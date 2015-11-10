@@ -7,17 +7,10 @@ Metacello new
 
 "Load Woden 2"
 FileStream stdout nextPutAll: 'Loading Woden2'; lf.
-FileStream stdout nextPutAll: 'TODO'; lf.
-
-"
-Author useAuthor: 'LoadWoden2' during: [ 
-	Gofer new
-		url: 'gitfiletree://../filetree';
-		package: 'Woden2-Core';
-		load.	
-	"(Smalltalk at: #ConfigurationOfWoden2) loadGit"
-].
-"
+Metacello new
+	baseline: 'Woden2';
+	repository: 'gitfiletree://filetree';
+	load.
 
 "Save the image"
 (Smalltalk saveAs: 'woden') 
