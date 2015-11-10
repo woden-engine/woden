@@ -1,4 +1,6 @@
 #!/bin/bash
+MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $MY_DIR/common.sh
 
 # Create the Abstract GPU build dir.
 BUILD_DIR="$WODEN2_BUILD_DIR/abstract-gpu"

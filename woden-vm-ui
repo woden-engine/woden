@@ -9,7 +9,7 @@ cd - > /dev/null
 set -f
 # run the VM and pass along all arguments as is
 
-export LD_LIBRARY_PATH="$DIR/vm:$LD_LIBRARY_PATH"
-export DYLD_LIBRARY_PATH="$DIR/vm:$DYLD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="$DIR/vm/pharo-vm:$LD_LIBRARY_PATH"
+export DYLD_LIBRARY_PATH="$DIR/vm/pharo-vm:$DYLD_LIBRARY_PATH"
 
 exec "$DIR"/"vm/pharo-ui" "$@"
