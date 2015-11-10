@@ -13,6 +13,6 @@ Metacello new
 	load.
 
 "Save the image"
-(Smalltalk saveAs: 'woden') 
+(Smalltalk saveAs: 'woden2') 
     ifFalse: [ Smalltalk snapshot: false andQuit: true ].
 
