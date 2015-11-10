@@ -1,0 +1,6 @@
+[submodule "core-assets"]
+	path = core-assets
+	url = git://github.com/ronsaldo/wloden-core-assets
+[submodule "abstract-gpu"]
+	path = abstract-gpu
+	url = git://github.com/ronsaldo/abstract-gpu
