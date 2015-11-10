@@ -1,5 +1,7 @@
 build
 build-dist
-image
 vm
+*.image
+*.changes
+*.log
 
