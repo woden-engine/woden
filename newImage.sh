@@ -12,3 +12,5 @@ cd "$IMAGE_DIR"
 # Fetch a new image and a new vm
 wget -O- get.pharo.org/40 | bash
 
+# Load the repositories into the image
+../woden-vm Pharo.image st "$WODEN2_SRC_TOP/scripts/LoadRepositories.st"
