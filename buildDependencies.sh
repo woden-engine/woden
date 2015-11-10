@@ -8,3 +8,7 @@ mkdir -p "$WODEN2_BUILD_DIR"
 
 bash scripts/build-agpu.sh || exit 1
 
+cd "$WODEN2_SRC_TOP"
+mkdir -p vm
+cp -R build-dist/* vm
+
