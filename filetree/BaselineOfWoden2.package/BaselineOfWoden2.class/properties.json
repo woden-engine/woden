@@ -1,0 +1,14 @@
+{
+	"category" : "BaselineOfWoden2",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "BaselineOfWoden2",
+	"pools" : [
+		 ],
+	"super" : "BaselineOf",
+	"type" : "normal" }
