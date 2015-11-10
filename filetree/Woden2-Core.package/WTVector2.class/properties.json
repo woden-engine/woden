@@ -1,0 +1,15 @@
+{
+	"category" : "Woden2-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"x",
+		"y" ],
+	"name" : "WTVector2",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }
