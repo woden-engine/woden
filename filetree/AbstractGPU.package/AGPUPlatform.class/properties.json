@@ -1,0 +1,14 @@
+{
+	"category" : "AbstractGPU-Generated",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "AGPUPlatform",
+	"pools" : [
+		 ],
+	"super" : "AGPUInterface",
+	"type" : "normal" }

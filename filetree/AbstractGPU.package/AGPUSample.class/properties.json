@@ -1,0 +1,16 @@
+{
+	"category" : "AbstractGPU-Samples",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"commandQueue",
+		"commandAllocator",
+		"commandList" ],
+	"name" : "AGPUSample",
+	"pools" : [
+		 ],
+	"super" : "AGPUMorph",
+	"type" : "normal" }

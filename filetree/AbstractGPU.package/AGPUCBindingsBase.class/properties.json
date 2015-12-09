@@ -1,0 +1,15 @@
+{
+	"category" : "AbstractGPU-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"ModuleName",
+		"ModuleSession" ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "AGPUCBindingsBase",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

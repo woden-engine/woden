@@ -1,0 +1,14 @@
+{
+	"category" : "AbstractGPU-Generated",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "AGPUPipelineState",
+	"pools" : [
+		 ],
+	"super" : "AGPUInterface",
+	"type" : "normal" }

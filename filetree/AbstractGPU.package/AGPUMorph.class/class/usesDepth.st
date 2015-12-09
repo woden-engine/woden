@@ -1,0 +1,3 @@
+configurations
+usesDepth
+	^ true

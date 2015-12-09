@@ -1,0 +1,15 @@
+{
+	"category" : "AbstractGPU-Generated",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "AGPUCBindings",
+	"pools" : [
+		"AGPUConstants",
+		"AGPUTypes" ],
+	"super" : "AGPUCBindingsBase",
+	"type" : "normal" }
