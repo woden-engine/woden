@@ -1,0 +1,14 @@
+{
+	"category" : "BaselineOfAbstractGPU",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "BaselineOfAbstractGPU",
+	"pools" : [
+		 ],
+	"super" : "BaselineOf",
+	"type" : "normal" }
