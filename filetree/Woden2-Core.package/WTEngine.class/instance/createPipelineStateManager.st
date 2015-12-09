@@ -1,4 +1,8 @@
 initialization
 createPipelineStateManager
-	pipelineStateManager := WTPipelineStateManager new.
-	pipelineStateManager initializeForEngine: self.
+	pipelineStateManager ifNil: [
+		pipelineStateManager := WTPipelineStateManager new.
+		pipelineStateManager initializeForEngine: self.
+ 	].
+
+	pipelineStateManager sessionChanged

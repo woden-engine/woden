@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Core-Resources",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "WTShaderSignature",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

@@ -6,7 +6,11 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"engine" ],
+		"engine",
+		"structures",
+		"vertexLayouts",
+		"shaders",
+		"pipelineStateObjects" ],
 	"name" : "WTPipelineStateManager",
 	"pools" : [
 		 ],

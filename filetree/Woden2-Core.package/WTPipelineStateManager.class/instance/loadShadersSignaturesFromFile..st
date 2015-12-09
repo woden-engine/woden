@@ -1,0 +1,2 @@
+state loading
+loadShadersSignaturesFromFile: aFileName

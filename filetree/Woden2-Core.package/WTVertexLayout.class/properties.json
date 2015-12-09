@@ -1,0 +1,15 @@
+{
+	"category" : "Woden2-Core-Resources",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"buffers",
+		"handle" ],
+	"name" : "WTVertexLayout",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }
