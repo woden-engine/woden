@@ -11,6 +11,6 @@ loadShadersFromFile: aFileName prefix: aShaderNamePrefix
 
 	shadersJson at: 'groups' ifPresent: [ :groups |
 		groups keysAndValuesDo: [ :newPrefix :fileName |
-			self loadShadersFromFile: baseDir / fileName prefix: aShaderNamePrefix , newPrefix , '.'
+			self loadShadersFromFile: (baseDir / fileName) fullName prefix: aShaderNamePrefix , newPrefix , '.'
 		]
 	]
