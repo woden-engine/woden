@@ -6,8 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"implementations" ],
-	"name" : "WTShader",
+		"code",
+		"handle" ],
+	"name" : "WTShaderStage",
 	"pools" : [
 		 ],
 	"super" : "Object",

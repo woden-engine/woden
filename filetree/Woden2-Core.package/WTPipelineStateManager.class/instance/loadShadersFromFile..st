@@ -1,2 +1,0 @@
-state loading
-loadShadersFromFile: aFileName
