@@ -14,5 +14,5 @@ unzip moose-6.0.zip || exit 1
 rm -f moose-6.0.zip
 
 # Load the repositories into the image
-./woden-vm moose-6.0.image st "$WODEN2_SRC_TOP/scripts/LoadRepositories.st"
+./pharo-ui moose-6.0.image st "$WODEN2_SRC_TOP/scripts/LoadRepositories.st"
 
