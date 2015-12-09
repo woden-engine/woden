@@ -8,7 +8,7 @@ mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
 
 # Build the abstract gpu
-cmake "$WODEN2_SRC_TOP/abstract-gpu" -G "Unix Makefiles" || exit 1
+cmake "$WODEN2_SRC_TOP/abstract-gpu" -G "Unix Makefiles" -DCMAKE_CXX_FLAGS="-m32" -DCMAKE_C_FLAGS="-m32" || exit 1
 make || exit 1
 
 # Copy the results to the build dist
