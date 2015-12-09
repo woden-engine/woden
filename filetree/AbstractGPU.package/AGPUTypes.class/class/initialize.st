@@ -9,7 +9,7 @@ initialize
 	agpu_string := #'char*'.
 	agpu_color4f := AGPUColor4f.
 	agpu_field_type := #int.
-	agpu_buffer_usage_type := #int.
+	agpu_byte := #'uchar'.
 	agpu_mapping_access := #int.
 	agpu_texture_address_mode := #int.
 	agpu_float := #'float'.
@@ -37,7 +37,7 @@ initialize
 	agpu_platform := #'void*'.
 	agpu_shader_signature_builder := #'void*'.
 	agpu_texture_format := #int.
-	agpu_byte := #'uchar'.
+	agpu_command_list_type := #int.
 	agpu_bitfield := #'uint'.
 	agpu_buffer := #'void*'.
 	agpu_texture := #'void*'.
@@ -57,6 +57,7 @@ initialize
 	agpu_enum := #'int'.
 	agpu_command_allocator := #'void*'.
 	agpu_texture_description := AGPUTextureDescription.
+	agpu_buffer_binding_type := #int.
 	agpu_swap_chain := #'void*'.
 	agpu_shader_type := #int.
 	agpu_pipeline_state := #'void*'.
@@ -64,7 +65,7 @@ initialize
 	agpu_uint := #'uint'.
 	agpu_fence := #'void*'.
 	agpu_short := #'short'.
-	agpu_buffer_binding_type := #int.
+	agpu_buffer_usage_type := #int.
 	agpu_render_buffer_bit := #int.
 	agpu_texture_type := #int.
 	agpu_ushort := #'ushort'.
