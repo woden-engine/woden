@@ -6,9 +6,11 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"x",
-		"y" ],
-	"name" : "WTVector2",
+		"r",
+		"i",
+		"j",
+		"k" ],
+	"name" : "WTQuaternion",
 	"pools" : [
 		 ],
 	"super" : "Object",

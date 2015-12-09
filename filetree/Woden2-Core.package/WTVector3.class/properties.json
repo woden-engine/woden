@@ -7,8 +7,9 @@
 	"commentStamp" : "",
 	"instvars" : [
 		"x",
-		"y" ],
-	"name" : "WTVector2",
+		"y",
+		"z" ],
+	"name" : "WTVector3",
 	"pools" : [
 		 ],
 	"super" : "Object",

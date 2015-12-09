@@ -6,9 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"x",
-		"y" ],
-	"name" : "WTVector2",
+		"center",
+		"radius" ],
+	"name" : "WTSphere",
 	"pools" : [
 		 ],
 	"super" : "Object",

@@ -1,14 +1,13 @@
 {
-	"category" : "Woden2-Core-Math",
+	"category" : "Woden2-Core-Window",
 	"classinstvars" : [
 		 ],
 	"classvars" : [
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"x",
-		"y" ],
-	"name" : "WTVector2",
+		 ],
+	"name" : "WTOSWindow",
 	"pools" : [
 		 ],
 	"super" : "Object",

@@ -6,9 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"x",
-		"y" ],
-	"name" : "WTVector2",
+		"normal",
+		"distance" ],
+	"name" : "WTPlane",
 	"pools" : [
 		 ],
 	"super" : "Object",

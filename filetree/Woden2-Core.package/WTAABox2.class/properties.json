@@ -6,9 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"x",
-		"y" ],
-	"name" : "WTVector2",
+		"center",
+		"halfExtent" ],
+	"name" : "WTAABox2",
 	"pools" : [
 		 ],
 	"super" : "Object",

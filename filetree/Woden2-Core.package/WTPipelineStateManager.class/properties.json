@@ -1,14 +1,13 @@
 {
-	"category" : "Woden2-Core-Math",
+	"category" : "Woden2-Core-Engine",
 	"classinstvars" : [
 		 ],
 	"classvars" : [
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"x",
-		"y" ],
-	"name" : "WTVector2",
+		"engine" ],
+	"name" : "WTPipelineStateManager",
 	"pools" : [
 		 ],
 	"super" : "Object",

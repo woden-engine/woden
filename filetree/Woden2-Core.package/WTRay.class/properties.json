@@ -6,9 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"x",
-		"y" ],
-	"name" : "WTVector2",
+		"origin",
+		"direction" ],
+	"name" : "WTRay",
 	"pools" : [
 		 ],
 	"super" : "Object",
