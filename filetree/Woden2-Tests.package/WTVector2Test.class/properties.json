@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Tests",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "<historical>",
+	"instvars" : [
+		 ],
+	"name" : "WTVector2Test",
+	"pools" : [
+		 ],
+	"super" : "TestCase",
+	"type" : "normal" }
