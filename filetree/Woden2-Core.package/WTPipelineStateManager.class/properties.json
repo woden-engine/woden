@@ -3,16 +3,17 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		 ],
+		"ShaderBindingTypeMap" ],
 	"commentStamp" : "",
 	"instvars" : [
 		"engine",
 		"structures",
 		"vertexLayouts",
 		"shaders",
-		"pipelineStateObjects" ],
+		"pipelineStateObjects",
+		"shaderSignatures" ],
 	"name" : "WTPipelineStateManager",
 	"pools" : [
-		 ],
+		"AGPUConstants" ],
 	"super" : "Object",
 	"type" : "normal" }

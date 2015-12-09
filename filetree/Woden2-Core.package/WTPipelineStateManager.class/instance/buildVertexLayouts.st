@@ -1,3 +1,3 @@
 abstract gpu baking
 buildVertexLayouts
-	vertexLayouts do: [ :vertexLayout | self buildVertexLayout: vertexLayout ]
+	vertexLayouts valuesDo: [ :vertexLayout | self buildVertexLayout: vertexLayout ]
