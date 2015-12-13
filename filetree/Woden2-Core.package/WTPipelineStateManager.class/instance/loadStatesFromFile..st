@@ -7,3 +7,4 @@ loadStatesFromFile: aFileName
 	self loadShaderSignaturesFromFile: baseDir / (statesJson at: 'shader-signatures').
 	self loadVertexLayoutsFromFile: baseDir / (statesJson at: 'vertex-layouts').
 	self loadShadersFromFile: (baseDir / (statesJson at: 'shaders')) fullName prefix: ''.
+	self loadPipelineStatesFromFile: (baseDir / (statesJson at: 'pipeline-states')) fullName prefix: ''.

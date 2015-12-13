@@ -3,7 +3,11 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		"ShaderBindingTypeMap" ],
+		"PipelineStateObjectAttributeParser",
+		"PrimitiveTypeNameMap",
+		"ShaderBindingTypeMap",
+		"ShaderLanguageNameMap",
+		"StageNameMap" ],
 	"commentStamp" : "",
 	"instvars" : [
 		"engine",
@@ -11,7 +15,8 @@
 		"vertexLayouts",
 		"shaders",
 		"pipelineStateObjects",
-		"shaderSignatures" ],
+		"shaderSignatures",
+		"shaderLanguageSearchOrder" ],
 	"name" : "WTPipelineStateManager",
 	"pools" : [
 		"AGPUConstants" ],

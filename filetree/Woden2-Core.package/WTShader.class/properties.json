@@ -7,7 +7,8 @@
 	"commentStamp" : "",
 	"instvars" : [
 		"name",
-		"implementations" ],
+		"implementations",
+		"handleSet" ],
 	"name" : "WTShader",
 	"pools" : [
 		 ],

@@ -6,9 +6,12 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"code",
-		"handle" ],
-	"name" : "WTShaderStage",
+		"name",
+		"scope",
+		"handle",
+		"description",
+		"isAbstract" ],
+	"name" : "WTPipelineState",
 	"pools" : [
 		 ],
 	"super" : "Object",
