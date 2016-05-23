@@ -9,7 +9,7 @@ IMAGE_DIR="$WODEN2_SRC_TOP"
 cd "$IMAGE_DIR"
 
 # Fetch a new image and a new vm
-wget -O- get.pharo.org/50 | bash
+wget -O- get.pharo.org/60 | bash
 
 # Load the repositories into the image
 ./pharo-ui Pharo.image st "$WODEN2_SRC_TOP/scripts/LoadRepositories.st"

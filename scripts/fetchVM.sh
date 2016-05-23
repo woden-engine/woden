@@ -4,5 +4,5 @@ source $MY_DIR/common.sh
 
 cd "$WODEN2_SRC_TOP"
 
-wget -O- get.pharo.org/vm | bash
+wget -O- get.pharo.org/vm60 | bash
 

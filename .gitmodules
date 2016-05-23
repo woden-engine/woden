@@ -4,5 +4,5 @@
 	branch = master
 [submodule "abstract-gpu"]
 	path = abstract-gpu
-	url = git://github.com/ronsaldo/abstract-gpu
+	url = https://github.com/ronsaldo/wloden-core-assets.git
 	branch = master
