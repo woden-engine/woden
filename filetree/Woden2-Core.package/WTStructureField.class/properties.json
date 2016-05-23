@@ -12,6 +12,6 @@
 		"offset" ],
 	"name" : "WTStructureField",
 	"pools" : [
-		"AGPUConstants" ],
+		 ],
 	"super" : "Object",
 	"type" : "normal" }

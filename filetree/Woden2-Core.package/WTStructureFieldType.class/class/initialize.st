@@ -3,58 +3,112 @@ initialize
 	"
 	self initialize
 	"
+	| formatId componentType components normalized size alignment type |
 	super initialize.
 
-	FieldTypes := IdentityDictionary new.
+	FieldTypes := Dictionary new.
+	#(
+		R32G32B32A32_TYPELESS 		(uint 	4 false 16 4)
+		R32G32B32A32_FLOAT 			(float 4 false 16 4)
+		R32G32B32A32_UINT 				(uint 	4 false 16 4)
+		R32G32B32A32_SINT 				(int 	4 false 16 4)
+
+		R32G32B32_TYPELESS 			(uint  3 false 12 4)
+		R32G32B32_FLOAT 				(float 3 false 12 4)
+		R32G32B32_UINT 					(uint  3 false 12 4)
+		R32G32B32_SINT 					(int  3 false 12 4)
+
+		R16G16B16A16_TYPELESS 		(ushort  4 false 8 4)
+		R16G16B16A16_FLOAT 			(float  4 false 8 4)
+		R16G16B16A16_UNORM 			(ushort  4 true 8 4)
+		R16G16B16A16_UINT 				(ushort   4 false 8 4)
+		R16G16B16A16_SNORM  			(short  4 true 8 4)
+		R16G16B16A16_SINT 				(short    4 false 8 4)
+
+		R32G32_TYPELESS 				(uint  2 false 8 4)
+		R32G32_FLOAT 					(float  2 false 8 4)
+		R32G32_UINT 						(uint  2 false 8 4)
+		R32G32_SINT 						(int  2 false 8 4)
+		R32G8X24_TYPELESS 				(uint  2 false 8 4)
+		D32_FLOAT_S8X24_UINT 			((float byte)  2 false 8 4)
+		R32_FLOAT_S8X24_TYPELESS 	((float byte)  2 false 8 4)
+		X32_TYPELESS_G8X24_UINT 		(uint  2 false 8 4)
+		R10G10B10A2_TYPELESS 			(uint  4 false 4 4)
+		R10G10B10A2_UNORM 				(uint  4 true 4 4)
+		R10G10B10A2_UINT 				(uint  4 false 4 4)
+		R11G11B10_FLOAT 				(float  3 false 4 4)
+						
+		R8G8B8A8_TYPELESS 				(byte  4 false 4 4)
+		R8G8B8A8_UNORM 					(byte  4 true 4 4)
+		R8G8B8A8_UNORM_SRGB 			(byte  4 true 4 4)
+		R8G8B8A8_UINT 					(byte  4 false 4 4)
+		R8G8B8A8_SNORM 					(sbyte  4 true 4 4)
+		R8G8B8A8_SINT 					(sbyte  4 false 4 4)
+							
+		R16G16_TYPELESS 				(ushort  2 false 4 4)
+		R16G16_FLOAT 					(float  2 false 4 4)
+		R16G16_UNORM 					(ushort  2 true 4 4)
+		R16G16_UINT 						(ushort  2 false 4 4)
+		R16G16_SNORM 					(short  2 true 4 4)
+		R16G16_SINT 						(short  2 false 4 4)
+								
+		R32_TYPELESS 					(uint 1 false 4 4)
+		D32_FLOAT 						(float 1 false 4 4)
+		R32_FLOAT 						(float 1 false 4 4)
+		R32_UINT 							(uint 1 false 4 4)
+		R32_SINT 							(sint 1 false 4 4)
+									
+		"R24G8_TYPELESS
+		D24_UNORM_S8_UINT
+		R24_UNORM_X8_TYPELESS
+		X24TG8_UINT
 		
-	{ 
-	self name: #float type: AGPU_FLOAT components: 1 rows: 1 normalized: false size: 4 alignment: 4.
-	self name: #vec2  type: AGPU_FLOAT components: 2 rows: 1 normalized: false size: 8 alignment: 4.
-	self name: #vec3  type: AGPU_FLOAT components: 3 rows: 1 normalized: false size: 12 alignment: 4.
-	self name: #vec4  type: AGPU_FLOAT components: 4 rows: 1 normalized: false size: 16 alignment: 4.
-	
-	self name: #int   type: AGPU_INT components: 1 rows: 1 normalized: false size: 4 alignment: 4.
-	self name: #ivec2 type: AGPU_INT components: 2 rows: 1 normalized: false size: 8 alignment: 4.
-	self name: #ivec3 type: AGPU_INT components: 3 rows: 1 normalized: false size: 12 alignment: 4.
-	self name: #ivec4 type: AGPU_INT components: 4 rows: 1 normalized: false size: 16 alignment: 4.
-
-	self name: #uint   type: AGPU_UNSIGNED_INT components: 1 rows: 1 normalized: false size: 4 alignment: 4.
-	self name: #uivec2 type: AGPU_UNSIGNED_INT components: 2 rows: 1 normalized: false size: 8 alignment: 4.
-	self name: #uivec3 type: AGPU_UNSIGNED_INT components: 3 rows: 1 normalized: false size: 12 alignment: 4.
-	self name: #uivec4 type: AGPU_UNSIGNED_INT components: 4 rows: 1 normalized: false size: 16 alignment: 4.
-	
-	self name: #short type: AGPU_SHORT components: 1 rows: 1 normalized: false size: 4 alignment: 2.
-	self name: #svec2 type: AGPU_SHORT components: 2 rows: 1 normalized: false size: 8 alignment: 4.
-	self name: #svec4 type: AGPU_SHORT components: 4 rows: 1 normalized: false size: 16 alignment: 8.
-
-	self name: #ushort type: AGPU_UNSIGNED_SHORT components: 1 rows: 1 normalized: false size: 2 alignment: 2.
-	self name: #usvec2 type: AGPU_UNSIGNED_SHORT components: 2 rows: 1 normalized: false size: 4 alignment: 4.
-	self name: #usvec4 type: AGPU_UNSIGNED_SHORT components: 4 rows: 1 normalized: false size: 8 alignment: 8.
-
-	self name: #nshort type: AGPU_SHORT components: 1 rows: 1 normalized: true size: 2 alignment: 2.
-	self name: #nsvec2 type: AGPU_SHORT components: 2 rows: 1 normalized: true size: 4 alignment: 4.
-	self name: #nsvec4 type: AGPU_SHORT components: 4 rows: 1 normalized: true size: 8 alignment: 8.
-
-	self name: #nushort type: AGPU_UNSIGNED_SHORT components: 1 rows: 1 normalized: true size: 2 alignment: 2.
-	self name: #nusvec2 type: AGPU_UNSIGNED_SHORT components: 2 rows: 1 normalized: true size: 4 alignment: 4.
-	self name: #nusvec4 type: AGPU_UNSIGNED_SHORT components: 4 rows: 1 normalized: true size: 8 alignment: 8.
-
-	self name: #byte type: AGPU_BYTE components: 1 rows: 1 normalized: false size: 1 alignment: 1.
-	self name: #bvec2 type: AGPU_BYTE components: 2 rows: 1 normalized: false size: 2 alignment: 2.
-	self name: #bvec4 type: AGPU_BYTE components: 4 rows: 1 normalized: false size: 3 alignment: 4.
-
-	self name: #ubyte type: AGPU_UNSIGNED_BYTE components: 1 rows: 1 normalized: false size: 1 alignment: 1.
-	self name: #ubvec2 type: AGPU_UNSIGNED_BYTE components: 2 rows: 1 normalized: false size: 2 alignment: 2.
-	self name: #ubvec4 type: AGPU_UNSIGNED_BYTE components: 4 rows: 1 normalized: false size: 3 alignment: 4.
-
-	self name: #nbyte type: AGPU_BYTE components: 1 rows: 1 normalized: true size: 1 alignment: 1.
-	self name: #nbvec2 type: AGPU_BYTE components: 2 rows: 1 normalized: true size: 2 alignment: 2.
-	self name: #nbvec4 type: AGPU_BYTE components: 4 rows: 1 normalized: true size: 3 alignment: 4.
-
-	self name: #nubyte type: AGPU_UNSIGNED_BYTE components: 1 rows: 1 normalized: true size: 1 alignment: 1.
-	self name: #nubvec2 type: AGPU_UNSIGNED_BYTE components: 2 rows: 1 normalized: true size: 2 alignment: 2.
-	self name: #nubvec4 type: AGPU_UNSIGNED_BYTE components: 4 rows: 1 normalized: true size: 3 alignment: 4.
-
-	} do: [:type |
-		FieldTypes at: type name put: type.
+		R8G8_TYPELESS
+		R8G8_UNORM
+		R8G8_UINT
+		R8G8_SNORM
+		R8G8_SINT
+		
+		R16_TYPELESS
+		R16_FLOAT
+		D16_UNORM
+		R16_UNORM
+		R16_UINT
+		R16_SNORM
+		R16_SINT
+		
+		R8_TYPELESS
+		R8_UNORM
+		R8_UINT
+		R8_SNORM
+		R8_SINT
+		A8_UNORM
+		R1_UNORM
+		
+		B5G6R5_UNORM
+		B5G5R5A1_UNORM
+		B8G8R8A8_UNORM
+		B8G8R8X8_UNORM
+		B8G8R8A8_TYPELESS
+		B8G8R8A8_UNORM_SRGB
+		B8G8R8X8_TYPELESS
+		B8G8R8X8_UNORM_SRGB"
+	) pairsDo: [ :formatName :spec |
+		formatId := (AGPUConstants bindingOf: (#AGPU_TEXTURE_FORMAT_ , formatName) asSymbol) value.
+		componentType := spec first.
+		components := spec second.
+		normalized := spec third.
+		size := spec fourth.
+		alignment := spec fifth.
+		type := self new
+			name: formatName asSymbol;
+			componentType: componentType;
+			components: components; 
+			format: formatId;
+			normalized: normalized;
+			rows: 1;
+			size: size;
+			alignment: alignment;
+			yourself.
+		FieldTypes at: type name put: type
 	]

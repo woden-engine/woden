@@ -7,7 +7,8 @@
 	"commentStamp" : "",
 	"instvars" : [
 		"name",
-		"agpuType",
+		"format",
+		"componentType",
 		"components",
 		"rows",
 		"normalized",

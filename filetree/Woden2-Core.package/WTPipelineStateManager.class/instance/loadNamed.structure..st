@@ -9,7 +9,7 @@ loadNamed: name structure: structureDesc
 		type: (structureDesc at: 'type') asSymbol.
 	structure fields: ((structureDesc at: 'fields') collect: [ :fieldDesc |
 		"Align the structure size to the field type alignment"
-		fieldType := WTStructureFieldType typeNamed: (fieldDesc at: 'type').
+		fieldType := WTStructureFieldType typeNamed: (fieldDesc at: 'format').
 		structure size: (structure size alignedTo: fieldType alignment).
 		
 		"Construct the field"

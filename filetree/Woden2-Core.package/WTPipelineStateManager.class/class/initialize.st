@@ -6,18 +6,21 @@ initialize
 	super initialize.
 	
 	ShaderBindingTypeMap := IdentityDictionary newFromPairs: {
-		#cbv . AGPU_SHADER_BINDING_TYPE_CBV .
-		#srv . AGPU_SHADER_BINDING_TYPE_SRV .
-		#uav . AGPU_SHADER_BINDING_TYPE_UAV .
+		#'uniform-buffer' . AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER .
+		#'sampled-image' . AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE .
+		#'storage-image' . AGPU_SHADER_BINDING_TYPE_STORAGE_IMAGE .
 		#sampler . AGPU_SHADER_BINDING_TYPE_SAMPLER .
 	}.
 	
 	ShaderLanguageNameMap := Dictionary newFromPairs: {
+		AGPU_SHADER_LANGUAGE_NONE . #none .
 		AGPU_SHADER_LANGUAGE_GLSL . #glsl .
 		AGPU_SHADER_LANGUAGE_EGLSL . #eglsl .
 		AGPU_SHADER_LANGUAGE_HLSL . #hlsl .
 		AGPU_SHADER_LANGUAGE_BINARY . #binary .
 		AGPU_SHADER_LANGUAGE_SPIR_V . #spirv .
+		AGPU_SHADER_LANGUAGE_METAL . #metal .
+		AGPU_SHADER_LANGUAGE_METAL_AIR . #'metal-air'
 	}.
 	
 	StageNameMap := Dictionary newFromPairs: {
@@ -41,9 +44,15 @@ initialize
 		'shader' . #setPipeline:shaderNamed: .
 	}.
 	
-	PrimitiveTypeNameMap := IdentityDictionary newFromPairs: { 
-		#point . AGPU_PRIMITIVE_TYPE_POINT .
-		#line . AGPU_PRIMITIVE_TYPE_LINE .
-		#triangle . AGPU_PRIMITIVE_TYPE_TRIANGLE .
-		#patch . AGPU_PRIMITIVE_TYPE_PATCH .
+	PrimitiveTopologyNameMap := IdentityDictionary newFromPairs: { 
+		#points . AGPU_POINTS .
+		#lines . AGPU_LINES .
+		#'lines-adjacency' . AGPU_LINES_ADJACENCY .
+		#'line-strip' . AGPU_LINE_STRIP .
+		#'line-strip-adjacency' . AGPU_LINE_STRIP_ADJACENCY .
+		#triangles . AGPU_TRIANGLES .
+		#'triangles-adjacency' . AGPU_TRIANGLES_ADJACENCY .
+		#'triangle-strip' . AGPU_TRIANGLE_STRIP .
+		#'triangle-strip-adjacency' . AGPU_TRIANGLE_STRIP_ADJACENCY .
+		#patches . AGPU_PATCHES .
 	}.

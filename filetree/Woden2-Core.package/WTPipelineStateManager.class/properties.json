@@ -4,6 +4,7 @@
 		 ],
 	"classvars" : [
 		"PipelineStateObjectAttributeParser",
+		"PrimitiveTopologyNameMap",
 		"PrimitiveTypeNameMap",
 		"ShaderBindingTypeMap",
 		"ShaderLanguageNameMap",
