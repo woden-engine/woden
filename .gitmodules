@@ -1,8 +1,8 @@
 [submodule "core-assets"]
 	path = core-assets
-	url = git://github.com/ronsaldo/wloden-core-assets
+	url = https://github.com/ronsaldo/wloden-core-assets.git
 	branch = master
 [submodule "abstract-gpu"]
 	path = abstract-gpu
-	url = https://github.com/ronsaldo/wloden-core-assets.git
+	url = https://github.com/ronsaldo/abstract-gpu.git
 	branch = master
