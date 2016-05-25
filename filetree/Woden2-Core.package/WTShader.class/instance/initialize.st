@@ -1,3 +1,3 @@
 initialization
 initialize
-	implementations := IdentityDictionary new.
+	stages := IdentityDictionary new.

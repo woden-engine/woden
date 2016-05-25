@@ -18,7 +18,7 @@ initialize
 		AGPU_SHADER_LANGUAGE_EGLSL . #eglsl .
 		AGPU_SHADER_LANGUAGE_HLSL . #hlsl .
 		AGPU_SHADER_LANGUAGE_BINARY . #binary .
-		AGPU_SHADER_LANGUAGE_SPIR_V . #spirv .
+		AGPU_SHADER_LANGUAGE_SPIR_V . #'spir-v' .
 		AGPU_SHADER_LANGUAGE_METAL . #metal .
 		AGPU_SHADER_LANGUAGE_METAL_AIR . #'metal-air'
 	}.
@@ -42,6 +42,13 @@ initialize
 		'vertex-layout' . #setPipeline:vertexLayoutNamed: .
 		'primitive-type' . #setPipeline:primitiveTypeNamed: .
 		'shader' . #setPipeline:shaderNamed: .
+		'sample-description' . #setPipeline:sampleDescription: .
+		'stencil-state' . #setPipeline:stencilState: .
+		'stencil-operations' . #setPipeline:stencilOperations: .
+		'stencil-front-operations' . #setPipeline:stencilFrontOperations: .
+		'stencil-back-operations' . #setPipeline:stencilBackOperations: .
+		'blend-state' . #setPipeline:blendState: .
+		'color-mask' . #setPipeline:colorMask:
 	}.
 	
 	PrimitiveTopologyNameMap := IdentityDictionary newFromPairs: { 
@@ -56,3 +63,48 @@ initialize
 		#'triangle-strip-adjacency' . AGPU_TRIANGLE_STRIP_ADJACENCY .
 		#patches . AGPU_PATCHES .
 	}.
+	
+	BlendingFactorNameMap := Dictionary newFromPairs: {
+		#zero . AGPU_BLENDING_ZERO.
+		#one . AGPU_BLENDING_ONE.
+		#'source-color' . AGPU_BLENDING_SRC_COLOR.
+		#'inverted-source-color' . AGPU_BLENDING_INVERTED_SRC_COLOR.
+		#'source-alpha' . AGPU_BLENDING_SRC_ALPHA.
+		#'inverted-source-alpha' . AGPU_BLENDING_INVERTED_SRC_ALPHA.
+		#'dest-alpha' . AGPU_BLENDING_DEST_ALPHA.
+		#'inverted-dest-alpha' . AGPU_BLENDING_INVERTED_DEST_ALPHA.
+		#'dest-color' . AGPU_BLENDING_DEST_COLOR.
+		#'inverted-dest-color' . AGPU_BLENDING_INVERTED_DEST_COLOR.
+		#'source-alpha-sat' . AGPU_BLENDING_SRC_ALPHA_SAT.
+	}.
+
+	BlendingOperationNameMap := Dictionary newFromPairs: {
+		#add . AGPU_BLENDING_OPERATION_ADD.
+		#subtract . AGPU_BLENDING_OPERATION_SUBTRACT.
+		#'reverse-subtract' . AGPU_BLENDING_OPERATION_REVERSE_SUBTRACT.
+		#max . AGPU_BLENDING_OPERATION_MAX.
+		#min . AGPU_BLENDING_OPERATION_MIN.
+	}.
+	
+	CompareFunctionNameMap := Dictionary newFromPairs: {
+		#always . AGPU_ALWAYS.
+		#never . AGPU_NEVER.
+		#less . AGPU_LESS.
+		#'less-equal' . AGPU_LESS_EQUAL.
+		#equal . AGPU_EQUAL.
+		#'not-equal' . AGPU_NOT_EQUAL.
+		#greater . AGPU_GREATER.
+		#'greater-equal' . AGPU_GREATER_EQUAL.
+	}.
+	
+	StencilOperationNameMap := Dictionary newFromPairs: {
+		#keep . AGPU_KEEP.
+		#zero . AGPU_ZERO.
+		#replace . AGPU_REPLACE.
+		#invert . AGPU_INVERT.
+		#increase . AGPU_INCREASE.
+		#'increase-wrap' . AGPU_INCREASE_WRAP.
+		#decrease . AGPU_DECREASE.
+		#'decrease-wrap' . AGPU_DECREASE_WRAP.
+	}.
+	

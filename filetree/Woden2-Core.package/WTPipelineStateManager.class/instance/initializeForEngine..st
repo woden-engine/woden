@@ -6,4 +6,6 @@ initializeForEngine: anEngine
 	vertexLayouts := IdentityDictionary new.
 	shaders := IdentityDictionary new.
 	pipelineStateObjects :=IdentityDictionary new.
-	self loadCoreStates.
+	self
+		createSettingsStates;
+		loadCoreStates.

@@ -1,18 +1,17 @@
 state loading
 loadNamed: shaderName shader: shaderDesc baseDir: baseDir
-	| shader implementation sourceCode |
+	| shader stage |
 	shader := WTShader new
 		name: shaderName asSymbol;
 		yourself.
-		
-	shaderDesc keysAndValuesDo: [ :languageName :implDesc |
-		implementation := WTShaderImplementation new.
-		implDesc keysAndValuesDo: [ :stage :sourceFileName |
-			sourceCode := (baseDir / sourceFileName) binaryReadStreamDo: [ :in | in contents ].
-			implementation addStage: stage asSymbol code: sourceCode.
+
+	shaderDesc keysAndValuesDo: [ :stageName :implementationsDesc |
+		stage := WTShaderStage new name: stageName asSymbol.
+		implementationsDesc keysAndValuesDo: [ :languageName :sourceFileName |
+			stage addImplementation: languageName asSymbol fileReference:  baseDir / sourceFileName
 		].
 		
-		shader addLanguage: languageName asSymbol implementation: implementation
+		shader addStage: stage
 	].
 
 	shaders at: shader name put: shader

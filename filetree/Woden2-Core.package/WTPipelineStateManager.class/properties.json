@@ -3,12 +3,15 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
+		"BlendingFactorNameMap",
+		"BlendingOperationNameMap",
+		"CompareFunctionNameMap",
 		"PipelineStateObjectAttributeParser",
 		"PrimitiveTopologyNameMap",
-		"PrimitiveTypeNameMap",
 		"ShaderBindingTypeMap",
 		"ShaderLanguageNameMap",
-		"StageNameMap" ],
+		"StageNameMap",
+		"StencilOperationNameMap" ],
 	"commentStamp" : "",
 	"instvars" : [
 		"engine",
