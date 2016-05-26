@@ -1,0 +1,24 @@
+{
+	"category" : "Woden2-Samples",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"mainRenderPass",
+		"commandAllocator",
+		"commandList",
+		"pipelineState",
+		"viewportUniformBuffer",
+		"vertexBuffer",
+		"vertexLayout",
+		"shaderSignature",
+		"viewportUniformBinding",
+		"vertexBinding",
+		"indexBuffer" ],
+	"name" : "WTSampleApplication",
+	"pools" : [
+		 ],
+	"super" : "WTApplication",
+	"type" : "normal" }
