@@ -6,9 +6,20 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		 ],
+		"engine",
+		"application",
+		"mainColorbuffer",
+		"session",
+		"screenWidth",
+		"screenHeight",
+		"mainDepthbuffer",
+		"mainFramebuffer",
+		"mainFramebufferForm",
+		"currentColorBuffer",
+		"currentDepthBuffer",
+		"currentFramebuffer" ],
 	"name" : "WTMorphicWindow",
 	"pools" : [
-		 ],
+		"AGPUConstants" ],
 	"super" : "BorderedMorph",
 	"type" : "normal" }

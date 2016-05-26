@@ -6,9 +6,11 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		 ],
+		"engine",
+		"window",
+		"session" ],
 	"name" : "WTApplication",
 	"pools" : [
-		 ],
+		"AGPUConstants" ],
 	"super" : "Object",
 	"type" : "normal" }

@@ -1,6 +1,7 @@
 initialization
 createDevice
 	device := AGPU mainDevice.
+	graphicsQueue := device getDefaultCommandQueue.
 	"| platform deviceOpenInfo |
 	platform := AGPU firstPlatform.
 	platform ifNil: [ self error: 'Failed to open the AGPU platform' ].

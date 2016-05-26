@@ -1,0 +1,3 @@
+opening
+openInOSWindow
+	self halt.

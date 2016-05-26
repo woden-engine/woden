@@ -8,7 +8,11 @@
 	"instvars" : [
 		"session",
 		"device",
-		"pipelineStateManager" ],
+		"pipelineStateManager",
+		"graphicsQueue",
+		"frameIndex",
+		"frameFences",
+		"bufferingFrameIndex" ],
 	"name" : "WTEngine",
 	"pools" : [
 		 ],
