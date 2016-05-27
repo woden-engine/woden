@@ -1,3 +1,5 @@
 opening
 openInOSWindow
-	self halt.
+	self createOSWindow.
+	window open.
+	^ window

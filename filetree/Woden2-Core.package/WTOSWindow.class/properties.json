@@ -6,9 +6,17 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		 ],
+		"engine",
+		"application",
+		"window",
+		"drawingProcess",
+		"windowHandle",
+		"screenWidth",
+		"screenHeight",
+		"swapChain",
+		"currentFramebuffer" ],
 	"name" : "WTOSWindow",
 	"pools" : [
-		 ],
+		"AGPUConstants" ],
 	"super" : "Object",
 	"type" : "normal" }

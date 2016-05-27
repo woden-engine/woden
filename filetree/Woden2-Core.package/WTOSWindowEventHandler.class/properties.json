@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Core-Window",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"wodenWindow" ],
+	"name" : "WTOSWindowEventHandler",
+	"pools" : [
+		 ],
+	"super" : "OSWindowEventVisitor",
+	"type" : "normal" }
