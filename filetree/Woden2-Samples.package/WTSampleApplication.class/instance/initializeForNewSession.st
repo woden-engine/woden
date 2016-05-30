@@ -14,19 +14,10 @@ initializeForNewSession
 	shaderSignature := engine pipelineStateManager shaderSignatureNamed: #GUI.
 	
 	viewportUniformBuffer := self createUniformBuffer: 4*16*2
-		immutableData: #(
-		"projection matrix"
-		1.0 0.0 0.0 0.0
-		0.0 1.0 0.0 0.0
-		0.0 0.0 1.0 0.0
-		0.0 0.0 0.0 1.0
-		
-		"view matrix"
-		1.0 0.0 0.0 0.0
-		0.0 1.0 0.0 0.0
-		0.0 0.0 1.0 0.0
-		0.0 0.0 0.0 1.0
-	) asFloatArray.
+		immutableData: (WTCanvasViewport new
+			projectionMatrix: (WMMatrix4F orthoLeft: -2.0 right: 2.0 bottom: -2.0 top: 2.0 near: -1.0 far: 1.0 invertedY: true);
+			viewMatrix: WMMatrix4F identity) asByteArray.
+	
 	vertexBuffer := self createVertex: 8*4 elements: 3 immutableBuffer: #(
 		"Bottom left"
 		-1.0 -1.0

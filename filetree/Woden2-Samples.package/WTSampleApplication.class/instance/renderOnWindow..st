@@ -15,8 +15,7 @@ renderOnWindow: aWindow
 		useIndexBuffer: indexBuffer;
 		useShaderResources: viewportUniformBinding;
 		
-		"drawElements: 3 instance_count: 1 first_index: 0 base_vertex: 0 base_instance: 0; "
-		drawArrays: 3 instance_count: 1 first_vertex: 0 base_instance: 0; 
+		drawElements: 3 instance_count: 1 first_index: 0 base_vertex: 0 base_instance: 0;
 		
 		endRenderPass;
 		close.
