@@ -6,8 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"allocator" ],
-	"name" : "WTCommandList",
+		"colorAttachments",
+		"depthStencilAttachment" ],
+	"name" : "WTRenderPass",
 	"pools" : [
 		 ],
 	"super" : "WTResourceWithSessionHandle",

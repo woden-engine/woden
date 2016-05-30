@@ -4,7 +4,7 @@
 		 ],
 	"classvars" : [
 		"BufferRegistry" ],
-	"commentStamp" : "",
+	"commentStamp" : "RonieSalgado 5/30/2016 21:46",
 	"instvars" : [
 		"data",
 		"pointer",

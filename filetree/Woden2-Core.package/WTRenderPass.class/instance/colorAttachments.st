@@ -1,0 +1,3 @@
+accessing
+colorAttachments
+	^ colorAttachments

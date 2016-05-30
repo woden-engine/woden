@@ -1,0 +1,1 @@
+I am mechanism to keep track of data in external memory mapped buffers that have to survive between sessions.
