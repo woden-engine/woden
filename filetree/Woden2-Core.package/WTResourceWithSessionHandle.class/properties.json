@@ -1,0 +1,16 @@
+{
+	"category" : "Woden2-Core-Resources",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"engine",
+		"session",
+		"handle" ],
+	"name" : "WTResourceWithSessionHandle",
+	"pools" : [
+		"AGPUConstants" ],
+	"super" : "Object",
+	"type" : "normal" }
