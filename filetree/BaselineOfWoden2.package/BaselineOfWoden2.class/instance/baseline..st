@@ -27,7 +27,13 @@ baseline: spec
 					className: #ConfigurationOfLowcode;
 					versionString: #'development';
 					repository: 'http://smalltalkhub.com/mc/ronsaldo/Lowcode/main' ].
+			spec 
+				project: 'WodenMath' with: [
+				spec
+					className: #ConfigurationOfWodenMath;
+					versionString: #'development';
+					repository: 'http://smalltalkhub.com/mc/ronsaldo/WodenMath/main' ].
 		spec package: #'Woden2-Core' with: [
-				spec requires: #('NeoJSON' 'AbstractGPU' 'Dastrel' 'Lowcode')].
+				spec requires: #('NeoJSON' 'AbstractGPU' 'Dastrel' 'Lowcode' 'WodenMath')].
 		spec group: 'default' with: #('Woden2-Core')
 	]
