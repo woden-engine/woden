@@ -95,11 +95,38 @@ initialize
 		B8G8R8X8_UNORM_SRGB"
 	) pairsDo: [ :formatName :spec |
 		formatId := (AGPUConstants bindingOf: (#AGPU_TEXTURE_FORMAT_ , formatName) asSymbol) value.
+		self assert: formatId isNotNil.
 		componentType := spec first.
 		components := spec second.
 		normalized := spec third.
 		size := spec fourth.
 		alignment := spec fifth.
+		type := self new
+			name: formatName asSymbol;
+			componentType: componentType;
+			components: components; 
+			format: formatId;
+			normalized: normalized;
+			rows: 1;
+			size: size;
+			alignment: alignment;
+			yourself.
+		FieldTypes at: type name put: type
+	].
+
+	#(
+		float 		(R32_FLOAT float 1 false 4 4)
+		float2 	(R32G32_FLOAT float 2 false 8 8)
+		float3 	(R32G32B32_FLOAT  float 3 false 16 16)
+		float4 	(R32G32B32A32_FLOAT  float 4 false 16 16)
+	) pairsDo: [ :formatName :spec |
+		formatId := (AGPUConstants bindingOf: (#AGPU_TEXTURE_FORMAT_ , spec first) asSymbol) value.
+		self assert: formatId isNotNil.
+		componentType := spec second.
+		components := spec third.
+		normalized := spec fourth.
+		size := spec fifth.
+		alignment := spec sixth.
 		type := self new
 			name: formatName asSymbol;
 			componentType: componentType;

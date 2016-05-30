@@ -1,3 +1,0 @@
-accessing
-min
-	^ center - halfExtent
