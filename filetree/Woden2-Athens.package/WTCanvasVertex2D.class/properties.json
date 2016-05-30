@@ -1,0 +1,16 @@
+{
+	"category" : "Woden2-Athens",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"#position &=> #WMVector2F",
+		"#texcoord &=> #WMVector2F",
+		"#color &=> #WMVector4F" ],
+	"name" : "WTCanvasVertex2D",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }

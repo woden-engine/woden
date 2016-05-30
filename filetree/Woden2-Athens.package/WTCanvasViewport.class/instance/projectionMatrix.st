@@ -1,0 +1,4 @@
+accessing
+projectionMatrix
+	<accessor>
+	^ projectionMatrix
