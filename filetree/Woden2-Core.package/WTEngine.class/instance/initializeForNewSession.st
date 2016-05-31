@@ -5,3 +5,4 @@ initializeForNewSession
 	self createFrameFences.
 	
 	session := Smalltalk session.
+	projectionInvertedY := device hasTopLeftNdcOrigin ~= 0.

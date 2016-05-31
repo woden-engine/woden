@@ -1,3 +1,3 @@
 resource building
 initialData
-	^ data isSessionPersistentExternalBuffer ifTrue: [ data isSessionPersistentExternalBuffer ] ifFalse: [ false ].
+	^ data isSessionPersistentExternalBuffer ifTrue: [ data data ] ifFalse: [ data ].

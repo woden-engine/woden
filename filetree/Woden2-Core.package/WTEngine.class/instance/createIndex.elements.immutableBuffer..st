@@ -7,4 +7,4 @@ createIndex: indexSize elements: elementCount immutableBuffer: data
 		binding: AGPU_ELEMENT_ARRAY_BUFFER;
 		mapping_flags: 0;
 		stride: indexSize.
-	^ (WTBufferResource for: self) description: desc; data: data; yourself
+	^ (WTBufferResource for: self) description: desc; data: data; checkSession; yourself

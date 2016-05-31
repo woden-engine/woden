@@ -1,0 +1,15 @@
+{
+	"category" : "Woden2-Core-Resources",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"vertexLayout",
+		"vertexBuffers" ],
+	"name" : "WTVertexBinding",
+	"pools" : [
+		 ],
+	"super" : "WTResourceWithSessionHandle",
+	"type" : "normal" }

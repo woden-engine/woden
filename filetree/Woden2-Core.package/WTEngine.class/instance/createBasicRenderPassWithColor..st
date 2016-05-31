@@ -20,4 +20,5 @@ createBasicRenderPassWithColor: aColor
 	^ (WTRenderPass for: self)
 		colorAttachments: colorAttachments;
 		depthStencilAttachment: depthStencilAttachment;
+		checkSession;
 		yourself

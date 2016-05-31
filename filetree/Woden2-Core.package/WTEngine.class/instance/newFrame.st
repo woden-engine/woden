@@ -4,4 +4,4 @@ newFrame
 	frameIndex := frameIndex + 1.
 	bufferingFrameIndex := (frameIndex % self frameBufferingCount) + 1.
 	self frameFence waitOnClient.
-	
+	^ bufferingFrameIndex

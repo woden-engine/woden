@@ -7,4 +7,4 @@ createVertex: vertexSize elements: elementCount immutableBuffer: data
 		binding: AGPU_ARRAY_BUFFER;
 		mapping_flags: 0;
 		stride: vertexSize.
-	^ (WTBufferResource for: self) description: desc; data: data; yourself
+	^ (WTBufferResource for: self) description: desc; data: data; checkSession; yourself

@@ -12,7 +12,8 @@
 		"graphicsQueue",
 		"frameIndex",
 		"frameFences",
-		"bufferingFrameIndex" ],
+		"bufferingFrameIndex",
+		"projectionInvertedY" ],
 	"name" : "WTEngine",
 	"pools" : [
 		"AGPUConstants" ],

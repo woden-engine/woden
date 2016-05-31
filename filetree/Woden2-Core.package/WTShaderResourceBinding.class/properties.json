@@ -1,0 +1,16 @@
+{
+	"category" : "Woden2-Core-Resources",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"shaderSignature",
+		"element",
+		"slots" ],
+	"name" : "WTShaderResourceBinding",
+	"pools" : [
+		 ],
+	"super" : "WTResourceWithSessionHandle",
+	"type" : "normal" }
