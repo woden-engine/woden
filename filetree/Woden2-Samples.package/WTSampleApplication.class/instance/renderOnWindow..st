@@ -1,24 +1,36 @@
 rendering
 renderOnWindow: aWindow
-	engine newFrame.
+	| frameIndex commandList commandAllocator viewportUniformBinding viewportPointer |
+	frameIndex := engine newFrame.
 	
-	commandList 
-		reset: commandAllocator initial_pipeline_state: pipelineState handle;
-		setShaderSignature: shaderSignature handle;
-		beginRenderPass: mainRenderPass framebuffer: aWindow currentFramebuffer bundle_content: false asBit.
+	self computeProjectionMatrixFor: aWindow.
+
+	viewportPointer := viewportUniformBuffer validPointer + ((WTCanvasViewport structureSize alignedTo: 256) * (frameIndex - 1)).
+	canvasViewport storeBytesIn: viewportPointer getHandle position: 1.
 	
-	commandList
-		setViewport: 0 y: 0 w: aWindow screenWidth h: aWindow screenHeight;
-		setScissor: 0 y: 0 w: aWindow screenWidth h: aWindow screenHeight;
+	Transcript show: frameIndex; cr.
+	
+	commandList := commandLists at: frameIndex.
+	commandAllocator := commandAllocators at: frameIndex.
+	commandAllocator reset.
+	
+	viewportUniformBinding := viewportUniformBindings at: frameIndex.
+	commandList withPipelineState: pipelineState rebuild: [ :builder |
+		builder
+			setShaderSignature: shaderSignature handle;
+			beginRenderPass: mainRenderPass validHandle framebuffer: aWindow currentFramebuffer bundle_content: false asBit;
+			
+			setViewport: 0 y: 0 w: aWindow screenWidth h: aWindow screenHeight;
+			setScissor: 0 y: 0 w: aWindow screenWidth h: aWindow screenHeight;
 		
-		useVertexBinding: vertexBinding;
-		useIndexBuffer: indexBuffer;
-		useShaderResources: viewportUniformBinding;
+			useVertexBinding: vertexBinding validHandle;
+			useIndexBuffer: indexBuffer validHandle;
+			useShaderResources: viewportUniformBinding validHandle;
 		
-		drawElements: 3 instance_count: 1 first_index: 0 base_vertex: 0 base_instance: 0;
+			drawElements: 3 instance_count: 1 first_index: 0 base_vertex: 0 base_instance: 0;
 		
-		endRenderPass;
-		close.
-		
+			endRenderPass.
+	].
+	
 	engine graphicsQueue
-		addCommandList: commandList
+		addCommandList: commandList validHandle
