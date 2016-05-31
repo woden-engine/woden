@@ -5,10 +5,12 @@ renderOnWindow: aWindow
 	
 	self computeProjectionMatrixFor: aWindow.
 
-	viewportPointer := viewportUniformBuffer validPointer + ((WTCanvasViewport structureSize alignedTo: 256) * (frameIndex - 1)).
-	canvasViewport storeBytesIn: viewportPointer getHandle position: 1.
+	viewportPointer := viewportUniformBuffer validPointer getHandle + ((WTCanvasViewport structureSize alignedTo: 256) * (frameIndex - 1)).
+	canvasViewport storeBytesIn: viewportPointer position: 1.
 	
-	Transcript show: frameIndex; cr.
+	"Transcript
+		show: frameIndex; cr;
+		show: viewportPointer printString; cr."
 	
 	commandList := commandLists at: frameIndex.
 	commandAllocator := commandAllocators at: frameIndex.
