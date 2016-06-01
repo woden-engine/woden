@@ -1,0 +1,15 @@
+{
+	"category" : "Woden2-Athens",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"vertices",
+		"indices" ],
+	"name" : "WTAthensBasicMeshPathBuilderBackend",
+	"pools" : [
+		 ],
+	"super" : "WTAthensPathBuilderBackend",
+	"type" : "normal" }

@@ -1,0 +1,3 @@
+accessing
+numberOfVertices
+	^ vertices size.
