@@ -1,3 +1,3 @@
 private
 toAbsolute: aPoint
-	^ aPoint + lastPoint
+	^ absolute ifTrue: [aPoint] ifFalse: [ aPoint + lastPoint ]

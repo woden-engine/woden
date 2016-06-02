@@ -3,7 +3,7 @@ exportWavefront: fileReference
 	fileReference writeStreamDo: [ :out |
 		out truncate.
 		vertices do: [ :v | 
-			out nextPutAll: 'v '; print: v x; space; print: v y; nextPutAll: ' 0.0'; lf.
+			out nextPutAll: 'v '; print: v x *0.1; space; print: v y *0.1; nextPutAll: ' 0.0'; lf.
 		].
 	
 		0 to: indices size // 3 - 1 do: [ :i |

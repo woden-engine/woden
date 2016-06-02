@@ -1,3 +1,3 @@
 defaults
 defaultFlattnessFactor
-	^ 1.01
+	^ 1.001

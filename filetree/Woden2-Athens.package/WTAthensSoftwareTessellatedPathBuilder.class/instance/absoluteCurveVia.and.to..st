@@ -20,7 +20,7 @@ absoluteCurveVia: cp1 and: cp2 to: aPoint
 		m6 := (m4 + m5) * 0.5.
 		self
 			absoluteCurveVia: m1 and: m4 to: m6;
-			absoluteCurveVia: m2 and: m5 to: end
+			absoluteCurveVia: m5 and: m3 to: end
 	] ifFalse: [
 		self absoluteLineTo: end.
 	]

@@ -1,3 +1,3 @@
 private
 toAbsolute: aPoint
-	^ aPoint asWMVector2F + lastPoint asWMVector2F
+	^ transformation transformPosition2: (absolute ifTrue: [aPoint asWMVector2F ] ifFalse: [aPoint asWMVector2F + lastPoint asWMVector2F])

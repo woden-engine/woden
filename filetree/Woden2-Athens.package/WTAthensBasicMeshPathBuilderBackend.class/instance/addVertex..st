@@ -1,3 +1,10 @@
 adding
 addVertex: aPoint
-	vertices add: aPoint asWMVector2F
+	self primitiveAddVertex: aPoint.
+	subpathVertexCount := subpathVertexCount + 1.
+	subpathVertexCount >= 3 ifTrue: [
+		self
+			addIndex: subpathFirstVertex;
+			addIndex: subpathFirstVertex + subpathVertexCount - 2;
+			addIndex: subpathFirstVertex + subpathVertexCount - 1
+	]

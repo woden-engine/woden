@@ -8,7 +8,7 @@
 	"instvars" : [
 		"#projectionMatrix &=> #WMMatrix4F",
 		"#viewMatrix &=> #WMMatrix4F" ],
-	"name" : "WTCanvasViewport",
+	"name" : "WTCanvasViewportUniformData",
 	"pools" : [
 		 ],
 	"super" : "NativeStructure",

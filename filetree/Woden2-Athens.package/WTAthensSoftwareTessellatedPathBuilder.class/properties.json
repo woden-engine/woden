@@ -9,10 +9,9 @@
 		"backend",
 		"baseIndex",
 		"closed",
-		"subpathStartPoint",
-		"subpathVertexCount",
 		"flattnessFactor",
-		"pixelThreshold" ],
+		"pixelThreshold",
+		"transformation" ],
 	"name" : "WTAthensSoftwareTessellatedPathBuilder",
 	"pools" : [
 		 ],

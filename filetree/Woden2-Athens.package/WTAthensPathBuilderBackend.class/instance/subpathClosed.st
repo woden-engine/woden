@@ -1,0 +1,3 @@
+commands
+subpathClosed
+	self subclassResponsibility
