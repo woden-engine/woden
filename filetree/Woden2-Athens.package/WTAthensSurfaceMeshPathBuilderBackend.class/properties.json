@@ -6,9 +6,8 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"vertices",
-		"indices" ],
-	"name" : "WTAthensBasicMeshPathBuilderBackend",
+		"surface" ],
+	"name" : "WTAthensSurfaceMeshPathBuilderBackend",
 	"pools" : [
 		 ],
 	"super" : "WTAthensMeshPathBuilderBackend",

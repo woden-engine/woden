@@ -1,0 +1,39 @@
+initialization
+initializeForNewSession
+	| device stateManager canvasViewportSize |
+	Transcript show: 'WTAthensSurface initializeForNewSession'; cr.
+	engine checkSession.
+	device := engine device.
+	stateManager := engine pipelineStateManager.
+	vertexLayout := stateManager vertexLayoutNamed: #CanvasVertex2D.
+	shaderSignature := stateManager shaderSignatureNamed: #GUI.
+	convexColorLinePipeline := stateManager pipelineStateNamed: #'canvas2d.polygon.convex.color.lines'.
+	convexColorTrianglePipeline := stateManager pipelineStateNamed: #'canvas2d.polygon.convex.color.triangles'.
+	
+	stencilNonZeroPipeline := stateManager pipelineStateNamed: #'canvas2d.polygon.stencil.non-zero'.
+	stencilEvenOddPipeline := stateManager pipelineStateNamed: #'canvas2d.polygon.stencil.even-odd'.
+	coverColorPipeline := stateManager pipelineStateNamed: #'canvas2d.polygon.cover.color'.
+	
+	textColorPipeline := stateManager pipelineStateNamed: #'canvas2d.text.color'.
+	textSdfColorPipeline := stateManager pipelineStateNamed: #'canvas2d.textsdf.color'.
+	
+	vertexBinding := device createVertexBinding: vertexLayout handle.
+	
+	synchronizationFence := device createFence.
+	commandQueue := engine graphicsQueue.
+	commandAllocator := device createCommandAllocator: AGPU_COMMAND_LIST_TYPE_DIRECT queue: commandQueue.
+	commandList := device createCommandList: AGPU_COMMAND_LIST_TYPE_DIRECT allocator: commandAllocator initial_pipeline_state: nil.
+	commandList close.
+	
+	canvasViewportSize := WTCanvasViewportUniformData structureSize alignedTo: 256.
+	viewportUniformBuffer := engine createStreamingUniformBuffer: canvasViewportSize * 3.
+	viewportUniformBinding := (engine createShaderSignature: shaderSignature resourceBinding: 0)
+			bind: 0 uniformBuffer: viewportUniformBuffer offset: 0 size: canvasViewportSize;
+			yourself.
+	
+	vertexBuffer := nil.
+	indexBuffer := nil.
+	self createFrameBuffer.
+	self createRenderPass.
+	self computeProjectionMatrix.
+	session := Smalltalk session.

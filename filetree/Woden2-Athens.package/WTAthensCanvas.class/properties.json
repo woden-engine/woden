@@ -6,10 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"vertices",
-		"indices" ],
-	"name" : "WTAthensBasicMeshPathBuilderBackend",
+		 ],
+	"name" : "WTAthensCanvas",
 	"pools" : [
 		 ],
-	"super" : "WTAthensMeshPathBuilderBackend",
+	"super" : "AthensCanvas",
 	"type" : "normal" }

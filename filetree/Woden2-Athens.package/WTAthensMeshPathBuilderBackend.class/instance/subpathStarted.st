@@ -1,4 +1,4 @@
-as yet unclassified
+commands
 subpathStarted
 	subpathFirstVertex := vertices size.
 	subpathVertexCount := 0.

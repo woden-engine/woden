@@ -3,6 +3,6 @@ createPath: aBlock
 	baseIndex := 0.
 	subpathVertexCount := 0.
 	closed := true.
-	backend ifNil: [ backend := WTAthensBasicMeshPathBuilderBackend new. ].
+	backend ifNil: [ backend := WTAthensMeshPathBuilderBackend new. ].
 	aBlock value: self.
 	^ backend.

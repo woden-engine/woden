@@ -6,10 +6,11 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"vertices",
-		"indices" ],
-	"name" : "WTAthensBasicMeshPathBuilderBackend",
+		"subpathFirstVertex",
+		"subpathVertexCount",
+		"boundingBox" ],
+	"name" : "WTAthensMeshPathBuilderBackend",
 	"pools" : [
 		 ],
-	"super" : "WTAthensMeshPathBuilderBackend",
+	"super" : "WTAthensPathBuilderBackend",
 	"type" : "normal" }

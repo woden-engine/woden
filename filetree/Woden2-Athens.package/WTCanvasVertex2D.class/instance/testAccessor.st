@@ -1,3 +1,3 @@
-as yet unclassified
+tests
 testAccessor
 	^ self color

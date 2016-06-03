@@ -1,3 +1,3 @@
-as yet unclassified
+commands
 subpathClosed
 	"Nothing to do"
