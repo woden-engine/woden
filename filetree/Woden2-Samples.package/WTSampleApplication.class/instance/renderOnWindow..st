@@ -5,7 +5,7 @@ renderOnWindow: aWindow
 	
 	self computeProjectionMatrixFor: aWindow.
 
-	viewportPointer := viewportUniformBuffer validPointer getHandle + ((WTCanvasViewport structureSize alignedTo: 256) * (frameIndex - 1)).
+	viewportPointer := viewportUniformBuffer validPointer getHandle + ((WTCanvasViewportUniformData structureSize alignedTo: 256) * (frameIndex - 1)).
 	canvasViewport storeBytesIn: viewportPointer position: 1.
 	
 	"Transcript

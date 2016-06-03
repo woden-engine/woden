@@ -1,7 +1,7 @@
 initialization
 initializeApplication
 	| canvasViewportSize |
-	canvasViewport := WTCanvasViewport new
+	canvasViewport := WTCanvasViewportUniformData new
 		viewMatrix: WMMatrix4F identity;
 		projectionMatrix: WMMatrix4F identity.
 	pipelineState := engine pipelineStateNamed: #'canvas2d.polygon.convex.color.triangles'.
@@ -12,7 +12,7 @@ initializeApplication
 	commandAllocators := engine frameBufferingCollect: [:frameId | engine createGraphicsDirectCommandListAllocator].
 	commandLists := commandAllocators collect: #createListNow.
 	
-	canvasViewportSize := WTCanvasViewport structureSize alignedTo: 256.
+	canvasViewportSize := WTCanvasViewportUniformData structureSize alignedTo: 256.
 	viewportUniformBuffer := engine createStreamingUniformBuffer: canvasViewportSize * 3.
 	
 	viewportUniformBindings := engine frameBufferingCollect: [ :frame |
@@ -25,17 +25,17 @@ initializeApplication
 		"Bottom left"
 		-1.0 -1.0
 		0.0 0.0
-		1.0 0.0 0.0 1.0
+		0.0 1.0 0.0 1.0
 		
 		"Bottom right"
 		1.0 -1.0
 		0.0 0.0
-		0.0 0.0 1.0 1.0
+		1.0 0.0 0.0 1.0
 		
 		"Top"
 		0.0 1.0
 		0.0 0.0
-		0.0 1.0 0.0 1.0
+		0.0 0.0 1.0 1.0
 	) asFloatArray.
 	
 	indexBuffer := engine createIndex: 4 elements: 3 immutableBuffer: #(
@@ -44,5 +44,3 @@ initializeApplication
 	
 	vertexBinding := engine createVertexBindingForLayout: vertexLayout.
 	vertexBinding vertexBuffers: { vertexBuffer }.
-
-	
