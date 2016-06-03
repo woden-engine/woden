@@ -35,6 +35,7 @@ initialize
 	PipelineStateObjectAttributeParser := Dictionary newFromPairs: { 
 		'abstract' . #setPipeline:dummyAttribute: .
 		'inherit-from' . #setPipeline:dummyAttribute: .
+		'mixin-variants' . #setPipeline:dummyAttribute: .
 		'shader-signature' . #setPipeline:shaderSignatureNamed: .
 		'render-target-count' . #setPipeline:renderTargetCount: .
 		'render-target-formats' . #setPipeline:renderTargetFormats: .
