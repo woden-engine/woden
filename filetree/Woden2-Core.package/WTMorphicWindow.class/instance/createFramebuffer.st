@@ -13,7 +13,7 @@ createFramebuffer
 		height: screenHeight;
 		depthOrArraySize: 1;
 		miplevels: 1;
-		format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM;
+		format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB;
 		flags: AGPU_TEXTURE_FLAG_RENDER_TARGET | AGPU_TEXTURE_FLAG_READED_BACK;
 		sample_count: 1.
 	mainColorbuffer := device createTexture: colorBufferDesc.

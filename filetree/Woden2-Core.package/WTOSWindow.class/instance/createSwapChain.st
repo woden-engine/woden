@@ -15,7 +15,7 @@ createSwapChain
 	screenHeight := windowExtent y.
 	swapChainInfo := AGPUSwapChainCreateInfo new
 		buffer_count: engine frameBufferingCount;
-		colorbuffer_format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM;
+		colorbuffer_format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB;
 		depth_stencil_format: depthStencilFormat;
 		width: screenWidth;
 		height: screenHeight;
