@@ -7,8 +7,8 @@ initializeForNewSession
 	stateManager := engine pipelineStateManager.
 	vertexLayout := stateManager vertexLayoutNamed: #CanvasVertex2D.
 	shaderSignature := stateManager shaderSignatureNamed: #GUI.
-	convexColorLinePipeline := stateManager pipelineStateNamed: #'canvas2d.polygon.convex.color.lines'.
-	convexColorTrianglePipeline := stateManager pipelineStateNamed: #'canvas2d.polygon.convex.color.triangles'.
+	convexColorLinePipeline := self loadStateWithBlendVariants: #'canvas2d.polygon.convex.color.lines'.
+	convexColorTrianglePipeline := self loadStateWithBlendVariants: #'canvas2d.polygon.convex.color.triangles'.
 	
 	stencilNonZeroPipeline := stateManager pipelineStateNamed: #'canvas2d.polygon.stencil.non-zero'.
 	stencilEvenOddPipeline := stateManager pipelineStateNamed: #'canvas2d.polygon.stencil.even-odd'.
