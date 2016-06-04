@@ -4,7 +4,7 @@ initializeApplication
 	canvasViewport := WTCanvasViewportUniformData new
 		viewMatrix: WMMatrix4F identity;
 		projectionMatrix: WMMatrix4F identity.
-	pipelineState := engine pipelineStateNamed: #'canvas2d.polygon.convex.color.triangles'.
+	pipelineState := engine pipelineStateNamed: #'canvas2d.polygon.convex.color.triangles.blend.alpha-over'.
 	vertexLayout := engine pipelineStateManager vertexLayoutNamed: #CanvasVertex2D.
 	shaderSignature := engine pipelineStateManager shaderSignatureNamed: #GUI.
 	
