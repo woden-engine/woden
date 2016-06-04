@@ -1,7 +1,6 @@
 initialization
 initializeForNewSession
 	| device stateManager canvasViewportSize |
-	Transcript show: 'WTAthensSurface initializeForNewSession'; cr.
 	engine checkSession.
 	device := engine device.
 	stateManager := engine pipelineStateManager.
@@ -12,7 +11,7 @@ initializeForNewSession
 	
 	stencilNonZeroPipeline := stateManager pipelineStateNamed: #'canvas2d.polygon.stencil.non-zero'.
 	stencilEvenOddPipeline := stateManager pipelineStateNamed: #'canvas2d.polygon.stencil.even-odd'.
-	coverColorPipeline := stateManager pipelineStateNamed: #'canvas2d.polygon.cover.color'.
+	coverColorPipeline := self loadStateWithBlendVariants: #'canvas2d.polygon.cover.color'.
 	
 	textColorPipeline := stateManager pipelineStateNamed: #'canvas2d.text.color'.
 	textSdfColorPipeline := stateManager pipelineStateNamed: #'canvas2d.textsdf.color'.

@@ -1,4 +1,4 @@
 commands
 subpathStarted
-	subpathFirstVertex := vertices size.
+	subpathFirstVertex := self numberOfVertices.
 	subpathVertexCount := 0.

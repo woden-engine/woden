@@ -1,6 +1,7 @@
 private
 resetDrawState
 	deferredDrawCommands removeAll.
+	pathTransform loadIdentity.
 	vertices removeAll.
 	indices removeAll.
 	startIndex := 0.

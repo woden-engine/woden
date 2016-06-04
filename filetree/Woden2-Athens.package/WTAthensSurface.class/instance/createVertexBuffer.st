@@ -1,7 +1,6 @@
 private
 createVertexBuffer
 	| pointerSize vertexBufferHandles |
-	Transcript show: 'create vertex buffer'; cr.
 	vertexBufferCapacity := indices capacity.
 	vertexBuffer := engine createVertex: WTCanvasVertex2D structureSize streamingElements: vertexBufferCapacity.
 	

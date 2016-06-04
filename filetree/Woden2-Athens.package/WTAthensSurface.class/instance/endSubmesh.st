@@ -5,8 +5,7 @@ endSubmesh
 	count := indices size - startIndex.
 	count = 0 ifTrue: [ ^ self ].
 
-	self deferDrawCommand: [ 
-		Transcript show: 'Draw elements ', count printString , ' ', start printString ; cr.
+	self deferDrawCommand: [
 		commandList drawElements: count instance_count: 1 first_index: start base_vertex: 0 base_instance: 0
 	].
 

@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Athens",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"matrix" ],
+	"name" : "WTAthensTransform",
+	"pools" : [
+		 ],
+	"super" : "AthensTransform",
+	"type" : "normal" }

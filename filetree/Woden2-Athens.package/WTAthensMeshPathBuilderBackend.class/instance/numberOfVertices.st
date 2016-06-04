@@ -1,3 +1,3 @@
 accessing
 numberOfVertices
-	^ vertices size.
+	self subclassResponsibility

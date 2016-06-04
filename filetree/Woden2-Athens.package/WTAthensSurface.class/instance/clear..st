@@ -5,7 +5,7 @@ clear: clearColor
 	w := extent x asFloat.
 	h := extent y asFloat.
 	self
-		beginShape: AGPU_TRIANGLES pipeline: (convexColorTrianglePipeline at: #replace);
+		beginShape: AGPU_TRIANGLES pipeline: (convexColorTrianglePipeline at: #source);
 		beginWithNewBaseVertex;
 		addVertex: (WMVector2F x: 0.0 y: 0.0) color: color;
 		addVertex: (WMVector2F x: w y: 0.0) color: color;

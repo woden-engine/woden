@@ -17,6 +17,7 @@ dispatchRenderingCommands
 			beginRenderPass: renderPass framebuffer: frameBuffer bundle_content: false asBit;	
 			setViewport: 0 y: 0 w: w h: h;
 			setScissor: 0 y: 0 w: w h: h;
+			setStencilReference: 0;
 			
 			useVertexBinding: vertexBinding;
 			useIndexBuffer: indexBuffer validHandle;
