@@ -3,7 +3,7 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		 ],
+		"TracingEnabled" ],
 	"commentStamp" : "",
 	"instvars" : [
 		"session",
