@@ -1,4 +1,4 @@
-as yet unclassified
+rendering dispatch
 fillPath: aPath withSolidColor: aColor
 	currentColor := aColor asWMVector4F.
 	self

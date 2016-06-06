@@ -21,7 +21,8 @@ dispatchRenderingCommands
 			
 			useVertexBinding: vertexBinding;
 			useIndexBuffer: indexBuffer validHandle;
-			useShaderResources: viewportUniformBinding validHandle.
+			useShaderResources: viewportUniformBinding validHandle;
+			useShaderResources: samplerBindings validHandle.
 		
 		deferredDrawCommands do: #value.
 	

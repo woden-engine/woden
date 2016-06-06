@@ -1,3 +1,3 @@
-as yet unclassified
+paints
 createStrokePaintFor: aPaint
 	^ WTAthensStrokePaint new fillPaint: aPaint

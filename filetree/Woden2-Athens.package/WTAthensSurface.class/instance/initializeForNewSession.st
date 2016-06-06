@@ -32,6 +32,7 @@ initializeForNewSession
 	
 	vertexBuffer := nil.
 	indexBuffer := nil.
+	self createSamplers.
 	self createFrameBuffer.
 	self createRenderPass.
 	self computeProjectionMatrix.

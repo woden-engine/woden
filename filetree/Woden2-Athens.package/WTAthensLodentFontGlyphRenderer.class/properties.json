@@ -1,0 +1,15 @@
+{
+	"category" : "Woden2-Athens",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"surface",
+		"font" ],
+	"name" : "WTAthensLodentFontGlyphRenderer",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

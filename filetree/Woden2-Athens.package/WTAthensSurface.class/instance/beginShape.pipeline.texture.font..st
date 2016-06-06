@@ -13,12 +13,12 @@ beginShape: newShapeType pipeline: newPipelineState texture: newTexture font: ne
 	].
 
 	(newTexture ~= currentTexture and: [newTexture isNotNil ]) ifTrue: [
-		self deferDrawCommand: [ commandList useShaderResources: newTexture ].
+		self deferDrawCommand: [ commandList useShaderResources: newTexture validHandle ].
 		currentTexture := newTexture.
 	].
 
 	(newFont ~= currentFont and: [newFont isNotNil ]) ifTrue: [
-		self deferDrawCommand: [ commandList useShaderResources: newTexture ].
+		self deferDrawCommand: [ commandList useShaderResources: newFont validHandle ].
 		currentFont := newFont.
 	].
  
