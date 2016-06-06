@@ -35,5 +35,9 @@ baseline: spec
 					repository: 'http://smalltalkhub.com/mc/ronsaldo/WodenMath/main' ].
 		spec package: #'Woden2-Core' with: [
 				spec requires: #('NeoJSON' 'AbstractGPU' 'Dastrel' 'Lowcode' 'WodenMath')].
-		spec group: 'default' with: #('Woden2-Core')
+		spec package: #'Woden2-Athens' with: [
+				spec requires: #('Woden2-Core')].
+		spec package: #'Woden2-Samples' with: [
+				spec requires: #('Woden2-Core' 'Woden2-Athens')].
+		spec group: 'default' with: #('Woden2-Core' 'Woden2-Athens' 'Woden2-Samples')
 	]
