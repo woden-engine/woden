@@ -1,0 +1,15 @@
+{
+	"category" : "Woden2-Core-Resources",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"description",
+		"data" ],
+	"name" : "WTTexture",
+	"pools" : [
+		 ],
+	"super" : "WTResourceWithSessionHandle",
+	"type" : "normal" }

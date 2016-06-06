@@ -1,0 +1,4 @@
+accessing
+numberOfGlyphs
+	<accessor>
+	^ numberOfGlyphs

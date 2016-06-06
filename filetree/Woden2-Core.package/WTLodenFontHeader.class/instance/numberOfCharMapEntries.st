@@ -1,0 +1,4 @@
+accessing
+numberOfCharMapEntries
+	<accessor>
+	^ numberOfCharMapEntries

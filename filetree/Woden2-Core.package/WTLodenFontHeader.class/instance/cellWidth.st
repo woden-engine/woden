@@ -1,0 +1,4 @@
+accessing
+cellWidth
+	<accessor>
+	^ cellWidth

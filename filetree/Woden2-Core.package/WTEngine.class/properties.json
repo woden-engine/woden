@@ -13,7 +13,8 @@
 		"frameIndex",
 		"frameFences",
 		"bufferingFrameIndex",
-		"projectionInvertedY" ],
+		"projectionInvertedY",
+		"fontManager" ],
 	"name" : "WTEngine",
 	"pools" : [
 		"AGPUConstants" ],

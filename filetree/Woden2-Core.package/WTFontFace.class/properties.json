@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Core-Resources-Font",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"name" ],
+	"name" : "WTFontFace",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

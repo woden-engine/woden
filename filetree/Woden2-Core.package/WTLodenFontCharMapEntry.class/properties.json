@@ -1,0 +1,15 @@
+{
+	"category" : "Woden2-Core-Resources-Font",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"#character &=> #int32",
+		"#glyph &=> #int32" ],
+	"name" : "WTLodenFontCharMapEntry",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }

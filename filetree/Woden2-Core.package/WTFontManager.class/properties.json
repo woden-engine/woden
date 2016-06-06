@@ -1,0 +1,20 @@
+{
+	"category" : "Woden2-Core-Engine",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"LdfSignedDistanceField",
+		"LodenFontSignature" ],
+	"commentStamp" : "",
+	"instvars" : [
+		"engine",
+		"default",
+		"fonts",
+		"defaultMono",
+		"defaultSans",
+		"defaultSerif" ],
+	"name" : "WTFontManager",
+	"pools" : [
+		"AGPUConstants" ],
+	"super" : "Object",
+	"type" : "normal" }

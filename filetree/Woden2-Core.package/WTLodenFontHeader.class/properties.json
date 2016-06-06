@@ -1,0 +1,20 @@
+{
+	"category" : "Woden2-Core-Resources-Font",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"#numberOfGlyphs &=> #uint32",
+		"#numberOfCharMapEntries &=> #uint32",
+		"#cellWidth &=> #uint32",
+		"#cellHeight &=> #uint32",
+		"#cellMargin &=> #uint32",
+		"#pointSize &=> #float",
+		"#flags &=> #uint32" ],
+	"name" : "WTLodenFontHeader",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }

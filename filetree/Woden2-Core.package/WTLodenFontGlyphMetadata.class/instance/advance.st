@@ -1,0 +1,4 @@
+accessing
+advance
+	<accessor>
+	^ advance
