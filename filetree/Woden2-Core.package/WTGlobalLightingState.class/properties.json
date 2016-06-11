@@ -1,0 +1,19 @@
+{
+	"category" : "Woden2-Core-Rendering",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"extradependencies" : "#(#WTLightSourceData #WMVector3F #WMVector4F)",
+	"instvars" : [
+		"#groundLighting &=> #WMVector4F",
+		"#skyLighting &=> #WMVector4F",
+		"#sunDirection &=> #WMVector3F",
+		"#numberOfLights &=> #int",
+		"#lightSources &=> #(#WTLightSourceData array: 16)" ],
+	"name" : "WTGlobalLightingState",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }

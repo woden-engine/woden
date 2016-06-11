@@ -6,6 +6,8 @@
 		"BlendingFactorNameMap",
 		"BlendingOperationNameMap",
 		"CompareFunctionNameMap",
+		"CullModeNameMap",
+		"FaceWindingNameMap",
 		"PipelineStateObjectAttributeParser",
 		"PrimitiveTopologyNameMap",
 		"ShaderBindingTypeMap",

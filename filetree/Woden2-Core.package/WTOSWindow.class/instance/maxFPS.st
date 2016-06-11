@@ -1,3 +1,3 @@
 factory
 maxFPS
-	^ 60
+	^ 60.0

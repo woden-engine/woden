@@ -1,0 +1,16 @@
+{
+	"category" : "Woden2-Core-Rendering",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"extradependencies" : "#(#WMVector4F)",
+	"instvars" : [
+		"#positionOrDirection &=> #WMVector4F",
+		"#intensity &=> #WMVector4F" ],
+	"name" : "WTLightSourceData",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }

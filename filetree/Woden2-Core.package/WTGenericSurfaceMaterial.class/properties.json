@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Core-Material",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"modePipelines" ],
+	"name" : "WTGenericSurfaceMaterial",
+	"pools" : [
+		 ],
+	"super" : "WTMaterial",
+	"type" : "normal" }

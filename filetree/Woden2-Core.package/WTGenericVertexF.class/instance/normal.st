@@ -1,0 +1,4 @@
+accessing
+normal
+	<accessor>
+	^ normal

@@ -11,6 +11,7 @@
 		"session" ],
 	"name" : "WTApplication",
 	"pools" : [
-		"AGPUConstants" ],
-	"super" : "Object",
+		"AGPUConstants",
+		"OSKeySymbols" ],
+	"super" : "OSWindowEventVisitor",
 	"type" : "normal" }

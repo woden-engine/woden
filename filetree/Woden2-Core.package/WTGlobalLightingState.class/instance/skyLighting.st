@@ -1,0 +1,4 @@
+accessing
+skyLighting
+	<accessor>
+	^ skyLighting

@@ -14,7 +14,10 @@
 		"frameFences",
 		"bufferingFrameIndex",
 		"projectionInvertedY",
-		"fontManager" ],
+		"fontManager",
+		"defaultMaterial",
+		"preferredDepthFormat",
+		"preferredDepthStencilFormat" ],
 	"name" : "WTEngine",
 	"pools" : [
 		"AGPUConstants" ],

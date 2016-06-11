@@ -1,0 +1,4 @@
+accessing
+inverseProjectionMatrix
+	<accessor>
+	^ inverseProjectionMatrix

@@ -1,0 +1,16 @@
+{
+	"category" : "Woden2-Core-Mesh",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"extradependencies" : "#(#WMMatrix4F)",
+	"instvars" : [
+		"#projectionMatrix &=> #WMMatrix4F",
+		"#inverseProjectionMatrix &=> #WMMatrix4F" ],
+	"name" : "WTCameraState",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }

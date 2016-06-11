@@ -37,9 +37,12 @@ initialize
 		'inherit-from' . #setPipeline:dummyAttribute: .
 		'mixin-variants' . #setPipeline:dummyAttribute: .
 		'shader-signature' . #setPipeline:shaderSignatureNamed: .
+		'front-face' . #setPipeline:frontFace: .
+		'cull-mode' . #setPipeline:cullMode: .
 		'render-target-count' . #setPipeline:renderTargetCount: .
 		'render-target-formats' . #setPipeline:renderTargetFormats: .
 		'depth-stencil-format' . #setPipeline:depthStencilFormat: .
+		'depth-state' . #setPipeline:depthState: .
 		'vertex-layout' . #setPipeline:vertexLayoutNamed: .
 		'primitive-type' . #setPipeline:primitiveTypeNamed: .
 		'shader' . #setPipeline:shaderNamed: .
@@ -107,5 +110,17 @@ initialize
 		#'increase-wrap' . AGPU_INCREASE_WRAP.
 		#decrease . AGPU_DECREASE.
 		#'decrease-wrap' . AGPU_DECREASE_WRAP.
+	}.
+	
+	CullModeNameMap := Dictionary newFromPairs: {
+		#none . AGPU_CULL_MODE_NONE.
+		#front . AGPU_CULL_MODE_FRONT.
+		#back . AGPU_CULL_MODE_BACK.
+		#'front-and-back' . AGPU_CULL_MODE_FRONT_AND_BACK.
+	}.
+	
+	FaceWindingNameMap := Dictionary newFromPairs: {
+		#clockwise . AGPU_CLOCKWISE .
+		#'counter-clockwise' . AGPU_COUNTER_CLOCKWISE .
 	}.
 	

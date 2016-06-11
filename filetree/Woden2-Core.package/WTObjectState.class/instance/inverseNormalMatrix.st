@@ -1,0 +1,4 @@
+accessing
+inverseNormalMatrix
+	<accessor>
+	^ inverseNormalMatrix

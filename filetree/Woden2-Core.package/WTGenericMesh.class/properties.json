@@ -1,0 +1,16 @@
+{
+	"category" : "Woden2-Core-Mesh",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"vertexBinding",
+		"indexBuffer",
+		"submeshes" ],
+	"name" : "WTGenericMesh",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

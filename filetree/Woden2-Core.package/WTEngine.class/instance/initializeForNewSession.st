@@ -1,9 +1,12 @@
 initialization
 initializeForNewSession
-	self createDevice.
-	self createPipelineStateManager.
-	self createFontManager.
-	self createFrameFences.
-	
 	session := Smalltalk session.
+	self
+		createDevice;
+		queryDeviceCapabilities;
+		createPipelineStateManager;
+		createFontManager;
+		createFrameFences.
+	
+	
 	projectionInvertedY := device hasTopLeftNdcOrigin ~= 0.

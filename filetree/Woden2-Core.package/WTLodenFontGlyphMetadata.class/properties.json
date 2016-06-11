@@ -5,6 +5,7 @@
 	"classvars" : [
 		 ],
 	"commentStamp" : "",
+	"extradependencies" : "#(#WMBox2DF #WMVector2F)",
 	"instvars" : [
 		"#box &=> #WMBox2DF",
 		"#advance &=> #WMVector2F",

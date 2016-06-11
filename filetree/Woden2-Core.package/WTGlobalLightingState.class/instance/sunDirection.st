@@ -1,0 +1,4 @@
+accessing
+sunDirection
+	<accessor>
+	^ sunDirection

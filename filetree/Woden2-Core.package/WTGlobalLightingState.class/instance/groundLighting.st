@@ -1,0 +1,4 @@
+accessing
+groundLighting
+	<accessor>
+	^ groundLighting

@@ -1,0 +1,4 @@
+accessing
+modelMatrix
+	<accessor>
+	^ modelMatrix

@@ -1,0 +1,4 @@
+accessing
+bitangent
+	<accessor>
+	^ bitangent
