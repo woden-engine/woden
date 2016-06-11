@@ -1,22 +1,21 @@
 rendering
 renderOnWindow: aWindow
-	| frameIndex commandList commandAllocator viewportUniformBinding viewportPointer |
+	| frameIndex commandList commandAllocator cameraUniformBinding objectStateBinding globalLightingStateBinding |
 	frameIndex := engine newFrame.
 	
-	self computeProjectionMatrixFor: aWindow.
-
-	viewportPointer := viewportUniformBuffer validPointer getHandle + ((WTCanvasViewportUniformData structureSize alignedTo: 256) * (frameIndex - 1)).
-	canvasViewport storeBytesIn: viewportPointer position: 1.
-	
-	"Transcript
-		show: frameIndex; cr;
-		show: viewportPointer printString; cr."
+	self
+		updateProjectionMatrixFor: aWindow;
+		updateObjectStates;
+		updateLightingState.
 	
 	commandList := commandLists at: frameIndex.
 	commandAllocator := commandAllocators at: frameIndex.
 	commandAllocator reset.
 	
-	viewportUniformBinding := viewportUniformBindings at: frameIndex.
+	cameraUniformBinding := cameraUniformBindings at: frameIndex.
+	objectStateBinding := objectStateBindings at: frameIndex.
+	globalLightingStateBinding := globalLightingStateBindings at: frameIndex.
+	
 	commandList withPipelineState: pipelineState rebuild: [ :builder |
 		builder
 			setShaderSignature: shaderSignature handle;
@@ -24,13 +23,13 @@ renderOnWindow: aWindow
 			
 			setViewport: 0 y: 0 w: aWindow screenWidth h: aWindow screenHeight;
 			setScissor: 0 y: 0 w: aWindow screenWidth h: aWindow screenHeight;
-		
-			useVertexBinding: vertexBinding validHandle;
-			useIndexBuffer: indexBuffer validHandle;
-			useShaderResources: viewportUniformBinding validHandle;
-		
-			drawElements: 3 instance_count: 1 first_index: 0 base_vertex: 0 base_instance: 0;
-		
+			
+			useShaderResources: cameraUniformBinding validHandle;
+			useShaderResources: objectStateBinding validHandle;
+			useShaderResources: globalLightingStateBinding validHandle.
+			
+		mesh renderOn: builder mode: #forward.
+		builder		
 			endRenderPass.
 	].
 	
