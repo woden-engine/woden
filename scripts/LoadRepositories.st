@@ -1,12 +1,15 @@
 FileStream stdout nextPutAll: 'Loading FileTree'; lf.
 
-"Use the modified version of monticello"
-'scripts/MonticelloMethodSorting.cs' asFileReference fileIn.
-
 Metacello new
 	baseline: 'FileTree';
 	repository: 'github://dalehenrich/filetree:issue_161/repository';
 	load: 'MonticelloFileTree-Git'.
+
+"Use the modified version of monticello"
+'scripts/MonticelloMethodSorting.cs' asFileReference fileIn.
+
+"Load the runtime changes that are required for Lowcode"
+'scripts/LowcodeRuntimeChanges.cs' asFileReference fileIn.
 
 "Load Abstract GPU bindings"
 "FileStream stdout nextPutAll: 'Loading Woden2'; lf.
