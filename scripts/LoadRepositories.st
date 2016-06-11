@@ -1,5 +1,8 @@
 FileStream stdout nextPutAll: 'Loading FileTree'; lf.
 
+"Use the modified version of monticello"
+'scripts/MonticelloMethodSorting.cs' asFileReference fileIn.
+
 Metacello new
 	baseline: 'FileTree';
 	repository: 'github://dalehenrich/filetree:issue_161/repository';
