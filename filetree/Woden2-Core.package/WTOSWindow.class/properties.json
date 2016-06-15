@@ -14,7 +14,8 @@
 		"screenWidth",
 		"screenHeight",
 		"swapChain",
-		"currentFramebuffer" ],
+		"currentFramebuffer",
+		"lastTime" ],
 	"name" : "WTOSWindow",
 	"pools" : [
 		"AGPUConstants" ],

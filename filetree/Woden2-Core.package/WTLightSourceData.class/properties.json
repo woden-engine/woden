@@ -5,10 +5,15 @@
 	"classvars" : [
 		 ],
 	"commentStamp" : "",
-	"extradependencies" : "#(#WMVector4F)",
+	"extradependencies" : "#(#WMVector3F #WMVector4F)",
 	"instvars" : [
 		"#positionOrDirection &=> #WMVector4F",
-		"#intensity &=> #WMVector4F" ],
+		"#intensity &=> #WMVector4F",
+		"#spotDirection &=> #WMVector3F",
+		"#innerCosCutoff &=> #float",
+		"#outerCosCutoff &=> #float",
+		"#spotExponent &=> #float",
+		"#radius &=> #float" ],
 	"name" : "WTLightSourceData",
 	"pools" : [
 		 ],

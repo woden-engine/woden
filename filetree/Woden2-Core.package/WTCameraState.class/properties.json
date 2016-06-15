@@ -7,8 +7,7 @@
 	"commentStamp" : "",
 	"extradependencies" : "#(#WMMatrix4F)",
 	"instvars" : [
-		"#projectionMatrix &=> #WMMatrix4F",
-		"#inverseProjectionMatrix &=> #WMMatrix4F" ],
+		"#projectionMatrix &=> #WMMatrix4F" ],
 	"name" : "WTCameraState",
 	"pools" : [
 		 ],

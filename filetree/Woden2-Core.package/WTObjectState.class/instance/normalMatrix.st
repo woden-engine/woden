@@ -1,4 +1,0 @@
-accessing
-normalMatrix
-	<accessor>
-	^ normalMatrix

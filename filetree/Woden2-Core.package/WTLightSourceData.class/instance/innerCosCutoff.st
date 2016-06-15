@@ -1,0 +1,4 @@
+accessing
+innerCosCutoff
+	<accessor>
+	^ innerCosCutoff

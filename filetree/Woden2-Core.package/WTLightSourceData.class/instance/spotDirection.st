@@ -1,0 +1,4 @@
+accessing
+spotDirection
+	<accessor>
+	^ spotDirection

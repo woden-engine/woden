@@ -1,4 +1,0 @@
-accessing
-inverseModelMatrix
-	<accessor>
-	^ inverseModelMatrix

@@ -1,0 +1,4 @@
+accessing
+spotExponent
+	<accessor>
+	^ spotExponent
