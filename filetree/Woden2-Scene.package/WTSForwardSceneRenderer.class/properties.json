@@ -1,0 +1,28 @@
+{
+	"category" : "Woden2-Scene-Renderer",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "RonieSalgado 6/15/2016 01:46",
+	"instvars" : [
+		"engine",
+		"scene",
+		"renderPass",
+		"commandAllocators",
+		"commandLists",
+		"globalLightingStateBuffer",
+		"globalLightingStateBindings",
+		"cameraUniformBuffer",
+		"cameraUniformBindings",
+		"visibleObjects",
+		"currentCamera",
+		"currentFrameIndex",
+		"shaderSignature",
+		"visibleLightSources",
+		"lightSources" ],
+	"name" : "WTSForwardSceneRenderer",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

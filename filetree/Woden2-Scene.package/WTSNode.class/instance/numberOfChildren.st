@@ -1,0 +1,3 @@
+accessing
+numberOfChildren
+	^ children size

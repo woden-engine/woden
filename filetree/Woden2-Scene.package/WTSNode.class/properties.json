@@ -1,0 +1,18 @@
+{
+	"category" : "Woden2-Scene-Graph",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "RonieSalgado 6/13/2016 14:33",
+	"instvars" : [
+		"scene",
+		"transform",
+		"children",
+		"visible",
+		"lastUpdatedGpuFrame" ],
+	"name" : "WTSNode",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }
