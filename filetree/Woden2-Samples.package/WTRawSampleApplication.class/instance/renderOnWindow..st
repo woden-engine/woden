@@ -3,6 +3,11 @@ renderOnWindow: aWindow
 	| frameIndex commandList commandAllocator cameraUniformBinding objectStateBinding globalLightingStateBinding |
 	frameIndex := engine newFrame.
 	
+	newFrameRenderTime := DateAndTime millisecondClockValue * 0.001.
+	lastFrameRenderTime ifNil: [ lastFrameRenderTime := newFrameRenderTime ].
+	renderTimeLog add: (newFrameRenderTime - lastFrameRenderTime) * 1000.
+	lastFrameRenderTime := newFrameRenderTime.
+	
 	self
 		updateProjectionMatrixFor: aWindow;
 		updateObjectStates;

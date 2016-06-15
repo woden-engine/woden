@@ -25,9 +25,15 @@
 		"globalLightingState",
 		"globalLightingStateBuffer",
 		"globalLightingStateBindings",
-		"lightSources" ],
-	"name" : "WTSampleApplication",
+		"lightSources",
+		"cameraAngle",
+		"cameraAngularVelocity",
+		"cameraAngularSpeed",
+		"newFrameRenderTime",
+		"lastFrameRenderTime",
+		"renderTimeLog" ],
+	"name" : "WTRawSampleApplication",
 	"pools" : [
 		 ],
-	"super" : "WTApplication",
+	"super" : "WTAnimatedApplication",
 	"type" : "normal" }

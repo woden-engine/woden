@@ -1,0 +1,21 @@
+{
+	"category" : "Woden2-Samples",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"cameraAngle",
+		"cameraAngularVelocity",
+		"cameraAngularSpeed",
+		"camera",
+		"cameraVelocity",
+		"cameraSpeed",
+		"scene",
+		"sceneRenderer" ],
+	"name" : "WTFPSSampleApplication",
+	"pools" : [
+		 ],
+	"super" : "WTAnimatedApplication",
+	"type" : "normal" }
