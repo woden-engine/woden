@@ -7,7 +7,7 @@
 	"commentStamp" : "<historical>",
 	"instvars" : [
 		 ],
-	"name" : "WTVector2Test",
+	"name" : "WTSNodeTest",
 	"pools" : [
 		 ],
 	"super" : "TestCase",
