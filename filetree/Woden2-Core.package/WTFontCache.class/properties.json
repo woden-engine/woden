@@ -13,7 +13,7 @@
 		"defaultMono",
 		"defaultSans",
 		"defaultSerif" ],
-	"name" : "WTFontManager",
+	"name" : "WTFontCache",
 	"pools" : [
 		"AGPUConstants" ],
 	"super" : "Object",

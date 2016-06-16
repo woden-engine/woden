@@ -1,7 +1,7 @@
 as yet unclassified
 loadLodenFontFaceNamed: faceName fromFile: fileReference
 	| header glyphMetaData charMapData fontFace characterMap textureImageName textureImage textureFormat shaderSignature textureBinding texture |
-	shaderSignature := engine pipelineStateManager shaderSignatureNamed: #GUI.
+	shaderSignature := engine pipelineStateCache shaderSignatureNamed: #GUI.
 	textureImageName := (fileReference fullPath withExtension: 'png') asFileReference.
 	textureImage := PNGReadWriter formFromFileNamed: textureImageName.
 	fontFace := WTLodenFontFace new.

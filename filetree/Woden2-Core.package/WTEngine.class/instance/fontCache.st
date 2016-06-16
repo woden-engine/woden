@@ -1,4 +1,4 @@
 accessing
-fontManager
+fontCache
 	self checkSession.
-	^ fontManager
+	^ fontCache

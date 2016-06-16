@@ -6,7 +6,13 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"modePipelines" ],
+		"modePipelines",
+		"albedoTexture",
+		"normalTexture",
+		"metalTexture",
+		"albedoColor",
+		"resourceBindingsAreUpdated",
+		"resourceBinding" ],
 	"name" : "WTGenericSurfaceMaterial",
 	"pools" : [
 		 ],

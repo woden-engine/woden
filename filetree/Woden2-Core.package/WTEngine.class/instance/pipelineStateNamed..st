@@ -1,3 +1,3 @@
 accessing
 pipelineStateNamed: pipelineStateName
-	^ pipelineStateManager pipelineStateNamed: pipelineStateName
+	^ pipelineStateCache pipelineStateNamed: pipelineStateName

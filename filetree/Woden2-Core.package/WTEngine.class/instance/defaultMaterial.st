@@ -1,3 +1,3 @@
 accessing
 defaultMaterial
-	^ defaultMaterial
+	^ resourceCache defaultMaterial

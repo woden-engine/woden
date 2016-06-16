@@ -1,7 +1,4 @@
-as yet unclassified
+state binding
 engineChanged
-	| psm |
-	psm := engine pipelineStateManager.
-	modePipelines := IdentityDictionary newFromPairs: {
-		#forward . psm pipelineStateNamed: #'material.forward.surface.color'
-	}
+	resourceBinding := nil.
+	self invalidateCache.

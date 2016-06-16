@@ -4,8 +4,9 @@ initializeForNewSession
 	self
 		createDevice;
 		queryDeviceCapabilities;
-		createPipelineStateManager;
-		createFontManager;
+		createPipelineStateCache;
+		createFontCache;
+		createResourceCache;
 		createFrameFences.
 	
 	

@@ -23,7 +23,7 @@
 		"pipelineStateObjects",
 		"shaderSignatures",
 		"shaderLanguageSearchOrder" ],
-	"name" : "WTPipelineStateManager",
+	"name" : "WTPipelineStateCache",
 	"pools" : [
 		"AGPUConstants" ],
 	"super" : "Object",

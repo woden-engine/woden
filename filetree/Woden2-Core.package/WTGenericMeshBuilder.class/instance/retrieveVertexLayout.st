@@ -1,3 +1,3 @@
 as yet unclassified
 retrieveVertexLayout
-	^ engine pipelineStateManager vertexLayoutNamed: #GenericVertex
+	^ engine pipelineStateCache vertexLayoutNamed: #GenericVertex
