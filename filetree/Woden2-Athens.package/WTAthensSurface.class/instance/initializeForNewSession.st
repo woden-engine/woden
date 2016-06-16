@@ -3,7 +3,7 @@ initializeForNewSession
 	| device stateManager canvasViewportSize |
 	engine checkSession.
 	device := engine device.
-	stateManager := engine pipelineStateManager.
+	stateManager := engine pipelineStateCache.
 	vertexLayout := stateManager vertexLayoutNamed: #CanvasVertex2D.
 	shaderSignature := stateManager shaderSignatureNamed: #GUI.
 	convexColorLinePipeline := self loadStateWithBlendVariants: #'canvas2d.polygon.convex.color.lines'.
