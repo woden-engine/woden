@@ -20,9 +20,10 @@
 		"currentFrameIndex",
 		"shaderSignature",
 		"visibleLightSources",
-		"lightSources" ],
+		"lightSources",
+		"samplerBindings" ],
 	"name" : "WTSForwardSceneRenderer",
 	"pools" : [
-		 ],
+		"AGPUConstants" ],
 	"super" : "Object",
 	"type" : "normal" }

@@ -33,6 +33,7 @@ renderFrame: frameIndex camera: camera on: aWindow
 			
 			useShaderResources: cameraUniformBinding validHandle;
 			useShaderResources: globalLightingStateBinding validHandle;
+			useShaderResources: samplerBindings validHandle;
 			
 			beginRenderPass: renderPass validHandle framebuffer: aWindow currentFramebuffer bundle_content: false asBit.
 			

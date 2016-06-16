@@ -1,7 +1,7 @@
 initialization
 initializeWithEngine: anEngine
 	engine := anEngine.
-	shaderSignature := engine pipelineStateManager shaderSignatureNamed: #ForwardRenderer.
+	shaderSignature := engine pipelineStateCache shaderSignatureNamed: #ForwardRenderer.
 	visibleObjects := OrderedCollection new.
 	visibleLightSources := OrderedCollection new.
 	
@@ -11,4 +11,5 @@ initializeWithEngine: anEngine
 		createRenderPass;
 		createCommandLists;
 		createCameraStateBuffer;
-		createLightingState.
+		createLightingState;
+		createSamplers.
