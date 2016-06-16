@@ -17,7 +17,7 @@ initializeApplication
 	meshObjectState := WMReversibleAffineTransformF identity.
 	
 	pipelineState := engine pipelineStateNamed: #'canvas2d.polygon.convex.color.triangles.blend.over'.
-	shaderSignature := engine pipelineStateManager shaderSignatureNamed: #ForwardRenderer.
+	shaderSignature := engine pipelineStateCache shaderSignatureNamed: #ForwardRenderer.
 	
 	mainRenderPass := engine createBasicRenderPassWithColor: Color black.
 	commandAllocators := engine frameBufferingCollect: [:frameId | engine createGraphicsDirectCommandListAllocator].
