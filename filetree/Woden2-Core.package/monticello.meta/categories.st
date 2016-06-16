@@ -6,5 +6,6 @@ SystemOrganization addCategory: 'Woden2-Core-Mesh'!
 SystemOrganization addCategory: 'Woden2-Core-Rendering'!
 SystemOrganization addCategory: 'Woden2-Core-Resources'!
 SystemOrganization addCategory: 'Woden2-Core-Resources-Font'!
+SystemOrganization addCategory: 'Woden2-Core-Resources-Texture'!
 SystemOrganization addCategory: 'Woden2-Core-Structures'!
 SystemOrganization addCategory: 'Woden2-Core-Window'!

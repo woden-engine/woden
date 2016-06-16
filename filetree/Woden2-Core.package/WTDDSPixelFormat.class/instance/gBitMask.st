@@ -1,0 +1,4 @@
+accessing
+gBitMask
+	<accessor>
+	^ gBitMask

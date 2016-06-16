@@ -1,0 +1,4 @@
+accessing
+bBitMask
+	<accessor>
+	^ bBitMask

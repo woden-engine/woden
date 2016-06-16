@@ -1,0 +1,4 @@
+accessing
+size
+	<accessor>
+	^ size

@@ -1,0 +1,4 @@
+accessing
+fourCC
+	<accessor>
+	^ fourCC

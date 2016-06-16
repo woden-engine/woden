@@ -1,0 +1,21 @@
+{
+	"category" : "Woden2-Core-Resources-Texture",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"#size &=> #uint32",
+		"#flags &=> #uint32",
+		"#fourCC &=> #uint32",
+		"#rgbBitCount &=> #uint32",
+		"#rBitMask &=> #uint32",
+		"#gBitMask &=> #uint32",
+		"#bBitMask &=> #uint32",
+		"#aBitMask &=> #uint32" ],
+	"name" : "WTDDSPixelFormat",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }

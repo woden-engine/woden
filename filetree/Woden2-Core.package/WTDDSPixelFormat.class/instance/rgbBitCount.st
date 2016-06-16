@@ -1,0 +1,4 @@
+accessing
+rgbBitCount
+	<accessor>
+	^ rgbBitCount
