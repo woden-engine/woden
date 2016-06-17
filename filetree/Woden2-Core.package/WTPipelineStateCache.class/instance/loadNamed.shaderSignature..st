@@ -11,9 +11,13 @@ loadNamed: name shaderSignature: signatureDesc
 		elementType = 'bank' ifTrue: [
 			element := WTShaderSignatureBank new
 				name: (elementDesc at: 'name');
-				bindingType: (elementDesc at: 'binding-type') asSymbol;
-				bindingPoints: (elementDesc at: 'binding-points');
 				maxBindings: (elementDesc at: 'max-bindings');
+				elements: ((elementDesc at: 'elements') collect: [ :bankElementDesc |
+					WTShaderSignatureBankElement new
+						bindingType: (bankElementDesc at: 'type') asSymbol;
+						bindingPoints: (bankElementDesc at: 'points' ifAbsent: [0]);
+						yourself
+				]);
 				yourself
 		].
 	

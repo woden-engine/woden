@@ -5,8 +5,11 @@ buildShaderSignature: shaderSignature
 	signatureBuilder := device createShaderSignatureBuilder.
 	shaderSignature elements do: [ :el |
 		el isBank ifTrue: [
-			bindingType := ShaderBindingTypeMap at: el bindingType.
-			signatureBuilder addBindingBank: bindingType bindingPointCount: el bindingPoints maxBindings: el maxBindings
+			signatureBuilder beginBindingBank: el maxBindings.
+			el elements do: [ :bankElement |
+				bindingType := ShaderBindingTypeMap at: bankElement bindingType.
+				signatureBuilder addBindingBankElement: bindingType bindingPointCount: bankElement bindingPoints. 
+			]
 		]
 	].
 

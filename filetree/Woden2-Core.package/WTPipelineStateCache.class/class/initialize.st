@@ -7,6 +7,9 @@ initialize
 	
 	ShaderBindingTypeMap := IdentityDictionary newFromPairs: {
 		#'uniform-buffer' . AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER .
+		#'storage-buffer' . AGPU_SHADER_BINDING_TYPE_STORAGE_BUFFER .
+		#'uniform-texel-buffer' . AGPU_SHADER_BINDING_TYPE_UNIFORM_TEXEL_BUFFER .
+		#'storage-texel-buffer' . AGPU_SHADER_BINDING_TYPE_STORAGE_TEXEL_BUFFER .
 		#'sampled-image' . AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE .
 		#'storage-image' . AGPU_SHADER_BINDING_TYPE_STORAGE_IMAGE .
 		#sampler . AGPU_SHADER_BINDING_TYPE_SAMPLER .

@@ -6,10 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"name",
-		"elements",
-		"maxBindings" ],
-	"name" : "WTShaderSignatureBank",
+		"bindingType",
+		"bindingPoints" ],
+	"name" : "WTShaderSignatureBankElement",
 	"pools" : [
 		 ],
 	"super" : "Object",
