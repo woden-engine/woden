@@ -1,5 +1,5 @@
 accessing
-point
+directional
 	type := #point.
 	state
 		outerCosCutoff: -1.0;
