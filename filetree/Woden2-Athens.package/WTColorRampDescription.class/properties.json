@@ -5,11 +5,10 @@
 	"classvars" : [
 		 ],
 	"commentStamp" : "",
-	"extradependencies" : "#(#WMVector4F)",
 	"instvars" : [
-		"#edge &=> #float",
-		"#color &=> #WMVector4F" ],
-	"name" : "WTColorRampEntry",
+		"#firstIndex &=> #int",
+		"#count &=> #int" ],
+	"name" : "WTColorRampDescription",
 	"pools" : [
 		 ],
 	"super" : "NativeStructure",

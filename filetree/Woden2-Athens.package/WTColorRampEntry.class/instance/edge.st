@@ -1,0 +1,4 @@
+accessing
+edge
+	<accessor>
+	^ edge

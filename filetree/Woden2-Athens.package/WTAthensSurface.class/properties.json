@@ -56,7 +56,10 @@
 		"samplerBindings",
 		"colorRampEntryBuffer",
 		"colorRampEntryBufferCapacity",
-		"colorRampEntries" ],
+		"colorRampEntries",
+		"coverGradientPipeline",
+		"currentTexcoord",
+		"colorRampDictionary" ],
 	"name" : "WTAthensSurface",
 	"pools" : [
 		"AGPUConstants" ],

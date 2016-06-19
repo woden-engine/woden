@@ -6,9 +6,11 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		 ],
-	"name" : "WTAthensStrokePaint",
+		"center",
+		"radius",
+		"focalPoint" ],
+	"name" : "WTAthensRadialGradientPaint",
 	"pools" : [
 		 ],
-	"super" : "AthensStrokePaint",
+	"super" : "WTAthensGradientPaint",
 	"type" : "normal" }

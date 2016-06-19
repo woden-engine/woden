@@ -4,6 +4,8 @@ resetDrawState
 	pathTransform loadIdentity.
 	vertices removeAll.
 	indices removeAll.
+	colorRampEntries removeAll.
+	colorRampDictionary removeAll.
 	startIndex := 0.
 	baseVertex := 0.
 	
@@ -11,3 +13,5 @@ resetDrawState
 	currentPipelineState := nil.
 	currentTexture := nil.
 	currentFont := nil.
+	currentTexcoord := WMVector2F new.
+	

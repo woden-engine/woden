@@ -6,9 +6,10 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		 ],
-	"name" : "WTAthensStrokePaint",
+		"start",
+		"stop" ],
+	"name" : "WTAthensLinearGradientPaint",
 	"pools" : [
 		 ],
-	"super" : "AthensStrokePaint",
+	"super" : "WTAthensGradientPaint",
 	"type" : "normal" }

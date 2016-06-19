@@ -12,6 +12,7 @@ initializeForNewSession
 	stencilNonZeroPipeline := stateManager pipelineStateNamed: #'canvas2d.polygon.stencil.non-zero'.
 	stencilEvenOddPipeline := stateManager pipelineStateNamed: #'canvas2d.polygon.stencil.even-odd'.
 	coverColorPipeline := self loadStateWithBlendVariants: #'canvas2d.polygon.cover.color'.
+	coverGradientPipeline := self loadStateWithBlendVariants: #'canvas2d.polygon.cover.gradient'.
 	
 	textColorPipeline := stateManager pipelineStateNamed: #'canvas2d.text.color'.
 	textSdfColorPipeline := stateManager pipelineStateNamed: #'canvas2d.textsdf.color'.
