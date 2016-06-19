@@ -8,7 +8,7 @@ drawDuring: aBlock
 	self checkSession.
 	currentCanvas ifNotNil: [ self attemptToRecurseDrawing ].
 	changedData := true.
-	synchronizationFence waitOnClient.
+	synchronizationFence ifNotNil: [ synchronizationFence waitOnClient ].
 	self resetDrawState.
 	[
 		currentCanvas := self newCanvas.

@@ -53,7 +53,10 @@
 		"blendMode",
 		"strokePathTessellatorBackend",
 		"strokePathTessellator",
-		"samplerBindings" ],
+		"samplerBindings",
+		"colorRampEntryBuffer",
+		"colorRampEntryBufferCapacity",
+		"colorRampEntries" ],
 	"name" : "WTAthensSurface",
 	"pools" : [
 		"AGPUConstants" ],

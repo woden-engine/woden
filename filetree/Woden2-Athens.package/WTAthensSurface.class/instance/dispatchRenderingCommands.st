@@ -5,6 +5,7 @@ dispatchRenderingCommands
 	viewportUniformData storeBytesIn: viewportUniformBuffer validPointer getHandle position: 1.
 	self updateIndexBuffer.
 	self updateVertexBuffer.
+	self updateColorRampBuffer.
 	
 	w := extent x.
 	h := extent y.

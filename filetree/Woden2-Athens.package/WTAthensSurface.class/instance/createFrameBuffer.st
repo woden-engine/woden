@@ -24,8 +24,8 @@ createFrameBuffer
 		height: height;
 		depthOrArraySize: 1;
 		miplevels: 1;
-		format: AGPU_TEXTURE_FORMAT_D24_UNORM_S8_UINT;
-		flags: AGPU_TEXTURE_FLAG_DEPTH | AGPU_TEXTURE_FLAG_RENDERBUFFER_ONLY;
+		format: engine preferredDepthStencilFormat;
+		flags: AGPU_TEXTURE_FLAG_DEPTH | AGPU_TEXTURE_FLAG_STENCIL | AGPU_TEXTURE_FLAG_RENDERBUFFER_ONLY;
 		sample_count: 1.
 	depthStencilBuffer := device createTexture: depthStencilDesc.
 	depthStencilBufferView := AGPUTextureViewDescription new.

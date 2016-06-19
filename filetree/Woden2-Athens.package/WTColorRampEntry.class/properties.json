@@ -1,0 +1,16 @@
+{
+	"category" : "Woden2-Athens",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"extradependencies" : "#(#WMVector4F)",
+	"instvars" : [
+		"#edge &=> #float",
+		"#color &=> #WMVector4F" ],
+	"name" : "WTColorRampEntry",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }
