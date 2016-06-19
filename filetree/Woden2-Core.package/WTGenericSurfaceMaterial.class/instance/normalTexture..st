@@ -1,3 +1,4 @@
 accessing
-normalTexture: anObject
-	normalTexture := anObject
+normalTexture: aTexture
+	normalTexture := aTexture.
+	self invalidateCache.

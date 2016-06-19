@@ -1,0 +1,17 @@
+{
+	"category" : "Woden2-Core-Material",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"extradependencies" : "#(#WMVector3F #WMVector4F)",
+	"instvars" : [
+		"#albedo &=> #WMVector4F",
+		"#fresnel &=> #WMVector3F",
+		"#smoothness &=> #float" ],
+	"name" : "WTGenericSurfaceMaterialState",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }

@@ -21,6 +21,13 @@ loadNamed: name shaderSignature: signatureDesc
 				yourself
 		].
 	
+		elementType = 'constant' ifTrue: [
+			element := WTShaderSignatureConstants new
+				name: (elementDesc at: 'name');
+				count: (elementDesc at: 'count' ifAbsent: [ 1 ]);
+				yourself
+		].
+	
 		element ifNil: [ self error: 'Unsupport shader signature element of type ' , elementType printString ].
 		element
 	]).

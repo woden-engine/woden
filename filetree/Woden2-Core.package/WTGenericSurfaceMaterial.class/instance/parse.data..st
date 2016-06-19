@@ -1,7 +1,8 @@
 parsing
 parse: materialFileReference data: data
-	albedoColor := self parse: data at: materialFileReference srgbColor: 'albedo-color' ifAbsent: [ Color white ].
+	materialState
+		albedo: (self parse: data at: materialFileReference srgbColor: 'albedo-color' ifAbsent: [ Color white ]).
 	albedoTexture := self parse: data at: materialFileReference optionalTexture: 'albedo-texture'.
 	normalTexture := self parse: data at: materialFileReference optionalTexture: 'normal-texture'.
-	metalTexture := self parse: data at: materialFileReference optionalTexture: 'metal-texture'.
+	fresnelTexture := self parse: data at: materialFileReference optionalTexture: 'fresnel-texture'.
 	self invalidateCache.

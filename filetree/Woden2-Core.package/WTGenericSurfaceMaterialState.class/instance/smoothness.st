@@ -1,0 +1,4 @@
+accessing
+smoothness
+	<accessor>
+	^ smoothness

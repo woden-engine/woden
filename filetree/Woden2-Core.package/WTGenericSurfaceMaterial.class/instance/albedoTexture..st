@@ -1,3 +1,4 @@
 accessing
-albedoTexture: anObject
-	albedoTexture := anObject
+albedoTexture: aTexture
+	albedoTexture := aTexture.
+	self invalidateCache.

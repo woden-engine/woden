@@ -1,3 +1,4 @@
 accessing
-albedoColor: anObject
-	albedoColor := anObject
+albedoColor: aColor
+	materialState albedo: aColor asWMVector4F.
+	self uploadMaterialStateData.

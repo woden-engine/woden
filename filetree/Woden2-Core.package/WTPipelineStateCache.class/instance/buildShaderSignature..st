@@ -10,6 +10,10 @@ buildShaderSignature: shaderSignature
 				bindingType := ShaderBindingTypeMap at: bankElement bindingType.
 				signatureBuilder addBindingBankElement: bindingType bindingPointCount: bankElement bindingPoints. 
 			]
+		].
+	
+		el isConstants ifTrue: [ 
+			1 to: el count do: [ :i | signatureBuilder addBindingConstant ]
 		]
 	].
 

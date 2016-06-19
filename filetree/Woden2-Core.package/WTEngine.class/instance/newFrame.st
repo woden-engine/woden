@@ -1,7 +1,17 @@
 triple buffering
 newFrame
-	graphicsQueue signalFence: self frameFence.
+	| fence |
+	fence := frameFences at: bufferingFrameIndex.
+	fence ifNil: [ 
+		fence := device createFence.
+		frameFences at: bufferingFrameIndex put: fence.
+	].
+
+	graphicsQueue signalFence: fence.
+
 	frameIndex := frameIndex + 1.
 	bufferingFrameIndex := (frameIndex % self frameBufferingCount) + 1.
-	self frameFence waitOnClient.
+	
+	fence := frameFences at: bufferingFrameIndex.
+	fence ifNotNil: [ fence waitOnClient ].
 	^ bufferingFrameIndex

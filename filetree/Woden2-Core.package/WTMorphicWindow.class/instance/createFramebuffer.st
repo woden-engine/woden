@@ -1,6 +1,6 @@
 initialization
 createFramebuffer
-	| innerBounds colorBufferDesc hasDepth hasStencil depthStencilFormat depthStencilDesc mainColorbufferView mainDepthbufferView device |
+	| innerBounds colorBufferDesc hasDepth hasStencil depthStencilFormat depthStencilDesc mainColorbufferView mainDepthbufferView device depthStencilFlags |
 	device := engine device.
 	innerBounds := self innerBounds.
 	screenWidth := innerBounds width asInteger.
@@ -23,7 +23,9 @@ createFramebuffer
 
 	mainDepthbufferView := nil.
 	(hasDepth or: [ hasStencil ]) ifTrue: [ 
-		depthStencilFormat := hasStencil ifTrue: [ AGPU_TEXTURE_FORMAT_D24_UNORM_S8_UINT ] ifFalse: [ AGPU_TEXTURE_FORMAT_D32_FLOAT ].
+		depthStencilFormat := hasStencil ifTrue: [ engine preferredDepthStencilFormat ] ifFalse: [ engine preferredDepthFormat ].
+		depthStencilFlags := AGPU_TEXTURE_FLAG_DEPTH | AGPU_TEXTURE_FLAG_RENDERBUFFER_ONLY.
+		hasStencil ifTrue: [ depthStencilFlags := depthStencilFlags | AGPU_TEXTURE_FLAG_STENCIL ].
 		depthStencilDesc := AGPUTextureDescription new
 			type: AGPU_TEXTURE_2D;
 			width: screenWidth;
@@ -31,7 +33,7 @@ createFramebuffer
 			depthOrArraySize: 1;
 			miplevels: 1;
 			format: depthStencilFormat;
-			flags: AGPU_TEXTURE_FLAG_DEPTH | AGPU_TEXTURE_FLAG_RENDERBUFFER_ONLY;
+			flags: depthStencilFlags;
 			sample_count: 1.
 		hasStencil ifTrue: [
 			depthStencilDesc flags: depthStencilDesc flags | AGPU_TEXTURE_FLAG_STENCIL
