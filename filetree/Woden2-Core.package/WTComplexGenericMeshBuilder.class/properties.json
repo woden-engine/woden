@@ -3,7 +3,7 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		 ],
+		"NormalAxis" ],
 	"commentStamp" : "",
 	"instvars" : [
 		"transform" ],

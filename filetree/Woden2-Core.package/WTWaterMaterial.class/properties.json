@@ -1,0 +1,20 @@
+{
+	"category" : "Woden2-Core-Material",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"modePipelines",
+		"skyTexture",
+		"normalTexture",
+		"resourceBindingsAreUpdated",
+		"resourceBinding",
+		"materialState",
+		"stateUniformBuffer" ],
+	"name" : "WTWaterMaterial",
+	"pools" : [
+		 ],
+	"super" : "WTMaterial",
+	"type" : "normal" }

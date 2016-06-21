@@ -1,0 +1,3 @@
+accessing
+albedoColor
+	^ materialState albedo

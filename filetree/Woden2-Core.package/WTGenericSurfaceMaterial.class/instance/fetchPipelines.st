@@ -4,7 +4,19 @@ fetchPipelines
 	psm := engine pipelineStateCache.
 	modeSuffix := #'color'.
 	albedoTexture ifNotNil: [ 
-		modeSuffix := #'albedo-texture'
+		normalTexture ifNotNil: [
+			fresnelTexture ifNotNil: [
+				modeSuffix := #'albedo-normal-fresnel-texture' 
+			] ifNil: [
+				modeSuffix := #'albedo-normal-texture'
+			]		
+		] ifNil: [
+			fresnelTexture ifNotNil: [ 
+				modeSuffix := #'albedo-fresnel-texture'.
+			] ifNil: [
+				modeSuffix := #'albedo-texture'.
+			]
+		]	
 	].
 
 	modePipelines := IdentityDictionary newFromPairs: {

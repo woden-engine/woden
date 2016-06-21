@@ -1,0 +1,4 @@
+accessing
+arraySize
+	<accessor>
+	^ arraySize

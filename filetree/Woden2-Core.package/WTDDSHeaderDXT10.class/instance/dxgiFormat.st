@@ -1,0 +1,4 @@
+accessing
+dxgiFormat
+	<accessor>
+	^ dxgiFormat

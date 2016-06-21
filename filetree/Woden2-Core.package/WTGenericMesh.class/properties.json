@@ -6,6 +6,7 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
+		"boundingBox",
 		"vertexBinding",
 		"indexBuffer",
 		"submeshes" ],

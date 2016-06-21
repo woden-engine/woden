@@ -1,0 +1,18 @@
+{
+	"category" : "Woden2-Core-Resources-Texture",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"#dxgiFormat &=> #uint32",
+		"#resourceDimension &=> #uint32",
+		"#miscFlag &=> #uint32",
+		"#arraySize &=> #uint32",
+		"#miscFlags2 &=> #uint32" ],
+	"name" : "WTDDSHeaderDXT10",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }

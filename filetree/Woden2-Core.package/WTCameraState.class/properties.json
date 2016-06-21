@@ -7,7 +7,8 @@
 	"commentStamp" : "",
 	"extradependencies" : "#(#WMMatrix4F)",
 	"instvars" : [
-		"#projectionMatrix &=> #WMMatrix4F" ],
+		"#projectionMatrix &=> #WMMatrix4F",
+		"#currentTime &=> #float" ],
 	"name" : "WTCameraState",
 	"pools" : [
 		 ],

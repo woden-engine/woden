@@ -25,7 +25,11 @@ loadFromStream: aBinaryStream
 		depth: (header depth max: 1).
 		
 	numberOfLayers := 1.
-	
+	(header caps2 anyMask: DDSCAPS2_CUBEMAP) ifTrue: [
+		textureData type: AGPU_TEXTURE_CUBE.
+		numberOfLayers := 6.
+	].
+
 	(pixelFormat flags anyMask: DDPF_FOURCC) ifTrue: [
 		compressedFormatInfo := FourCCDictionary at: pixelFormat fourCC.
 		blockSize := compressedFormatInfo first.

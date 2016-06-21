@@ -1,0 +1,3 @@
+resource building
+uploadTextureCubeData
+	self uploadWodenTextureData

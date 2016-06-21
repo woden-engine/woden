@@ -1,0 +1,19 @@
+{
+	"category" : "Woden2-Core-Material",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"extradependencies" : "#(#WMVector3F #WMVector4F #WTWaterHarmonic)",
+	"instvars" : [
+		"#albedo &=> #WMVector4F",
+		"#fresnel &=> #WMVector3F",
+		"#smoothness &=> #float",
+		"#propagationSpeed &=> #float",
+		"#harmonics &=> #(#WTWaterHarmonic array: 5)" ],
+	"name" : "WTWaterMaterialState",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }
