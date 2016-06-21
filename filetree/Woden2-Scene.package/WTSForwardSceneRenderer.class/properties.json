@@ -21,7 +21,8 @@
 		"shaderSignature",
 		"visibleLightSources",
 		"lightSources",
-		"samplerBindings" ],
+		"samplerBindings",
+		"currentTime" ],
 	"name" : "WTSForwardSceneRenderer",
 	"pools" : [
 		"AGPUConstants" ],
