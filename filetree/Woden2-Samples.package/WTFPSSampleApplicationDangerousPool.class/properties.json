@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Samples",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "WTFPSSampleApplicationDangerousPool",
+	"pools" : [
+		 ],
+	"super" : "WTFPSSampleApplication",
+	"type" : "normal" }

@@ -3,13 +3,14 @@ initializeSceneContent
 	| meshBuilder mesh cube light material |
 	camera transform translateByZ: 3.0.
 	
-	material := engine resourceCache loadMaterial: 'materials/basic/checkboard.json'.
+	material := engine resourceCache loadMaterial: 'materials/demos/tile.json'.
 
-	meshBuilder := WTGenericMeshBuilder for: engine.
+	meshBuilder := WTComplexGenericMeshBuilder for: engine.
 	meshBuilder
 		currentMaterial: material;
-		addCubeWithWidth: 1.0 height: 1.0 depth: 1.0.
-		"addUVSphereRadius: 1.0 segments: 32 slices: 32."
+		addCubeWithWidth: 10.0 height: 0.5 depth: 10.0;
+		planeTextureScale: (WMVector2F x: 2.0 y: 2.0) offset: (WMVector2F x: 0.0 y: 0.0);
+		computeTangentsBitangents.
 	mesh := meshBuilder mesh.
 	
 	cube := WTSSpatialObject new.
