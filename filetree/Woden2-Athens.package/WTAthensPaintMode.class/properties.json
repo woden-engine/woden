@@ -10,5 +10,5 @@
 	"name" : "WTAthensPaintMode",
 	"pools" : [
 		 ],
-	"super" : "AthensPaintMode",
+	"super" : "AnObsoleteAthensPaintMode",
 	"type" : "normal" }
