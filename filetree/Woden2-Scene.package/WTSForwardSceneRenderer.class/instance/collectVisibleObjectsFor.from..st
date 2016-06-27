@@ -6,5 +6,5 @@ collectVisibleObjectsFor: camera from: node
 	node isLightSource ifTrue: [ self tryToCollectLightSource: node for: camera ].
 	
 	node children do: [:child |
-		self collectVisibleObjectsFor: camera from: node
+		self collectVisibleObjectsFor: camera from: child
 	]

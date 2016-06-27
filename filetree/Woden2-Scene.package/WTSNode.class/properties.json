@@ -10,7 +10,9 @@
 		"transform",
 		"children",
 		"visible",
-		"lastUpdatedGpuFrame" ],
+		"lastUpdatedGpuFrame",
+		"parent",
+		"renderTransform" ],
 	"name" : "WTSNode",
 	"pools" : [
 		 ],
