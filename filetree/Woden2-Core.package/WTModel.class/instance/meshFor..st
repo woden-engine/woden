@@ -1,7 +1,14 @@
 as yet unclassified
 meshFor: anEngine
 	| mesh |
-	mesh := WTGenericMesh new.
+	armature ifNotNil: [
+		mesh := WTSkinnedGenericMesh new.
+		mesh
+			armature: armature;
+			actions: actions.
+	] ifNil: [ 
+		mesh := WTGenericMesh new.
+	].
 	mesh
 		boundingBox: boundingBox copy;
 		vertexBinding: (self createVertexBindingFor: anEngine);

@@ -1,30 +1,23 @@
 as yet unclassified
 computeTangentsBitangents
-	| vertex normal tangent bitangent |
+	| vertex normal tangent bitangent tangents bitangents scaleFactor |
 	self finishSubmesh.
-	1 to: vertices size do: [ :vi |
-		vertices at: vi put: 
-		((vertices at: vi)
-			tangent: WMVector3F new;
-			bitangent: WMVector3F new;
-			yourself)
-	].
-
-	submeshes do: [ :sm | self computeTangentsBitangentsFor: sm ].
+	tangents := NativeArray for: WMVector3F new: vertices size.
+	bitangents := NativeArray for: WMVector3F new: vertices size.
+	submeshes do: [ :sm | self computeTangentsBitangentsFor: sm tangents: tangents bitangents: bitangents ].
 	
 	1 to: vertices size do: [ :vi |
 		vertex := (vertices at: vi).
 		
 		normal := vertex normal.
-		tangent := vertex tangent.
-		bitangent := vertex bitangent.
+		tangent := tangents at: vi.
+		bitangent := bitangents at: vi.
 		
 		"Gram schmidth orthogonalization"
 		tangent := (tangent - (normal * (normal dot: tangent))) normalized.
 		bitangent := (bitangent - (normal * (normal dot: bitangent)) - (tangent * (tangent dot: bitangent))) normalized.
-
-		vertex tangent: tangent.
-		vertex bitangent: bitangent.
+		scaleFactor := (normal cross: tangent) dot: bitangent.
+		vertex tangent4: (WMVector4F x: tangent x y: tangent y z: tangent z w: scaleFactor).
 		
 		vertices at: vi put: vertex.
 	].

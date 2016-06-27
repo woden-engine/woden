@@ -1,6 +1,6 @@
 as yet unclassified
-computeTangentsBitangentsFor: submesh
-	| triangleCount triangleTangents triangleBitangents indexBase i1 i2 i3 vi1 vi2 vi3 p1 p2 p3 u v tc1 tc2 tc3 det den tangent bitangent v1 v2 v3 du1 dv1 du2 dv2 |
+computeTangentsBitangentsFor: submesh tangents: tangents bitangents: bitangents
+	| triangleCount indexBase i1 i2 i3 vi1 vi2 vi3 p1 p2 p3 u v tc1 tc2 tc3 det den tangent bitangent v1 v2 v3 du1 dv1 du2 dv2 |
 	submesh primitiveType ~= AGPU_TRIANGLES ifTrue: [ ^ self ].
 	triangleCount := submesh indexCount // 3.
 
@@ -41,18 +41,13 @@ computeTangentsBitangentsFor: submesh
 			v2 := vertices at: vi2.
 			v3 := vertices at: vi3.
 			
-			v1 tangent: v1 tangent + tangent.
-			v2 tangent: v2 tangent + tangent.
-			v3 tangent: v3 tangent + tangent.
+			tangents at: vi1 put: (tangents at: vi1) + tangent.
+			tangents at: vi2 put: (tangents at: vi2) + tangent.
+			tangents at: vi3 put: (tangents at: vi3) + tangent.
 
-			v1 bitangent: v1 bitangent + bitangent.
-			v2 bitangent: v2 bitangent + bitangent.
-			v3 bitangent: v3 bitangent + bitangent.
-			
-			"These three should be removed when using the lowcode compiler."
-			vertices at: vi1 put: v1.
-			vertices at: vi2 put: v2.
-			vertices at: vi3 put: v3.
+			bitangents at: vi1 put: (bitangents at: vi1) + bitangent.
+			bitangents at: vi2 put: (bitangents at: vi2) + bitangent.
+			bitangents at: vi3 put: (bitangents at: vi3) + bitangent.
 		].
 				
 		i1 := i1 + 3.

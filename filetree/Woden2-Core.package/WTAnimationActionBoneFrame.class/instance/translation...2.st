@@ -1,5 +1,5 @@
 accessing
-normal: value
+translation: value
 	<accessor>
 	<argument: #value type: #(WMVector3F object)>
-	normal := value
+	translation := value

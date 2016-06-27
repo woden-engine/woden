@@ -9,7 +9,9 @@
 		"vertices",
 		"indices",
 		"submeshes",
-		"boundingBox" ],
+		"boundingBox",
+		"armature",
+		"actions" ],
 	"name" : "WTModel",
 	"pools" : [
 		"AGPUConstants" ],

@@ -1,4 +1,4 @@
 accessing
-bitangent
+location
 	<accessor>
-	^ bitangent
+	^ location

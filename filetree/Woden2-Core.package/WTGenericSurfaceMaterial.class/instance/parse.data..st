@@ -6,4 +6,5 @@ parse: materialFileReference data: data
 	albedoTexture := self parse: data at: materialFileReference optionalSRGBTexture: 'albedo-texture'.
 	normalTexture := self parse: data at: materialFileReference optionalTexture: 'normal-texture'.
 	fresnelTexture := self parse: data at: materialFileReference optionalSRGBTexture: 'fresnel-texture'.
+	isSkinned := data at: 'skinned' ifAbsent: [ false ].
 	self invalidateCache.

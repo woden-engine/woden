@@ -1,15 +1,19 @@
 as yet unclassified
 loadVertices: verticesData
-	| positions normals texcoords tangents4 numberOfVertices vertex normal tangent bitangent |
+	| positions normals texcoords tangents4 numberOfVertices vertex normal boneIndices boneWeights isSkinned vertexClass weights den |
 	positions := verticesData at: 'positions' ifAbsent: [ self error: 'Position data is not present.' ].
 	normals := verticesData at: 'normals' ifAbsent: [ nil ].
 	texcoords := verticesData at: 'texcoords' ifAbsent: [ nil].
 	tangents4 := verticesData at: 'tangents4' ifAbsent: [ nil ].
+	boneIndices := verticesData at: 'boneIndices' ifAbsent: [ nil ].
+	boneWeights := verticesData at: 'boneWeights' ifAbsent: [ nil ].
 	
+	isSkinned := boneIndices isNotNil and: [ boneWeights isNotNil ].
+	vertexClass := isSkinned ifTrue: [ WTSkinnedGenericVertexF ] ifFalse: [ WTGenericVertexF ].
 	numberOfVertices := positions size // 3.
-	vertices := NativeArray for: WTGenericVertexF new: numberOfVertices.
+	vertices := NativeArray for: vertexClass new: numberOfVertices.
 	1 to: numberOfVertices do: [ :i |
-		vertex := WTGenericVertexF new.
+		vertex := vertexClass new.
 		vertex position: (WMVector3F x: (positions at: i*3 - 2) y: (positions at: i*3 - 1) z: (positions at: i*3)).
 		
 		vertex color: (WMVector4F x: 1.0 y: 1.0 z: 1.0 w: 1.0).
@@ -24,11 +28,24 @@ loadVertices: verticesData
 		].
 
 		tangents4 ifNotNil: [
-			tangent := (WMVector3F x: (tangents4 at: i*4 - 3) y: (tangents4 at: i*4 - 2) z: (tangents4 at: i*4 - 1)).
-			bitangent := (normal cross: tangent) * (tangents4 at: i*4).
 			vertex
-				tangent: tangent;
-				bitangent: bitangent.
+				tangent4: (WMVector4F x: (tangents4 at: i*4 - 3) y: (tangents4 at: i*4 - 2) z: (tangents4 at: i*4 - 1) w: (tangents4 at: i*4))
+		].
+	
+		isSkinned ifTrue: [
+			vertex boneIndices: (WMVector4US
+				x: (boneIndices at: i*4 - 3)
+				y: (boneIndices at: i*4 - 2)
+				z: (boneIndices at: i*4 - 1)
+				w: (boneIndices at: i*4)).
+			weights := (WMVector4F
+				x: (boneWeights at: i*4 - 3)
+				y: (boneWeights at: i*4 - 2)
+				z: (boneWeights at: i*4 - 1)
+				w: (boneWeights at: i*4)).
+			den := weights x + weights y + weights z + weights w.
+			(den closeTo: 0.0) ifFalse: [ den := 1.0 / den ].
+			vertex boneWeights: weights.
 		].
 	
 		vertices at: i put: vertex.

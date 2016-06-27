@@ -5,13 +5,12 @@
 	"classvars" : [
 		 ],
 	"commentStamp" : "",
-	"extradependencies" : "#(#WMVector2F #WMVector3F #WMVector4F)",
+	"extradependencies" : "#(#WMCompactVector3F #WMVector2F #WMVector4F)",
 	"instvars" : [
-		"#position &=> #WMVector3F",
-		"#tangent &=> #WMVector3F",
-		"#bitangent &=> #WMVector3F",
-		"#normal &=> #WMVector3F",
+		"#position &=> #WMCompactVector3F",
+		"#normal &=> #WMCompactVector3F",
 		"#texcoord &=> #WMVector2F",
+		"#tangent4 &=> #WMVector4F",
 		"#color &=> #WMVector4F" ],
 	"name" : "WTGenericVertexF",
 	"pools" : [

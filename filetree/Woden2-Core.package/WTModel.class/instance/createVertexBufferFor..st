@@ -1,3 +1,3 @@
 as yet unclassified
 createVertexBufferFor: anEngine
-	^ anEngine createVertex: WTGenericVertexF structureSize elements: vertices size immutableBuffer: vertices rawData 
+	^ anEngine createVertex: vertices elementSize elements: vertices size immutableBuffer: vertices rawData 

@@ -5,5 +5,5 @@ initialize
 		fresnel: (WMVector3F x: 0.03 y: 0.03 z: 0.03);
 		smoothness: 0.45;
 		yourself.
-		
+	isSkinned := false.
 	self invalidateCache.

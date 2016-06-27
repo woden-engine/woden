@@ -1,0 +1,4 @@
+accessing
+boneIndices
+	<accessor>
+	^ boneIndices

@@ -1,8 +1,10 @@
 state binding
 fetchPipelines
-	| psm modeSuffix |
+	| psm modeSuffix variant |
 	psm := engine pipelineStateCache.
 	modeSuffix := #'color'.
+	variant := #'surface.'.
+	isSkinned ifTrue: [ variant := #'skinned.' ].
 	albedoTexture ifNotNil: [ 
 		normalTexture ifNotNil: [
 			fresnelTexture ifNotNil: [
@@ -20,5 +22,5 @@ fetchPipelines
 	].
 
 	modePipelines := IdentityDictionary newFromPairs: {
-		#forward . psm pipelineStateNamed: (#'material.forward.surface.' , modeSuffix) asSymbol
+		#forward . psm pipelineStateNamed: (#'material.forward.', variant , modeSuffix) asSymbol
 	}

@@ -1,5 +1,5 @@
 accessing
-tangent: value
+location: value
 	<accessor>
 	<argument: #value type: #(WMVector3F object)>
-	tangent := value
+	location := value

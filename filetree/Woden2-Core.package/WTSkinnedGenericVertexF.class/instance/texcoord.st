@@ -1,0 +1,4 @@
+accessing
+texcoord
+	<accessor>
+	^ texcoord

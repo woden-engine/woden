@@ -14,7 +14,8 @@
 		"resourceBindingsAreUpdated",
 		"resourceBinding",
 		"materialState",
-		"stateUniformBuffer" ],
+		"stateUniformBuffer",
+		"isSkinned" ],
 	"name" : "WTGenericSurfaceMaterial",
 	"pools" : [
 		 ],

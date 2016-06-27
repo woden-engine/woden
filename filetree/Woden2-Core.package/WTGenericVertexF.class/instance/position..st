@@ -1,5 +1,7 @@
 accessing
 position: value
-	<accessor>
 	<argument: #value type: #(WMVector3F object)>
-	position := value
+	position
+		x: value x;
+		y: value y;
+		z: value z

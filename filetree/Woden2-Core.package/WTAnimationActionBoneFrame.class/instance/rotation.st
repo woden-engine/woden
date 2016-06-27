@@ -1,4 +1,4 @@
 accessing
-tangent
+rotation
 	<accessor>
-	^ tangent
+	^ rotation
