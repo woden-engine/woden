@@ -6,7 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"pickedGun" ],
+		"pickedGun",
+		"floorGun",
+		"playerBox" ],
 	"name" : "WTFPSSampleApplicationDangerousPool",
 	"pools" : [
 		 ],

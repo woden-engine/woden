@@ -1,9 +1,12 @@
 rendering
 initializeSceneContent
-	| meshBuilder cube sunLight floorMaterial waterSurface skyBox skyMaterial waterMaterial magnumMesh magnum |
+	| meshBuilder cube sunLight floorMaterial waterSurface skyBox skyMaterial waterMaterial magnumMesh height eyePosition |
 	
 	cameraAngle := WMVector3F y: Float pi.
 	camera transform translateToX: 0.0 y: 1.0 z: -4.0.
+	height := 1.6.
+	eyePosition := 1.45.
+	playerBox := WMBox3DF min: (WMVector3F x: -0.20 y: 0.0 - eyePosition z: -0.20) max: (WMVector3F x: 0.20 y: height - eyePosition z: 0.20).
 	
 	floorMaterial := engine resourceCache loadMaterial: 'materials/demos/tile.json'.
 	waterMaterial := engine resourceCache loadMaterial: 'materials/demos/water.json'.
@@ -50,10 +53,10 @@ initializeSceneContent
 
 	"Add a magnum .357"
 	magnumMesh := engine resourceCache loadMesh: 'models/demos/magnum.fmdl'.	
-	magnum := WTSSpatialObject new.
-	magnum renderable: magnumMesh.
-	magnum transform translateToX: -0.5 y: magnumMesh boundingBox height * 0.5 z: -3.5.
-	scene add: magnum.
+	floorGun := WTSSpatialObject new.
+	floorGun renderable: magnumMesh.
+	floorGun transform translateToX: -0.5 y: magnumMesh boundingBox height * 0.5 z: -3.5.
+	scene add: floorGun.
 	
 	"Add the sky box"
 	meshBuilder := WTGenericMeshBuilder for: engine.
