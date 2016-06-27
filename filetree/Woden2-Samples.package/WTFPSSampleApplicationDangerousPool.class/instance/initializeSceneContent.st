@@ -54,7 +54,7 @@ initializeSceneContent
 	magnum renderable: magnumMesh.
 	magnum transform translateToX: -0.5 y: magnumMesh boundingBox height * 0.5 z: -3.5.
 	scene add: magnum.
-			
+	
 	"Add the sky box"
 	meshBuilder := WTGenericMeshBuilder for: engine.
 	meshBuilder
