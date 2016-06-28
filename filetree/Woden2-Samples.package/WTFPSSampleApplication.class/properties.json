@@ -13,7 +13,9 @@
 		"cameraVelocity",
 		"cameraSpeed",
 		"scene",
-		"sceneRenderer" ],
+		"sceneRenderer",
+		"athensSurfaces",
+		"lastRenderTime" ],
 	"name" : "WTFPSSampleApplication",
 	"pools" : [
 		 ],
