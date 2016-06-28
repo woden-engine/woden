@@ -10,5 +10,5 @@ drawingProcessCycle
 	wantedCycleTime := 1.0 / self maxFPS.
 	endTime := DateAndTime millisecondClockValue *0.001.
 	"remainingTime > 0 ifTrue: [ wantedCycleTime := wantedCycleTime - remainingTime ]." 
-	sleepTime := ((wantedCycleTime - (endTime - startTime)) *1000) asInteger - 1.
+	sleepTime := ((wantedCycleTime - (endTime - startTime)) *1000) asInteger - 2.
 	sleepTime > 0 ifTrue: [ (Delay forMilliseconds: sleepTime) wait. ]

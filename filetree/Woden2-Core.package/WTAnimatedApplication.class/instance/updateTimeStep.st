@@ -1,3 +1,3 @@
 rendering
 updateTimeStep
-	^ 2.0 / 60.0
+	^ 1.0 / 120.0

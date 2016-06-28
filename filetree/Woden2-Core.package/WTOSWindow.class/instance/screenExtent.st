@@ -1,0 +1,3 @@
+accessing
+screenExtent
+	^ screenWidth @ screenHeight
