@@ -1,3 +1,3 @@
 modes
-multiply
+composeMultiply
 	surface blendMode: #multiply.

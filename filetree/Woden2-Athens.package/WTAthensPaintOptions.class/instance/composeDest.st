@@ -1,3 +1,3 @@
 modes
-dest
+composeDest
 	surface blendMode: #dest.

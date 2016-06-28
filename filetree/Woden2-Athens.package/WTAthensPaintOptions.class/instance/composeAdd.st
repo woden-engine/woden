@@ -1,3 +1,3 @@
 modes
-add
+composeAdd
 	surface blendMode: #add.

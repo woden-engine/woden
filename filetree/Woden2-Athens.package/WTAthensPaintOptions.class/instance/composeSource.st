@@ -1,3 +1,3 @@
 modes
-source
+composeSource
 	surface blendMode: #source.

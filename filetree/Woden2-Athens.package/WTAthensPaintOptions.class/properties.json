@@ -7,8 +7,8 @@
 	"commentStamp" : "",
 	"instvars" : [
 		"surface" ],
-	"name" : "WTAthensPaintMode",
+	"name" : "WTAthensPaintOptions",
 	"pools" : [
 		 ],
-	"super" : "AnObsoleteAthensPaintMode",
+	"super" : "AthensPaintOptions",
 	"type" : "normal" }

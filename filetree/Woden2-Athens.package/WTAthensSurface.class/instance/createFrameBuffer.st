@@ -1,6 +1,7 @@
 initialization
 createFrameBuffer
 	| width height device colorBufferDesc colorBufferView depthStencilDesc depthStencilBufferView |
+	useOwnFramebuffer ifFalse: [ ^ self ].
 	width := extent x.
 	height := extent y.
 	device := engine device.
@@ -10,7 +11,7 @@ createFrameBuffer
 		height: height;
 		depthOrArraySize: 1;
 		miplevels: 1;
-		format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB;
+		format: colorBufferFormat;
 		flags: AGPU_TEXTURE_FLAG_RENDER_TARGET | AGPU_TEXTURE_FLAG_READED_BACK;
 		sample_count: 1.
 	colorBuffer := device createTexture: colorBufferDesc.

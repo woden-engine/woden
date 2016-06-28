@@ -1,6 +1,7 @@
 private
 computeProjectionMatrix
 	| w h |
+	extent ifNil: [ ^ self ].
 	w := extent x asFloat.
 	h := extent y asFloat.
 	viewportUniformData projectionMatrix: (

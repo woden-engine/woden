@@ -1,3 +1,3 @@
 modes
-destOver
+composeDestOver
 	surface blendMode: #destOver.

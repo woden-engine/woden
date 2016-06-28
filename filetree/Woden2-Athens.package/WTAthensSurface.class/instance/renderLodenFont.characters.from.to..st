@@ -2,7 +2,8 @@ as yet unclassified
 renderLodenFont: font characters: aString from: start to: end
 	| originalFace pipelineState scaleFactor currentPosition |
 	originalFace := font originalFace.
-	currentColor := Color black asWMVector4F.
+	currentColor := currentCanvas paint isColor ifTrue: [ currentCanvas paint ] ifFalse: [ Color black ].
+	currentColor := currentColor asWMVector4F.
 	pipelineState := originalFace sdfFont ifTrue: [ textSdfColorPipeline ] ifFalse: [ textColorPipeline ].
 	scaleFactor := font scaleFactor.
 	self

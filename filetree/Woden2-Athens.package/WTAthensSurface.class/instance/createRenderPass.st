@@ -3,14 +3,14 @@ createRenderPass
 	| colorAttachments depthStencilAttachment |
 	colorAttachments := {
 		AGPURenderpassColorAttachmentDescription new
-			format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB;
+			format: colorBufferFormat;
 			begin_action: AGPU_ATTACHMENT_KEEP;
 			end_action: AGPU_ATTACHMENT_KEEP;
 			yourself
 	}.
 	
 	depthStencilAttachment := AGPURenderpassDepthStencilDescription new
-		format: AGPU_TEXTURE_FORMAT_D24_UNORM_S8_UINT;
+		format: engine preferredDepthStencilFormat;
 		begin_action: AGPU_ATTACHMENT_CLEAR;
 		end_action: AGPU_ATTACHMENT_KEEP;
 		clear_value: (AGPUDepthStencilValue new depth: 0.0; stencil: 0; yourself);

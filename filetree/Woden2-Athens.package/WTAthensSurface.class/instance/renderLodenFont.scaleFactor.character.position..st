@@ -1,6 +1,6 @@
 as yet unclassified
 renderLodenFont: face scaleFactor: scaleFactor character: character position: position
-	| glyphIndex glyph texcoordScale box boxExtent translation extraY |
+	| glyphIndex glyph texcoordScale box boxExtent translation |
 	glyphIndex := (face characterMap at: character ifAbsent: [ 0 ]) + 1.
 	glyph := face glyphs at: glyphIndex.
 	texcoordScale := face texcoordScaleFactor.

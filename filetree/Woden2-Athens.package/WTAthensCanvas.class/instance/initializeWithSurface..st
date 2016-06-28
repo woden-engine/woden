@@ -1,5 +1,5 @@
 initialization
 initializeWithSurface: anAthensSurface
 	super initializeWithSurface: anAthensSurface.
-	paintMode := WTAthensPaintMode on: anAthensSurface.
-	paintMode default
+	paintOptions := WTAthensPaintOptions on: anAthensSurface.
+	paintOptions composeDefault

@@ -1,3 +1,3 @@
 modes
-clear
+composeClear
 	surface blendMode: #clear.

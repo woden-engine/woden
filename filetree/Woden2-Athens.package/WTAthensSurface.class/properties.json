@@ -59,7 +59,8 @@
 		"colorRampEntries",
 		"coverGradientPipeline",
 		"currentTexcoord",
-		"colorRampDictionary" ],
+		"colorRampDictionary",
+		"useOwnFramebuffer" ],
 	"name" : "WTAthensSurface",
 	"pools" : [
 		"AGPUConstants" ],
