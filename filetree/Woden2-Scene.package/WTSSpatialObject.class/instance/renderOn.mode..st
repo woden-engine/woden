@@ -5,4 +5,4 @@ renderOn: commandList mode: renderMode
 	commandList
 		useShaderResources: self currentObjectStateBinding validHandle.
 		
-	renderable renderOn: commandList mode: #forward.
+	renderable renderOn: commandList mode: #forward

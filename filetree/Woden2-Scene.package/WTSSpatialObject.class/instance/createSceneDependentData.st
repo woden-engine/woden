@@ -9,3 +9,7 @@ createSceneDependentData
 			bind: 0 uniformBuffer: objectStateBuffer offset: (frame - 1) * objectStateSize size: objectStateSize;
 			yourself.
 	].
+
+	renderable ifNotNil: [
+		renderableSceneData := renderable createSceneDependentDataFor: scene engine into: objectStateBindings
+	].
