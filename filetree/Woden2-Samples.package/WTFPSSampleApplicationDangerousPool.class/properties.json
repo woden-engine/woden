@@ -8,7 +8,10 @@
 	"instvars" : [
 		"pickedGun",
 		"floorGun",
-		"playerBox" ],
+		"playerBox",
+		"gunAction",
+		"gunActionFrame",
+		"gunActionRepeated" ],
 	"name" : "WTFPSSampleApplicationDangerousPool",
 	"pools" : [
 		 ],

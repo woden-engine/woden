@@ -1,4 +1,4 @@
-as yet unclassified
+rendering
 renderOnAthens: surface
 	| paint path |
 	surface drawDuring: [:can |

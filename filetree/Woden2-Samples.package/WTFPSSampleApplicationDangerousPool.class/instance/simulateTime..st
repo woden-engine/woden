@@ -12,15 +12,28 @@ simulateTime: delta
 
 	floorGun ifNotNil: [
 		gunBoundingBox := floorGun renderable boundingBox translatedBy: floorGun transform translation.
-		Transcript
+		"Transcript
 			show: gunBoundingBox; cr;
 			show: gunBoundingBox extent; cr;
 			show: translatedPlayerBox; cr;
 			show: translatedPlayerBox extent; cr;
-			show: (translatedPlayerBox intersectsOrContainsBox: gunBoundingBox); cr.
+			show: (translatedPlayerBox intersectsOrContainsBox: gunBoundingBox); cr."
 		(translatedPlayerBox intersectsOrContainsBox: gunBoundingBox) ifTrue: [
 			self pickGun.
 			floorGun removeFromScene.
 			floorGun := nil.
+		]
+	].
+
+	gunAction ifNotNil: [ 
+		gunActionFrame := gunActionFrame + (delta *30.0).
+		pickedGun renderableSceneData
+			setRestPose;
+			addAction: gunAction repeated: gunActionRepeated frame: gunActionFrame;
+			computePoseMatrices.
+		(gunActionRepeated not and: [ gunActionFrame > 35 ]) ifTrue: [
+			gunAction := pickedGun renderable actions at: 'Idle'.
+			gunActionFrame := 0.
+			gunActionRepeated := true.
 		]
 	].
