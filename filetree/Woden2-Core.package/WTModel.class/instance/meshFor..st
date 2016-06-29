@@ -5,7 +5,7 @@ meshFor: anEngine
 		mesh := WTSkinnedGenericMesh new.
 		mesh
 			armature: armature;
-			actions: actions.
+			actions: actions
 	] ifNil: [ 
 		mesh := WTGenericMesh new.
 	].

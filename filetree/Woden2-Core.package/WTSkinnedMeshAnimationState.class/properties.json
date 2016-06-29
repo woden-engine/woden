@@ -6,11 +6,13 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"armature",
-		"actions",
-		"pose" ],
-	"name" : "WTSkinnedGenericMesh",
+		"mesh",
+		"poseBuffer",
+		"pose",
+		"poseMatrices",
+		"poseForwardMatrices" ],
+	"name" : "WTSkinnedMeshAnimationState",
 	"pools" : [
 		 ],
-	"super" : "WTGenericMesh",
+	"super" : "Object",
 	"type" : "normal" }

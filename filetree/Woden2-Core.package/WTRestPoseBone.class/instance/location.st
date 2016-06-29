@@ -1,4 +1,0 @@
-accessing
-location
-	<accessor>
-	^ location

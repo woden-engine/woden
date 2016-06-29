@@ -1,4 +1,0 @@
-accessing
-parentIndex
-	<accessor>
-	^ parentIndex

@@ -7,7 +7,11 @@
 	"commentStamp" : "",
 	"instvars" : [
 		"names",
-		"bones" ],
+		"boneParents",
+		"bones",
+		"restPoseInverseMatrices",
+		"restPoseForwardMatrices",
+		"restPoseMatrices" ],
 	"name" : "WTModelArmature",
 	"pools" : [
 		"AGPUConstants" ],
