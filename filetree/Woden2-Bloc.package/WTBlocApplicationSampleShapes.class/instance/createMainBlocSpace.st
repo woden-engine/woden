@@ -3,7 +3,7 @@ createMainBlocSpace
 	| space |
 	space := BlSpace new.
 	space hostWindow: (WTBlVirtualWindow new engine: engine).
-	space world
+	space root
 		"addChild: (BlFPSCounter on:space);"
 		addChild: (BlBasicExamples newRectangle position: 10 @ 50);
 		addChild: (BlBasicExamples newPolygon position: 220 @ 0);
