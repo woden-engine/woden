@@ -1,4 +1,4 @@
-as yet unclassified
+rendering dispatch
 strokePath: aPath withStrokePaint: aStrokePaint
 	| pixelScaleFactors lineWidth pixelScaleFactor |
 	pixelScaleFactors := pathTransform matrix topLeft2x2 eigenValues collect: #abs.
@@ -8,7 +8,7 @@ strokePath: aPath withStrokePaint: aStrokePaint
 	lineWidth < 1.5 ifTrue: [
 		self strokeThinPath: aPath withStrokePaint: aStrokePaint
 	] ifFalse: [
-		Transcript show: 'Stroke non thin-path: ', lineWidth printString; cr.
+		"Transcript show: 'Stroke non thin-path: ', lineWidth printString; cr."
 		self strokeThinPath: aPath withStrokePaint: aStrokePaint
 	]
 	

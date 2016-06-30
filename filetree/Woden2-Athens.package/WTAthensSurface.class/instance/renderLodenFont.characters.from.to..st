@@ -1,4 +1,4 @@
-as yet unclassified
+rendering dispatch
 renderLodenFont: font characters: aString from: start to: end
 	| originalFace pipelineState scaleFactor currentPosition |
 	originalFace := font originalFace.

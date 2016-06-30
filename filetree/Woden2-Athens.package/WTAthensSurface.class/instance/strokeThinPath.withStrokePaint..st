@@ -1,4 +1,4 @@
-as yet unclassified
+rendering dispatch
 strokeThinPath: aPath withStrokePaint: aStrokePaint.
 	currentColor := aStrokePaint fillPaint asColor asWMVector4F.
 	self

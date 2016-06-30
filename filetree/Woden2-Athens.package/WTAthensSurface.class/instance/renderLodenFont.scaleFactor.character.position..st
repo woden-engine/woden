@@ -1,4 +1,4 @@
-as yet unclassified
+rendering dispatch
 renderLodenFont: face scaleFactor: scaleFactor character: character position: position
 	| glyphIndex glyph texcoordScale box boxExtent translation |
 	glyphIndex := (face characterMap at: character ifAbsent: [ 0 ]) + 1.

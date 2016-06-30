@@ -11,7 +11,9 @@
 		"closed",
 		"flattnessFactor",
 		"pixelThreshold",
-		"transformation" ],
+		"transformation",
+		"arcSegmentLength",
+		"maxArcSegments" ],
 	"name" : "WTAthensSoftwareTessellatedPathBuilder",
 	"pools" : [
 		 ],
