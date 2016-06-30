@@ -1,0 +1,22 @@
+{
+	"category" : "Woden2-Bloc",
+	"classinstvars" : [
+		 ],
+	"classtraitcomposition" : "TAkHostWindow classTrait",
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"engine",
+		"extent",
+		"eventFetcher",
+		"visible",
+		"opened",
+		"eventHandler",
+		"renderNeeded" ],
+	"name" : "WTBlVirtualWindow",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"traitcomposition" : "TAkHostWindow",
+	"type" : "normal" }

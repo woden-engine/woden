@@ -1,0 +1,17 @@
+{
+	"category" : "Woden2-Bloc",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"started",
+		"pulseEvent",
+		"pulseStartTime",
+		"pulsePeriod" ],
+	"name" : "WTBlPulseLoop",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

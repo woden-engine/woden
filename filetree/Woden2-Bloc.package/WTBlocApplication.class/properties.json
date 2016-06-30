@@ -1,0 +1,17 @@
+{
+	"category" : "Woden2-Bloc",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"blocUniverse",
+		"athensSurfaces",
+		"mainBlocSpace",
+		"lastRenderTime" ],
+	"name" : "WTBlocApplication",
+	"pools" : [
+		 ],
+	"super" : "WTAnimatedApplication",
+	"type" : "normal" }
