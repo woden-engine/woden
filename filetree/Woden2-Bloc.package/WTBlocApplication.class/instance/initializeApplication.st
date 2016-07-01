@@ -2,4 +2,5 @@ rendering
 initializeApplication
 	super initializeApplication.
 	athensSurfaces := engine frameBufferingCollect: [ :i | WTAthensSurface engine: engine ].
-	self createMainBlocSpace.
+	mainBlocSpace := self createMainBlocSpace.
+	mainBlocSpace ifNotNil: [ self activateBlocSpace: mainBlocSpace ].

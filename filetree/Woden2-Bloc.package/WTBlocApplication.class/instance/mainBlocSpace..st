@@ -1,3 +1,3 @@
 accessing
 mainBlocSpace: anObject
-	mainBlocSpace := anObject
+	mainBlocSpace := anObject.
