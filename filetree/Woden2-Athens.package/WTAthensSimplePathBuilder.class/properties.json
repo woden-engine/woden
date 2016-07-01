@@ -6,10 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"firstSegment",
-		"isJustText" ],
-	"name" : "WTAthensPath",
+		 ],
+	"name" : "WTAthensSimplePathBuilder",
 	"pools" : [
 		 ],
-	"super" : "AthensPath",
+	"super" : "AthensSimplePathBuilder",
 	"type" : "normal" }

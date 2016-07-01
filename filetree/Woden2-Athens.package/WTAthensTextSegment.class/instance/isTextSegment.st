@@ -1,0 +1,3 @@
+testing
+isTextSegment
+	^ true

@@ -1,3 +1,3 @@
 paths
 createPath: aPathCreatingBlock
-	^ WTAthensPath new firstSegment: (AthensSimplePathBuilder createPath:  aPathCreatingBlock )
+	^ WTAthensPath new firstSegment: (WTAthensSimplePathBuilder createPath: aPathCreatingBlock )

@@ -6,10 +6,11 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"firstSegment",
-		"isJustText" ],
-	"name" : "WTAthensPath",
+		"endPoint",
+		"string",
+		"font" ],
+	"name" : "WTAthensTextSegment",
 	"pools" : [
 		 ],
-	"super" : "AthensPath",
+	"super" : "AthensPathSegment",
 	"type" : "normal" }
