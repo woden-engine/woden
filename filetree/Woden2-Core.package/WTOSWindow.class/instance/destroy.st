@@ -1,6 +1,7 @@
 factory
 destroy
-	"This function must be called when the window is closed"
 	drawingProcess terminate.
 	
-	engine graphicsQueue finishExecution.
+	"This function must be called when the window is closed"
+	application ifNotNil: [ application windowDestroyed: self ].
+	

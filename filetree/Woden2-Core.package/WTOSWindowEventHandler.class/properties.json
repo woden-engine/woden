@@ -6,7 +6,8 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"wodenWindow" ],
+		"wodenWindow",
+		"handledHere" ],
 	"name" : "WTOSWindowEventHandler",
 	"pools" : [
 		 ],

@@ -1,3 +1,4 @@
 visiting
 visitWindowCloseEvent: anEvent
-	wodenWindow destroy
+	wodenWindow destroy.
+	handledHere := true.
