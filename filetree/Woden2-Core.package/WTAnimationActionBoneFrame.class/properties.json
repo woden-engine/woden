@@ -5,7 +5,7 @@
 	"classvars" : [
 		 ],
 	"commentStamp" : "",
-	"extradependencies" : "#(#WMQuaternionF #WMVector3F)",
+	"extradependencies" : "#(#WMVector3F #WMQuaternionF)",
 	"instvars" : [
 		"#translation &=> #WMVector3F",
 		"#rotation &=> #WMQuaternionF" ],

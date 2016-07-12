@@ -15,7 +15,10 @@
 		"screenHeight",
 		"swapChain",
 		"currentFramebuffer",
-		"lastTime" ],
+		"lastTime",
+		"controlSemaphore",
+		"shuttingDown",
+		"drawingProcessFinishSemaphore" ],
 	"name" : "WTOSWindow",
 	"pools" : [
 		"AGPUConstants" ],
