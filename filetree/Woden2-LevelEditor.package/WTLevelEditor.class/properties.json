@@ -1,0 +1,16 @@
+{
+	"category" : "Woden2-LevelEditor",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"sceneRenderer",
+		"camera",
+		"scene" ],
+	"name" : "WTLevelEditor",
+	"pools" : [
+		 ],
+	"super" : "WTBlocApplication",
+	"type" : "normal" }
