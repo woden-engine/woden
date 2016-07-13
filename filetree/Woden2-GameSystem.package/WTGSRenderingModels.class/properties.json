@@ -1,0 +1,16 @@
+{
+	"category" : "Woden2-GameSystem",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"invalidWireModel",
+		"invalidSolidModel",
+		"invalidTexturedModel" ],
+	"name" : "WTGSRenderingModels",
+	"pools" : [
+		 ],
+	"super" : "WTGSComponent",
+	"type" : "normal" }

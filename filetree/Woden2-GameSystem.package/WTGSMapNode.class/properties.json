@@ -1,0 +1,15 @@
+{
+	"category" : "Woden2-GameSystem",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"selected",
+		"lastSelected" ],
+	"name" : "WTGSMapNode",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }
