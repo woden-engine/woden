@@ -33,7 +33,7 @@ renderOnWindow: aWindow
 			useShaderResources: objectStateBinding validHandle;
 			useShaderResources: globalLightingStateBinding validHandle.
 			
-		mesh renderOn: builder mode: #forward.
+		mesh renderOn: builder mode: #forward submode: #full.
 		builder		
 			endRenderPass.
 	].
