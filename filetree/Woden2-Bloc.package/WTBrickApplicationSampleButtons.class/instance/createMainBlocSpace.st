@@ -13,8 +13,7 @@ createMainBlocSpace
 	b2 := BrButton new 
 		text: 'button with icon';
 		margin:(BlInsets all:5);
-		constraintsDo:[:c| c alignCenter];
-		icon: (BlSvgShape new svg: BlIcons checked;extent:20@20).
+		constraintsDo:[:c| c alignCenter].
 	
 	b3 := BrButton new 
 		text: 'button outlined';
@@ -22,14 +21,12 @@ createMainBlocSpace
 		margin:(BlInsets all:5);
 		constraintsDo:[:c| c alignCenter].
 		
-	b4 := BrButton new 
-		icon: (BlSvgShape new svg: BlIcons checked;extent:32@32);
+	b4 := BrButton new
 		margin:(BlInsets all:5);
 		constraintsDo:[:c| c alignCenter].	
 	
 	b5 := BrButton new 
 		addStyleClass: #outlined;
-		icon: (BlSvgShape new svg: BlIcons checked;extent:32@32);
 		margin:(BlInsets all:5);
 		constraintsDo:[:c| c alignCenter].	
 	

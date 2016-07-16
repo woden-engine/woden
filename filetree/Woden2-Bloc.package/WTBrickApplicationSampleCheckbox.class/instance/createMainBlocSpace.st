@@ -14,8 +14,7 @@ createMainBlocSpace
 	b2 := BrCheckbox new 
 		text: 'cb with icon';
 		margin:(BlInsets all:5);
-		constraintsDo:[:c| c alignCenter];
-		icon: (BlSvgShape new svg: BlIcons circleCross;extent:20@20).
+		constraintsDo:[:c| c alignCenter].
 	
 	b3 := BrCheckbox new 
 		text: 'cb outlined';
@@ -23,14 +22,12 @@ createMainBlocSpace
 		margin:(BlInsets all:5);
 		constraintsDo:[:c| c alignCenter].
 		
-	b4 := BrCheckbox new 
-		icon: (BlSvgShape new svg: BlIcons circleCross;extent:20@20);
+	b4 := BrCheckbox new
 		margin:(BlInsets all:5);
 		constraintsDo:[:c| c alignCenter].	
 	
 	b5 := BrCheckbox new 
 		addStyleClass: #outlined;
-		icon: (BlSvgShape new svg: BlIcons circleCross;extent:20@20);
 		margin:(BlInsets all:5);
 		constraintsDo:[:c| c alignCenter].	
 	

@@ -15,11 +15,7 @@ createMainBlocSpace
 		margin:(BlInsets all:5);
 		fontColor: Color black;
 		fontSize: 14;
-		constraintsDo:[:c| c alignCenter];
-		icon: (BlSvgShape new svg: BlIcons checked;extent:20@20).
-	
-	
-	
+		constraintsDo:[:c| c alignCenter]..
 	
 	box := BrHBoxPane new
 		constraintsDo:[:c| c vhMatchParent ; alignCenter];

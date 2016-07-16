@@ -2,7 +2,6 @@
 	"category" : "Woden2-Bloc",
 	"classinstvars" : [
 		 ],
-	"classtraitcomposition" : "TBlHostWindow classTrait",
 	"classvars" : [
 		 ],
 	"commentStamp" : "",
@@ -18,5 +17,4 @@
 	"pools" : [
 		 ],
 	"super" : "Object",
-	"traitcomposition" : "TBlHostWindow",
 	"type" : "normal" }
