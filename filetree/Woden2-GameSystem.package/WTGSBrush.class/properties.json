@@ -1,5 +1,5 @@
 {
-	"category" : "Woden2-GameSystem",
+	"category" : "Woden2-GameSystem-Level",
 	"classinstvars" : [
 		 ],
 	"classvars" : [
@@ -8,7 +8,8 @@
 	"instvars" : [
 		"faces",
 		"positions",
-		"boundingBox" ],
+		"boundingBox",
+		"color" ],
 	"name" : "WTGSBrush",
 	"pools" : [
 		 ],

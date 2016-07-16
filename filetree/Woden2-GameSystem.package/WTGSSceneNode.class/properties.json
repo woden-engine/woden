@@ -6,10 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"selected",
-		"lastSelected" ],
-	"name" : "WTGSMapNode",
+		"node" ],
+	"name" : "WTGSSceneNode",
 	"pools" : [
 		 ],
-	"super" : "Object",
+	"super" : "WTGSComponent",
 	"type" : "normal" }

@@ -1,0 +1,3 @@
+initialization
+generateColor
+	^ BrushColors atRandom

@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 center	
 	| center |
 	center := WMVector3D new.
