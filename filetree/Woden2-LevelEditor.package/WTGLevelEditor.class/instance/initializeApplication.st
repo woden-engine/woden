@@ -3,4 +3,4 @@ initializeApplication
 	super initializeApplication.
 	self
 		clearScene;
-		initializeSceneRenderer
+		initializeSceneRenderer.

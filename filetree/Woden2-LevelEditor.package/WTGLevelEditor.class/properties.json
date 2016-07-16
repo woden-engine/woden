@@ -3,13 +3,16 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		 ],
+		"DefaultSettingsForViews" ],
 	"commentStamp" : "",
 	"instvars" : [
 		"sceneRenderer",
 		"camera",
-		"scene" ],
-	"name" : "WTLevelEditor",
+		"scene",
+		"map",
+		"renderMode",
+		"levelViews" ],
+	"name" : "WTGLevelEditor",
 	"pools" : [
 		 ],
 	"super" : "WTBlocApplication",
