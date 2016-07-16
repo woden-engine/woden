@@ -1,3 +1,3 @@
 factory
 defaultExtent
-	^ 640@480
+	^ application ifNil: [ 640@480 ] ifNotNil: [ application defaultExtent ]

@@ -5,7 +5,7 @@ mesh
 	indices ifEmpty: [ ^ nil ].
 	self finishSubmesh.
 	
-	mesh := WTGenericMesh new.
+	mesh := self instantiateMesh.
 	mesh
 		vertexBinding: self createVertexBinding;
 		indexBuffer: self createIndexBuffer;

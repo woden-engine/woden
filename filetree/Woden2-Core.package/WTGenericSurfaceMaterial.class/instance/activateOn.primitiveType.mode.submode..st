@@ -1,5 +1,5 @@
 rendering
-activateOn: listBuilder primitiveType: primitiveType mode: renderMode
+activateOn: listBuilder primitiveType: primitiveType mode: renderMode submode: submode
 	| pipeline |
 	self validateCache.
 	resourceBinding ifNotNil: [ 

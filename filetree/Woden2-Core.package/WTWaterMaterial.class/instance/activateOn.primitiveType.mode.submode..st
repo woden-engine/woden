@@ -1,5 +1,5 @@
-state binding
-activateOn: listBuilder primitiveType: primitiveType mode: renderMode
+rendering
+activateOn: listBuilder primitiveType: primitiveType mode: renderMode submode: submode
 	| pipeline |
 	self validateCache.
 	resourceBinding ifNotNil: [ 

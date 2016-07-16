@@ -1,0 +1,19 @@
+{
+	"category" : "Woden2-Core-Mesh",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"vertexBuffer",
+		"vertexBufferCapacity",
+		"indexBuffer",
+		"indexBufferCapacity",
+		"vertexBinding",
+		"instantiatedMesh" ],
+	"name" : "WTDynamicGenericMeshBuilder",
+	"pools" : [
+		 ],
+	"super" : "WTGenericMeshBuilder",
+	"type" : "normal" }

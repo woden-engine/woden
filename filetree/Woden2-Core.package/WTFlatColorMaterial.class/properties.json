@@ -3,12 +3,14 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		"PrimitiveTypeToStateSuffix" ],
+		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"engine" ],
-	"name" : "WTMaterial",
+		"useDepth",
+		"writeDepth",
+		"modePipelines" ],
+	"name" : "WTFlatColorMaterial",
 	"pools" : [
-		"AGPUConstants" ],
-	"super" : "Object",
+		 ],
+	"super" : "WTMaterial",
 	"type" : "normal" }
