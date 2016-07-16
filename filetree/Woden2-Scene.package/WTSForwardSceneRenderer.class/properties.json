@@ -22,7 +22,8 @@
 		"visibleLightSources",
 		"lightSources",
 		"samplerBindings",
-		"currentTime" ],
+		"currentTime",
+		"maxNumberOfCameras" ],
 	"name" : "WTSForwardSceneRenderer",
 	"pools" : [
 		"AGPUConstants" ],

@@ -9,7 +9,8 @@
 		"renderable",
 		"objectStateBuffer",
 		"objectStateBindings",
-		"renderableSceneData" ],
+		"renderableSceneData",
+		"renderPriority" ],
 	"name" : "WTSSpatialObject",
 	"pools" : [
 		 ],

@@ -1,3 +1,3 @@
 accessing
-transform: anObject
-	transform := anObject
+transform: aTransform
+	transform := aTransform asWMReversibleAffineTransformF

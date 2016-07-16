@@ -1,0 +1,3 @@
+accessing
+maxNumberOfCameras
+	^ maxNumberOfCameras

@@ -3,7 +3,12 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		 ],
+		"RenderPriorityDefault",
+		"RenderPriorityEditorOpaqueAfter",
+		"RenderPriorityEditorOpaqueBefore",
+		"RenderPriorityOpaque",
+		"RenderPriorityOpaqueStatic",
+		"RenderPriorityTranslucent" ],
 	"commentStamp" : "RonieSalgado 6/13/2016 14:33",
 	"instvars" : [
 		"scene",
@@ -12,7 +17,8 @@
 		"visible",
 		"lastUpdatedGpuFrame",
 		"parent",
-		"renderTransform" ],
+		"renderTransform",
+		"model" ],
 	"name" : "WTSNode",
 	"pools" : [
 		 ],
