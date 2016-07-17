@@ -8,7 +8,8 @@
 	"instvars" : [
 		"useDepth",
 		"writeDepth",
-		"modePipelines" ],
+		"modePipelines",
+		"stipple" ],
 	"name" : "WTFlatColorMaterial",
 	"pools" : [
 		 ],

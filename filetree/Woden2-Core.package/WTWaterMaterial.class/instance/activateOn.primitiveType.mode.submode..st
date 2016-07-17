@@ -7,5 +7,5 @@ activateOn: listBuilder primitiveType: primitiveType mode: renderMode submode: s
 	].
 	
 	pipeline := modePipelines at: renderMode ifAbsent: [ ^ false ].
-	listBuilder usePipelineState: pipeline handle.
+	listBuilder usePipelineState: pipeline validHandle.
 	^ true

@@ -18,7 +18,8 @@
 		"lastTime",
 		"controlSemaphore",
 		"shuttingDown",
-		"drawingProcessFinishSemaphore" ],
+		"drawingProcessFinishSemaphore",
+		"properties" ],
 	"name" : "WTOSWindow",
 	"pools" : [
 		"AGPUConstants" ],

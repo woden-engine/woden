@@ -9,7 +9,8 @@
 		"boundingBox",
 		"vertexBinding",
 		"indexBuffer",
-		"submeshes" ],
+		"submeshes",
+		"modificationCount" ],
 	"name" : "WTGenericMesh",
 	"pools" : [
 		 ],

@@ -1,10 +1,11 @@
 state binding
 fetchPipelines
-	| psm prefix |
+	| psm prefix baseName |
 	psm := engine pipelineStateCache.
-	prefix := useDepth
-		ifTrue: [ writeDepth ifTrue: [ 'flat-color.' ] ifFalse: [ 'flat-color.depth-nowrite.' ] ]
-		ifFalse: [ 'flat-color.no-depth.' ].
+	baseName := stipple ifTrue: [ 'flat-color-stipple' ] ifFalse: [ 'flat-color' ].
+	prefix := baseName , (useDepth
+		ifTrue: [ writeDepth ifTrue: [ '.' ] ifFalse: [ '.depth-nowrite.' ] ]
+		ifFalse: [ '.no-depth.' ]).
 		
 	modePipelines := Dictionary newFromPairs: {
 		#'forward.lines' . psm pipelineStateNamed: ('material.forward.' , prefix , 'lines') asSymbol.
