@@ -12,5 +12,5 @@ cd "$IMAGE_DIR"
 wget -O- get.pharo.org/60 | bash
 
 # Load the repositories into the image
-./pharo-ui Pharo.image st "$WODEN2_SRC_TOP/scripts/LoadRepositories.st"
+#./pharo-ui Pharo.image st "$WODEN2_SRC_TOP/scripts/LoadRepositories.st"
 

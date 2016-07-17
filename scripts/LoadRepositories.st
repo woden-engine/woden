@@ -19,6 +19,13 @@ Metacello new
 	load.
 "
 
+"Load Bloc2"
+Gofer new
+    smalltalkhubUser: 'GlennCavarle' project: 'Bloc2';
+    package: 'ConfigurationOfBloc2';
+    load.
+(Smalltalk at: #ConfigurationOfBloc2) loadBleedingEdge.
+
 "Load Woden 2"
 FileStream stdout nextPutAll: 'Loading Woden2'; lf.
 Metacello new
