@@ -82,6 +82,7 @@ initializeSceneContent
 		addGridWithWidth: 5.0 height: 5.0 subdivisions: 64.
 		
 	waterSurface := WTSSpatialObject new.
+	waterSurface translucentRenderPriority.
 	waterSurface renderable: meshBuilder mesh.
 	waterSurface transform translateToX: 0.0 y: -0.3 z: 0.0.
 	scene add: waterSurface.

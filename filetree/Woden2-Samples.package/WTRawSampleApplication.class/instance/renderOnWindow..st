@@ -23,7 +23,7 @@ renderOnWindow: aWindow
 	
 	commandList withPipelineState: pipelineState rebuild: [ :builder |
 		builder
-			setShaderSignature: shaderSignature handle;
+			setShaderSignature: shaderSignature validHandle;
 			beginRenderPass: mainRenderPass validHandle framebuffer: aWindow currentFramebuffer bundle_content: false asBit;
 			
 			setViewport: 0 y: 0 w: aWindow screenWidth h: aWindow screenHeight;
