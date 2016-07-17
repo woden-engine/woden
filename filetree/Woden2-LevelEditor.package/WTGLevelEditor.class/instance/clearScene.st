@@ -9,8 +9,6 @@ clearScene
 	].
 
 	self
-		createSelectionBoxManipulatorMesh;
-		createSelectionBoxManipulators;
-		createSelectionBoxMesh;
 		createSelectionBox;
+		createSelectionBoxView;
 		createMap.

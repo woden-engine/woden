@@ -3,11 +3,11 @@ onDragStartEvent: anEvent
 	| element |
 	toolController ifNil: [
 		anEvent isLeftButtonDrag ifTrue: [
-			element := self findBestElementAtGlobalCoord: anEvent position.
+			element := (self findBestElementAtGlobalCoord: anEvent position) value asNodeModelForLevelEditor: editor.
 			element ifNil: [
 				self startDragController: WTGEDragMakeSelectionBox new event: anEvent.
 			] ifNotNil: [
-				self startDragController: (element value view: self dragControllerFor: anEvent) event: anEvent.
+				self startDragController: (element view: self dragControllerFor: anEvent) event: anEvent.
 			]
 		].
 

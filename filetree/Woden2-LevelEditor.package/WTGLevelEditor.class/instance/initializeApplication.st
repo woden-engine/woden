@@ -1,4 +1,4 @@
-rendering
+initialization
 initializeApplication
 	super initializeApplication.
 	self

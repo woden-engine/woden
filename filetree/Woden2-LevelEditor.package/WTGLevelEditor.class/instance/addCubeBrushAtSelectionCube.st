@@ -1,7 +1,9 @@
-initialization
+actions
 addCubeBrushAtSelectionCube
 	| brush |
-	selectionBox isEmpty ifTrue: [ ^ self ].
+	(selectionBox isEmpty or: [ selectionBox isSpaceSelection not ]) ifTrue: [ ^ self ].
 	
-	brush := WTGSBrush box: selectionBox.
+	brush := WTGSBrush box: selectionBox box.
 	map entities first addComponent: brush.
+	
+	selectionBox addElement: brush.

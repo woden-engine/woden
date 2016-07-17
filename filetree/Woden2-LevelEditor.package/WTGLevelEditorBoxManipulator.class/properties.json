@@ -6,8 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"box",
-		"direction" ],
+		"boxIndex",
+		"direction",
+		"node" ],
 	"name" : "WTGLevelEditorBoxManipulator",
 	"pools" : [
 		 ],

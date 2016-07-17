@@ -25,7 +25,9 @@
 		"isPerspective",
 		"gridSize",
 		"cameraFrustum",
-		"toolController" ],
+		"toolController",
+		"lastClickElements",
+		"nextClickElementIndex" ],
 	"name" : "WTGLevelEditorView",
 	"pools" : [
 		"OSKeySymbols" ],

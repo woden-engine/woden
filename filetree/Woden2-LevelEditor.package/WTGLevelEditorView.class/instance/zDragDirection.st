@@ -1,3 +1,3 @@
 coordinate systems
 zDragDirection
-	^ cameraTransform matrix thirdRow
+	^ cameraTransform matrix thirdColumn negated

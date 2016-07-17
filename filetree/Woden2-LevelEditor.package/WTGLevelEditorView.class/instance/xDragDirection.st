@@ -1,3 +1,3 @@
 coordinate systems
 xDragDirection
-	^ cameraTransform matrix firstRow
+	^ cameraTransform matrix firstColumn

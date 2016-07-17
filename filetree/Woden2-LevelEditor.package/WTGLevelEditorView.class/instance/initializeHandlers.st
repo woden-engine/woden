@@ -13,6 +13,9 @@ initializeHandlers
 			evt consumed: true.
 			self onDoubleClickEvent: evt.
 		]);
+		addEventHandler: (BlEventHandler on: BlMouseMoveEvent do: [ :evt | 
+			self onMouseMoveEvent: evt.
+		]);
 		addEventHandler: (BlEventHandler on: BlDragStartEvent do: [ :evt | 
 			evt consumed: true.
 			self onDragStartEvent: evt.

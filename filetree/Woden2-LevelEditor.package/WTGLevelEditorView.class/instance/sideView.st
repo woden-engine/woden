@@ -1,4 +1,4 @@
 view side
 sideView
-	cameraAngle := WMVector3D y: Float halfPi negated.
-	gridOrientation := WMMatrix3F lookAtRight.
+	cameraAngle := WMVector3D y: Float halfPi.
+	gridOrientation := WMMatrix3F lookAtLeft.

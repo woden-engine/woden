@@ -1,5 +1,11 @@
 selection
 findElementsAtWindowCoord: coord
-	| ray |
+	| ray elements|
 	ray := self rayAtWindowCoord: coord.
-	Transcript show: ray; cr.
+	elements := OrderedCollection new.
+	self elementsAlongRay: ray do: [ :result |
+		elements add: result
+	].
+
+	elements sort: [:a :b | a < b].
+	^ elements

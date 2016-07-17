@@ -12,7 +12,8 @@ onDragStartEvent: event
 		nearPosition := -1.0.
 		farPosition := 1.0.
 	] ifFalse: [
-		nearPosition := zdirection dot: (selectionBox support: zdirection negated).
-		farPosition := zdirection dot: (selectionBox support: zdirection).
-	]
+		nearPosition := zdirection dot: (selectionBox box support: zdirection negated).
+		farPosition := zdirection dot: (selectionBox box support: zdirection).
+	].
 	
+	view editor selectionBox: WTGLevelEditorSelectionBox empty.

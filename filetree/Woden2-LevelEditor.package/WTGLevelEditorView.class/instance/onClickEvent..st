@@ -1,5 +1,20 @@
 event handling
 onClickEvent: anEvent
-	| np |
-	np := self normalizedPosition: (self globalPointToLocal: anEvent position).
-	Transcript show: np; cr.
+	| elements currentElement |
+	elements := (self findElementsAtGlobalCoord: anEvent position) collect: #value.
+	
+	elements ifNotEmpty: [
+		lastClickElements = elements ifTrue: [
+			nextClickElementIndex := (nextClickElementIndex + 1) % lastClickElements size
+		] ifFalse: [ 
+			nextClickElementIndex := 0
+		].
+		lastClickElements := elements.
+		
+		currentElement := elements at: nextClickElementIndex + 1.
+	].
+
+	currentElement := currentElement asNodeModelForLevelEditor: editor.
+	currentElement
+		ifNotNil: [ currentElement selectSingleOnEditor: editor ]
+		ifNil: [ editor selectionBox: WTGLevelEditorSelectionBox empty ]

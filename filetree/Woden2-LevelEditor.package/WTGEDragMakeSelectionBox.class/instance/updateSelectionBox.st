@@ -1,12 +1,12 @@
 as yet unclassified
 updateSelectionBox
 	| leftPosition rightPosition bottomPosition topPosition near far min max box |
-	leftPosition := self roundToGrid: (xdirection dot: startPoint).
-	rightPosition := self roundToGrid: (xdirection dot: endPoint).
-	bottomPosition := self roundToGrid: (ydirection dot: startPoint).
-	topPosition := self roundToGrid: (ydirection dot: endPoint).
-	near := self roundToGrid: nearPosition.
-	far := self roundToGrid: farPosition.
+	leftPosition := xdirection dot: startPoint.
+	rightPosition := xdirection dot: endPoint.
+	bottomPosition := ydirection dot: startPoint.
+	topPosition := ydirection dot: endPoint.
+	near := nearPosition.
+	far := farPosition.
 	
 	min := (xdirection * leftPosition) + (ydirection * bottomPosition) + (zdirection * near).
 	max := (xdirection * rightPosition) + (ydirection * topPosition) + (zdirection * far).
@@ -14,4 +14,4 @@ updateSelectionBox
 		insertPoint: min;
 		insertPoint: max;
 		yourself.
-	self editor selectionBox: box.
+	self editor selectionBox box: (view snapBox: box).

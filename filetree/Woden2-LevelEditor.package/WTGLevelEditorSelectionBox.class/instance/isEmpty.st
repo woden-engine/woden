@@ -1,0 +1,3 @@
+requirements
+isEmpty
+	^ box isEmpty

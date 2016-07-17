@@ -1,4 +1,7 @@
 selection
 selectionBox: aBox
+	self assert: aBox isNotNil.
+	selectionBox ifNotNil: [ selectionBox editor: nil ].
 	selectionBox := aBox.
-	self selectionBoxChanged
+	selectionBox ifNotNil: [ selectionBox editor: self ].
+	selectionBoxView ifNotNil: [ selectionBoxView updateNodes ]

@@ -1,0 +1,20 @@
+{
+	"category" : "Woden2-LevelEditor",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"editor",
+		"node",
+		"manipulatorBoxes",
+		"manipulatorNodes",
+		"boxMesh",
+		"manipulatorMesh",
+		"mouseOverIndex" ],
+	"name" : "WTGESelectionBoxView",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }
