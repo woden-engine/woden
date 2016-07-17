@@ -1,4 +1,4 @@
-extra per object rendering data
+rendering
 renderOn: listBuilder mode: renderMode submode: submode
 	| model |
 	

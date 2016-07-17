@@ -1,4 +1,4 @@
-extra per object rendering data
+rendering
 modelForSubMode: submode
 	| engine |
 	engine := entity scene engine.
