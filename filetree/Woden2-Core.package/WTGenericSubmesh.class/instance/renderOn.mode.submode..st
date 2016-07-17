@@ -1,4 +1,4 @@
-as yet unclassified
+rendering
 renderOn: listBuilder mode: renderMode submode: submode
 	material ifNil: [ ^ self ].
 	(material activateOn: listBuilder primitiveType: primitiveType mode: renderMode submode: submode) ifFalse: [ ^ self].
