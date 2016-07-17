@@ -1,11 +1,13 @@
 rendering
-renderFrame: frameIndex viewports: viewports on: framebuffer
-	| commandList commandAllocator cameraUniformBinding globalLightingStateBinding backgroundColor viewportBounds |
+renderFrame: frameIndex viewports: viewports on: window
+	| commandList commandAllocator cameraUniformBinding globalLightingStateBinding backgroundColor viewportBounds objectsPerViewport isCommandListCached framebuffer newFrameState frameStateCache |
 	currentFrameIndex := frameIndex.
-	commandList := commandLists at: frameIndex.
-	commandAllocator := commandAllocators at: frameIndex.
-	commandAllocator reset.
-
+	self createWindowStateFor: window.
+	framebuffer := window currentFramebuffer.
+	commandList := self commandListFor: window at: frameIndex.
+	commandAllocator := self commandAllocatorFor: window at: frameIndex.
+	frameStateCache := self frameStateCacheFor: window at: frameIndex.
+	
 	currentCamera := viewports first camera.	
 	self collectVisibleObjectsFor: currentCamera.
 	self sortVisibleObjects.
@@ -13,8 +15,10 @@ renderFrame: frameIndex viewports: viewports on: framebuffer
 	
 	self
 		updateFrameCameraStates: viewports;
-		updateFrameLightingState.
+		updateFrameLightingStates: viewports.
 		
+	objectsPerViewport := viewports collect: [ :viewport | visibleObjects select: viewport filter ].
+	
 	cameraUniformBinding := cameraUniformBindings at: frameIndex.
 	globalLightingStateBinding := globalLightingStateBindings at: frameIndex.
 	
@@ -25,26 +29,36 @@ renderFrame: frameIndex viewports: viewports on: framebuffer
 		b: backgroundColor z;
 		a: backgroundColor w;
 		yourself).
-	
-	commandList withPipelineState: nil rebuild: [ :builder |
-		builder
-				setShaderSignature: shaderSignature handle;
-				useShaderResources: globalLightingStateBinding validHandle;
-				useShaderResources: samplerBindings validHandle;
 
-				beginRenderPass: renderPass validHandle framebuffer: framebuffer bundle_content: false asBit.
-										
+	newFrameState := {
+		objectsPerViewport .
+		objectsPerViewport collect: [:list | list collect: #renderModificationCount ].
+		viewports collect: #submode .
+		viewports collect: #bounds .
+		framebuffer validHandle getHandle asInteger
+	}.
+	isCommandListCached := frameStateCache value = newFrameState.
+	frameStateCache value: newFrameState.
+	isCommandListCached ifFalse: [ commandAllocator reset. ].
+	
+	commandList withPipelineState: nil isCached: isCommandListCached rebuild: [ :builder |
+		builder
+			beginRenderPass: renderPass validHandle framebuffer: framebuffer bundle_content: false asBit.
+	
 		viewports doWithIndex: [ :viewport :viewportIndex |
 			viewportBounds := viewport bounds.
 			builder
 				setViewport: viewportBounds origin x y: viewportBounds origin y w: viewportBounds width h: viewportBounds height;
 				setScissor: viewportBounds origin x y: viewportBounds origin y w: viewportBounds width h: viewportBounds height;
+
+				setShaderSignature: shaderSignature handle;
+				useShaderResources: samplerBindings validHandle;
+											
+				useShaderResources: (cameraUniformBinding at: viewportIndex) validHandle;
+				useShaderResources: (globalLightingStateBinding at: viewportIndex) validHandle.
 			
-				useShaderResources: (cameraUniformBinding at: viewportIndex) validHandle.
-			
-				self renderObjects: visibleObjects filter: viewport filter onList: builder submode: viewport submode.
-		].
-	
+				(objectsPerViewport at: viewportIndex) do: [ :object | object renderOn: builder mode: #forward submode: viewport submode ]
+		].	
 		builder
 			endRenderPass.
 	].

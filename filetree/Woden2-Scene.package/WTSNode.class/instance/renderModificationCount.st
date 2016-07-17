@@ -1,0 +1,3 @@
+accessing
+renderModificationCount
+	^ 0

@@ -1,0 +1,17 @@
+{
+	"category" : "Woden2-Scene-Renderer",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "RonieSalgado 7/17/2016 00:04",
+	"instvars" : [
+		"commandAllocators",
+		"commandLists",
+		"stateCaches",
+		"framebufferCount" ],
+	"name" : "WTSForwardSceneRendererWindowData",
+	"pools" : [
+		"AGPUConstants" ],
+	"super" : "Object",
+	"type" : "normal" }

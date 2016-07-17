@@ -9,7 +9,6 @@ initializeWithEngine: anEngine
 	
 	self
 		createRenderPass;
-		createCommandLists;
 		createCameraStateBuffer;
 		createLightingState;
 		createSamplers.

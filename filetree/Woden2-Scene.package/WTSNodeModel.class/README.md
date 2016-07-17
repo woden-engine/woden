@@ -1,0 +1,1 @@
+I am the super class of a model used by a scene node.

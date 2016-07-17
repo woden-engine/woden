@@ -9,8 +9,6 @@
 		"engine",
 		"scene",
 		"renderPass",
-		"commandAllocators",
-		"commandLists",
 		"globalLightingStateBuffer",
 		"globalLightingStateBindings",
 		"cameraUniformBuffer",
