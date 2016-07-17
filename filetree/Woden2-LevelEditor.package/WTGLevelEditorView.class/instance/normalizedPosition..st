@@ -1,6 +1,8 @@
 coordinate systems
 normalizedPosition: aPosition
-	| x y |
-	x := aPosition x / self width.
-	y := 1.0 - (aPosition y / self height).
+	| x y myExtent |
+	myExtent := self innerBounds extent.
+	
+	x := aPosition x / myExtent x.
+	y := 1.0 - (aPosition y / myExtent y).
 	^ x asFloat @ y

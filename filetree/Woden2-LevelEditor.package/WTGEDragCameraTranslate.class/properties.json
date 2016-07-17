@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-LevelEditor",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "WTGEDragCameraTranslate",
+	"pools" : [
+		 ],
+	"super" : "WTGEDragTool",
+	"type" : "normal" }

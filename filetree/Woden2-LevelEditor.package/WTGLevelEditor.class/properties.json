@@ -7,11 +7,16 @@
 	"commentStamp" : "",
 	"instvars" : [
 		"sceneRenderer",
-		"camera",
 		"scene",
 		"map",
 		"renderMode",
-		"levelViews" ],
+		"levelViews",
+		"selectionBox",
+		"selectionBoxMesh",
+		"selectionBoxNode",
+		"selectionBoxManipulatorMesh",
+		"selectionBoxManipulators",
+		"selectionBoxManipulatorNodes" ],
 	"name" : "WTGLevelEditor",
 	"pools" : [
 		 ],

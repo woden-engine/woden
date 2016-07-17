@@ -17,11 +17,11 @@ createGrid
 		mesh.
 
 	primaryGrid := WTSSpatialObject new
-		model: self;
+		model: (WTGLevelEditorElementModel new view: self);
 		renderable: primaryGridMesh.
 			
 	secondaryGrid := WTSSpatialObject new
-		model: self;
+		model: (WTGLevelEditorElementModel new view: self);
 		renderable: secondaryGridMesh.
 
 	self scene add: secondaryGrid.

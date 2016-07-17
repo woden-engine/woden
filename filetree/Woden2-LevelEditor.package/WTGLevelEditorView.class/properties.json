@@ -24,9 +24,8 @@
 		"gridOrientation",
 		"isPerspective",
 		"gridSize",
-		"dragStartPosition",
-		"lastDragPosition",
-		"cameraFrustum" ],
+		"cameraFrustum",
+		"toolController" ],
 	"name" : "WTGLevelEditorView",
 	"pools" : [
 		"OSKeySymbols" ],

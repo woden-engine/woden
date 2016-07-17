@@ -1,0 +1,16 @@
+{
+	"category" : "Woden2-LevelEditor",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"depthPoint",
+		"onNewTranslation",
+		"totalTranslation" ],
+	"name" : "WTGEDragTranslate",
+	"pools" : [
+		 ],
+	"super" : "WTGEDragTool",
+	"type" : "normal" }

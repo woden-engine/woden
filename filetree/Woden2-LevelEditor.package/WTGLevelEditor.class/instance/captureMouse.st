@@ -1,3 +1,3 @@
-as yet unclassified
+mouse capture
 captureMouse
 	window ifNotNil: [ window captureMouse ]
