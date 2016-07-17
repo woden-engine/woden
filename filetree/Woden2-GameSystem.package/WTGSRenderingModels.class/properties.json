@@ -14,7 +14,8 @@
 		"wireModelMaterial",
 		"solidModelBuilder",
 		"solidModel",
-		"solidModelMaterial" ],
+		"solidModelMaterial",
+		"modificationCount" ],
 	"name" : "WTGSRenderingModels",
 	"pools" : [
 		 ],
