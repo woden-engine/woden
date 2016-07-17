@@ -10,14 +10,13 @@ renderFrame: frameIndex viewports: viewports on: window
 	
 	currentCamera := viewports first camera.	
 	self collectVisibleObjectsFor: currentCamera.
-	self sortVisibleObjects.
 	visibleObjects do: [ :obj | obj updateGpuStateForFrame: frameIndex ].
+	objectsPerViewport := viewports collect: [ :viewport | visibleObjects select: viewport filter ].
+	self sortObjects: objectsPerViewport perViewports: viewports.
 	
 	self
 		updateFrameCameraStates: viewports;
 		updateFrameLightingStates: viewports.
-		
-	objectsPerViewport := viewports collect: [ :viewport | visibleObjects select: viewport filter ].
 	
 	cameraUniformBinding := cameraUniformBindings at: frameIndex.
 	globalLightingStateBinding := globalLightingStateBindings at: frameIndex.
@@ -32,7 +31,7 @@ renderFrame: frameIndex viewports: viewports on: window
 
 	newFrameState := {
 		objectsPerViewport .
-		objectsPerViewport collect: [:list | list collect: #renderModificationCount ].
+		objectsPerViewport collectWithIndex: [:list :i| list collect: [:node | node renderModificationCountFor: #forward submode: (viewports at: i) submode] ].
 		viewports collect: #submode .
 		viewports collect: #bounds .
 		framebuffer validHandle getHandle asInteger

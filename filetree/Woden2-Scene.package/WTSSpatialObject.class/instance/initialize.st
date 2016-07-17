@@ -1,4 +1,6 @@
-as yet unclassified
+initialization
 initialize
 	super initialize.
-	renderPriority := RenderPriorityDefault
+	renderPriority := RenderPriorityDefault.
+	objectState := WTGenericObjectState new.
+	objectState color: Color white asWMVector4F.

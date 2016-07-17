@@ -11,5 +11,10 @@ initialize
 	RenderPriorityEditorOpaqueAfter := 800.
 	
 	RenderPriorityTranslucent := 1000.
+	
+	RenderPriorityEditorTranslucentAfter := 1500.
 
+	RenderPriorityTranslucentSorted := 2000.
+	
+	RenderPriorityEditorTranslucentSortedAfter := 2500.
 	

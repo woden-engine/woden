@@ -1,3 +1,0 @@
-accessing
-renderModificationCount
-	^ 0

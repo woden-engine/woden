@@ -2,7 +2,9 @@ rendering
 createSceneDependentData
 	"TODO: Create an allocator that allocates big buffers, and then sub-allocates the object data."
 	| objectStateSize |
-	objectStateSize := WMReversibleAffineTransformF structureSize alignedTo: 256.
+	objectStateBuffer ifNotNil: [ ^ self ].
+	
+	objectStateSize := WTGenericObjectState structureSize alignedTo: 256.
 	objectStateBuffer := scene engine createStreamingUniformBuffer: objectStateSize * scene engine frameBufferingCount.
 	objectStateBindings := scene engine frameBufferingCollect: [ :frame |
 		(scene engine createShaderSignature: scene shaderSignature resourceBinding: 0)
