@@ -2,6 +2,7 @@ rendering
 renderFrame: frameIndex viewports: viewports on: window
 	| commandList commandAllocator cameraUniformBinding globalLightingStateBinding backgroundColor viewportBounds objectsPerViewport isCommandListCached framebuffer newFrameState frameStateCache |
 	currentFrameIndex := frameIndex.
+	fullFrameIndex := fullFrameIndex + 1.
 	self createWindowStateFor: window.
 	framebuffer := window currentFramebuffer.
 	commandList := self commandListFor: window at: frameIndex.
@@ -10,7 +11,7 @@ renderFrame: frameIndex viewports: viewports on: window
 	
 	currentCamera := viewports first camera.	
 	self collectVisibleObjectsFor: currentCamera.
-	visibleObjects do: [ :obj | obj updateGpuStateForFrame: frameIndex ].
+	visibleObjects do: [ :obj | obj updateGpuStateForFrame: fullFrameIndex ].
 	objectsPerViewport := viewports collect: [ :viewport | visibleObjects select: viewport filter ].
 	self sortObjects: objectsPerViewport perViewports: viewports.
 	

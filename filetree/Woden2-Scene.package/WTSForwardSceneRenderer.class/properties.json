@@ -21,7 +21,12 @@
 		"lightSources",
 		"samplerBindings",
 		"currentTime",
-		"maxNumberOfCameras" ],
+		"maxNumberOfCameras",
+		"fullFrameIndex",
+		"cameraStatePool",
+		"cameraStates",
+		"globalLightingStatePool",
+		"globalLightingStates" ],
 	"name" : "WTSForwardSceneRenderer",
 	"pools" : [
 		"AGPUConstants" ],

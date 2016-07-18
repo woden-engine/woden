@@ -9,7 +9,8 @@
 		"engine",
 		"backgroundColor",
 		"roots",
-		"shaderSignature" ],
+		"shaderSignature",
+		"genericObjectStatePool" ],
 	"name" : "WTSScene",
 	"pools" : [
 		 ],

@@ -1,6 +1,21 @@
 initialization
 createLightingState
-	| globalLightingStateSize cameraStride frameStride baseOffset |
+	globalLightingStatePool := WTStreamingUniformBufferPool engine: engine elementType: WTGlobalLightingState.
+	globalLightingStatePool heapSize: engine frameBufferingCount * maxNumberOfCameras.
+	
+	globalLightingStates := engine frameBufferingCollect: [ :frame |
+		globalLightingStatePool allocate: maxNumberOfCameras
+	].
+
+	globalLightingStateBindings := globalLightingStates collect: [ :states |
+		states collect: [ :state |
+			(engine createShaderSignature: shaderSignature resourceBinding: 2)
+				bind: 0 uniformBufferElement: state;
+				yourself
+		]
+	].
+
+"	| globalLightingStateSize cameraStride frameStride baseOffset |
 	globalLightingStateSize := WTGlobalLightingState structureSize alignedTo: 256.
 	globalLightingStateBuffer := engine createStreamingUniformBuffer: globalLightingStateSize * engine frameBufferingCount * maxNumberOfCameras.
 	
@@ -14,4 +29,4 @@ createLightingState
 				bind: 0 uniformBuffer: globalLightingStateBuffer offset: baseOffset size: globalLightingStateSize;
 				yourself
 		]
-	].
+	]."

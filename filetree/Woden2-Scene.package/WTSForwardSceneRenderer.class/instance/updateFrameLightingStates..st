@@ -1,10 +1,7 @@
 rendering
 updateFrameLightingStates: viewports
-	| lightingState lightingStateOffset transform numberOfLights globalLightingStateSize cameraStride frameStride |
-	
-	globalLightingStateSize := WTGlobalLightingState structureSize alignedTo: 256.
-	cameraStride := globalLightingStateSize * engine frameBufferingCount.	
-	frameStride := globalLightingStateSize.
+	| lightingStates transform numberOfLights lightingState |
+	lightingStates := globalLightingStates at: currentFrameIndex.
 	
 	viewports doWithIndex: [ :viewport :viewportIndex |
 		transform := viewport camera transform.
@@ -21,6 +18,5 @@ updateFrameLightingStates: viewports
 			numberOfLights: numberOfLights;
 			lightSources: lightSources.
 			
-		lightingStateOffset := ((viewportIndex - 1) * cameraStride) + ((currentFrameIndex - 1) * frameStride) + 1.
-		lightingState storeBytesIn: globalLightingStateBuffer validPointer getHandle position: lightingStateOffset.
+		(lightingStates at: viewportIndex) value: lightingState
 	]

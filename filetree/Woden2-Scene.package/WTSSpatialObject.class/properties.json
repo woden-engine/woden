@@ -11,7 +11,8 @@
 		"objectStateBindings",
 		"renderableSceneData",
 		"renderPriority",
-		"objectState" ],
+		"objectState",
+		"gpuObjectStates" ],
 	"name" : "WTSSpatialObject",
 	"pools" : [
 		 ],

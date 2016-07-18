@@ -1,9 +1,24 @@
 initialization
 createCameraStateBuffer
-	| objectStateSize cameraStateSize frameStride cameraStride baseOffset |
+	cameraStatePool := WTStreamingUniformBufferPool engine: engine elementType: WTCameraState.
+	cameraStatePool heapSize: engine frameBufferingCount * maxNumberOfCameras.
+	
+	cameraStates := engine frameBufferingCollect: [ :frame |
+		cameraStatePool allocate: maxNumberOfCameras
+	].
+
+	cameraUniformBindings := cameraStates collect: [ :frameStates |
+		frameStates collect: [ :state |
+			(engine createShaderSignature: shaderSignature resourceBinding: 1)
+				bind: 0 uniformBufferElement: state;
+				yourself
+		]
+	].
+	
+	"| objectStateSize cameraStateSize frameStride cameraStride baseOffset |
 	objectStateSize := WMReversibleAffineTransformF structureSize alignedTo: 256.
 	cameraStateSize := WTCameraState structureSize alignedTo: 256.
-	cameraUniformBuffer := engine createStreamingUniformBuffer: (objectStateSize + cameraStateSize) * engine frameBufferingCount * maxNumberOfCameras.
+	cameraUniformBuffer := engine createStreamingUniformBuffer: (objectStateSize + cameraStateSize) * .
 
 	frameStride := objectStateSize + cameraStateSize.
 	cameraStride := frameStride * engine frameBufferingCount.	
@@ -15,4 +30,4 @@ createCameraStateBuffer
 				bind: 1 uniformBuffer: cameraUniformBuffer offset: baseOffset + objectStateSize size: cameraStateSize;
 				yourself
 		].
-	]
+	]"
