@@ -6,7 +6,7 @@ updateObjectStates
 	
 	states := {meshObjectState . renderCameraObjectState }.
 "	Transcript show: cameraPosition; cr."
-	stateSize := WMReversibleAffineTransformF structureSize alignedTo: 256.
+	stateSize := WTGenericObjectState structureSize alignedTo: 256.
 	pointer := objectStateBuffer validPointer getHandle.
 	baseOffset := (engine bufferingFrameIndex - 1) * stateSize * 2 + 1.
 	states doWithIndex: [ :state :i |
