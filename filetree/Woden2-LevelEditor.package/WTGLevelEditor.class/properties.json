@@ -12,7 +12,10 @@
 		"renderMode",
 		"levelViews",
 		"selectionBoxView",
-		"selectionBox" ],
+		"selectionBox",
+		"primaryGridMesh",
+		"secondaryGridMesh",
+		"centerAxisMesh" ],
 	"name" : "WTGLevelEditor",
 	"pools" : [
 		 ],

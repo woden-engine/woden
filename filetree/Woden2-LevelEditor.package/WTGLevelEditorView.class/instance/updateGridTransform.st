@@ -30,3 +30,4 @@ updateGridTransform
 		scaleByX: scale y: scale z: scale;
 		translation: translation asWMVector3F.
 		
+	centerAxis renderPriority: renderPriority + 2.

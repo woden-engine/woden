@@ -27,7 +27,8 @@
 		"cameraFrustum",
 		"toolController",
 		"lastClickElements",
-		"nextClickElementIndex" ],
+		"nextClickElementIndex",
+		"centerAxis" ],
 	"name" : "WTGLevelEditorView",
 	"pools" : [
 		"OSKeySymbols" ],
