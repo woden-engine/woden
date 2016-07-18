@@ -5,8 +5,9 @@
 	"classvars" : [
 		 ],
 	"commentStamp" : "",
-	"extradependencies" : "#(#WMMatrix4F)",
+	"extradependencies" : "#(#WMReversibleAffineTransformF #WMMatrix4F)",
 	"instvars" : [
+		"#transform &=> #WMReversibleAffineTransformF",
 		"#projectionMatrix &=> #WMMatrix4F",
 		"#currentTime &=> #float" ],
 	"name" : "WTCameraState",
