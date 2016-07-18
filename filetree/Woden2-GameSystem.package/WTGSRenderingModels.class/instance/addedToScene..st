@@ -1,4 +1,8 @@
 adding
 addedToScene: scene
+	| nodeComponent |
 	scene ifNil: [ ^ self ].
-	entity sceneNodeComponent node renderable: self
+	nodeComponent := entity sceneNodeComponent.
+	nodeComponent
+		addedToScene: scene.
+	nodeComponent node renderable: self

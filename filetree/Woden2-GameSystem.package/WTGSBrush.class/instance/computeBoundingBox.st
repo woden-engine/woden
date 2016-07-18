@@ -1,4 +1,4 @@
-as yet unclassified
+private
 computeBoundingBox
 	boundingBox
 		makeEmpty;

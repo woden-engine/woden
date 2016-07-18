@@ -1,0 +1,3 @@
+rendering
+currentTexturedColor
+	^ Color white

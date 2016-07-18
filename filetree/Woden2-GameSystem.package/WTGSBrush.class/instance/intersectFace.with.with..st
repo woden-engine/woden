@@ -1,4 +1,4 @@
-as yet unclassified
+private
 intersectFace: f1 with: f2 with: f3
 	| p1 p2 p3 pos index |
 	"Compute the intersection between the planes"

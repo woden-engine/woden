@@ -1,0 +1,19 @@
+{
+	"category" : "Woden2-GameSystem-Level",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"UDirections",
+		"VDirections",
+		"VectorDirections" ],
+	"commentStamp" : "",
+	"instvars" : [
+		"face",
+		"scale",
+		"offset",
+		"rotation" ],
+	"name" : "WTGBrushFaceTextureTransform",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

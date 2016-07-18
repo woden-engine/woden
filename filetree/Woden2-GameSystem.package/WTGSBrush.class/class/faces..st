@@ -1,3 +1,3 @@
-as yet unclassified
+construction
 faces: anArrayOfFaces
 	^ self new faces: anArrayOfFaces

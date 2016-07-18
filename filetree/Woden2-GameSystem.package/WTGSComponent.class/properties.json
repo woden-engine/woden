@@ -3,7 +3,7 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		 ],
+		"JsonTypeMap" ],
 	"commentStamp" : "",
 	"instvars" : [
 		"entity" ],

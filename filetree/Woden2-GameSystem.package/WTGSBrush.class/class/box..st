@@ -1,4 +1,4 @@
-as yet unclassified
+construction
 box: box
 	^ (self faces: { 
 		WTGSBrushFace nx: -1.0 ny: 0.0 nz: 0.0 d: box min x negated. "Left"

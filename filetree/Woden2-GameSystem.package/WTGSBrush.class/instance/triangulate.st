@@ -1,4 +1,4 @@
-as yet unclassified
+private
 triangulate
 	| faceCount f1 f2 f3|
 	faceCount := self numberOfFaces.

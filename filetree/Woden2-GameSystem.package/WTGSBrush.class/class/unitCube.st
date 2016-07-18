@@ -1,3 +1,3 @@
-as yet unclassified
+construction
 unitCube
 	^ self cubeSize: 1.

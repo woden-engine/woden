@@ -1,0 +1,3 @@
+serialization
+fuelIgnoredInstanceVariableNames
+	^ #('scene')

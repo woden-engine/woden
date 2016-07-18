@@ -1,4 +1,4 @@
-as yet unclassified
+adding
 addedToEntity: anEntity
 	entity ifNotNil: [ entity invalidateModels ].
 	super addedToEntity: anEntity.

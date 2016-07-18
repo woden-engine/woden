@@ -10,7 +10,8 @@
 		"indices",
 		"plane",
 		"material",
-		"textureTransform" ],
+		"textureTransform",
+		"materialCache" ],
 	"name" : "WTGSBrushFace",
 	"pools" : [
 		 ],

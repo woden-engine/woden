@@ -1,4 +1,4 @@
-as yet unclassified
+adding
 addPosition: aPosition
 	| index |
 	index := positions size.

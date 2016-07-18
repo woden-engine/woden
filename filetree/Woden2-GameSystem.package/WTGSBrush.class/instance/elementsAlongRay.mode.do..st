@@ -1,4 +1,4 @@
-as yet unclassified
+selection
 elementsAlongRay: ray mode: mode do: aBlock
 	| distance intersectionPoint result bestDistance |
 	(ray intersectionDistanceWithBox: boundingBox) ifNil: [ ^ self ].

@@ -1,0 +1,3 @@
+serialization
+fuelAfterMaterialization
+	self invalidate
