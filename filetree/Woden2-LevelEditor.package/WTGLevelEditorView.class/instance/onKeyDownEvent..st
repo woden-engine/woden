@@ -6,6 +6,8 @@ onKeyDownEvent: anEvent
 
 	(keyValue = OSK_MINUS or: [keyValue = OSK_KP_MINUS]) ifTrue: [ editor subtractSelectedBrushes ].
 		
+	keyValue = OSK_a ifTrue: [ cameraVelocity := WMVector3D x: -1.0 ].
+	
 	keyValue = OSK_KP_7 ifTrue: [ self topView ].
 	keyValue = OSK_KP_1 ifTrue: [ self frontView ].
 	keyValue = OSK_KP_3 ifTrue: [ self sideView ].

@@ -28,6 +28,10 @@ initializeHandlers
 			evt consumed: true.
 			self onDragEndEvent: evt.
 		]);
+		addEventHandler: (BlEventHandler on: BlDropEvent do: [ :evt | 
+			evt consumed: true.
+			self onDropEvent: evt.
+		]);
 		addEventHandler: (BlEventHandler on: BlTextInputEvent do: [ :evt | 
 			evt consumed: true.
 			self onTextInput: evt.
