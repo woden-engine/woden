@@ -3,7 +3,8 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		 ],
+		"DefaultSpotInnerCosCutoff",
+		"DefaultSpotOuterCosCutoff" ],
 	"commentStamp" : "RonieSalgado 6/13/2016 14:34",
 	"instvars" : [
 		"state",
