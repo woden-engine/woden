@@ -28,7 +28,8 @@
 		"toolController",
 		"lastClickElements",
 		"nextClickElementIndex",
-		"centerAxis" ],
+		"centerAxis",
+		"lastDragEndPosition" ],
 	"name" : "WTGLevelEditorView",
 	"pools" : [
 		"OSKeySymbols" ],

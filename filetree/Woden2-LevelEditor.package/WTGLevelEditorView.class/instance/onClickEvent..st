@@ -1,6 +1,11 @@
 event handling
 onClickEvent: anEvent
 	| elements currentElement |
+	anEvent position = lastDragEndPosition ifTrue: [ 
+		lastDragEndPosition := nil.
+		^ self
+	].
+
 	elements := (self findElementsAtGlobalCoord: anEvent position) collect: #value.
 	
 	elements ifNotEmpty: [

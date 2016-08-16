@@ -20,4 +20,4 @@ onKeyDownEvent: anEvent
 	keyValue = OSK_s ifTrue: [ self solid ].
 	keyValue = OSK_t ifTrue: [ self textured ].	
 
-	((anEvent buttons anyMask: 2r01000000) and: [ keyValue = OSK_i ]) ifTrue: [ self inspect ].
+	(anEvent modifiers isAlt and: [ keyValue = OSK_i ]) ifTrue: [ self inspect ].

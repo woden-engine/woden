@@ -2,7 +2,7 @@ event handling
 onDragStartEvent: anEvent
 	| element |
 	toolController ifNil: [
-		anEvent isLeftButtonDrag ifTrue: [
+		anEvent isPrimaryButtonDrag ifTrue: [
 			element := (self findBestElementAtGlobalCoord: anEvent position) value asNodeModelForLevelEditor: editor.
 			element ifNil: [
 				self startDragController: WTGEDragMakeSelectionBox new event: anEvent.
@@ -11,11 +11,11 @@ onDragStartEvent: anEvent
 			]
 		].
 
-		anEvent isRightButtonDrag ifTrue: [
+		anEvent isSecondaryButtonDrag ifTrue: [
 			self startDragController: WTGEDragCameraTranslate new event: anEvent.
 		].
 
-		anEvent isCenterButtonDrag ifTrue: [
+		anEvent isMiddleButtonDrag ifTrue: [
 			self startDragController: WTGEDragCameraRotate new event: anEvent.
 		].
 	].
