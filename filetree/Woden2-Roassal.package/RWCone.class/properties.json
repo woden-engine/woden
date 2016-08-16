@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Roassal-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "RWCone",
+	"pools" : [
+		 ],
+	"super" : "RWSimpleShape",
+	"type" : "normal" }

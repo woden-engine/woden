@@ -1,0 +1,3 @@
+accessing
+diffuse
+	^ sceneNode diffuseColor

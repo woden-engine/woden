@@ -1,0 +1,3 @@
+initialization
+createSceneNode
+	^ WDSpotLight new

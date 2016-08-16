@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Roassal-Layout",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"gap" ],
+	"name" : "RWGridLayout",
+	"pools" : [
+		 ],
+	"super" : "RWLayout",
+	"type" : "normal" }

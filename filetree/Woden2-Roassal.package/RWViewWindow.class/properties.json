@@ -1,0 +1,23 @@
+{
+	"category" : "Woden2-Roassal-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"view",
+		"fpsCount",
+		"lastFpsDisplay",
+		"lastUpdateTime",
+		"mouseFocusElement",
+		"keyboardFocusElement",
+		"dragElement",
+		"morphicWindow",
+		"athensSurfaces",
+		"lastRenderTime" ],
+	"name" : "RWViewWindow",
+	"pools" : [
+		"OSKeySymbols" ],
+	"super" : "WTAnimatedApplication",
+	"type" : "normal" }

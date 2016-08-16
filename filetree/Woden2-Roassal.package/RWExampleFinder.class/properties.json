@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Roassal-Examples",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "RWExampleFinder",
+	"pools" : [
+		 ],
+	"super" : "RTExampleFinder",
+	"type" : "normal" }

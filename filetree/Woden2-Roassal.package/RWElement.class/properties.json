@@ -1,0 +1,22 @@
+{
+	"category" : "Woden2-Roassal-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"shape",
+		"model",
+		"sceneNode",
+		"renderable",
+		"mass",
+		"rigidBody",
+		"connectedEdges",
+		"view",
+		"behaviors" ],
+	"name" : "RWElement",
+	"pools" : [
+		 ],
+	"super" : "RWAnnounceableObject",
+	"type" : "normal" }

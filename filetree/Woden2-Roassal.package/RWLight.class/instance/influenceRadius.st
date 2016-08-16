@@ -1,0 +1,3 @@
+accessing
+influenceRadius
+	^ sceneNode influenceRadius

@@ -1,0 +1,3 @@
+interaction
+addInteraction: anInteraction
+	anInteraction initializeElement: self

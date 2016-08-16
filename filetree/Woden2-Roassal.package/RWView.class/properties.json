@@ -1,0 +1,26 @@
+{
+	"category" : "Woden2-Roassal-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "AlexandreBergel 10/28/2015 15:41",
+	"instvars" : [
+		"engine",
+		"elements",
+		"scene",
+		"camera",
+		"eventHandler",
+		"cameraLight",
+		"baseShapes",
+		"dynamicsWorld",
+		"signalUpdateCallback",
+		"isStereo",
+		"fullscreen",
+		"sceneRenderer",
+		"currentTime" ],
+	"name" : "RWView",
+	"pools" : [
+		 ],
+	"super" : "RWObject",
+	"type" : "normal" }

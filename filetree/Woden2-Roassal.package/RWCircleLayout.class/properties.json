@@ -1,0 +1,18 @@
+{
+	"category" : "Woden2-Roassal-Layout",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"radius",
+		"initialRadius",
+		"initialIncrementalAngle",
+		"initialAngle",
+		"factor" ],
+	"name" : "RWCircleLayout",
+	"pools" : [
+		 ],
+	"super" : "RWLayout",
+	"type" : "normal" }

@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Roassal-Examples",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "AlexandreBergel 5/4/2015 10:22",
+	"instvars" : [
+		 ],
+	"name" : "RWRoassal3dLayoutExample",
+	"pools" : [
+		 ],
+	"super" : "RWAbstractExample",
+	"type" : "normal" }

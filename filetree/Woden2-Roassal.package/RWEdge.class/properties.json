@@ -1,0 +1,16 @@
+{
+	"category" : "Woden2-Roassal-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"controlPoints",
+		"from",
+		"to" ],
+	"name" : "RWEdge",
+	"pools" : [
+		 ],
+	"super" : "RWElement",
+	"type" : "normal" }

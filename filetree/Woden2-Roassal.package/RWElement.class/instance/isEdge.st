@@ -1,0 +1,3 @@
+testing
+isEdge
+	^ false

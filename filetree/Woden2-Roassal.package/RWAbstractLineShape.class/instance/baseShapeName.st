@@ -1,0 +1,3 @@
+hooks
+baseShapeName
+	^ #lines

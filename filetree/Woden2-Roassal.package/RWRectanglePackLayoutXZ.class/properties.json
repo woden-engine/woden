@@ -1,0 +1,16 @@
+{
+	"category" : "Woden2-Roassal-Layout",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "YuriyTymchuk 12/1/2014 11:12",
+	"instvars" : [
+		"freeSpace",
+		"bounds",
+		"gap" ],
+	"name" : "RWRectanglePackLayoutXZ",
+	"pools" : [
+		 ],
+	"super" : "RWLayout",
+	"type" : "normal" }

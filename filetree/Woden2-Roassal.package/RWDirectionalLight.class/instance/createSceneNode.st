@@ -1,0 +1,3 @@
+initialization
+createSceneNode
+	^ WDDirectionalLight new
