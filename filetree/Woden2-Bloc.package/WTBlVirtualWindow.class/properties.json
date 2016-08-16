@@ -13,7 +13,11 @@
 		"visible",
 		"opened",
 		"eventHandler",
-		"renderNeeded" ],
+		"renderNeeded",
+		"position",
+		"resizable",
+		"borderless",
+		"title" ],
 	"name" : "WTBlVirtualWindow",
 	"pools" : [
 		 ],
