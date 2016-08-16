@@ -16,7 +16,8 @@
 		"textureExtent",
 		"texcoordScaleFactor",
 		"ascent",
-		"descent" ],
+		"descent",
+		"height" ],
 	"name" : "WTLodenFontFace",
 	"pools" : [
 		 ],

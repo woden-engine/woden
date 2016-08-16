@@ -3,7 +3,7 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		 ],
+		"PixelFormatDecoderSelector" ],
 	"commentStamp" : "",
 	"instvars" : [
 		"pixelFormat",

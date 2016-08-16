@@ -3,6 +3,7 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
+		"DefaultFontBlocHack",
 		"LdfSignedDistanceField",
 		"LodenFontSignature" ],
 	"commentStamp" : "",
