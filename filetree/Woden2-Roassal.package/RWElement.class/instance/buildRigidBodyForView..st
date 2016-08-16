@@ -1,9 +1,10 @@
 physics
-buildRigidBody
+buildRigidBodyForView: aView
 	| collisionShape |
 	mass ifNil: [ ^ self ].
 	collisionShape := shape buildCollisionShapeFor: self.
-	rigidBody := WDRigidBody new
+	rigidBody := WTRigidBody new
+					sceneNode: sceneNode;
 					mass: mass;
 					shape: collisionShape.
-	sceneNode attach: rigidBody
+	aView addRigidBody: rigidBody

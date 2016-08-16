@@ -18,7 +18,9 @@
 		"isStereo",
 		"fullscreen",
 		"sceneRenderer",
-		"currentTime" ],
+		"currentTime",
+		"rigidBodies",
+		"internalElements" ],
 	"name" : "RWView",
 	"pools" : [
 		 ],

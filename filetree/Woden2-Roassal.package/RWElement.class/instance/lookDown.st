@@ -1,3 +1,4 @@
 orientation
 lookDown
-	sceneNode orientation: (WDMatrix3 xrot: Float halfPi negated )
+	sceneNode transform orthonormal: (WMMatrix3F xrot: Float halfPi negated ).
+	sceneNode stateChanged

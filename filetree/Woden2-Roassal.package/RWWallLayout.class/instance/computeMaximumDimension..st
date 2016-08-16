@@ -1,7 +1,7 @@
 position calculation
 computeMaximumDimension: nodes
 	^ (nodes
-		inject: WDVector3 zero
+		inject: WMVector3F zero
 		into: [ :maxiumDimension :each |
 			| boundingBoxDimension |
 			boundingBoxDimension := each extent.

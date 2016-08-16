@@ -1,9 +1,9 @@
 time simulation
 simulateTime: delta onElement: anElement
-	| matrix  |
+	| orientation |
 	angle := angle + (angularVelocity*(delta*angularSpeed)).
-	matrix := (WMMatrix3F xyzRotation: angle) transposed.
-	anElement orientation: matrix.
-		
-	anElement translateBy: (matrix transformVector3: (velocity*delta) + (acceleration*(delta*delta*0.5))).
+	orientation := (WMMatrix3F yrot: angle y) * (WMMatrix3F xrot: angle x).
+	anElement
+		orientation: orientation;
+		translateBy: (orientation transformVector3: (velocity*(delta*speed))).
 	velocity := velocity + (acceleration*delta).

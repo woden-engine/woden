@@ -1,3 +1,3 @@
 accessing
 diffuse
-	^ sceneNode diffuseColor
+	^ self color

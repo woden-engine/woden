@@ -1,3 +1,3 @@
 initialization
 createSceneNode
-	^ WDPointLight new
+	^ WTSLightSource new point

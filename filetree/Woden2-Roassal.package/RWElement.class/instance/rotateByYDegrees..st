@@ -1,3 +1,4 @@
 orientation
 rotateByYDegrees: angle
-	self rotateByY: angle degreesToRadians 
+	sceneNode transform rotateDegreesOnY: angle.
+	sceneNode stateChanged

@@ -1,3 +1,3 @@
 initialization
 createSceneNode
-	^ WDSpotLight new
+	^ WTSLightSource new spot

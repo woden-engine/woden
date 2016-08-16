@@ -1,3 +1,3 @@
 accessing
 influenceRadius
-	^ sceneNode influenceRadius
+	^ sceneNode state radius

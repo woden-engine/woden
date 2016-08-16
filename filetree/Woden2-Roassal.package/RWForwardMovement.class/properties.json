@@ -10,7 +10,8 @@
 		"angularVelocity",
 		"velocity",
 		"acceleration",
-		"angularSpeed" ],
+		"angularSpeed",
+		"speed" ],
 	"name" : "RWForwardMovement",
 	"pools" : [
 		 ],

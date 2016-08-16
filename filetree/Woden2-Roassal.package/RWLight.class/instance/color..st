@@ -1,4 +1,3 @@
 accessing
 color: aWDColor
-	sceneNode diffuseColor: aWDColor;
-		specularColor: aWDColor
+	sceneNode state intensity: aWDColor asWMVector4F

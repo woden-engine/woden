@@ -1,3 +1,3 @@
 hook
 getNewPositionFor: aValue
-	^ WDVector3 new y: aValue asFloat
+	^ WMVector3F new y: aValue asFloat

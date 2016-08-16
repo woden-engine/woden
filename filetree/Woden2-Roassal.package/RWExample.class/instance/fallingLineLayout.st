@@ -5,11 +5,11 @@ fallingLineLayout
 	"
 	| v floor |
 	v := RWView new.
-	1 to: 250 do: [ :i |
+	1 to: 1000 do: [ :i |
 		v add: (RWCube element mass: 1.0).
 	].
 
-	v camera position: (WDVector3 newX: 0.0 y: 0.0 z: 3.0). 
+	v camera translateByZ: 3.0. 
 	RWYLineLayout on: v elements.
 
 	floor := RWCube new width: 10.0; depth: 5.0; height: 0.1; element.

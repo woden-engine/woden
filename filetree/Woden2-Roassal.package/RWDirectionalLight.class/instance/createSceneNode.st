@@ -1,3 +1,3 @@
 initialization
 createSceneNode
-	^ WDDirectionalLight new
+	^ WTSLightSource new directional

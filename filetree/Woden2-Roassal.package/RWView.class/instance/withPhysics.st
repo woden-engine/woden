@@ -1,6 +1,5 @@
-scene
+physics
 withPhysics
-"	dynamicsWorld := WDPhysicsEngine current createDynamicsWorld.
-	dynamicsWorld gravity: (WDVector3 x: 0.0 y: -9.8 z: 0.0).
-	scene attach: dynamicsWorld.
-"
+	dynamicsWorld := WTPhysicsEngine current createDynamicsWorld.
+	dynamicsWorld gravity: (WMVector3F x: 0.0 y: -9.8 z: 0.0).
+	dynamicsWorld addRigidBodies: rigidBodies.

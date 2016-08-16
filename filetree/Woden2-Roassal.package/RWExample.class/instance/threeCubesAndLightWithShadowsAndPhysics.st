@@ -19,6 +19,7 @@ threeCubesAndLightWithShadowsAndPhysics
 	
 	light := RWSpotLight new.
 	light lookDown;
+		color: Color lightGray;
 		translateByX: 2.0 y: 3.0 z: 0.0;
 		influenceRadius: 10.0;
 		castShadows: true.

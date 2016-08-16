@@ -1,5 +1,7 @@
-as yet unclassified
+rendering
 simulateTime: delta
 	"Accumulate the total time"
 	currentTime := currentTime + currentTime.
-	elements do: [ :element | element simulateTime: delta ]
+	self simulatePhysics: delta.
+	elements do: [ :element | element simulateTime: delta ].
+	internalElements do: [ :element | element simulateTime: delta ].

@@ -1,6 +1,6 @@
 hooks
 createComponent: baseShape for: edge
-	| v1 v2 renderable |
+"	| v1 v2 renderable |
 	v1 := WDLineVertex new.
 	v2 := WDLineVertex new.
 	renderable := baseShape renderable.
@@ -12,4 +12,4 @@ createComponent: baseShape for: edge
 	v2 position: edge to position;
 		color: color;
 		texcoord: (WDVector2 x: 1.0 y: 0.0).
-	^ renderable componentVertices: { v1 . v2 } indices: {  0 . 1 } primitiveType: WDMeshPrimitiveType lines material: renderable subMeshes last material.
+	^ renderable componentVertices: { v1 . v2 } indices: {  0 . 1 } primitiveType: WDMeshPrimitiveType lines material: renderable subMeshes last material."

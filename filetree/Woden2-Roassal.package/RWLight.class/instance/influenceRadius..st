@@ -1,3 +1,3 @@
 accessing
 influenceRadius: aNumber
-	sceneNode influenceRadius: aNumber asFloat
+	sceneNode state radius: aNumber asFloat

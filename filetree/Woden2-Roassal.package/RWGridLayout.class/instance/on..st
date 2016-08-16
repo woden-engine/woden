@@ -13,7 +13,7 @@ on: elements
 	lineItemCount := 0.
 	maxLastLineHeight := 0.0.
 	
-	currentPosition := WDVector3 zero.
+	currentPosition := WMVector3F zero.
 	elements do: [ :el |
 		w := u dot: el extent.
 		h := v dot: el extent.

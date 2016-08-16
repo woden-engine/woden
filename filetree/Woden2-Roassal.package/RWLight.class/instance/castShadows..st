@@ -1,3 +1,4 @@
 accessing
 castShadows: aBoolean
-	sceneNode castShadows: aBoolean
+	self flag: 'Support shadows.'.
+	"sceneNode castShadows: aBoolean"

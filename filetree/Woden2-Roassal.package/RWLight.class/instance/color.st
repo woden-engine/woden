@@ -1,3 +1,3 @@
 accessing
 color
-	^ sceneNode diffuseColor
+	^ sceneNode state intensity
