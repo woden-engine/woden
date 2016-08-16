@@ -45,8 +45,7 @@ initializeSceneContent
 	sunLight state
 			intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.8.
 	sunLight transform
-		rotateDegreesOnX: 45;
-		rotateDegreesOnY: 180;
+		rotateDegreesOnX: -45;
 		translateToX: 0.0 y: 1.5 z: 2.5.
 		
 	scene add: sunLight.
