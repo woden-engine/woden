@@ -1,23 +1,24 @@
 rendering dispatch
 renderLodenFont: face scaleFactor: scaleFactor character: character position: position
-	| glyphIndex glyph texcoordScale box boxExtent translation |
+	| glyphIndex glyph texcoordScale margin sourceRect destRect |
 	glyphIndex := (face characterMap at: character ifAbsent: [ 0 ]) + 1.
 	glyph := face glyphs at: glyphIndex.
 	texcoordScale := face texcoordScaleFactor.
-	box := glyph box.
-	boxExtent := box max - box min.
-	translation := position + (WMVector2F x: 0.0 y: glyph computePreciseAscent asFloat negated * scaleFactor).
-	boxExtent := boxExtent * scaleFactor.
+	margin := (0.0 max: face cellMargin - 1) asFloat.
+	sourceRect := glyph computeSourceRectangleWithTexcoordScale: texcoordScale margin: margin.
+	destRect := glyph computeDestinationRectangleWithScale: scaleFactor margin: margin position: position.
+	
 	self
 		beginWithNewBaseVertex;
-		addTransformingVertex: translation texcoord: box bottomLeft * texcoordScale;
-		addTransformingVertex: (WMVector2F x: boxExtent x y: 0.0) + translation texcoord: box bottomRight * texcoordScale;
-		addTransformingVertex: boxExtent + translation texcoord: box topRight * texcoordScale;
-		addTransformingVertex: (WMVector2F x: 0.0 y: boxExtent y) + translation texcoord: box topLeft * texcoordScale;
+		addTransformingVertex: destRect bottomLeft texcoord: sourceRect bottomLeft;
+		addTransformingVertex: destRect bottomRight texcoord: sourceRect bottomRight;
+		addTransformingVertex: destRect topRight texcoord: sourceRect topRight;
+		addTransformingVertex: destRect topLeft texcoord: sourceRect topLeft;
 		addIndex: 0;
 		addIndex: 1;
 		addIndex: 2;
 		addIndex: 2;
 		addIndex: 3;
 		addIndex: 0.
+
 	^ position + (WMVector2F x: glyph advance x * scaleFactor)
