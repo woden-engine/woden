@@ -5,6 +5,8 @@ collectVisibleObjectsFor: camera from: node
 	visibleObjects add: node.
 	node isLightSource ifTrue: [ self tryToCollectLightSource: node for: camera ].
 	
-	node children do: [:child |
-		self collectVisibleObjectsFor: camera from: child
+	node isInstanceGroup ifFalse: [
+		node children do: [:child |
+			self collectVisibleObjectsFor: camera from: child
+		]
 	]

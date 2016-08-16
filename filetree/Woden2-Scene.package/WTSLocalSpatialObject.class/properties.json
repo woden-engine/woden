@@ -10,5 +10,5 @@
 	"name" : "WTSLocalSpatialObject",
 	"pools" : [
 		 ],
-	"super" : "WTSNode",
+	"super" : "WTSAbstractSpatialObject",
 	"type" : "normal" }

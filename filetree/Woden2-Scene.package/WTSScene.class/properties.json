@@ -10,7 +10,9 @@
 		"backgroundColor",
 		"roots",
 		"shaderSignature",
-		"genericObjectStatePool" ],
+		"genericObjectStatePool",
+		"neutralObjectInstanceStatePool",
+		"neutralObjectInstanceState" ],
 	"name" : "WTSScene",
 	"pools" : [
 		 ],

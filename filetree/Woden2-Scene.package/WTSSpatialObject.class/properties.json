@@ -10,11 +10,9 @@
 		"objectStateBuffer",
 		"objectStateBindings",
 		"renderableSceneData",
-		"renderPriority",
-		"objectState",
 		"gpuObjectStates" ],
 	"name" : "WTSSpatialObject",
 	"pools" : [
 		 ],
-	"super" : "WTSNode",
+	"super" : "WTSAbstractSpatialObject",
 	"type" : "normal" }

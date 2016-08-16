@@ -1,0 +1,15 @@
+{
+	"category" : "Woden2-Scene-Graph",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "RonieSalgado 8/11/2016 16:38",
+	"instvars" : [
+		"pendingUpdates",
+		"childOffsetDictionary" ],
+	"name" : "WTSSpatialObjectInstanceGroup",
+	"pools" : [
+		 ],
+	"super" : "WTSSpatialObject",
+	"type" : "normal" }

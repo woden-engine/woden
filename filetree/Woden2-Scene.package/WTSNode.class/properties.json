@@ -21,7 +21,9 @@
 		"lastUpdatedGpuFrame",
 		"parent",
 		"renderTransform",
-		"model" ],
+		"model",
+		"modificationCount",
+		"updatedPerFrame" ],
 	"name" : "WTSNode",
 	"pools" : [
 		 ],

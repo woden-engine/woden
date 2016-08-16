@@ -5,4 +5,4 @@ renderOn: commandList mode: renderMode submode: submode
 	commandList
 		useShaderResources: self currentObjectStateBinding validHandle.
 		
-	renderable renderOn: commandList mode: renderMode submode: submode instanceCount: 1 baseInstance: 0 baseVertex: 0
+	renderable renderOn: commandList mode: renderMode submode: submode instanceCount: children size baseInstance: 0 baseVertex: 0
