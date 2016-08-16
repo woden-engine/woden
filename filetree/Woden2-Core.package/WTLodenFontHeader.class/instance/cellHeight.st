@@ -1,4 +1,0 @@
-accessing
-cellHeight
-	<accessor>
-	^ cellHeight

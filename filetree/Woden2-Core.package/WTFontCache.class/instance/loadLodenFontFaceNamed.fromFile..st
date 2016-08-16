@@ -11,8 +11,6 @@ loadLodenFontFaceNamed: faceName fromFile: fileReference
 		(in next: 8) = LodenFontSignature ifFalse: [ ^ nil ]. 
 		header := WTLodenFontHeader newFrom: (in next: WTLodenFontHeader structureSize).
 		fontFace
-			cellHeight: header cellHeight;
-			cellWidth: header cellWidth;
 			cellMargin: header cellMargin;
 			flags: header flags;
 			basePointSize: header pointSize.

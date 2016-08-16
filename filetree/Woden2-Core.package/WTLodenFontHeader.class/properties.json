@@ -8,8 +8,6 @@
 	"instvars" : [
 		"#numberOfGlyphs &=> #uint32",
 		"#numberOfCharMapEntries &=> #uint32",
-		"#cellWidth &=> #uint32",
-		"#cellHeight &=> #uint32",
 		"#cellMargin &=> #uint32",
 		"#pointSize &=> #float",
 		"#flags &=> #uint32" ],

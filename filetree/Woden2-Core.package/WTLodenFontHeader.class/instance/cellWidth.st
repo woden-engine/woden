@@ -1,4 +1,0 @@
-accessing
-cellWidth
-	<accessor>
-	^ cellWidth

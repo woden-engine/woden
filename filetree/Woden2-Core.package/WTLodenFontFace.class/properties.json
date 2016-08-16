@@ -9,8 +9,6 @@
 		"texture",
 		"glyphs",
 		"characterMap",
-		"cellHeight",
-		"cellWidth",
 		"cellMargin",
 		"basePointSize",
 		"flags",
