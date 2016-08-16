@@ -1,3 +1,3 @@
 accessing
 pointer
-	^ pointer ifNil: [ pointer := buffer validPointer getHandle ]
+	^ pointer ifNil: [ pointer := self buffer validPointer getHandle ]

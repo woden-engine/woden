@@ -8,7 +8,8 @@
 	"instvars" : [
 		"engine",
 		"window",
-		"session" ],
+		"session",
+		"fullscreen" ],
 	"name" : "WTApplication",
 	"pools" : [
 		"AGPUConstants",

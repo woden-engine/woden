@@ -6,11 +6,10 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"vertexBinding",
-		"indexBuffer",
-		"submeshes" ],
-	"name" : "WTGenericMesh",
+		"boundingBox",
+		"modificationCount" ],
+	"name" : "WTRenderable",
 	"pools" : [
 		 ],
-	"super" : "WTRenderable",
+	"super" : "Object",
 	"type" : "normal" }

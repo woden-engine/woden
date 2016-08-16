@@ -6,10 +6,8 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"vertexBinding",
-		"indexBuffer",
-		"submeshes" ],
-	"name" : "WTGenericMesh",
+		 ],
+	"name" : "WTNullRenderable",
 	"pools" : [
 		 ],
 	"super" : "WTRenderable",
