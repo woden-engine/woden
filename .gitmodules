@@ -6,3 +6,6 @@
 	path = abstract-gpu
 	url = https://github.com/ronsaldo/abstract-gpu.git
 	branch = master
+[submodule "abstract-physics"]
+	path = abstract-physics
+	url = https://github.com/ronsaldo/abstract-physics.git
