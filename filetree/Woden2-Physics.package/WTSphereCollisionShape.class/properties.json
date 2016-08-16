@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Physics-Interface",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"radius" ],
+	"name" : "WTSphereCollisionShape",
+	"pools" : [
+		 ],
+	"super" : "WTCollisionShape",
+	"type" : "normal" }

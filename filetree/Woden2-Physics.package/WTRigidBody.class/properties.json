@@ -1,0 +1,17 @@
+{
+	"category" : "Woden2-Physics-Interface",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"sceneNode",
+		"mass",
+		"shape",
+		"handle" ],
+	"name" : "WTRigidBody",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

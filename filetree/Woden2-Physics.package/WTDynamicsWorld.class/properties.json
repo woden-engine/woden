@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Physics-Interface",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "WTDynamicsWorld",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

@@ -1,0 +1,15 @@
+{
+	"category" : "Woden2-Physics-Interface",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"CurrentEngine",
+		"PhysicsSession" ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "WTPhysicsEngine",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }
