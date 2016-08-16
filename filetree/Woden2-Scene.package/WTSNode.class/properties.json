@@ -23,7 +23,8 @@
 		"renderTransform",
 		"model",
 		"modificationCount",
-		"updatedPerFrame" ],
+		"updatedPerFrame",
+		"stateChangeListeners" ],
 	"name" : "WTSNode",
 	"pools" : [
 		 ],

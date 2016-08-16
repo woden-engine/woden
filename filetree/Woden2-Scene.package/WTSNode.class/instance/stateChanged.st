@@ -1,3 +1,3 @@
 changing
 stateChanged
-	"Here goes GPU state update"
+	stateChangeListeners ifNotNil: [ stateChangeListeners do: [ :handler | handler value: self ] ].

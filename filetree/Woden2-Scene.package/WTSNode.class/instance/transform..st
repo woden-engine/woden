@@ -1,3 +1,4 @@
 accessing
 transform: aTransform
-	transform := aTransform asWMReversibleAffineTransformF
+	transform := aTransform asWMReversibleAffineTransformF.
+	self stateChanged
