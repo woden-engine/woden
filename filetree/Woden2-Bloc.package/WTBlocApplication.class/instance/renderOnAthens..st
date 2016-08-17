@@ -6,6 +6,7 @@ renderOnAthens: surface
 		] ifNotNil: [
 			mainBlocSpace fullDrawOnAthensCanvas: canvas.
 		].
+		self renderAboveBlocOnAthens: surface canvas: canvas
 	].
 
 
