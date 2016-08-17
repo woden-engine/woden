@@ -1,3 +1,3 @@
 as yet unclassified
 fontAscent
-	^ font ascent
+	^ "font ascent" actualFont getPreciseAscent

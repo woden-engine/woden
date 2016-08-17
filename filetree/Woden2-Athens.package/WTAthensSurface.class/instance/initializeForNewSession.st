@@ -8,6 +8,8 @@ initializeForNewSession
 	shaderSignature := stateManager shaderSignatureNamed: #GUI.
 	convexColorLinePipeline := self loadStateWithBlendVariants: #'canvas2d.polygon.convex.color.lines'.
 	convexColorTrianglePipeline := self loadStateWithBlendVariants: #'canvas2d.polygon.convex.color.triangles'.
+	convexTexturedLinePipeline := self loadStateWithBlendVariants: #'canvas2d.polygon.convex.textured.lines'.
+	convexTexturedTrianglePipeline := self loadStateWithBlendVariants: #'canvas2d.polygon.convex.textured.triangles'.
 	
 	stencilNonZeroPipeline := stateManager pipelineStateNamed: #'canvas2d.polygon.stencil.non-zero'.
 	stencilEvenOddPipeline := stateManager pipelineStateNamed: #'canvas2d.polygon.stencil.even-odd'.

@@ -60,7 +60,9 @@
 		"coverGradientPipeline",
 		"currentTexcoord",
 		"colorRampDictionary",
-		"useOwnFramebuffer" ],
+		"useOwnFramebuffer",
+		"convexTexturedTrianglePipeline",
+		"convexTexturedLinePipeline" ],
 	"name" : "WTAthensSurface",
 	"pools" : [
 		"AGPUConstants" ],

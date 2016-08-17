@@ -1,3 +1,3 @@
 as yet unclassified
 fontHeight
-	^ font height
+	^ "font height" actualFont height

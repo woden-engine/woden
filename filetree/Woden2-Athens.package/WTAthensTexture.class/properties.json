@@ -6,9 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"font",
-		"actualFont" ],
-	"name" : "WTAthensFontMetricsProvider",
+		"texture",
+		"binding" ],
+	"name" : "WTAthensTexture",
 	"pools" : [
 		 ],
 	"super" : "Object",
