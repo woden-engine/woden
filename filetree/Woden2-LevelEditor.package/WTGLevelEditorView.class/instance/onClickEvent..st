@@ -22,4 +22,4 @@ onClickEvent: anEvent
 	currentElement := currentElement asNodeModelForLevelEditor: editor.
 	currentElement
 		ifNotNil: [ currentElement selectSingleOnEditor: editor ]
-		ifNil: [ editor selectionBox: WTGLevelEditorSelectionBox empty ]
+		ifNil: [ editor selection: WTGLevelEditorSelectionBox empty ]

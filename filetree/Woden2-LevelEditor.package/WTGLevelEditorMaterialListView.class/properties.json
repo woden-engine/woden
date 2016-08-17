@@ -1,0 +1,23 @@
+{
+	"category" : "Woden2-LevelEditor",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"CellHighlightedBackgroundColor",
+		"CellMargin",
+		"CellSelectedBackgroundColor",
+		"CellSize",
+		"MaterialTypeBlackList",
+		"VerticalScrollAmount" ],
+	"commentStamp" : "",
+	"instvars" : [
+		"thumbnailCells",
+		"labelFont",
+		"verticalScroll",
+		"selectedCell",
+		"highlightedCell" ],
+	"name" : "WTGLevelEditorMaterialListView",
+	"pools" : [
+		 ],
+	"super" : "WTGLevelEditorViewComponent",
+	"type" : "normal" }

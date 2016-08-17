@@ -1,3 +1,3 @@
 initialization
 createSelectionBox
-	self selectionBox: WTGLevelEditorSelectionBox empty.
+	self selection: WTGLevelEditorSelectionBox empty.

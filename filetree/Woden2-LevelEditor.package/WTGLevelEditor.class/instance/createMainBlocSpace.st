@@ -1,6 +1,6 @@
 rendering
 createMainBlocSpace
-	| topLeft topRight bottomLeft bottomRight space topHorizontalPane bottomHorizontalPane verticalPane |
+	| topLeft topRight bottomLeft bottomRight space topHorizontalPane bottomHorizontalPane verticalPane materialListView contentBarHorizontalPane |
 	
 	BlMaterialTheme load.
 	
@@ -28,14 +28,24 @@ createMainBlocSpace
 
 	verticalPane := BrVBoxPane new
 		background: Color transparent;
-		constraintsDo:[:c| c vhMatchParent ; alignCenter];
+		constraintsDo:[:c| c vhMatchParent ; alignCenter; weight: 4];
 		addChildren:{topHorizontalPane . bottomHorizontalPane}.
+
+	materialListView := WTGLevelEditorMaterialListView for: self.
+	materialListView
+		background: Color gray;
+		constraintsDo:[:c| c vhMatchParent ; alignCenter; weight: 1].
+		
+	contentBarHorizontalPane := BrHBoxPane new
+		background: Color transparent;
+		constraintsDo:[:c| c vhMatchParent ; alignCenter];
+		addChildren:{verticalPane . materialListView}.
 		
 	space := BlSpace new.
 	space hostWindow: (WTBlVirtualWindow new engine: engine).
 	space root
 		background: Color transparent;
-		addChild: verticalPane.
+		addChild: contentBarHorizontalPane.
 	
 	^ space
 	

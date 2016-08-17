@@ -3,7 +3,8 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		"DefaultSettingsForViews" ],
+		"DefaultSettingsForViews",
+		"MaterialThumbDBFileName" ],
 	"commentStamp" : "",
 	"instvars" : [
 		"sceneRenderer",
@@ -15,7 +16,11 @@
 		"selectionBox",
 		"primaryGridMesh",
 		"secondaryGridMesh",
-		"centerAxisMesh" ],
+		"centerAxisMesh",
+		"currentMaterialName",
+		"materialThumbDB",
+		"thumbnailPaintCache",
+		"selection" ],
 	"name" : "WTGLevelEditor",
 	"pools" : [
 		 ],

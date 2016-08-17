@@ -16,4 +16,4 @@ onDragStartEvent: event
 		farPosition := zdirection dot: (selectionBox box support: zdirection).
 	].
 	
-	view editor selectionBox: WTGLevelEditorSelectionBox empty.
+	view editor selection: WTGLevelEditorSelectionBox empty.

@@ -1,7 +1,7 @@
 as yet unclassified
 selectSingleOnEditor: editor
-	| selectionBox |
-	selectionBox := WTGLevelEditorSelectionBox new
+	| newSelection |
+	newSelection := WTGLevelEditorSelectionBox new
 		box: brush boundingBox;
 		addElement: brush.
-	editor selectionBox: selectionBox.
+	editor selection: newSelection.

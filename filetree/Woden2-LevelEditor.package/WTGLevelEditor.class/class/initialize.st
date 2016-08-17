@@ -2,6 +2,8 @@ as yet unclassified
 initialize
 	super initialize.
 	
+	MaterialThumbDBFileName := 'WTGLevelEditor_MaterialThumb.db'.
+	
 	DefaultSettingsForViews := {
 		"Top Left"
 		[ :view | view orthographic; wireframe; topView ].

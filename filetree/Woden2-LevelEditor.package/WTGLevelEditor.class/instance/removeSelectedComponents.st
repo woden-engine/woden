@@ -1,4 +1,4 @@
 actions
 removeSelectedComponents
-	selectionBox elements do: [ :element | element removeFromMap ].
-	self selectionBox: WTGLevelEditorSelectionBox empty
+	selection elements do: [ :element | element removeFromMap ].
+	self selection: WTGLevelEditorSelectionBox empty

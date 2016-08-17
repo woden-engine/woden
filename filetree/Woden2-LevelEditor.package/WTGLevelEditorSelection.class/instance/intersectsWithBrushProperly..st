@@ -1,4 +1,4 @@
-as yet unclassified
+intersection
 intersectsWithBrushProperly: brush
 	elements do: [:element |
 		(element intersectsWithBrushProperly: brush) ifTrue: [ ^ true ]

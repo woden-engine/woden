@@ -9,11 +9,9 @@
 		"SpaceSelectionHighlightColor" ],
 	"commentStamp" : "",
 	"instvars" : [
-		"editor",
-		"box",
-		"elements" ],
+		"box" ],
 	"name" : "WTGLevelEditorSelectionBox",
 	"pools" : [
 		 ],
-	"super" : "WTGLevelEditorElementModel",
+	"super" : "WTGLevelEditorSelection",
 	"type" : "normal" }

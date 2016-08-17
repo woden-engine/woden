@@ -9,7 +9,6 @@
 		"PerspectiveNearDistance" ],
 	"commentStamp" : "",
 	"instvars" : [
-		"editor",
 		"camera",
 		"cameraVelocity",
 		"cameraSpeed",
@@ -32,6 +31,6 @@
 		"lastDragEndPosition" ],
 	"name" : "WTGLevelEditorView",
 	"pools" : [
-		"OSKeySymbols" ],
-	"super" : "BlElement",
+		 ],
+	"super" : "WTGLevelEditorViewComponent",
 	"type" : "normal" }
