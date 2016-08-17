@@ -9,7 +9,8 @@
 		"useDepth",
 		"writeDepth",
 		"modePipelines",
-		"stipple" ],
+		"stipple",
+		"thumbnailType" ],
 	"name" : "WTFlatColorMaterial",
 	"pools" : [
 		 ],

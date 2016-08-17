@@ -3,7 +3,8 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		"PixelFormatDecoderSelector" ],
+		"PixelFormatDecoderSelector",
+		"ThumbnailSize" ],
 	"commentStamp" : "",
 	"instvars" : [
 		"pixelFormat",
