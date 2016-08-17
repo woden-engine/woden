@@ -1,7 +1,7 @@
-rendering
+accessing
 currentTexturedColor
-	^  selected ifTrue: [
+	^ selected ifTrue: [
 		lastSelected
 			ifTrue: [ LastSelectionColor ]
 			ifFalse: [ SelectionColor ]
-	] ifFalse: [ brush currentTexturedColor ]
+	] ifFalse: [ Color white]

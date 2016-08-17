@@ -3,7 +3,8 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		 ],
+		"LastSelectionColor",
+		"SelectionColor" ],
 	"commentStamp" : "",
 	"instvars" : [
 		"selected",

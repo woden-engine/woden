@@ -1,3 +1,7 @@
 accessing
 currentColor
-	^ color
+	^ selected ifTrue: [
+		lastSelected
+			ifTrue: [ LastSelectionColor ]
+			ifFalse: [ SelectionColor ]
+	] ifFalse: [ color]

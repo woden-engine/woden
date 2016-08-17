@@ -1,3 +1,4 @@
 accessing
 selected: anObject
-	selected := anObject
+	selected := anObject.
+	self changedSelectionState.
