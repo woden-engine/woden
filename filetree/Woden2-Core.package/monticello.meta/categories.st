@@ -3,6 +3,7 @@ SystemOrganization addCategory: 'Woden2-Core-Application'!
 SystemOrganization addCategory: 'Woden2-Core-Engine'!
 SystemOrganization addCategory: 'Woden2-Core-Material'!
 SystemOrganization addCategory: 'Woden2-Core-Mesh'!
+SystemOrganization addCategory: 'Woden2-Core-Morphic'!
 SystemOrganization addCategory: 'Woden2-Core-Pool'!
 SystemOrganization addCategory: 'Woden2-Core-Rendering'!
 SystemOrganization addCategory: 'Woden2-Core-Resources'!

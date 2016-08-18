@@ -1,0 +1,23 @@
+{
+	"category" : "Woden2-Core-Morphic",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"hand",
+		"screenForm",
+		"needsRendering",
+		"renderThread",
+		"osWindow",
+		"osWindowRenderer",
+		"model",
+		"closeCallback",
+		"title",
+		"isResizeable" ],
+	"name" : "WTOSWindowMorphWorld",
+	"pools" : [
+		 ],
+	"super" : "PasteUpMorph",
+	"type" : "normal" }
