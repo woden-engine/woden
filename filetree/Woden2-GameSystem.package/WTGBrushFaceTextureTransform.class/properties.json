@@ -11,7 +11,8 @@
 		"face",
 		"scale",
 		"offset",
-		"rotation" ],
+		"rotation",
+		"lock" ],
 	"name" : "WTGBrushFaceTextureTransform",
 	"pools" : [
 		 ],

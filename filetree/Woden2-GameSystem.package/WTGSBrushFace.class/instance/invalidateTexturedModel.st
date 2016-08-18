@@ -1,3 +1,3 @@
-as yet unclassified
+rendering
 invalidateTexturedModel
 	brush ifNotNil: [ brush invalidateTexturedModel ]

@@ -1,3 +1,3 @@
-as yet unclassified
+rendering
 invalidateModels
 	brush ifNotNil: [ brush invalidateModels ]

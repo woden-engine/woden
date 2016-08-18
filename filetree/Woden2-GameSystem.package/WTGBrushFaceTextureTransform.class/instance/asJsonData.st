@@ -4,4 +4,5 @@ asJsonData
 		'scale' . scale asJsonData . 
 		'offset' . offset asJsonData .
 		'rotation' . rotation .
+		'lock' . lock .
 	}

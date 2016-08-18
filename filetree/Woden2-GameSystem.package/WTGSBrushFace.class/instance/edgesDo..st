@@ -1,4 +1,4 @@
-as yet unclassified
+iterator
 edgesDo: aBlock
 	| start end |
 	1 to: indices size do: [ :i |
