@@ -18,6 +18,8 @@ onKeyDownEvent: anEvent
 
 		(anEvent modifiers isShift not and: [ anEvent modifiers isAlt not]) ifTrue: [ 
 			keyValue = OSK_s ifTrue: [ editor save ].
+			keyValue = OSK_o ifTrue: [ editor open ].
+			keyValue = OSK_t ifTrue: [ editor openTextureTransformEditor ].
 			
 			keyValue = OSK_i ifTrue: [ editor inspectSelection ]
 		].
@@ -36,6 +38,8 @@ onKeyDownEvent: anEvent
 			keyValue = OSK_w ifTrue: [ self wireframe ].
 			keyValue = OSK_s ifTrue: [ self solid ].
 			keyValue = OSK_t ifTrue: [ self textured ].	
+				
+			keyValue = OSK_f ifTrue: [ editor toggleFaceSelectMode ].	
 		].
 
 		(anEvent modifiers isShift not and: [ anEvent modifiers isAlt ]) ifTrue: [ 

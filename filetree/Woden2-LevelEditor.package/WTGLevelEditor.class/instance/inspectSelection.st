@@ -1,5 +1,7 @@
 actions
 inspectSelection
-	selection elements isEmpty ifTrue: [ ^ self ].
-	
-	selection inspect
+	currentInspector ifNotNil: [ ^ self ].
+	currentInspector := GTInspector new.
+	(currentInspector openInExternalWindowOn: self)
+		extent: 640@480;
+		closeCallback: [ currentInspector := nil ].

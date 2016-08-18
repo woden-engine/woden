@@ -5,7 +5,9 @@ onDragStartEvent: anEvent
 		anEvent isPrimaryButtonDrag ifTrue: [
 			element := (self findBestElementAtGlobalCoord: anEvent position) value asNodeModelForLevelEditor: editor.
 			element ifNil: [
-				self startDragController: WTGEDragMakeSelectionBox new event: anEvent.
+				editor isFaceSelectMode ifFalse: [
+					self startDragController: WTGEDragMakeSelectionBox new event: anEvent.
+				]
 			] ifNotNil: [
 				self startDragController: (element view: self dragControllerFor: anEvent) event: anEvent.
 			]

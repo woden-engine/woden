@@ -1,3 +1,3 @@
 event handling
 onDropEvent: event
-	Transcript show: event; cr.
+	"Transcript show: event; cr."

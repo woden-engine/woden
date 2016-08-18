@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-LevelEditor",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"face" ],
+	"name" : "WTGLevelEditorBrushFaceModel",
+	"pools" : [
+		 ],
+	"super" : "WTGLevelEditorElementModel",
+	"type" : "normal" }

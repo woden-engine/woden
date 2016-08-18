@@ -4,5 +4,7 @@ selection: aSelection
 		self useNewSelectionBox: aSelection.
 	] ifFalse: [
 		self useNewSelectionBox: WTGLevelEditorSelectionBox empty.
-		selection := aSelection
+		selection := aSelection.
+		selection setSelectedState.
 	].
+	self selectionChanged.

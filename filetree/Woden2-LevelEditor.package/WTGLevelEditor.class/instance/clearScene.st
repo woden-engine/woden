@@ -10,5 +10,4 @@ clearScene
 
 	self
 		createSelectionBox;
-		createSelectionBoxView;
-		createMap.
+		createSelectionBoxView

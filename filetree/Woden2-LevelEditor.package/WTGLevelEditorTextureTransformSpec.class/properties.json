@@ -1,0 +1,34 @@
+{
+	"category" : "Woden2-LevelEditor",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"editor",
+		"xScale",
+		"xScaleLabel",
+		"xScaleMore",
+		"xScaleLess",
+		"yScale",
+		"yScaleLabel",
+		"yScaleMore",
+		"yScaleLess",
+		"xOffset",
+		"xOffsetLabel",
+		"xOffsetMore",
+		"xOffsetLess",
+		"yOffset",
+		"yOffsetLabel",
+		"yOffsetMore",
+		"yOffsetLess",
+		"rotation",
+		"rotationLabel",
+		"rotationMore",
+		"rotationLess" ],
+	"name" : "WTGLevelEditorTextureTransformSpec",
+	"pools" : [
+		 ],
+	"super" : "ComposableModel",
+	"type" : "normal" }

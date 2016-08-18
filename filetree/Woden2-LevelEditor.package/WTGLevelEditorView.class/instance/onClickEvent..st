@@ -10,16 +10,30 @@ onClickEvent: anEvent
 	
 	elements ifNotEmpty: [
 		lastClickElements = elements ifTrue: [
-			nextClickElementIndex := (nextClickElementIndex + 1) % lastClickElements size
+			(anEvent modifiers isCtrl not and: [ anEvent modifiers isShift not ]) ifTrue: [ 
+				nextClickElementIndex := (nextClickElementIndex + 1) % lastClickElements size
+			].
 		] ifFalse: [ 
 			nextClickElementIndex := 0
 		].
-		lastClickElements := elements.
-		
+
+		lastClickElements := elements.		
 		currentElement := elements at: nextClickElementIndex + 1.
 	].
 
 	currentElement := currentElement asNodeModelForLevelEditor: editor.
-	currentElement
-		ifNotNil: [ currentElement selectSingleOnEditor: editor ]
-		ifNil: [ editor selection: WTGLevelEditorSelectionBox empty ]
+	currentElement ifNotNil: [
+		(anEvent modifiers isCtrl and: [ anEvent modifiers isShift not ]) ifTrue: [
+			currentElement selectToggleOnEditor: editor
+		].
+		(anEvent modifiers isCtrl not and: [ anEvent modifiers isShift ]) ifTrue: [
+			currentElement selectAddOnEditor: editor
+		].
+		(anEvent modifiers isCtrl not and: [ anEvent modifiers isShift not ]) ifTrue: [
+			currentElement selectSingleOnEditor: editor
+		]
+	] ifNil: [
+		(anEvent modifiers isCtrl not and: [ anEvent modifiers isShift not ]) ifTrue: [ 
+			editor clearSelection
+		]
+	]

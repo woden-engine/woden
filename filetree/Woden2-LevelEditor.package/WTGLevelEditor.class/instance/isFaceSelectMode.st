@@ -1,3 +1,3 @@
-accessing
+selection
 isFaceSelectMode
-	^ false
+	^ faceSelectMode

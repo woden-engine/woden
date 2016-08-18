@@ -2,4 +2,5 @@ initialization
 initialize
 	super initialize.
 
-	elements := OrderedCollection new.
+	elements := Set new.
+	lastElement := nil.
