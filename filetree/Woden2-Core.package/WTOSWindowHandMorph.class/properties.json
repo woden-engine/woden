@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Core-Morphic",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "WTOSWindowHandMorph",
+	"pools" : [
+		 ],
+	"super" : "HandMorph",
+	"type" : "normal" }

@@ -5,6 +5,6 @@ initialize
 	self color: Color veryLightGray.
 	title := 'New Window'.
 	isResizeable := true.
-	hand := HandMorph new.
+	hand := WTOSWindowHandMorph new.
 	hand privateOwner: self.
 	needsRendering := false.

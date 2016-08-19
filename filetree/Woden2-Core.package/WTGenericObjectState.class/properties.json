@@ -8,7 +8,8 @@
 	"extradependencies" : "#(#WMReversibleAffineTransformF #WMVector4F)",
 	"instvars" : [
 		"#transform &=> #WMReversibleAffineTransformF",
-		"#color &=> #WMVector4F" ],
+		"#color &=> #WMVector4F",
+		"#visible &=> #int32" ],
 	"name" : "WTGenericObjectState",
 	"pools" : [
 		 ],

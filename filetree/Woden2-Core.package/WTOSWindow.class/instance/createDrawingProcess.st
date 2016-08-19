@@ -9,4 +9,4 @@ createDrawingProcess
 			controlSemaphore critical: [ shouldContinue := shuttingDown not. ].
 			shouldContinue ] whileTrue: [ self drawingProcessCycle ].
 			drawingProcessFinishSemaphore signal
-		] forkAt: Processor lowIOPriority
+		] fork "forkAt: Processor lowIOPriority"
