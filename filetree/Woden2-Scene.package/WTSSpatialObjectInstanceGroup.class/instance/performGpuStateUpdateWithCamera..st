@@ -1,7 +1,8 @@
 rendering
-performGpuStateUpdate
+performGpuStateUpdateWithCamera: aCamera
 	| currentGpuState instanceStateBuffer instanceStateSize instanceStateOffset instanceStatePointer |
 	objectState transform: renderTransform.
+	depthSorted ifTrue: [ self depthSortFor: aCamera ].
 	
 	currentGpuState := self currentGpuObjectState.
 	currentGpuState first value: objectState.

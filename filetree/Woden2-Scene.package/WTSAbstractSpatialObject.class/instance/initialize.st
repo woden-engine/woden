@@ -3,5 +3,7 @@ initialize
 	super initialize.
 	renderPriority := RenderPriorityDefault.
 	objectState := WTGenericObjectState new.
-	objectState color: Color white asWMVector4F.
+	objectState
+		visible: 1;
+		color: Color white asWMVector4F.
 	

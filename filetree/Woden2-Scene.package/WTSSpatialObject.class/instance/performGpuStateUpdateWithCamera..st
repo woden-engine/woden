@@ -1,5 +1,5 @@
 rendering
-performGpuStateUpdate
+performGpuStateUpdateWithCamera: aCamera
 	objectState transform: renderTransform.
 	self currentGpuObjectState value: objectState.
 	

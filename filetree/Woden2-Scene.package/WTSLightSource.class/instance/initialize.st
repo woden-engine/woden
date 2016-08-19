@@ -2,5 +2,7 @@ initialization
 initialize
 	super initialize.
 	state := WTLightSourceData new.
-	state radius: 3.0.
-	type := #point.
+	state
+		intensity: Color white asWMVector4F;
+		radius: 3.0.
+	self point.

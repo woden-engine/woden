@@ -24,7 +24,8 @@
 		"model",
 		"modificationCount",
 		"updatedPerFrame",
-		"stateChangeListeners" ],
+		"stateChangeListeners",
+		"useViewportCamera" ],
 	"name" : "WTSNode",
 	"pools" : [
 		 ],

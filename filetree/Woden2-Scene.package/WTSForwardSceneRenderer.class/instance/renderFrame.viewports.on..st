@@ -11,8 +11,15 @@ renderFrame: frameIndex viewports: viewports on: window
 	
 	currentCamera := viewports first camera.	
 	self collectVisibleObjectsFor: currentCamera.
-	visibleObjects do: [ :obj | obj updateGpuStateForFrame: fullFrameIndex ].
-	objectsPerViewport := viewports collect: [ :viewport | visibleObjects select: viewport filter ].
+	visibleObjects select: [:obj | obj useViewportCamera not ] thenDo: [ :obj | obj updateGpuStateForFrame: fullFrameIndex camera: currentCamera].
+	objectsPerViewport := viewports collect: [ :viewport |
+		visibleObjects select: viewport filter thenCollect: [ :element |
+			element useViewportCamera ifTrue: [
+				element updateGpuStateForFrame: fullFrameIndex camera: viewport camera
+			].
+			element
+		]
+	].
 	self sortObjects: objectsPerViewport perViewports: viewports.
 	
 	self

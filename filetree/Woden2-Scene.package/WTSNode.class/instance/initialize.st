@@ -6,3 +6,4 @@ initialize
 	visible := true.
 	modificationCount := 0.
 	updatedPerFrame := true.
+	useViewportCamera := false.
