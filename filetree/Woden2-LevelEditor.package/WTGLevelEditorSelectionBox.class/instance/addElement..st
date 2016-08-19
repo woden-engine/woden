@@ -5,6 +5,6 @@ addElement: anElement
 		ifNotNil: [ box insertBox: anElement boundingBox ].
 
 	editor ifNotNil: [
-		elements size = 1 ifTrue: [ editor selectionBoxView updateColors ].
-		editor selectionBoxView updateNodes
+		elements size = 1 ifTrue: [ editor selectionBoxViewsDo: #updateColors ].
+		editor selectionBoxViewsDo: #updateNodes
 	]

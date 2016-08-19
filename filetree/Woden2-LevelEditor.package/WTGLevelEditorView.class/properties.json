@@ -28,7 +28,8 @@
 		"lastClickElements",
 		"nextClickElementIndex",
 		"centerAxis",
-		"lastDragEndPosition" ],
+		"lastDragEndPosition",
+		"selectionBoxView" ],
 	"name" : "WTGLevelEditorView",
 	"pools" : [
 		 ],

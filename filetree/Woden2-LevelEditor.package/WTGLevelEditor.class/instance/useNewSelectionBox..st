@@ -8,5 +8,4 @@ useNewSelectionBox: aBox
 	selection := aBox.
 
 	selectionBox ifNotNil: [ selectionBox editor: self; setSelectedState ].
-	selectionBoxView ifNotNil: [ selectionBoxView updateNodes ]
-	
+	self selectionBoxViewsDo: #updateNodes.

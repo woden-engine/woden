@@ -12,7 +12,9 @@
 		"manipulatorNodes",
 		"boxMesh",
 		"manipulatorMesh",
-		"mouseOverIndex" ],
+		"mouseOverIndex",
+		"manipulatorNodesInstanceGroup",
+		"view" ],
 	"name" : "WTGESelectionBoxView",
 	"pools" : [
 		 ],

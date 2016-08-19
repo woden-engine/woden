@@ -1,9 +1,7 @@
 selection
 elementsAlongRay: ray do: aBlock
 	| selectionMode |
-	selectionBoxView elementsAlongRay: ray do: aBlock.
-	
 	selectionMode := self isFaceSelectMode
 		ifTrue: [ #face ]
-		ifFalse: [ #brush ].
+		ifFalse: [ #entity"#brush" ].
 	map elementsAlongRay: ray mode: selectionMode do: aBlock

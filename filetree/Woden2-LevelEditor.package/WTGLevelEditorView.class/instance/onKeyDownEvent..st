@@ -5,7 +5,7 @@ onKeyDownEvent: anEvent
 	keyValue := anEvent keyValue.
 
 	(anEvent modifiers isCmd or: [ anEvent modifiers isCtrl ]) ifTrue: [
-		(anEvent modifiers isShift not and: [ anEvent modifiers isAlt ]) ifTrue: [ 
+		(anEvent modifiers isShift not and: [ anEvent modifiers isAlt ]) ifTrue: [
 			keyValue = OSK_s ifTrue: [ editor saveAs ].
 		].
 
@@ -17,6 +17,9 @@ onKeyDownEvent: anEvent
 		].
 
 		(anEvent modifiers isShift not and: [ anEvent modifiers isAlt not]) ifTrue: [ 
+			keyValue = OSK_a ifTrue: [ editor addPointEntity: cameraTransform translation ].
+			keyValue = OSK_l ifTrue: [ editor addLightEntity: cameraTransform translation ].
+			
 			keyValue = OSK_s ifTrue: [ editor save ].
 			keyValue = OSK_o ifTrue: [ editor open ].
 			keyValue = OSK_t ifTrue: [ editor openTextureTransformEditor ].

@@ -1,3 +1,3 @@
 mouse over
 mouseOverNone
-	selectionBoxView mouseOverIndex: -1.
+	self selectionBoxViewsDo: [ :view | view mouseOverIndex: -1 ].

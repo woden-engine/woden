@@ -1,4 +1,4 @@
 accessing
 box: anObject
 	box := anObject.
-	editor ifNotNil: [ editor selectionBoxView updateNodes ]
+	editor ifNotNil: [ editor selectionBoxViewsDo: #updateNodes ]

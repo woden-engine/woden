@@ -13,7 +13,6 @@
 		"mapFileName",
 		"renderMode",
 		"levelViews",
-		"selectionBoxView",
 		"selectionBox",
 		"primaryGridMesh",
 		"secondaryGridMesh",

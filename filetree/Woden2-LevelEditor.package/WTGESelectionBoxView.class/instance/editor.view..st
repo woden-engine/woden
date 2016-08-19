@@ -1,6 +1,7 @@
 accessing
-editor: anObject
+editor: anObject view: aView
 	editor := anObject.
+	view := aView.
 	
 	self
 		createSelectionBoxManipulatorMesh;

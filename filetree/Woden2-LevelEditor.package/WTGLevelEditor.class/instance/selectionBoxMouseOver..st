@@ -1,3 +1,3 @@
 mouse over
 selectionBoxMouseOver: boxIndex
-	selectionBoxView mouseOverIndex: boxIndex.
+	self selectionBoxViewsDo: [ :view | view mouseOverIndex: boxIndex ].
