@@ -2,4 +2,5 @@ changing
 changedSelectionState
 	pointEntityNode ifNil: [ ^ self ].
 	
-	pointEntityNode color: self currentColor.
+	pointEntityNode
+		color: self currentColor.

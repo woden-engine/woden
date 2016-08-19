@@ -3,15 +3,12 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		 ],
+		"BrushColors" ],
 	"commentStamp" : "",
 	"instvars" : [
-		"scene",
-		"entities",
-		"pointEntityInstanceGroup",
-		"editorMode" ],
-	"name" : "WTGSMap",
+		"intensity" ],
+	"name" : "WTGSLightSourceComponent",
 	"pools" : [
 		 ],
-	"super" : "WTGSMapNode",
+	"super" : "WTGSComponent",
 	"type" : "normal" }

@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 applyTransformation: transformation
 	| spatialDescription |
 	spatialDescription := self spatialDescription.
