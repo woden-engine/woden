@@ -2,6 +2,7 @@ initialization
 createMap
 	| world |
 	map := WTGSMap new.
+	map editorMode: true.
 	map scene: scene.
 		
 	world := WTGSEntity new.

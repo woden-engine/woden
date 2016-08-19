@@ -1,6 +1,5 @@
 rendering
 updateNodes
-	| halfExtent baseBox manipulatorBox manip |
 	node visible: editor selectionBox isEmpty not.
 	node visible ifFalse: [
 		self makeManipulatorsEmpty.

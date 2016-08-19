@@ -1,4 +1,4 @@
 events
 initialize
 	super initialize.
-	totalTranslation := WMVector3D new.
+	totalDelta := 0@0.

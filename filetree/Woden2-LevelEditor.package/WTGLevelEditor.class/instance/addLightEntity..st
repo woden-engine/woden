@@ -1,6 +1,9 @@
 actions
 addLightEntity: aPosition
 	| entity |
-	Transcript show: 'addLightEntity:'; cr.
-	entity := WTGSEntity new ensureSpatialDescription; ensureSceneNodeOfType: WTSLightSource.
+	entity := WTGSEntity new.
+	entity
+		addComponent: WTGSSpatialDescription new;
+		addComponent: WTGSLightSourceComponent new.
+	entity spatialDescription translation: aPosition.
 	map addEntity: entity.

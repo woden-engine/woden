@@ -1,6 +1,8 @@
 actions
 addPointEntity: aPosition
 	| entity |
-	Transcript show: 'addPointEntity:'; cr.
 	entity := WTGSEntity new ensureSpatialDescription.
+	entity
+		addComponent: WTGSSpatialDescription new.
+	entity spatialDescription translation: aPosition.
 	map addEntity: entity.

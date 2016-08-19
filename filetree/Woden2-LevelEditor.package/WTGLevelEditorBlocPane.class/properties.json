@@ -6,11 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"depthPoint",
-		"onNewTranslation",
-		"totalDelta" ],
-	"name" : "WTGEDragTranslate",
+		"bloc" ],
+	"name" : "WTGLevelEditorBlocPane",
 	"pools" : [
 		 ],
-	"super" : "WTGEDragTool",
+	"super" : "Object",
 	"type" : "normal" }

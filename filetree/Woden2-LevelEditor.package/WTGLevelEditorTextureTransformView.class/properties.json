@@ -6,11 +6,13 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"depthPoint",
-		"onNewTranslation",
-		"totalDelta" ],
-	"name" : "WTGEDragTranslate",
+		"xScale",
+		"yScale",
+		"xOffset",
+		"yOffset",
+		"rotation" ],
+	"name" : "WTGLevelEditorTextureTransformView",
 	"pools" : [
 		 ],
-	"super" : "WTGEDragTool",
+	"super" : "WTGLevelEditorBlocPane",
 	"type" : "normal" }
