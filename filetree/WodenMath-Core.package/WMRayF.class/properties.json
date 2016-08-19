@@ -1,0 +1,18 @@
+{
+	"category" : "WodenMath-Core-Geometry",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "RonieSalgado 6/22/2016 23:07",
+	"extradependencies" : "#(#WMVector3F #WMVector3S)",
+	"instvars" : [
+		"#origin &=> #WMVector3F",
+		"#direction &=> #WMVector3F",
+		"#invertedDirection &=> #WMVector3F",
+		"#signs &=> #WMVector3S" ],
+	"name" : "WMRayF",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }

@@ -1,0 +1,17 @@
+{
+	"category" : "WodenMath-Core-Geometry",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "RonieSalgado 7/12/2016 16:24",
+	"instvars" : [
+		"#nx &=> #double",
+		"#ny &=> #double",
+		"#nz &=> #double",
+		"#d &=> #double" ],
+	"name" : "WMPlaneD",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }

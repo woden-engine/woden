@@ -1,0 +1,15 @@
+{
+	"category" : "WodenMath-Core-Complex",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "RonieSalgado 6/4/2016 01:45",
+	"instvars" : [
+		"#r &=> #float",
+		"#i &=> #float" ],
+	"name" : "WMComplexF",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }

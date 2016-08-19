@@ -1,0 +1,18 @@
+{
+	"category" : "WodenMath-Core-Transform",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "RonieSalgado 7/12/2016 14:14",
+	"extradependencies" : "#(#WMMatrix3D #WMVector4D)",
+	"instvars" : [
+		"#matrix &=> #WMMatrix3D",
+		"#translation &=> #WMVector4D",
+		"#inverseMatrix &=> #WMMatrix3D",
+		"#inverseTranslation &=> #WMVector4D" ],
+	"name" : "WMReversibleAffineTransformD",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }

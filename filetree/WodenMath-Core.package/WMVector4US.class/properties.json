@@ -1,0 +1,17 @@
+{
+	"category" : "WodenMath-Core-CompressedVectors",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "RonieSalgado 6/27/2016 16:12",
+	"instvars" : [
+		"#x &=> #ushort",
+		"#y &=> #ushort",
+		"#z &=> #ushort",
+		"#w &=> #ushort" ],
+	"name" : "WMVector4US",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }

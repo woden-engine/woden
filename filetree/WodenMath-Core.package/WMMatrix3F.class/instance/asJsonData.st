@@ -1,0 +1,3 @@
+converting
+asJsonData
+	^ self asRowMajorArray 

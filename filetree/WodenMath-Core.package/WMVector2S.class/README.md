@@ -1,0 +1,1 @@
+I represent a two dimensional vector whose fields are shorts. I am useful for keeping compressed data.

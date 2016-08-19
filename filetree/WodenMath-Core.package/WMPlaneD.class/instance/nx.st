@@ -1,0 +1,4 @@
+accessing
+nx
+	<accessor>
+	^ nx

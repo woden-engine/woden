@@ -1,0 +1,15 @@
+{
+	"category" : "WodenMath-Core-LinearAlgebra",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "RonieSalgado 5/26/2016 14:43",
+	"instvars" : [
+		"#x &=> #float",
+		"#y &=> #float" ],
+	"name" : "WMVector2F",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }

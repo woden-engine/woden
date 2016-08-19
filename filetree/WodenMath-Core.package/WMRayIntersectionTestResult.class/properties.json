@@ -1,0 +1,16 @@
+{
+	"category" : "WodenMath-Core-Geometry",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "RonieSalgado 7/16/2016 18:59",
+	"instvars" : [
+		"priority",
+		"distance",
+		"value" ],
+	"name" : "WMRayIntersectionTestResult",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

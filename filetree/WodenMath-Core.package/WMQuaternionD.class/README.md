@@ -1,0 +1,1 @@
+I represent a quaternion, using double precision floats..

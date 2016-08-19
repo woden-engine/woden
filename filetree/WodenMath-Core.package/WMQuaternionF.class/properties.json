@@ -1,0 +1,17 @@
+{
+	"category" : "WodenMath-Core-Complex",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "RonieSalgado 6/1/2016 13:07",
+	"instvars" : [
+		"#i &=> #float",
+		"#j &=> #float",
+		"#k &=> #float",
+		"#r &=> #float" ],
+	"name" : "WMQuaternionF",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }

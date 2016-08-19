@@ -1,0 +1,1 @@
+I represent a result obtained by a ray intersection test.

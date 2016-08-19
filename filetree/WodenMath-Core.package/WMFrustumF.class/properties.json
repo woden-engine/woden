@@ -1,0 +1,22 @@
+{
+	"category" : "WodenMath-Core-Geometry",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "RonieSalgado 7/15/2016 23:40",
+	"instvars" : [
+		"leftBottomNear",
+		"rightBottomNear",
+		"leftTopNear",
+		"rightTopNear",
+		"leftBottomFar",
+		"rightBottomFar",
+		"leftTopFar",
+		"rightTopFar",
+		"matrix" ],
+	"name" : "WMFrustumF",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

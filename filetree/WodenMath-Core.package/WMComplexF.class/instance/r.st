@@ -1,0 +1,4 @@
+accessing
+r
+	<accessor>
+	^ r

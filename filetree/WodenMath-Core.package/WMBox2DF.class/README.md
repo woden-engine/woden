@@ -1,0 +1,1 @@
+I represent a 2D bounding box.
