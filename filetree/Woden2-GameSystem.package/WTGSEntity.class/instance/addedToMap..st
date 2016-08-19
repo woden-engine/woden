@@ -1,3 +1,3 @@
 adding
 addedToMap: aMap
-	map := aMap
+	map := aMap.

@@ -3,17 +3,15 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		 ],
+		"DefaultHalfExtent" ],
 	"commentStamp" : "",
 	"instvars" : [
-		"components",
-		"numberOfComponents",
-		"map",
-		"pointEntity",
-		"worldEntity",
-		"pointEntityNode" ],
-	"name" : "WTGSEntity",
+		"hasVolume",
+		"transform",
+		"localBoundingBox",
+		"boundingBox" ],
+	"name" : "WTGSSpatialDescription",
 	"pools" : [
 		 ],
-	"super" : "WTGSMapNode",
+	"super" : "WTGSComponent",
 	"type" : "normal" }

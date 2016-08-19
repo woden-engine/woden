@@ -7,7 +7,8 @@
 	"commentStamp" : "",
 	"instvars" : [
 		"scene",
-		"entities" ],
+		"entities",
+		"pointEntityInstanceGroup" ],
 	"name" : "WTGSMap",
 	"pools" : [
 		 ],
