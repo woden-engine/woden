@@ -20,7 +20,10 @@ onKeyDownEvent: anEvent
 		(anEvent modifiers isShift not and: [ anEvent modifiers isAlt not]) ifTrue: [ 
 			keyValue = OSK_a ifTrue: [ editor addPointEntity: cameraTransform translation ].
 			keyValue = OSK_l ifTrue: [ editor addLightEntity: cameraTransform translation ].
+			keyValue = OSK_g ifTrue: [ editor addGunItem: cameraTransform translation ].
 			keyValue = OSK_b ifTrue: [ editor makeBrushEntity ].
+			
+			keyValue = OSK_p ifTrue: [ editor playInExternalWindow ].
 						
 			keyValue = OSK_s ifTrue: [ editor save ].
 			keyValue = OSK_o ifTrue: [ editor open ].

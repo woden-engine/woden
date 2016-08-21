@@ -6,3 +6,4 @@ addPointEntity: aPosition
 		addComponent: WTGSSpatialDescription new.
 	entity spatialDescription translation: aPosition.
 	map addEntity: entity.
+	^ entity
