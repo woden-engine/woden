@@ -1,6 +1,7 @@
 event handling
 onDragStartEvent: anEvent
 	| element |
+	self updateCameraProjection.
 	toolController ifNil: [
 		anEvent isPrimaryButtonDrag ifTrue: [
 			element := (self findBestElementAtGlobalCoord: anEvent position) value asNodeModelForLevelEditor: editor.

@@ -7,7 +7,7 @@ view: view dragControllerFor: anEvent
 		[ (direction closeTo: forward negated) or:
 		[ direction closeTo: WMVector3D new] ].
 	fullTranslation := WMVector3D new.
-	expandDirection := direction copy.
+	expandDirection := WMVector3D x: direction x sign asFloat y: direction y sign asFloat z: direction z sign asFloat.
 
 	memento := view editor selectionBox transformMemento.
 	(isBoxTranslation not and: [ view editor selectionBox rotationMode ]) ifTrue: [
