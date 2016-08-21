@@ -1,3 +1,3 @@
 accessing
 lightSource
-	(components at: #'light-source' ifAbsent: [ ^ nil ]) first
+	^ (components at: #'light-source' ifAbsent: [ ^ nil ]) first
