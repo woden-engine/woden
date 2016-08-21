@@ -1,0 +1,18 @@
+{
+	"category" : "Woden2-GameSystem-Player",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"angle",
+		"linearVelocity",
+		"linearAcceleration",
+		"angularVelocity",
+		"angularAcceleration" ],
+	"name" : "WTGSForwardKinematicMovementBehavior",
+	"pools" : [
+		 ],
+	"super" : "WTGSBehavior",
+	"type" : "normal" }

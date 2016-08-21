@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-GameSystem-Level",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"behaviorClassName" ],
+	"name" : "WTGSBehaviorClass",
+	"pools" : [
+		 ],
+	"super" : "WTGSComponent",
+	"type" : "normal" }

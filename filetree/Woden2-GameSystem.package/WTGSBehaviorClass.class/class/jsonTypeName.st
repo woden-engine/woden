@@ -1,0 +1,3 @@
+serialization
+jsonTypeName
+	^ 'behavior-class'

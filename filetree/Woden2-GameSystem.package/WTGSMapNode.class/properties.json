@@ -11,6 +11,6 @@
 		"lastSelected" ],
 	"name" : "WTGSMapNode",
 	"pools" : [
-		 ],
+		"OSKeySymbols" ],
 	"super" : "Object",
 	"type" : "normal" }

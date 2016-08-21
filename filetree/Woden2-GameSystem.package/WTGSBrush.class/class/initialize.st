@@ -6,7 +6,7 @@ initialize
 	super initialize.
 	
 	BrushColors := {
-		Color green .
+		Color green muchDarker.
 		Color blue .
 		Color cyan .
 		Color yellow .

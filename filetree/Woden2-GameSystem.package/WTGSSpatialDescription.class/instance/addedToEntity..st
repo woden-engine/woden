@@ -1,4 +1,4 @@
-as yet unclassified
+adding
 addedToEntity: anEntity
 	super addedToEntity: anEntity.
 	self changed.

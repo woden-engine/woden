@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-GameSystem-Player",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"speed" ],
+	"name" : "WTGSPlayerBehavior",
+	"pools" : [
+		 ],
+	"super" : "WTGSForwardKinematicMovementBehavior",
+	"type" : "normal" }

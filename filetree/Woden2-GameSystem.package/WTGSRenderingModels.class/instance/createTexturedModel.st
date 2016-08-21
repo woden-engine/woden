@@ -9,6 +9,7 @@ createTexturedModel
 		brushFaces addAll: brush faces
 	].
 
+	brushFaces sort: [ :a :b | a material <= b material ].
 	brushFaces do: [:face | face buildTexturedModelInto: texturedModelBuilder].
 
 	(entity components at: #modeling) do: [ :model |

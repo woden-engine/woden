@@ -1,0 +1,15 @@
+{
+	"category" : "Woden2-GameSystem-Level",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"ScriptCodeEnvironment" ],
+	"commentStamp" : "",
+	"instvars" : [
+		"spawnCode",
+		"spawnMethod" ],
+	"name" : "WTGSBehaviorScript",
+	"pools" : [
+		 ],
+	"super" : "WTGSComponent",
+	"type" : "normal" }

@@ -1,3 +1,3 @@
-as yet unclassified
+adding
 removeFromMap
 	self removeFromEntity

@@ -1,0 +1,3 @@
+memento
+transformMemento
+	^ positions copy

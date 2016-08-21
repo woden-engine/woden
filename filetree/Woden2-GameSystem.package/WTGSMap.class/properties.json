@@ -9,7 +9,9 @@
 		"scene",
 		"entities",
 		"pointEntityInstanceGroup",
-		"editorMode" ],
+		"editorMode",
+		"timeListeners",
+		"levelPlayer" ],
 	"name" : "WTGSMap",
 	"pools" : [
 		 ],

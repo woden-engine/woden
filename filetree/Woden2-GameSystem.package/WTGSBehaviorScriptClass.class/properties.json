@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-GameSystem-Level",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "WTGSBehaviorScriptClass",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }
