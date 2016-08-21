@@ -6,7 +6,10 @@
 		"BrushColors" ],
 	"commentStamp" : "",
 	"instvars" : [
-		"intensity" ],
+		"intensity",
+		"type",
+		"outerSpotCutoff",
+		"innerSpotCutoff" ],
 	"name" : "WTGSLightSourceComponent",
 	"pools" : [
 		 ],
