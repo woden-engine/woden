@@ -39,7 +39,8 @@ onKeyDownEvent: anEvent
 			keyValue = OSK_KP_7 ifTrue: [ self topView ].
 			keyValue = OSK_KP_1 ifTrue: [ self frontView ].
 			keyValue = OSK_KP_3 ifTrue: [ self sideView ].
-	
+			keyValue = OSK_KP_5 ifTrue: [ isPerspective := isPerspective not ].
+				
 			keyValue = OSK_RETURN ifTrue: [ editor addCubeBrushAtSelectionCube ].	
 			keyValue = OSK_DELETE ifTrue: [ editor removeSelectedComponents ].
 	
