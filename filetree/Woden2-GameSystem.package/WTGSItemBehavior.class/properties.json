@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-GameSystem-Item",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "WTGSItemBehavior",
+	"pools" : [
+		 ],
+	"super" : "WTGSBehavior",
+	"type" : "normal" }

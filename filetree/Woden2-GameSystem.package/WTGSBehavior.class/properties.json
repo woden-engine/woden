@@ -3,7 +3,13 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		 ],
+		"Box3D",
+		"Complex",
+		"Quaternion",
+		"ReversibleAffineTransform",
+		"Vector2",
+		"Vector3",
+		"Vector4" ],
 	"commentStamp" : "",
 	"instvars" : [
 		 ],

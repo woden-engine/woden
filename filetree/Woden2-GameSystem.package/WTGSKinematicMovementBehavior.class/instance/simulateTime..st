@@ -7,4 +7,5 @@ simulateTime: delta
 	spatialDesc := entity spatialDescription.
 	spatialDesc transform
 		kinematicTranslateBy: linearVelocity * delta
-		rotateByQuaternion: (WMQuaternionD vector3: angularVelocity * delta * 0.5) "TODO: Look this up"
+		rotateByQuaternion: (WMQuaternionD vector3: angularVelocity * delta * 0.5). "TODO: Look this up"
+	spatialDesc changed.

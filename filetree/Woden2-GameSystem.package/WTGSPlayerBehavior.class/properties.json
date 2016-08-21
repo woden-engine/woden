@@ -6,7 +6,13 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"speed" ],
+		"speed",
+		"weapons",
+		"currentWeapon",
+		"weaponSceneNode",
+		"weaponAction",
+		"weaponActionFrame",
+		"weaponActionRepeated" ],
 	"name" : "WTGSPlayerBehavior",
 	"pools" : [
 		 ],

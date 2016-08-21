@@ -1,6 +1,5 @@
 as yet unclassified
 compileScript: aSourceCode
 	^ Smalltalk compiler
-		class: WTGSBehaviorScriptClass new;
-		noPattern: true;
+		class: WTGSBehavior;
 		compile: aSourceCode

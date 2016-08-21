@@ -6,4 +6,4 @@ initialize
 	angularAcceleration := WMVector3D new.
 	linearVelocity := WMVector3D new.
 	linearAcceleration := WMVector3D new.
-	
+	movingInGrounding := true.

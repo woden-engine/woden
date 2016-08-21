@@ -1,4 +1,4 @@
-as yet unclassified
+map events
 spawn
 	| allComponents |
 	allComponents := self componentsCollect: #yourself.

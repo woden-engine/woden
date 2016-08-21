@@ -10,7 +10,8 @@
 		"linearVelocity",
 		"linearAcceleration",
 		"angularVelocity",
-		"angularAcceleration" ],
+		"angularAcceleration",
+		"movingInGrounding" ],
 	"name" : "WTGSForwardKinematicMovementBehavior",
 	"pools" : [
 		 ],

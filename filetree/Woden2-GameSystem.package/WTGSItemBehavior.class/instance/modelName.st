@@ -1,0 +1,3 @@
+accessing
+modelName
+	self subclassResponsibility

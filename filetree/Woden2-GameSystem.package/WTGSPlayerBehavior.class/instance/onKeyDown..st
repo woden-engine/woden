@@ -1,4 +1,4 @@
-as yet unclassified
+event handling
 onKeyDown: anEvent
 	| symbol |
 	symbol := anEvent symbol.

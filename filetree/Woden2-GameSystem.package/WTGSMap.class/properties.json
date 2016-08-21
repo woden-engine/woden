@@ -11,7 +11,9 @@
 		"pointEntityInstanceGroup",
 		"editorMode",
 		"timeListeners",
-		"levelPlayer" ],
+		"levelPlayer",
+		"backgroundColor",
+		"touchListeners" ],
 	"name" : "WTGSMap",
 	"pools" : [
 		 ],

@@ -6,4 +6,6 @@ ensureSceneNodeOfType: nodeType
 		self flag: 'Notify the removal of the old nodes'.
 		nodes removeAll.
 		self addComponent: (WTGSSceneNode new node: nodeType new).
-	]
+	].
+
+	^ nodes first

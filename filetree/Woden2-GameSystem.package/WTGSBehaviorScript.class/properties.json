@@ -3,7 +3,7 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		"ScriptCodeEnvironment" ],
+		 ],
 	"commentStamp" : "",
 	"instvars" : [
 		"spawnCode",
@@ -11,5 +11,5 @@
 	"name" : "WTGSBehaviorScript",
 	"pools" : [
 		 ],
-	"super" : "WTGSComponent",
+	"super" : "WTGSBehavior",
 	"type" : "normal" }

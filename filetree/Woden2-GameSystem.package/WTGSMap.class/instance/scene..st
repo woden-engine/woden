@@ -6,6 +6,7 @@ scene: anObject
 	]. 
 	scene := anObject.
 	scene ifNotNil: [
+		scene backgroundColor: backgroundColor.
 		self createPointEntityInstanceGroup.
 		entities do: [ :entity | entity addedToScene: scene ]
 	]

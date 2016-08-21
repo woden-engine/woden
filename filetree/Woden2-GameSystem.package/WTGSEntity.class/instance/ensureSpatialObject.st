@@ -1,3 +1,3 @@
 adding
 ensureSpatialObject
-	self ensureSceneNodeOfType: WTSSpatialObject
+	^ self ensureSceneNodeOfType: WTSSpatialObject

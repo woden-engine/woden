@@ -10,5 +10,5 @@
 	"name" : "WTGSBehaviorClass",
 	"pools" : [
 		 ],
-	"super" : "WTGSComponent",
+	"super" : "WTGSBehavior",
 	"type" : "normal" }
