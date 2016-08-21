@@ -1,0 +1,15 @@
+{
+	"category" : "Woden2-GameSystem-Level",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"modelName",
+		"model" ],
+	"name" : "WTGSModel",
+	"pools" : [
+		 ],
+	"super" : "WTGSComponent",
+	"type" : "normal" }
