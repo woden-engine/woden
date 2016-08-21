@@ -33,4 +33,6 @@ manipulationCorners
 		self nearPoint .
 		self farPoint .
 		
+		self center .
+		
 	 }
