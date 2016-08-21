@@ -15,7 +15,12 @@
 		"model",
 		"closeCallback",
 		"title",
-		"isResizeable" ],
+		"isResizeable",
+		"stepList",
+		"lastStepMessage",
+		"lastStepTime",
+		"lastAlarmTime",
+		"alarms" ],
 	"name" : "WTOSWindowMorphWorld",
 	"pools" : [
 		 ],
