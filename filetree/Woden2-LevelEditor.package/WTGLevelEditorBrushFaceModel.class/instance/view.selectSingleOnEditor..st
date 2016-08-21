@@ -1,5 +1,5 @@
 as yet unclassified
-selectSingleOnEditor: editor
+view: view selectSingleOnEditor: editor
 	| newSelection |
 	newSelection := WTGLevelEditorSelection new
 		addElement: face.

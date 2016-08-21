@@ -1,3 +1,3 @@
 as yet unclassified
-selectToggleOnEditor: editor
+view: view selectToggleOnEditor: editor
 	editor selection toggleSelectedElement: entity.

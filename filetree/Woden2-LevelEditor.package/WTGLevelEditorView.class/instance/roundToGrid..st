@@ -1,5 +1,3 @@
 utiltity
 roundToGrid: value
-	| quantum |
-	quantum := self secondaryGridSize.
-	^ (value / quantum) floor * quantum
+	^ editor roundToGrid: value

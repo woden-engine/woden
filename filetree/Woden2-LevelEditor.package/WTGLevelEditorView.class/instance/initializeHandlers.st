@@ -16,6 +16,9 @@ initializeHandlers
 		addEventHandler: (BlEventHandler on: BlMouseMoveEvent do: [ :evt | 
 			self onMouseMoveEvent: evt.
 		]);
+		addEventHandler: (BlEventHandler on: BlScrollEvent do: [ :evt | 
+			self onScrollEvent: evt.
+		]);
 		addEventHandler: (BlEventHandler on: BlDragStartEvent do: [ :evt | 
 			evt consumed: true.
 			self onDragStartEvent: evt.

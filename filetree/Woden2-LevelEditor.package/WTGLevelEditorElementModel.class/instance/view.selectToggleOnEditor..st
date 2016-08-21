@@ -1,3 +1,3 @@
 as yet unclassified
-selectAddOnEditor: editor
+view: view selectToggleOnEditor: editor
 	"By default, do nothing"

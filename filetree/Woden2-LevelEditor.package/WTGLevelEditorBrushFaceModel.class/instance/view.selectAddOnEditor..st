@@ -1,3 +1,3 @@
 as yet unclassified
-selectAddOnEditor: editor
+view: view selectAddOnEditor: editor
 	editor selection addElement: face.

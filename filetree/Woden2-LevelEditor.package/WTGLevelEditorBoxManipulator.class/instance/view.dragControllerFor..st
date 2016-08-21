@@ -1,6 +1,6 @@
 as yet unclassified
 view: view dragControllerFor: anEvent
-	| oldBox actualExpansion expandedBox forward isBoxTranslation fullTranslation expandDirection |
+	| oldBox actualExpansion expandedBox forward isBoxTranslation fullTranslation expandDirection memento pivot transformation |
 	oldBox := view editor selectionBox box copy.
 	forward := view cameraTransform matrix thirdColumn negated.
 	isBoxTranslation := (direction closeTo: forward) or:
@@ -9,14 +9,27 @@ view: view dragControllerFor: anEvent
 	fullTranslation := WMVector3D new.
 	expandDirection := direction copy.
 
+	memento := view editor selectionBox transformMemento.
+	(isBoxTranslation not and: [ view editor selectionBox rotationMode ]) ifTrue: [
+		pivot := oldBox center.
+		^ WTGEDragRotate new
+			pivotPoint: (view worldToWindow: pivot);
+			onNewRotation: [ :rotation |
+				view editor selection restoreTransformMemento: memento.
+				view editor selection rotate: rotation axis: forward pivot: pivot.
+			]
+	].
+
 	^ WTGEDragTranslate new
 		depthPoint: node transform translation;
 		onNewTranslation: [ :translation |
+			view editor selection restoreTransformMemento: memento.
 			isBoxTranslation ifTrue: [
-				view editor selectionBox transformIntoBox: (oldBox translatedBy: (view snapTranslation: translation))
+				view editor selection translateBy: (view snapTranslation: translation).
 			] ifFalse: [
 				actualExpansion := translation * expandDirection.
 				expandedBox := view snapBox: (self expand: actualExpansion direction: expandDirection box: oldBox).
-				view editor selectionBox transformIntoBox: expandedBox.
+				transformation := oldBox computeTransformationInto: expandedBox.
+				view editor selection applyTransformation: transformation.
 			].
 		]

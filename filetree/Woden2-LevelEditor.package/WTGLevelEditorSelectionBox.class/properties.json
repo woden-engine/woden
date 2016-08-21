@@ -9,7 +9,8 @@
 		"SpaceSelectionHighlightColor" ],
 	"commentStamp" : "",
 	"instvars" : [
-		"box" ],
+		"box",
+		"rotationMode" ],
 	"name" : "WTGLevelEditorSelectionBox",
 	"pools" : [
 		 ],

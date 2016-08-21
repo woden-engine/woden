@@ -23,7 +23,8 @@
 		"selection",
 		"faceSelectMode",
 		"currentInspector",
-		"textureTransformEditor" ],
+		"textureTransformEditor",
+		"gridSize" ],
 	"name" : "WTGLevelEditor",
 	"pools" : [
 		 ],

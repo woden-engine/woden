@@ -1,3 +1,3 @@
 as yet unclassified
-selectSingleOnEditor: editor
+view: view selectAddOnEditor: editor
 	"By default, do nothing"

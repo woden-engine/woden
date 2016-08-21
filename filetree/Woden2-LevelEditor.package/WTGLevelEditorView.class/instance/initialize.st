@@ -1,7 +1,7 @@
 initialize-release
 initialize
 	super initialize.
-	gridSize := 1.0.
+	viewScale := 3.0.
 	self resetCameraState.
 	self initializeHandlers.
 	self frontView;

@@ -6,11 +6,19 @@ updateNodes
 		^ self.
 	].
 
+	self makeManipulatorsEmpty.
 	editor selectionBox isPointSelection ifTrue: [ 
-		self makeManipulatorsEmpty.
-		self createTranslationManipulators.
+		editor selectionBox rotationMode ifTrue: [
+			self createTranslationAndRotationManipulators.
+		] ifFalse: [
+			self createTranslationManipulators.
+		]
 	] ifFalse: [ 
-		self createTranslationAndScaleManipulators.
+		editor selectionBox rotationMode ifTrue: [
+			self createTranslationAndRotationManipulators.
+		] ifFalse: [
+			self createTranslationAndScaleManipulators.
+		]
 	].
 
 	self updateColors.

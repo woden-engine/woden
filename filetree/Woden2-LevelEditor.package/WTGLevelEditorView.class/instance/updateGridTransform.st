@@ -6,7 +6,7 @@ updateGridTransform
 		ifTrue: [ WTSNode renderPriorityEditorOpaqueAfter ]
 		ifFalse: [ WTSNode renderPriorityEditorOpaqueBefore ].
 		
-	scale := gridSize / baseGridSize.
+	scale := editor primaryGridSize / baseGridSize.
 	u := orientation firstRow asWMVector3D.
 	v := orientation secondRow asWMVector3D.
 	

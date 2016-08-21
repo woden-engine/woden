@@ -1,0 +1,3 @@
+snapping
+primaryGridSize
+	^ gridSize

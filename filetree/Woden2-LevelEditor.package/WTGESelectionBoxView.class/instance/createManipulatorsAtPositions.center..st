@@ -1,7 +1,7 @@
 as yet unclassified
 createManipulatorsAtPositions: positions center: center
 	| halfExtent baseBox manipulatorBox manip |
-	halfExtent := 0.08.
+	halfExtent := 0.08 * self manipBoxScale.
 	baseBox := WMBox3DD halfExtent: (WMVector3D x: halfExtent y: halfExtent z: halfExtent).
 	positions doWithIndex: [ :corner :index |
 		manipulatorBox := baseBox translatedBy: corner.

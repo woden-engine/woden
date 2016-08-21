@@ -10,6 +10,7 @@ onKeyDownEvent: anEvent
 		].
 
 		(anEvent modifiers isShift and: [ anEvent modifiers isAlt not ]) ifTrue: [ 
+			keyValue = OSK_p ifTrue: [ editor addPlayerSpawnPoint: cameraTransform translation ].
 		].
 
 		(anEvent modifiers isShift and: [ anEvent modifiers isAlt ]) ifTrue: [ 

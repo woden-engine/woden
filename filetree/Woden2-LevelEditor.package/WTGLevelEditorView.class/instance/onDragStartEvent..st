@@ -23,4 +23,7 @@ onDragStartEvent: anEvent
 	].
 
 	toolController ifNotNil: [ toolController onDragStartEvent: anEvent ].
-	editor captureMouse.
+	(toolController isNotNil and: [ toolController needsMouseCapture ]) ifTrue: [ 
+		editor captureMouse.
+	]
+	

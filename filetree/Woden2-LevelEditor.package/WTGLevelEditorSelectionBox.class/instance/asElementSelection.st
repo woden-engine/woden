@@ -1,4 +1,4 @@
-as yet unclassified
+converting
 asElementSelection
 	^ WTGLevelEditorSelection new
 		addAllElements: elements;

@@ -24,13 +24,13 @@ onClickEvent: anEvent
 	currentElement := currentElement asNodeModelForLevelEditor: editor.
 	currentElement ifNotNil: [
 		(anEvent modifiers isCtrl and: [ anEvent modifiers isShift not ]) ifTrue: [
-			currentElement selectToggleOnEditor: editor
+			currentElement view: self selectToggleOnEditor: editor
 		].
 		(anEvent modifiers isCtrl not and: [ anEvent modifiers isShift ]) ifTrue: [
-			currentElement selectAddOnEditor: editor
+			currentElement view: self selectAddOnEditor: editor
 		].
 		(anEvent modifiers isCtrl not and: [ anEvent modifiers isShift not ]) ifTrue: [
-			currentElement selectSingleOnEditor: editor
+			currentElement view: self selectSingleOnEditor: editor
 		]
 	] ifNil: [
 		(anEvent modifiers isCtrl not and: [ anEvent modifiers isShift not ]) ifTrue: [ 
