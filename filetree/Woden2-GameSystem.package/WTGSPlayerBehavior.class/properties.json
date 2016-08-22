@@ -12,7 +12,9 @@
 		"weaponSceneNode",
 		"weaponAction",
 		"weaponActionFrame",
-		"weaponActionRepeated" ],
+		"weaponActionRepeated",
+		"velocityDirection",
+		"weaponAnimationSpeed" ],
 	"name" : "WTGSPlayerBehavior",
 	"pools" : [
 		 ],

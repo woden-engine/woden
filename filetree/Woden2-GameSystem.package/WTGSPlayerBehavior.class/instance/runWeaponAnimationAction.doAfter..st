@@ -1,7 +1,3 @@
-adding
+weapon animation
 runWeaponAnimationAction: actionName doAfter: finishBlock
-	| animationState |
-	animationState := weaponSceneNode renderableSceneData.
-	weaponAction := animationState actionNamed: actionName.
-	weaponActionFrame := 0.0.
-	weaponActionRepeated := false
+	self runWeaponAnimationAction: actionName speed: 1.0 doAfter: finishBlock

@@ -1,6 +1,7 @@
 map events
 simulateTime: delta
 	| camera spatialDesc orientation |
+	linearVelocity := velocityDirection * speed.
 	super simulateTime: delta.
 	camera := self levelPlayer camera.
 	camera ifNotNil: [
@@ -14,7 +15,7 @@ simulateTime: delta
 	].
 
 	weaponAction ifNotNil: [
-		weaponActionFrame := weaponActionFrame + (delta *30.0).
+		weaponActionFrame := weaponActionFrame + (delta *30.0 * weaponAnimationSpeed).
 		weaponSceneNode renderableSceneData
 			setRestPose;
 			addAction: weaponAction repeated: weaponActionRepeated frame: weaponActionFrame;

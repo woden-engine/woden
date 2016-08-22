@@ -1,3 +1,3 @@
-adding
+weapon animation
 runWeaponAnimationAction: actionName
-	self runWeaponAnimationAction: actionName doAfter: nil
+	self runWeaponAnimationAction: actionName speed: 1.0 doAfter: nil
