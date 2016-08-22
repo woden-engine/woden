@@ -19,3 +19,7 @@ onJoyAxis: event
 	event isRightY ifTrue: [ 
 		angularVelocity x: value negated
 	].
+
+	event isTriggerRight ifTrue: [
+		speed := 3.0 * (self mapTrigger: event value)
+	]

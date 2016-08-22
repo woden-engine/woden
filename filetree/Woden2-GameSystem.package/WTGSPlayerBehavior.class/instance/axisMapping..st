@@ -1,4 +1,4 @@
-as yet unclassified
+event handling
 axisMapping: value
 	| deadZone |
 	deadZone := self class analogDeadZone.

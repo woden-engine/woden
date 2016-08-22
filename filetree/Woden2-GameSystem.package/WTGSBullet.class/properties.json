@@ -1,0 +1,16 @@
+{
+	"category" : "Woden2-GameSystem-Player",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"node",
+		"position",
+		"velocity" ],
+	"name" : "WTGSBullet",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

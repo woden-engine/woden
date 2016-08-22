@@ -12,7 +12,8 @@ simulateTime: delta
 		camera transform
 			orthonormal: orientation;
 			translation: transform translation asWMVector3F;
-			translateByY: self class eyePosition
+			translateByY: self class eyePosition.
+		headTransform := camera transform copy
 	].
 
 	soundListener ifNotNil: [ 
@@ -33,3 +34,5 @@ simulateTime: delta
 			self runRepeatedWeaponAnimation: 'Idle' 
 		]
 	].
+
+	bullets do: [ :bullet | bullet update: delta ]

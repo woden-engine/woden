@@ -16,7 +16,10 @@
 		"velocityDirection",
 		"weaponAnimationSpeed",
 		"soundListener",
-		"weaponSoundSource" ],
+		"weaponSoundSource",
+		"bullets",
+		"bulletsNode",
+		"headTransform" ],
 	"name" : "WTGSPlayerBehavior",
 	"pools" : [
 		 ],
