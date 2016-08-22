@@ -14,7 +14,9 @@
 		"weaponActionFrame",
 		"weaponActionRepeated",
 		"velocityDirection",
-		"weaponAnimationSpeed" ],
+		"weaponAnimationSpeed",
+		"soundListener",
+		"weaponSoundSource" ],
 	"name" : "WTGSPlayerBehavior",
 	"pools" : [
 		 ],

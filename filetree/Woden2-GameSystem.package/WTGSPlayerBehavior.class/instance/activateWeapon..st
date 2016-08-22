@@ -7,6 +7,7 @@ activateWeapon: aWeapon
 	].
 	
 	weaponSceneNode := WTSSpatialObject new.
+	currentWeapon precacheResourcesFor: self engine.
 	weaponSceneNode renderable: (currentWeapon fpsModelFor: self engine).
 	self levelPlayer camera addChild: weaponSceneNode.
 

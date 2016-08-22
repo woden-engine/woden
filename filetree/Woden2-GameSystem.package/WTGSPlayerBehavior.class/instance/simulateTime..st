@@ -1,17 +1,25 @@
 map events
 simulateTime: delta
-	| camera spatialDesc orientation |
+	| camera spatialDesc orientation transform |
 	linearVelocity := velocityDirection * speed.
 	super simulateTime: delta.
 	camera := self levelPlayer camera.
+	spatialDesc := entity spatialDescription.
+	transform := spatialDesc transform.
 	camera ifNotNil: [
-		spatialDesc := entity spatialDescription.
 		orientation := (WMMatrix3F yrot: angle y) * (WMMatrix3F xrot: angle x).
 		
 		camera transform
 			orthonormal: orientation;
-			translation: spatialDesc transform translation asWMVector3F;
+			translation: transform translation asWMVector3F;
 			translateByY: self class eyePosition
+	].
+
+	soundListener ifNotNil: [ 
+		soundListener
+			position: transform translation asWMVector3F;
+			velocity: linearVelocity asWMVector3F;
+			orientation: transform matrix asWMMatrix3F.
 	].
 
 	weaponAction ifNotNil: [
@@ -24,4 +32,4 @@ simulateTime: delta
 		(weaponActionRepeated not and: [ weaponActionFrame > weaponAction numberOfFrames ]) ifTrue: [
 			self runRepeatedWeaponAnimation: 'Idle' 
 		]
-	]
+	].
