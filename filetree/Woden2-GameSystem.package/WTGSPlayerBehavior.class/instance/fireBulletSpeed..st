@@ -6,7 +6,8 @@ fireBulletSpeed: initialSpeed
 	initialPosition := headTransform translation.
 
 	node := WTSLocalSpatialObject new.
-	node transform translation: initialPosition.
+	node transform: (headTransform copy
+		translation: initialPosition).
 	bulletsNode addChild: node.
 		
 	bullet := WTGSBullet new

@@ -21,5 +21,5 @@ onJoyAxis: event
 	].
 
 	event isTriggerRight ifTrue: [
-		speed := 3.0 * (self mapTrigger: event value)
+		speed := 1.0 + (2.0 * (self mapTrigger: event value))
 	]
