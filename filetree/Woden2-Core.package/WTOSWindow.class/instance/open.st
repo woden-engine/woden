@@ -11,3 +11,4 @@ open
 	window eventHandler: (self createEventHandler).
 	
 	drawingProcess := self createDrawingProcess.
+	application ifNotNil: [ application windowOpened: self ]
