@@ -18,7 +18,8 @@
 		"resourceCache",
 		"pipelineStateCache",
 		"fontCache",
-		"assetSearchPaths" ],
+		"assetSearchPaths",
+		"soundDevice" ],
 	"name" : "WTEngine",
 	"pools" : [
 		"AGPUConstants" ],

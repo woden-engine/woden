@@ -1,0 +1,4 @@
+accessing
+blockAlign
+	<accessor>
+	^ blockAlign

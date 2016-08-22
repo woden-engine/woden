@@ -1,0 +1,4 @@
+accessing
+averageBytesPerSecond
+	<accessor>
+	^ averageBytesPerSecond

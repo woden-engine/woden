@@ -1,0 +1,17 @@
+{
+	"category" : "Woden2-Core-Sound",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"dataSource",
+		"position",
+		"velocity",
+		"gain" ],
+	"name" : "WTSoundSource",
+	"pools" : [
+		 ],
+	"super" : "WTResourceWithSessionHandle",
+	"type" : "normal" }

@@ -1,0 +1,4 @@
+accessing
+validBitsPerSample
+	<accessor>
+	^ validBitsPerSample

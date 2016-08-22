@@ -1,0 +1,4 @@
+accessing
+samplersPerSecond
+	<accessor>
+	^ samplersPerSecond

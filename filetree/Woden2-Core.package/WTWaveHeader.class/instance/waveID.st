@@ -1,0 +1,4 @@
+accessing
+waveID
+	<accessor>
+	^ waveID

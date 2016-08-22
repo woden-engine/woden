@@ -1,0 +1,16 @@
+{
+	"category" : "Woden2-Core-Sound",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"#signature &=> #uint",
+		"#chunkSize &=> #uint",
+		"#waveID &=> #uint" ],
+	"name" : "WTWaveHeader",
+	"pools" : [
+		 ],
+	"super" : "NativeStructure",
+	"type" : "StructureLayout" }

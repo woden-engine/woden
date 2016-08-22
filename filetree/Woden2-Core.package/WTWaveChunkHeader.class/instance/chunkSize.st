@@ -1,0 +1,4 @@
+accessing
+chunkSize
+	<accessor>
+	^ chunkSize
