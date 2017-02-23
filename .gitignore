@@ -1,5 +1,8 @@
-build
-build-dist
+build-32
+build-64
+abstract-gpu
+abstract-physics
+core-assets
 pharo-vm
 pharo
 pharo-ui
@@ -10,6 +13,11 @@ native-libraries*
 github-*.zip
 ProcessWrapperPlugin.dll
 PharoDebug.log
+Pharo*.app
 *.image
 *.changes
 *.log
+*.sources
+Pharo*.zip
+woden2.sh
+*pharo.cog*.zip

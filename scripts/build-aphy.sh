@@ -1,5 +1,5 @@
 # Fetch the AbstractPhysics
-source "$WODEN2_SRC_TOP/common_scripts.sh"
+source "$WODEN2_SRC_TOP/scripts/common_scripts.sh"
 fetch_git_dependency "https://github.com/ronsaldo/abstract-physics.git" abstract-physics
 
 # Create the Abstract Physics build dir.

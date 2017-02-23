@@ -1,5 +1,5 @@
 # Fetch the AbstractGPU
-source "$WODEN2_SRC_TOP/common_scripts.sh"
+source "$WODEN2_SRC_TOP/scripts/common_scripts.sh"
 fetch_git_dependency "https://github.com/ronsaldo/abstract-gpu.git" abstract-gpu
 
 # Create the Abstract GPU build dir.
@@ -16,8 +16,8 @@ cp -R dist/* "$WODEN2_BUILD_DIST_DIR"
 
 # Make symlinks to the Debug version, if they exists
 if test -e "$WODEN2_BUILD_DIST_DIR/libAgpu_d.so"; then
-    ln -s "$WODEN2_BUILD_DIST_DIR/libAgpu_d.so" "$WODEN2_BUILD_DIST_DIR/libAgpu.so"
+    ln -sf "$WODEN2_BUILD_DIST_DIR/libAgpu_d.so" "$WODEN2_BUILD_DIST_DIR/libAgpu.so"
 fi
 if test -e "$WODEN2_BUILD_DIST_DIR/libAgpu_d.dylib"; then
-    ln -s "$WODEN2_BUILD_DIST_DIR/libAgpu_d.dylib" "$WODEN2_BUILD_DIST_DIR/libAgpu.dylib"
+    ln -sf "$WODEN2_BUILD_DIST_DIR/libAgpu_d.dylib" "$WODEN2_BUILD_DIST_DIR/libAgpu.dylib"
 fi

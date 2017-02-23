@@ -3,7 +3,7 @@
 fetch_git_dependency()
 {
     URL="$1"
-    FOLDER_NAME="$1"
+    FOLDER_NAME="$2"
     TARGET="$WODEN2_SRC_TOP/$FOLDER_NAME"
 
     if test ! -d "$TARGET"; then
