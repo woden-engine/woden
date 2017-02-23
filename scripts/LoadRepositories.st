@@ -3,7 +3,11 @@ FileStream stdout nextPutAll: 'Loading LowcodeOpalCompiler'; lf.
 "Load the runtime changes that are required for Lowcode"
 'scripts/LowcodeRuntimeChanges.cs' asFileReference fileIn.
 
-(ConfigurationOfLowcode project version: #stable) load: #(WithOpalCompiler)
+Gofer it
+    url: 'http://smalltalkhub.com/mc/ronsaldo/Lowcode/main';
+    package: 'ConfigurationOfLowcode';
+    load.
+((Smalltalk at: #ConfigurationOfLowcode) project version: #stable) load: #(WithOpalCompiler).
 
 "Load Git file tree"
 FileStream stdout nextPutAll: 'Loading GitFileTree'; lf.
@@ -11,7 +15,7 @@ FileStream stdout nextPutAll: 'Loading GitFileTree'; lf.
 Metacello new
   baseline: 'FileTree';
   repository: 'github://dalehenrich/filetree:pharo6.0_dev/repository';
-  load: 'Git'
+  load: 'Git'.
 
 "Use the modified version of monticello"
 'scripts/MonticelloMethodSorting.cs' asFileReference fileIn.
