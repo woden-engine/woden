@@ -1,7 +1,22 @@
-FileStream stdout nextPutAll: 'Loading LowcodeOpalCompiler'; lf.
 
 "Load the runtime changes that are required for Lowcode"
 'scripts/LowcodeRuntimeChanges.cs' asFileReference fileIn.
+Smalltalk recreateSpecialObjectsArray.
+
+"Update the UnifiedFFI"
+"FIXME: Remove this part, when it is not needed anymore."
+FileStream stdout nextPutAll: 'Updating the UnifiedFFI'; lf.
+Gofer it
+    url: 'http://smalltalkhub.com/mc/Pharo/FFI-NB/main';
+    package: 'ConfigurationOfLowcode';
+    load.
+(Smalltalk at: #ConfigurationOfUnifiedFFI) load.
+Author useAuthor: 'Woden2Loader' during: [
+    FFIExternalStructure FFIExternalStructure allSubclassesDo: #rebuildFieldAccessors.
+].
+
+"Load Lowcode"
+FileStream stdout nextPutAll: 'Loading LowcodeOpalCompiler'; lf.
 
 Gofer it
     url: 'http://smalltalkhub.com/mc/ronsaldo/Lowcode/main';
