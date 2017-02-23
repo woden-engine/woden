@@ -6,11 +6,10 @@ pharo-ui
 github-cache
 package-cache
 play-cache
-native-libraries
+native-libraries*
 github-*.zip
 ProcessWrapperPlugin.dll
 PharoDebug.log
 *.image
 *.changes
 *.log
-

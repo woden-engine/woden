@@ -1,5 +1,16 @@
 #!/bin/bash
 
+fetch_git_dependency()
+{
+    URL="$1"
+    FOLDER_NAME="$1"
+    TARGET="$WODEN2_SRC_TOP/$FOLDER_NAME"
+
+    if test ! -d "$TARGET"; then
+        git clone "$URL" "$TARGET" || exit 1
+    fi
+}
+
 fetch_targz()
 {
     URL="$1"

@@ -1,3 +1,7 @@
+# Fetch the AbstractGPU
+source "$WODEN2_SRC_TOP/common_scripts.sh"
+fetch_git_dependency "https://github.com/ronsaldo/abstract-gpu.git" abstract-gpu
+
 # Create the Abstract GPU build dir.
 BUILD_DIR="$WODEN2_BUILD_DIR/abstract-gpu"
 mkdir -p "$BUILD_DIR"
