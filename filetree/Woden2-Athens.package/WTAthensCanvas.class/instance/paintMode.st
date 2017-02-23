@@ -1,0 +1,3 @@
+accessing
+paintMode
+	^ paintMode
