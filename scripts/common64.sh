@@ -6,6 +6,6 @@ export WODEN2_BUILD_DIR="$WODEN2_SRC_TOP/build-64"
 
 export WODEN_DEP_LIB_CMAKE_FLAGS=''
 export WODEN_DEPS_CMAKE_FLAGS=''
-export WODEN_ARCH=`uname -m
+export WODEN_ARCH=`uname -m`
 
 source "$WODEN2_SRC_TOP/scripts/common_scripts.sh"
