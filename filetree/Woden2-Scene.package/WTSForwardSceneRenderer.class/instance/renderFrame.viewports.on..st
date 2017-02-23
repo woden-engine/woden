@@ -44,7 +44,7 @@ renderFrame: frameIndex viewports: viewports on: window
 		viewports collect: #bounds .
 		framebuffer validHandle getHandle asInteger
 	}.
-	isCommandListCached := frameStateCache value = newFrameState.
+	isCommandListCached := (frameStateCache value = newFrameState) and: [ engine device isCommandListReuseSupported ~= 0].
 	frameStateCache value: newFrameState.
 	isCommandListCached ifFalse: [ commandAllocator reset. ].
 	
