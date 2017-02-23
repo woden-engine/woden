@@ -51,6 +51,12 @@ Smalltalk wordSize = 8 ifTrue: [
 	   load.
 ].
 
+"Install the Lowcode FFI by default when using a 64 bits VM. This is because the
+ passing of structures is not working completely yet."
+Smalltalk wordSize = 8 ifTrue: [
+    (Smalltalk at: #LowcodeFFICalloutAPI) install.
+].
+
 "Save the image"
 (Smalltalk saveAs: 'woden2')
     ifFalse: [ Smalltalk snapshot: false andQuit: true ].
