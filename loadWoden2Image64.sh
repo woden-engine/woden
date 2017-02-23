@@ -8,4 +8,6 @@ if test "$SOURCE_IMAGE_NAME" = ""; then
     SOURCE_IMAGE_NAME="Pharo64.image"
 fi
 
-execVM $SOURCE_IMAGE_NAME st $WODEN2_SRC_TOP/scripts/LoadRepositories.st
+execVM $SOURCE_IMAGE_NAME st $WODEN2_SRC_TOP/scripts/LoadRepositories.st || exit 1
+echo "Done loading image $SOURCE_IMAGE_NAME with Woden2"
+
