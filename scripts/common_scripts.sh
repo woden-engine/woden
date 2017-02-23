@@ -22,3 +22,14 @@ useVM()
 {
     exec "$WODEN2_SRC_TOP/useVM.sh" $1
 }
+
+execVM()
+{
+    VM_ARGS="$@"
+    if test ! -e "$WODEN2_SRC_TOP/woden2.sh"; then
+        echo "A VM has not been selected to use with Woden2. Please select a VM with the useVM.sh script."
+        exit 1
+    fi
+
+    exec "$WODEN2_SRC_TOP/woden2.sh" $VM_ARGS
+}
