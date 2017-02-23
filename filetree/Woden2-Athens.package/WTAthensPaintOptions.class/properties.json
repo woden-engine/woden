@@ -10,5 +10,5 @@
 	"name" : "WTAthensPaintOptions",
 	"pools" : [
 		 ],
-	"super" : "AthensPaintOptions",
+	"super" : "Object",
 	"type" : "normal" }
