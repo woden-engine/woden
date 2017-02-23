@@ -8,11 +8,11 @@ Smalltalk recreateSpecialObjectsArray.
 FileStream stdout nextPutAll: 'Updating the UnifiedFFI'; lf.
 Gofer it
     url: 'http://smalltalkhub.com/mc/Pharo/FFI-NB/main';
-    package: 'ConfigurationOfLowcode';
+    package: 'ConfigurationOfUnifiedFFI';
     load.
 (Smalltalk at: #ConfigurationOfUnifiedFFI) load.
 Author useAuthor: 'Woden2Loader' during: [
-    FFIExternalStructure FFIExternalStructure allSubclassesDo: #rebuildFieldAccessors.
+    FFIExternalStructure allSubclassesDo: #rebuildFieldAccessors.
 ].
 
 "Load Lowcode"
@@ -24,23 +24,32 @@ Gofer it
     load.
 ((Smalltalk at: #ConfigurationOfLowcode) project version: #stable) load: #(WithOpalCompiler).
 
-"Load Git file tree"
-FileStream stdout nextPutAll: 'Loading GitFileTree'; lf.
+"Load Git file tree. Only 32 bits for now."
+Smalltalk wordSize = 8 ifFalse: [
+    FileStream stdout nextPutAll: 'Loading GitFileTree'; lf.
 
-Metacello new
-  baseline: 'FileTree';
-  repository: 'github://dalehenrich/filetree:pharo6.0_dev/repository';
-  load: 'Git'.
+    Metacello new
+      baseline: 'FileTree';
+      repository: 'github://dalehenrich/filetree:pharo6.0_dev/repository';
+      load: 'Git'.
+].
 
 "Use the modified version of monticello"
 'scripts/MonticelloMethodSorting.cs' asFileReference fileIn.
 
 "Load Woden 2"
 FileStream stdout nextPutAll: 'Loading Woden2'; lf.
-Metacello new
-	baseline: 'Woden2';
-	repository: ('gitfiletree://' , ('filetree' asFileReference asAbsolute fullName));
-	load.
+Smalltalk wordSize = 8 ifTrue: [
+    Metacello new
+      baseline: 'Woden2';
+      repository: 'filetree://filetree';
+      load.
+] ifFalse: [
+    Metacello new
+	   baseline: 'Woden2';
+       repository: ('gitfiletree://' , ('filetree' asFileReference asAbsolute fullName));
+	   load.
+].
 
 "Save the image"
 (Smalltalk saveAs: 'woden2')
