@@ -17,7 +17,7 @@ else
     export LD_LIBRARY_PATH="\$TOP/native-libraries-32:\$TOP/native-libraries-64:\$LD_LIBRARY_PATH"
 fi
 
-exec $VM_NAME $@
+exec $VM_NAME \$@
 EOF
 
 chmod +x "$WODEN2_SRC_TOP/woden2.sh"
