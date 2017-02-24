@@ -6,6 +6,9 @@ core-assets
 pharo-vm
 pharo
 pharo-ui
+pharo-local
+phcog*
+*.dmp
 github-cache
 package-cache
 play-cache
@@ -21,3 +24,4 @@ Pharo*.app
 Pharo*.zip
 woden2.sh
 *pharo.cog*.zip
+*.tar.gz
