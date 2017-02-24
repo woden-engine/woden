@@ -47,7 +47,29 @@ is far more unstable than the 32 bits version of Pharo. There are several
 glitches in the image, but it still seems to work quite well.
 
 #### Ubuntu Requirements
+##### Threaded Heartbeat Security Policy
 
+The loading scripts download by default Lowcode VM with a threaded heartbeat. This VM
+requires a special security policy for allowing to run the heartbeat thread with a higher priority.
+Follow the instructions at: https://github.com/OpenSmalltalk/opensmalltalk-vm/releases/tag/r3732#linux
+and then run the following command for copying the squeak.conf into pharo.conf.
+
+```bash
+sudo cp /etc/security/limits.d/squeak.conf /etc/security/limits.d/pharo.conf
+```
+
+##### ITimer Heartbeat VM Alternative
+If you do not want to add the security policy, or are not able do it, then you
+can use a VM with the itimer heartbeat. The itimer VM can be downloaded and
+choosen by running the following script at the Woden 2 top level folder:
+
+```bash
+wget http://ronie.cl/files/lowcode/linux/release-phcoglowcodelinux.tar.gz
+tar -zvxf release-phcoglowcodelinux.tar.gz
+./useVM.sh phcoglowcodelinux/pharo
+```
+
+##### Required Packages
 In Ubuntu 16.10, it should be enough to install the dependencies using apt-get install:
 
 ```bash
