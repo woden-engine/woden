@@ -5,7 +5,7 @@
 	"classvars" : [
 		 ],
 	"commentStamp" : "",
-	"extradependencies" : "#(#WMVector4F #WMVector3F #WTLightSourceData)",
+	"extradependencies" : "#(#WMVector3F #WTLightSourceData #WMVector4F)",
 	"instvars" : [
 		"#groundLighting &=> #WMVector4F",
 		"#skyLighting &=> #WMVector4F",

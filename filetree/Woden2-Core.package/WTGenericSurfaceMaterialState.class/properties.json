@@ -5,7 +5,7 @@
 	"classvars" : [
 		 ],
 	"commentStamp" : "",
-	"extradependencies" : "#(#WMVector4F #WMVector3F)",
+	"extradependencies" : "#(#WMVector3F #WMVector4F)",
 	"instvars" : [
 		"#albedo &=> #WMVector4F",
 		"#fresnel &=> #WMVector3F",

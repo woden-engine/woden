@@ -1,5 +1,9 @@
 pipeline state object building
-setPipeline: pipeline depthStencilFormat: formatName
+setPipeline: pipeline depthStencilFormat: formatNameOrValue
 	| format |
-	format := (AGPUConstants bindingOf: ('AGPU_TEXTURE_FORMAT_' , formatName) asSymbol) value.
-	pipeline setDepthStencilFormat: format
+	formatNameOrValue isInteger ifTrue: [ 
+		pipeline setDepthStencilFormat: formatNameOrValue
+	] ifFalse: [ 
+		format := (AGPUConstants bindingOf: ('AGPU_TEXTURE_FORMAT_' , formatNameOrValue) asSymbol) value.
+		pipeline setDepthStencilFormat: format
+	]

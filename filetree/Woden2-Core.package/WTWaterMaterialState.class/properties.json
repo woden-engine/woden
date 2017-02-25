@@ -5,12 +5,13 @@
 	"classvars" : [
 		 ],
 	"commentStamp" : "",
-	"extradependencies" : "#(#WMVector4F #WMVector3F #WTWaterHarmonic)",
+	"extradependencies" : "#(#WMVector3F #WTWaterHarmonic #WMVector2F #WMVector4F)",
 	"instvars" : [
 		"#albedo &=> #WMVector4F",
 		"#fresnel &=> #WMVector3F",
 		"#smoothness &=> #float",
 		"#propagationSpeed &=> #float",
+		"#padding &=> #WMVector2F",
 		"#harmonics &=> #(#WTWaterHarmonic array: 5)" ],
 	"name" : "WTWaterMaterialState",
 	"pools" : [

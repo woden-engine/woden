@@ -13,6 +13,20 @@ createSettingsStates
 				}
 			});
 			isAbstract: true.
+		WTPipelineState new
+			name: (scope , 'depth-stencil-format') asSymbol;
+			scope: scope;
+			description: (Dictionary newFromPairs: {
+				'depth-stencil-format' . engine preferredDepthStencilFormat
+			});
+			isAbstract: true.
+		WTPipelineState new
+			name: (scope , 'depth-format') asSymbol;
+			scope: scope;
+			description: (Dictionary newFromPairs: {
+				'depth-stencil-format' . engine preferredDepthFormat
+			});
+			isAbstract: true.
 	}.
 	
 	settingStates do: [ :settingState |

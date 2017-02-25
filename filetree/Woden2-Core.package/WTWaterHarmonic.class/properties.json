@@ -10,7 +10,8 @@
 		"#center &=> #WMVector2F",
 		"#amplitude &=> #float",
 		"#frequency &=> #float",
-		"#radial &=> #int" ],
+		"#radial &=> #int",
+		"#padding &=> #(#float array: 3)" ],
 	"name" : "WTWaterHarmonic",
 	"pools" : [
 		 ],
