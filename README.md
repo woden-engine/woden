@@ -161,7 +161,7 @@ For bug reporting, use the GitHub issue tracker at the Woden 2 repository https:
 
 These are known issues with Woden 2. We are working on fixing some of them:
 
-* The Linux NVIDIA Vulkan driver is crashing when building the Pipeline State Objects.
+* There is a big stuttering problem with the Vulkan backend.
 * The RADV open source Vulkan driver is hanging the GPU when tested in a AMD Southern Island GPU (AMD HD 7770).
 * We have not tested the AMDGPU Pro Vulkan driver on Linux.
 
