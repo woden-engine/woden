@@ -16,6 +16,12 @@ baseline: spec
 					versionString: #'stable';
 					repository: 'http://smalltalkhub.com/mc/ronsaldo/AbstractGPU/main' ].
 			spec 
+				project: 'AbstractPhysics' with: [
+				spec
+					className: #ConfigurationOfAbstractPhysics;
+					versionString: #'development';
+					repository: 'http://smalltalkhub.com/mc/ronsaldo/AbstractPhysics/main' ].
+			spec 
 				project: 'Dastrel' with: [
 				spec
 					className: #ConfigurationOfDastrel;
@@ -33,6 +39,12 @@ baseline: spec
 					className: #ConfigurationOfWodenMath;
 					versionString: #'development';
 					repository: 'http://smalltalkhub.com/mc/ronsaldo/WodenMath/main' ].
+			spec 
+				project: 'OpenAL' with: [
+				spec
+					className: #ConfigurationOfOpenAL;
+					versionString: #'development';
+					repository: 'http://smalltalkhub.com/mc/ronsaldo/OpenAL/main' ].
 		spec package: #'Woden2-Core' with: [
 				spec requires: #('NeoJSON' 'AbstractGPU' 'Dastrel' 'Lowcode' 'WodenMath')].
 		spec package: #'Woden2-Athens' with: [
@@ -41,5 +53,11 @@ baseline: spec
 				spec requires: #('Woden2-Core')].
 		spec package: #'Woden2-Samples' with: [
 				spec requires: #('Woden2-Core' 'Woden2-Athens' 'Woden2-Scene')].
-		spec group: 'default' with: #('Woden2-Core' 'Woden2-Athens' 'Woden2-Samples')
+		spec package: #'Woden2-Physics' with: [
+				spec requires: #('Woden2-Core' 'AbstractPhysics')].
+		spec package: #'Woden2-OpenAL' with: [
+				spec requires: #('Woden2-Core' 'OpenAL')].
+		spec package: #'Woden2-GameSystem' with: [
+				spec requires: #('Woden2-Core' 'Woden2-Athens' 'Woden2-Scene' 'Woden2-Physics' 'Woden2-OpenAL')].
+		spec group: 'default' with: #('Woden2-Core' 'Woden2-Athens' 'Woden2-Samples' 'Woden2-GameSystem')
 	]
