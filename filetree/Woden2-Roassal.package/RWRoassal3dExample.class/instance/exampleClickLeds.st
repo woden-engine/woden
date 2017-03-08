@@ -2,7 +2,7 @@ sources
 exampleClickLeds
 
 	| v e colors cube |
-	colors := {  WDColor gray . WDColor red . WDColor green . WDColor blue . WDColor yellow . WDColor white}.
+	colors := {  Color gray . Color red . Color green . Color blue . Color yellow . Color white}.
 	cube := RWCube new.
 	cube color: [ :val | colors at: val ].
 	
@@ -25,6 +25,6 @@ exampleClickLeds
 	].
 	(RWXZGridLayout gap: 0.05) on: v elements.
 	v addInteraction: RWMouseKeyControl.
-	v camera position: (WDVector3 x: 0.0 y: 3.0 z: 0.0).
+	v camera position: (WMVector3F x: 0.0 y: 3.0 z: 0.0).
 
 ^ v

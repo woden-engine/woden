@@ -1,4 +1,4 @@
 tests
 testDefaultOrientationMatrix
 
-	self assert: element orientationMatrix equals: WDMatrix3 identity.
+	self assert: element orientationMatrix equals: WMMatrix3F identity.

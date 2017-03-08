@@ -5,7 +5,7 @@ initialize
 	"
 	super initialize.
 	
-	OpaqueTransparencyMode := WDRenderer blendingReplace.
-	AdditiveTransparencyMode := WDRenderer blendingAdditive.
-	AdditiveAlphaTransparencyMode := WDRenderer blendingAdditiveAlpha.
-	AlphaOverTransparencyMode := WDRenderer blendingOver.
+	OpaqueTransparencyMode := #blendingReplace.
+	AdditiveTransparencyMode := #blendingAdditive.
+	AdditiveAlphaTransparencyMode := #blendingAdditiveAlpha.
+	AlphaOverTransparencyMode := #blendingOver.

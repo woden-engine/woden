@@ -1,3 +1,3 @@
 accessing
 extent
-	^ WDVector3 newX: self width asFloat y: self height asFloat z: self depth asFloat
+	^ WMVector3F x: self width asFloat y: self height asFloat z: self depth asFloat

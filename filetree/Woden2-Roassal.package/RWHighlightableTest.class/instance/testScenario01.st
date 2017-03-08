@@ -4,7 +4,7 @@ testScenario01
 	| v es originalColor |
 
 	v := RWView new.
-	originalColor := WDColor white.
+	originalColor := Color white.
 	es := ((RWCube new size: 1; color: originalColor)) elementsOn: (1 to: 16).
 
 	RWCubeLayout on: es.

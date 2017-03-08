@@ -9,4 +9,4 @@ testShapeSize
 					
 	el := shape elementOn: 5.
 
-	self assert: el extent = (WDVector3 newX: 6.0 y: 7.0 z: 8.0)
+	self assert: el extent = (WMVector3F x: 6.0 y: 7.0 z: 8.0)

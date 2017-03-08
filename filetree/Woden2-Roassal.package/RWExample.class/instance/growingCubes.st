@@ -9,6 +9,6 @@ growingCubes
 	es := shape elementsOn: (1 to: 3 by: 0.5).
 	v addAll: es.
 	v addInteraction: RWMouseKeyControl.
-	v camera position: (WDVector3 newX: 5.0 y: 0.0 z: 10.0). 
+	v camera position: (WMVector3F x: 5.0 y: 0.0 z: 10.0). 
 	RWXLineLayout on: es.
 	v open

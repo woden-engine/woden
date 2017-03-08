@@ -1,6 +1,6 @@
 tests
 testCameraLightColor
-	self assert: (view cameraLightColor closeTo: WDColor lightGray).
-	view cameraLightColor: WDColor red.
-	self assert: (view cameraLightColor closeTo: WDColor red).
+	self assert: (view cameraLightColor closeTo: Color lightGray).
+	view cameraLightColor: Color red.
+	self assert: (view cameraLightColor closeTo: Color red).
 	

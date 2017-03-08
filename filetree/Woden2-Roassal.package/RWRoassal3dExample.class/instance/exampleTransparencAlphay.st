@@ -5,7 +5,7 @@ exampleTransparencAlphay
 "Alpha over transparency"
 
 v := RWView new.
-shape := RWCube new alphaOverTranslucent color: (WDColor red a: 0.8).
+shape := RWCube new alphaOverTranslucent color: (Color red a: 0.8).
 els := shape elementsOn: (1 to: 20).
 v addAll: els.
 RWCubeLayout on: els.

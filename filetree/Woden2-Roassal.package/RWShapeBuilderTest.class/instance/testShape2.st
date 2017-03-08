@@ -11,4 +11,4 @@ testShape2
 	self assert: (e1 shape colorFor: e1) = Color blue.
 	self assert: e1 trachelShape color = Color blue.
 	self assert: e2 trachelShape color = Color red.
-	self assert: e3 trachelShape color = Color white asWDColor.
+	self assert: e3 trachelShape color = Color white.

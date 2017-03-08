@@ -18,4 +18,4 @@ normalizeY: metricBlock min: min max: max minValue: minValue maxValue: maxValue 
 			| tt t |
 			t := transformation rtValue: (metricBlock rtValue: el model).
 			tt := self getValue: t min: min max: max minValue: minValue maxValue: maxValue.
-			translator translate: el to: el position + (WDVector3 x: 0.0 y: tt asFloat z: 0.0) ] ] 
+			translator translate: el to: el position + (WMVector3F x: 0.0 y: tt asFloat z: 0.0) ] ] 

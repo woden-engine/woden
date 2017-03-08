@@ -10,7 +10,7 @@ RWCubeLayout on: es.
 es when: RWMouseButtonDown do: [ :evt |
         | node |
         node := evt element sceneNode.
-          node shapeMatrix: (WDMatrix4 scale: 1.1) * (node shapeMatrix )
+          node shapeMatrix: (WMMatrix4F scale: 1.1) * (node shapeMatrix )
          ].
 
 ^	 v

@@ -10,4 +10,4 @@ testColoring
 	v addAll: es.
 
 	es first color: Color blue.
-	self assert: es second renderable color equals: Color white asWDColor.
+	self assert: es second renderable color equals: Color white.

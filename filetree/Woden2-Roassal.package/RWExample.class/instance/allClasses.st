@@ -11,7 +11,7 @@ allClasses
 			elementClass := ev element model.
 			self inform: 'Class ' , elementClass name.
 			elementClass inspect.
-			ev element  shape color: WDColor darkGray.
+			ev element  shape color: Color darkGray.
 			ev element changed.
 		]
 	].

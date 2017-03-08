@@ -1,3 +1,3 @@
 accessing
-color: aWDColor
-	sceneNode state intensity: aWDColor asWMVector4F
+color: aColor
+	sceneNode state intensity: aColor asWMVector4F

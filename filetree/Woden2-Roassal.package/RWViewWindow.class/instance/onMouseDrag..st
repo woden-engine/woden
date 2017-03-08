@@ -2,8 +2,8 @@ event handling
 onMouseDrag: event
 	| r3Event |
 	r3Event := RWMouseDrag new buttons: event buttons;
-		position: (WDVector2 fromPoint: event position);
-		delta: (WDVector2 fromPoint: event delta);
+		position: event position asWMVector2F;
+		delta: event delta asWMVector2F;
 		"element: dragElement."
 		element: view.
 	r3Event sendToElement.

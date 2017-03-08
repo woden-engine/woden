@@ -2,7 +2,7 @@ as yet unclassified
 testChangeColor
 	| light |
 	light := RWSpotLight new.
-	light color: WDColor red.
-	self assert: (light color closeTo: WDColor red).
-	self assert: (light diffuse closeTo: WDColor red).
-	self assert: (light specular closeTo: WDColor red).
+	light color: Color red.
+	self assert: (light color closeTo: Color red).
+	self assert: (light diffuse closeTo: Color red).
+	self assert: (light specular closeTo: Color red).

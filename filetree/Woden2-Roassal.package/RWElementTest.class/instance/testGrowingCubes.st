@@ -8,4 +8,4 @@ testGrowingCubes
 	v addAll: es. 
 	
 	"We cannot test much because Renderable does not have bounding box"
-	self assert: (es first boundingBox extent closeTo: (WDVector3 x: 1.0 y: 1.0 z: 1.0))
+	self assert: (es first boundingBox extent closeTo: (WMVector3F x: 1.0 y: 1.0 z: 1.0))

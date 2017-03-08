@@ -18,4 +18,4 @@ normalizeElementX: metricBlock min: min max: max minValue: minValue maxValue: ma
 			| tt t |
 			t := transformation rtValue: (metricBlock rtValue: el).
 			tt := min + ((max - min) * ( (t - minValue) / (maxValue - minValue))) asInteger.
-			translator translate: el to: el position + (WDVector3 x: tt asFloat y: 0.0 z: 0.0) ] ] 
+			translator translate: el to: el position + (WMVector3F x: tt asFloat y: 0.0 z: 0.0) ] ] 

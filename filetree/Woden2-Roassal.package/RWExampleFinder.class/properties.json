@@ -10,5 +10,5 @@
 	"name" : "RWExampleFinder",
 	"pools" : [
 		 ],
-	"super" : "RTExampleFinder",
+	"super" : "Object",
 	"type" : "normal" }

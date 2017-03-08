@@ -1,3 +1,3 @@
 trachel compatibility
 color: aColor
-	^ self shape color: aColor asWDColor
+	^ self shape color: aColor

@@ -1,5 +1,5 @@
 tests
 testSettingWDColor
 
-	cube color: WDColor black.
-	self assert: (cube colorFor: element) class equals: WDColor
+	cube color: Color black.
+	self assert: (cube colorFor: element) class equals: Color

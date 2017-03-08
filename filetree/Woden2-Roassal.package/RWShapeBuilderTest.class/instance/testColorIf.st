@@ -7,5 +7,5 @@ testColorIf
 		if: true color: Color red.
 	e := builder elementOn: 1.
 	
-	self assert: (e shape colorFor: e) equals: Color red asWDColor.
-	self assert: e trachelShape color equals: Color red asWDColor.
+	self assert: (e shape colorFor: e) equals: Color red.
+	self assert: e trachelShape color equals: Color red.
