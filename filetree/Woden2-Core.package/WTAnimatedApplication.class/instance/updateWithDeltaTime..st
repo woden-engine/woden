@@ -1,14 +1,16 @@
 rendering
 updateWithDeltaTime: deltaTime
-	| frameCount updateTimeStep |
+	| frameCount updateTimeStep iterationCount |
 	accumulatedUpdateTime := accumulatedUpdateTime + deltaTime.
 	updateTimeStep := self updateTimeStep.
 	frameCount := 0.
-	[ accumulatedUpdateTime > updateTimeStep] whileTrue: [
+	iterationCount := 0.
+	[ accumulatedUpdateTime > updateTimeStep and: [ iterationCount < MaxUpdateIterationCount ]] whileTrue: [
 		self simulateTime: updateTimeStep.
 		accumulatedUpdateTime := accumulatedUpdateTime - updateTimeStep.
-		frameCount := frameCount + 1
+		frameCount := frameCount + 1.
+		iterationCount := iterationCount + 1
 	].
 	
-	^ accumulatedUpdateTime
+	^ accumulatedUpdateTime max: updateTimeStep
 	
