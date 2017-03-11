@@ -12,6 +12,6 @@ renderOnWindow: aWindow
 	view render3DOnWindow: aWindow extraRenderTime: accumulatedUpdateTime.
 	
 	surface drawDuring: [:canvas |
-		view render2DOnSurface: surface canvas: aWindow.
+		view render2DOnSurface: surface canvas: canvas.
 		self renderFramesPerSecondOn: surface canvas: canvas
 	].

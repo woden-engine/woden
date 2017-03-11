@@ -8,3 +8,4 @@ SystemOrganization addCategory: 'Woden2-Roassal-Glamour'!
 SystemOrganization addCategory: 'Woden2-Roassal-Layout'!
 SystemOrganization addCategory: 'Woden2-Roassal-Normalizer'!
 SystemOrganization addCategory: 'Woden2-Roassal-Tests'!
+SystemOrganization addCategory: 'Woden2-Roassal-Trachel'!

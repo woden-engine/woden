@@ -20,7 +20,9 @@
 		"sceneRenderer",
 		"currentTime",
 		"rigidBodies",
-		"internalElements" ],
+		"internalElements",
+		"view2D",
+		"trachelCanvas" ],
 	"name" : "RWView",
 	"pools" : [
 		 ],

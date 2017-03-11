@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Roassal-Trachel",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"engine" ],
+	"name" : "RWTRMorph",
+	"pools" : [
+		 ],
+	"super" : "TRMorph",
+	"type" : "normal" }
