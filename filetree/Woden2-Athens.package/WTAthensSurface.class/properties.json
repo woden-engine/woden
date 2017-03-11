@@ -62,7 +62,8 @@
 		"colorRampDictionary",
 		"useOwnFramebuffer",
 		"convexTexturedTrianglePipeline",
-		"convexTexturedLinePipeline" ],
+		"convexTexturedLinePipeline",
+		"fenceSignaled" ],
 	"name" : "WTAthensSurface",
 	"pools" : [
 		"AGPUConstants" ],

@@ -5,6 +5,5 @@ releaseCanvas
 		self dispatchRenderingCommands.
 	].
 	useOwnFramebuffer ifTrue: [
-		synchronizationFence ifNil: [ synchronizationFence := engine device createFence ].
-		commandQueue signalFence: synchronizationFence.
+		self signalFence
 	]

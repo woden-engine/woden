@@ -4,5 +4,5 @@ readColorBufferToForm
 	pitch := framebufferForm width * 4.
 	slicePitch := pitch * framebufferForm height.
 	framebufferForm unhibernate.
-	synchronizationFence waitOnClient.
+	self waitFence.
 	colorBuffer readTextureData: 0 arrayIndex: 0 pitch: pitch slicePitch: slicePitch buffer: framebufferForm bits.

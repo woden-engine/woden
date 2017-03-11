@@ -22,6 +22,7 @@ initializeForNewSession
 	vertexBinding := device createVertexBinding: vertexLayout handle.
 	
 	synchronizationFence := nil.
+	fenceSignaled := false.
 	commandQueue := engine graphicsQueue.
 	commandAllocator := device createCommandAllocator: AGPU_COMMAND_LIST_TYPE_DIRECT queue: commandQueue.
 	commandList := device createCommandList: AGPU_COMMAND_LIST_TYPE_DIRECT allocator: commandAllocator initial_pipeline_state: nil.
