@@ -15,7 +15,7 @@ Author useAuthor: 'Woden2Loader' during: [
 ]."
 
 "Update OSWindow"
-FileStream stdout nextPutAll: 'Updating the UnifiedFFI'; lf.
+FileStream stdout nextPutAll: 'Updating OSWindow'; lf.
 Gofer it
     url: 'http://smalltalkhub.com/mc/Pharo/OSWindow/main';
     package: 'ConfigurationOfOSWindow';
