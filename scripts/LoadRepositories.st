@@ -14,6 +14,17 @@ Author useAuthor: 'Woden2Loader' during: [
     FFIExternalStructure allSubclassesDo: #rebuildFieldAccessors.
 ]."
 
+"Update OSWindow"
+FileStream stdout nextPutAll: 'Updating the UnifiedFFI'; lf.
+Gofer it
+    url: 'http://smalltalkhub.com/mc/Pharo/OSWindow/main';
+    package: 'ConfigurationOfOSWindow';
+    load.
+(Smalltalk at: #ConfigurationOfOSWindow) load.
+Author useAuthor: 'Woden2Loader' during: [
+    FFIExternalStructure allSubclassesDo: #rebuildFieldAccessors.
+].
+
 "Load Lowcode"
 FileStream stdout nextPutAll: 'Loading LowcodeOpalCompiler'; lf.
 
