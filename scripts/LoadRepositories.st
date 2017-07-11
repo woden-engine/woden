@@ -4,8 +4,7 @@
 Smalltalk recreateSpecialObjectsArray.
 
 "Update the UnifiedFFI"
-"FIXME: Remove this part, when it is not needed anymore."
-FileStream stdout nextPutAll: 'Updating the UnifiedFFI'; lf.
+"FileStream stdout nextPutAll: 'Updating the UnifiedFFI'; lf.
 Gofer it
     url: 'http://smalltalkhub.com/mc/Pharo/FFI-NB/main';
     package: 'ConfigurationOfUnifiedFFI';
@@ -13,7 +12,7 @@ Gofer it
 (Smalltalk at: #ConfigurationOfUnifiedFFI) load.
 Author useAuthor: 'Woden2Loader' during: [
     FFIExternalStructure allSubclassesDo: #rebuildFieldAccessors.
-].
+]."
 
 "Load Lowcode"
 FileStream stdout nextPutAll: 'Loading LowcodeOpalCompiler'; lf.
