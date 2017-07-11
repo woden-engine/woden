@@ -10,11 +10,8 @@ case $OS in
         ;;
 
     Darwin)
-        fetch_zip "http://ronie.cl/files/lowcode/osx/64x64-pharo.cog.spur.lowcode-Release.zip" 64x64-pharo.cog.spur.lowcode-Release.zip || exit 1
-        fetch_zip "http://files.pharo.org/get-files/50/sources.zip" PharoSourcesV50.zip || exit 1
-
-        # Zip does not preserve a symlink.
-        ln -sf "$WODEN2_SRC_TOP/Pharo.app/Contents/MacOS/Plugins/libSDL2-2.0.0.dylib" "$WODEN2_SRC_TOP/Pharo.app/Contents/MacOS/Plugins/libSDL2.dylib"
+        fetch_tar "http://ronie.cl/files/lowcode/osx/cog_macos64x64_pharo.cog.spur.lowcode_201707112009.tar" cog_macos64x64_pharo.cog.spur.lowcode_201707112009.tar || exit 1
+        fetch_zip "http://files.pharo.org/get-files/60/sources.zip" PharoSourcesV60.zip || exit 1
 
         useVM "$WODEN2_SRC_TOP/Pharo.app/Contents/MacOS/Pharo"
         ;;

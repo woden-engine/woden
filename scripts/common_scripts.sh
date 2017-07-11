@@ -20,6 +20,15 @@ fetch_targz()
     tar -xvzf "$FILE_NAME"
 }
 
+fetch_tar()
+{
+    URL="$1"
+    FILE_NAME="$2"
+
+    wget "-O$FILE_NAME" "$URL" || exit 1
+    tar -xvf "$FILE_NAME"
+}
+
 fetch_zip()
 {
     URL="$1"
