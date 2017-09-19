@@ -34,32 +34,15 @@ Gofer it
     load.
 ((Smalltalk at: #ConfigurationOfLowcode) project version: #stable) load: #(WithOpalCompiler).
 
-"Load Git file tree. Only 32 bits for now."
-Smalltalk wordSize = 8 ifFalse: [
-    FileStream stdout nextPutAll: 'Loading GitFileTree'; lf.
-
-    Metacello new
-      baseline: 'FileTree';
-      repository: 'github://dalehenrich/filetree:pharo6.0_dev/repository';
-      load: 'Git'.
-].
-
 "Use the modified version of monticello"
 'scripts/MonticelloMethodSorting.cs' asFileReference fileIn.
 
 "Load Woden 2"
 FileStream stdout nextPutAll: 'Loading Woden2'; lf.
-Smalltalk wordSize = 8 ifTrue: [
-    Metacello new
-      baseline: 'Woden2';
-      repository: 'filetree://filetree';
-      load.
-] ifFalse: [
-    Metacello new
-	   baseline: 'Woden2';
-       repository: ('gitfiletree://' , ('filetree' asFileReference asAbsolute fullName));
-	   load.
-].
+Metacello new
+  baseline: 'Woden2';
+  repository: 'filetree://filetree';
+  load.
 
 "Install the Lowcode FFI by default when using a 64 bits VM. This is because the
  passing of structures is not working completely yet."

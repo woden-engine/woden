@@ -7,4 +7,4 @@ IMAGE_DIR="$WODEN2_SRC_TOP"
 cd "$IMAGE_DIR"
 
 # Fetch a new image
-wget -O- get.pharo.org/64/60 | bash
+wget -O- get.pharo.org/64/61 | bash
