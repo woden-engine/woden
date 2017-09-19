@@ -1,17 +1,16 @@
 {
-	"category" : "Woden2-Core-Material",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
+	"super" : "WTMaterial",
+	"category" : "Woden2-Core-Material",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
 		"modePipelines",
 		"skyTexture",
 		"resourceBinding",
-		"resourceBindingsAreUpdated" ],
+		"resourceBindingsAreUpdated"
+	],
 	"name" : "WTSkyMaterial",
-	"pools" : [
-		 ],
-	"super" : "WTMaterial",
-	"type" : "normal" }
+	"type" : "normal"
+}

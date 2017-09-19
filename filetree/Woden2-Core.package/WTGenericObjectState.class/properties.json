@@ -1,17 +1,16 @@
 {
-	"category" : "Woden2-Core-Material",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
-	"commentStamp" : "",
 	"extradependencies" : "#(#WMReversibleAffineTransformF #WMVector4F)",
+	"classvars" : [ ],
 	"instvars" : [
 		"#transform &=> #WMReversibleAffineTransformF",
 		"#color &=> #WMVector4F",
-		"#visible &=> #int32" ],
+		"#visible &=> #int32"
+	],
 	"name" : "WTGenericObjectState",
-	"pools" : [
-		 ],
+	"commentStamp" : "",
 	"super" : "NativeStructure",
-	"type" : "StructureLayout" }
+	"type" : "StructureLayout",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "Woden2-Core-Material"
+}

@@ -1,10 +1,14 @@
 {
-	"category" : "Woden2-Core-Engine",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		"TracingEnabled" ],
 	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Engine",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [
+		"TracingEnabled"
+	],
 	"instvars" : [
 		"session",
 		"device",
@@ -19,9 +23,8 @@
 		"pipelineStateCache",
 		"fontCache",
 		"assetSearchPaths",
-		"soundDevice" ],
+		"soundDevice"
+	],
 	"name" : "WTEngine",
-	"pools" : [
-		"AGPUConstants" ],
-	"super" : "Object",
-	"type" : "normal" }
+	"type" : "normal"
+}

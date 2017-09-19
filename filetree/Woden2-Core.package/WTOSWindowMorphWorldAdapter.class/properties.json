@@ -1,14 +1,11 @@
 {
-	"category" : "Woden2-Core-Morphic",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
-	"instvars" : [
-		 ],
-	"name" : "WTOSWindowMorphWorldAdapter",
-	"pools" : [
-		 ],
 	"super" : "MorphicWindowAdapter",
-	"type" : "normal" }
+	"category" : "Woden2-Core-Morphic",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WTOSWindowMorphWorldAdapter",
+	"type" : "normal"
+}

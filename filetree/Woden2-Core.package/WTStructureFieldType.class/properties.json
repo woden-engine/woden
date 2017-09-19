@@ -1,10 +1,14 @@
 {
-	"category" : "Woden2-Core-Structures",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		"FieldTypes" ],
 	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Structures",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [
+		"FieldTypes"
+	],
 	"instvars" : [
 		"name",
 		"format",
@@ -13,9 +17,8 @@
 		"rows",
 		"normalized",
 		"size",
-		"alignment" ],
+		"alignment"
+	],
 	"name" : "WTStructureFieldType",
-	"pools" : [
-		"AGPUConstants" ],
-	"super" : "Object",
-	"type" : "normal" }
+	"type" : "normal"
+}

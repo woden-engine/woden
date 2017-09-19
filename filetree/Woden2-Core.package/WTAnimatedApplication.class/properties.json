@@ -1,16 +1,19 @@
 {
-	"category" : "Woden2-Core-Application",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		"MaxUpdateIterationCount" ],
 	"commentStamp" : "",
-	"instvars" : [
-		"accumulatedUpdateTime",
-		"currentTime" ],
-	"name" : "WTAnimatedApplication",
+	"super" : "WTApplication",
+	"category" : "Woden2-Core-Application",
+	"classinstvars" : [ ],
 	"pools" : [
 		"AGPUConstants",
-		"OSKeySymbols" ],
-	"super" : "WTApplication",
-	"type" : "normal" }
+		"OSKeySymbols"
+	],
+	"classvars" : [
+		"MaxUpdateIterationCount"
+	],
+	"instvars" : [
+		"accumulatedUpdateTime",
+		"currentTime"
+	],
+	"name" : "WTAnimatedApplication",
+	"type" : "normal"
+}

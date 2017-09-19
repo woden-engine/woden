@@ -1,17 +1,16 @@
 {
-	"category" : "Woden2-Core-Resources-Texture",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Resources-Texture",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
 		"width",
 		"height",
 		"depth",
-		"levels" ],
+		"levels"
+	],
 	"name" : "WTTextureLayerData",
-	"pools" : [
-		 ],
-	"super" : "Object",
-	"type" : "normal" }
+	"type" : "normal"
+}

@@ -1,14 +1,13 @@
 {
-	"category" : "Woden2-Samples",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
-	"instvars" : [
-		"athensSurfaces" ],
-	"name" : "WTAthensSampleApplication",
-	"pools" : [
-		 ],
 	"super" : "WTAnimatedApplication",
-	"type" : "normal" }
+	"category" : "Woden2-Samples",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"athensSurfaces"
+	],
+	"name" : "WTAthensSampleApplication",
+	"type" : "normal"
+}

@@ -1,10 +1,10 @@
 {
-	"category" : "Woden2-Core-Material",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
+	"super" : "WTMaterial",
+	"category" : "Woden2-Core-Material",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
 		"modePipelines",
 		"albedoTexture",
@@ -15,9 +15,8 @@
 		"resourceBinding",
 		"materialState",
 		"stateUniformBuffer",
-		"isSkinned" ],
+		"isSkinned"
+	],
 	"name" : "WTGenericSurfaceMaterial",
-	"pools" : [
-		 ],
-	"super" : "WTMaterial",
-	"type" : "normal" }
+	"type" : "normal"
+}

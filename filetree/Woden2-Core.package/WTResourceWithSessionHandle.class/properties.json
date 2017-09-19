@@ -1,16 +1,17 @@
 {
-	"category" : "Woden2-Core-Resources",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Resources",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [ ],
 	"instvars" : [
 		"engine",
 		"session",
-		"handle" ],
+		"handle"
+	],
 	"name" : "WTResourceWithSessionHandle",
-	"pools" : [
-		"AGPUConstants" ],
-	"super" : "Object",
-	"type" : "normal" }
+	"type" : "normal"
+}

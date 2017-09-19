@@ -1,21 +1,24 @@
 {
+	"commentStamp" : "",
+	"super" : "Object",
 	"category" : "Woden2-Core-Engine",
-	"classinstvars" : [
-		 ],
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
 	"classvars" : [
 		"DefaultFontBlocHack",
 		"LdfSignedDistanceField",
-		"LodenFontSignature" ],
-	"commentStamp" : "",
+		"LodenFontSignature"
+	],
 	"instvars" : [
 		"engine",
 		"default",
 		"fonts",
 		"defaultMono",
 		"defaultSans",
-		"defaultSerif" ],
+		"defaultSerif"
+	],
 	"name" : "WTFontCache",
-	"pools" : [
-		"AGPUConstants" ],
-	"super" : "Object",
-	"type" : "normal" }
+	"type" : "normal"
+}

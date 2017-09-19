@@ -1,11 +1,6 @@
 {
-	"category" : "Woden2-Core-Rendering",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
-	"commentStamp" : "",
 	"extradependencies" : "#(#WMVector3F #WMVector4F)",
+	"classvars" : [ ],
 	"instvars" : [
 		"#positionOrDirection &=> #WMVector4F",
 		"#intensity &=> #WMVector4F",
@@ -13,9 +8,13 @@
 		"#innerCosCutoff &=> #float",
 		"#outerCosCutoff &=> #float",
 		"#spotExponent &=> #float",
-		"#radius &=> #float" ],
+		"#radius &=> #float"
+	],
 	"name" : "WTLightSourceData",
-	"pools" : [
-		 ],
+	"commentStamp" : "",
 	"super" : "NativeStructure",
-	"type" : "StructureLayout" }
+	"type" : "StructureLayout",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "Woden2-Core-Rendering"
+}

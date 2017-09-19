@@ -1,10 +1,10 @@
 {
-	"category" : "Woden2-Samples",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
+	"super" : "WTAnimatedApplication",
+	"category" : "Woden2-Samples",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
 		"mainRenderPass",
 		"pipelineState",
@@ -31,9 +31,8 @@
 		"cameraAngularSpeed",
 		"newFrameRenderTime",
 		"lastFrameRenderTime",
-		"renderTimeLog" ],
+		"renderTimeLog"
+	],
 	"name" : "WTRawSampleApplication",
-	"pools" : [
-		 ],
-	"super" : "WTAnimatedApplication",
-	"type" : "normal" }
+	"type" : "normal"
+}

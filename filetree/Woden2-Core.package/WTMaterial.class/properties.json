@@ -1,14 +1,17 @@
 {
-	"category" : "Woden2-Core-Material",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		"PrimitiveTypeToStateSuffix" ],
 	"commentStamp" : "",
-	"instvars" : [
-		"engine" ],
-	"name" : "WTMaterial",
-	"pools" : [
-		"AGPUConstants" ],
 	"super" : "Object",
-	"type" : "normal" }
+	"category" : "Woden2-Core-Material",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [
+		"PrimitiveTypeToStateSuffix"
+	],
+	"instvars" : [
+		"engine"
+	],
+	"name" : "WTMaterial",
+	"type" : "normal"
+}

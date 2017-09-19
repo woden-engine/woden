@@ -1,20 +1,19 @@
 {
-	"category" : "Woden2-Core-Material",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
-	"commentStamp" : "",
-	"extradependencies" : "#(#WMVector3F #WTWaterHarmonic #WMVector2F #WMVector4F)",
+	"extradependencies" : "#(#WMVector3F #WTWaterHarmonic #WMVector4F #WMVector2F)",
+	"classvars" : [ ],
 	"instvars" : [
 		"#albedo &=> #WMVector4F",
 		"#fresnel &=> #WMVector3F",
 		"#smoothness &=> #float",
 		"#propagationSpeed &=> #float",
 		"#padding &=> #WMVector2F",
-		"#harmonics &=> #(#WTWaterHarmonic array: 5)" ],
+		"#harmonics &=> #(#WTWaterHarmonic array: 5)"
+	],
 	"name" : "WTWaterMaterialState",
-	"pools" : [
-		 ],
+	"commentStamp" : "",
 	"super" : "NativeStructure",
-	"type" : "StructureLayout" }
+	"type" : "StructureLayout",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "Woden2-Core-Material"
+}

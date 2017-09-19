@@ -1,14 +1,13 @@
 {
-	"category" : "Woden2-Core-Sound",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
-	"instvars" : [
-		"data" ],
-	"name" : "WTSoundSample",
-	"pools" : [
-		 ],
 	"super" : "WTSoundDataSource",
-	"type" : "normal" }
+	"category" : "Woden2-Core-Sound",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"data"
+	],
+	"name" : "WTSoundSample",
+	"type" : "normal"
+}

@@ -1,18 +1,17 @@
 {
-	"category" : "Woden2-Core-Material",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
+	"super" : "WTMaterial",
+	"category" : "Woden2-Core-Material",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
 		"useDepth",
 		"writeDepth",
 		"modePipelines",
 		"stipple",
-		"thumbnailType" ],
+		"thumbnailType"
+	],
 	"name" : "WTFlatColorMaterial",
-	"pools" : [
-		 ],
-	"super" : "WTMaterial",
-	"type" : "normal" }
+	"type" : "normal"
+}

@@ -1,14 +1,11 @@
 {
-	"category" : "Woden2-Samples",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
-	"instvars" : [
-		 ],
-	"name" : "WTAthensSampleApplicationGradients",
-	"pools" : [
-		 ],
 	"super" : "WTAthensSampleApplication",
-	"type" : "normal" }
+	"category" : "Woden2-Samples",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WTAthensSampleApplicationGradients",
+	"type" : "normal"
+}

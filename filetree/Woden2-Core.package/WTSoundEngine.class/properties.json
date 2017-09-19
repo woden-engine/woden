@@ -1,15 +1,14 @@
 {
+	"commentStamp" : "",
+	"super" : "Object",
 	"category" : "Woden2-Core-Sound",
-	"classinstvars" : [
-		 ],
+	"classinstvars" : [ ],
+	"pools" : [ ],
 	"classvars" : [
 		"CurrentEngine",
-		"SoundSession" ],
-	"commentStamp" : "",
-	"instvars" : [
-		 ],
+		"SoundSession"
+	],
+	"instvars" : [ ],
 	"name" : "WTSoundEngine",
-	"pools" : [
-		 ],
-	"super" : "Object",
-	"type" : "normal" }
+	"type" : "normal"
+}

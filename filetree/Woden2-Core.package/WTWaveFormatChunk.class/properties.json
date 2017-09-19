@@ -1,10 +1,10 @@
 {
-	"category" : "Woden2-Core-Sound",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
+	"super" : "NativeStructure",
+	"category" : "Woden2-Core-Sound",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
 		"#formatTag &=> #ushort",
 		"#channels &=> #ushort",
@@ -14,9 +14,8 @@
 		"#bitsPerSample &=> #ushort",
 		"#chunkBlockSize &=> #ushort",
 		"#validBitsPerSample &=> #uint",
-		"#subFormat &=> #(#uint8 array: 16)" ],
+		"#subFormat &=> #(#uint8 array: 16)"
+	],
 	"name" : "WTWaveFormatChunk",
-	"pools" : [
-		 ],
-	"super" : "NativeStructure",
-	"type" : "StructureLayout" }
+	"type" : "StructureLayout"
+}

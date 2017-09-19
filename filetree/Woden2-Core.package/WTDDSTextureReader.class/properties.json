@@ -1,7 +1,11 @@
 {
+	"commentStamp" : "",
+	"super" : "Object",
 	"category" : "Woden2-Core-Resources-Texture",
-	"classinstvars" : [
-		 ],
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
 	"classvars" : [
 		"DDPF_ALPHA",
 		"DDPF_ALPHAPIXELS",
@@ -36,12 +40,9 @@
 		"DXT4",
 		"DXT5",
 		"FourCCDictionary",
-		"RXGB" ],
-	"commentStamp" : "",
-	"instvars" : [
-		 ],
+		"RXGB"
+	],
+	"instvars" : [ ],
 	"name" : "WTDDSTextureReader",
-	"pools" : [
-		"AGPUConstants" ],
-	"super" : "Object",
-	"type" : "normal" }
+	"type" : "normal"
+}

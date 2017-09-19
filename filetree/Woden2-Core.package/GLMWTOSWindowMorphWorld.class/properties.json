@@ -1,14 +1,13 @@
 {
-	"category" : "Woden2-Core-Morphic",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
-	"instvars" : [
-		"toolbarBox" ],
-	"name" : "GLMWTOSWindowMorphWorld",
-	"pools" : [
-		 ],
 	"super" : "WTOSWindowMorphWorld",
-	"type" : "normal" }
+	"category" : "Woden2-Core-Morphic",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"toolbarBox"
+	],
+	"name" : "GLMWTOSWindowMorphWorld",
+	"type" : "normal"
+}

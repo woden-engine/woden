@@ -1,15 +1,14 @@
 {
-	"category" : "Woden2-Core-Sound",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
+	"super" : "NativeStructure",
+	"category" : "Woden2-Core-Sound",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
 		"#chunkID &=> #uint",
-		"#chunkSize &=> #uint" ],
+		"#chunkSize &=> #uint"
+	],
 	"name" : "WTWaveChunkHeader",
-	"pools" : [
-		 ],
-	"super" : "NativeStructure",
-	"type" : "StructureLayout" }
+	"type" : "StructureLayout"
+}

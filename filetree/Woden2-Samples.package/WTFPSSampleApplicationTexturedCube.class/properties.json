@@ -1,14 +1,11 @@
 {
-	"category" : "Woden2-Samples",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
-	"instvars" : [
-		 ],
-	"name" : "WTFPSSampleApplicationTexturedCube",
-	"pools" : [
-		 ],
 	"super" : "WTFPSSampleApplication",
-	"type" : "normal" }
+	"category" : "Woden2-Samples",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WTFPSSampleApplicationTexturedCube",
+	"type" : "normal"
+}

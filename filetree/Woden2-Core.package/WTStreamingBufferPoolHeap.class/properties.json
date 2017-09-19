@@ -1,10 +1,10 @@
 {
-	"category" : "Woden2-Core-Pool",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Pool",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
 		"pool",
 		"capacity",
@@ -13,9 +13,8 @@
 		"pointer",
 		"freeList",
 		"elementSize",
-		"elementType" ],
+		"elementType"
+	],
 	"name" : "WTStreamingBufferPoolHeap",
-	"pools" : [
-		 ],
-	"super" : "Object",
-	"type" : "normal" }
+	"type" : "normal"
+}

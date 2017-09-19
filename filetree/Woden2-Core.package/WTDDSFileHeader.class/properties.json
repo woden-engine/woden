@@ -1,11 +1,6 @@
 {
-	"category" : "Woden2-Core-Resources-Texture",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
-	"commentStamp" : "",
 	"extradependencies" : "#(#WTDDSPixelFormat)",
+	"classvars" : [ ],
 	"instvars" : [
 		"#size &=> #uint32",
 		"#flags &=> #uint32",
@@ -20,9 +15,13 @@
 		"#caps2 &=> #uint32",
 		"#caps3 &=> #uint32",
 		"#caps4 &=> #uint32",
-		"#reserved2 &=> #uint32" ],
+		"#reserved2 &=> #uint32"
+	],
 	"name" : "WTDDSFileHeader",
-	"pools" : [
-		 ],
+	"commentStamp" : "",
 	"super" : "NativeStructure",
-	"type" : "StructureLayout" }
+	"type" : "StructureLayout",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "Woden2-Core-Resources-Texture"
+}

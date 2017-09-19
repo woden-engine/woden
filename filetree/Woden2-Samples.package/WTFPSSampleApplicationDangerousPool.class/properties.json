@@ -1,19 +1,18 @@
 {
-	"category" : "Woden2-Samples",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
+	"super" : "WTFPSSampleApplication",
+	"category" : "Woden2-Samples",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
 		"pickedGun",
 		"floorGun",
 		"playerBox",
 		"gunAction",
 		"gunActionFrame",
-		"gunActionRepeated" ],
+		"gunActionRepeated"
+	],
 	"name" : "WTFPSSampleApplicationDangerousPool",
-	"pools" : [
-		 ],
-	"super" : "WTFPSSampleApplication",
-	"type" : "normal" }
+	"type" : "normal"
+}

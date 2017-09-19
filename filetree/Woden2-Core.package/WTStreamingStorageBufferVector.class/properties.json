@@ -1,14 +1,11 @@
 {
-	"category" : "Woden2-Core-Pool",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
-	"instvars" : [
-		 ],
-	"name" : "WTStreamingStorageBufferVector",
-	"pools" : [
-		 ],
 	"super" : "WTStreamingBufferVector",
-	"type" : "normal" }
+	"category" : "Woden2-Core-Pool",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WTStreamingStorageBufferVector",
+	"type" : "normal"
+}

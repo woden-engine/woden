@@ -1,10 +1,10 @@
 {
-	"category" : "Woden2-Samples",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
+	"super" : "WTAnimatedApplication",
+	"category" : "Woden2-Samples",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
 		"cameraAngle",
 		"cameraAngularVelocity",
@@ -15,9 +15,8 @@
 		"scene",
 		"sceneRenderer",
 		"athensSurfaces",
-		"lastRenderTime" ],
+		"lastRenderTime"
+	],
 	"name" : "WTFPSSampleApplication",
-	"pools" : [
-		 ],
-	"super" : "WTAnimatedApplication",
-	"type" : "normal" }
+	"type" : "normal"
+}

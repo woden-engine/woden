@@ -1,15 +1,14 @@
 {
-	"category" : "Woden2-Core-Resources",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
+	"super" : "WTResourceWithSessionHandle",
+	"category" : "Woden2-Core-Resources",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
 		"colorAttachments",
-		"depthStencilAttachment" ],
+		"depthStencilAttachment"
+	],
 	"name" : "WTRenderPass",
-	"pools" : [
-		 ],
-	"super" : "WTResourceWithSessionHandle",
-	"type" : "normal" }
+	"type" : "normal"
+}

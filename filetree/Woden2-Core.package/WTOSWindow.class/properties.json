@@ -1,10 +1,12 @@
 {
-	"category" : "Woden2-Core-Window",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Window",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [ ],
 	"instvars" : [
 		"engine",
 		"application",
@@ -19,9 +21,9 @@
 		"controlSemaphore",
 		"shuttingDown",
 		"drawingProcessFinishSemaphore",
-		"properties" ],
+		"properties",
+		"fullscreen"
+	],
 	"name" : "WTOSWindow",
-	"pools" : [
-		"AGPUConstants" ],
-	"super" : "Object",
-	"type" : "normal" }
+	"type" : "normal"
+}

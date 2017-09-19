@@ -1,10 +1,10 @@
 {
-	"category" : "Woden2-Core-Morphic",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
+	"super" : "PasteUpMorph",
+	"category" : "Woden2-Core-Morphic",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
 		"hand",
 		"screenForm",
@@ -20,9 +20,8 @@
 		"lastStepMessage",
 		"lastStepTime",
 		"lastAlarmTime",
-		"alarms" ],
+		"alarms"
+	],
 	"name" : "WTOSWindowMorphWorld",
-	"pools" : [
-		 ],
-	"super" : "PasteUpMorph",
-	"type" : "normal" }
+	"type" : "normal"
+}

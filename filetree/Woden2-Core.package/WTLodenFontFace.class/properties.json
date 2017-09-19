@@ -1,10 +1,10 @@
 {
-	"category" : "Woden2-Core-Resources-Font",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
+	"super" : "WTFontFace",
+	"category" : "Woden2-Core-Resources-Font",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
 		"texture",
 		"glyphs",
@@ -17,9 +17,8 @@
 		"texcoordScaleFactor",
 		"ascent",
 		"descent",
-		"height" ],
+		"height"
+	],
 	"name" : "WTLodenFontFace",
-	"pools" : [
-		 ],
-	"super" : "WTFontFace",
-	"type" : "normal" }
+	"type" : "normal"
+}

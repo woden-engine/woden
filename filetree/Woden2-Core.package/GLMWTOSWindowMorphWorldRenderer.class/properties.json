@@ -1,14 +1,13 @@
 {
-	"category" : "Woden2-Core-Morphic",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
-	"instvars" : [
-		"window" ],
-	"name" : "GLMWTOSWindowMorphWorldRenderer",
-	"pools" : [
-		 ],
 	"super" : "GLMMorphicWidgetRenderer",
-	"type" : "normal" }
+	"category" : "Woden2-Core-Morphic",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"window"
+	],
+	"name" : "GLMWTOSWindowMorphWorldRenderer",
+	"type" : "normal"
+}

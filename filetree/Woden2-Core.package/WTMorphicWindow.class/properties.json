@@ -1,10 +1,12 @@
 {
-	"category" : "Woden2-Core-Window",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
+	"super" : "BorderedMorph",
+	"category" : "Woden2-Core-Window",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [ ],
 	"instvars" : [
 		"engine",
 		"application",
@@ -17,9 +19,8 @@
 		"mainFramebufferForm",
 		"currentColorBuffer",
 		"currentDepthBuffer",
-		"currentFramebuffer" ],
+		"currentFramebuffer"
+	],
 	"name" : "WTMorphicWindow",
-	"pools" : [
-		"AGPUConstants" ],
-	"super" : "BorderedMorph",
-	"type" : "normal" }
+	"type" : "normal"
+}

@@ -1,14 +1,13 @@
 {
-	"category" : "Woden2-Core-Morphic",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
-	"instvars" : [
-		"hand" ],
-	"name" : "WTOSWindowMorphWorldEventHandler",
-	"pools" : [
-		 ],
 	"super" : "OSWindowMorphicEventHandler",
-	"type" : "normal" }
+	"category" : "Woden2-Core-Morphic",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"hand"
+	],
+	"name" : "WTOSWindowMorphWorldEventHandler",
+	"type" : "normal"
+}

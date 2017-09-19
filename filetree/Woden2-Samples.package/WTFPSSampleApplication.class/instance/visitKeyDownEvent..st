@@ -1,5 +1,8 @@
 visiting
 visitKeyDownEvent: anEvent
+	anEvent repeat > 0 ifTrue: [ ^ 0 ].
+	anEvent symbol = OSK_F11 ifTrue: [ self toggleFullscreen ].
+
 	anEvent symbol = OSK_a ifTrue: [ cameraVelocity x: -1.0 ].
 	anEvent symbol = OSK_d ifTrue: [ cameraVelocity x: 1.0 ].
 	anEvent symbol = OSK_w ifTrue: [ cameraVelocity z: -1.0 ].

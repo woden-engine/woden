@@ -1,14 +1,13 @@
 {
-	"category" : "Woden2-Core-Resources",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
-	"instvars" : [
-		"allocator" ],
-	"name" : "WTCommandList",
-	"pools" : [
-		 ],
 	"super" : "WTResourceWithSessionHandle",
-	"type" : "normal" }
+	"category" : "Woden2-Core-Resources",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"allocator"
+	],
+	"name" : "WTCommandList",
+	"type" : "normal"
+}
