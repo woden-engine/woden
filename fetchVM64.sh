@@ -10,7 +10,7 @@ case $OS in
         ;;
 
     Darwin)
-        fetch_tar "http://ronie.cl/files/lowcode/osx/cog_macos64x64_pharo.cog.spur.lowcode_201707112009.tar" cog_macos64x64_pharo.cog.spur.lowcode_201707112009.tar || exit 1
+        fetch_targz "https://bintray.com/opensmalltalk/vm/download_file?file_path=cog_macos64x64_pharo.cog.spur.lowcode_201708312323.tar.gz" cog_macos64x64_pharo.cog.spur.lowcode_201708312323.tar.gz || exit 1
         fetch_zip "http://files.pharo.org/get-files/60/sources.zip" PharoSourcesV60.zip || exit 1
 
         useVM "$WODEN2_SRC_TOP/Pharo.app/Contents/MacOS/Pharo"
