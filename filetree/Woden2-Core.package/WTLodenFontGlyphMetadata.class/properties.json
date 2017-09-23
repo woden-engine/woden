@@ -1,5 +1,5 @@
 {
-	"extradependencies" : "#(#WMBox2DF #WMVector2F)",
+	"extradependencies" : "#(#WMVector2F #WMBox2DF)",
 	"classvars" : [ ],
 	"instvars" : [
 		"#box &=> #WMBox2DF",

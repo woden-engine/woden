@@ -1,5 +1,5 @@
 {
-	"extradependencies" : "#(#WMVector3F #WMQuaternionF)",
+	"extradependencies" : "#(#WMQuaternionF #WMVector3F)",
 	"classvars" : [ ],
 	"instvars" : [
 		"#translation &=> #WMVector3F",

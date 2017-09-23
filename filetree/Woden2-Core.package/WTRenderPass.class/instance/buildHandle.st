@@ -23,8 +23,10 @@ buildHandle
 			AGPURenderpassDescription new
 			color_attachment_count: colorAttachments size;
 			color_attachments: (AGPURenderpassColorAttachmentDescription fromHandle: colorAttachmentBuffer);
-			depth_stencil_attachment: (AGPURenderpassDepthStencilDescription fromHandle: depthStencilAttachmentBuffer);
 			yourself.
+		depthStencilAttachment ifNotNil: [ 
+			description depth_stencil_attachment: (AGPURenderpassDepthStencilDescription fromHandle: depthStencilAttachmentBuffer).
+		].
 		handle := engine device createRenderPass: description.
 	] ensure: [
 		colorAttachmentBuffer ifNotNil: [ colorAttachmentBuffer free ].

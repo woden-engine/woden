@@ -18,7 +18,15 @@
 		"lastRenderTime",
 		"vrMode",
 		"stereoMode",
-		"fps"
+		"fps",
+		"intermediateRenderTarget",
+		"commandAllocators",
+		"commandLists",
+		"compositionRenderPass",
+		"compositionPipelineState",
+		"compositionShaderSignature",
+		"compositionSourceBindings",
+		"compositionSamplerBindings"
 	],
 	"name" : "WTFPSSampleApplication",
 	"type" : "normal"

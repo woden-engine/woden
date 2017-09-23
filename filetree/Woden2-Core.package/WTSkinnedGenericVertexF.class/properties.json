@@ -1,5 +1,5 @@
 {
-	"extradependencies" : "#(#WMVector4US #WMCompactVector3F #WMVector2F #WMVector4F)",
+	"extradependencies" : "#(#WMVector2F #WMCompactVector3F #WMVector4F #WMVector4US)",
 	"classvars" : [ ],
 	"instvars" : [
 		"#position &=> #WMCompactVector3F",

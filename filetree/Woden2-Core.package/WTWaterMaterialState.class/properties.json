@@ -1,5 +1,5 @@
 {
-	"extradependencies" : "#(#WMVector3F #WTWaterHarmonic #WMVector4F #WMVector2F)",
+	"extradependencies" : "#(#WMVector2F #WMVector3F #WMVector4F #WTWaterHarmonic)",
 	"classvars" : [ ],
 	"instvars" : [
 		"#albedo &=> #WMVector4F",
