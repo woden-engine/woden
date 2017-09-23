@@ -15,7 +15,10 @@
 		"scene",
 		"sceneRenderer",
 		"athensSurfaces",
-		"lastRenderTime"
+		"lastRenderTime",
+		"vrMode",
+		"stereoMode",
+		"fps"
 	],
 	"name" : "WTFPSSampleApplication",
 	"type" : "normal"

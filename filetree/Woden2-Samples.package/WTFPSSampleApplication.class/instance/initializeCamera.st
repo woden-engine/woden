@@ -1,8 +1,8 @@
-rendering
+initialize
 initializeCamera
 	camera := WTSCamera new.
 	scene add: camera.
-	
+		
 	cameraVelocity := WMVector3F new.
 	cameraSpeed := 1.0.
 	

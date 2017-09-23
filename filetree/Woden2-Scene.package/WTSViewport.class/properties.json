@@ -1,17 +1,18 @@
 {
-	"category" : "Woden2-Scene-Renderer",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "RonieSalgado 7/13/2016 17:58",
+	"super" : "Object",
+	"category" : "Woden2-Scene-Renderer",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [ ],
 	"instvars" : [
 		"camera",
 		"bounds",
 		"submode",
-		"filter" ],
+		"filter"
+	],
 	"name" : "WTSViewport",
-	"pools" : [
-		"AGPUConstants" ],
-	"super" : "Object",
-	"type" : "normal" }
+	"type" : "normal"
+}

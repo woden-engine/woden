@@ -1,10 +1,10 @@
 {
-	"category" : "Woden2-Scene-Graph",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "RonieSalgado 6/13/2016 14:33",
+	"super" : "Object",
+	"category" : "Woden2-Scene-Graph",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
 		"engine",
 		"backgroundColor",
@@ -12,9 +12,8 @@
 		"shaderSignature",
 		"genericObjectStatePool",
 		"neutralObjectInstanceStatePool",
-		"neutralObjectInstanceState" ],
+		"neutralObjectInstanceState"
+	],
 	"name" : "WTSScene",
-	"pools" : [
-		 ],
-	"super" : "Object",
-	"type" : "normal" }
+	"type" : "normal"
+}

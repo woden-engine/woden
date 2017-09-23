@@ -1,18 +1,17 @@
 {
-	"category" : "Woden2-Scene-Graph",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "RonieSalgado 6/13/2016 14:38",
+	"super" : "WTSAbstractSpatialObject",
+	"category" : "Woden2-Scene-Graph",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
 		"renderable",
 		"objectStateBuffer",
 		"objectStateBindings",
 		"renderableSceneData",
-		"gpuObjectStates" ],
+		"gpuObjectStates"
+	],
 	"name" : "WTSSpatialObject",
-	"pools" : [
-		 ],
-	"super" : "WTSAbstractSpatialObject",
-	"type" : "normal" }
+	"type" : "normal"
+}

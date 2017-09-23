@@ -1,16 +1,17 @@
 {
+	"commentStamp" : "RonieSalgado 6/13/2016 14:34",
+	"super" : "WTSNode",
 	"category" : "Woden2-Scene-Graph",
-	"classinstvars" : [
-		 ],
+	"classinstvars" : [ ],
+	"pools" : [ ],
 	"classvars" : [
 		"DefaultSpotInnerCosCutoff",
-		"DefaultSpotOuterCosCutoff" ],
-	"commentStamp" : "RonieSalgado 6/13/2016 14:34",
+		"DefaultSpotOuterCosCutoff"
+	],
 	"instvars" : [
 		"state",
-		"type" ],
+		"type"
+	],
 	"name" : "WTSLightSource",
-	"pools" : [
-		 ],
-	"super" : "WTSNode",
-	"type" : "normal" }
+	"type" : "normal"
+}

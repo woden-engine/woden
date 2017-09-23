@@ -1,7 +1,9 @@
 {
+	"commentStamp" : "RonieSalgado 6/13/2016 14:33",
+	"super" : "Object",
 	"category" : "Woden2-Scene-Graph",
-	"classinstvars" : [
-		 ],
+	"classinstvars" : [ ],
+	"pools" : [ ],
 	"classvars" : [
 		"RenderPriorityDefault",
 		"RenderPriorityEditorOpaqueAfter",
@@ -11,8 +13,8 @@
 		"RenderPriorityOpaque",
 		"RenderPriorityOpaqueStatic",
 		"RenderPriorityTranslucent",
-		"RenderPriorityTranslucentSorted" ],
-	"commentStamp" : "RonieSalgado 6/13/2016 14:33",
+		"RenderPriorityTranslucentSorted"
+	],
 	"instvars" : [
 		"scene",
 		"transform",
@@ -25,9 +27,8 @@
 		"modificationCount",
 		"updatedPerFrame",
 		"stateChangeListeners",
-		"useViewportCamera" ],
+		"useViewportCamera"
+	],
 	"name" : "WTSNode",
-	"pools" : [
-		 ],
-	"super" : "Object",
-	"type" : "normal" }
+	"type" : "normal"
+}

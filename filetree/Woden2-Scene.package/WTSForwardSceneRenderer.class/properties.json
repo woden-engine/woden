@@ -1,10 +1,12 @@
 {
-	"category" : "Woden2-Scene-Renderer",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "RonieSalgado 6/15/2016 01:46",
+	"super" : "Object",
+	"category" : "Woden2-Scene-Renderer",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [ ],
 	"instvars" : [
 		"engine",
 		"scene",
@@ -26,9 +28,8 @@
 		"cameraStatePool",
 		"cameraStates",
 		"globalLightingStatePool",
-		"globalLightingStates" ],
+		"globalLightingStates"
+	],
 	"name" : "WTSForwardSceneRenderer",
-	"pools" : [
-		"AGPUConstants" ],
-	"super" : "Object",
-	"type" : "normal" }
+	"type" : "normal"
+}

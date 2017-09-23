@@ -5,7 +5,7 @@ updateFrameCameraStates: viewports
 	viewports doWithIndex: [ :viewport :index |
 		camera := viewport camera.
 		camera state
-				transform: camera transform;
+				transform: camera renderTransform;
 				currentTime: currentTime.
 				
 		gpuCameraState := frameStates at: index.
