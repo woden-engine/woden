@@ -26,7 +26,11 @@
 		"compositionPipelineState",
 		"compositionShaderSignature",
 		"compositionSourceBindings",
-		"compositionSamplerBindings"
+		"compositionSamplerBindings",
+		"nearDistance",
+		"compositionStateBuffer",
+		"compositionStateBinding",
+		"vrSensorReader"
 	],
 	"name" : "WTFPSSampleApplication",
 	"type" : "normal"

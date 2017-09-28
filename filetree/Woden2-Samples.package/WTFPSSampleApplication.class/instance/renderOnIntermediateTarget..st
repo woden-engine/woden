@@ -2,7 +2,6 @@ rendering
 renderOnIntermediateTarget: aRenderTarget
 	| frameIndex framebuffer extent surface |
 	frameIndex := engine newFrame.
-	self updateCameraProjectionFor: aRenderTarget.
 	
 	sceneRenderer
 		currentTime: currentTime + accumulatedUpdateTime;

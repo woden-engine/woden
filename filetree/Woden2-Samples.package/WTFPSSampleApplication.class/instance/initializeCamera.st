@@ -9,3 +9,5 @@ initializeCamera
 	cameraAngle := WMVector3F new.
 	cameraAngularVelocity := WMVector3F new.
 	cameraAngularSpeed := 1.0.
+
+	nearDistance := 0.01

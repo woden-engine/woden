@@ -6,7 +6,12 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"eyes"
+		"eyes",
+		"ipd",
+		"focalDistance",
+		"projectionMode",
+		"vrHeadset",
+		"vrTransform"
 	],
 	"name" : "WTSMultiEyeCamera",
 	"type" : "normal"

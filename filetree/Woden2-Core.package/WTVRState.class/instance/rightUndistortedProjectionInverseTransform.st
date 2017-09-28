@@ -1,0 +1,4 @@
+accessing
+rightUndistortedProjectionInverseTransform
+	<accessor>
+	^ rightUndistortedProjectionInverseTransform

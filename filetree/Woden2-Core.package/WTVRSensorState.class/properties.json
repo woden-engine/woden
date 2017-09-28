@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Camera",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"orientation",
+		"translation"
+	],
+	"name" : "WTVRSensorState",
+	"type" : "normal"
+}

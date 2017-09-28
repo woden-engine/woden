@@ -1,0 +1,4 @@
+accessing
+rightProjectionTransform
+	<accessor>
+	^ rightProjectionTransform

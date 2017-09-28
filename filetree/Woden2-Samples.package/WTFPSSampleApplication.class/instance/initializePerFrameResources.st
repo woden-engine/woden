@@ -25,3 +25,7 @@ initializePerFrameResources
 
 	compositionSamplerBindings := engine createShaderSignature: compositionShaderSignature resourceBinding: 2.
 	compositionSamplerBindings createSampler: 0 description: samplerDesc.
+	
+	compositionStateBuffer := engine createStreamingUniformBuffer: WTVRState structureSize.
+	compositionStateBinding := engine createShaderSignature: compositionShaderSignature resourceBinding: 0.
+	compositionStateBinding bind: 0 uniformBuffer: compositionStateBuffer.

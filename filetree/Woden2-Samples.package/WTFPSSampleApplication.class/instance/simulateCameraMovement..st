@@ -1,8 +1,14 @@
 as yet unclassified
 simulateCameraMovement: delta
-	| orientation |
+	| orientation sensorState |
 	cameraAngle := cameraAngle + (cameraAngularVelocity * (cameraAngularSpeed * delta)).
 	orientation := (WMMatrix3F yrot: cameraAngle y) * (WMMatrix3F xrot: cameraAngle x).
+
+	vrSensorReader ifNotNil: [ 
+		sensorState := vrSensorReader sensorState.
+		orientation := sensorState orientation asWMMatrix3F * orientation.
+		"camera vrTransform translation: sensorState translation"
+	].
 
 	camera transform
 		orthonormal: orientation;

@@ -12,5 +12,5 @@
 	"type" : "StructureLayout",
 	"classinstvars" : [ ],
 	"pools" : [ ],
-	"category" : "Woden2-Core-Mesh"
+	"category" : "Woden2-Core-Camera"
 }

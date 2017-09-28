@@ -1,0 +1,3 @@
+session management
+sensorState
+	^ nullState

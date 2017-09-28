@@ -1,0 +1,4 @@
+accessing
+distortionCoefficients
+	<accessor>
+	^ distortionCoefficients

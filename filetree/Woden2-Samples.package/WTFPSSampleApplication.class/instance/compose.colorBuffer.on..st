@@ -17,18 +17,19 @@ compose: frameIndex colorBuffer: colorBuffer on: aWindow
 			setViewport: 0 y: 0 w: w h: h;
 			setScissor: 0 y: 0 w: w h: h;
 			
+			useShaderResources: compositionStateBinding validHandle;
 			useShaderResources: sourceBinding validHandle;
 			useShaderResources: compositionSamplerBindings validHandle.
 
-		vrMode ifTrue: [ 
+		"vrMode ifTrue: [ 
 			builder			
 				usePipelineState: compositionPipelineState validHandle;
-				drawArrays: 16*16*6 instance_count: 2 first_vertex: 0 base_instance: 0.
-		] ifFalse: [ 
+				drawArrays: 64*64*6 instance_count: 2 first_vertex: 0 base_instance: 0.
+		] ifFalse: [ "
 			builder			
 				usePipelineState: compositionPipelineState validHandle;
 				drawArrays: 4 instance_count: 1 first_vertex: 0 base_instance: 0.
-		].
+		"]."
 
 		builder			
 			endRenderPass.

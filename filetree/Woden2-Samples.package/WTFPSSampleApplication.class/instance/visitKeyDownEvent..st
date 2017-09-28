@@ -17,4 +17,9 @@ visitKeyDownEvent: anEvent
 	
 	anEvent symbol = OSK_LSHIFT ifTrue: [ cameraSpeed := 3.0 ].
 	
+	vrSensorReader ifNotNil: [ 
+		anEvent symbol = OSK_1 ifTrue: [ vrSensorReader recenter ]. 
+		anEvent symbol = OSK_2 ifTrue: [ vrSensorReader calibrate ].
+	].
+	
 	(anEvent modifiers leftAlt and: [ anEvent symbol = OSK_i ]) ifTrue: [ self inspect ].
