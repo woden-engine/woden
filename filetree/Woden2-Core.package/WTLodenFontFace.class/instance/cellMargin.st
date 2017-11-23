@@ -1,3 +1,0 @@
-accessing
-cellMargin
-	^ cellMargin

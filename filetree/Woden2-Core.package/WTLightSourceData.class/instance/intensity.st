@@ -1,4 +1,0 @@
-accessing
-intensity
-	<accessor>
-	^ intensity

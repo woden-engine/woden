@@ -1,3 +1,0 @@
-rendering
-createLeftToolPane
-	^ BlElement new

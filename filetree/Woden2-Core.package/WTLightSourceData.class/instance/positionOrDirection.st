@@ -1,4 +1,0 @@
-accessing
-positionOrDirection
-	<accessor>
-	^ positionOrDirection

@@ -1,3 +1,0 @@
-accessing
-primaryGridSize
-	^ editor primaryGridSize

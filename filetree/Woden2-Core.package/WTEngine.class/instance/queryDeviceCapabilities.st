@@ -1,4 +1,0 @@
-initialization
-queryDeviceCapabilities
-	preferredDepthFormat := AGPU_TEXTURE_FORMAT_D32_FLOAT.
-	preferredDepthStencilFormat := AGPU_TEXTURE_FORMAT_D32_FLOAT_S8X24_UINT.

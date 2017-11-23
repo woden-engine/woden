@@ -1,3 +1,0 @@
-accessing
-frameBufferingCount
-	^ self class defaultFrameBufferingCount

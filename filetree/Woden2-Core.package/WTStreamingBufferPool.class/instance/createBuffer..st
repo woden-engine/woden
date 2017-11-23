@@ -1,3 +1,0 @@
-private
-createBuffer: capacity
-	self subclassResponsibility

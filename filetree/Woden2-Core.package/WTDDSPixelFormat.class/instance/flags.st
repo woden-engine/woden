@@ -1,4 +1,0 @@
-accessing
-flags
-	<accessor>
-	^ flags

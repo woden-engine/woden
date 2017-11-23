@@ -1,4 +1,0 @@
-accessing
-albedo
-	<accessor>
-	^ albedo

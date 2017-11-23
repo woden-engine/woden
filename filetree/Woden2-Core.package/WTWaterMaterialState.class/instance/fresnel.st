@@ -1,4 +1,0 @@
-accessing
-fresnel
-	<accessor>
-	^ fresnel

@@ -1,3 +1,0 @@
-changing transparency
-opaque
-	self transparencyMode: OpaqueTransparencyMode

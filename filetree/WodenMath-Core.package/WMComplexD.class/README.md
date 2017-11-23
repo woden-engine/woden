@@ -1,1 +1,0 @@
-I represent a complex number, using double precision floats.

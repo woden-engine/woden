@@ -1,3 +1,0 @@
-accessing
-yScaleMore
-	^ yScaleMore

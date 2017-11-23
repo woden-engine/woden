@@ -1,4 +1,0 @@
-accessing
-nz
-	<accessor>
-	^ nz

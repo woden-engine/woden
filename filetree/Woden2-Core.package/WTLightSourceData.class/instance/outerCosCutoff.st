@@ -1,4 +1,0 @@
-accessing
-outerCosCutoff
-	<accessor>
-	^ outerCosCutoff

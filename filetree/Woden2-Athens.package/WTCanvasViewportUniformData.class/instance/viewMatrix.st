@@ -1,4 +1,0 @@
-accessing
-viewMatrix
-	<accessor>
-	^ viewMatrix

@@ -1,1 +1,0 @@
-I represent a four dimensional vector whose fields are double precision floating point value.

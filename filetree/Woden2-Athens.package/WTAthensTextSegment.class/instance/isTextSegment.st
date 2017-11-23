@@ -1,3 +1,0 @@
-testing
-isTextSegment
-	^ true

@@ -1,4 +1,0 @@
-accessing
-min
-	<accessor>
-	^ min

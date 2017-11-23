@@ -1,4 +1,0 @@
-accessing
-resourceDimension
-	<accessor>
-	^ resourceDimension

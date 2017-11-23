@@ -1,3 +1,0 @@
-converting
-asBoxSelection
-	^ self

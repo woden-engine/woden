@@ -1,3 +1,0 @@
-behaviors
-subscribeToTouchEvents
-	entity subscribeToTouchEvents

@@ -1,4 +1,0 @@
-accessing
-color
-	<accessor>
-	^ color

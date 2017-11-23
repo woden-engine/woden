@@ -1,3 +1,0 @@
-metrics
-computePreciseAscent
-	^ horizontalBearing y

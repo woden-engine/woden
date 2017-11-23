@@ -1,4 +1,0 @@
-accessing
-smoothness
-	^ materialState smoothness
-	

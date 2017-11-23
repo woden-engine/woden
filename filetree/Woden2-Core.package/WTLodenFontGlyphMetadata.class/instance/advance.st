@@ -1,4 +1,0 @@
-accessing
-advance
-	<accessor>
-	^ advance

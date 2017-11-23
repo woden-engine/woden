@@ -1,3 +1,0 @@
-accessing
-interLensDistance
-	^ interLensDistance

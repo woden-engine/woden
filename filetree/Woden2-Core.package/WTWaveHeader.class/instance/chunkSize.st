@@ -1,4 +1,0 @@
-accessing
-chunkSize
-	<accessor>
-	^ chunkSize

@@ -1,3 +1,0 @@
-accessing
-structureAlignment
-	^ 16

@@ -1,4 +1,0 @@
-accessing
-visible
-	<accessor>
-	^ visible

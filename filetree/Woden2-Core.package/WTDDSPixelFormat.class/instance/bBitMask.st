@@ -1,4 +1,0 @@
-accessing
-bBitMask
-	<accessor>
-	^ bBitMask

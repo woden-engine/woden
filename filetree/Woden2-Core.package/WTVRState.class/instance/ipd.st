@@ -1,4 +1,0 @@
-accessing
-ipd
-	<accessor>
-	^ ipd

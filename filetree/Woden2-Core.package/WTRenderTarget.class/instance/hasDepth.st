@@ -1,3 +1,0 @@
-accessing
-hasDepth
-	^ hasDepth

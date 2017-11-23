@@ -1,3 +1,0 @@
-accessing
-bufferSize
-	^ capacity * elementSize

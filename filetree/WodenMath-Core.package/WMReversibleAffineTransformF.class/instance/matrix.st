@@ -1,4 +1,0 @@
-accessing
-matrix
-	<accessor>
-	^ matrix

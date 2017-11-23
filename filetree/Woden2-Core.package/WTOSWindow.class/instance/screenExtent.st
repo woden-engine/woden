@@ -1,3 +1,0 @@
-accessing
-screenExtent
-	^ screenWidth @ screenHeight

@@ -1,4 +1,0 @@
-accessing
-ny
-	<accessor>
-	^ ny

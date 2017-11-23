@@ -1,3 +1,0 @@
-serialization
-asJsonData
-	^ nil.

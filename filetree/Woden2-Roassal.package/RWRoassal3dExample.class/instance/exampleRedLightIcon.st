@@ -1,8 +1,0 @@
-icons
-exampleRedLightIcon
-	^ 'iVBORw0KGgoAAAANSUhEUgAAAGQAAAA8CAYAAACQPx/OAAAA60lEQVR4XuXYMQqEMBBAUe+R
-g9gs5EgWaexy2/SewFWLRVDQBZHoG/h9mEeaaaYZ/arKX4IP4ueD+CB+PogP4ueD+CB+PogP
-4ueD+PkgPoifD+KD+PkgPoifD+KD+Pkgfj6ID+Lng/ggtxZjHHPOp6vhzX3bLqWUDnscyLzk
-f+bOt31C+C1/6LpNpZTDfJCLf8IehA/ig/ggPogP4oP4ID6ID+KD+CA+iA+CgOydS9ZIrwTx
-j4t+PogP4ueD+PkgPoifD+KD+PkgPoifD+KD+Pkgfj6ID+Lng/ggfj6ID+Lng/ggfj6Inw9S
-eV8Nv4mK+h1sGQAAAABJRU5ErkJggg=='

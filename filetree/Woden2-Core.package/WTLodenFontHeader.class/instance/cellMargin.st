@@ -1,4 +1,0 @@
-accessing
-cellMargin
-	<accessor>
-	^ cellMargin

@@ -1,1 +1,0 @@
-I represent a three dimensional vector whose fields are single precision floating point value.

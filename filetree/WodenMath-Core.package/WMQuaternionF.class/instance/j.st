@@ -1,4 +1,0 @@
-accessing
-j
-	<accessor>
-	^ j

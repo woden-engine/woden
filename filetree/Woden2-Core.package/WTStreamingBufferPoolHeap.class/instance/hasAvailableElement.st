@@ -1,3 +1,0 @@
-accessing
-hasAvailableElement
-	^ size < capacity

@@ -1,4 +1,0 @@
-accessing
-samplersPerSecond
-	<accessor>
-	^ samplersPerSecond

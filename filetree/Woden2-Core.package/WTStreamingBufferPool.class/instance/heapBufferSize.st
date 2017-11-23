@@ -1,3 +1,0 @@
-private
-heapBufferSize
-	^ heapSize * elementSize

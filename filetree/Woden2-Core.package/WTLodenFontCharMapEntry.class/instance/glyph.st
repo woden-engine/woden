@@ -1,4 +1,0 @@
-accessing
-glyph
-	<accessor>
-	^ glyph

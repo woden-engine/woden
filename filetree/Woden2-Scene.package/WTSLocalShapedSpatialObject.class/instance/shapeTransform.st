@@ -1,3 +1,0 @@
-accessing
-shapeTransform
-	^ shapeTransform

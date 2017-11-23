@@ -1,4 +1,0 @@
-accessing
-transform
-	<accessor>
-	^ transform

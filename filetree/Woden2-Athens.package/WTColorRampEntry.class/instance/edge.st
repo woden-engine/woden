@@ -1,4 +1,0 @@
-accessing
-edge
-	<accessor>
-	^ edge

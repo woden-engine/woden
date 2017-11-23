@@ -1,3 +1,0 @@
-changing
-changedSelectionState
-	self invalidateModels

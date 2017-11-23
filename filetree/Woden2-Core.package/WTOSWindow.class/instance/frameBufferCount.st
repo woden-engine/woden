@@ -1,3 +1,0 @@
-accessing
-frameBufferCount
-	^ swapChain getFramebufferCount

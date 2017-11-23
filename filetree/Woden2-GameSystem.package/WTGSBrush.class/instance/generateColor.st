@@ -1,3 +1,0 @@
-initialization
-generateColor
-	^ BrushColors atRandom

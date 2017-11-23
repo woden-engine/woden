@@ -1,3 +1,0 @@
-testing
-isUsedInPlayMode
-	^ true

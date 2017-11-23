@@ -1,3 +1,0 @@
-structure
-world
-	^ self

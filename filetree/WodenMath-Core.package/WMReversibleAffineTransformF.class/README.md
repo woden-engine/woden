@@ -1,1 +1,0 @@
-I am builder for reversible affine transforms that avoids performing matrix inversion.

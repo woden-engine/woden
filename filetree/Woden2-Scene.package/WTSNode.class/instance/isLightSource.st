@@ -1,3 +1,0 @@
-testing
-isLightSource
-	^ false

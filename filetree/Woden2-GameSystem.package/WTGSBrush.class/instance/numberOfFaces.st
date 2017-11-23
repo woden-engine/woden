@@ -1,3 +1,0 @@
-accessing
-numberOfFaces
-	^ faces size

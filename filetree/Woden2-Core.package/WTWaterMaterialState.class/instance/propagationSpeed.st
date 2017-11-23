@@ -1,4 +1,0 @@
-accessing
-propagationSpeed
-	<accessor>
-	^ propagationSpeed

@@ -1,3 +1,0 @@
-converting
-asJsonData
-	^ self asRowMajorArray 

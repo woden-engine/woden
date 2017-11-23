@@ -1,3 +1,0 @@
-accessing
-playerEventHandler
-	^ self explicitRequirement

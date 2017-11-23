@@ -1,4 +1,0 @@
-accessing
-box
-	<accessor>
-	^ box

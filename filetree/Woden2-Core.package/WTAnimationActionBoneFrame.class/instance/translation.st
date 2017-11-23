@@ -1,4 +1,0 @@
-accessing
-translation
-	<accessor>
-	^ translation

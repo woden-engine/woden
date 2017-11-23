@@ -1,4 +1,0 @@
-accessing
-rotation
-	<accessor>
-	^ rotation

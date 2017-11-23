@@ -1,2 +1,0 @@
-changing
-changedSelectionState

@@ -1,3 +1,0 @@
-accessing
-preferredDepthStencilFormat
-	^ preferredDepthStencilFormat

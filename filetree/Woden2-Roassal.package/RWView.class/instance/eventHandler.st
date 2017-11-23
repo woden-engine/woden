@@ -1,3 +1,0 @@
-interaction
-eventHandler
-	^ eventHandler

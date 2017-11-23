@@ -1,4 +1,0 @@
-accessing
-numberOfCharMapEntries
-	<accessor>
-	^ numberOfCharMapEntries

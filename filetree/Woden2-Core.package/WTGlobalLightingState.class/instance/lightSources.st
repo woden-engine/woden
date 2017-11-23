@@ -1,4 +1,0 @@
-accessing
-lightSources
-	<accessor>
-	^ lightSources

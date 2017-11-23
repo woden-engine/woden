@@ -1,3 +1,0 @@
-accessing
-numberOfEntities
-	^ entities size

@@ -1,4 +1,0 @@
-accessing
-miscFlag
-	<accessor>
-	^ miscFlag

@@ -1,3 +1,0 @@
-defaults
-defaultArcSegmentLength
-	^ 3

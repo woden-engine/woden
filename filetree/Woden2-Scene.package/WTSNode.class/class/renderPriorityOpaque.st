@@ -1,3 +1,0 @@
-accessing
-renderPriorityOpaque
-	^ RenderPriorityOpaque

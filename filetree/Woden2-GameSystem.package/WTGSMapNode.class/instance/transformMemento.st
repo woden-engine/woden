@@ -1,3 +1,0 @@
-memento
-transformMemento
-	^ nil

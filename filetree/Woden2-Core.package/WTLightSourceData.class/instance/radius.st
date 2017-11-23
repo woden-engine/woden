@@ -1,4 +1,0 @@
-accessing
-radius
-	<accessor>
-	^ radius

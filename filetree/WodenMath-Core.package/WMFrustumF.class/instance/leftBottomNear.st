@@ -1,3 +1,0 @@
-accessing
-leftBottomNear
-	^ leftBottomNear

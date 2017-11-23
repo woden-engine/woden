@@ -1,4 +1,0 @@
-accessing
-max
-	<accessor>
-	^ max

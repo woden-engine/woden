@@ -1,3 +1,0 @@
-configuration
-defaultSize
-	^ 2

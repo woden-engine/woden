@@ -1,4 +1,0 @@
-accessing
-leftUndistortedProjectionInverseTransform
-	<accessor>
-	^ leftUndistortedProjectionInverseTransform

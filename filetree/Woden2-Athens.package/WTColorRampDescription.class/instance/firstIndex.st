@@ -1,4 +1,0 @@
-accessing
-firstIndex
-	<accessor>
-	firstIndex

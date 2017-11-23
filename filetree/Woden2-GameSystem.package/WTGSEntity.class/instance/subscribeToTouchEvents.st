@@ -1,3 +1,0 @@
-behaviors
-subscribeToTouchEvents
-	self map registerTouchListener: self

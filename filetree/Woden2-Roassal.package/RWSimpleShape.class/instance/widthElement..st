@@ -1,3 +1,0 @@
-accessing
-widthElement: aValueOrASymbolOrAOneArgBlock
-	width := aValueOrASymbolOrAOneArgBlock

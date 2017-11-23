@@ -1,3 +1,0 @@
-testing
-isEntity
-	^ false

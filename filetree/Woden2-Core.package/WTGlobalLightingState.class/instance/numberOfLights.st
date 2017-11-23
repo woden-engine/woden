@@ -1,4 +1,0 @@
-accessing
-numberOfLights
-	<accessor>
-	^ numberOfLights

@@ -1,4 +1,0 @@
-accessing
-chunkID
-	<accessor>
-	^ chunkID

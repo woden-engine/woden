@@ -1,2 +1,0 @@
-rendering
-renderContentOnWindow: aWindow frameIndex: frameIndex

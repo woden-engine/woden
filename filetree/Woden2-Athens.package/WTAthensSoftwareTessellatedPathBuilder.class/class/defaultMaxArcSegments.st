@@ -1,3 +1,0 @@
-defaults
-defaultMaxArcSegments
-	^ 16

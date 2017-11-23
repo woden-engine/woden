@@ -1,4 +1,0 @@
-accessing
-channels
-	<accessor>
-	^ channels

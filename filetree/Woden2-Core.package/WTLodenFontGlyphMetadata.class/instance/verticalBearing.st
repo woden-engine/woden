@@ -1,4 +1,0 @@
-accessing
-verticalBearing
-	<accessor>
-	^ verticalBearing

@@ -1,3 +1,0 @@
-accessing
-manipulatorBoxes
-	^ manipulatorBoxes

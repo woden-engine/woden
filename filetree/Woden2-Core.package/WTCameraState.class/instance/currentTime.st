@@ -1,4 +1,0 @@
-accessing
-currentTime
-	<accessor>
-	^ currentTime

@@ -1,3 +1,0 @@
-tests
-testAccessor
-	^ self color

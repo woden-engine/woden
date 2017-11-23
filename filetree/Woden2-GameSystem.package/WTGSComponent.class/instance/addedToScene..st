@@ -1,2 +1,0 @@
-adding
-addedToScene: anScene

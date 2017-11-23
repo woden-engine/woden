@@ -1,3 +1,0 @@
-accessing
-albedoTexture
-	^ albedoTexture

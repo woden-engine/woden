@@ -1,3 +1,0 @@
-factory
-createDynamicsWorld
-	self subclassResponsibility

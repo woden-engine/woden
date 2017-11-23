@@ -1,1 +1,0 @@
-I represent a 4x4 column major matrix, whose fields are single precision floating point numbers.

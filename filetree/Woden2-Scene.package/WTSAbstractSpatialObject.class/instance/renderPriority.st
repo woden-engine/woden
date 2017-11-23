@@ -1,3 +1,0 @@
-accessing
-renderPriority
-	^ renderPriority

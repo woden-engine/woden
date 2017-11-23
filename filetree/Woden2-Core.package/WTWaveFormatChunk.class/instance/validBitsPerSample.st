@@ -1,4 +1,0 @@
-accessing
-validBitsPerSample
-	<accessor>
-	^ validBitsPerSample

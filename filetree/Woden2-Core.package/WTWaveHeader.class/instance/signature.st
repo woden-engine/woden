@@ -1,4 +1,0 @@
-accessing
-signature
-	<accessor>
-	^ signature

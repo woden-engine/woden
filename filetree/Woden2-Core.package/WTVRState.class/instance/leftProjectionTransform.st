@@ -1,4 +1,0 @@
-accessing
-leftProjectionTransform
-	<accessor>
-	^ leftProjectionTransform

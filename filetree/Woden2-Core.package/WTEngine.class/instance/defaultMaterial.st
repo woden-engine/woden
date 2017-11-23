@@ -1,3 +1,0 @@
-accessing
-defaultMaterial
-	^ resourceCache defaultMaterial

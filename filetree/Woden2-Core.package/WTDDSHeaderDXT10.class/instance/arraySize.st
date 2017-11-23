@@ -1,4 +1,0 @@
-accessing
-arraySize
-	<accessor>
-	^ arraySize

@@ -1,4 +1,0 @@
-accessing
-rgbBitCount
-	<accessor>
-	^ rgbBitCount

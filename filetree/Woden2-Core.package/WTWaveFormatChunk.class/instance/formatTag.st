@@ -1,4 +1,0 @@
-accessing
-formatTag
-	<accessor>
-	^ formatTag

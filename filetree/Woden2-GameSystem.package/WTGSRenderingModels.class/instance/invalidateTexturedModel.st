@@ -1,3 +1,0 @@
-rendering
-invalidateTexturedModel
-	invalidTexturedModel := true.

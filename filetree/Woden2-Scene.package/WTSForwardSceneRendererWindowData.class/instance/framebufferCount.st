@@ -1,3 +1,0 @@
-accessing
-framebufferCount
-	^ framebufferCount
