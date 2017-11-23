@@ -9,3 +9,4 @@ bash scripts/build-agpu.sh || exit 1
 bash scripts/build-aphy.sh || exit 1
 bash scripts/build-core-assets.sh || exit 1
 bash scripts/build-lowtalk.sh || exit 1
+bash scripts/build-phanide.sh || exit 1

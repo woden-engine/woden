@@ -1,3 +1,9 @@
+"Load Lowtalk"
+Metacello new
+  baseline: 'Lowtalk';
+  repository: 'filetree://lowtalk/filetree';
+  load.
+
 "Load Woden 2"
 "FileStream stdout nextPutAll: 'Loading Woden2'; lf.
 Metacello new

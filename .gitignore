@@ -3,6 +3,7 @@ build-64
 abstract-gpu
 abstract-physics
 core-assets
+lowtalk
 pharo-vm
 pharo
 pharo-ui
