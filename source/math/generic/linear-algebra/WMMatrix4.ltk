@@ -1,0 +1,82 @@
+WMMatrix4 category: 'comparing' methods: {
+:[= other -> BooleanBit.
+	^ WMMatrix4 == other class and:  
+		[ (m11 = other m11) and:
+		[ (m12 = other m12) and:
+		[ (m13 = other m13) and:
+		[ (m14 = other m14) and:
+		
+		[ (m21 = other m21) and:
+		[ (m22 = other m22) and:
+		[ (m23 = other m23) and:
+		[ (m24 = other m24) and:
+
+		[ (m31 = other m31) and:
+		[ (m32 = other m32) and:
+		[ (m33 = other m33) and:
+		[ (m34 = other m34) and:
+
+		[ (m41 = other m41) and:
+		[ (m42 = other m42) and:
+		[ (m43 = other m43) and:
+		[ (m44 = other m44) ]]]]]]]]]]]]]]]]
+].
+
+:[closeTo: other -> BooleanBit.
+	^ (m11 closeTo: other m11) and:
+		[ (m12 closeTo: other m12) and:
+		[ (m13 closeTo: other m13) and:
+		[ (m14 closeTo: other m14) and:
+		
+		[ (m21 closeTo: other m21) and:
+		[ (m22 closeTo: other m22) and:
+		[ (m23 closeTo: other m23) and:
+		[ (m24 closeTo: other m24) and:
+
+		[ (m31 closeTo: other m31) and:
+		[ (m32 closeTo: other m32) and:
+		[ (m33 closeTo: other m33) and:
+		[ (m34 closeTo: other m34) and:
+
+		[ (m41 closeTo: other m41) and:
+		[ (m42 closeTo: other m42) and:
+		[ (m43 closeTo: other m43) and:
+		[ (m44 closeTo: other m44) ]]]]]]]]]]]]]]]
+
+].
+
+:[hash
+	^ WMMatrix4 identityHash bitXor:
+		( m11 hash bitXor:
+		( m12 hash bitXor:
+		( m13 hash bitXor:
+		( m14 hash bitXor:
+		
+		( m21 hash bitXor:
+		( m22 hash bitXor:
+		( m23 hash bitXor:
+		( m24 hash bitXor:
+		
+		( m31 hash bitXor:
+		( m32 hash bitXor:
+		( m33 hash bitXor:
+		( m34 hash bitXor:
+		
+		( m41 hash bitXor:
+		( m42 hash bitXor:
+		( m43 hash bitXor:
+		( m44 hash))))))))))))))))
+
+].
+}.
+
+WMMatrix4 category: 'printing' methods: {
+:[printOn: aStream
+	aStream nextPutAll: WMMatrix4 name; nextPutAll: ' newFrom: #('; cr;
+		tab; print: m11; space; print: m12; space; print: m13; space; print: m14; cr;
+		tab; print: m21; space; print: m22; space; print: m23; space; print: m24; cr;
+		tab; print: m31; space; print: m32; space; print: m33; space; print: m34; cr;
+		tab; print: m41; space; print: m42; space; print: m43; space; print: m44; cr;
+		nextPut: $)
+]
+}.

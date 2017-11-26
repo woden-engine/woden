@@ -1,0 +1,82 @@
+WMVector4 class category: 'construction' methods: {
+:[x: <Scalar>x -> WMVector4.
+	^ WMVector4 newValue
+		x: x;
+		yourself
+].
+
+:[y: <Scalar>y -> WMVector4.
+	^ WMVector4 newValue
+		y: y;
+		yourself
+].
+
+:[z: <Scalar>z -> WMVector4.
+	^ WMVector4 newValue
+		z: z;
+		yourself
+].
+
+:[w: <Scalar>z -> WMVector4.
+	^ WMVector4 newValue
+		w: w;
+		yourself
+].
+
+:[x: <Scalar>x y: <Scalar>y z: <Scalar>z w: <Scalar>w -> WMVector4.
+	^ WMVector4 newValue
+		x: x;
+		y: y;
+		z: z;
+		w: w;
+		yourself
+].
+
+}.
+
+WMVector4 category: 'arithmetic' methods: {
+:[+ <WMVector4> other -> WMVector4.
+	^ WMVector4 x: x + other x y: y + other y z: z + other z w: w + other w
+].
+
+:[- <WMVector4> other -> WMVector4.
+	^ WMVector4 x: x - other x y: y - other y z: z - other z w: w - other w
+].
+
+:[dot: <WMVector4> other -> Scalar.
+	^ (x * other x) + (y * other y) + (z * other z) + (w * other w)
+].
+
+:[length2 -> Scalar.
+	^ (x * x) + (y * y) + (z * z) + (w * w)
+].
+
+:[length -> Scalar.
+	^ ((x * x) + (y * y) + (z * z) + (w * w)) sqrt
+].
+
+}.
+
+WMVector4 category: 'comparing' methods: {
+:[= other -> BooleanBit.
+	^ WMVector4 == other class and: [x = other x and: [y = other y and: [z = other z and: [w = other w]]]]
+].
+
+:[hash -> _DynamicObject.
+	^ (x hash bitXor: y hash) bitXor: z hash
+].
+
+:[closeTo: <WMVector4> other -> BooleanBit.
+	^ (x closeTo: other x) and: [(y closeTo: other y) and: [(z closeTo: other z) and: [w closeTo: other w]]]
+].
+}.
+
+WMVector4 category: 'printing' methods: {
+:[printOn: aStream
+	aStream nextPutAll: WMVector4 name;
+		nextPutAll: ' x: '; print: x;
+		nextPutAll: ' y: '; print: y;
+		nextPutAll: ' z: '; print: z;
+		nextPutAll: ' w: '; print: w.
+].
+}.

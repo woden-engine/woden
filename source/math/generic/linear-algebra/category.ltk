@@ -24,21 +24,30 @@ let WMVector4 := Structure <<< ('WMVector4' , typeNameSuffix) asSymbol
 	};
 	package: 'WodenMath-Core-LinearAlgebra';
 	yourself.
-	
+
 let WMMatrix2 := Structure <<< ('WMMatrix2' , typeNameSuffix) asSymbol
 	slots: {
+		#m11 => Scalar. #m12 => Scalar.
+		#m21 => Scalar. #m22 => Scalar.
 	};
 	package: 'WodenMath-Core-LinearAlgebra';
 	yourself.
 
 let WMMatrix3 := Structure <<< ('WMMatrix3' , typeNameSuffix) asSymbol
 	slots: {
+		#m11 => Scalar. #m12 => Scalar. #m13 => Scalar. (#pad1 => Scalar) private.
+		#m21 => Scalar. #m22 => Scalar. #m23 => Scalar. (#pad2 => Scalar) private.
+		#m31 => Scalar. #m32 => Scalar. #m33 => Scalar. (#pad3 => Scalar) private.
 	};
 	package: 'WodenMath-Core-LinearAlgebra';
 	yourself.
-	
+
 let WMMatrix4 := Structure <<< ('WMMatrix4' , typeNameSuffix) asSymbol
 	slots: {
+		#m11 => Scalar. #m12 => Scalar. #m13 => Scalar. #m14 => Scalar.
+		#m21 => Scalar. #m22 => Scalar. #m23 => Scalar. #m24 => Scalar.
+		#m31 => Scalar. #m32 => Scalar. #m33 => Scalar. #m34 => Scalar.
+		#m41 => Scalar. #m42 => Scalar. #m43 => Scalar. #m44 => Scalar.
 	};
 	package: 'WodenMath-Core-LinearAlgebra';
 	yourself.

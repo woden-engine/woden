@@ -40,8 +40,8 @@ WMVector2 category: 'arithmetic' methods: {
 }.
 
 WMVector2 category: 'comparing' methods: {
-:[= <WMVector2> other -> BooleanBit.
-	^ x = other x and: [y = other y]
+:[= other -> BooleanBit.
+	^ WMVector2 == other class and: [x = other x and: [y = other y]]
 ].
 
 :[hash -> _DynamicObject.
