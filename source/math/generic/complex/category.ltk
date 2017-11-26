@@ -1,12 +1,22 @@
 let WMComplex := Structure <<< ('WMComplex' , typeNameSuffix) asSymbol
 	slots: {
-	};
-	package: 'WodenMath-Core-Complex';
-	yourself.
-	
-let WMQuaternion := Structure <<< ('WMQuaternion' , typeNameSuffix) asSymbol
-	slots: {
+		#r => Scalar.
+		#i => Scalar.
 	};
 	package: 'WodenMath-Core-Complex';
 	yourself.
 
+let WMQuaternion := Structure <<< ('WMQuaternion' , typeNameSuffix) asSymbol
+	slots: {
+		#i => Scalar.
+		#j => Scalar.
+		#k => Scalar.
+		#r => Scalar.
+	};
+	package: 'WodenMath-Core-Complex';
+	yourself.
+
+Compiler
+	evaluateFileNamedInThisContext: 'WMComplex.ltk';
+	evaluateFileNamedInThisContext: 'WMQuaternion.ltk';
+	yourself.
