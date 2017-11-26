@@ -1,0 +1,15 @@
+Class <<< #WMQuaternionDTest
+	superclass: WMQuaternionTest;
+	package: #'WodenMath-Tests';
+	slots: {
+	};
+	yourself. 
+
+WMQuaternionDTest category: #running methods: {
+:[setUp
+	quaternionClass := WMQuaternionD.
+	vector3Class := WMVector3D.
+	matrix3Class := WMMatrix3D.
+].
+}.
+

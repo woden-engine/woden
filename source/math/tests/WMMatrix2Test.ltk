@@ -1,0 +1,145 @@
+Class <<< #WMMatrix2Test
+	superclass: TestCase;
+	package: #'WodenMath-Tests';
+	slots: {
+		#matrix2Class.
+	};
+	yourself. 
+
+WMMatrix2Test class category: #testing methods: {
+:[isAbstract
+	^ self == WMMatrix2Test
+].
+}.
+
+WMMatrix2Test category: #tests methods: {
+:[testAccessors
+	| m |
+	m := matrix2Class new.
+	m
+		m11: 1.0; m12: 2.0;
+		m21: 3.0; m22: 4.0.
+	self assert: m m11 equals: 1.0.
+	self assert: m m12 equals: 2.0.
+
+	self assert: m m21 equals: 3.0.
+	self assert: m m22 equals: 4.0.
+
+].
+
+:[testAdd
+	| a b |
+	a := matrix2Class ones.
+	b := matrix2Class ones.
+	
+	self assert: (a + b) asRowMajorFloatArray equals: #(
+		2.0 2.0
+		2.0 2.0
+	) asFloatArray
+].
+
+:[testConstructor
+	| m |
+	m := matrix2Class 
+		m11: 1.0 m12: 2.0
+		m21: 3.0 m22: 4.0.
+	self assert: m m11 equals: 1.0.
+	self assert: m m12 equals: 2.0.
+
+	self assert: m m21 equals: 3.0.
+	self assert: m m22 equals: 4.0.
+
+].
+
+:[testEquals
+	| a b c |
+	a := matrix2Class ones.
+	b := matrix2Class ones.
+	c := matrix2Class zeros.
+	self assert: a equals: b.
+	self deny: a = c.
+	self deny: b = c.
+].
+
+:[testHash
+	| a b |
+	a := matrix2Class ones.
+	b := matrix2Class ones.
+	self assert: a hash equals: b hash.
+].
+
+:[testIdentity
+	| m |
+	m := matrix2Class identity.
+	self assert: m asRowMajorFloatArray equals: #(
+		1.0 0.0
+		0.0 1.0
+	) asFloatArray
+].
+
+:[testMultiplyIdentity
+	| a b |
+	a := matrix2Class ones.
+	b := matrix2Class identity.
+	
+	self assert: (a * b) asRowMajorFloatArray equals: #(
+		1.0 1.0
+		1.0 1.0
+	) asFloatArray.
+	self assert: (b * a) asRowMajorFloatArray equals: #(
+		1.0 1.0
+		1.0 1.0
+	) asFloatArray.
+].
+
+:[testNew
+	| m |
+	m := matrix2Class new.
+	self assert: m asRowMajorFloatArray equals: #(
+		0.0 0.0
+		0.0 0.0
+	) asFloatArray
+].
+
+:[testOnes
+	| m |
+	m := matrix2Class ones.
+	
+	self assert: m asRowMajorFloatArray equals: #(
+		1.0 1.0
+		1.0 1.0
+	) asFloatArray
+].
+
+:[testSubtract
+	| a b |
+	a := matrix2Class ones.
+	b := matrix2Class ones.
+	
+	self assert: (a - b) asRowMajorFloatArray equals: #(
+		0.0 0.0
+		0.0 0.0
+	) asFloatArray
+].
+
+:[testZeros
+	| m |
+	m := matrix2Class zeros.
+	self assert: m asRowMajorFloatArray equals: #(
+		0.0 0.0
+		0.0 0.0
+	) asFloatArray
+].
+
+:[testasColumnMajorFloatArray
+	| m |
+	m := matrix2Class 
+		m11: 1.0 m12: 2.0
+		m21: 3.0 m22: 4.0.
+	self assert: m asColumnMajorFloatArray equals: #(
+		1.0 3.0
+		2.0 4.0
+	) asFloatArray
+].
+}.
+

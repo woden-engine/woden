@@ -1,0 +1,173 @@
+Class <<< #WMVector4Test
+	superclass: TestCase;
+	package: #'WodenMath-Tests';
+	slots: {
+		#vector4Class.
+	};
+	yourself. 
+
+WMVector4Test class category: #testing methods: {
+:[isAbstract
+	^ self == WMVector4Test
+].
+}.
+
+WMVector4Test category: #tests methods: {
+:[testAccessors
+	| v |
+	v := vector4Class new.
+	v x: 1.0; y: 2.0; z: 3.0; w: 4.0.
+	self assert: v x equals: 1.0.
+	self assert: v y equals: 2.0.
+	self assert: v z equals: 3.0.
+	self assert: v w equals: 4.0.
+].
+
+:[testAdd
+	| a b result |
+	a := vector4Class x: 1.0 y: 2.0 z: 3.0 w: 4.0.
+	b := vector4Class x: 4.0 y: 7.0 z: 10.0 w: 12.0.
+	result := vector4Class x: 5.0 y: 9.0 z: 13.0 w: 16.0.
+	self assert: a + b equals: result
+].
+
+:[testAsColor
+	| v |
+	v := vector4Class x: 1.0 y: 1.0 z: 1.0 w: 1.0.
+	self assert: (v asColor closeTo: Color white).
+].
+
+:[testCloseTo
+	| a b c |
+	a := vector4Class x: 1.0 y: 2.0 z: 3.0 w: 4.0.
+	b := vector4Class x: 3.0 y: 4.0 z: 5.0 w: 6.0.
+	c := vector4Class x: 3.0 y: 4.0 z: 5.0 w: 6.0.
+	self assert: (b closeTo: c).
+	self deny: (a closeTo: b).
+	self deny: (a closeTo: c).
+	
+].
+
+:[testConstruct
+	| v |
+	v := vector4Class x: 1.0 y: 2.0 z: 3.0 w: 4.0.
+	self assert: v x equals: 1.0.
+	self assert: v y equals: 2.0.
+	self assert: v z equals: 3.0.
+	self assert: v w equals: 4.0.
+].
+
+:[testConstructPair
+	self assert: (vector4Class x: 1.0 y: 2.0) equals: (vector4Class x: 1.0 y: 2.0 z: 0.0 w: 0.0).
+].
+
+:[testConstructSingle
+	self assert: (vector4Class x: 1.0) equals: (vector4Class x: 1.0 y: 0.0 z: 0.0 w: 0.0).
+	self assert: (vector4Class y: 1.0) equals: (vector4Class x: 0.0 y: 1.0 z: 0.0 w: 0.0).
+	self assert: (vector4Class z: 1.0) equals: (vector4Class x: 0.0 y: 0.0 z: 1.0 w: 0.0).
+	self assert: (vector4Class w: 1.0) equals: (vector4Class x: 0.0 y: 0.0 z: 0.0 w: 1.0).
+].
+
+:[testConstructTrio
+	self assert: (vector4Class x: 1.0 y: 2.0 z: 3.0) equals: (vector4Class x: 1.0 y: 2.0 z: 3.0 w: 0.0).
+].
+
+:[testDivide
+	| a b result |
+	a := vector4Class x: 1.0 y: 2.0 z: 3.0 w: 4.0.
+	b := vector4Class x: 4.0 y: 7.0 z: 9.0 w: 12.0.
+	result := vector4Class x: 0.25 y: 2.0 / 7.0 z: 1.0 / 3.0 w: 1.0 / 3.0.
+	self assert: (a / b closeTo: result)
+].
+
+:[testDivideScalar
+	| a b result |
+	a := vector4Class x: 1.0 y: 2.0 z: 3.0 w: 4.0.
+	b := 2.0.
+	result := vector4Class x: 0.5 y: 1.0 z: 1.5 w: 2.0.
+	self assert: (a / b closeTo: result)
+].
+
+:[testDot
+	| a b |
+	a := vector4Class x: 1.0 y: 2.0 z: 3.0 w: 4.0.
+	b := vector4Class x: 4.0 y: 7.0 z: 8.0 w: 9.0.
+	self assert: (a dot: b) equals: 4.0 + 14.0 + 24.0 + 36.0
+].
+
+:[testEquals
+	| a b c |
+	a := vector4Class x: 1.0 y: 2.0 z: 3.0 w: 4.0.
+	b := vector4Class x: 3.0 y: 4.0 z: 5.0 w: 6.0.
+	c := vector4Class x: 3.0 y: 4.0 z: 5.0 w: 6.0.
+	self assert: b equals:  c.
+	self deny: a = b.
+	self deny: a = c.
+	
+].
+
+:[testFromColor
+	| v |
+	v := vector4Class x: 1.0 y: 1.0 z: 1.0 w: 1.0.
+	self assert: ((Color white perform: (#as , vector4Class name) asSymbol) closeTo: v).
+].
+
+:[testHash
+	| b c |
+	b := vector4Class x: 3.0 y: 4.0 z: 5.0 w: 6.0.
+	c := vector4Class x: 3.0 y: 4.0 z: 5.0 w: 6.0.
+	self assert: b hash equals: c hash.
+].
+
+:[testLength
+	| v |
+	v := vector4Class x: 2.0 y: 2.0 z: 2.0 w: 2.0.
+	self assert: (v length closeTo: 4.0)
+].
+
+:[testLength2
+	| v |
+	v := vector4Class x: 2.0 y: 2.0 z: 2.0 w: 2.0.
+	self assert: v length2 equals: 16.0.
+].
+
+:[testMultiply
+	| a b result |
+	a := vector4Class x: 1.0 y: 2.0 z: 3.0 w: 4.0.
+	b := vector4Class x: 4.0 y: 7.0 z: 10.0 w: 12.0.
+	result := vector4Class x: 4.0 y: 14.0 z: 30.0 w: 48.0.
+	self assert: a * b equals: result
+].
+
+:[testMultiplyScalar
+	| a b result |
+	a := vector4Class x: 1.0 y: 2.0 z: 3.0 w: 4.0.
+	b := 3.0.
+	result := vector4Class x: 3.0 y: 6.0 z: 9.0 w: 12.0.
+	self assert: a * b equals: result
+].
+
+:[testNew
+	| v |
+	v := vector4Class new.
+	self assert: v x equals: 0.0.
+	self assert: v y equals: 0.0.
+	self assert: v z equals: 0.0.
+	self assert: v w equals: 0.0.
+].
+
+:[testNormalized
+	| a |
+	a := vector4Class x: 1.0 y: 2.0 z: 3.0 w: 4.0.
+	self assert: (a normalized length closeTo: 1.0)
+].
+
+:[testSub
+	| a b result |
+	a := vector4Class x: 1.0 y: 2.0 z: 3.0 w: 4.0.
+	b := vector4Class x: 4.0 y: 7.0 z: 10.0 w: 12.0.
+	result := vector4Class x: -3.0 y: -5.0 z: -7.0 w: -8.0.
+	self assert: a - b equals: result
+].
+}.
+

@@ -1,0 +1,62 @@
+WMVector2 class category: 'construction' methods: {
+:[x: <Scalar>x -> WMVector2.
+	^ WMVector2 newValue
+		x: x;
+		yourself
+].
+
+:[y: <Scalar>y -> WMVector2.
+	^ WMVector2 newValue
+		y: y;
+		yourself
+].
+
+:[x: <Scalar>x y: <Scalar>y -> WMVector2.
+	^ WMVector2 newValue
+		x: x;
+		y: y;
+		yourself
+].
+
+}.
+
+WMVector2 category: 'arithmetic' methods: {
+:[+ <WMVector2> other -> WMVector2.
+	^ WMVector2 x: x + other x y: y + other y
+].
+
+:[- <WMVector2> other -> WMVector2.
+	^ WMVector2 x: x - other x y: y - other y
+].
+
+:[dot: <WMVector2> other -> Scalar.
+	^ (x * other x) + (y * other y)
+].
+
+:[length2 -> Scalar.
+	^ (x * x) + (y * y)
+].
+
+}.
+
+WMVector2 category: 'comparing' methods: {
+:[= <WMVector2> other -> BooleanBit.
+	^ x = other x and: [y = other y]
+].
+
+:[hash -> _DynamicObject.
+	^ x hash bitXor: y hash
+].
+
+:[closeTo: <WMVector2> other -> BooleanBit.
+	^ (x closeTo: other x) and: [y closeTo: other y]
+].
+}.
+
+WMVector2 category: 'printing' methods: {
+:[printOn: aStream
+	aStream nextPutAll: WMVector2 name;
+		nextPutAll: ' x: '; print: x;
+		nextPutAll: ' y: '; print: y.
+].
+}.

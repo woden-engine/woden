@@ -1,0 +1,14 @@
+Class <<< #WMBox3DDTest
+	superclass: WMBox3DTest;
+	package: #'WodenMath-Tests';
+	slots: {
+	};
+	yourself. 
+
+WMBox3DDTest category: #running methods: {
+:[setUp
+	boxClass := WMBox3DD.
+	vector3Class := WMVector3D.
+].
+}.
+

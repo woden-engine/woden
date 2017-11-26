@@ -1,0 +1,6 @@
+let WMReversibleAffineTransform := Structure <<< ('WMReversibleAffineTransform' , typeNameSuffix) asSymbol
+	slots: {
+	};
+	package: 'WodenMath-Core-Transforms';
+	yourself.
+	

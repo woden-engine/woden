@@ -1,0 +1,14 @@
+Class <<< #WMPlaneFTest
+	superclass: WMPlaneTest;
+	package: #'WodenMath-Tests';
+	slots: {
+	};
+	yourself. 
+
+WMPlaneFTest category: #running methods: {
+:[setUp
+	planeClass := WMPlaneF.
+	vector3Class := WMVector3F.
+].
+}.
+

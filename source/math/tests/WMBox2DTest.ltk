@@ -1,0 +1,101 @@
+Class <<< #WMBox2DTest
+	superclass: TestCase;
+	package: #'WodenMath-Tests';
+	slots: {
+		#boxClass.
+		#vector2Class.
+	};
+	yourself. 
+
+WMBox2DTest class category: #'as yet unclassified' methods: {
+:[isAbstract
+	^ self == WMBox2DTest
+].
+}.
+
+WMBox2DTest category: #tests methods: {
+:[testAccessors
+	| b |
+	b := boxClass new.
+	b
+		min: (vector2Class x: -1.0 y: -2.0);
+		max: (vector2Class x: 1.0 y: 2.0).
+		
+	self assert: b min x equals: -1.0.
+	self assert: b min y equals: -2.0.
+	
+	self assert: b max x equals: 1.0.
+	self assert: b max y equals: 2.0.
+].
+
+:[testCorners
+	| box zeroPoint |
+	box := boxClass nx: -1.0 ny: -1.0 px: 1.0 py: 1.0.
+	zeroPoint := vector2Class new.
+	self deny: box isEmpty.
+	self assert: box min equals: (vector2Class x: -1.0 y: -1.0).
+	self assert: box max equals: (vector2Class x: 1.0 y: 1.0).
+	self assert: box bottomLeft equals: (vector2Class x: -1.0 y: -1.0).
+	self assert: box bottomRight equals: (vector2Class x: 1.0 y: -1.0).
+	self assert: box topLeft equals: (vector2Class x: -1.0 y: 1.0).
+	self assert: box topRight equals: (vector2Class x: 1.0 y: 1.0).
+	
+].
+
+:[testEmpty
+	| box |
+	box := boxClass empty.
+	self assert: box isEmpty.
+].
+
+:[testInsertBox
+	| box min max |
+	min := vector2Class new.
+	max := vector2Class x: 1.0 y: 1.0.
+	box := boxClass empty
+		insertBox: (boxClass min: min max: max).
+	self deny: box isEmpty.
+	self assert: box min equals: min.
+	self assert: box max equals: max.
+].
+
+:[testInsertPoint
+	| box point |
+	point := vector2Class new.
+	box := boxClass empty insertPoint: point.
+	self deny: box isEmpty.
+	self assert: box min equals: point.
+	self assert: box max equals: point.
+].
+
+:[testInsertPoint2
+	| box min max |
+	min := vector2Class new.
+	max := vector2Class x: 1.0 y: 1.0.
+	box := boxClass empty
+		insertPoint: min;
+		insertPoint: max;
+		yourself.
+	self deny: box isEmpty.
+	self assert: box min equals: min.
+	self assert: box max equals: max.
+].
+
+:[testMakeEmpty
+	| box |
+	box := boxClass new.
+	self deny: box isEmpty.
+	box makeEmpty.
+	self assert: box isEmpty.
+].
+
+:[testNew
+	| box zeroPoint |
+	box := boxClass new.
+	zeroPoint := vector2Class new.
+	self deny: box isEmpty.
+	self assert: box min equals: zeroPoint.
+	self assert: box max equals: zeroPoint.
+].
+}.
+

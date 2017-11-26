@@ -1,3 +1,9 @@
+"Load Phanide"
+Metacello new
+  baseline: 'Phanide';
+  repository: 'filetree://phanide/filetree';
+  load.
+
 "Load Lowtalk"
 Metacello new
   baseline: 'Lowtalk';

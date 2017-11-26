@@ -1,0 +1,12 @@
+let GenericMath := [:Scalar :typeNameSuffix |
+	<compileTimeOnly>
+	Compiler
+		evaluateFileNamedInThisContext: 'complex/category.ltk';
+		evaluateFileNamedInThisContext: 'linear-algebra/category.ltk';
+		evaluateFileNamedInThisContext: 'geometry/category.ltk';
+		evaluateFileNamedInThisContext: 'transforms/category.ltk';
+		yourself
+].
+
+GenericMath #{Float32 . 'F'}.
+GenericMath #{Float64 . 'D'}.

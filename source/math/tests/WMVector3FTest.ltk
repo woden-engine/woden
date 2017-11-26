@@ -1,0 +1,13 @@
+Class <<< #WMVector3FTest
+	superclass: WMVector3Test;
+	package: #'WodenMath-Tests';
+	slots: {
+	};
+	yourself. 
+
+WMVector3FTest category: #running methods: {
+:[setUp
+	vector3Class := WMVector3F.
+].
+}.
+

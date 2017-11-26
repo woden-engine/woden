@@ -1,0 +1,4 @@
+Compiler
+	evaluateFileNamed: 'generic/package.ltk';
+	evaluateFileNamed: 'tests/package.ltk';
+	yourself

@@ -1,0 +1,13 @@
+Class <<< #WMMatrix3DTest
+	superclass: WMMatrix3Test;
+	package: #'WodenMath-Tests';
+	slots: {
+	};
+	yourself. 
+
+WMMatrix3DTest category: #running methods: {
+:[setUp
+	matrix3Class := WMMatrix3D.
+].
+}.
+

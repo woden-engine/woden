@@ -1,0 +1,162 @@
+Class <<< #WMMatrix3Test
+	superclass: TestCase;
+	package: #'WodenMath-Tests';
+	slots: {
+		#matrix3Class.
+	};
+	yourself. 
+
+WMMatrix3Test class category: #testing methods: {
+:[isAbstract
+	^ self == WMMatrix3Test
+].
+}.
+
+WMMatrix3Test category: #tests methods: {
+:[testAccessors
+	| m |
+	m := matrix3Class new.
+	m
+		m11: 1.0; m12: 2.0; m13: 3.0;
+		m21: 4.0; m22: 5.0; m23: 6.0;
+		m31: 7.0; m32: 8.0; m33: 9.0.
+	self assert: m m11 equals: 1.0.
+	self assert: m m12 equals: 2.0.
+	self assert: m m13 equals: 3.0.
+
+	self assert: m m21 equals: 4.0.
+	self assert: m m22 equals: 5.0.
+	self assert: m m23 equals: 6.0.
+
+	self assert: m m31 equals: 7.0.
+	self assert: m m32 equals: 8.0.
+	self assert: m m33 equals: 9.0.
+
+].
+
+:[testAdd
+	| a b |
+	a := matrix3Class ones.
+	b := matrix3Class ones.
+	
+	self assert: (a + b) asRowMajorFloatArray equals: #(
+		2.0 2.0 2.0
+		2.0 2.0 2.0
+		2.0 2.0 2.0
+	) asFloatArray
+].
+
+:[testAsColumnMajorFloatArray
+	| m |
+	m := matrix3Class 
+		m11: 1.0 m12: 2.0 m13: 3.0
+		m21: 4.0 m22: 5.0 m23: 6.0
+		m31: 7.0 m32: 8.0 m33: 9.0.
+	self assert: m asColumnMajorFloatArray equals: #(
+		1.0 4.0 7.0
+		2.0 5.0 8.0
+		3.0 6.0 9.0
+	) asFloatArray
+].
+
+:[testEquals
+	| a b c |
+	a := matrix3Class ones.
+	b := matrix3Class ones.
+	c := matrix3Class zeros.
+	self assert: a equals: b.
+	self deny: a = c.
+	self deny: b = c.
+].
+
+:[testHash
+	| a b |
+	a := matrix3Class ones.
+	b := matrix3Class ones.
+	self assert: a hash equals: b hash.
+].
+
+:[testIdentity
+	| m |
+	m := matrix3Class identity.
+	self assert: m asRowMajorFloatArray equals: #(
+		1.0 0.0 0.0
+		0.0 1.0 0.0
+		0.0 0.0 1.0
+	) asFloatArray
+].
+
+:[testMultiplyIdentity
+	| a b |
+	a := matrix3Class ones.
+	b := matrix3Class identity.
+	
+	self assert: (a * b) asRowMajorFloatArray equals: #(
+		1.0 1.0 1.0
+		1.0 1.0 1.0
+		1.0 1.0 1.0
+	) asFloatArray.
+	self assert: (b * a) asRowMajorFloatArray equals: #(
+		1.0 1.0 1.0
+		1.0 1.0 1.0
+		1.0 1.0 1.0
+	) asFloatArray.
+].
+
+:[testNew
+	| m |
+	m := matrix3Class new.
+	self assert: m asRowMajorFloatArray equals: #(
+		0.0 0.0 0.0
+		0.0 0.0 0.0
+		0.0 0.0 0.0
+	) asFloatArray
+].
+
+:[testOnes
+	| m |
+	m := matrix3Class ones.
+	
+	self assert: m asRowMajorFloatArray equals: #(
+		1.0 1.0 1.0
+		1.0 1.0 1.0
+		1.0 1.0 1.0
+	) asFloatArray
+].
+
+:[testSubtract
+	| a b |
+	a := matrix3Class ones.
+	b := matrix3Class ones.
+	
+	self assert: (a - b) asRowMajorFloatArray equals: #(
+		0.0 0.0 0.0
+		0.0 0.0 0.0
+		0.0 0.0 0.0
+	) asFloatArray
+].
+
+:[testTransposed
+	| m |
+	m := matrix3Class 
+		m11: 1.0 m12: 2.0 m13: 3.0
+		m21: 4.0 m22: 5.0 m23: 6.0
+		m31: 7.0 m32: 8.0 m33: 9.0.
+	self assert: m transposed asRowMajorFloatArray equals: #(
+		1.0 4.0 7.0
+		2.0 5.0 8.0
+		3.0 6.0 9.0
+	) asFloatArray
+].
+
+:[testZeros
+	| m |
+	m := matrix3Class zeros.
+	self assert: m asRowMajorFloatArray equals: #(
+		0.0 0.0 0.0
+		0.0 0.0 0.0
+		0.0 0.0 0.0
+	) asFloatArray
+].
+}.
+

@@ -1,0 +1,12 @@
+let WMComplex := Structure <<< ('WMComplex' , typeNameSuffix) asSymbol
+	slots: {
+	};
+	package: 'WodenMath-Core-Complex';
+	yourself.
+	
+let WMQuaternion := Structure <<< ('WMQuaternion' , typeNameSuffix) asSymbol
+	slots: {
+	};
+	package: 'WodenMath-Core-Complex';
+	yourself.
+

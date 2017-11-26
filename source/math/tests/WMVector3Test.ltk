@@ -1,0 +1,156 @@
+Class <<< #WMVector3Test
+	superclass: TestCase;
+	package: #'WodenMath-Tests';
+	slots: {
+		#vector3Class.
+	};
+	yourself. 
+
+WMVector3Test class category: #'as yet unclassified' methods: {
+:[isAbstract
+	^ self == WMVector3Test
+].
+}.
+
+WMVector3Test category: #tests methods: {
+:[testAccessors
+	| v |
+	v := vector3Class new.
+	v x: 1.0; y: 2.0; z: 3.0.
+	self assert: v x equals: 1.0.
+	self assert: v y equals: 2.0.
+	self assert: v z equals: 3.0.
+].
+
+:[testAdd
+	| a b result |
+	a := vector3Class x: 1.0 y: 2.0 z: 3.0.
+	b := vector3Class x: 4.0 y: 7.0 z: 10.0.
+	result := vector3Class x: 5.0 y: 9.0 z: 13.0.
+	self assert: a + b equals: result
+].
+
+:[testCloseTo
+	| a b c |
+	a := vector3Class x: 1.0 y: 2.0 z: 3.0.
+	b := vector3Class x: 3.0 y: 4.0 z: 5.0.
+	c := vector3Class x: 3.0 y: 4.0 z: 5.0.
+	self assert: (b closeTo: c).
+	self deny: (a closeTo: b).
+	self deny: (a closeTo: c).
+	
+].
+
+:[testConstruct
+	| v |
+	v := vector3Class x: 1.0 y: 2.0 z: 3.0.
+	self assert: v x equals: 1.0.
+	self assert: v y equals: 2.0.
+	self assert: v z equals: 3.0.
+].
+
+:[testConstructPairs
+	self assert: (vector3Class x: 1.0 y: 2.0) equals: (vector3Class x: 1.0 y: 2.0 z: 0.0).
+	self assert: (vector3Class x: 1.0 z: 2.0) equals: (vector3Class x: 1.0 y: 0.0 z: 2.0).
+	self assert: (vector3Class y: 1.0 z: 2.0) equals: (vector3Class x: 0.0 y: 1.0 z: 2.0).
+].
+
+:[testConstructSingle
+	self assert: (vector3Class x: 1.0) equals: (vector3Class x: 1.0 y: 0.0 z: 0.0).
+	self assert: (vector3Class y: 1.0) equals: (vector3Class x: 0.0 y: 1.0 z: 0.0).
+	self assert: (vector3Class z: 1.0) equals: (vector3Class x: 0.0 y: 0.0 z: 1.0).
+].
+
+:[testCross
+	self assert: ((vector3Class x: 2.0) cross: (vector3Class y: 3.0)) equals: (vector3Class z: 6.0).
+	self assert: ((vector3Class y: 2.0) cross: (vector3Class z: 3.0)) equals: (vector3Class x: 6.0).
+	self assert: ((vector3Class z: 2.0) cross: (vector3Class x: 3.0)) equals: (vector3Class y: 6.0).
+].
+
+:[testDivide
+	| a b result |
+	a := vector3Class x: 1.0 y: 2.0 z: 3.0.
+	b := vector3Class x: 4.0 y: 7.0 z: 10.0.
+	result := vector3Class x: 0.25 y: 2.0 / 7.0 z: 0.3.
+	self assert: (a / b closeTo: result)
+].
+
+:[testDivideScalar
+	| a result |
+	a := vector3Class x: 1.0 y: 2.0 z: 3.0.
+	result := vector3Class x: 0.5 y: 1.0 z: 1.5.
+	self assert: (a / 2.0 closeTo: result)
+].
+
+:[testDot
+	| a b |
+	a := vector3Class x: 1.0 y: 2.0 z: 3.0.
+	b := vector3Class x: 4.0 y: 7.0 z: 8.0.
+	self assert: (a dot: b) equals: 4.0 + 14.0 + 24.0
+].
+
+:[testEquals
+	| b c |
+	b := vector3Class x: 3.0 y: 4.0 z: 5.0.
+	c := vector3Class x: 3.0 y: 4.0 z: 5.0.
+	self assert: b hash equals: c hash.
+].
+
+:[testLength
+	| v |
+	v := vector3Class x: 1.0 y: 2.0 z: 2.0.
+	self assert: (v length closeTo: 3.0)
+].
+
+:[testLength2
+	| v |
+	v := vector3Class x: 3.0 y: 4.0 z: 5.0.
+	self assert: v length2 equals: 50.0
+].
+
+:[testMultiply
+	| a b result |
+	a := vector3Class x: 1.0 y: 2.0 z: 3.0.
+	b := vector3Class x: 4.0 y: 7.0 z: 10.0.
+	result := vector3Class x: 4.0 y: 14.0 z: 30.0.
+	self assert: a * b equals: result
+].
+
+:[testMultiplyScalar
+	| a b result |
+	a := vector3Class x: 1.0 y: 2.0 z: 3.0.
+	b := 3.0.
+	result := vector3Class x: 3.0 y: 6.0 z: 9.0.
+	self assert: a * b equals: result
+].
+
+:[testNegated
+	| a b result |
+	a := vector3Class x: 1.0 y: 2.0 z: 3.0.
+	result := vector3Class x: -1.0 y: -2.0 z: -3.0.
+	self assert: a negated equals: result
+].
+
+:[testNew
+	| v |
+	v := vector3Class new.
+	self assert: v x equals: 0.0.
+	self assert: v y equals: 0.0.
+	self assert: v z equals: 0.0.
+].
+
+:[testNormalized
+	| a |
+	a := vector3Class x: 1.0 y: 2.0 z: 3.0.
+	self assert: (a normalized length closeTo: 1.0)
+].
+
+:[testSubtract
+	| a b result |
+	a := vector3Class x: 1.0 y: 2.0 z: 3.0.
+	b := vector3Class x: 4.0 y: 7.0 z: 10.0.
+	result := vector3Class x: -3.0 y: -5.0 z: -7.0.
+	self assert: a - b equals: result
+].
+}.
+

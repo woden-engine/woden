@@ -1,0 +1,41 @@
+let WMBox2D := Structure <<< ('WMBox2D' , typeNameSuffix) asSymbol
+	slots: {
+	};
+	package: 'WodenMath-Core-Geometry';
+	yourself.
+	
+let WMBox3D := Structure <<< ('WMBox3D' , typeNameSuffix) asSymbol
+	slots: {
+	};
+	package: 'WodenMath-Core-Geometry';
+	yourself.
+
+let WMFrustum := Structure <<< ('WMFrustum' , typeNameSuffix) asSymbol
+	slots: {
+	};
+	package: 'WodenMath-Core-Geometry';
+	yourself.
+
+let WMPlane := Structure <<< ('WMPlane' , typeNameSuffix) asSymbol
+	slots: {
+	};
+	package: 'WodenMath-Core-Geometry';
+	yourself.
+
+let WMRay := Structure <<< ('WMRay' , typeNameSuffix) asSymbol
+	slots: {
+	};
+	package: 'WodenMath-Core-Geometry';
+	yourself.
+
+let WMSphere := Structure <<< ('WMSphere' , typeNameSuffix) asSymbol
+	slots: {
+	};
+	package: 'WodenMath-Core-Geometry';
+	yourself.
+
+let WMRayIntersectionTestResult := Structure <<< ('WMRayIntersectionTestResult' , typeNameSuffix) asSymbol
+	slots: {
+	};
+	package: 'WodenMath-Core-Geometry';
+	yourself.

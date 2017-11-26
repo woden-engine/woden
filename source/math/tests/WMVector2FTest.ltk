@@ -1,0 +1,13 @@
+Class <<< #WMVector2FTest
+	superclass: WMVector2Test;
+	package: #'WodenMath-Tests';
+	slots: {
+	};
+	yourself. 
+
+WMVector2FTest category: #running methods: {
+:[setUp
+	vector2Class := WMVector2F.
+].
+}.
+

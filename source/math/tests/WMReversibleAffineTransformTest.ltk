@@ -1,0 +1,50 @@
+Class <<< #WMReversibleAffineTransformTest
+	superclass: TestCase;
+	package: #'WodenMath-Tests';
+	slots: {
+		#reversibleTransformClass.
+		#matrix4Class.
+		#matrix3Class.
+		#vector3Class.
+	};
+	yourself. 
+
+WMReversibleAffineTransformTest class category: #'as yet unclassified' methods: {
+:[isAbstract
+	^ self == WMReversibleAffineTransformTest
+].
+}.
+
+WMReversibleAffineTransformTest category: #tests methods: {
+:[testBuilding
+	| transform |
+	transform := reversibleTransformClass identity
+		scaleByX: 2.0 y: 3.0 z: 4.0;
+		rotateDegreesOnZ: 90.0;
+		translateByX: 1.0 y: 2.0 z: 3.0;
+		yourself.
+	
+	self assert: (transform matrix4 * transform inverseMatrix4 closeTo: matrix4Class identity).
+].
+
+:[testIdentity
+	| transform |
+	transform := reversibleTransformClass identity.
+	self assert: (transform matrix4 closeTo: matrix4Class identity).
+	self assert: (transform matrix closeTo: matrix3Class identity).
+	self assert: (transform translation closeTo: vector3Class new).
+	
+	self assert: (transform inverseMatrix4 closeTo: matrix4Class identity).
+	self assert: (transform inverseMatrix closeTo: matrix3Class identity).
+	self assert: (transform inverseTranslation closeTo: vector3Class new).
+
+].
+
+:[testSetIdentity
+	| transform |
+	transform := reversibleTransformClass new setIdentity.
+	self assert: (transform matrix4 closeTo: matrix4Class identity).
+	self assert: (transform inverseMatrix4 closeTo: matrix4Class identity).
+].
+}.
+

@@ -1,0 +1,14 @@
+Class <<< #WMBox2DFTest
+	superclass: WMBox2DTest;
+	package: #'WodenMath-Tests';
+	slots: {
+	};
+	yourself. 
+
+WMBox2DFTest category: #running methods: {
+:[setUp
+	boxClass := WMBox2DF.
+	vector2Class := WMVector2F.
+].
+}.
+

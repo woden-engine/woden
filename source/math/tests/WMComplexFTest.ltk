@@ -1,0 +1,14 @@
+Class <<< #WMComplexFTest
+	superclass: WMComplexTest;
+	package: #'WodenMath-Tests';
+	slots: {
+	};
+	yourself. 
+
+WMComplexFTest category: #running methods: {
+:[setUp
+	complexClass := WMComplexF.
+	vector2Class := WMVector2F.
+].
+}.
+

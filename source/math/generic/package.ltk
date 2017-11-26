@@ -1,0 +1,4 @@
+Compiler
+	declarePackage: #'WodenMath-Core';
+	evaluateFileNamed: 'genericMath.ltk';
+	yourself.

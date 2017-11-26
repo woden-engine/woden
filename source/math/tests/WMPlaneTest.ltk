@@ -1,0 +1,61 @@
+Class <<< #WMPlaneTest
+	superclass: TestCase;
+	package: #'WodenMath-Tests';
+	slots: {
+		#planeClass.
+		#vector3Class.
+	};
+	yourself. 
+
+WMPlaneTest class category: #'as yet unclassified' methods: {
+:[isAbstract
+	^ self == WMPlaneTest
+].
+}.
+
+WMPlaneTest category: #tests methods: {
+:[testConstruct
+	| plane |
+	plane := planeClass normal: (vector3Class x: 1.0) distance: 1.0.
+	self assert: plane nx equals: 1.0.
+	self assert: plane ny equals: 0.0.
+	self assert: plane nz equals: 0.0.
+	self assert: plane normal equals: (vector3Class x: 1.0).
+	self assert: plane d equals: 1.0.
+].
+
+:[testIntersectIntersect
+	| right top front intersection |
+	right := planeClass nx: 1.0 ny: 0.0 nz: 0.0 d: 1.0.
+	top := planeClass nx: 0.0 ny: 1.0 nz: 0.0 d: 2.0.
+	front := planeClass nx: 0.0 ny: 0.0 nz: 1.0 d: 3.0.
+
+	intersection := right intersect: top intersect: front.
+	self assert: (intersection closeTo: (vector3Class x: 1.0 y: 2.0 z: 3.0)).
+].
+
+:[testNew
+	| plane |
+	plane := planeClass new.
+	self assert: plane nx equals: 0.0.
+	self assert: plane ny equals: 0.0.
+	self assert: plane nz equals: 0.0.
+	self assert: plane normal equals: vector3Class new.
+	self assert: plane d equals: 0.0.
+].
+
+:[testPointDistance
+	| plane point |
+	plane := planeClass normal: (vector3Class x: 1.0) distance: 1.0.
+	point := vector3Class x: 2.0 y: 3.0 z: -60.0.
+	self assert: (plane pointDistance: point) equals: 1.0
+].
+
+:[testPointPointPoint
+	| plane |
+	plane := planeClass point: (vector3Class x: 0.0) point: (vector3Class x: 1.0) point: (vector3Class y: 1.0).
+	self assert: (plane normal closeTo: (vector3Class z: 1.0)).
+	self assert: (plane d closeTo: 0.0).
+].
+}.
+

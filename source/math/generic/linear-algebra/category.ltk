@@ -1,0 +1,49 @@
+let WMVector2 := Structure <<< ('WMVector2' , typeNameSuffix) asSymbol
+	slots: {
+		#x => Scalar.
+		#y => Scalar.
+	};
+	package: 'WodenMath-Core-LinearAlgebra';
+	yourself.
+
+let WMVector3 := Structure <<< ('WMVector3' , typeNameSuffix) asSymbol
+	slots: {
+		#x => Scalar.
+		#y => Scalar.
+		#z => Scalar.
+	};
+	package: 'WodenMath-Core-LinearAlgebra';
+	yourself.
+
+let WMVector4 := Structure <<< ('WMVector4' , typeNameSuffix) asSymbol
+	slots: {
+		#x => Scalar.
+		#y => Scalar.
+		#z => Scalar.
+		#w => Scalar.
+	};
+	package: 'WodenMath-Core-LinearAlgebra';
+	yourself.
+	
+let WMMatrix2 := Structure <<< ('WMMatrix2' , typeNameSuffix) asSymbol
+	slots: {
+	};
+	package: 'WodenMath-Core-LinearAlgebra';
+	yourself.
+
+let WMMatrix3 := Structure <<< ('WMMatrix3' , typeNameSuffix) asSymbol
+	slots: {
+	};
+	package: 'WodenMath-Core-LinearAlgebra';
+	yourself.
+	
+let WMMatrix4 := Structure <<< ('WMMatrix4' , typeNameSuffix) asSymbol
+	slots: {
+	};
+	package: 'WodenMath-Core-LinearAlgebra';
+	yourself.
+
+Compiler
+	evaluateFileNamedInThisContext: 'WMVector2.ltk';
+	evaluateFileNamedInThisContext: 'WMVector3.ltk';
+	yourself
