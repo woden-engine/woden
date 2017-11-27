@@ -53,6 +53,10 @@ let WMMatrix4 := Structure <<< ('WMMatrix4' , typeNameSuffix) asSymbol
 	yourself.
 
 Compiler
+	evaluateFileNamedInThisContext: 'WMMatrix2.ltk';
+	evaluateFileNamedInThisContext: 'WMMatrix3.ltk';
+	evaluateFileNamedInThisContext: 'WMMatrix4.ltk';
 	evaluateFileNamedInThisContext: 'WMVector2.ltk';
 	evaluateFileNamedInThisContext: 'WMVector3.ltk';
+	evaluateFileNamedInThisContext: 'WMVector4.ltk';
 	yourself

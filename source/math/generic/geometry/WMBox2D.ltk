@@ -1,0 +1,101 @@
+WMBox2D class category: 'construction' methods: {
+:[empty -> WMBox2D.
+	^ WMBox2D min: WMVector2 infinity max: WMVector2 negativeInfinity
+].
+
+:[min: <WMVector2>min max: <WMVector2>max -> WMBox2D.
+	^ WMBox2D newValue
+		min: min;
+		max: max;
+		yourself
+].
+
+:[nx: <Scalar>nx ny: <Scalar>ny px: <Scalar>px py: <Scalar>py -> WMBox2D.
+	let result := WMBox2D newValue.
+	result min x := nx.
+	result min y := ny.
+	result max x := px.
+	result max y := py.
+	^ result
+].
+}.
+
+WMBox2D category: 'accessing' methods: {
+:[bottomLeft -> WMVector2.
+	^ min
+].
+
+:[bottomRight -> WMVector2.
+	^ WMVector2 x: max x y: min y
+].
+
+:[topLeft -> WMVector2.
+	^ WMVector2 x: min x y: max y
+].
+
+:[topRight -> WMVector2.
+	^ max
+].
+
+:[corners -> _DynamicObject.
+	^ {
+		self bottomLeft .
+		self bottomRight .
+		self topLeft .
+		self topRight .
+	 }
+].
+
+}.
+
+WMBox2D category: 'comparing' methods: {
+:[= other -> BooleanBit.
+	^ WMBox2D = other class and: [ min = other min and: [ max = other max ] ]
+].
+
+:[closeTo: <WMBox2D>other -> BooleanBit.
+	^ (min closeTo: other min) and: [ max closeTo: other max ]
+].
+
+:[hash -> _DynamicObject.
+	^ (WMBox2D identityHash bitXor: min hash) bitXor: max hash
+].
+
+}.
+
+WMBox2D category: 'content manipulation' methods: {
+:[makeEmpty
+	max := WMVector2 negativeInfinity.
+	min := WMVector2 infinity.
+].
+}.
+
+WMBox2D category: 'testing' methods: {
+:[isEmpty -> BooleanBit.
+	^ min x > max x
+].
+}.
+
+WMBox2D category: 'volume insertion' methods: {
+:[insertBox: <WMBox2D> aBox
+	min x := (min x min: aBox min x) castTo: Scalar.
+	min y := (min y min: aBox min y) castTo: Scalar.
+	max x := (max x max: aBox max x) castTo: Scalar.
+	max y := (max y max: aBox max y) castTo: Scalar. 
+].
+
+:[insertPoint: <WMVector2> aPoint
+	min x := (min x min: aPoint x) castTo: Scalar.
+	min y := (min y min: aPoint y) castTo: Scalar.
+	max x := (max x max: aPoint x) castTo: Scalar.
+	max y := (max y max: aPoint y) castTo: Scalar. 
+].
+}.
+
+WMBox2D category: 'printing' methods: {
+:[printOn: aStream
+	aStream nextPutAll: WMBox2D name;
+		nextPutAll: ' min: '; print: min;
+		nextPutAll: ' max '; print: max
+].
+}.

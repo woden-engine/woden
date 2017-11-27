@@ -17,12 +17,43 @@ WMVector3 class category: 'construction' methods: {
 		yourself
 ].
 
+:[x: <Scalar>x y: <Scalar>y -> WMVector3.
+	^ WMVector3 newValue
+		x: x;
+		y: y;
+		yourself
+].
+
+:[x: <Scalar>x z: <Scalar>z -> WMVector3.
+	^ WMVector3 newValue
+		x: x;
+		z: z;
+		yourself
+].
+
+:[y: <Scalar>y z: <Scalar>z -> WMVector3.
+	^ WMVector3 newValue
+		y: y;
+		z: z;
+		yourself
+].
+
 :[x: <Scalar>x y: <Scalar>y z: <Scalar>z -> WMVector3.
 	^ WMVector3 newValue
 		x: x;
 		y: y;
 		z: z;
 		yourself
+].
+
+:[infinity -> WMVector3.
+	let v := Float infinity castTo: Scalar.
+	^ WMVector3 x: v y: v z: v
+].
+
+:[negativeInfinity -> WMVector3.
+	let v := Float negativeInfinity castTo: Scalar.
+	^ WMVector3 x: v y: v z: v
 ].
 
 }.
@@ -36,8 +67,47 @@ WMVector3 category: 'arithmetic' methods: {
 	^ WMVector3 x: x - other x y: y - other y z: z - other z
 ].
 
+:[* other -> WMVector3.
+	^ other isNumber ifTrue: [
+		self scale: (other castTo: Scalar)
+	] ifFalse: [
+		self multiplyWithVector: (other castTo: WMVector3)
+	]
+].
+
+:[scale: <Scalar> scalar -> WMVector3.
+	^ WMVector3 x: x * scalar y: y * scalar z: z * scalar
+].
+
+:[multiplyWithVector: <WMVector3> other -> WMVector3.
+	^ WMVector3 x: x * other x y: y * other y z: z * other z
+].
+
+:[/ other -> WMVector3.
+	^ other isNumber ifTrue: [
+		self inverseScale: (other castTo: Scalar)
+	] ifFalse: [
+		self divideWithVector: (other castTo: WMVector3)
+	]
+].
+
+:[inverseScale: <Scalar> scalar -> WMVector3.
+	^ WMVector3 x: x / scalar y: y / scalar z: z / scalar
+].
+
+:[divideWithVector: <WMVector3> other -> WMVector3.
+	^ WMVector3 x: x / other x y: y / other y z: z / other z
+].
+
 :[dot: <WMVector3> other -> Scalar.
 	^ (x * other x) + (y * other y) + (z * other z)
+].
+
+:[cross: <WMVector3> other -> WMVector3.
+	^ WMVector3
+		x: (y * other z) - (z * other y) 
+		y: (z * other x) - (x * other z)
+		z: (x * other y) - (y * other x)
 ].
 
 :[length2 -> Scalar.
@@ -46,6 +116,19 @@ WMVector3 category: 'arithmetic' methods: {
 
 :[length -> Scalar.
 	^ ((x * x) + (y * y) + (z * z)) sqrt
+].
+
+:[negated -> WMVector3.
+	^ WMVector3 x: x negated y: y negated z: z negated
+].
+
+:[normalized -> WMVector3.
+	let l := self length.
+	^ l > 0.00001 ifTrue: [
+		WMVector3 x: x / l y: y / l z: z / l
+	] ifFalse: [
+		WMVector3 newValue
+	]
 ].
 
 }.

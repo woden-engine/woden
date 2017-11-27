@@ -17,9 +17,24 @@ WMVector4 class category: 'construction' methods: {
 		yourself
 ].
 
-:[w: <Scalar>z -> WMVector4.
+:[w: <Scalar>w -> WMVector4.
 	^ WMVector4 newValue
 		w: w;
+		yourself
+].
+
+:[x: <Scalar>x y: <Scalar>y -> WMVector4.
+	^ WMVector4 newValue
+		x: x;
+		y: y;
+		yourself
+].
+
+:[x: <Scalar>x y: <Scalar>y z: <Scalar>z -> WMVector4.
+	^ WMVector4 newValue
+		x: x;
+		y: y;
+		z: z;
 		yourself
 ].
 
@@ -30,6 +45,16 @@ WMVector4 class category: 'construction' methods: {
 		z: z;
 		w: w;
 		yourself
+].
+
+:[infinity -> WMVector4.
+	let v := Float infinity castTo: Scalar.
+	^ WMVector4 x: v y: v z: v w: v
+].
+
+:[negativeInfinity -> WMVector4.
+	let v := Float negativeInfinity castTo: Scalar.
+	^ WMVector4 x: v y: v z: v w: v
 ].
 
 }.
@@ -43,6 +68,38 @@ WMVector4 category: 'arithmetic' methods: {
 	^ WMVector4 x: x - other x y: y - other y z: z - other z w: w - other w
 ].
 
+:[* other -> WMVector4.
+	^ other isNumber ifTrue: [
+		self scale: (other castTo: Scalar)
+	] ifFalse: [
+		self multiplyWithVector: (other castTo: WMVector4)
+	]
+].
+
+:[scale: <Scalar> scalar -> WMVector4.
+	^ WMVector4 x: x * scalar y: y * scalar z: z * scalar w: w * scalar
+].
+
+:[multiplyWithVector: <WMVector4> other -> WMVector4.
+	^ WMVector4 x: x * other x y: y * other y z: z * other z w: w * other w
+].
+
+:[/ other -> WMVector4.
+	^ other isNumber ifTrue: [
+		self inverseScale: (other castTo: Scalar)
+	] ifFalse: [
+		self divideWithVector: (other castTo: WMVector4)
+	]
+].
+
+:[inverseScale: <Scalar> scalar -> WMVector4.
+	^ WMVector4 x: x / scalar y: y / scalar z: z / scalar w: w / scalar
+].
+
+:[divideWithVector: <WMVector4> other -> WMVector4.
+	^ WMVector4 x: x / other x y: y / other y z: z / other z w: w / other w
+].
+
 :[dot: <WMVector4> other -> Scalar.
 	^ (x * other x) + (y * other y) + (z * other z) + (w * other w)
 ].
@@ -53,6 +110,15 @@ WMVector4 category: 'arithmetic' methods: {
 
 :[length -> Scalar.
 	^ ((x * x) + (y * y) + (z * z) + (w * w)) sqrt
+].
+
+:[normalized -> WMVector4.
+	let l := self length.
+	^ l > 0.00001 ifTrue: [
+		WMVector4 x: x / l y: y / l z: z / l w: w / l
+	] ifFalse: [
+		WMVector4 newValue
+	]
 ].
 
 }.
@@ -69,6 +135,12 @@ WMVector4 category: 'comparing' methods: {
 :[closeTo: <WMVector4> other -> BooleanBit.
 	^ (x closeTo: other x) and: [(y closeTo: other y) and: [(z closeTo: other z) and: [w closeTo: other w]]]
 ].
+}.
+
+WMVector4 category: 'converting' methods: {
+:[asColor -> _DynamicObject.
+	^ Color r: x encodeSRGBComponent g: y encodeSRGBComponent b: z encodeSRGBComponent alpha: w
+]
 }.
 
 WMVector4 category: 'printing' methods: {

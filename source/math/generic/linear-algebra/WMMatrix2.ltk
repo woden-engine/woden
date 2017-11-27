@@ -1,3 +1,122 @@
+WMMatrix2 class category: 'construction' methods: {
+:[zeros -> WMMatrix2.
+	^ WMMatrix2 newValue
+
+].
+
+:[ones -> WMMatrix2.
+	^ WMMatrix2 newValue
+		m11: 1.0; m12: 1.0;
+		m21: 1.0; m22: 1.0;
+		yourself
+].
+
+:[identity -> WMMatrix2.
+	^ WMMatrix2 newValue
+		m11: 1.0; m22: 1.0;
+		yourself
+].
+
+:[scaleX: <Scalar> x y: <Scalar> y -> WMMatrix2.
+	^ WMMatrix2 newValue
+		m11:   x; m12: 0.0;
+		m21: 0.0; m22:   y;
+		yourself
+].
+
+:[m11: <Scalar> m11 m12: <Scalar> m12
+  m21: <Scalar> m21 m22: <Scalar> m22 -> WMMatrix2.
+	^ WMMatrix2 newValue
+		m11: m11; m12: m12;
+		m21: m21; m22: m22;
+		yourself
+].
+
+}.
+
+WMMatrix2 category: 'arithmetic' methods: {
+:[+ <WMMatrix2> other -> WMMatrix2.
+	^ WMMatrix2 newValue
+		m11: m11 + other m11; m12: m12 + other m12;
+		m21: m21 + other m21; m22: m22 + other m22;
+		yourself
+].
+
+:[- <WMMatrix2> other -> WMMatrix2.
+	^ WMMatrix2 newValue
+		m11: m11 - other m11; m12: m12 - other m12;
+		m21: m21 - other m21; m22: m22 - other m22;
+		yourself
+].
+
+:[* <WMMatrix2> other -> WMMatrix2.
+	^ WMMatrix2 newValue
+		m11: (m11 * other m11) + (m12 * other m21);
+		m12: (m11 * other m12) + (m12 * other m22);
+		
+		m21: (m21 * other m11) + (m22 * other m21);
+		m22: (m21 * other m12) + (m22 * other m22);
+		yourself
+].
+
+}.
+
+WMMatrix2 category: 'comparing' methods: {
+:[= other -> BooleanBit.
+	^ WMMatrix2 == other class and:
+		[ (m11 = other m11) and:
+		[ (m12 = other m12) and:
+		
+		[ (m21 = other m22) and:
+		[ (m22 = other m22) ]]]]
+].
+
+:[closeTo: other -> BooleanBit.
+	^ (m11 closeTo: other m11) and:
+		[ (m12 closeTo: other m12) and:
+		
+		[ (m21 closeTo: other m22) and:
+		[ (m22 closeTo: other m22) ]]]
+].
+
+:[hash -> _DynamicObject.
+	^ WMMatrix2 identityHash bitXor:
+		( m11 hash bitXor:
+		( m12 hash bitXor:
+		( m21 hash bitXor:
+		( m22 hash ))))
+].
+}.
+
+WMMatrix2 category: 'converting' methods: {
+:[asColumnMajorFloatArray -> _DynamicObject.
+	| result |
+	result := FloatArray new: 4.
+	result
+		at: 1 put: m11;
+		at: 2 put: m21;
+		
+		at: 3 put: m12;
+		at: 4 put: m22.
+		
+	^ result
+].
+
+:[asRowMajorFloatArray -> _DynamicObject.
+	| result |
+	result := FloatArray new: 4.
+	result
+		at: 1 put: m11;
+		at: 2 put: m12;
+		
+		at: 3 put: m21;
+		at: 4 put: m22.
+		
+	^ result
+].
+
+}.
+
 WMMatrix2 category: 'printing' methods: {
 :[printOn: aStream
 	aStream nextPutAll: WMMatrix2 name; nextPutAll: ' newFrom: #('; cr;

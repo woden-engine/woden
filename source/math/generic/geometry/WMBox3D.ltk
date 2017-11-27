@@ -1,0 +1,53 @@
+WMBox3D class category: 'construction' methods: {
+:[empty -> WMBox3D.
+	^ WMBox3D min: WMVector3 infinity max: WMVector3 negativeInfinity
+].
+
+:[min: <WMVector3>min max: <WMVector3>max -> WMBox3D.
+	^ WMBox3D newValue
+		min: min;
+		max: max;
+		yourself
+].
+
+:[nx: <Scalar>nx ny: <Scalar>ny nz: <Scalar>nz
+  px: <Scalar>px py: <Scalar>py pz: <Scalar>pz -> WMBox3D.
+	let result := WMBox3D newValue.
+	result min x := nx.
+	result min y := ny.
+	result min z := nz.
+	result max x := px.
+	result max y := py.
+	result max z := pz.
+	^ result
+].
+}.
+
+WMBox3D category: 'comparing' methods: {
+:[= other -> BooleanBit.
+	^ WMBox3D = other class and: [ min = other min and: [ max = other max ] ]
+].
+
+:[closeTo: <WMBox3D>other -> BooleanBit.
+	^ (min closeTo: other min) and: [ max closeTo: other max ]
+].
+
+:[hash -> _DynamicObject.
+	^ (WMBox3D identityHash bitXor: min hash) bitXor: max hash
+].
+
+}.
+
+WMBox3D category: 'testing' methods: {
+:[isEmpty -> BooleanBit.
+	^ min x > max x
+].
+}.
+
+WMBox3D category: 'printing' methods: {
+:[printOn: aStream
+	aStream nextPutAll: WMBox3D name;
+		nextPutAll: ' min: '; print: min;
+		nextPutAll: ' max '; print: max
+].
+}.

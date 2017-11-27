@@ -1,51 +1,131 @@
+WMMatrix4 class category: 'construction' methods: {
+:[zeros -> WMMatrix4.
+	^ WMMatrix4 newValue
+
+].
+
+:[ones -> WMMatrix4.
+	^ WMMatrix4 newValue
+		m11: 1.0; m12: 1.0; m13: 1.0; m14: 1.0;
+		m21: 1.0; m22: 1.0; m23: 1.0; m24: 1.0;
+		m31: 1.0; m32: 1.0; m33: 1.0; m34: 1.0;
+		m41: 1.0; m42: 1.0; m43: 1.0; m44: 1.0;
+		yourself
+].
+
+:[identity -> WMMatrix4.
+	^ WMMatrix4 newValue
+		m11: 1.0; m22: 1.0; m33: 1.0; m44: 1.0;
+		yourself
+].
+
+}.
+
+WMMatrix4 category: 'arithmetic' methods: {
+:[+ <WMMatrix4> other -> WMMatrix4.
+	^ WMMatrix4 newValue
+		m11: m11 + other m11; m12: m12 + other m12; m13: m13 + other m13; m14: m14 + other m14;
+		m21: m21 + other m21; m22: m22 + other m22; m23: m23 + other m23; m24: m24 + other m24;
+		m31: m31 + other m31; m32: m32 + other m32; m33: m33 + other m33; m34: m34 + other m34;
+		m41: m41 + other m41; m42: m42 + other m42; m43: m43 + other m43; m44: m44 + other m44;
+		yourself
+].
+
+:[- <WMMatrix4> other -> WMMatrix4.
+	^ WMMatrix4 newValue
+		m11: m11 - other m11; m12: m12 - other m12; m13: m13 - other m13; m14: m14 - other m14;
+		m21: m21 - other m21; m22: m22 - other m22; m23: m23 - other m23; m24: m24 - other m24;
+		m31: m31 - other m31; m32: m32 - other m32; m33: m33 - other m33; m34: m34 - other m34;
+		m41: m41 - other m41; m42: m42 - other m42; m43: m43 - other m43; m44: m44 - other m44;
+		yourself
+].
+
+:[* <WMMatrix4> other -> WMMatrix4.
+	^ WMMatrix4 newValue
+		m11: (m11 * other m11) + (m12 * other m21) + (m13 * other m31) + (m14 * other m41);
+		m12: (m11 * other m12) + (m12 * other m22) + (m13 * other m32) + (m14 * other m42);
+		m13: (m11 * other m13) + (m12 * other m23) + (m13 * other m33) + (m14 * other m43);
+		m14: (m11 * other m14) + (m12 * other m24) + (m13 * other m34) + (m14 * other m44);
+		
+		m21: (m21 * other m11) + (m22 * other m21) + (m23 * other m31) + (m24 * other m41);
+		m22: (m21 * other m12) + (m22 * other m22) + (m23 * other m32) + (m24 * other m42);
+		m23: (m21 * other m13) + (m22 * other m23) + (m23 * other m33) + (m24 * other m43);
+		m24: (m21 * other m14) + (m22 * other m24) + (m23 * other m34) + (m24 * other m44);
+		
+		m31: (m31 * other m11) + (m32 * other m21) + (m33 * other m31) + (m34 * other m41);
+		m32: (m31 * other m12) + (m32 * other m22) + (m33 * other m32) + (m34 * other m42);
+		m33: (m31 * other m13) + (m32 * other m23) + (m33 * other m33) + (m34 * other m43);
+		m34: (m31 * other m14) + (m32 * other m24) + (m33 * other m34) + (m34 * other m44);
+		
+		m41: (m41 * other m11) + (m42 * other m21) + (m43 * other m31) + (m44 * other m41);
+		m42: (m41 * other m12) + (m42 * other m22) + (m43 * other m32) + (m44 * other m42);
+		m43: (m41 * other m13) + (m42 * other m23) + (m43 * other m33) + (m44 * other m43);
+		m44: (m41 * other m14) + (m42 * other m24) + (m43 * other m34) + (m44 * other m44);
+		yourself
+].
+
+:[transposed -> WMMatrix4.
+	^ WMMatrix4 newValue
+		m11: m11; m12: m21; m13: m31; m14: m41;
+		m21: m12; m22: m22; m23: m32; m24: m42;
+		m31: m13; m32: m23; m33: m33; m34: m43;
+		m41: m14; m42: m24; m43: m34; m44: m44;
+		yourself
+].
+}.
+
 WMMatrix4 category: 'comparing' methods: {
 :[= other -> BooleanBit.
-	^ WMMatrix4 == other class and:  
-		[ (m11 = other m11) and:
-		[ (m12 = other m12) and:
-		[ (m13 = other m13) and:
-		[ (m14 = other m14) and:
-		
-		[ (m21 = other m21) and:
-		[ (m22 = other m22) and:
-		[ (m23 = other m23) and:
-		[ (m24 = other m24) and:
+	WMMatrix4 == other class ifFalse: [ ^ false ].
+	
+	m11 = other m11 ifFalse: [ ^ false ].  
+	m12 = other m12 ifFalse: [ ^ false ].  
+	m13 = other m13 ifFalse: [ ^ false ].  
+	m14 = other m14 ifFalse: [ ^ false ].  
 
-		[ (m31 = other m31) and:
-		[ (m32 = other m32) and:
-		[ (m33 = other m33) and:
-		[ (m34 = other m34) and:
+	m21 = other m21 ifFalse: [ ^ false ].  
+	m22 = other m22 ifFalse: [ ^ false ].  
+	m23 = other m23 ifFalse: [ ^ false ].  
+	m24 = other m24 ifFalse: [ ^ false ].  
 
-		[ (m41 = other m41) and:
-		[ (m42 = other m42) and:
-		[ (m43 = other m43) and:
-		[ (m44 = other m44) ]]]]]]]]]]]]]]]]
+	m31 = other m31 ifFalse: [ ^ false ].  
+	m32 = other m32 ifFalse: [ ^ false ].  
+	m33 = other m33 ifFalse: [ ^ false ].  
+	m34 = other m34 ifFalse: [ ^ false ].  
+
+	m41 = other m41 ifFalse: [ ^ false ].  
+	m42 = other m42 ifFalse: [ ^ false ].  
+	m43 = other m43 ifFalse: [ ^ false ].  
+	m44 = other m44 ifFalse: [ ^ false ].  
+	
+	^ true
 ].
 
 :[closeTo: other -> BooleanBit.
-	^ (m11 closeTo: other m11) and:
-		[ (m12 closeTo: other m12) and:
-		[ (m13 closeTo: other m13) and:
-		[ (m14 closeTo: other m14) and:
-		
-		[ (m21 closeTo: other m21) and:
-		[ (m22 closeTo: other m22) and:
-		[ (m23 closeTo: other m23) and:
-		[ (m24 closeTo: other m24) and:
+	(m11 closeTo: other m11) ifFalse: [ ^ false ].
+	(m12 closeTo: other m12) ifFalse: [ ^ false ].
+	(m13 closeTo: other m13) ifFalse: [ ^ false ].
+	(m14 closeTo: other m14) ifFalse: [ ^ false ].
 
-		[ (m31 closeTo: other m31) and:
-		[ (m32 closeTo: other m32) and:
-		[ (m33 closeTo: other m33) and:
-		[ (m34 closeTo: other m34) and:
+	(m21 closeTo: other m21) ifFalse: [ ^ false ].
+	(m22 closeTo: other m22) ifFalse: [ ^ false ].
+	(m23 closeTo: other m23) ifFalse: [ ^ false ].
+	(m24 closeTo: other m24) ifFalse: [ ^ false ].
 
-		[ (m41 closeTo: other m41) and:
-		[ (m42 closeTo: other m42) and:
-		[ (m43 closeTo: other m43) and:
-		[ (m44 closeTo: other m44) ]]]]]]]]]]]]]]]
+	(m31 closeTo: other m31) ifFalse: [ ^ false ].
+	(m32 closeTo: other m32) ifFalse: [ ^ false ].
+	(m33 closeTo: other m33) ifFalse: [ ^ false ].
+	(m34 closeTo: other m34) ifFalse: [ ^ false ].
+	
+	(m41 closeTo: other m41) ifFalse: [ ^ false ].
+	(m42 closeTo: other m42) ifFalse: [ ^ false ].
+	(m43 closeTo: other m43) ifFalse: [ ^ false ].
+	(m44 closeTo: other m44) ifFalse: [ ^ false ].
 
+	^ true
 ].
 
-:[hash
+:[hash -> _DynamicObject.
 	^ WMMatrix4 identityHash bitXor:
 		( m11 hash bitXor:
 		( m12 hash bitXor:
@@ -68,6 +148,61 @@ WMMatrix4 category: 'comparing' methods: {
 		( m44 hash))))))))))))))))
 
 ].
+}.
+
+WMMatrix4 category: 'converting' methods: {
+:[asColumnMajorFloatArray -> _DynamicObject.
+	| result |
+	result := FloatArray new: 16.
+	result
+		at: 1 put: m11;
+		at: 2 put: m21;
+		at: 3 put: m31;
+		at: 4 put: m41;
+		
+		at: 5 put: m12;
+		at: 6 put: m22;
+		at: 7 put: m32;
+		at: 8 put: m42;
+		
+		at: 9 put: m13;
+		at: 10 put: m23;
+		at: 11 put: m33;
+		at: 12 put: m43;
+		
+		at: 13 put: m14;
+		at: 14 put: m24;
+		at: 15 put: m34;
+		at: 16 put: m44.
+	^ result
+].
+
+:[asRowMajorFloatArray -> _DynamicObject.
+	| result |
+	result := FloatArray new: 16.
+	result
+		at: 1 put: m11;
+		at: 2 put: m12;
+		at: 3 put: m13;
+		at: 4 put: m14;
+		
+		at: 5 put: m21;
+		at: 6 put: m22;
+		at: 7 put: m23;
+		at: 8 put: m24;
+		
+		at: 9 put: m31;
+		at: 10 put: m32;
+		at: 11 put: m33;
+		at: 12 put: m34;
+		
+		at: 13 put: m41;
+		at: 14 put: m42;
+		at: 15 put: m43;
+		at: 16 put: m44.
+	^ result
+].
+
 }.
 
 WMMatrix4 category: 'printing' methods: {

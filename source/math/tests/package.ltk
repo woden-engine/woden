@@ -1,6 +1,7 @@
 Compiler
 	declarePackage: #'WodenMath-Tests';
 	evaluateFileNamed: 'WMBox2DTest.ltk';
+	evaluateFileNamed: 'WMBox2DDTest.ltk';
 	evaluateFileNamed: 'WMBox2DFTest.ltk';
 	evaluateFileNamed: 'WMBox3DTest.ltk';
 	evaluateFileNamed: 'WMBox3DDTest.ltk';

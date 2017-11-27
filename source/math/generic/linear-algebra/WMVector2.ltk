@@ -18,6 +18,16 @@ WMVector2 class category: 'construction' methods: {
 		yourself
 ].
 
+:[infinity -> WMVector2.
+	let v := Float infinity castTo: Scalar.
+	^ WMVector2 x: v y: v
+].
+
+:[negativeInfinity -> WMVector2.
+	let v := Float negativeInfinity castTo: Scalar.
+	^ WMVector2 x: v y: v
+].
+
 }.
 
 WMVector2 category: 'arithmetic' methods: {
@@ -29,12 +39,65 @@ WMVector2 category: 'arithmetic' methods: {
 	^ WMVector2 x: x - other x y: y - other y
 ].
 
+:[* other -> WMVector2.
+	^ other isNumber ifTrue: [
+		self scale: (other castTo: Scalar)
+	] ifFalse: [
+		self multiplyWithVector: (other castTo: WMVector2)
+	]
+].
+
+:[scale: <Scalar> scalar -> WMVector2.
+	^ WMVector2 x: x * scalar y: y * scalar
+].
+
+:[multiplyWithVector: <WMVector2> other -> WMVector2.
+	^ WMVector2 x: x * other x y: y * other y
+].
+
+:[/ other -> WMVector2.
+	^ other isNumber ifTrue: [
+		self inverseScale: (other castTo: Scalar)
+	] ifFalse: [
+		self divideWithVector: (other castTo: WMVector2)
+	]
+].
+
+:[inverseScale: <Scalar> scalar -> WMVector2.
+	^ WMVector2 x: x / scalar y: y / scalar
+].
+
+:[divideWithVector: <WMVector2> other -> WMVector2.
+	^ WMVector2 x: x / other x y: y / other y
+].
+
+:[cross: <WMVector2> other -> Scalar.
+	^ (x * other y) - (y * other x)
+].
+
 :[dot: <WMVector2> other -> Scalar.
 	^ (x * other x) + (y * other y)
 ].
 
 :[length2 -> Scalar.
 	^ (x * x) + (y * y)
+].
+
+:[length -> Scalar.
+	^ ((x * x) + (y * y)) sqrt
+].
+
+:[negated -> WMVector2.
+	^ WMVector2 x: x negated y: y negated
+].
+
+:[normalized -> WMVector2.
+	let l := self length.
+	^ l > 0.00001 ifTrue: [
+		WMVector2 x: x / l y: y / l
+	] ifFalse: [
+		WMVector2 newValue
+	]
 ].
 
 }.
@@ -50,6 +113,24 @@ WMVector2 category: 'comparing' methods: {
 
 :[closeTo: <WMVector2> other -> BooleanBit.
 	^ (x closeTo: other x) and: [y closeTo: other y]
+].
+}.
+
+WMVector2 category: 'converting' methods: {
+:[asWMComplex -> WMComplex.
+	^ WMComplex x: x y: y
+].
+
+:[asWMVector2 -> WMVector2.
+	^ self
+].
+
+:[asWMVector2F -> WMVector2F.
+	^ WMVector2F x: (x castTo: Float32) y: (y castTo: Float32)
+].
+
+:[asWMVector2D -> WMVector2D.
+	^ WMVector2D x: x y: y
 ].
 }.
 
