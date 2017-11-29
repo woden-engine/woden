@@ -1,0 +1,10 @@
+Structure <<< #WTGlobalLightingState
+	slots: {
+		#groundLighting => WMVector4F. 
+		#skyLighting => WMVector4F. 
+		#sunDirection => WMVector3F. 
+		#numberOfLights => Int32. 
+		#lightSources => (WTLightSourceData array: 16)
+	};
+	package: 'Woden2-Structures-Core-Rendering';
+	yourself.

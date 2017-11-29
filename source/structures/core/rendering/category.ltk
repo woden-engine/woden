@@ -1,0 +1,4 @@
+Compiler
+    evaluateFileNamed: 'WTGlobalLightingState.ltk';
+    evaluateFileNamed: 'WTLightSourceData.ltk';
+	yourself.

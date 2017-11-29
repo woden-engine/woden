@@ -1,0 +1,6 @@
+Compiler
+    evaluateFileNamed: 'WTGenericObjectState.ltk';
+    evaluateFileNamed: 'WTGenericSurfaceMaterialState.ltk';
+    evaluateFileNamed: 'WTWaterHarmonic.ltk';
+    evaluateFileNamed: 'WTWaterMaterialState.ltk';
+	yourself.

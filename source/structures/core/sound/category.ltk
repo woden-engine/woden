@@ -1,0 +1,5 @@
+Compiler
+    evaluateFileNamed: 'WTWaveChunkHeader.ltk';
+    evaluateFileNamed: 'WTWaveFormatChunk.ltk';
+    evaluateFileNamed: 'WTWaveHeader.ltk';
+	yourself.

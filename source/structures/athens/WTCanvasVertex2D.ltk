@@ -1,0 +1,8 @@
+Structure <<< #WTCanvasVertex2D
+	slots: {
+		#position => WMVector2F. 
+		#texcoord => WMVector2F. 
+		#color => WMVector4F
+	};
+	package: 'Woden2-Structures-Athens';
+	yourself.

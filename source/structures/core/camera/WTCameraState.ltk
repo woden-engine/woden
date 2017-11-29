@@ -1,0 +1,8 @@
+Structure <<< #WTCameraState
+	slots: {
+		#transform => WMReversibleAffineTransformF. 
+		#projectionMatrix => WMMatrix4F. 
+		#currentTime => Float32
+	};
+	package: 'Woden2-Structures-Core-Camera';
+	yourself.

@@ -1,0 +1,8 @@
+Structure <<< #WTGenericObjectState
+	slots: {
+		#transform => WMReversibleAffineTransformF. 
+		#color => WMVector4F. 
+		#visible => Int32
+	};
+	package: 'Woden2-Structures-Core-Material';
+	yourself.

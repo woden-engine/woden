@@ -1,0 +1,11 @@
+Structure <<< #WTWaterMaterialState
+	slots: {
+		#albedo => WMVector4F. 
+		#fresnel => WMVector3F. 
+		#smoothness => Float32. 
+		#propagationSpeed => Float32. 
+		(#padding => WMVector2F) private. 
+		#harmonics => (WTWaterHarmonic array: 5)
+	};
+	package: 'Woden2-Structures-Core-Material';
+	yourself.

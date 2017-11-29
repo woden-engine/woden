@@ -1,0 +1,61 @@
+Structure <<< #WMCompactVector3F
+	slots: {
+		#x => Float32. 
+		#y => Float32. 
+		#z => Float32
+	};
+	package: 'WodenMath-Core-CompressedVectors';
+	yourself.
+
+WMCompactVector3F category: 'converting' methods: {
+:[asWMVector3F -> WMVector3F.
+	^ WMVector3F x: x y: y z: z
+].
+}.
+
+Structure <<< #WMVector2S
+	slots: {
+		#x => Int16. 
+		#y => Int16.
+	};
+	package: 'WodenMath-Core-CompressedVectors';
+	yourself.
+
+Structure <<< #WMVector3S
+	slots: {
+		#x => Int16.
+		#y => Int16.
+		#z => Int16.
+	};
+	package: 'WodenMath-Core-CompressedVectors';
+	yourself.
+
+Structure <<< #WMVector4S
+	slots: {
+		#x => Int16.
+		#y => Int16.
+		#z => Int16.
+		#w => Int16.
+	};
+	package: 'WodenMath-Core-CompressedVectors';
+	yourself.
+	
+Structure <<< #WMVector4US
+	slots: {
+		#x => UInt16.
+		#y => UInt16.
+		#z => UInt16.
+		#w => UInt16.
+	};
+	package: 'WodenMath-Core-CompressedVectors';
+	yourself.
+	
+WMVector4US category: 'converting' methods: {
+:[asWMVector4FN -> WMVector4F.
+	^ WMVector4F
+		x: (x asFloatFromNormalizedUShort castTo: Float32)
+		y: (y asFloatFromNormalizedUShort castTo: Float32)
+		z: (z asFloatFromNormalizedUShort castTo: Float32)
+		w: (w asFloatFromNormalizedUShort castTo: Float32)
+].
+}.

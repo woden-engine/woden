@@ -1,0 +1,7 @@
+Structure <<< #WTAnimationActionBoneFrame
+	slots: {
+		#translation => WMVector3F. 
+		#rotation => WMQuaternionF
+	};
+	package: 'Woden2-Structures-Core-Mesh';
+	yourself.

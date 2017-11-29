@@ -1,0 +1,11 @@
+Structure <<< #WTVRState
+	slots: {
+		#leftProjectionTransform => WMVector4F. 
+		#leftUndistortedProjectionInverseTransform => WMVector4F. 
+		#rightProjectionTransform => WMVector4F. 
+		#rightUndistortedProjectionInverseTransform => WMVector4F. 
+		#distortionCoefficients => WMVector2F. 
+		#ipd => Float32
+	};
+	package: 'Woden2-Structures-Core-Camera';
+	yourself.

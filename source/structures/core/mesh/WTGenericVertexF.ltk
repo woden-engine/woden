@@ -1,0 +1,10 @@
+Structure <<< #WTGenericVertexF
+	slots: {
+		#position => WMCompactVector3F. 
+		#normal => WMCompactVector3F. 
+		#texcoord => WMVector2F. 
+		#tangent4 => WMVector4F. 
+		#color => WMVector4F
+	};
+	package: 'Woden2-Structures-Core-Mesh';
+	yourself.

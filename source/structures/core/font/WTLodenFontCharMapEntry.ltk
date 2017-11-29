@@ -1,0 +1,7 @@
+Structure <<< #WTLodenFontCharMapEntry
+	slots: {
+		#character => Int32. 
+		#glyph => Int32.
+	};
+	package: 'Woden2-Structures-Core-Font';
+	yourself.

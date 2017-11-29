@@ -1,0 +1,7 @@
+Structure <<< #WTWaveChunkHeader
+	slots: {
+		#chunkID => UInt32. 
+		#chunkSize => UInt32
+	};
+	package: 'Woden2-Structures-Core-Sound';
+	yourself.

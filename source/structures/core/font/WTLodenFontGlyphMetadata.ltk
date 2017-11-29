@@ -1,0 +1,10 @@
+Structure <<< #WTLodenFontGlyphMetadata
+	slots: {
+		#box => WMBox2DF. 
+		#advance => WMVector2F. 
+		#size => WMVector2F. 
+		#horizontalBearing => WMVector2F. 
+		#verticalBearing => WMVector2F
+	};
+	package: 'Woden2-Structures-Core-Font';
+	yourself.

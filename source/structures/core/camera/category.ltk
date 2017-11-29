@@ -1,0 +1,4 @@
+Compiler
+    evaluateFileNamed: 'WTCameraState.ltk';
+    evaluateFileNamed: 'WTVRState.ltk';
+	yourself.

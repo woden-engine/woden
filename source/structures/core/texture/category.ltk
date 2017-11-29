@@ -1,0 +1,5 @@
+Compiler
+    evaluateFileNamed: 'WTDDSFileHeader.ltk';
+    evaluateFileNamed: 'WTDDSHeaderDXT10.ltk';
+    evaluateFileNamed: 'WTDDSPixelFormat.ltk';
+	yourself.

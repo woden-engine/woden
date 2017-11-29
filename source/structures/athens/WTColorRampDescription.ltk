@@ -1,0 +1,7 @@
+Structure <<< #WTColorRampDescription
+	slots: {
+		#firstIndex => Int32.
+		#count => Int32
+	};
+	package: 'Woden2-Structures-Athens';
+	yourself.

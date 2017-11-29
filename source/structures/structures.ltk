@@ -1,0 +1,4 @@
+Compiler
+    evaluateFileNamed: 'core/package.ltk';
+	evaluateFileNamed: 'athens/package.ltk';
+	yourself

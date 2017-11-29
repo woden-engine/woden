@@ -1,0 +1,10 @@
+Compiler
+	declarePackage: #'Woden2-Structures-Core';
+    evaluateFileNamed: 'camera/category.ltk';
+    evaluateFileNamed: 'font/category.ltk';
+    evaluateFileNamed: 'material/category.ltk';
+    evaluateFileNamed: 'mesh/category.ltk';
+    evaluateFileNamed: 'rendering/category.ltk';
+    evaluateFileNamed: 'sound/category.ltk';
+    evaluateFileNamed: 'texture/category.ltk';
+	yourself.
