@@ -32,6 +32,13 @@ WMMatrix2 class category: 'construction' methods: {
 		yourself
 ].
 
+:[newFrom: anArray -> WMMatrix2.
+	^ WMMatrix2 newValue
+		m11: ((anArray at: 1) castTo: Scalar); m12: ((anArray at: 2) castTo: Scalar);
+		m21: ((anArray at: 3) castTo: Scalar); m22: ((anArray at: 4) castTo: Scalar);
+		yourself
+].
+
 }.
 
 WMMatrix2 category: 'arithmetic' methods: {

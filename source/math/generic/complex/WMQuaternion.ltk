@@ -1,0 +1,239 @@
+WMQuaternion class category: 'construction' methods: {
+:[r: <Scalar> r -> WMQuaternion.
+	^ WMQuaternion newValue
+		r: r;
+		yourself
+].
+
+:[r: <Scalar> r i: <Scalar> i j: <Scalar> j k: <Scalar> k -> WMQuaternion.
+	^ WMQuaternion newValue
+		r: r;
+		i: i;
+		j: j;
+		k: k;
+		yourself
+].
+
+
+:[identity -> WMQuaternion.
+	^ WMQuaternion newValue
+		r: 1.0;
+		yourself
+].
+
+:[xrot: <Scalar> angle -> WMQuaternion.
+	let c := (angle * 0.5) cos castTo: Scalar.
+	let s := (angle * 0.5) sin castTo: Scalar.
+	^ WMQuaternion newValue
+		r: c;
+		i: s;
+		yourself
+].
+
+:[yrot: <Scalar> angle -> WMQuaternion.
+	let c := (angle * 0.5) cos castTo: Scalar.
+	let s := (angle * 0.5) sin castTo: Scalar.
+	^ WMQuaternion newValue
+		r: c;
+		j: s;
+		yourself
+].
+
+:[zrot: <Scalar> angle -> WMQuaternion.
+	let c := (angle * 0.5) cos castTo: Scalar.
+	let s := (angle * 0.5) sin castTo: Scalar.
+	^ WMQuaternion newValue
+		r: c;
+		k: s;
+		yourself
+].
+
+:[axis: <WMVector3> axis angle: <Scalar> angle -> WMQuaternion.
+	let c := (angle * 0.5) cos castTo: Scalar.
+	let s := (angle * 0.5) sin castTo: Scalar.
+	^ WMQuaternion newValue
+		r: c;
+		i: axis x * s;
+		j: axis y * s;
+		k: axis z * s;
+		yourself
+].
+
+}.
+
+WMQuaternion category: 'accessing' methods: {
+:[x -> Scalar.
+	^ i
+].
+
+:[x: <Scalar> newX
+	i := newX
+].
+
+:[y -> Scalar.
+	^ j
+].
+
+:[y: <Scalar> newY
+	j := newY
+].
+
+:[z -> Scalar.
+	^ k
+].
+
+:[z: <Scalar> newZ
+	k := newZ
+].
+
+:[w -> Scalar.
+	^ r
+].
+
+:[w: <Scalar> newW
+	r := newW
+].
+
+}.
+
+WMQuaternion category: 'arithmetic' methods: {
+:[+ <WMQuaternion> other -> WMQuaternion.
+	^ WMQuaternion r: r + other r i: i + other i j: j + other j k: k + other k
+].
+
+:[- <WMQuaternion> other -> WMQuaternion.
+	^ WMQuaternion r: r - other r i: i - other i j: j - other j k: k - other k
+].
+
+:[* other -> WMQuaternion.
+	^ other isNumber ifTrue: [
+		self scale: (other castTo: Scalar)
+	] ifFalse: [
+		self multiplyWithQuaternion: (other castTo: WMQuaternion)
+	]
+].
+
+:[scale: <Scalar> other -> WMQuaternion.
+	^ WMQuaternion r: r * other i: i * other j: j * other k: k * other
+].
+
+:[multiplyWithQuaternion: <WMQuaternion> other -> WMQuaternion.
+	^ WMQuaternion
+		r: (r * other r) - (i * other i) - (j * other j) - (k * other k)
+		i: (r * other i) + (i * other r) + (j * other k) - (k * other j)
+		j: (r * other j) - (i * other k) + (j * other r) + (k * other i)
+		k: (r * other k) + (i * other j) - (j * other i) + (k * other r)
+].
+
+:[abs -> Scalar.
+	^ self length
+].
+
+:[conjugated -> WMQuaternion.
+	^ WMQuaternion r: r i: i negated j: j negated k: k negated
+].
+
+:[inverse -> WMQuaternion.
+	let l2 := self length2.
+	^ WMQuaternion r: r / l2 i: i negated / l2 j: j negated / l2 k: k negated / l2
+].
+
+:[negated -> WMQuaternion.
+	^ WMQuaternion r: r negated i: i negated j: j negated k: k negated
+].
+
+:[length2 -> Scalar.
+	^ (r*r) + (i*i) + (j*j) + (k*k)
+].
+
+:[length -> Scalar.
+	^ ((r*r) + (i*i) + (j*j) + (k*k)) sqrt
+].
+
+}.
+
+WMQuaternion category: 'comparing' methods: {
+:[= other -> BooleanBit.
+	^ WMQuaternion == other class and:
+	[ r = other r and:
+	[ i = other i and:
+	[ j = other j and:
+	[ k = other k ]]]]
+].
+
+:[closeTo: <WMQuaternion> other -> BooleanBit.
+	^ (r closeTo: other r) and:
+	[ (i closeTo: other i) and:
+	[ (j closeTo: other j) and:
+	[ (k closeTo: other k) ]]]
+].
+
+:[hash -> _DynamicObject.
+	^ WMQuaternion identityHash bitXor:
+	( r hash bitXor:
+	( i hash bitXor:
+	( j hash bitXor:
+	( k hash ))))
+].
+}.
+
+WMQuaternion category: 'converting' methods: {
+:[asWMMatrix3 -> WMMatrix3.
+	^ WMMatrix3 newValue
+		m11: 1.0 - (2.0*j*j) - (2.0*k*k);
+		m12: (2.0*i*j) - (2.0*k*r);
+		m13: (2.0*i*k) + (2.0*j*r);
+		
+		m21: (2.0*i*j) + (2.0*k*r);
+		m22: 1.0 - (2.0*i*i) - (2.0*k*k);
+		m23: (2.0*j*k) - (2.0*i*r);
+		
+		m31: (2.0*i*k) - (2.0*j*r);
+		m32: (2.0*j*k) + (2.0*i*r);
+		m33: 1.0 - (2.0*i*i) - (2.0*j*j);
+		yourself
+].
+
+:[asWMMatrix3F -> WMMatrix3F.
+	^ WMMatrix3F newValue
+		m11: (1.0 - (2.0*j*j) - (2.0*k*k) castTo: Float32);
+		m12: ((2.0*i*j) - (2.0*k*r) castTo: Float32);
+		m13: ((2.0*i*k) + (2.0*j*r) castTo: Float32);
+		
+		m21: ((2.0*i*j) + (2.0*k*r) castTo: Float32);
+		m22: (1.0 - (2.0*i*i) - (2.0*k*k) castTo: Float32);
+		m23: ((2.0*j*k) - (2.0*i*r) castTo: Float32);
+		
+		m31: ((2.0*i*k) - (2.0*j*r) castTo: Float32);
+		m32: ((2.0*j*k) + (2.0*i*r) castTo: Float32);
+		m33: (1.0 - (2.0*i*i) - (2.0*j*j) castTo: Float32);
+		yourself
+].
+
+:[asWMMatrix3D -> WMMatrix3D.
+	^ WMMatrix3D newValue
+		m11: 1.0 - (2.0*j*j) - (2.0*k*k);
+		m12: (2.0*i*j) - (2.0*k*r);
+		m13: (2.0*i*k) + (2.0*j*r);
+		
+		m21: (2.0*i*j) + (2.0*k*r);
+		m22: 1.0 - (2.0*i*i) - (2.0*k*k);
+		m23: (2.0*j*k) - (2.0*i*r);
+		
+		m31: (2.0*i*k) - (2.0*j*r);
+		m32: (2.0*j*k) + (2.0*i*r);
+		m33: 1.0 - (2.0*i*i) - (2.0*j*j);
+		yourself
+].
+
+}.
+
+WMQuaternion category: 'printing' methods: {
+:[printOn: aStream
+	aStream nextPutAll: WMQuaternion name;
+		nextPutAll: ' r: '; print: r;
+		nextPutAll: ' i: '; print: i;
+		nextPutAll: ' j: '; print: j;
+		nextPutAll: ' k: '; print: k
+].
+}.

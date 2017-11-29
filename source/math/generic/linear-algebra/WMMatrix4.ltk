@@ -1,7 +1,47 @@
 WMMatrix4 class category: 'construction' methods: {
-:[zeros -> WMMatrix4.
+:[newFrom: anArray -> WMMatrix4.
 	^ WMMatrix4 newValue
+		m11: ((anArray at: 1) castTo: Scalar); m12: ((anArray at: 2) castTo: Scalar); m13: ((anArray at: 3) castTo: Scalar); m14: ((anArray at: 4) castTo: Scalar);
+		m21: ((anArray at: 5) castTo: Scalar); m22: ((anArray at: 6) castTo: Scalar); m23: ((anArray at: 7) castTo: Scalar); m24: ((anArray at: 8) castTo: Scalar);
+		m31: ((anArray at: 9) castTo: Scalar); m32: ((anArray at: 10) castTo: Scalar); m33: ((anArray at: 11) castTo: Scalar); m34: ((anArray at: 12) castTo: Scalar);
+		m41: ((anArray at: 13) castTo: Scalar); m42: ((anArray at: 14) castTo: Scalar); m43: ((anArray at: 15) castTo: Scalar); m44: ((anArray at: 16) castTo: Scalar);
+		yourself
+].
 
+}.
+
+WMMatrix4 class category: 'special matrices' methods: {
+:[identity -> WMMatrix4.
+	^ WMMatrix4 newValue
+		m11: 1.0; m22: 1.0; m33: 1.0; m44: 1.0;
+		yourself
+].
+
+:[mat3: <WMMatrix3> mat3-> WMMatrix4.
+	^ WMMatrix4 newValue
+		m11: mat3 m11; m12: mat3 m12; m13: mat3 m13;
+		m21: mat3 m21; m22: mat3 m22; m23: mat3 m23;
+		m31: mat3 m31; m32: mat3 m32; m33: mat3 m33;
+		m44: 1.0;
+		yourself
+].
+
+:[mat3: <WMMatrix3> mat3 translation: <WMVector3> vector -> WMMatrix4.
+	^ WMMatrix4 newValue
+		m11: mat3 m11; m12: mat3 m12; m13: mat3 m13; m14: vector x;
+		m21: mat3 m21; m22: mat3 m22; m23: mat3 m23; m24: vector y;
+		m31: mat3 m31; m32: mat3 m32; m33: mat3 m33; m34: vector z;
+		m44: 1.0;
+		yourself
+].
+
+:[mat3: <WMMatrix3> mat3 translation4: <WMVector4> vector4 -> WMMatrix4.
+	^ WMMatrix4 newValue
+		m11: mat3 m11; m12: mat3 m12; m13: mat3 m13; m14: vector4 x;
+		m21: mat3 m21; m22: mat3 m22; m23: mat3 m23; m24: vector4 y;
+		m31: mat3 m31; m32: mat3 m32; m33: mat3 m33; m34: vector4 z;
+		m44: vector4 w;
+		yourself
 ].
 
 :[ones -> WMMatrix4.
@@ -13,10 +53,108 @@ WMMatrix4 class category: 'construction' methods: {
 		yourself
 ].
 
-:[identity -> WMMatrix4.
+:[scale: <Scalar> s -> WMMatrix4.
 	^ WMMatrix4 newValue
-		m11: 1.0; m22: 1.0; m33: 1.0; m44: 1.0;
+		m11: s; m22: s; m33: s; m44: 1.0;
 		yourself
+].
+
+:[scaleX: <Scalar> sx y: <Scalar> sy z: <Scalar> sz -> WMMatrix4.
+	^ WMMatrix4 newValue
+		m11: sx; m22: sy; m33: sz; m44: 1.0;
+		yourself
+].
+
+:[zeros -> WMMatrix4.
+	^ WMMatrix4 newValue
+
+].
+}.
+
+WMMatrix4 class category: 'projection matrices' methods: {
+:[frustumLeft: <Scalar> left right: <Scalar> right
+	bottom: <Scalar> bottom top: <Scalar> top
+	near: <Scalar> near far: <Scalar> far
+	invertedY: <BooleanBit> invertedY ->WMMatrix4.
+
+	let twoNear := 2.0 * near.
+	let result := WMMatrix4 newValue.
+	result
+		m11: twoNear / (right - left); m13: ((right + left) / (right - left));
+		m22: twoNear / (top - bottom); m23: ((top + bottom) / (top - bottom));
+		m33: far negated / (far - near); m34: ((near * far) negated / (far - near));
+		m43: -1.0.
+	invertedY ifTrue: [ 
+		result m22: result m22 negated; m23: result m23 negated.
+	].
+
+	^ result
+].
+
+:[orthoLeft: <Scalar> left right: <Scalar> right
+	bottom: <Scalar> bottom top: <Scalar> top
+	near: <Scalar> near far: <Scalar> far
+	invertedY: <BooleanBit> invertedY -> WMMatrix4.
+	let result := WMMatrix4 newValue.
+	result
+		m11: 2.0 / (right - left); m14: ((right + left) / (right - left)) negated;
+		m22: 2.0 / (top - bottom); m24: ((top + bottom) / (top - bottom)) negated;
+		m33: -1.0 / (far - near); m34: ((near) / (far - near)) negated;
+		m44: 1.0.
+	invertedY ifTrue: [ 
+		result m22: result m22 negated; m24: result m24 negated.
+	].
+
+	^ result
+].
+
+:[perspectiveFovY: <Scalar> fovy aspect: <Scalar> aspect near: <Scalar> near far: <Scalar> far invertedY: <BooleanBit> invertedY -> WMMatrix4.
+	let fovyRad := fovy degreesToRadians * 0.5 castTo: Scalar.
+	let top := near * fovyRad tan castTo: Scalar.
+	let right := top * aspect castTo: Scalar.
+	^ WMMatrix4 frustumLeft: right negated right: right bottom: top negated top: top near: near far: far invertedY: invertedY
+].
+
+:[reverseDepthFrustumLeft: <Scalar> left right: <Scalar> right
+	bottom: <Scalar> bottom top: <Scalar> top
+	near: <Scalar> near far: <Scalar> far
+	invertedY: <BooleanBit> invertedY -> WMMatrix4.
+	let twoNear := 2.0 * near.
+	let result := WMMatrix4 newValue.
+	result
+		m11: twoNear / (right - left); m13: ((right + left) / (right - left));
+		m22: twoNear / (top - bottom); m23: ((top + bottom) / (top - bottom));
+		m33: near / (far - near); m34: ((near * far) / (far - near));
+		m43: -1.0.
+	invertedY ifTrue: [ 
+		result m22: result m22 negated; m23: result m23 negated.
+	].
+
+	^ result
+].
+
+:[reverseDepthOrthoLeft: <Scalar> left right: <Scalar> right
+	bottom: <Scalar> bottom top: <Scalar> top
+	near: <Scalar> near far: <Scalar> far
+	invertedY: <BooleanBit> invertedY -> WMMatrix4.
+	let result := WMMatrix4 newValue.
+	result
+		m11: 2.0 / (right - left); m14: ((right + left) / (right - left)) negated;
+		m22: 2.0 / (top - bottom); m24: ((top + bottom) / (top - bottom)) negated;
+		m33: 1.0 / (far - near); m34: ((far) / (far - near));
+		m44: 1.0.
+	invertedY ifTrue: [ 
+		result m22: result m22 negated; m24: result m24 negated.
+	].
+
+	^ result
+].
+
+:[reverseDepthPerspectiveFovY: <Scalar> fovy aspect: <Scalar> aspect near: <Scalar> near far: <Scalar> far invertedY: <BooleanBit> invertedY -> WMMatrix4.
+	let fovyRad := fovy degreesToRadians * 0.5 castTo: Scalar.
+	let top := near * fovyRad tan castTo: Scalar.
+	let right := top * aspect castTo: Scalar.
+	^ self reverseDepthFrustumLeft: right negated right: right bottom: top negated top: top near: near far: far invertedY: invertedY
 ].
 
 }.

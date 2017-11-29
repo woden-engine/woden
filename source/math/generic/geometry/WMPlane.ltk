@@ -1,0 +1,60 @@
+WMPlane class category: 'construction' methods: {
+:[normal: <WMVector3>normal distance: <Scalar>distance -> WMPlane.
+	^ WMPlane nx: normal x ny: normal y nz: normal z d: distance
+].
+
+:[nx: <Scalar> nx ny: <Scalar> ny nz: <Scalar> nz d: <Scalar> d -> WMPlane.
+	<constructor>
+	<argument: #(nx ny nz d) type: #float>
+	^ WMPlane newValue
+		nx: nx;
+		ny: ny;
+		nz: nz;
+		d: d;
+		yourself
+].
+
+:[point: <WMVector3>firstPoint point: <WMVector3>secondPoint point: <WMVector3>thirdPoint
+	let u := secondPoint - firstPoint.
+	let v := thirdPoint - firstPoint.
+	let n := (u cross: v) normalized.
+	let d := n dot: firstPoint.
+	^ WMPlane normal: n distance: d
+].
+
+}.
+
+WMPlane category: 'accessing' methods: {
+:[distance -> Scalar.
+	^ d
+].
+
+:[normal -> WMVector3.
+	^ WMVector3 x: nx y: ny z: nz
+].
+
+}.
+
+WMPlane category: 'distance functions' methods: {
+:[pointDistance: <WMVector3> point -> Scalar.
+	^ (nx*point x) + (ny*point y) + (nz*point z) - d
+]
+
+}.
+
+WMPlane category: 'intersection' methods: {
+:[intersect: <WMPlane> second intersect: <WMPlane> third -> _DynamicObject.
+	let matrix := WMMatrix3
+		m11: nx m12: ny m13: nz
+		m21: second nx m22: second ny m23: second nz
+		m31: third nx m32: third ny m33: third nz.
+	let point := WMVector3 x: d y: second d z: third d.
+	^ matrix solveSystemAtPoint: point.
+].
+}.
+
+WMPlane category: 'printing' methods: {
+:[printOn: aStream
+	aStream nextPutAll: WMPlane name; nextPutAll: ' nx: '; print: nx; nextPutAll: ' ny: '; print: ny; nextPutAll: ' nz: '; print: nz; nextPutAll: ' d: '; print: d.
+].
+}.

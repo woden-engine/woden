@@ -36,6 +36,20 @@ WMComplex class category: 'construction' methods: {
 		i: i;
 		yourself
 ].
+
+:[angle: <Scalar>angle -> WMComplex.
+	^ WMComplex newValue
+		r: (angle cos castTo: Scalar);
+		i: (angle sin castTo: Scalar);
+		yourself
+].
+
+:[radius: <Scalar> radius angle: <Scalar>angle -> WMComplex.
+	^ WMComplex newValue
+		r: radius * (angle cos castTo: Scalar);
+		i: radius * (angle sin castTo: Scalar);
+		yourself
+].
 }.
 
 WMComplex category: 'accessing' methods: {

@@ -1,4 +1,14 @@
 WMMatrix3 class category: 'construction' methods: {
+:[newFrom: anArray -> WMMatrix3.
+	^ WMMatrix3 newValue
+		m11: ((anArray at: 1) castTo: Scalar); m12: ((anArray at: 2) castTo: Scalar); m13: ((anArray at: 3) castTo: Scalar);
+		m21: ((anArray at: 4) castTo: Scalar); m22: ((anArray at: 5) castTo: Scalar); m23: ((anArray at: 6) castTo: Scalar);
+		m31: ((anArray at: 7) castTo: Scalar); m32: ((anArray at: 8) castTo: Scalar); m33: ((anArray at: 9) castTo: Scalar);
+		yourself
+].
+}.
+
+WMMatrix3 class category: 'special matrices' methods: {
 :[zeros -> WMMatrix3.
 	^ WMMatrix3 newValue
 
@@ -18,12 +28,28 @@ WMMatrix3 class category: 'construction' methods: {
 		yourself
 ].
 
-:[scaleX: <Scalar> x y: <Scalar> y z: <Scalar> z-> WMMatrix3.
+:[scaleX: <Scalar> x y: <Scalar> y z: <Scalar> z -> WMMatrix3.
 	^ WMMatrix3 newValue
 		m11:   x; m12: 0.0; m13: 0.0;
 		m21: 0.0; m22:   y; m23: 0.0;
 		m31: 0.0; m32: 0.0; m33:   z;
 		yourself
+].
+
+:[texScale: <WMVector3> scale offset: <WMVector2> offset -> WMMatrix3.
+	"Computes a texture matrix that performs a scale and a translation. Scale and offset are 2D points"
+	^ WMMatrix3
+		m11: scale x m12: 0.0 m13: offset x
+		m21: 0.0 m22: scale y m23: offset y
+		m31: 0.0 m32: 0.0 m33: 1.0
+].
+
+
+:[translate2DX: <Scalar> x y: <Scalar> y -> WMMatrix3.
+	^ WMMatrix3
+		m11: 1.0 m12: 0.0 m13: x
+		m21: 0.0 m22: 1.0 m23: y
+		m31: 0.0 m32: 0.0 m33: 1.0
 ].
 
 :[m11: <Scalar> m11 m12: <Scalar> m12 m13: <Scalar> m13
@@ -65,6 +91,72 @@ WMMatrix3 class category: 'construction' methods: {
 		m31: 0.0; m32: 0.0; m33: 1.0;
 		yourself
 ].
+
+:[xyzRotation: <WMVector3> angles -> WMMatrix3.
+	^ (WMMatrix3 xrot: angles x) * (WMMatrix3 yrot: angles y) * (WMMatrix3 zrot: angles z) castTo: WMMatrix3
+].
+
+:[zyxRotation: <WMVector3> angles -> WMMatrix3.
+	^ (WMVector3 zrot: angles z) * (WMVector3 yrot: angles y) * (WMVector3 xrot: angles x) castTo: WMMatrix3
+].
+
+:[lookAtBack -> WMMatrix3.
+	^ WMMatrix3 yrot: (Float pi castTo: Scalar)
+].
+
+:[lookAtBottom -> WMMatrix3.
+	^ WMMatrix3 xrot: (Float halfPi negated castTo: Scalar)
+].
+
+:[lookAtFront -> WMMatrix3.
+	^ WMMatrix3 identity
+].
+
+:[lookAtLeft -> WMMatrix3.
+	^ WMMatrix3 yrot: (Float halfPi castTo: Scalar)
+].
+
+:[lookAtRight -> WMMatrix3.
+	^ WMMatrix3 yrot: (Float halfPi negated castTo: Scalar)
+].
+
+:[lookAtTop -> WMMatrix3.
+	^ WMMatrix3 xrot: (Float halfPi castTo: Scalar)
+].
+
+}.
+
+WMMatrix3 category: 'accessing' methods: {
+:[firstColumn -> WMVector3.
+	^ WMVector3 x: m11 y: m21 z: m31
+].
+
+:[firstRow -> WMVector3.
+	^ WMVector3 x: m11 y: m12 z: m13
+].
+
+:[secondColumn -> WMVector3.
+	^ WMVector3 x: m12 y: m22 z: m32
+].
+
+:[secondRow -> WMVector3.
+	^ WMVector3 x: m21 y: m22 z: m23
+].
+
+:[thirdColumn -> WMVector3.
+	^ WMVector3 x: m13 y: m23 z: m33
+].
+
+:[thirdRow -> WMVector3.
+	^ WMVector3 x: m31 y: m32 z: m33
+].
+
+:[topLeft2x2 -> WMMatrix2.
+	^ WMMatrix2
+		m11: m11 m12: m12
+		m21: m21 m22: m22
+].
+
 }.
 
 WMMatrix3 category: 'arithmetic' methods: {
@@ -223,4 +315,85 @@ WMMatrix3 category: 'printing' methods: {
 		tab; print: m31; space; print: m32; space; print: m33; cr;
 		nextPut: $)
 ]
+}.
+
+WMMatrix3 category: 'linear algebra' methods: {
+:[qrDecomposition -> _DynamicObject.
+	let u1 := self firstColumn normalized.
+
+	let u2 := self secondColumn.
+	u2 := (u2 - (u1 * (u2 dot: u1))) normalized.
+
+	let u3 := self thirdColumn.
+	u3 := u3 - (u1 * (u3 dot: u1)).
+	u3 := (u3 - (u2 * (u3 dot: u2))) normalized.
+	
+	let q := WMMatrix3
+		m11: u1 x m12: u2 x m13: u3 x
+		m21: u1 y m22: u2 y m23: u3 y
+		m31: u1 z m32: u2 z m33: u3 z.
+		
+	let r := q transposed * self.
+	^ { q . r }
+].
+
+:[solveSystemAtPoint: point -> _DynamicObject.
+	let qr := self qrDecomposition.
+	let q := qr first castTo: WMVector3.
+	let r := qr second castTo: WMVector3.
+	^ r upperTriangularSolveSystemAt: (q transposedTransformVector3: point)
+].
+
+:[upperTriangularSolveSystemAt: <WMVector3> point -> _DynamicObject.
+	((m33 closeTo: 0.0) or: [ (m22 closeTo: 0.0) or: [m11 closeTo: 0.0]]) ifTrue: [ ^ nil ].
+
+	let z := point z / m33.
+	let y := (point y - (z * m23))  / m22.
+	let x := (point x - (y * m12) - (z * m13)) / m11.
+	^ WMVector3 x: x y: y z: z
+].
+
+}.
+
+WMMatrix3 category: 'transformation' methods: {
+:[transformPosition2: <WMVector2>position2 -> WMVector2.
+	^ WMVector2
+		x: (m11 * position2 x) + (m12 * position2 y) + m13
+		y: (m21 * position2 x) + (m22 * position2 y) + m23
+].
+
+:[transformPosition3: <WMVector3>position3 -> WMVector3.
+	^ WMVector3
+		x: (m11 * position3 x) + (m12 * position3 y) + (m13 * position3 z) 
+		y: (m21 * position3 x) + (m22 * position3 y) + (m23 * position3 z) 
+		z: (m31 * position3 x) + (m32 * position3 y) + (m33 * position3 z)
+].
+
+:[transformVector2: <WMVector2>vector2 -> WMVector2.
+	^ WMVector2
+		x: (m11 * vector2 x) + (m12 * vector2 y)
+		y: (m21 * vector2 x) + (m22 * vector2 y)
+].
+
+:[transformVector3: <WMVector3>vector3 -> WMVector3.
+	^ WMVector3
+		x: (m11 * vector3 x) + (m12 * vector3 y) + (m13 * vector3 z) 
+		y: (m21 * vector3 x) + (m22 * vector3 y) + (m23 * vector3 z) 
+		z: (m31 * vector3 x) + (m32 * vector3 y) + (m33 * vector3 z)
+].
+
+:[transformVector4: <WMVector4>vector4 -> WMVector4.
+	^ WMVector4
+		x: (m11 * vector4 x) + (m12 * vector4 y) + (m13 * vector4 z) 
+		y: (m21 * vector4 x) + (m22 * vector4 y) + (m23 * vector4 z) 
+		z: (m31 * vector4 x) + (m32 * vector4 y) + (m33 * vector4 z)
+		w: vector4 w
+].
+
+:[transposedTransformVector3: <WMVector3>vector3 -> WMVector3.
+	^ WMVector3
+		x: (m11 * vector3 x) + (m21 * vector3 y) + (m31 * vector3 z) 
+		y: (m12 * vector3 x) + (m22 * vector3 y) + (m32 * vector3 z) 
+		z: (m13 * vector3 x) + (m23 * vector3 y) + (m33 * vector3 z)
+].
 }.

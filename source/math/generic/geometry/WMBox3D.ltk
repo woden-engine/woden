@@ -10,6 +10,20 @@ WMBox3D class category: 'construction' methods: {
 		yourself
 ].
 
+:[halfExtent: <WMVector3>halfExtent -> WMBox3D.
+	^ WMBox3D newValue
+		min: halfExtent negated;
+		max: halfExtent;
+		yourself
+].
+
+:[halfExtent: <WMVector3>halfExtent center: <WMVector3>center -> WMBox3D.
+	^ WMBox3D newValue
+		min: center - halfExtent;
+		max: center + halfExtent;
+		yourself
+].
+
 :[nx: <Scalar>nx ny: <Scalar>ny nz: <Scalar>nz
   px: <Scalar>px py: <Scalar>py pz: <Scalar>pz -> WMBox3D.
 	let result := WMBox3D newValue.
@@ -20,6 +34,244 @@ WMBox3D class category: 'construction' methods: {
 	result max y := py.
 	result max z := pz.
 	^ result
+].
+
+:[unitCube -> WMBox3D.
+	^ WMBox3D nx: -0.5 ny: -0.5 nz: -0.5 px: 0.5 py: 0.5 pz: 0.5
+].
+
+:[loadFromJson: jsonData -> WMBox3D.
+	^ WMBox3D
+		nx: ((jsonData at: 1) castTo: Scalar)
+		ny: ((jsonData at: 2) castTo: Scalar)
+		nz: ((jsonData at: 3) castTo: Scalar)
+		px: ((jsonData at: 4) castTo: Scalar)
+		py: ((jsonData at: 5) castTo: Scalar)
+		pz: ((jsonData at: 6) castTo: Scalar)
+].
+
+}.
+
+WMBox3D category: 'accessing' methods: {
+:[bottomPoint -> WMVector3.
+	^ (self leftBottomPoint + self rightBottomPoint) * 0.5
+].
+
+:[boundsAtSign: sign -> WMVector3.
+	^ sign = 0 ifTrue: [ min ] ifFalse: [ max ]
+].
+
+:[center -> WMVector3.
+	^ (max + min) * 0.5
+].
+
+:[corners -> _DynamicObject.
+	^ {
+		self nearBottomLeft .
+		self nearBottomRight .
+		self nearTopLeft .
+		self nearTopRight .
+		
+		self farBottomLeft .
+		self farBottomRight .
+		self farTopLeft .
+		self farTopRight .
+	 }
+].
+
+:[cornersDo: aBlock
+	aBlock value: self nearBottomLeft.
+	aBlock value: self nearBottomRight.
+	aBlock value: self nearTopLeft.
+	aBlock value: self nearTopRight.
+
+	aBlock value: self farBottomLeft.
+	aBlock value: self farBottomRight.
+	aBlock value: self farTopLeft.
+	aBlock value: self farTopRight.
+].
+
+:[depth -> Scalar.
+	^ max z - min z
+].
+
+:[extent -> WMVector3.
+	^ max - min
+].
+
+:[farBottomLeft -> WMVector3.
+	^ WMVector3 x: min x y: min y z: max z
+].
+
+:[farBottomPoint -> WMVector3.
+	^ (self farBottomLeft + self farBottomRight) * 0.5
+].
+
+:[farBottomRight -> WMVector3.
+	^ WMVector3 x: max x y: min y z: max z
+].
+
+:[farLeftPoint -> WMVector3.
+	^ (self farBottomLeft + self farTopLeft) * 0.5
+].
+
+:[farPoint -> WMVector3.
+	^ (self farLeftPoint + self farRightPoint) * 0.5
+].
+
+:[farRightPoint -> WMVector3.
+	^ (self farBottomRight + self farTopRight) * 0.5
+].
+
+:[farTopLeft -> WMVector3.
+	^ WMVector3 x: min x y: max y z: max z
+].
+
+:[farTopPoint -> WMVector3.
+	^ (self farTopLeft + self farTopRight) * 0.5
+].
+
+:[farTopRight -> WMVector3.
+	^ max
+].
+
+:[halfExtent -> WMVector3.
+	^ (max - min) * 0.5
+].
+
+:[height -> Scalar.
+	^ max y - min y
+].
+
+:[leftBottomPoint -> WMVector3.
+	^ (self nearBottomLeft + self farBottomLeft) * 0.5
+].
+
+:[leftPoint -> WMVector3.
+	^ (self leftBottomPoint + self leftTopPoint) * 0.5
+].
+
+:[leftTopPoint -> WMVector3.
+	^ (self nearTopLeft + self farTopLeft) * 0.5
+].
+
+:[manipulationCorners -> _DynamicObject.
+	^ {
+		self nearBottomLeft .
+		self nearBottomRight .
+		self nearTopLeft .
+		self nearTopRight .
+		
+		self farBottomLeft .
+		self farBottomRight .
+		self farTopLeft .
+		self farTopRight .
+
+		self nearLeftPoint .
+		self nearRightPoint .
+		self nearTopPoint .
+		self nearBottomPoint .
+		
+		self farLeftPoint .
+		self farRightPoint .
+		self farTopPoint .
+		self farBottomPoint .
+
+		self leftBottomPoint .		
+		self rightBottomPoint .
+		self leftTopPoint .
+		self rightTopPoint .
+		
+		self leftPoint .
+		self rightPoint .
+		self bottomPoint .
+		self topPoint .		
+		self nearPoint .
+		self farPoint .
+		
+		self center .
+		
+	 }
+].
+
+:[nearBottomLeft -> WMVector3.
+	^ min
+].
+
+:[nearBottomPoint -> WMVector3.
+	^ (self nearBottomLeft + self nearBottomRight) * 0.5
+].
+
+:[nearBottomRight -> WMVector3.
+	^ WMVector3 x: max x y: min y z: min z
+].
+
+:[nearLeftPoint -> WMVector3.
+	^ (self nearBottomLeft + self nearTopLeft) * 0.5
+].
+
+:[nearPoint -> WMVector3.
+	^ (self nearLeftPoint + self nearRightPoint) * 0.5
+].
+
+:[nearRightPoint -> WMVector3.
+	^ (self nearBottomRight + self nearTopRight) * 0.5
+].
+
+:[nearTopLeft -> WMVector3.
+	^ WMVector3 x: min x y: max y z: min z
+].
+
+:[nearTopPoint -> WMVector3.
+	^ (self nearTopLeft + self nearTopRight) * 0.5
+].
+
+:[nearTopRight -> WMVector3.
+	^ WMVector3 x: max x y: max y z: min z
+].
+
+:[rightBottomPoint -> WMVector3.
+	^ (self nearBottomRight + self farBottomRight) * 0.5
+].
+
+:[rightPoint -> WMVector3.
+	^ (self rightBottomPoint + self rightTopPoint) * 0.5
+].
+
+:[rightTopPoint -> WMVector3.
+	^ (self nearTopRight + self farTopRight) * 0.5
+].
+
+:[rotationManipulationCorners -> _DynamicObject.
+	^ {
+		self nearBottomLeft .
+		self nearBottomRight .
+		self nearTopLeft .
+		self nearTopRight .
+		
+		self farBottomLeft .
+		self farBottomRight .
+		self farTopLeft .
+		self farTopRight .
+
+		self center		
+	 }
+].
+
+:[topPoint -> WMVector3.
+	^ (self leftTopPoint + self rightTopPoint) * 0.5
+].
+
+:[width -> Scalar.
+	^ max x - min x
+].
+
+}.
+
+WMBox3D category: 'content manipulation' methods: {
+:[makeEmpty
+	max := WMVector3 negativeInfinity.
+	min := WMVector3 infinity.
 ].
 }.
 
@@ -38,6 +290,21 @@ WMBox3D category: 'comparing' methods: {
 
 }.
 
+WMBox3D category: 'converting' methods: {
+:[asJsonData -> _DynamicObject.
+	^ { min x . min y . min z . max x . max y . max z}
+].
+
+:[asWMBox3DD -> WMBox3DD.
+	^ WMBox3DD min: min asWMVector3D max: max asWMVector3D
+].
+
+:[asWMBox3DF -> WMBox3DF.
+	^ WMBox3DF min: min asWMVector3F max: max asWMVector3F
+].
+
+}.
+
 WMBox3D category: 'testing' methods: {
 :[isEmpty -> BooleanBit.
 	^ min x > max x
@@ -50,4 +317,54 @@ WMBox3D category: 'printing' methods: {
 		nextPutAll: ' min: '; print: min;
 		nextPutAll: ' max '; print: max
 ].
+}.
+
+WMBox3D category: 'special vertices' methods: {
+:[negativeVertex: <WMVector3> direction -> WMVector3.
+	let vertex := max.
+	direction x >= 0.0 ifTrue: [ vertex x: min x ].
+	direction y >= 0.0 ifTrue: [ vertex y: min y ].
+	direction z >= 0.0 ifTrue: [ vertex z: min z ].
+	^ vertex
+].
+
+:[positiveVertex: <WMVector3> direction -> WMVector3.
+	let vertex := max.
+	direction x >= 0.0 ifTrue: [ vertex x: max x ].
+	direction y >= 0.0 ifTrue: [ vertex y: max y ].
+	direction z >= 0.0 ifTrue: [ vertex z: max z ].
+	^ vertex
+].
+
+:[support: <WMVector3> direction -> WMVector3.
+	^ self positiveVertex: direction
+].
+
+}.
+
+WMBox3D category: 'volume insertion' methods: {
+:[insertBox: <WMBox3D> aBox
+	min x: ((min x min: aBox min x) castTo: Scalar).
+	min y: ((min y min: aBox min y) castTo: Scalar).
+	min z: ((min z min: aBox min z) castTo: Scalar).
+	max x: ((max x max: aBox max x) castTo: Scalar).
+	max y: ((max y max: aBox max y) castTo: Scalar).
+	max z: ((max z max: aBox max z) castTo: Scalar).
+].
+
+:[insertPoint: <WMVector3> aPoint
+	min x: ((min x min: aPoint x) castTo: Scalar).
+	min y: ((min y min: aPoint y) castTo: Scalar).
+	min z: ((min z min: aPoint z) castTo: Scalar).
+	max x: ((max x max: aPoint x) castTo: Scalar).
+	max y: ((max y max: aPoint y) castTo: Scalar).
+	max z: ((max z max: aPoint z) castTo: Scalar).
+].
+
+:[insertPoints: points
+	1 to: points size do: [:i |
+		self insertPoint: ((points at: i) castTo: WMVector3)
+	]
+].
+
 }.

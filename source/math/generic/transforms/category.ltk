@@ -1,9 +1,9 @@
 let WMReversibleAffineTransform := Structure <<< ('WMReversibleAffineTransform' , typeNameSuffix) asSymbol
 	slots: {
 		#matrix => WMMatrix3. 
-		#translation => WMVector4. 
+		#translation4 => WMVector4. 
 		#inverseMatrix => WMMatrix3. 
-		#inverseTranslation => WMVector4.
+		#inverseTranslation4 => WMVector4.
 	};
 	package: 'WodenMath-Core-Transforms';
 	yourself.

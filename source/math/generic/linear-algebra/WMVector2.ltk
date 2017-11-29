@@ -30,6 +30,12 @@ WMVector2 class category: 'construction' methods: {
 
 }.
 
+WMVector2 class category: 'serialization' methods: {
+:[loadFromJson: data -> WMVector2.
+	^ WMVector2 x: ((data at: 1) castTo: Scalar) y: ((data at: 2) castTo: Scalar)
+].
+}.
+
 WMVector2 category: 'arithmetic' methods: {
 :[+ <WMVector2> other -> WMVector2.
 	^ WMVector2 x: x + other x y: y + other y
@@ -117,6 +123,10 @@ WMVector2 category: 'comparing' methods: {
 }.
 
 WMVector2 category: 'converting' methods: {
+:[asJsonData -> _DynamicObject.
+	^ { x . y }
+].
+
 :[asWMComplex -> WMComplex.
 	^ WMComplex x: x y: y
 ].
