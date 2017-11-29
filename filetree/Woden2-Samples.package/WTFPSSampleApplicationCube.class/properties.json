@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "WTFPSSampleApplication",
+	"category" : "Woden2-Samples",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WTFPSSampleApplicationCube",
+	"type" : "normal"
+}

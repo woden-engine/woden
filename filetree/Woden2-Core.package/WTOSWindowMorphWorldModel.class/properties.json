@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "WindowModel",
+	"category" : "Woden2-Core-Morphic",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WTOSWindowMorphWorldModel",
+	"type" : "normal"
+}

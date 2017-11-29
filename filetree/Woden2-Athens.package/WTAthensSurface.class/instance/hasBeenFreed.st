@@ -1,0 +1,3 @@
+testing
+hasBeenFreed
+	^ false

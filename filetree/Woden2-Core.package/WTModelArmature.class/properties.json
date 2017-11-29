@@ -1,0 +1,20 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Mesh",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [ ],
+	"instvars" : [
+		"names",
+		"boneParents",
+		"bones",
+		"restPoseInverseMatrices",
+		"restPoseForwardMatrices",
+		"restPoseMatrices"
+	],
+	"name" : "WTModelArmature",
+	"type" : "normal"
+}

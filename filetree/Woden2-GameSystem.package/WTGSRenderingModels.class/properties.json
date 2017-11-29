@@ -1,0 +1,23 @@
+{
+	"commentStamp" : "",
+	"super" : "WTGSComponent",
+	"category" : "Woden2-GameSystem-Level",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"invalidWireModel",
+		"invalidSolidModel",
+		"invalidTexturedModel",
+		"wireModelBuilder",
+		"wireModel",
+		"wireModelMaterial",
+		"solidModelBuilder",
+		"solidModel",
+		"solidModelMaterial",
+		"texturedModelBuilder",
+		"texturedModel"
+	],
+	"name" : "WTGSRenderingModels",
+	"type" : "normal"
+}

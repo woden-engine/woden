@@ -1,0 +1,3 @@
+accessing
+boneParents
+	^ boneParents

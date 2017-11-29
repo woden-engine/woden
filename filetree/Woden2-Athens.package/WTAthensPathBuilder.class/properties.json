@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "AthensPathBuilder",
+	"category" : "Woden2-Athens",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"absolute",
+		"lastPoint"
+	],
+	"name" : "WTAthensPathBuilder",
+	"type" : "normal"
+}

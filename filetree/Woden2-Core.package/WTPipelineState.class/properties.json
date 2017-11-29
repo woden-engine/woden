@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Resources",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"name",
+		"scope",
+		"handle",
+		"description",
+		"isAbstract"
+	],
+	"name" : "WTPipelineState",
+	"type" : "normal"
+}

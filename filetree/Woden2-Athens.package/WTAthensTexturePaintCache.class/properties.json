@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Athens",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"engine",
+		"cachedTextures"
+	],
+	"name" : "WTAthensTexturePaintCache",
+	"type" : "normal"
+}

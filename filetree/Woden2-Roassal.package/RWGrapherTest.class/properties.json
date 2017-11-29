@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Roassal-Builder-Grapher",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "RWGrapherTest",
+	"pools" : [
+		 ],
+	"super" : "RWTest",
+	"type" : "normal" }

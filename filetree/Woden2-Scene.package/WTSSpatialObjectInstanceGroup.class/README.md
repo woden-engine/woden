@@ -1,0 +1,1 @@
+I take care of binding all of the per-instance data of a group of objects.

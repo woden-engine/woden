@@ -1,0 +1,18 @@
+{
+	"category" : "Woden2-LevelEditor",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"ElementSelectionColor",
+		"ElementSelectionHighlightColor",
+		"SpaceSelectionColor",
+		"SpaceSelectionHighlightColor" ],
+	"commentStamp" : "",
+	"instvars" : [
+		"box",
+		"rotationMode" ],
+	"name" : "WTGLevelEditorSelectionBox",
+	"pools" : [
+		 ],
+	"super" : "WTGLevelEditorSelection",
+	"type" : "normal" }

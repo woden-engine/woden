@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Pool",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"heap",
+		"index",
+		"offset",
+		"next"
+	],
+	"name" : "WTStreamingBufferPoolElement",
+	"type" : "normal"
+}

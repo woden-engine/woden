@@ -1,0 +1,30 @@
+{
+	"instance" : {
+		"hasStencil" : "RonieSalgado 9/23/2017 21:35",
+		"hasDepth:" : "RonieSalgado 9/23/2017 21:35",
+		"initialize" : "RonieSalgado 9/23/2017 22:15",
+		"hasDepth" : "RonieSalgado 9/23/2017 21:35",
+		"createFramebuffers:" : "RonieSalgado 9/23/2017 22:10",
+		"engine" : "RonieSalgado 9/23/2017 21:34",
+		"screenExtent" : "RonieSalgado 9/23/2017 22:12",
+		"screenHeight" : "RonieSalgado 9/23/2017 21:34",
+		"frameBufferCount" : "RonieSalgado 9/23/2017 22:14",
+		"extent:" : "RonieSalgado 9/23/2017 22:08",
+		"createFramebuffers" : "RonieSalgado 9/23/2017 21:40",
+		"advanceFramebuffer" : "RonieSalgado 9/23/2017 22:15",
+		"propertyAt:put:" : "RonieSalgado 9/23/2017 22:13",
+		"engine:" : "RonieSalgado 9/23/2017 21:34",
+		"currentFramebuffer" : "RonieSalgado 9/23/2017 22:14",
+		"propertyAt:ifPresent:" : "RonieSalgado 9/23/2017 22:13",
+		"propertyAt:" : "RonieSalgado 9/23/2017 22:13",
+		"propertyAt:ifAbsent:" : "RonieSalgado 9/23/2017 22:13",
+		"hasStencil:" : "RonieSalgado 9/23/2017 21:35",
+		"currentColorBuffer" : "RonieSalgado 9/23/2017 22:24",
+		"release" : "RonieSalgado 9/23/2017 22:08",
+		"screenWidth" : "RonieSalgado 9/23/2017 21:34",
+		"framebuffers" : "RonieSalgado 9/23/2017 21:50"
+	},
+	"class" : {
+		"for:" : "RonieSalgado 9/23/2017 21:36"
+	}
+}

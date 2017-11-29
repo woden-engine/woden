@@ -1,0 +1,18 @@
+{
+	"commentStamp" : "RonieSalgado 9/23/2017 20:31",
+	"super" : "WTSNode",
+	"category" : "Woden2-Scene-Graph",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"eyes",
+		"ipd",
+		"focalDistance",
+		"projectionMode",
+		"vrHeadset",
+		"vrTransform"
+	],
+	"name" : "WTSMultiEyeCamera",
+	"type" : "normal"
+}

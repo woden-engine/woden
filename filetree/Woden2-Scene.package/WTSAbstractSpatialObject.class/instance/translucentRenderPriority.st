@@ -1,0 +1,3 @@
+some render priorities
+translucentRenderPriority
+	self renderPriority: RenderPriorityTranslucent

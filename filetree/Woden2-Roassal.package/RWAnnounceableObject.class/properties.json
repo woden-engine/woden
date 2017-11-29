@@ -1,0 +1,15 @@
+{
+	"category" : "Woden2-Roassal-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"attributes",
+		"announcer" ],
+	"name" : "RWAnnounceableObject",
+	"pools" : [
+		 ],
+	"super" : "RWObject",
+	"type" : "normal" }

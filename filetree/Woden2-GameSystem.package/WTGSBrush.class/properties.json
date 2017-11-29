@@ -1,0 +1,18 @@
+{
+	"commentStamp" : "",
+	"super" : "WTGSComponent",
+	"category" : "Woden2-GameSystem-Level",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"BrushColors"
+	],
+	"instvars" : [
+		"faces",
+		"positions",
+		"boundingBox",
+		"color"
+	],
+	"name" : "WTGSBrush",
+	"type" : "normal"
+}

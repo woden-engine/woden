@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "WTRenderable",
+	"category" : "Woden2-Core-Mesh",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"vertexBinding",
+		"indexBuffer",
+		"submeshes"
+	],
+	"name" : "WTGenericMesh",
+	"type" : "normal"
+}

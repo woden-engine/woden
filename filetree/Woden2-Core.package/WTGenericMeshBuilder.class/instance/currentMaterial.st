@@ -1,0 +1,3 @@
+accessing
+currentMaterial
+	^ currentMaterial

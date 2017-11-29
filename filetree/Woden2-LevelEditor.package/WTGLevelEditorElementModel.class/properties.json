@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-LevelEditor",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"visibleView" ],
+	"name" : "WTGLevelEditorElementModel",
+	"pools" : [
+		 ],
+	"super" : "WTSNodeModel",
+	"type" : "normal" }

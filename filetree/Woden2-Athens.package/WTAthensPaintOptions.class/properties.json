@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Athens",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"surface"
+	],
+	"name" : "WTAthensPaintOptions",
+	"type" : "normal"
+}

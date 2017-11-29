@@ -1,0 +1,22 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Sound",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"DataChunkSignature",
+		"FormatChunkSignature",
+		"FormatIEEEFloat",
+		"FormatPCM",
+		"WaveHeaderSignature",
+		"WaveIDValue"
+	],
+	"instvars" : [
+		"header",
+		"format",
+		"samples"
+	],
+	"name" : "WTWaveFile",
+	"type" : "normal"
+}

@@ -1,0 +1,35 @@
+{
+	"instance" : {
+		"onKeyUp:" : " 9/23/2017 19:41:17",
+		"onJoyButtonUp:" : " 9/23/2017 19:41:17",
+		"initialize" : " 9/23/2017 19:41:17",
+		"onMouseMove:" : " 9/23/2017 19:41:17",
+		"runWeaponAnimationAction:speed:doAfter:" : " 9/23/2017 19:41:17",
+		"onMouseButtonUp:" : " 9/23/2017 19:41:17",
+		"addAndActivateWeapon:" : " 9/23/2017 19:41:17",
+		"runRepeatedWeaponAnimation:speed:" : " 9/23/2017 19:41:17",
+		"axisMapping:" : " 9/23/2017 19:41:17",
+		"shoot" : " 9/23/2017 19:41:17",
+		"onJoyAxis:" : " 9/23/2017 19:41:17",
+		"pickItem:" : " 9/23/2017 19:41:17",
+		"runRepeatedWeaponAnimation:" : " 9/23/2017 19:41:17",
+		"runWeaponAnimationAction:" : " 9/23/2017 19:41:17",
+		"fireBulletSpeed:" : " 9/23/2017 19:41:17",
+		"spawn" : " 9/23/2017 19:41:17",
+		"playRandomShootSound:" : " 9/23/2017 19:41:17",
+		"simulateTime:" : " 9/23/2017 19:41:17",
+		"runWeaponAnimationAction:doAfter:" : " 9/23/2017 19:41:17",
+		"runWeaponAnimationAction:speed:" : " 9/23/2017 19:41:17",
+		"onJoyButtonDown:" : " 9/23/2017 19:41:17",
+		"onMouseButtonDown:" : " 9/23/2017 19:41:17",
+		"playShootSound:" : " 9/23/2017 19:41:17",
+		"mapTrigger:" : " 9/23/2017 19:41:17",
+		"activateWeapon:" : " 9/23/2017 19:41:17",
+		"onKeyDown:" : " 9/23/2017 19:41:17"
+	},
+	"class" : {
+		"analogDeadZone" : " 9/23/2017 19:41:17",
+		"eyePosition" : " 9/23/2017 19:41:17",
+		"halfExtent" : " 9/23/2017 19:41:17"
+	}
+}

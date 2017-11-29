@@ -1,0 +1,20 @@
+{
+	"commentStamp" : "",
+	"super" : "WTGSSubComponent",
+	"category" : "Woden2-GameSystem-Level",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"Epsilon"
+	],
+	"instvars" : [
+		"brush",
+		"indices",
+		"plane",
+		"material",
+		"textureTransform",
+		"materialCache"
+	],
+	"name" : "WTGSBrushFace",
+	"type" : "normal"
+}

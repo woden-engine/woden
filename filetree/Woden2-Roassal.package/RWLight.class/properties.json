@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Roassal-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "RWLight",
+	"pools" : [
+		 ],
+	"super" : "RWElement",
+	"type" : "normal" }

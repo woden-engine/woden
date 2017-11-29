@@ -1,0 +1,3 @@
+tracing
+tracingEnabled
+	^ WTEngine tracingEnabled

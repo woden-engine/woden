@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "RonieSalgado 7/16/2016 19:30",
+	"super" : "Object",
+	"category" : "Woden2-Scene-Graph",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WTSNodeModel",
+	"type" : "normal"
+}

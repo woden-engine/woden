@@ -1,0 +1,15 @@
+{
+	"category" : "Woden2-Roassal-Tests",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "<historical>",
+	"instvars" : [
+		"cube",
+		"element" ],
+	"name" : "RWShapeTest",
+	"pools" : [
+		 ],
+	"super" : "TestCase",
+	"type" : "normal" }

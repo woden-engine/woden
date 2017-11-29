@@ -1,0 +1,29 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Window",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [ ],
+	"instvars" : [
+		"engine",
+		"application",
+		"window",
+		"drawingProcess",
+		"windowHandle",
+		"screenWidth",
+		"screenHeight",
+		"swapChain",
+		"currentFramebuffer",
+		"lastTime",
+		"controlSemaphore",
+		"shuttingDown",
+		"drawingProcessFinishSemaphore",
+		"properties",
+		"fullscreen"
+	],
+	"name" : "WTOSWindow",
+	"type" : "normal"
+}

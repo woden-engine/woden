@@ -1,0 +1,3 @@
+factory
+createSoundDevice
+	self subclassResponsibility

@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Roassal-Glamour",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "GLMWoden2Presentation",
+	"pools" : [
+		 ],
+	"super" : "GLMRoassal2Presentation",
+	"type" : "normal" }

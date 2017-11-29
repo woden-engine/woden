@@ -1,0 +1,3 @@
+accessing
+map
+	^ entity map

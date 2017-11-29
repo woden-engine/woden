@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Roassal-Tests",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"view" ],
+	"name" : "RWViewTest",
+	"pools" : [
+		 ],
+	"super" : "RWTest",
+	"type" : "normal" }

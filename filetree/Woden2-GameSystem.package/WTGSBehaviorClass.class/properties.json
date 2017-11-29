@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "WTGSBehavior",
+	"category" : "Woden2-GameSystem-Level",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"behaviorClassName"
+	],
+	"name" : "WTGSBehaviorClass",
+	"type" : "normal"
+}

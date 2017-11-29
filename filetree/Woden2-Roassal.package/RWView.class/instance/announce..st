@@ -1,0 +1,3 @@
+interaction
+announce: eventOrClassEvent
+	eventHandler announce: eventOrClassEvent

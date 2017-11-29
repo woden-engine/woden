@@ -1,0 +1,21 @@
+{
+	"instance" : {
+		"loadSubmeshes:" : "RonieSalgado 11/29/2017 00:20",
+		"loadActions:" : " 9/23/2017 19:41:15",
+		"loadVertices:" : "RonieSalgado 11/29/2017 00:20",
+		"importFromFileNamed:" : " 9/23/2017 19:41:15",
+		"loadQuaternion:" : " 9/23/2017 19:41:15",
+		"loadVector3:" : " 9/23/2017 19:41:15",
+		"loadSubmesh:" : " 9/23/2017 19:41:15",
+		"loadAction:" : " 9/23/2017 19:41:15",
+		"loadArmature:" : "RonieSalgado 11/29/2017 00:20",
+		"loadBoundingBox:" : " 9/23/2017 19:41:15",
+		"loadActionBone:" : "RonieSalgado 11/29/2017 00:20",
+		"loadFrom:" : " 9/23/2017 19:41:15"
+	},
+	"class" : {
+		"convert:singleMaterial:toFuel:" : " 9/23/2017 19:41:15",
+		"convert:materialMap:toFuel:" : " 9/23/2017 19:41:15",
+		"scriptsUsed" : " 9/23/2017 19:41:15"
+	}
+}

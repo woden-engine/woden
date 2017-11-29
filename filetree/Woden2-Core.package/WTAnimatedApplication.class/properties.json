@@ -1,0 +1,19 @@
+{
+	"commentStamp" : "",
+	"super" : "WTApplication",
+	"category" : "Woden2-Core-Application",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants",
+		"OSKeySymbols"
+	],
+	"classvars" : [
+		"MaxUpdateIterationCount"
+	],
+	"instvars" : [
+		"accumulatedUpdateTime",
+		"currentTime"
+	],
+	"name" : "WTAnimatedApplication",
+	"type" : "normal"
+}

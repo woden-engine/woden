@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "AthensSimplePathBuilder",
+	"category" : "Woden2-Athens",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WTAthensSimplePathBuilder",
+	"type" : "normal"
+}

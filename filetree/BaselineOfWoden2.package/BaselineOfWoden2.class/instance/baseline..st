@@ -34,7 +34,7 @@ baseline: spec
 					versionString: #'development';
 					repository: 'http://smalltalkhub.com/mc/ronsaldo/OpenAL/main' ].
 		spec package: #'Woden2-Core' with: [
-				spec requires: #('NeoJSON' 'AbstractGPU' 'Dastrel' 'Lowcode' 'WodenMath')].
+				spec requires: #('NeoJSON' 'AbstractGPU' 'Dastrel')].
 		spec package: #'Woden2-Athens' with: [
 				spec requires: #('Woden2-Core')].
 		spec package: #'Woden2-Scene' with: [

@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Roassal-Glamour",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "GLMMorphicWodenRenderer",
+	"pools" : [
+		 ],
+	"super" : "GLMMorphicRoassal2Renderer",
+	"type" : "normal" }

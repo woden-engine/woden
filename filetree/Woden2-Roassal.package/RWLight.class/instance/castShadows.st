@@ -1,0 +1,3 @@
+accessing
+castShadows
+	^ sceneNode castShadows

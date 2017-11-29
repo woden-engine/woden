@@ -1,0 +1,14 @@
+{
+	"instance" : {
+		"vertexBinding:" : " 9/23/2017 19:41:15",
+		"vertexBinding" : " 9/23/2017 19:41:15",
+		"indexBuffer:" : " 9/23/2017 19:41:15",
+		"renderOn:mode:submode:instanceCount:baseInstance:baseVertex:" : " 9/23/2017 19:41:15",
+		"submeshes" : " 9/23/2017 19:41:15",
+		"performGpuStateUpdateFor:frameIndex:into:" : " 9/23/2017 19:41:15",
+		"createSceneDependentDataFor:into:" : " 9/23/2017 19:41:15",
+		"indexBuffer" : " 9/23/2017 19:41:15",
+		"submeshes:" : " 9/23/2017 19:41:15"
+	},
+	"class" : { }
+}

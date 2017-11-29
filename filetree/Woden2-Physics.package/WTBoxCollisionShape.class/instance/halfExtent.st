@@ -1,0 +1,3 @@
+accessing
+halfExtent
+	^ halfExtent copy

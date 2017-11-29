@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "RonieSalgado 5/30/2016 21:46",
+	"super" : "Object",
+	"category" : "Woden2-Core-Resources",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"BufferRegistry"
+	],
+	"instvars" : [
+		"data",
+		"pointer",
+		"size"
+	],
+	"name" : "WTSessionPersistentExternalBuffer",
+	"type" : "normal"
+}

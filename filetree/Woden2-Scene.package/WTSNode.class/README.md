@@ -1,0 +1,1 @@
+I represent a node in the Woden scene graph.

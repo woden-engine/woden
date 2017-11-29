@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "WTAthensPathBuilderBackend",
+	"category" : "Woden2-Athens",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"surface",
+		"closed",
+		"subpathFirstVertex",
+		"pathVertexCount",
+		"subpathVertexCount"
+	],
+	"name" : "WTAthensSurfaceThinLinePathBuilderBackend",
+	"type" : "normal"
+}

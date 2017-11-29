@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Roassal-Events",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"element" ],
+	"name" : "RWEvent",
+	"pools" : [
+		 ],
+	"super" : "Announcement",
+	"type" : "normal" }

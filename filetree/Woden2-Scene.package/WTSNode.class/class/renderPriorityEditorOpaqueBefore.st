@@ -1,0 +1,3 @@
+accessing
+renderPriorityEditorOpaqueBefore
+	^ RenderPriorityEditorOpaqueBefore

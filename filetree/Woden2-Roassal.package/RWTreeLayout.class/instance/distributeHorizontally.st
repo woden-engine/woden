@@ -1,0 +1,3 @@
+private
+distributeHorizontally
+	self distributeNodesHorizontally: roots

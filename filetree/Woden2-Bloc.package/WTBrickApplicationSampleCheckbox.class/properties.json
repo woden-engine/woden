@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Bloc",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "WTBrickApplicationSampleCheckbox",
+	"pools" : [
+		 ],
+	"super" : "WTBlocApplication",
+	"type" : "normal" }

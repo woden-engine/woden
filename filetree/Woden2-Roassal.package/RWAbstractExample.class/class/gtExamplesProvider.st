@@ -1,0 +1,3 @@
+gtinspector
+gtExamplesProvider
+	^ self new

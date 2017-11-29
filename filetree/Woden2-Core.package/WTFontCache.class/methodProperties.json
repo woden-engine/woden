@@ -1,0 +1,23 @@
+{
+	"instance" : {
+		"loadLodenFontFaceMetadataNamed:fromFile:" : "RonieSalgado 11/29/2017 00:21",
+		"default" : " 9/23/2017 19:41:15",
+		"loadLodenFontFaceNamed:fromFile:" : " 9/23/2017 19:41:15",
+		"sessionChanged" : " 9/23/2017 19:41:15",
+		"addedAssetSearchPath:" : " 9/23/2017 19:41:15",
+		"readJsonFromFile:" : " 9/23/2017 19:41:15",
+		"defaultSerif" : " 9/23/2017 19:41:15",
+		"defaultMono" : " 9/23/2017 19:41:15",
+		"defaultSans" : " 9/23/2017 19:41:15",
+		"loadFont:name:baseDir:" : " 9/23/2017 19:41:15",
+		"loadFonts" : " 9/23/2017 19:41:15",
+		"initializeForEngine:" : " 9/23/2017 19:41:15",
+		"loadFontFaceNamed:fromFile:" : " 9/23/2017 19:41:15",
+		"loadFontFace:name:baseDir:" : " 9/23/2017 19:41:15",
+		"loadFontsFromFile:" : " 9/23/2017 19:41:15"
+	},
+	"class" : {
+		"initialize" : " 9/23/2017 19:41:15",
+		"defaultFontBlocHack" : " 9/23/2017 19:41:15"
+	}
+}

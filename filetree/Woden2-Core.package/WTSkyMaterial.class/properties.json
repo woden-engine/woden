@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "WTMaterial",
+	"category" : "Woden2-Core-Material",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"modePipelines",
+		"skyTexture",
+		"resourceBinding",
+		"resourceBindingsAreUpdated"
+	],
+	"name" : "WTSkyMaterial",
+	"type" : "normal"
+}

@@ -1,0 +1,29 @@
+{
+	"instance" : {
+		"resolveResourceFileReference:" : " 9/23/2017 19:41:15",
+		"performMaterialLoading:" : " 9/23/2017 19:41:15",
+		"stringifyPath:" : " 9/23/2017 19:41:15",
+		"loadMesh:" : " 9/23/2017 19:41:15",
+		"loadTexture:" : " 9/23/2017 19:41:15",
+		"sessionChanged" : " 9/23/2017 19:41:15",
+		"allMaterialNames" : " 9/23/2017 19:41:15",
+		"loadSoundSampleData:" : " 9/23/2017 19:41:15",
+		"ensureAllMaterialThumbnailsInDB:" : " 9/23/2017 19:41:15",
+		"athensCache" : " 9/23/2017 19:41:15",
+		"resolveResourceFileReference:ifFailed:" : " 9/23/2017 19:41:15",
+		"createDefaultMaterial" : " 9/23/2017 19:41:15",
+		"addedAssetSearchPath:" : " 9/23/2017 19:41:15",
+		"loadModel:" : " 9/23/2017 19:41:15",
+		"loadSoundSample:" : " 9/23/2017 19:41:15",
+		"binaryContentsOf:" : " 9/23/2017 19:41:15",
+		"loadTextureData:" : " 9/23/2017 19:41:15",
+		"initializeForEngine:" : " 9/23/2017 19:41:15",
+		"resourceAt:ifAbsentPut:" : " 9/23/2017 19:41:15",
+		"defaultMaterial" : " 9/23/2017 19:41:15",
+		"loadMaterial:fallback:" : " 9/23/2017 19:41:15",
+		"performModelLoading:" : " 9/23/2017 19:41:15",
+		"loadSRGBTexture:" : " 9/23/2017 19:41:15",
+		"loadMaterial:" : " 9/23/2017 19:41:15"
+	},
+	"class" : { }
+}

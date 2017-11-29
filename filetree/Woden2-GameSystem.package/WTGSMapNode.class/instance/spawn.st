@@ -1,0 +1,2 @@
+map events
+spawn

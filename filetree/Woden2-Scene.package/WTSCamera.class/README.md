@@ -1,0 +1,1 @@
+I represent a camera in the woden scene graph.

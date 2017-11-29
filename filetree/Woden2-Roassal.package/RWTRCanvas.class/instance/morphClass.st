@@ -1,0 +1,3 @@
+instance creation
+morphClass
+	^ RWTRMorph

@@ -1,0 +1,13 @@
+{
+	"instance" : {
+		"loadCompressedLayerFromStream:header:blockSize:" : " 9/23/2017 19:41:15",
+		"loadFromStream:" : " 9/23/2017 19:41:15",
+		"loadUncompressedLayerFromStream:header:format:" : " 9/23/2017 19:41:15"
+	},
+	"class" : {
+		"initialize" : " 9/23/2017 19:41:15",
+		"textureFromFileNamed:" : " 9/23/2017 19:41:15",
+		"textureFromStream:" : " 9/23/2017 19:41:15",
+		"fourCC:" : " 9/23/2017 19:41:15"
+	}
+}

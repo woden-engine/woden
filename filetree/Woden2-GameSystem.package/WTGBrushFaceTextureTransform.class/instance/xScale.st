@@ -1,0 +1,3 @@
+accessing
+xScale
+	^ scale x

@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "WTResourceWithSessionHandle",
+	"category" : "Woden2-Core-Sound",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WTSoundDevice",
+	"type" : "normal"
+}

@@ -1,0 +1,3 @@
+changing transparency
+alphaOverTranslucent
+	self transparencyMode: AlphaOverTransparencyMode

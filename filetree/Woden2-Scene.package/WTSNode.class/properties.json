@@ -1,0 +1,34 @@
+{
+	"commentStamp" : "RonieSalgado 6/13/2016 14:33",
+	"super" : "Object",
+	"category" : "Woden2-Scene-Graph",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"RenderPriorityDefault",
+		"RenderPriorityEditorOpaqueAfter",
+		"RenderPriorityEditorOpaqueBefore",
+		"RenderPriorityEditorTranslucentAfter",
+		"RenderPriorityEditorTranslucentSortedAfter",
+		"RenderPriorityOpaque",
+		"RenderPriorityOpaqueStatic",
+		"RenderPriorityTranslucent",
+		"RenderPriorityTranslucentSorted"
+	],
+	"instvars" : [
+		"scene",
+		"transform",
+		"children",
+		"visible",
+		"lastUpdatedGpuFrame",
+		"parent",
+		"renderTransform",
+		"model",
+		"modificationCount",
+		"updatedPerFrame",
+		"stateChangeListeners",
+		"useViewportCamera"
+	],
+	"name" : "WTSNode",
+	"type" : "normal"
+}

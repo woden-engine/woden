@@ -1,0 +1,21 @@
+{
+	"instance" : {
+		"rotateByDegrees:" : " 9/23/2017 19:41:17",
+		"loadIdentity" : " 9/23/2017 19:41:17",
+		"matrix:" : " 9/23/2017 19:41:17",
+		"translateBy:" : " 9/23/2017 19:41:17",
+		"rotateByRadians:" : " 9/23/2017 19:41:17",
+		"transform:" : " 9/23/2017 19:41:17",
+		"scaleX:Y:" : " 9/23/2017 19:41:17",
+		"transformPosition2:" : " 9/23/2017 19:41:17",
+		"translateX:Y:" : " 9/23/2017 19:41:17",
+		"initialize" : " 9/23/2017 19:41:17",
+		"matrix" : " 9/23/2017 19:41:17",
+		"restoreAfter:" : " 9/23/2017 19:41:17",
+		"scaleBy:" : " 9/23/2017 19:41:17",
+		"multiplyBy:" : " 9/23/2017 19:41:17",
+		"loadAffineTransform:" : " 9/23/2017 19:41:17",
+		"transformX:Y:" : " 9/23/2017 19:41:17"
+	},
+	"class" : { }
+}

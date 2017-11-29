@@ -1,0 +1,5 @@
+initialization
+loadMaterialThumbDB
+	materialThumbDB := WTResourceThumbnailDB tryToLoadFromFileNamed: MaterialThumbDBFileName.
+	engine resourceCache ensureAllMaterialThumbnailsInDB: materialThumbDB.
+	materialThumbDB saveTo: MaterialThumbDBFileName

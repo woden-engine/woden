@@ -1,0 +1,3 @@
+accessing
+minimalAlignment
+	^ 1

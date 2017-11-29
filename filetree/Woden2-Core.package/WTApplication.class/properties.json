@@ -1,0 +1,19 @@
+{
+	"commentStamp" : "",
+	"super" : "OSWindowEventVisitor",
+	"category" : "Woden2-Core-Application",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants",
+		"OSKeySymbols"
+	],
+	"classvars" : [ ],
+	"instvars" : [
+		"engine",
+		"window",
+		"session",
+		"fullscreen"
+	],
+	"name" : "WTApplication",
+	"type" : "normal"
+}

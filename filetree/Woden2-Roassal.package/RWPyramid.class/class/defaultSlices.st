@@ -1,0 +1,3 @@
+configuration
+defaultSlices
+	^ 4

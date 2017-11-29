@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "WTMaterial",
+	"category" : "Woden2-Core-Material",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"useDepth",
+		"writeDepth",
+		"modePipelines",
+		"stipple",
+		"thumbnailType"
+	],
+	"name" : "WTFlatColorMaterial",
+	"type" : "normal"
+}

@@ -1,0 +1,48 @@
+WMRayIntersectionTestResult category: 'accessing' methods: {
+:[distance
+	^ distance
+].
+
+:[distance: anObject
+	distance := anObject
+].
+
+:[priority
+	^ priority
+].
+
+:[priority: anObject
+	priority := anObject
+].
+
+:[value
+	^ value
+].
+
+:[value: anObject
+	value := anObject
+]
+}.
+
+WMRayIntersectionTestResult category: 'initialization' methods: {
+:[initialize
+	priority := 0.
+].
+
+}.
+
+WMRayIntersectionTestResult category: 'comparing' methods: {
+:[< other
+	priority = other priority ifTrue: [
+		^ distance < other distance
+	] ifFalse: [ 
+		^ priority < other priority
+	]
+]
+}.
+
+WMRayIntersectionTestResult category: 'printing' methods: {
+:[printOn: aStream
+	aStream nextPutAll: self class name; nextPutAll: ' distance: '; print: distance; nextPutAll: ' value: ('; print: value; nextPut: $)
+].
+}.

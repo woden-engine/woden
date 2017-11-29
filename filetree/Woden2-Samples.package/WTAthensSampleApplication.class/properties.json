@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "WTAnimatedApplication",
+	"category" : "Woden2-Samples",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"athensSurfaces"
+	],
+	"name" : "WTAthensSampleApplication",
+	"type" : "normal"
+}

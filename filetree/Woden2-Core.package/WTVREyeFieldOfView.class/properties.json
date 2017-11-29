@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Camera",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"left",
+		"right",
+		"top",
+		"bottom"
+	],
+	"name" : "WTVREyeFieldOfView",
+	"type" : "normal"
+}

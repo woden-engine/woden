@@ -1,0 +1,16 @@
+sources
+exampleMatrixHandling
+
+| v es |
+v := RWView new.
+es := RWCube elementsOn: (1 to: 10).
+v addAll: es.
+RWCubeLayout on: es.
+
+es when: RWMouseButtonDown do: [ :evt |
+        | node |
+        node := evt element sceneNode.
+          node shapeMatrix: (WMMatrix4F scale: 1.1) * (node shapeMatrix )
+         ].
+
+^	 v

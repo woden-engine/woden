@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "WTGSBehavior",
+	"category" : "Woden2-GameSystem-Player",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WTGSPlayerSpawnPointBehavior",
+	"type" : "normal"
+}

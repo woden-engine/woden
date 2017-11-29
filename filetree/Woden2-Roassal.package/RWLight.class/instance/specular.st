@@ -1,0 +1,3 @@
+accessing
+specular
+	^ sceneNode specularColor

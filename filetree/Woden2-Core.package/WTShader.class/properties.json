@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Resources",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"name",
+		"implementations",
+		"handleSet",
+		"stages"
+	],
+	"name" : "WTShader",
+	"type" : "normal"
+}

@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "AthensAbstractPaint",
+	"category" : "Woden2-Athens-Paint",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"colorRamp"
+	],
+	"name" : "WTAthensGradientPaint",
+	"type" : "normal"
+}

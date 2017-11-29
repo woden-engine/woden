@@ -1,0 +1,22 @@
+{
+	"instance" : {
+		"mesh:" : " 9/23/2017 19:41:15",
+		"poseBuffer" : " 9/23/2017 19:41:15",
+		"pose" : " 9/23/2017 19:41:15",
+		"computeFrameIndex:actionBone:repeated:" : " 9/23/2017 19:41:15",
+		"setRestPoseAndMatrices" : " 9/23/2017 19:41:15",
+		"interpolateFrame:with:alpha:" : " 9/23/2017 19:41:15",
+		"computePoseMatrices" : " 9/23/2017 19:41:15",
+		"pose:" : "RonieSalgado 11/29/2017 00:20",
+		"actionNamed:" : " 9/23/2017 19:41:15",
+		"poseBuffer:" : " 9/23/2017 19:41:15",
+		"setRestPoseMatrices" : " 9/23/2017 19:41:15",
+		"poseMatrices" : " 9/23/2017 19:41:15",
+		"addActionBone:repeated:frame:" : " 9/23/2017 19:41:15",
+		"addAction:frame:" : " 9/23/2017 19:41:15",
+		"addAction:repeated:frame:" : " 9/23/2017 19:41:15",
+		"mesh" : " 9/23/2017 19:41:15",
+		"setRestPose" : " 9/23/2017 19:41:15"
+	},
+	"class" : { }
+}

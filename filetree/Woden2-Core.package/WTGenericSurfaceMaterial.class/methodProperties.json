@@ -1,0 +1,26 @@
+{
+	"instance" : {
+		"albedoColor" : " 9/23/2017 19:41:15",
+		"initialize" : " 9/23/2017 19:41:15",
+		"normalTexture" : " 9/23/2017 19:41:15",
+		"smoothness:" : " 9/23/2017 19:41:15",
+		"smoothness" : " 9/23/2017 19:41:15",
+		"invalidateCache" : " 9/23/2017 19:41:15",
+		"albedoColor:" : " 9/23/2017 19:41:15",
+		"fresnelConstant" : " 9/23/2017 19:41:15",
+		"albedoTexture:" : " 9/23/2017 19:41:15",
+		"fetchPipelines" : " 9/23/2017 19:41:15",
+		"fresnelConstant:" : " 9/23/2017 19:41:15",
+		"thumbnail" : " 9/23/2017 19:41:15",
+		"albedoTexture" : " 9/23/2017 19:41:15",
+		"normalTexture:" : " 9/23/2017 19:41:15",
+		"activateOn:primitiveType:mode:submode:" : " 9/23/2017 19:41:15",
+		"uploadMaterialStateData" : " 9/23/2017 19:41:15",
+		"validateCache" : " 9/23/2017 19:41:15",
+		"parse:data:" : " 9/23/2017 19:41:15",
+		"engineChanged" : " 9/23/2017 19:41:15",
+		"thumbnailType" : " 9/23/2017 19:41:15",
+		"bindResources" : " 9/23/2017 19:41:15"
+	},
+	"class" : { }
+}

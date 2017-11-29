@@ -1,0 +1,19 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-GameSystem-Level",
+	"classinstvars" : [ ],
+	"pools" : [
+		"OSKeySymbols"
+	],
+	"classvars" : [
+		"LastSelectionColor",
+		"SelectionColor"
+	],
+	"instvars" : [
+		"selected",
+		"lastSelected"
+	],
+	"name" : "WTGSMapNode",
+	"type" : "normal"
+}

@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Engine",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"engine",
+		"resources",
+		"defaultMaterial",
+		"athensCache"
+	],
+	"name" : "WTResourceCache",
+	"type" : "normal"
+}

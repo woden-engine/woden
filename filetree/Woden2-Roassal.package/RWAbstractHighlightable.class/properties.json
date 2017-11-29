@@ -1,0 +1,15 @@
+{
+	"category" : "Woden2-Roassal-Core",
+	"classinstvars" : [
+		"lastHighlightedElements",
+		"lastColor" ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"highlightElements" ],
+	"name" : "RWAbstractHighlightable",
+	"pools" : [
+		 ],
+	"super" : "RWElementInteraction",
+	"type" : "normal" }

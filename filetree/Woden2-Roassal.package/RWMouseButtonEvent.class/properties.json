@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Roassal-Events",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"button" ],
+	"name" : "RWMouseButtonEvent",
+	"pools" : [
+		 ],
+	"super" : "RWMouseEvent",
+	"type" : "normal" }

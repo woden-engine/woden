@@ -1,0 +1,3 @@
+initialization
+defaultPopupColor
+	^ Color red

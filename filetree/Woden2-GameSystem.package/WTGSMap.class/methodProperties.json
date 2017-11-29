@@ -1,0 +1,43 @@
+{
+	"instance" : {
+		"saveJsonToFile:prettyPrint:" : " 9/23/2017 19:41:17",
+		"playModeCopy" : " 9/23/2017 19:41:17",
+		"createPointEntityInstanceGroup" : " 9/23/2017 19:41:17",
+		"asJsonData" : " 9/23/2017 19:41:17",
+		"initialize" : " 9/23/2017 19:41:17",
+		"pointEntityInstanceGroup" : " 9/23/2017 19:41:17",
+		"findBrushesIntersectingBox:" : " 9/23/2017 19:41:17",
+		"loadJsonFromFileNamed:" : " 9/23/2017 19:41:17",
+		"backgroundColor" : " 9/23/2017 19:41:17",
+		"registerTouchListener:" : " 9/23/2017 19:41:17",
+		"scene:" : " 9/23/2017 19:41:17",
+		"findBrushesIntersectingSelectedBrushesProperly:" : " 9/23/2017 19:41:17",
+		"unregisterTimeListener:" : " 9/23/2017 19:41:17",
+		"registerTimeListener:" : " 9/23/2017 19:41:17",
+		"sendTouchEvents" : " 9/23/2017 19:41:17",
+		"elementsAlongRay:mode:do:" : " 9/23/2017 19:41:17",
+		"loadFromJson:" : " 9/23/2017 19:41:17",
+		"unregisterTouchListener:" : " 9/23/2017 19:41:17",
+		"levelPlayer:" : " 9/23/2017 19:41:17",
+		"entities" : " 9/23/2017 19:41:17",
+		"spawn" : " 9/23/2017 19:41:17",
+		"backgroundColor:" : " 9/23/2017 19:41:17",
+		"editorMode" : " 9/23/2017 19:41:17",
+		"numberOfEntities" : " 9/23/2017 19:41:17",
+		"removeEntity:" : " 9/23/2017 19:41:17",
+		"saveBinaryToFile:" : " 9/23/2017 19:41:17",
+		"simulateTime:" : " 9/23/2017 19:41:17",
+		"destroyPointEntityInstanceGroup" : " 9/23/2017 19:41:17",
+		"levelPlayer" : " 9/23/2017 19:41:17",
+		"editorMode:" : " 9/23/2017 19:41:17",
+		"saveJsonToFile:" : " 9/23/2017 19:41:17",
+		"scene" : " 9/23/2017 19:41:17",
+		"spawnEntityWithBehavior:position:" : " 9/23/2017 19:41:17",
+		"addEntity:" : " 9/23/2017 19:41:17",
+		"loadMaterial:" : " 9/23/2017 19:41:17"
+	},
+	"class" : {
+		"fuelIgnoredInstanceVariableNames" : " 9/23/2017 19:41:17",
+		"loadJsonFromFileNamed:" : " 9/23/2017 19:41:17"
+	}
+}

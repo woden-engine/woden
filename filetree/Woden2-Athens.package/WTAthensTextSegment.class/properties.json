@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "AthensPathSegment",
+	"category" : "Woden2-Athens",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"endPoint",
+		"string",
+		"font"
+	],
+	"name" : "WTAthensTextSegment",
+	"type" : "normal"
+}

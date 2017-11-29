@@ -1,0 +1,16 @@
+{
+	"instance" : {
+		"renderModificationCountFor:submode:" : " 9/23/2017 19:41:17",
+		"renderable:" : " 9/23/2017 19:41:17",
+		"renderOn:mode:submode:" : " 9/23/2017 19:41:17",
+		"currentObjectStateBinding" : " 9/23/2017 19:41:17",
+		"performGpuStateUpdateWithCamera:" : " 9/23/2017 19:41:17",
+		"renderableSceneData" : " 9/23/2017 19:41:17",
+		"initialize" : " 9/23/2017 19:41:17",
+		"canBeRendered" : " 9/23/2017 19:41:17",
+		"renderable" : " 9/23/2017 19:41:17",
+		"createSceneDependentData" : " 9/23/2017 19:41:17",
+		"currentGpuObjectState" : " 9/23/2017 19:41:17"
+	},
+	"class" : { }
+}

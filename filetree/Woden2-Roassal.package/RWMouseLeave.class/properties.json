@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Roassal-Events",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "RWMouseLeave",
+	"pools" : [
+		 ],
+	"super" : "RWMouseEvent",
+	"type" : "normal" }

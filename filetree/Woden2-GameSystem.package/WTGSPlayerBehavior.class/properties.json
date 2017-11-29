@@ -1,0 +1,26 @@
+{
+	"commentStamp" : "",
+	"super" : "WTGSForwardKinematicMovementBehavior",
+	"category" : "Woden2-GameSystem-Player",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"speed",
+		"weapons",
+		"currentWeapon",
+		"weaponSceneNode",
+		"weaponAction",
+		"weaponActionFrame",
+		"weaponActionRepeated",
+		"velocityDirection",
+		"weaponAnimationSpeed",
+		"soundListener",
+		"weaponSoundSource",
+		"bullets",
+		"bulletsNode",
+		"headTransform"
+	],
+	"name" : "WTGSPlayerBehavior",
+	"type" : "normal"
+}

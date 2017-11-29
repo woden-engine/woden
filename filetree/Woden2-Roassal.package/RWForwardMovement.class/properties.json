@@ -1,0 +1,19 @@
+{
+	"category" : "Woden2-Roassal-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"angle",
+		"angularVelocity",
+		"velocity",
+		"acceleration",
+		"angularSpeed",
+		"speed" ],
+	"name" : "RWForwardMovement",
+	"pools" : [
+		 ],
+	"super" : "RWElementBehavior",
+	"type" : "normal" }

@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "AthensStrokePaint",
+	"category" : "Woden2-Athens-Paint",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WTAthensStrokePaint",
+	"type" : "normal"
+}

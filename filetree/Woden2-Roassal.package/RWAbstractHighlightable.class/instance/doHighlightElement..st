@@ -1,0 +1,3 @@
+actions
+doHighlightElement: anElement
+	self subclassResponsibility

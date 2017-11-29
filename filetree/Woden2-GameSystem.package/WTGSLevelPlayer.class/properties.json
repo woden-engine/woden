@@ -1,0 +1,21 @@
+{
+	"classtraitcomposition" : "TWTGSLevelPlayer classTrait",
+	"classvars" : [ ],
+	"instvars" : [
+		"map",
+		"scene",
+		"camera",
+		"sceneRenderer",
+		"athensSurfaces",
+		"lastRenderTime",
+		"playerEventHandler"
+	],
+	"name" : "WTGSLevelPlayer",
+	"commentStamp" : "",
+	"super" : "WTAnimatedApplication",
+	"traitcomposition" : "TWTGSLevelPlayer",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "Woden2-GameSystem-LevelPlayer"
+}

@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "WTGenericMeshBuilder",
+	"category" : "Woden2-Core-Mesh",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [
+		"NormalAxis"
+	],
+	"instvars" : [
+		"transform"
+	],
+	"name" : "WTComplexGenericMeshBuilder",
+	"type" : "normal"
+}

@@ -137,6 +137,13 @@ WMVector3 category: 'arithmetic' methods: {
 	]
 ].
 
+:[reciprocalFloatQuiet -> WMVector3.
+	^ WMVector3
+		x: (x reciprocalFloatQuiet castTo: Scalar)
+		y: (y reciprocalFloatQuiet castTo: Scalar)
+		z: (z reciprocalFloatQuiet castTo: Scalar)
+].
+
 }.
 
 WMVector3 category: 'comparing' methods: {

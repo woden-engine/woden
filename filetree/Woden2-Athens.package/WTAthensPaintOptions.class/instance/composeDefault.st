@@ -1,0 +1,3 @@
+modes
+composeDefault
+	self composeOver

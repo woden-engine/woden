@@ -1,0 +1,3 @@
+class initialization
+renderPriorityEditorTranslucentAfter
+	^ RenderPriorityEditorTranslucentAfter

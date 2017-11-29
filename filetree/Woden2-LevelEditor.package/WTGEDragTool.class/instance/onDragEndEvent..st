@@ -1,0 +1,3 @@
+events
+onDragEndEvent: anEvent
+	view toolControllerFinished

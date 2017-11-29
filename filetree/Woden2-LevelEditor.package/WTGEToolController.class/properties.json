@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-LevelEditor",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"view" ],
+	"name" : "WTGEToolController",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

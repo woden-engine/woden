@@ -1,0 +1,19 @@
+{
+	"commentStamp" : "",
+	"super" : "WTGSComponent",
+	"category" : "Woden2-GameSystem-Level",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"Box3D",
+		"Complex",
+		"Quaternion",
+		"ReversibleAffineTransform",
+		"Vector2",
+		"Vector3",
+		"Vector4"
+	],
+	"instvars" : [ ],
+	"name" : "WTGSBehavior",
+	"type" : "normal"
+}

@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Roassal-Events",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "RWJoyButtonDown",
+	"pools" : [
+		 ],
+	"super" : "RWJoyButtonEvent",
+	"type" : "normal" }

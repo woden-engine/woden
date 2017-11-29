@@ -1,0 +1,3 @@
+hooks
+buildCollisionShapeFor: element
+	self subclassResponsibility

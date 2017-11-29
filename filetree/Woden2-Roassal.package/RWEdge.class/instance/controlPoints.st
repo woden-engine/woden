@@ -1,0 +1,4 @@
+accessing
+controlPoints
+	
+	^ controlPoints

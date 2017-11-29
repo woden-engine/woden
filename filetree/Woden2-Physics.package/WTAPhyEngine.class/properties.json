@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Physics-AbstractPhysics",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"handle" ],
+	"name" : "WTAPhyEngine",
+	"pools" : [
+		 ],
+	"super" : "WTPhysicsEngine",
+	"type" : "normal" }

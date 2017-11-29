@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "RonieSalgado 8/16/2016 02:12",
+	"super" : "WTSLocalSpatialObject",
+	"category" : "Woden2-Scene-Graph",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"shapeTransform"
+	],
+	"name" : "WTSLocalShapedSpatialObject",
+	"type" : "normal"
+}

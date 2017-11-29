@@ -1,0 +1,17 @@
+{
+	"category" : "Woden2-Roassal-Normalizer",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"elements",
+		"view",
+		"translator",
+		"edges" ],
+	"name" : "RWMetricNormalizer",
+	"pools" : [
+		 ],
+	"super" : "RTObject",
+	"type" : "normal" }

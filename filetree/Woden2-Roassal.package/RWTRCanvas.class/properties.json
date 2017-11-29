@@ -1,0 +1,15 @@
+{
+	"category" : "Woden2-Roassal-Trachel",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"customSurface",
+		"engine" ],
+	"name" : "RWTRCanvas",
+	"pools" : [
+		 ],
+	"super" : "TRCanvas",
+	"type" : "normal" }

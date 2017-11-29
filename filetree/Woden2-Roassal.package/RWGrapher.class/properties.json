@@ -1,0 +1,24 @@
+{
+	"category" : "Woden2-Roassal-Builder-Grapher",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"datasets",
+		"axisConfigurationX",
+		"axisConfigurationY",
+		"axisConfigurationZ",
+		"minX",
+		"maxX",
+		"minY",
+		"maxY",
+		"minZ",
+		"maxZ",
+		"extent" ],
+	"name" : "RWGrapher",
+	"pools" : [
+		 ],
+	"super" : "RWBuilder",
+	"type" : "normal" }

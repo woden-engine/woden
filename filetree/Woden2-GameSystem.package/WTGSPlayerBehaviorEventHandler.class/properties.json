@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "OSWindowEventVisitor",
+	"category" : "Woden2-GameSystem-Player",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"behavior"
+	],
+	"name" : "WTGSPlayerBehaviorEventHandler",
+	"type" : "normal"
+}

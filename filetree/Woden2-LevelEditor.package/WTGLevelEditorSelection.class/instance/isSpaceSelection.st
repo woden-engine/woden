@@ -1,0 +1,3 @@
+testing
+isSpaceSelection
+	^ false

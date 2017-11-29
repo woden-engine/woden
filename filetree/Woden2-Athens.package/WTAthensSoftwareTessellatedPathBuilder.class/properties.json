@@ -1,0 +1,20 @@
+{
+	"commentStamp" : "",
+	"super" : "WTAthensPathBuilder",
+	"category" : "Woden2-Athens",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"backend",
+		"baseIndex",
+		"closed",
+		"flattnessFactor",
+		"pixelThreshold",
+		"transformation",
+		"arcSegmentLength",
+		"maxArcSegments"
+	],
+	"name" : "WTAthensSoftwareTessellatedPathBuilder",
+	"type" : "normal"
+}

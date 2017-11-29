@@ -1,0 +1,3 @@
+accessing
+fresnelConstant
+	^ materialState fresnel

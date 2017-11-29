@@ -1,0 +1,3 @@
+adding
+removeFromMap
+	self removeFromEntity

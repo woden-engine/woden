@@ -1,0 +1,14 @@
+{
+	"category" : "Woden2-Roassal-Layout",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "RWZLineLayout",
+	"pools" : [
+		 ],
+	"super" : "RWLineLayout",
+	"type" : "normal" }

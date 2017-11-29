@@ -1,0 +1,3 @@
+changing
+changedSelectionState
+	self invalidateModels

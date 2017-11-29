@@ -1,0 +1,15 @@
+{
+	"instance" : {
+		"behavior:" : " 9/23/2017 19:41:17",
+		"visitMouseButtonPressEvent:" : " 9/23/2017 19:41:17",
+		"visitJoyButtonDownEvent:" : " 9/23/2017 19:41:17",
+		"visitMouseMoveEvent:" : " 9/23/2017 19:41:17",
+		"behavior" : " 9/23/2017 19:41:17",
+		"visitMouseButtonReleaseEvent:" : " 9/23/2017 19:41:17",
+		"visitJoyButtonUpEvent:" : " 9/23/2017 19:41:17",
+		"visitJoyAxisEvent:" : " 9/23/2017 19:41:17",
+		"visitKeyUpEvent:" : " 9/23/2017 19:41:17",
+		"visitKeyDownEvent:" : " 9/23/2017 19:41:17"
+	},
+	"class" : { }
+}

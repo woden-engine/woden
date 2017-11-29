@@ -1,0 +1,25 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Resources-Texture",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [
+		"PixelFormatDecoderSelector",
+		"ThumbnailSize"
+	],
+	"instvars" : [
+		"pixelFormat",
+		"srgbPixelFormat",
+		"width",
+		"height",
+		"depth",
+		"layers",
+		"type",
+		"miplevels"
+	],
+	"name" : "WTTextureData",
+	"type" : "normal"
+}

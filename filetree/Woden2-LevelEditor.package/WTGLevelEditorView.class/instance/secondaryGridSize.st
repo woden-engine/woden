@@ -1,0 +1,3 @@
+accessing
+secondaryGridSize
+	^ editor secondaryGridSize

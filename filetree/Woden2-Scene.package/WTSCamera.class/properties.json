@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "RonieSalgado 6/13/2016 14:33",
+	"super" : "WTSNode",
+	"category" : "Woden2-Scene-Graph",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"state"
+	],
+	"name" : "WTSCamera",
+	"type" : "normal"
+}

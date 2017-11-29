@@ -1,0 +1,18 @@
+{
+	"category" : "Woden2-Roassal-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"AdditiveAlphaTransparencyMode",
+		"AdditiveTransparencyMode",
+		"AlphaOverTransparencyMode",
+		"OpaqueTransparencyMode" ],
+	"commentStamp" : "",
+	"instvars" : [
+		"color",
+		"transparencyMode" ],
+	"name" : "RWShape",
+	"pools" : [
+		 ],
+	"super" : "RWObject",
+	"type" : "normal" }

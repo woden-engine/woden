@@ -1,0 +1,37 @@
+{
+	"category" : "Woden2-LevelEditor",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"OrthographicFarDistance",
+		"OrthographicNearDistance",
+		"PerspectiveFarDistance",
+		"PerspectiveNearDistance" ],
+	"commentStamp" : "",
+	"instvars" : [
+		"camera",
+		"cameraVelocity",
+		"cameraSpeed",
+		"cameraAngle",
+		"cameraAngularVelocity",
+		"cameraAngularSpeed",
+		"renderMode",
+		"cameraTransform",
+		"baseGridSize",
+		"primaryGrid",
+		"secondaryGrid",
+		"gridOrientation",
+		"isPerspective",
+		"cameraFrustum",
+		"toolController",
+		"lastClickElements",
+		"nextClickElementIndex",
+		"centerAxis",
+		"lastDragEndPosition",
+		"selectionBoxView",
+		"viewScale" ],
+	"name" : "WTGLevelEditorView",
+	"pools" : [
+		 ],
+	"super" : "WTGLevelEditorViewComponent",
+	"type" : "normal" }

@@ -1,0 +1,15 @@
+{
+	"category" : "Woden2-OpenAL",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"device",
+		"handle" ],
+	"name" : "WTOpenALSoundSample",
+	"pools" : [
+		"OpenALConstants" ],
+	"super" : "Object",
+	"type" : "normal" }

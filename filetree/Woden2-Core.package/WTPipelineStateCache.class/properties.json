@@ -1,0 +1,33 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Engine",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [
+		"BlendingFactorNameMap",
+		"BlendingOperationNameMap",
+		"CompareFunctionNameMap",
+		"CullModeNameMap",
+		"FaceWindingNameMap",
+		"PipelineStateObjectAttributeParser",
+		"PrimitiveTopologyNameMap",
+		"ShaderBindingTypeMap",
+		"ShaderLanguageNameMap",
+		"StageNameMap",
+		"StencilOperationNameMap"
+	],
+	"instvars" : [
+		"engine",
+		"structures",
+		"vertexLayouts",
+		"shaders",
+		"pipelineStateObjects",
+		"shaderSignatures",
+		"shaderLanguageSearchOrder"
+	],
+	"name" : "WTPipelineStateCache",
+	"type" : "normal"
+}

@@ -1,0 +1,18 @@
+{
+	"commentStamp" : "",
+	"super" : "WTGSMapNode",
+	"category" : "Woden2-GameSystem-Level",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"components",
+		"numberOfComponents",
+		"map",
+		"pointEntity",
+		"worldEntity",
+		"pointEntityNode"
+	],
+	"name" : "WTGSEntity",
+	"type" : "normal"
+}

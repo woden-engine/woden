@@ -1,0 +1,20 @@
+{
+	"category" : "Woden2-LevelEditor",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"xdirection",
+		"ydirection",
+		"startPoint",
+		"endPoint",
+		"zdirection",
+		"nearPosition",
+		"farPosition" ],
+	"name" : "WTGEDragMakeSelectionBox",
+	"pools" : [
+		 ],
+	"super" : "WTGEDragTool",
+	"type" : "normal" }

@@ -1,0 +1,18 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Structures",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"FieldTypes"
+	],
+	"instvars" : [
+		"type",
+		"name",
+		"binding",
+		"offset"
+	],
+	"name" : "WTStructureField",
+	"type" : "normal"
+}

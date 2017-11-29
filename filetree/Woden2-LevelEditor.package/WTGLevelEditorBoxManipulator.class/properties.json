@@ -1,0 +1,16 @@
+{
+	"category" : "Woden2-LevelEditor",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"boxIndex",
+		"direction",
+		"node" ],
+	"name" : "WTGLevelEditorBoxManipulator",
+	"pools" : [
+		 ],
+	"super" : "WTGLevelEditorElementModel",
+	"type" : "normal" }

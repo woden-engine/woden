@@ -1,0 +1,18 @@
+{
+	"category" : "Woden2-LevelEditor",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"xScale",
+		"yScale",
+		"xOffset",
+		"yOffset",
+		"rotation" ],
+	"name" : "WTGLevelEditorTextureTransformView",
+	"pools" : [
+		 ],
+	"super" : "WTGLevelEditorBlocPane",
+	"type" : "normal" }

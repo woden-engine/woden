@@ -1,0 +1,18 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-Core-Camera",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"outside",
+		"inner",
+		"top",
+		"bottom",
+		"eyeX",
+		"eyeY"
+	],
+	"name" : "WTVREyeViewportParameters",
+	"type" : "normal"
+}

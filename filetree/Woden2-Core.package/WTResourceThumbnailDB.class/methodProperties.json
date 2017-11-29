@@ -1,0 +1,13 @@
+{
+	"instance" : {
+		"thumbnailFor:ifAbsent:" : " 9/23/2017 19:41:15",
+		"initialize" : " 9/23/2017 19:41:15",
+		"resources" : " 9/23/2017 19:41:15",
+		"saveTo:" : " 9/23/2017 19:41:15",
+		"thumbnailFor:ifAbsentPut:" : " 9/23/2017 19:41:15"
+	},
+	"class" : {
+		"tryToLoadFromFileNamed:" : " 9/23/2017 19:41:15",
+		"loadFromFileNamed:" : " 9/23/2017 19:41:15"
+	}
+}

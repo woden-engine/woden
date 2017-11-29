@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "Woden2-GameSystem-Item",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"fpsModel",
+		"shootSounds"
+	],
+	"name" : "WTGSWeapon",
+	"type" : "normal"
+}

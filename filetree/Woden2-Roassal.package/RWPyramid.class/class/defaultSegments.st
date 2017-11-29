@@ -1,0 +1,3 @@
+configuration
+defaultSegments
+	^ 2
