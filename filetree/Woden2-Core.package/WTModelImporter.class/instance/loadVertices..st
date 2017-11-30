@@ -44,7 +44,7 @@ loadVertices: verticesData
 				z: (boneWeights at: i*4 - 1)
 				w: (boneWeights at: i*4)).
 			den := weights x + weights y + weights z + weights w.
-			(den closeTo: 0.0) ifFalse: [ den := 1.0 / den ].
+			(den closeTo: 0.0) ifFalse: [ weights := weights / den ].
 			vertex boneWeights: weights.
 		].
 	
