@@ -8,3 +8,9 @@ Structure <<< #WTGenericVertexF
 	};
 	package: 'Woden2-Structures-Core-Mesh';
 	yourself.
+
+WTGenericVertexF class category: 'vertex layout' methods: {
+:[vertexLayoutName
+	^ #GenericVertex
+].
+}.

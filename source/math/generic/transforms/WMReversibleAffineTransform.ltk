@@ -134,7 +134,7 @@ WMReversibleAffineTransform category: 'transformation building' methods: {
 	self applyOrthonormalMatrix: (WMMatrix3 xrot: x)
 ].
 
-:[rotateRadiansOnX: <Scalar> y
+:[rotateRadiansOnY: <Scalar> y
 	self applyOrthonormalMatrix: (WMMatrix3 yrot: y)
 ].
 

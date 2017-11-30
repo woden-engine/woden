@@ -8,3 +8,32 @@ Structure <<< #WTLodenFontGlyphMetadata
 	};
 	package: 'Woden2-Structures-Core-Font';
 	yourself.
+
+WTLodenFontGlyphMetadata category: 'metrics' methods: {
+:[computeDestinationRectangleWithScale: <Float32> scale margin: <Float32> margin position: <WMVector2F> position -> WMBox2DF.
+	let drawPosition := position + ((WMVector2F x: horizontalBearing x - margin y: (horizontalBearing y + margin) negated) * scale).
+	let drawExtent := (box max - box min + (WMVector2F x: margin * 2.0 y: margin * 2.0)) * scale.
+	^ WMBox2DF min: drawPosition max: drawPosition + drawExtent
+].
+
+:[computePreciseAscent -> Float32.
+	^ horizontalBearing y
+
+].
+
+:[computePreciseDescent -> Float32.
+	^ box max y - box min y - self computePreciseAscent
+].
+
+:[computeSourceRectangleWithTexcoordScale: <WMVector2F> texcoordScale margin: <Float32> margin -> WMBox2DF.
+	^ WMBox2DF
+		min: ((box min - (WMVector2F x: margin y: margin)) * texcoordScale) asWMVector2F
+		max: ((box max + (WMVector2F x: margin y: margin)) * texcoordScale) asWMVector2F
+
+].
+
+:[height -> Float32.
+	^ box max y - box min y
+].
+
+}.

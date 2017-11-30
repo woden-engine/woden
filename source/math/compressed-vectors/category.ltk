@@ -11,6 +11,14 @@ WMCompactVector3F category: 'converting' methods: {
 :[asWMVector3F -> WMVector3F.
 	^ WMVector3F x: x y: y z: z
 ].
+
+:[asWMVector3D -> WMVector3D.
+	^ WMVector3D x: x y: y z: z
+].
+
+:[asWMVector3 -> WMVector3F.
+	^ WMVector3F x: x y: y z: z
+].
 }.
 
 Structure <<< #WMVector2S
@@ -49,6 +57,14 @@ Structure <<< #WMVector4US
 	};
 	package: 'WodenMath-Core-CompressedVectors';
 	yourself.
+
+WMVector4US class category: 'constructing' methods: {
+:[x: <UInt16> x y: <UInt16> y z: <UInt16> z w: <UInt16> w -> WMVector4US.
+	^ WMVector4US newValue
+		x: x; y: y; z: z; w: w;
+		yourself
+]
+}.
 	
 WMVector4US category: 'converting' methods: {
 :[asWMVector4FN -> WMVector4F.

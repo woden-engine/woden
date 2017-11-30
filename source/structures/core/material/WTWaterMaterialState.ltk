@@ -9,3 +9,14 @@ Structure <<< #WTWaterMaterialState
 	};
 	package: 'Woden2-Structures-Core-Material';
 	yourself.
+
+WTWaterMaterialState category: 'accessing' methods: {
+:[harmonicAt: <Int32> index put: <WTWaterHarmonic>harmonic
+	(harmonics at: index) := harmonic
+].
+
+:[harmonicAt: <Int32> index -> WTWaterHarmonic.
+	^ harmonics at: index
+].
+
+}.

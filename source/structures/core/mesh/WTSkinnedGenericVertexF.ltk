@@ -10,3 +10,9 @@ Structure <<< #WTSkinnedGenericVertexF
 	};
 	package: 'Woden2-Structures-Core-Mesh';
 	yourself.
+
+WTSkinnedGenericVertexF class category: 'vertex layout' methods: {
+:[vertexLayoutName
+	^ #SkinnedGenericVertex
+].
+}.

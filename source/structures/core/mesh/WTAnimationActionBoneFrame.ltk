@@ -5,3 +5,15 @@ Structure <<< #WTAnimationActionBoneFrame
 	};
 	package: 'Woden2-Structures-Core-Mesh';
 	yourself.
+
+WTAnimationActionBoneFrame category: 'matrices' methods: {
+:[forwardMatrix -> WMMatrix4F.
+	^ WMMatrix4F mat3: rotation asWMMatrix3F translation: translation
+].
+
+:[inverseMatrix -> WMMatrix4F.
+	let inverseOrientation := rotation asWMMatrix3F transposed.
+	^ WMMatrix4F mat3: inverseOrientation translation: (inverseOrientation transformVector3: translation negated)
+].
+
+}.

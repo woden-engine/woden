@@ -342,6 +342,46 @@ WMBox3D category: 'special vertices' methods: {
 
 }.
 
+WMBox3D category: 'testing' methods: {
+:[intersectsOrContainsBox: <WMBox3D>other -> BooleanBit.
+	^ (self isBoxOutside: other) not
+].
+
+:[isBoxOutside: <WMBox3D> other -> BooleanBit.
+	^ other max x < min x or:
+	[ other max y < min y or:
+	[ other max z < min z or:
+	[ other min x > max x or:
+	[ other min y > max y or:
+	[ other min z > max z ]]]]]
+].
+
+:[isEmpty -> BooleanBit.
+	^ min x > max y
+]
+}.
+
+WMBox3D category: 'transforming' methods: {
+:[translatedBy: <WMVector3> translation -> WMBox3D.
+	^ WMBox3D min: min + translation max: max + translation
+].
+
+:[transformedWith: <WMReversibleAffineTransform> transformation -> WMBox3D.
+	let result := WMBox3D empty.
+	
+	result insertPoint: (transformation transformPosition3: self nearBottomLeft).
+	result insertPoint: (transformation transformPosition3: self nearBottomRight).
+	result insertPoint: (transformation transformPosition3: self nearTopLeft).
+	result insertPoint: (transformation transformPosition3: self nearTopRight).
+
+	result insertPoint: (transformation transformPosition3: self farBottomLeft).
+	result insertPoint: (transformation transformPosition3: self farBottomRight).
+	result insertPoint: (transformation transformPosition3: self farTopLeft).
+	result insertPoint: (transformation transformPosition3: self farTopRight).
+	^ result
+]
+}.
+
 WMBox3D category: 'volume insertion' methods: {
 :[insertBox: <WMBox3D> aBox
 	min x: ((min x min: aBox min x) castTo: Scalar).

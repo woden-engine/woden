@@ -150,6 +150,14 @@ WMQuaternion category: 'arithmetic' methods: {
 	^ ((r*r) + (i*i) + (j*j) + (k*k)) sqrt
 ].
 
+:[normalized -> WMQuaternion.
+	let l := self length.
+	^ l > 0.00001 ifTrue: [
+		WMQuaternion r: r / l i: i / l j: j / l k: k / l
+	] ifFalse: [
+		WMQuaternion newValue
+	]
+].
 }.
 
 WMQuaternion category: 'comparing' methods: {

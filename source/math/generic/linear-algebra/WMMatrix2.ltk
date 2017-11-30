@@ -124,6 +124,23 @@ WMMatrix2 category: 'converting' methods: {
 
 }.
 
+WMMatrix2 category: 'linear algebra' methods: {
+:[eigenValues -> _DynamicObject.
+	let det := ((m11 + m22)*(m11 + m22)) - ((4.0) * ((m11*m22) - (m12*m21))).
+	det >= 0.0 ifTrue: [
+		det := det sqrt.
+		let first := (m11 + m22 - det) / (2.0).
+		let second := (m11 + m22 + det) / (2.0).
+		^ { first . second }
+	] ifFalse: [
+		det := det negated sqrt.
+		let first := WMComplexD r: m11 + m22 i: det negated.
+		let second := WMComplexD r: m11 + m22 i: det.
+		^ { first . second }
+	].
+].
+}.
+
 WMMatrix2 category: 'printing' methods: {
 :[printOn: aStream
 	aStream nextPutAll: WMMatrix2 name; nextPutAll: ' newFrom: #('; cr;

@@ -10,3 +10,20 @@ Structure <<< #WTLightSourceData
 	};
 	package: 'Woden2-Structures-Core-Rendering';
 	yourself.
+
+WTLightSourceData category: 'accessing' methods: {
+:[direction: <WMVector3F> newDirection
+	positionOrDirection x: newDirection x.
+	positionOrDirection y: newDirection y.
+	positionOrDirection z: newDirection z.
+	positionOrDirection w: 0.0.
+].
+
+:[position: <WMVector3F> newPosition
+	positionOrDirection x: newPosition x.
+	positionOrDirection y: newPosition y.
+	positionOrDirection z: newPosition z.
+	positionOrDirection w: 1.0.
+].
+
+}.

@@ -4,7 +4,7 @@ Structure <<< #WTLodenFontHeader
 		#numberOfCharMapEntries => UInt32.
 		#cellMargin => UInt32.
 		#pointSize => Float32.
-		#flags => Float32.
+		#flags => UInt32.
 	};
 	package: 'Woden2-Structures-Core-Font';
 	yourself.
