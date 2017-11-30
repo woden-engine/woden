@@ -5,7 +5,7 @@ Structure <<< #WTSkinnedGenericVertexF
 		#texcoord => WMVector2F. 
 		#tangent4 => WMVector4F. 
 		#color => WMVector4F. 
-		#boneWeights => WMVector4US. 
+		#compressedBoneWeights => WMVector4US. 
 		#boneIndices => WMVector4US
 	};
 	package: 'Woden2-Structures-Core-Mesh';
@@ -15,4 +15,15 @@ WTSkinnedGenericVertexF class category: 'vertex layout' methods: {
 :[vertexLayoutName
 	^ #SkinnedGenericVertex
 ].
+}.
+
+WTSkinnedGenericVertexF category: 'accessing' methods: {
+:[boneWeights -> WMVector4F.
+	^ compressedBoneWeights asWMVector4FN
+].
+
+:[boneWeights: <WMVector4F>value
+	compressedBoneWeights := value asWMVector4USN
+].
+
 }.

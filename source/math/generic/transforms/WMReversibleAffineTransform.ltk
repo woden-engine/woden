@@ -222,6 +222,7 @@ WMReversibleAffineTransform category: 'transformations' methods: {
 
 :[transformTransform: <WMReversibleAffineTransform>transform -> WMReversibleAffineTransform.
 	^ WMReversibleAffineTransform newValue
+		initialize;
 		matrix: matrix * transform matrix;
 		inverseMatrix: transform inverseMatrix * inverseMatrix;
 		translation: self translation + (matrix transformVector3: transform translation);

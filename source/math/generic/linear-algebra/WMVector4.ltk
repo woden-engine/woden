@@ -187,6 +187,14 @@ WMVector4 category: 'converting' methods: {
 	^ WMVector4F x: (x castTo: Float32) y: (y castTo: Float32) z: (z castTo: Float32) w: (w castTo: Float32)
 ].
 
+:[asWMVector4USN -> WMVector4US.
+	^ WMVector4US
+		x: (x asNormalizedUShort castTo: UInt16)
+		y: (y asNormalizedUShort castTo: UInt16)
+		z: (z asNormalizedUShort castTo: UInt16)
+		w: (w asNormalizedUShort castTo: UInt16) 
+].
+
 }.
 
 WMVector4 category: 'printing' methods: {
