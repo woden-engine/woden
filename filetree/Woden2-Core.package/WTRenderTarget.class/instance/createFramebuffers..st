@@ -6,7 +6,7 @@ createFramebuffers: aCount
 	depthStencilBuffers := Array new: aCount.
 	
 	(hasDepth or: [ hasStencil ]) ifTrue: [ 
-		depthStencilFormat := hasStencil ifTrue: [ AGPU_TEXTURE_FORMAT_D24_UNORM_S8_UINT  ] ifFalse: [ AGPU_TEXTURE_FORMAT_D32_FLOAT ].
+		depthStencilFormat := hasStencil ifTrue: [ engine preferredDepthStencilFormat ] ifFalse: [ engine preferredDepthFormat ].
 		depthStencilFlags := AGPU_TEXTURE_FLAG_DEPTH | AGPU_TEXTURE_FLAG_RENDERBUFFER_ONLY.
 		hasStencil ifTrue: [ depthStencilFlags := depthStencilFlags | AGPU_TEXTURE_FLAG_STENCIL ].
 		
