@@ -305,6 +305,26 @@ WMMatrix3 category: 'converting' methods: {
 		at: 9 put: m33.
 	^ result
 ].
+
+:[asWMMatrix3 -> WMMatrix3.
+	^ self
+].
+
+:[asWMMatrix3F -> WMMatrix3F.
+	^ WMMatrix3F newValue
+		m11: (m11 castTo: Float32); m12: (m12 castTo: Float32); m13: (m13 castTo: Float32);
+		m21: (m21 castTo: Float32); m22: (m22 castTo: Float32); m23: (m23 castTo: Float32);
+		m31: (m31 castTo: Float32); m32: (m32 castTo: Float32); m33: (m33 castTo: Float32);
+		yourself
+].
+
+:[asWMMatrix3D -> WMMatrix3D.
+	^ WMMatrix3D newValue
+		m11: m11; m12: m12; m13: m13;
+		m21: m21; m22: m22; m23: m23;
+		m31: m31; m32: m32; m33: m33;
+		yourself
+].
 }.
 
 WMMatrix3 category: 'printing' methods: {
