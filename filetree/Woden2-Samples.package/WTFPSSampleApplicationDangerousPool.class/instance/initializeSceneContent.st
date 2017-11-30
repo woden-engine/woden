@@ -51,7 +51,8 @@ initializeSceneContent
 	scene add: sunLight.
 
 	"Add a magnum .357"
-	magnumMesh := engine resourceCache loadMesh: 'models/demos/magnum.fmdl'.	
+	magnumMesh := engine resourceCache loadMesh: 'models/demos/magnum.wmjson'.
+	magnumMesh combineSubmeshesWithMaterial: 'materials/demos/magnum.json'.
 	floorGun := WTSSpatialObject new.
 	floorGun renderable: magnumMesh.
 	floorGun transform translateToX: -0.5 y: magnumMesh boundingBox height * 0.5 z: -3.5.
