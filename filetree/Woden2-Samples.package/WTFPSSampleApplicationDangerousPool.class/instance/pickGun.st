@@ -2,8 +2,9 @@ rendering
 pickGun
 	"Add the picked FPS magnum .357"
 	| magnumMesh animationState |
-	magnumMesh := engine resourceCache loadMesh: 'models/demos/magnum_fps.wmjson'.	
-	magnumMesh combineSubmeshesWithMaterial: 'materials/demos/magnum_fps.json'.
+	magnumMesh := (engine resourceCache loadModel: 'models/demos/magnum_fps.wmjson')
+		combineSubmeshesWithMaterial: 'materials/demos/magnum_fps.json';
+		meshFor: engine.
 		
 	pickedGun := WTSSpatialObject new.
 	pickedGun renderable: magnumMesh.
