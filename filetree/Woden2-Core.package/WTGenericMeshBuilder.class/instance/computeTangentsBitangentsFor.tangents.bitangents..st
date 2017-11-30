@@ -13,9 +13,9 @@ computeTangentsBitangentsFor: submesh tangents: tangents bitangents: bitangents
 		vi2 := (indices at: i2) + 1.
 		vi3 := (indices at: i3) + 1.
 		
-		p1 := (vertices at: vi1) position.
-		p2 := (vertices at: vi2) position.
-		p3 := (vertices at: vi3) position.
+		p1 := (vertices at: vi1) position asWMVector3.
+		p2 := (vertices at: vi2) position asWMVector3.
+		p3 := (vertices at: vi3) position asWMVector3.
 
 		tc1 := (vertices at: vi1) texcoord.
 		tc2 := (vertices at: vi2) texcoord.

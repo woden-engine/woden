@@ -3,8 +3,8 @@ planeTextureTransform: textureMatrix
 	| vertex normal position normalAxis tangent bitangent uv |
 	1 to: vertices size do: [ :vi |
 		vertex := vertices at: vi.
-		normal := vertex normal.
-		position := vertex position.
+		normal := vertex normal asWMVector3.
+		position := vertex position asWMVector3.
 		
 		"Compute the predominant normal plane."
 		normalAxis := self computeNormalAxis: normal.

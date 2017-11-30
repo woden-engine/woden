@@ -9,7 +9,7 @@ computeTangentsBitangents
 	1 to: vertices size do: [ :vi |
 		vertex := (vertices at: vi).
 		
-		normal := vertex normal.
+		normal := vertex normal asWMVector3.
 		tangent := tangents at: vi.
 		bitangent := bitangents at: vi.
 		
