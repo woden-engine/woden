@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "WDASceneModel",
+	"category" : "WodenEngine-GameSystem-LevelPlayer",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"map",
+		"playerEventHandler"
+	],
+	"name" : "WDAGSLevelModel",
+	"type" : "normal"
+}

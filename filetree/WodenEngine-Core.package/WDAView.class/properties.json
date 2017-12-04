@@ -11,7 +11,8 @@
 	"instvars" : [
 		"engine",
 		"model",
-		"window"
+		"window",
+		"fullscreen"
 	],
 	"name" : "WDAView",
 	"type" : "normal"

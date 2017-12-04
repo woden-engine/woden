@@ -11,8 +11,8 @@ createRenderTarget
 		
 		resolveRenderTarget := WDCRenderTarget for: engine extent: self drawingSurfaceExtent.
 		resolveRenderTarget
-			hasDepth: self hasDepth;
-			hasStencil: self hasStencil;
+			hasDepth: false;
+			hasStencil: false;
 			sampleCount: 1;
 			gpuOnly: false;
 			createFramebuffers.

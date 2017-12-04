@@ -19,7 +19,8 @@
 		"graphicsQueue",
 		"preferredDepthFormat",
 		"preferredDepthStencilFormat",
-		"resourceCache"
+		"resourceCache",
+		"soundDevice"
 	],
 	"name" : "WDCEngine",
 	"type" : "normal"

@@ -1,4 +1,4 @@
-as yet unclassified
+examples
 example05DangerousPool
 	| model meshBuilder cube scene camera engine floorMaterial waterMaterial skyMaterial sunLight skyBox waterSurface view magnumMesh pickedGun animationState gunAction gunActionFrame gunActionRepeated |
 	model := WDASampleSceneModel new.

@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "OSWindowEventVisitor",
+	"category" : "WodenEngine-Core-Window",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"engine",
+		"window",
+		"renderTarget",
+		"resolveRenderTarget",
+		"handledHere"
+	],
+	"name" : "WDCOSWindow",
+	"type" : "normal"
+}

@@ -1,4 +1,4 @@
-as yet unclassified
+examples
 example01Cube
 	| model meshBuilder mesh cube light scene camera |
 	model := WDASampleSceneModel new.

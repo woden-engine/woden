@@ -3,9 +3,16 @@
 	"super" : "WDCMorphicWindow",
 	"category" : "WodenEngine-Core-Application",
 	"classinstvars" : [ ],
-	"pools" : [ ],
-	"classvars" : [ ],
-	"instvars" : [ ],
+	"pools" : [
+		"OSKeySymbols"
+	],
+	"classvars" : [
+		"KeySymbolMap",
+		"MouseButtonMap"
+	],
+	"instvars" : [
+		"view"
+	],
 	"name" : "WDAMorphicViewWindow",
 	"type" : "normal"
 }

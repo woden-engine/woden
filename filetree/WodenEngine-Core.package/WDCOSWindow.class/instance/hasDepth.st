@@ -1,0 +1,3 @@
+framebuffer description
+hasDepth
+	^ false

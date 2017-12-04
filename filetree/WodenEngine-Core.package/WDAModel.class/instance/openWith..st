@@ -1,3 +1,3 @@
 opening
 openWith: aView
-	^ self openInMorphicWith: aView
+	^ self openInOSWindowWith: aView

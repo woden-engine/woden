@@ -1,4 +1,4 @@
-as yet unclassified
+examples
 example02TextureCube
 	| model meshBuilder mesh cube light scene camera material |
 	model := WDASampleSceneModel new.

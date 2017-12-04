@@ -1,4 +1,4 @@
-as yet unclassified
+examples
 example04Pool
 	| model meshBuilder cube scene camera engine floorMaterial waterMaterial skyMaterial sunLight skyBox waterSurface view |
 	model := WDASampleSceneModel new.

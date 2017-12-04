@@ -6,4 +6,5 @@ spawnEntityWithBehavior: behavior position: aPosition
 		addComponent: (WTGSSpatialDescription new translation: aPosition);
 		addComponent: behavior.
 	self addEntity: entity.
-	entity spawn
+	entity spawn.
+	^ entity

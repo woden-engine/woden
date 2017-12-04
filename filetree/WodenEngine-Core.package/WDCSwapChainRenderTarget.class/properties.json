@@ -7,7 +7,10 @@
 		"AGPUConstants"
 	],
 	"classvars" : [ ],
-	"instvars" : [ ],
+	"instvars" : [
+		"windowHandle",
+		"swapChain"
+	],
 	"name" : "WDCSwapChainRenderTarget",
 	"type" : "normal"
 }
