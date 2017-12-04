@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "WDCMaterial",
+	"category" : "WodenEngine-Core-Material",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"skyTexture",
+		"resourceBindingsAreUpdated",
+		"vertexShader",
+		"fragmentShader",
+		"resourceBinding"
+	],
+	"name" : "WDCSkyMaterial",
+	"type" : "normal"
+}

@@ -1,0 +1,3 @@
+accessing
+getOrCreateShaderSignature: aShaderSignatureClass
+	^ resourceCache getOrCreateShaderSignature: aShaderSignatureClass

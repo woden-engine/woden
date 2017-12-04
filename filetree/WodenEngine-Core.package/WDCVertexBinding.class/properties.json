@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "WDCResourceWithSessionHandle",
+	"category" : "WodenEngine-Core-GPU-Resources",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"vertexLayout",
+		"vertexBuffers"
+	],
+	"name" : "WDCVertexBinding",
+	"type" : "normal"
+}

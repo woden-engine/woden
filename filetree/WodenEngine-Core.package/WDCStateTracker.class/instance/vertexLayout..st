@@ -1,0 +1,3 @@
+pipeline state
+vertexLayout: aVertexLayout
+	pipelineStateDescription vertexLayout: aVertexLayout

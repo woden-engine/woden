@@ -1,0 +1,21 @@
+{
+	"instance" : {
+		"parseError:at:" : "RonieSalgado 12/3/2017 03:21",
+		"parse:at:srgbColor:ifAbsent:" : "RonieSalgado 12/3/2017 03:21",
+		"engine:" : "RonieSalgado 12/3/2017 03:21",
+		"engine" : "RonieSalgado 12/3/2017 03:21",
+		"parse:at:texture:ifAbsent:" : "RonieSalgado 12/3/2017 03:22",
+		"parse:at:srgbTexture:ifAbsent:" : "RonieSalgado 12/3/2017 03:21",
+		"activateOn:" : "RonieSalgado 12/3/2017 03:29",
+		"parse:at:optionalSRGBTexture:" : "RonieSalgado 12/3/2017 03:21",
+		"parse:at:vector3:ifAbsent:" : "RonieSalgado 12/3/2017 03:22",
+		"isMaterial" : "RonieSalgado 12/3/2017 03:22",
+		"parse:at:optionalTexture:" : "RonieSalgado 12/3/2017 03:21",
+		"parse:at:color:ifAbsent:" : "RonieSalgado 12/3/2017 03:21",
+		"parse:data:" : "RonieSalgado 12/3/2017 03:20"
+	},
+	"class" : {
+		"for:" : "RonieSalgado 12/3/2017 03:22",
+		"isMaterialClass" : "RonieSalgado 12/3/2017 18:57"
+	}
+}

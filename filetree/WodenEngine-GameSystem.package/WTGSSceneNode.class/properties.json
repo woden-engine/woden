@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "WTGSComponent",
+	"category" : "WodenEngine-GameSystem-Level",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"node"
+	],
+	"name" : "WTGSSceneNode",
+	"type" : "normal"
+}

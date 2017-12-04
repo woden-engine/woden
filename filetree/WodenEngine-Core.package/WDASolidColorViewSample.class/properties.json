@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "RonieSalgado 12/3/2017 14:05",
+	"super" : "WDAView",
+	"category" : "WodenEngine-Core-Application",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"color",
+		"commandList",
+		"renderPass"
+	],
+	"name" : "WDASolidColorViewSample",
+	"type" : "normal"
+}

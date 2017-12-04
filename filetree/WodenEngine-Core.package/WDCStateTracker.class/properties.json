@@ -1,0 +1,21 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-Rendering",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [ ],
+	"instvars" : [
+		"engine",
+		"commandList",
+		"pipelineStateDescription",
+		"commandListBuilder",
+		"mode",
+		"submode",
+		"activeMaterial"
+	],
+	"name" : "WDCStateTracker",
+	"type" : "normal"
+}

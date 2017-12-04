@@ -1,0 +1,21 @@
+{
+	"instance" : {
+		"rotateRadiansOnY:" : " 12/1/2017 02:37:59",
+		"transform:" : " 12/1/2017 02:37:59",
+		"planeTextureTransform:" : " 12/1/2017 02:37:59",
+		"translateToX:y:z:" : " 12/1/2017 02:37:59",
+		"bitangentForAxis:" : " 12/1/2017 02:37:59",
+		"initialize" : " 12/1/2017 02:37:59",
+		"addP:TC:" : " 12/1/2017 02:37:59",
+		"computeNormalAxis:" : " 12/1/2017 02:37:59",
+		"planeTextureScale:offset:" : " 12/1/2017 02:37:59",
+		"rotateRadiansOnX:" : " 12/1/2017 02:37:59",
+		"tangentForAxis:" : " 12/1/2017 02:37:59",
+		"rotateRadiansOnZ:" : " 12/1/2017 02:37:59",
+		"transform" : " 12/1/2017 02:37:59",
+		"addP:N:TC:" : " 12/1/2017 02:37:59"
+	},
+	"class" : {
+		"initialize" : " 12/1/2017 02:37:59"
+	}
+}

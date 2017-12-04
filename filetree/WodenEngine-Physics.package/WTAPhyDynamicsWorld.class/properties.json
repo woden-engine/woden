@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "WTDynamicsWorld",
+	"category" : "WodenEngine-Physics-AbstractPhysics",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"physicsEngine",
+		"handle",
+		"rigidBodies",
+		"onSimulation",
+		"kinematicObjects"
+	],
+	"name" : "WTAPhyDynamicsWorld",
+	"type" : "normal"
+}

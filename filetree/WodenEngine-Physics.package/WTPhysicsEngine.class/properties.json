@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Physics-Interface",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"CurrentEngine",
+		"PhysicsSession"
+	],
+	"instvars" : [ ],
+	"name" : "WTPhysicsEngine",
+	"type" : "normal"
+}

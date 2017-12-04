@@ -1,0 +1,18 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-Mesh",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [ ],
+	"instvars" : [
+		"vertices",
+		"submeshes",
+		"indices",
+		"baseIndex"
+	],
+	"name" : "WTModelImporter",
+	"type" : "normal"
+}

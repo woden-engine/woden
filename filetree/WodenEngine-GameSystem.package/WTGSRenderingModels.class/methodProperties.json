@@ -1,0 +1,34 @@
+{
+	"instance" : {
+		"bestModel" : " 9/23/2017 19:41:17",
+		"createTexturedModel" : " 9/23/2017 19:41:17",
+		"initialize" : " 9/23/2017 19:41:17",
+		"createSolidModelBuilderFor:" : " 9/23/2017 19:41:17",
+		"addedToScene:" : " 9/23/2017 19:41:17",
+		"wireModelFor:" : " 9/23/2017 19:41:17",
+		"createSolidModel" : " 9/23/2017 19:41:17",
+		"removedFromScene:" : " 9/23/2017 19:41:17",
+		"addedToEntity:" : " 9/23/2017 19:41:17",
+		"isUsedInPlayMode" : " 9/23/2017 19:41:17",
+		"invalidate" : " 9/23/2017 19:41:17",
+		"isSingleton" : " 9/23/2017 19:41:17",
+		"createWireModelBuilderFor:" : " 9/23/2017 19:41:17",
+		"createSceneDependentDataFor:into:" : " 9/23/2017 19:41:17",
+		"solidModelFor:" : " 9/23/2017 19:41:17",
+		"fuelAfterMaterialization" : " 9/23/2017 19:41:17",
+		"bucket" : " 9/23/2017 19:41:17",
+		"playModeCopyWith:" : " 9/23/2017 19:41:17",
+		"renderOn:mode:submode:instanceCount:baseInstance:baseVertex:" : " 9/23/2017 19:41:17",
+		"texturedModelFor:" : " 9/23/2017 19:41:17",
+		"performGpuStateUpdateFor:frameIndex:into:" : " 9/23/2017 19:41:17",
+		"modelForSubMode:" : " 9/23/2017 19:41:17",
+		"renderOn:instanceCount:baseInstance:baseVertex:" : "RonieSalgado 12/3/2017 15:19",
+		"createTexturedModelBuilderFor:" : " 9/23/2017 19:41:17",
+		"invalidateTexturedModel" : " 9/23/2017 19:41:17",
+		"renderModificationCountFor:submode:" : " 9/23/2017 19:41:17",
+		"createWireModel" : " 9/23/2017 19:41:17"
+	},
+	"class" : {
+		"fuelIgnoredInstanceVariableNames" : " 9/23/2017 19:41:17"
+	}
+}

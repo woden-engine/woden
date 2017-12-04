@@ -1,0 +1,24 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-Structures",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [
+		"FieldTypes"
+	],
+	"instvars" : [
+		"name",
+		"format",
+		"componentType",
+		"components",
+		"rows",
+		"normalized",
+		"size",
+		"alignment"
+	],
+	"name" : "WDCStructureFieldType",
+	"type" : "normal"
+}

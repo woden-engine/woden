@@ -1,0 +1,20 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-Mesh",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [ ],
+	"instvars" : [
+		"vertices",
+		"indices",
+		"submeshes",
+		"boundingBox",
+		"armature",
+		"actions"
+	],
+	"name" : "WTModel",
+	"type" : "normal"
+}

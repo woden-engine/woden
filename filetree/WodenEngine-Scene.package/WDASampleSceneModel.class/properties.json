@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "WDASceneModel",
+	"category" : "WodenEngine-Scene-Examples",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"deltaTimeBlock"
+	],
+	"name" : "WDASampleSceneModel",
+	"type" : "normal"
+}

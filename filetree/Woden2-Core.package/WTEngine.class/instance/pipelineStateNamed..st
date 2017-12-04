@@ -1,3 +1,0 @@
-accessing
-pipelineStateNamed: pipelineStateName
-	^ pipelineStateCache pipelineStateNamed: pipelineStateName

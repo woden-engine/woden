@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "WDCResourceWithSessionHandle",
+	"category" : "WodenEngine-Core-GPU-Resources",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"shaderSignature",
+		"element",
+		"slots"
+	],
+	"name" : "WDCShaderResourceBinding",
+	"type" : "normal"
+}

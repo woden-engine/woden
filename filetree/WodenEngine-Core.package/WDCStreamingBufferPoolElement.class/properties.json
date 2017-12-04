@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-Pool",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"heap",
+		"index",
+		"offset",
+		"next"
+	],
+	"name" : "WDCStreamingBufferPoolElement",
+	"type" : "normal"
+}

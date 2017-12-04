@@ -1,0 +1,38 @@
+{
+	"instance" : {
+		"resolveResourceFileReference:" : "RonieSalgado 12/1/2017 21:51",
+		"performMaterialLoading:" : "RonieSalgado 12/3/2017 03:24",
+		"stringifyPath:" : "RonieSalgado 12/1/2017 21:51",
+		"vertexLayoutFor:" : "RonieSalgado 12/3/2017 04:23",
+		"loadTexture:" : "RonieSalgado 12/3/2017 18:58",
+		"sessionChanged" : "RonieSalgado 12/2/2017 00:49",
+		"loadSoundSampleData:" : "RonieSalgado 12/3/2017 18:59",
+		"resolveResourceFileReference:ifFailed:" : "RonieSalgado 12/1/2017 21:51",
+		"createDefaultMaterial" : "RonieSalgado 12/3/2017 17:05",
+		"buildVertexLayout:" : "RonieSalgado 12/3/2017 04:16",
+		"addedAssetSearchPath:" : "RonieSalgado 12/1/2017 21:51",
+		"loadVertexLayoutFrom:" : "RonieSalgado 12/3/2017 04:23",
+		"perform3DModelLoading:" : "RonieSalgado 12/3/2017 21:35",
+		"loadLowLevelShaderCode:" : "RonieSalgado 12/2/2017 00:40",
+		"loadSoundSample:" : "RonieSalgado 12/3/2017 18:58",
+		"loadVertexShader:" : "RonieSalgado 12/1/2017 22:10",
+		"binaryContentsOf:" : "RonieSalgado 12/1/2017 21:51",
+		"loadTextureData:" : "RonieSalgado 12/3/2017 18:58",
+		"performLowLevelShaderLoading:" : "RonieSalgado 12/2/2017 00:45",
+		"performShaderLoading:stage:" : "RonieSalgado 12/2/2017 00:42",
+		"initializeForEngine:" : "RonieSalgado 12/3/2017 18:26",
+		"resourceAt:ifAbsentPut:" : "RonieSalgado 12/1/2017 21:51",
+		"getOrCreateShaderSignature:" : "RonieSalgado 12/3/2017 03:08",
+		"load3DModel:" : "RonieSalgado 12/3/2017 21:35",
+		"loadFragmentShader:" : "RonieSalgado 12/3/2017 18:07",
+		"buildPipelineStateWithDescription:" : "RonieSalgado 12/3/2017 21:15",
+		"defaultMaterial" : "RonieSalgado 12/1/2017 21:51",
+		"loadMaterial:fallback:" : "RonieSalgado 12/3/2017 03:24",
+		"loadMaterial:" : "RonieSalgado 12/3/2017 03:24",
+		"loadSRGBTexture:" : "RonieSalgado 12/3/2017 18:58",
+		"pipelineStateForDescription:" : "RonieSalgado 12/3/2017 18:33"
+	},
+	"class" : {
+		"initialize" : "RonieSalgado 12/1/2017 22:03"
+	}
+}

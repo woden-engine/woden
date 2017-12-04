@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "RonieSalgado 12/1/2017 18:30",
+	"super" : "WDCMorphicWindow",
+	"category" : "WodenEngine-Core-Application",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WDAMorphicViewWindow",
+	"type" : "normal"
+}

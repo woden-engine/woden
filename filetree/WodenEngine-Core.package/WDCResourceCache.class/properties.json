@@ -1,0 +1,24 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-Engine",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [
+		"ShaderLanguageTargetMap"
+	],
+	"instvars" : [
+		"engine",
+		"resources",
+		"defaultMaterial",
+		"shaderLanguageTarget",
+		"shaderLanguageTargetName",
+		"shaderSignatures",
+		"vertexLayouts",
+		"pipelineStates"
+	],
+	"name" : "WDCResourceCache",
+	"type" : "normal"
+}

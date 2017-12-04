@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "WTGSBehavior",
+	"category" : "WodenEngine-GameSystem-Player",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"linearVelocity",
+		"linearAcceleration",
+		"angularVelocity",
+		"angularAcceleration"
+	],
+	"name" : "WTGSKinematicMovementBehavior",
+	"type" : "normal"
+}

@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "WTCollisionShape",
+	"category" : "WodenEngine-Physics-Interface",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"halfExtent"
+	],
+	"name" : "WTBoxCollisionShape",
+	"type" : "normal"
+}

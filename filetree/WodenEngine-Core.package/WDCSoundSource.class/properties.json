@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "WDCResourceWithSessionHandle",
+	"category" : "WodenEngine-Core-Sound",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"dataSource",
+		"position",
+		"velocity",
+		"gain"
+	],
+	"name" : "WDCSoundSource",
+	"type" : "normal"
+}

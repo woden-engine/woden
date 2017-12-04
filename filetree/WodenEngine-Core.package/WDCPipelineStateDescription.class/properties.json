@@ -1,0 +1,29 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-Rendering",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [ ],
+	"instvars" : [
+		"vertexShader",
+		"vertexLayout",
+		"fragmentShader",
+		"shaderSignature",
+		"primitiveType",
+		"frontFaceWinding",
+		"cullMode",
+		"depthEnabled",
+		"depthWriteMask",
+		"depthFunction",
+		"isChanged",
+		"renderTargetFormats",
+		"depthStencilFormat",
+		"blendingStates",
+		"sampleCount"
+	],
+	"name" : "WDCPipelineStateDescription",
+	"type" : "normal"
+}

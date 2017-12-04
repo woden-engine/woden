@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "WTGSBehavior",
+	"category" : "WodenEngine-GameSystem-Item",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WTGSItemBehavior",
+	"type" : "normal"
+}

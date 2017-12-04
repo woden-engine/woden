@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-Texture",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"width",
+		"height",
+		"depth",
+		"levels"
+	],
+	"name" : "WDCTextureLayerData",
+	"type" : "normal"
+}

@@ -1,0 +1,3 @@
+accessing
+renderModeName
+	^ self subclassResponsibility

@@ -1,0 +1,12 @@
+{
+	"instance" : {
+		"updateFrameLightingStates:" : "RonieSalgado 12/3/2017 15:01",
+		"createLightingState" : "RonieSalgado 12/3/2017 14:31",
+		"renderModeName" : "RonieSalgado 12/3/2017 15:15",
+		"shaderSignatureClass" : "RonieSalgado 12/3/2017 14:24",
+		"setupViewportRendering:index:" : "RonieSalgado 12/3/2017 15:14",
+		"updateRenderingStatesFor:" : "RonieSalgado 12/3/2017 15:10",
+		"initializeWithEngine:" : "RonieSalgado 12/3/2017 14:30"
+	},
+	"class" : { }
+}

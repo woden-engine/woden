@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-OpenAL",
+	"classinstvars" : [ ],
+	"pools" : [
+		"OpenALConstants"
+	],
+	"classvars" : [ ],
+	"instvars" : [
+		"device",
+		"handle"
+	],
+	"name" : "WTOpenALSoundSample",
+	"type" : "normal"
+}

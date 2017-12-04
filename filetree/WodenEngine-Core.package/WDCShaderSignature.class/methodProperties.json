@@ -1,0 +1,22 @@
+{
+	"instance" : {
+		"handle" : "RonieSalgado 12/3/2017 02:54",
+		"engine" : "RonieSalgado 12/3/2017 03:05",
+		"engine:" : "RonieSalgado 12/3/2017 03:05",
+		"handle:" : "RonieSalgado 12/3/2017 02:54",
+		"shaderSignatureFor:" : "RonieSalgado 12/3/2017 13:53"
+	},
+	"class" : {
+		"removeShaderSignatureMethods" : "RonieSalgado 12/3/2017 02:38",
+		"compileShaderSignatureElementNewFor:" : "RonieSalgado 12/3/2017 02:57",
+		"handle:" : "RonieSalgado 12/3/2017 02:54",
+		"shaderSignatureMethodCategory" : "RonieSalgado 12/3/2017 02:33",
+		"compileShaderSignatureMethod:" : "RonieSalgado 12/3/2017 02:58",
+		"for:" : "RonieSalgado 12/3/2017 03:06",
+		"parseSpec" : "RonieSalgado 12/3/2017 02:31",
+		"shaderSignatureFor:" : "RonieSalgado 12/3/2017 13:53",
+		"signatureSpec:" : "RonieSalgado 12/3/2017 00:20",
+		"compileShaderSignatureInstantiateFor:" : "RonieSalgado 12/3/2017 02:58",
+		"rebuildShaderSignatureMethods" : "RonieSalgado 12/3/2017 03:09"
+	}
+}

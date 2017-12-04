@@ -66,6 +66,13 @@ Color category: '*WodenMath-Core' methods: {
 
 }.
 
+Color class category: '*WodenMath-Core' methods: {
+:[loadWodenJsonData: jsonData
+	jsonData isString ifTrue: [ ^ self fromString: jsonData ].
+	^ WMVector4F loadFromJson: jsonData
+]
+}.
+
 Point category: '*WodenMath-Core' methods: {
 :[asWMComplexF -> WMComplexF.
 	^ WMComplexF r: (x castTo: Float32) i: (y castTo: Float32)

@@ -1,0 +1,1 @@
+I am a Woden application view.

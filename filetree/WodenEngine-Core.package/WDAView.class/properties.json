@@ -1,0 +1,18 @@
+{
+	"commentStamp" : "RonieSalgado 12/1/2017 18:28",
+	"super" : "OSWindowEventVisitor",
+	"category" : "WodenEngine-Core-Application",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants",
+		"OSKeySymbols"
+	],
+	"classvars" : [ ],
+	"instvars" : [
+		"engine",
+		"model",
+		"window"
+	],
+	"name" : "WDAView",
+	"type" : "normal"
+}

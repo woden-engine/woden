@@ -1,0 +1,11 @@
+{
+	"instance" : {
+		"prepareRendering" : "RonieSalgado 12/3/2017 21:27",
+		"hasDepth" : "RonieSalgado 12/3/2017 18:40",
+		"camera" : "RonieSalgado 12/3/2017 14:12",
+		"sceneRenderer" : "RonieSalgado 12/3/2017 14:22",
+		"sendRenderingCommands" : "RonieSalgado 12/3/2017 04:30",
+		"updateCameraProjection" : "RonieSalgado 12/3/2017 18:49"
+	},
+	"class" : { }
+}

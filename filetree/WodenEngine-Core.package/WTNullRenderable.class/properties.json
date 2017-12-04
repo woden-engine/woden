@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "WTRenderable",
+	"category" : "WodenEngine-Core-Mesh",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WTNullRenderable",
+	"type" : "normal"
+}

@@ -1,4 +1,0 @@
-as yet unclassified
-delete
-	self model notNil ifTrue: [self model unregisterFromAllAnnouncements].
-	super delete

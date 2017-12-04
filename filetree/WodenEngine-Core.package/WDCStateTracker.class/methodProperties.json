@@ -1,0 +1,41 @@
+{
+	"instance" : {
+		"pipelineStateDescription" : "RonieSalgado 12/3/2017 13:46",
+		"submode" : "RonieSalgado 12/3/2017 15:15",
+		"useIndexBuffer:" : "RonieSalgado 12/3/2017 18:35",
+		"initialize" : "RonieSalgado 12/3/2017 13:46",
+		"beginRenderPass:renderTarget:bounds:" : "RonieSalgado 12/3/2017 17:40",
+		"mode:" : "RonieSalgado 12/3/2017 15:15",
+		"engine" : "RonieSalgado 12/3/2017 13:52",
+		"commandList" : "RonieSalgado 12/3/2017 13:48",
+		"beginRenderPass:renderTarget:" : "RonieSalgado 12/3/2017 17:40",
+		"blendingAllEnabled:sourceFactor:destFactor:operation:" : "RonieSalgado 12/3/2017 18:19",
+		"useVertexBinding:" : "RonieSalgado 12/3/2017 17:08",
+		"drawElements:instance_count:first_index:base_vertex:base_instance:" : "RonieSalgado 12/3/2017 18:35",
+		"vertexShader:" : "RonieSalgado 12/3/2017 17:06",
+		"mode" : "RonieSalgado 12/3/2017 15:15",
+		"resolveRenderTarget:into:" : "RonieSalgado 12/3/2017 14:02",
+		"useShaderResources:" : "RonieSalgado 12/3/2017 15:09",
+		"reset" : "RonieSalgado 12/3/2017 21:03",
+		"commitPipelineState" : "RonieSalgado 12/3/2017 18:37",
+		"activateMaterial:" : "RonieSalgado 12/3/2017 21:03",
+		"frontFaceWinding:" : "RonieSalgado 12/3/2017 17:20",
+		"vertexLayout:" : "RonieSalgado 12/3/2017 17:31",
+		"cullMode:" : "RonieSalgado 12/3/2017 17:21",
+		"depthEnabled:" : "RonieSalgado 12/3/2017 17:28",
+		"primitiveType:" : "RonieSalgado 12/3/2017 17:07",
+		"shaderSignature:" : "RonieSalgado 12/3/2017 14:00",
+		"engine:" : "RonieSalgado 12/3/2017 13:52",
+		"commandList:" : "RonieSalgado 12/3/2017 13:48",
+		"submode:" : "RonieSalgado 12/3/2017 15:15",
+		"fragmentShader:" : "RonieSalgado 12/3/2017 18:08",
+		"depthWriteMask:" : "RonieSalgado 12/3/2017 17:28",
+		"commandList:rebuildWith:" : "RonieSalgado 12/3/2017 14:00",
+		"endRenderPass" : "RonieSalgado 12/3/2017 14:01",
+		"depthFunction:" : "RonieSalgado 12/3/2017 17:28",
+		"beginRenderPass:renderTarget:x:y:width:height:" : "RonieSalgado 12/3/2017 17:47"
+	},
+	"class" : {
+		"for:" : "RonieSalgado 12/3/2017 13:52"
+	}
+}

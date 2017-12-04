@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "WTGenericMesh",
+	"category" : "WodenEngine-Core-Mesh",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"armature",
+		"actions",
+		"pose"
+	],
+	"name" : "WTSkinnedGenericMesh",
+	"type" : "normal"
+}

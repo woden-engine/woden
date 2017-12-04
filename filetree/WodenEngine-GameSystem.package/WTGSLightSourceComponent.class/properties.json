@@ -1,0 +1,18 @@
+{
+	"commentStamp" : "",
+	"super" : "WTGSComponent",
+	"category" : "WodenEngine-GameSystem-Level",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"BrushColors"
+	],
+	"instvars" : [
+		"intensity",
+		"type",
+		"outerSpotCutoff",
+		"innerSpotCutoff"
+	],
+	"name" : "WTGSLightSourceComponent",
+	"type" : "normal"
+}

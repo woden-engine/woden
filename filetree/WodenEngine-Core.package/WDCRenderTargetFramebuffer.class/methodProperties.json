@@ -1,0 +1,21 @@
+{
+	"instance" : {
+		"handle" : "RonieSalgado 12/1/2017 17:05",
+		"depthStencilAttachment" : "RonieSalgado 12/1/2017 17:05",
+		"validCommandAllocator" : "RonieSalgado 12/1/2017 19:18",
+		"engine:" : "RonieSalgado 12/1/2017 19:14",
+		"engine" : "RonieSalgado 12/1/2017 19:14",
+		"commandList" : "RonieSalgado 12/1/2017 19:20",
+		"commandAllocator" : "RonieSalgado 12/1/2017 19:20",
+		"validHandle" : "RonieSalgado 12/1/2017 19:53",
+		"handle:" : "RonieSalgado 12/1/2017 17:05",
+		"initializeExtraStateFrom:" : "RonieSalgado 12/3/2017 21:41",
+		"commandList:" : "RonieSalgado 12/1/2017 19:20",
+		"commandAllocator:" : "RonieSalgado 12/1/2017 19:20",
+		"colorAttachments" : "RonieSalgado 12/1/2017 17:27",
+		"depthStencilAttachment:" : "RonieSalgado 12/1/2017 17:05",
+		"validCommandList" : "RonieSalgado 12/1/2017 19:20",
+		"colorAttachments:" : "RonieSalgado 12/1/2017 17:27"
+	},
+	"class" : { }
+}

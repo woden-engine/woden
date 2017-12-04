@@ -1,0 +1,3 @@
+accessing
+bufferingFrameIndexModule: aModule
+	^ frameBufferingDriver bufferingFrameIndexModule: aModule

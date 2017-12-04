@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "WDCSoundEngine",
+	"category" : "WodenEngine-OpenAL",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WTOpenALSoundEngine",
+	"type" : "normal"
+}

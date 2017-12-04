@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "WTGSWeapon",
+	"category" : "WodenEngine-GameSystem-Item",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WTGSMagnumWeapon",
+	"type" : "normal"
+}

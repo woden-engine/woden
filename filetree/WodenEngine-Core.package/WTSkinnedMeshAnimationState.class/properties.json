@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-Mesh",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"mesh",
+		"poseBuffer",
+		"pose",
+		"poseMatrices",
+		"poseForwardMatrices"
+	],
+	"name" : "WTSkinnedMeshAnimationState",
+	"type" : "normal"
+}

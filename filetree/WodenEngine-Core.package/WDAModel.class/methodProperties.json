@@ -1,0 +1,25 @@
+{
+	"instance" : {
+		"updateForDeltaMicroseconds:" : "RonieSalgado 12/1/2017 18:50",
+		"updateViewsForDeltaMicroseconds:" : "RonieSalgado 12/1/2017 18:49",
+		"initializeForNewSession" : "RonieSalgado 12/1/2017 18:44",
+		"addView:" : "RonieSalgado 12/1/2017 18:56",
+		"initializeModel" : "RonieSalgado 12/1/2017 18:41",
+		"commitSurfaces" : "RonieSalgado 12/1/2017 18:37",
+		"openInMorphic" : "RonieSalgado 12/1/2017 19:00",
+		"openInMorphicWith:" : "RonieSalgado 12/1/2017 19:00",
+		"continousUpdating" : "RonieSalgado 12/1/2017 18:36",
+		"initialize" : "RonieSalgado 12/1/2017 18:44",
+		"needsToRender" : "RonieSalgado 12/1/2017 18:43",
+		"sendRenderingCommands" : "RonieSalgado 12/1/2017 18:37",
+		"start" : "RonieSalgado 12/1/2017 18:36",
+		"views" : "RonieSalgado 12/1/2017 18:25",
+		"initializeWithEngine:" : "RonieSalgado 12/1/2017 18:25",
+		"openWith:" : "RonieSalgado 12/3/2017 20:32",
+		"defaultViewClass" : "RonieSalgado 12/1/2017 18:54",
+		"prepareRendering" : "RonieSalgado 12/1/2017 18:37"
+	},
+	"class" : {
+		"for:" : "RonieSalgado 12/1/2017 18:35"
+	}
+}

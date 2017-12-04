@@ -1,0 +1,3 @@
+testing
+hasStencil
+	^ view hasStencil

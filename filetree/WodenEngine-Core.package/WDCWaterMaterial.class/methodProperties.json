@@ -1,0 +1,17 @@
+{
+	"instance" : {
+		"bindResources" : "RonieSalgado 12/3/2017 21:04",
+		"invalidateCache" : "RonieSalgado 12/3/2017 21:04",
+		"skyTexture:" : "RonieSalgado 12/3/2017 21:05",
+		"fetchShaders" : "RonieSalgado 12/3/2017 21:04",
+		"initialize" : "RonieSalgado 12/3/2017 21:11",
+		"activateOn:" : "RonieSalgado 12/3/2017 21:04",
+		"skyTexture" : "RonieSalgado 12/3/2017 21:05",
+		"harmonicAt:amplitude:frequency:center:" : "RonieSalgado 12/3/2017 21:10",
+		"harmonicAt:amplitude:frequency:direction:" : "RonieSalgado 12/3/2017 21:10",
+		"validateCache" : "RonieSalgado 12/3/2017 21:04",
+		"parse:data:" : "RonieSalgado 12/3/2017 21:11",
+		"uploadMaterialStateData" : "RonieSalgado 12/3/2017 21:18"
+	},
+	"class" : { }
+}

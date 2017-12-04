@@ -1,0 +1,2 @@
+rendering process stages
+updateForDeltaMicroseconds: delta

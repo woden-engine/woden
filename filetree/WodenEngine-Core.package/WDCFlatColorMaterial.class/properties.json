@@ -1,0 +1,18 @@
+{
+	"commentStamp" : "",
+	"super" : "WDCMaterial",
+	"category" : "WodenEngine-Core-Material",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"useDepth",
+		"writeDepth",
+		"stipple",
+		"thumbnailType",
+		"vertexShader",
+		"fragmentShader"
+	],
+	"name" : "WDCFlatColorMaterial",
+	"type" : "normal"
+}

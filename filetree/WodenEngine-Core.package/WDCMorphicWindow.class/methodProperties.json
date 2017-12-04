@@ -1,0 +1,41 @@
+{
+	"instance" : {
+		"renderTarget" : "RonieSalgado 12/1/2017 17:30",
+		"sampleCount" : "RonieSalgado 12/1/2017 17:41",
+		"commitSurface" : "RonieSalgado 12/1/2017 19:55",
+		"hasStencil" : "RonieSalgado 12/1/2017 17:41",
+		"initialize" : "RonieSalgado 12/1/2017 17:31",
+		"hasDepth" : "RonieSalgado 12/1/2017 17:41",
+		"keySymbolFor:" : "RonieSalgado 12/3/2017 20:29",
+		"engine" : "RonieSalgado 12/1/2017 17:30",
+		"handlesMouseDown:" : "RonieSalgado 12/3/2017 20:09",
+		"mouseDown:" : "RonieSalgado 12/3/2017 20:15",
+		"drawingSurfaceExtent" : "RonieSalgado 12/1/2017 17:47",
+		"mouseUp:" : "RonieSalgado 12/3/2017 20:15",
+		"validResolveRenderTarget" : "RonieSalgado 12/1/2017 19:36",
+		"view" : "RonieSalgado 12/1/2017 20:00",
+		"drawOn:" : "RonieSalgado 12/1/2017 17:49",
+		"view:" : "RonieSalgado 12/1/2017 20:00",
+		"handlesMouseWheel:" : "RonieSalgado 12/3/2017 20:09",
+		"mouseWheel:" : "RonieSalgado 12/3/2017 20:18",
+		"validRenderTarget" : "RonieSalgado 12/1/2017 19:36",
+		"checkRenderTarget" : "RonieSalgado 12/1/2017 19:07",
+		"resolveRenderTarget" : "RonieSalgado 12/1/2017 19:07",
+		"modifiers:putOn:" : "RonieSalgado 12/3/2017 20:10",
+		"engine:" : "RonieSalgado 12/1/2017 17:30",
+		"handleKeyDown:" : "RonieSalgado 12/3/2017 20:27",
+		"checkSession" : "RonieSalgado 12/1/2017 17:31",
+		"mouseEventCommon:putOn:" : "RonieSalgado 12/3/2017 20:14",
+		"keyNameFor:" : "RonieSalgado 12/3/2017 20:09",
+		"handleKeyUp:" : "RonieSalgado 12/3/2017 20:24",
+		"mapMouseButton:" : "RonieSalgado 12/3/2017 20:10",
+		"handlesMouseOver:" : "RonieSalgado 12/3/2017 20:09",
+		"handlesKeyboard:" : "RonieSalgado 12/3/2017 20:09",
+		"initializeForNewSession" : "RonieSalgado 12/3/2017 20:11",
+		"mousePosition:putOn:" : "RonieSalgado 12/3/2017 20:11",
+		"createRenderTarget" : "RonieSalgado 12/1/2017 20:17"
+	},
+	"class" : {
+		"initialize" : "RonieSalgado 12/3/2017 20:10"
+	}
+}

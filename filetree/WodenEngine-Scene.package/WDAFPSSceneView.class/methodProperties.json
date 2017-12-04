@@ -1,0 +1,19 @@
+{
+	"instance" : {
+		"cameraAngle:" : "RonieSalgado 12/3/2017 20:44",
+		"cameraAngularSpeed:" : "RonieSalgado 12/3/2017 20:44",
+		"cameraAngularVelocity:" : "RonieSalgado 12/3/2017 20:44",
+		"cameraVelocity:" : "RonieSalgado 12/3/2017 20:44",
+		"cameraAngle" : "RonieSalgado 12/3/2017 20:44",
+		"cameraAngularSpeed" : "RonieSalgado 12/3/2017 20:44",
+		"initialize" : "RonieSalgado 12/3/2017 19:56",
+		"cameraSpeed:" : "RonieSalgado 12/3/2017 20:44",
+		"cameraVelocity" : "RonieSalgado 12/3/2017 20:44",
+		"cameraAngularVelocity" : "RonieSalgado 12/3/2017 20:44",
+		"visitKeyUpEvent:" : "RonieSalgado 12/3/2017 19:58",
+		"updateForDeltaMicroseconds:" : "RonieSalgado 12/3/2017 19:59",
+		"cameraSpeed" : "RonieSalgado 12/3/2017 20:44",
+		"visitKeyDownEvent:" : "RonieSalgado 12/3/2017 19:58"
+	},
+	"class" : { }
+}

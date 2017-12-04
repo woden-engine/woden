@@ -1,0 +1,33 @@
+{
+	"instance" : {
+		"mainRenderPass:" : "RonieSalgado 12/3/2017 14:20",
+		"sampleCount" : "RonieSalgado 12/1/2017 17:24",
+		"hasStencil" : "RonieSalgado 12/1/2017 17:24",
+		"extent" : "RonieSalgado 12/1/2017 17:24",
+		"hasDepth:" : "RonieSalgado 12/1/2017 17:24",
+		"hasDepth" : "RonieSalgado 12/1/2017 17:24",
+		"colorAttachmentFormats:" : "RonieSalgado 12/1/2017 17:24",
+		"engine" : "RonieSalgado 12/1/2017 17:24",
+		"initialize" : "RonieSalgado 12/1/2017 17:36",
+		"sampleCount:" : "RonieSalgado 12/1/2017 17:24",
+		"depthStencilFormat:" : "RonieSalgado 12/1/2017 17:24",
+		"mainRenderPass" : "RonieSalgado 12/3/2017 14:20",
+		"width:" : "RonieSalgado 12/3/2017 14:20",
+		"createRenderPassWithColor:" : "RonieSalgado 12/1/2017 19:42",
+		"width" : "RonieSalgado 12/1/2017 17:24",
+		"extent:" : "RonieSalgado 12/1/2017 17:36",
+		"createFramebuffers" : "RonieSalgado 12/1/2017 17:25",
+		"colorAttachmentFormats" : "RonieSalgado 12/1/2017 17:24",
+		"validMainRenderPass" : "RonieSalgado 12/3/2017 14:20",
+		"depthStencilFormat" : "RonieSalgado 12/3/2017 18:42",
+		"createRenderPassWithColors:" : "RonieSalgado 12/1/2017 19:42",
+		"engine:" : "RonieSalgado 12/1/2017 17:24",
+		"currentFramebuffer" : "RonieSalgado 12/1/2017 19:40",
+		"createRenderPassWithColors:depth:stencil:" : "RonieSalgado 12/1/2017 20:56",
+		"bounds" : "RonieSalgado 12/3/2017 14:40",
+		"hasStencil:" : "RonieSalgado 12/1/2017 17:24",
+		"framebuffers" : "RonieSalgado 12/1/2017 17:24",
+		"height" : "RonieSalgado 12/1/2017 17:24"
+	},
+	"class" : { }
+}

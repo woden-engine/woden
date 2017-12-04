@@ -1,0 +1,25 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-Texture",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [
+		"PixelFormatDecoderSelector",
+		"ThumbnailSize"
+	],
+	"instvars" : [
+		"pixelFormat",
+		"srgbPixelFormat",
+		"width",
+		"height",
+		"depth",
+		"layers",
+		"type",
+		"miplevels"
+	],
+	"name" : "WDCTextureData",
+	"type" : "normal"
+}

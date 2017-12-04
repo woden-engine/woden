@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-Mesh",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"firstIndex",
+		"indexCount",
+		"primitiveType",
+		"material"
+	],
+	"name" : "WTGenericSubmesh",
+	"type" : "normal"
+}

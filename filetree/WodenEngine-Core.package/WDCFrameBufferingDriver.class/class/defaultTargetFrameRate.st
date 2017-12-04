@@ -1,0 +1,3 @@
+accessing
+defaultTargetFrameRate
+	^ 60

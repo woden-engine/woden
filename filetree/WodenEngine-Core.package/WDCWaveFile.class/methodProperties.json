@@ -1,0 +1,12 @@
+{
+	"instance" : {
+		"loadFrom:" : " 12/1/2017 02:37:59",
+		"asSoundSampleFor:" : " 12/1/2017 02:37:59",
+		"loadFromFileNamed:" : " 12/1/2017 02:37:59"
+	},
+	"class" : {
+		"initialize" : " 12/1/2017 02:37:59",
+		"loadFromFileNamed:" : " 12/1/2017 02:37:59",
+		"fourCC:" : " 12/1/2017 02:37:59"
+	}
+}

@@ -1,0 +1,20 @@
+{
+	"commentStamp" : "",
+	"super" : "WTGSMapNode",
+	"category" : "WodenEngine-GameSystem-Level",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"scene",
+		"entities",
+		"pointEntityInstanceGroup",
+		"editorMode",
+		"timeListeners",
+		"levelPlayer",
+		"backgroundColor",
+		"touchListeners"
+	],
+	"name" : "WTGSMap",
+	"type" : "normal"
+}

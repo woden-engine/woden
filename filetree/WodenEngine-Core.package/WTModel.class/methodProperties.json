@@ -1,0 +1,24 @@
+{
+	"instance" : {
+		"actions" : " 12/1/2017 02:37:59",
+		"combineSubmeshesWithMaterial:" : " 12/1/2017 02:37:59",
+		"submeshes:" : " 12/1/2017 02:37:59",
+		"indices:" : " 12/1/2017 02:37:59",
+		"actions:" : " 12/1/2017 02:37:59",
+		"meshFor:" : " 12/1/2017 02:37:59",
+		"indices" : " 12/1/2017 02:37:59",
+		"createIndexBufferFor:" : " 12/1/2017 02:37:59",
+		"createVertexBindingFor:" : "RonieSalgado 12/3/2017 21:38",
+		"createVertexBufferFor:" : " 12/1/2017 02:37:59",
+		"boundingBox" : " 12/1/2017 02:37:59",
+		"vertices" : " 12/1/2017 02:37:59",
+		"armature" : " 12/1/2017 02:37:59",
+		"combineSubmeshes" : " 12/1/2017 02:37:59",
+		"mapMaterials:" : " 12/1/2017 02:37:59",
+		"armature:" : " 12/1/2017 02:37:59",
+		"boundingBox:" : " 12/1/2017 02:37:59",
+		"vertices:" : " 12/1/2017 02:37:59",
+		"submeshes" : " 12/1/2017 02:37:59"
+	},
+	"class" : { }
+}

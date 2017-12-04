@@ -1,0 +1,21 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-GameSystem-Level",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"UDirections",
+		"VDirections",
+		"VectorDirections"
+	],
+	"instvars" : [
+		"face",
+		"scale",
+		"offset",
+		"rotation",
+		"lock"
+	],
+	"name" : "WTGBrushFaceTextureTransform",
+	"type" : "normal"
+}

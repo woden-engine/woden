@@ -1,0 +1,5 @@
+commands
+resolveRenderTarget: sourceRenderTarget into: targetRenderTarget
+	commandListBuilder
+		resolveFramebuffer: targetRenderTarget currentFramebuffer validHandle
+		sourceFramebuffer: sourceRenderTarget currentFramebuffer validHandle

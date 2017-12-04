@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "RonieSalgado 6/13/2016 14:38",
+	"super" : "WTSAbstractSpatialObject",
+	"category" : "WodenEngine-Scene-Graph",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"renderable",
+		"objectStateBuffer",
+		"objectStateBindings",
+		"renderableSceneData",
+		"gpuObjectStates"
+	],
+	"name" : "WTSSpatialObject",
+	"type" : "normal"
+}

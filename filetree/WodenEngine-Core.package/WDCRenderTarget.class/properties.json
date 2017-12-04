@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "WDCAbstractRenderTarget",
+	"category" : "WodenEngine-Core-Window",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [ ],
+	"instvars" : [
+		"gpuOnly"
+	],
+	"name" : "WDCRenderTarget",
+	"type" : "normal"
+}

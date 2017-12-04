@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "RonieSalgado 8/11/2016 16:38",
+	"super" : "WTSSpatialObject",
+	"category" : "WodenEngine-Scene-Graph",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"pendingUpdates",
+		"childOffsetDictionary",
+		"depthSorted",
+		"lastForwardDirection"
+	],
+	"name" : "WTSSpatialObjectInstanceGroup",
+	"type" : "normal"
+}

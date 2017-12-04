@@ -1,0 +1,18 @@
+{
+	"commentStamp" : "",
+	"super" : "WTGenericMeshBuilder",
+	"category" : "WodenEngine-Core-Mesh",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"vertexBuffer",
+		"vertexBufferCapacity",
+		"indexBuffer",
+		"indexBufferCapacity",
+		"vertexBinding",
+		"instantiatedMesh"
+	],
+	"name" : "WTDynamicGenericMeshBuilder",
+	"type" : "normal"
+}

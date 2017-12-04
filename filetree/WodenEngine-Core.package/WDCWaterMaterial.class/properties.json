@@ -1,0 +1,20 @@
+{
+	"commentStamp" : "",
+	"super" : "WDCMaterial",
+	"category" : "WodenEngine-Core-Material",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"skyTexture",
+		"resourceBindingsAreUpdated",
+		"vertexShader",
+		"fragmentShader",
+		"resourceBinding",
+		"stateUniformBuffer",
+		"materialState",
+		"normalTexture"
+	],
+	"name" : "WDCWaterMaterial",
+	"type" : "normal"
+}

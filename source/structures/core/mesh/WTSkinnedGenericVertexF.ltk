@@ -1,12 +1,26 @@
 Structure <<< #WTSkinnedGenericVertexF
 	slots: {
-		#position => WMCompactVector3F. 
-		#normal => WMCompactVector3F. 
-		#texcoord => WMVector2F. 
-		#tangent4 => WMVector4F. 
-		#color => WMVector4F. 
-		#compressedBoneWeights => WMVector4US. 
-		#boneIndices => WMVector4US
+		(#position => WMCompactVector3F)
+			vertexLocation: 0;
+			vertexFormat: #R32G32B32_FLOAT.
+		(#normal => WMCompactVector3F)
+			vertexLocation: 3;
+			vertexFormat: #R32G32B32_FLOAT.
+		(#texcoord => WMVector2F)
+			vertexLocation: 1;
+			vertexFormat: #float2. 
+		(#tangent4 => WMVector4F)
+			vertexLocation: 4;
+			vertexFormat: #float4. 
+		(#color => WMVector4F)
+			vertexLocation: 2;
+			vertexFormat: #float4.
+		(#compressedBoneWeights => WMVector4US)
+			vertexLocation: 5;
+			vertexFormat: #R16G16B16A16_UNORM.
+		(#boneIndices => WMVector4US)
+			vertexLocation: 6;
+			vertexFormat: #R16G16B16A16_SINT.
 	};
 	package: 'Woden2-Structures-Core-Mesh';
 	yourself.

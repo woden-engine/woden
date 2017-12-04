@@ -1,0 +1,26 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-Engine",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [
+		"DefaultEngine",
+		"TracingEnabled"
+	],
+	"instvars" : [
+		"frameBufferingDriver",
+		"projectionInvertedY",
+		"assetSearchPaths",
+		"session",
+		"device",
+		"graphicsQueue",
+		"preferredDepthFormat",
+		"preferredDepthStencilFormat",
+		"resourceCache"
+	],
+	"name" : "WDCEngine",
+	"type" : "normal"
+}

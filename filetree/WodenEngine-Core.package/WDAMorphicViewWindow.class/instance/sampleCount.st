@@ -1,0 +1,3 @@
+testing
+sampleCount
+	^ view sampleCount

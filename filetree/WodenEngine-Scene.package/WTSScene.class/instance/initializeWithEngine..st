@@ -1,0 +1,3 @@
+accessing
+initializeWithEngine: anEngine
+	self initializeWithEngine: anEngine shaderSignatureClass: WDCForwardRenderingShaderSignature

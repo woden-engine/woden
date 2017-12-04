@@ -1,0 +1,15 @@
+{
+	"instance" : {
+		"viewportsForRenderTarget:resolveRenderTarget:submode:" : "RonieSalgado 12/3/2017 14:41",
+		"state:" : " 9/23/2017 19:41:17",
+		"viewportForRenderTarget:resolveRenderTarget:submode:" : "RonieSalgado 12/3/2017 14:40",
+		"viewportForRenderTarget:resolveRenderTarget:bounds:submode:" : "RonieSalgado 12/3/2017 14:39",
+		"reverseDepthPerspectiveFovY:aspect:near:far:invertedY:" : "RonieSalgado 9/23/2017 20:36",
+		"initialize" : " 9/23/2017 19:41:17",
+		"reverseDepthFrustumLeft:right:bottom:top:near:far:invertedY:" : "RonieSalgado 9/24/2017 22:41",
+		"state" : " 9/23/2017 19:41:17",
+		"isCamera" : " 9/23/2017 19:41:17",
+		"projectionMatrix:" : "RonieSalgado 9/25/2017 15:14"
+	},
+	"class" : { }
+}

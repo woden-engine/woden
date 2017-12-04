@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "WDCResourceWithSessionHandle",
+	"category" : "WodenEngine-Core-GPU-Resources",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"colorAttachments",
+		"depthStencilAttachment"
+	],
+	"name" : "WDCRenderPass",
+	"type" : "normal"
+}

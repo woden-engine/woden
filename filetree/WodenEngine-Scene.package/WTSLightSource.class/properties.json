@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "RonieSalgado 6/13/2016 14:34",
+	"super" : "WTSNode",
+	"category" : "WodenEngine-Scene-Graph",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"DefaultSpotInnerCosCutoff",
+		"DefaultSpotOuterCosCutoff"
+	],
+	"instvars" : [
+		"state",
+		"type"
+	],
+	"name" : "WTSLightSource",
+	"type" : "normal"
+}

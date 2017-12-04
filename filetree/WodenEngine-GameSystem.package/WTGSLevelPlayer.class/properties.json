@@ -1,0 +1,27 @@
+{
+	"classtraitcomposition" : "TWTGSLevelPlayer classTrait",
+	"classvars" : [ ],
+	"instvars" : [
+		"engine",
+		"currentTime",
+		"accumulatedUpdateTime",
+		"map",
+		"scene",
+		"camera",
+		"sceneRenderer",
+		"athensSurfaces",
+		"lastRenderTime",
+		"playerEventHandler"
+	],
+	"name" : "WTGSLevelPlayer",
+	"commentStamp" : "",
+	"super" : "Object",
+	"traitcomposition" : "TWTGSLevelPlayer",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants",
+		"OSKeySymbols"
+	],
+	"category" : "WodenEngine-GameSystem-LevelPlayer"
+}

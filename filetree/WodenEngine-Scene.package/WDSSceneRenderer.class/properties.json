@@ -1,0 +1,28 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Scene-Application",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [ ],
+	"instvars" : [
+		"currentScene",
+		"stateTracker",
+		"engine",
+		"shaderSignature",
+		"cameraStatePool",
+		"cameraStates",
+		"cameraUniformBindings",
+		"samplerBindings",
+		"visibleObjects",
+		"visibleLightSources",
+		"mainCamera",
+		"cameraUniformBinding",
+		"currentTime",
+		"objectsPerViewport"
+	],
+	"name" : "WDSSceneRenderer",
+	"type" : "normal"
+}

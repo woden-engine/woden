@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-Shaders",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"index",
+		"name",
+		"elements",
+		"maxBindings",
+		"totalBindingPointCount"
+	],
+	"name" : "WDCShaderSignatureSpecBank",
+	"type" : "normal"
+}

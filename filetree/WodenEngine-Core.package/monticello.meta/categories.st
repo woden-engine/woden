@@ -1,0 +1,13 @@
+SystemOrganization addCategory: #'WodenEngine-Core'!
+SystemOrganization addCategory: 'WodenEngine-Core-Application'!
+SystemOrganization addCategory: 'WodenEngine-Core-Engine'!
+SystemOrganization addCategory: 'WodenEngine-Core-GPU-Resources'!
+SystemOrganization addCategory: 'WodenEngine-Core-Material'!
+SystemOrganization addCategory: 'WodenEngine-Core-Mesh'!
+SystemOrganization addCategory: 'WodenEngine-Core-Pool'!
+SystemOrganization addCategory: 'WodenEngine-Core-Rendering'!
+SystemOrganization addCategory: 'WodenEngine-Core-Shaders'!
+SystemOrganization addCategory: 'WodenEngine-Core-Sound'!
+SystemOrganization addCategory: 'WodenEngine-Core-Structures'!
+SystemOrganization addCategory: 'WodenEngine-Core-Texture'!
+SystemOrganization addCategory: 'WodenEngine-Core-Window'!

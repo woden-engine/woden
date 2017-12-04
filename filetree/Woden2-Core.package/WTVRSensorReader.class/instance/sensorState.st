@@ -1,3 +1,0 @@
-session management
-sensorState
-	self subclassResponsibility

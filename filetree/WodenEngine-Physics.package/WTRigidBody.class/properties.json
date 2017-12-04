@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Physics-Interface",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"sceneNode",
+		"mass",
+		"shape",
+		"handle"
+	],
+	"name" : "WTRigidBody",
+	"type" : "normal"
+}

@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "WDCShaderSignature",
+	"category" : "WodenEngine-Core-Shaders",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WDCForwardRenderingShaderSignature",
+	"type" : "normal"
+}

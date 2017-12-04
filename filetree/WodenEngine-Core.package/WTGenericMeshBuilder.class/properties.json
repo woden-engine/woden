@@ -1,0 +1,22 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-Mesh",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [ ],
+	"instvars" : [
+		"engine",
+		"vertices",
+		"indices",
+		"currentColor",
+		"currentMaterial",
+		"submeshes",
+		"baseVertex",
+		"vertexLayout"
+	],
+	"name" : "WTGenericMeshBuilder",
+	"type" : "normal"
+}

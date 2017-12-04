@@ -1,10 +1,20 @@
 Structure <<< #WTGenericVertexF
 	slots: {
-		#position => WMCompactVector3F. 
-		#normal => WMCompactVector3F. 
-		#texcoord => WMVector2F. 
-		#tangent4 => WMVector4F. 
-		#color => WMVector4F
+		(#position => WMCompactVector3F)
+			vertexLocation: 0;
+			vertexFormat: #R32G32B32_FLOAT.
+		(#normal => WMCompactVector3F)
+			vertexLocation: 3;
+			vertexFormat: #R32G32B32_FLOAT.
+		(#texcoord => WMVector2F)
+			vertexLocation: 1;
+			vertexFormat: #float2. 
+		(#tangent4 => WMVector4F)
+			vertexLocation: 4;
+			vertexFormat: #float4. 
+		(#color => WMVector4F)
+			vertexLocation: 2;
+			vertexFormat: #float4.
 	};
 	package: 'Woden2-Structures-Core-Mesh';
 	yourself.

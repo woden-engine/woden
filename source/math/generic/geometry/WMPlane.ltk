@@ -24,6 +24,16 @@ WMPlane class category: 'construction' methods: {
 
 }.
 
+WMPlane class category: 'serialization' methods: {
+:[loadFromJson: jsonData -> WMPlane.
+	^ self
+		nx: ((jsonData at: 1) castTo: Scalar)
+		ny: ((jsonData at: 2) castTo: Scalar)
+		nz: ((jsonData at: 3) castTo: Scalar)
+		d: ((jsonData at: 4) castTo: Scalar)
+].
+}.
+
 WMPlane category: 'accessing' methods: {
 :[distance -> Scalar.
 	^ d

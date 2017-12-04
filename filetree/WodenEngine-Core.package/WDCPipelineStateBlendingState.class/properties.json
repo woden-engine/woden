@@ -1,0 +1,22 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-Rendering",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [ ],
+	"instvars" : [
+		"targetMask",
+		"enabled",
+		"sourceFactor",
+		"destFactor",
+		"operation",
+		"sourceAlphaFactor",
+		"destAlphaFactor",
+		"alphaOperation"
+	],
+	"name" : "WDCPipelineStateBlendingState",
+	"type" : "normal"
+}

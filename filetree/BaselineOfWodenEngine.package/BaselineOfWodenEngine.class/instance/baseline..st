@@ -1,0 +1,51 @@
+baselines
+baseline: spec
+    <baseline>
+    spec for: #'common' do: [
+			spec blessing: #baseline.
+			spec 
+				project: 'NeoJSON' with: [
+				spec
+					className: #ConfigurationOfNeoJSON;
+					versionString: #'stable';
+					repository: 'http://mc.stfx.eu/Neo' ].
+			spec 
+				project: 'AbstractGPU' with: [
+				spec
+					className: #ConfigurationOfAbstractGPU;
+					versionString: #'stable';
+					repository: 'http://smalltalkhub.com/mc/ronsaldo/AbstractGPU/main' ].
+			spec 
+				project: 'AbstractPhysics' with: [
+				spec
+					className: #ConfigurationOfAbstractPhysics;
+					versionString: #'development';
+					repository: 'http://smalltalkhub.com/mc/ronsaldo/AbstractPhysics/main' ].
+			spec 
+				project: 'Dastrel' with: [
+				spec
+					className: #ConfigurationOfDastrel;
+					versionString: #'development';
+					repository: 'http://smalltalkhub.com/mc/ronsaldo/Dastrel/main' ].
+			spec 
+				project: 'OpenAL' with: [
+				spec
+					className: #ConfigurationOfOpenAL;
+					versionString: #'development';
+					repository: 'http://smalltalkhub.com/mc/ronsaldo/OpenAL/main' ].
+		spec package: #'WodenEngine-Core' with: [
+				spec requires: #('NeoJSON' 'AbstractGPU' 'Dastrel')].
+		"spec package: #'WodenEngine-Athens' with: [
+				spec requires: #('WodenEngine-Core')]."
+		spec package: #'WodenEngine-Scene' with: [
+				spec requires: #('WodenEngine-Core')].
+		spec package: #'WodenEngine-Samples' with: [
+				spec requires: #('WodenEngine-Core' "'WodenEngine-Athens'" 'WodenEngine-Scene' 'WodenEngine-GameSystem')].
+		spec package: #'WodenEngine-Physics' with: [
+				spec requires: #('WodenEngine-Core' 'AbstractPhysics')].
+		spec package: #'WodenEngine-OpenAL' with: [
+				spec requires: #('WodenEngine-Core' 'OpenAL')].
+		spec package: #'WodenEngine-GameSystem' with: [
+				spec requires: #('WodenEngine-Core' "'WodenEngine-Athens'" 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL')].
+		spec group: 'default' with: #('WodenEngine-Core' "'WodenEngine-Athens'" 'WodenEngine-Samples' 'WodenEngine-GameSystem')
+	]
