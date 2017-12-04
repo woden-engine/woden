@@ -353,3 +353,34 @@ WMMatrix4 category: 'printing' methods: {
 		nextPut: $)
 ]
 }.
+
+WMMatrix4 category: 'transformations' methods: {
+:[transformPosition3: <WMVector3>vector -> WMVector3.
+	^ WMVector3
+		x: (m11 * vector x) + (m12 * vector y) + (m13 * vector z) + m14
+		y: (m21 * vector x) + (m22 * vector y) + (m23 * vector z) + m24
+		z: (m31 * vector x) + (m32 * vector y) + (m33 * vector z) + m34
+].
+
+:[transformVector3: <WMVector3>vector -> WMVector3.
+	^ WMVector3
+		x: (m11 * vector x) + (m12 * vector y) + (m13 * vector z)
+		y: (m21 * vector x) + (m22 * vector y) + (m23 * vector z)
+		z: (m31 * vector x) + (m32 * vector y) + (m33 * vector z)
+].
+
+:[transformVector4: <WMVector4>vector -> WMVector4.
+	^ WMVector4
+		x: (m11 * vector x) + (m12 * vector y) + (m13 * vector z) + (m14 * vector w)
+		y: (m21 * vector x) + (m22 * vector y) + (m23 * vector z) + (m24 * vector w)
+		z: (m31 * vector x) + (m32 * vector y) + (m33 * vector z) + (m34 * vector w)
+		w: (m41 * vector x) + (m42 * vector y) + (m43 * vector z) + (m44 * vector w)
+].
+
+:[transposedTransformVector3: <WMVector3>vector3 -> WMVector3.
+	^ WMVector3
+		x: (m11 * vector3 x) + (m21 * vector3 y) + (m31 * vector3 z) 
+		y: (m12 * vector3 x) + (m22 * vector3 y) + (m32 * vector3 z) 
+		z: (m13 * vector3 x) + (m23 * vector3 y) + (m33 * vector3 z)
+]
+}.
