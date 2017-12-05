@@ -1,0 +1,34 @@
+{
+	"commentStamp" : "RonieSalgado 9/25/2017 14:49",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-VR",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"InverseDistortRadiusEpsilon",
+		"MetersPerInch"
+	],
+	"instvars" : [
+		"extent",
+		"dpi",
+		"fov",
+		"interLensDistance",
+		"screenVerticalAlignment",
+		"screenLensDistance",
+		"distortionCoefficients",
+		"ipd",
+		"leftProjection",
+		"rightProjection",
+		"nearDistance",
+		"farDistance",
+		"invertedY",
+		"state",
+		"physicalExtent",
+		"bevelLength",
+		"leftUndistortedProjection",
+		"rightUndistortedProjection",
+		"validMatrices"
+	],
+	"name" : "WDCVRHeadsetDescription",
+	"type" : "normal"
+}

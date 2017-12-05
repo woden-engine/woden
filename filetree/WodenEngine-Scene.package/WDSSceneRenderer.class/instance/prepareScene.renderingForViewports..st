@@ -2,6 +2,7 @@ rendering preparations
 prepareScene: scene renderingForViewports: viewports
 	| fullFrameIndex |
 	currentScene := scene.
+	viewports ifEmpty: [ ^ self ].
 	mainCamera := viewports first camera.
 
 	self collectVisibleObjectsFor: mainCamera.

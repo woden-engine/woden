@@ -13,7 +13,8 @@ signatureSpec: spec
 		bank: #Source with: [ :bank |
 			bank
 				maxBindings: 1000;
-				texture: #Texture
+				texture: #LeftTexture;
+				texture: #RightTexture
 		];
 		bank: #Sampler with: [ :bank |
 			bank

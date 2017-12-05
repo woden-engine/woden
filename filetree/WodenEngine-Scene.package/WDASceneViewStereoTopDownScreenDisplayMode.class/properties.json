@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "WDASceneViewStereoScreenDisplayMode",
+	"category" : "WodenEngine-Scene-Application",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WDASceneViewStereoTopDownScreenDisplayMode",
+	"type" : "normal"
+}

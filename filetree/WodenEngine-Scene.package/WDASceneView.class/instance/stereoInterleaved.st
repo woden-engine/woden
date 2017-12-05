@@ -1,0 +1,3 @@
+screen display modes
+stereoInterleaved
+	self screenDisplayMode: WDASceneViewStereoInterleavedScreenDisplayMode new

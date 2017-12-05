@@ -20,7 +20,8 @@
 		"preferredDepthFormat",
 		"preferredDepthStencilFormat",
 		"resourceCache",
-		"soundDevice"
+		"soundDevice",
+		"vrSensorReader"
 	],
 	"name" : "WDCEngine",
 	"type" : "normal"

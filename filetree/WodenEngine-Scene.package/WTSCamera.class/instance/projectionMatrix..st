@@ -1,3 +1,0 @@
-construction
-projectionMatrix: aProjectionMatrix
-	state projectionMatrix: aProjectionMatrix

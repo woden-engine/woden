@@ -1,15 +1,16 @@
 rendering preparations
 updateFrameCameraStates: viewports
-	| frameStates camera gpuCameraState |
+	| frameStates camera gpuCameraState cameraState |
 	frameStates := cameraStates at: engine bufferingFrameIndex.
 	viewports doWithIndex: [ :viewport :index |
 		camera := viewport camera.
-		camera state
-				transform: camera renderTransform;
-				currentTime: currentTime.
+		cameraState := viewport cameraState.
+		cameraState
+			transform: (camera renderTransform transformTransform: cameraState transform);
+			currentTime: currentTime.
 				
 		gpuCameraState := frameStates at: index.
-		gpuCameraState value: camera state.
+		gpuCameraState value: cameraState.
 	].
 
 	cameraUniformBinding := cameraUniformBindings at: engine bufferingFrameIndex

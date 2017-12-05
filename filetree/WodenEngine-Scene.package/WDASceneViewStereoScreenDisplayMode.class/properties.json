@@ -1,0 +1,28 @@
+{
+	"commentStamp" : "",
+	"super" : "WDASceneViewScreenDisplayMode",
+	"category" : "WodenEngine-Scene-Application",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"ipd",
+		"focalDistance",
+		"leftRenderTarget",
+		"leftResolveRenderTarget",
+		"rightResolveRenderTarget",
+		"rightRenderTarget",
+		"shaderSignature",
+		"vertexShader",
+		"fragmentShader",
+		"sourceRenderTargetsBinding",
+		"samplerBindings",
+		"compositionStateBinding",
+		"compositionStateBuffer",
+		"compositionState",
+		"leftProjectionMatrix",
+		"rightProjectionMatrix"
+	],
+	"name" : "WDASceneViewStereoScreenDisplayMode",
+	"type" : "normal"
+}

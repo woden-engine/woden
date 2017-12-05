@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-VR",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"CurrentSensorReader",
+		"CurrentSensorReaderSession"
+	],
+	"instvars" : [ ],
+	"name" : "WDCVRSensorReader",
+	"type" : "normal"
+}

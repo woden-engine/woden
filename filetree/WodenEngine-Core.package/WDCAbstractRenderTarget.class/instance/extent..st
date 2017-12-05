@@ -7,6 +7,7 @@ extent: anExtent
 		height := anExtent y.
 	
 		(extentChanged and: [ framebuffers isNotNil ]) ifTrue: [
+			engine trace: 'Framebuffer extent changed'.
 			frameBufferCount := framebuffers size.
 			self release.
 			self createFramebuffers: frameBufferCount

@@ -1,0 +1,3 @@
+screen display modes
+stereoSideBySide
+	self screenDisplayMode: WDASceneViewStereoSideBySideScreenDisplayMode new

@@ -4,6 +4,7 @@ reset
 	shaderSignature := nil.
 	vertexShader := nil.
 	fragmentShader := nil.
+	vertexLayout := nil.
 	
 	frontFaceWinding := AGPU_COUNTER_CLOCKWISE.
 	cullMode := AGPU_CULL_MODE_NONE.

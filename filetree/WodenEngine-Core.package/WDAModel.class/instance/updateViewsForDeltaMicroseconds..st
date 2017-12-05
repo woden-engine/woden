@@ -1,3 +1,5 @@
 rendering process stages
 updateViewsForDeltaMicroseconds: microsecondsDelta
-	views do: [:v | v updateForDeltaMicroseconds: microsecondsDelta].
+	engine renderingProcessCritical: [ 
+		views do: [:v | v updateForDeltaMicroseconds: microsecondsDelta].
+	]

@@ -1,0 +1,18 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "WodenEngine-Core-VR",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"outside",
+		"inner",
+		"top",
+		"bottom",
+		"eyeX",
+		"eyeY"
+	],
+	"name" : "WDCVREyeViewportParameters",
+	"type" : "normal"
+}

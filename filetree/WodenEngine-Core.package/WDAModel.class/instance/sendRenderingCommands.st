@@ -1,3 +1,5 @@
 rendering process stages
 sendRenderingCommands
-	views do: #sendRenderingCommands
+	engine renderingProcessCritical: [ 
+		views do: #sendRenderingCommands
+	]

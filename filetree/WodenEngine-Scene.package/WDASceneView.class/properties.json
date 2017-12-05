@@ -6,9 +6,10 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"commandList",
 		"sceneRenderer",
-		"camera"
+		"camera",
+		"screenDisplayMode",
+		"commandList"
 	],
 	"name" : "WDASceneView",
 	"type" : "normal"

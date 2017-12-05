@@ -19,7 +19,9 @@ createFramebuffer
 		flags: colorBufferFags;
 		sample_count: sampleCount.
 		
-		engine device createTexture: description
+		(WDCTexture for: engine handle: (engine device createTexture: description))
+			description: description;
+			yourself
 	].
 
 	depthStencilView := nil.
@@ -38,10 +40,12 @@ createFramebuffer
 			flags: depthStencilFlags;
 			sample_count: sampleCount.
 			
-		depthStencilAttachment := engine device createTexture: depthStencilDesc.
+		depthStencilAttachment := (WDCTexture for: engine handle: (engine device createTexture: depthStencilDesc))
+			description: depthStencilDesc;
+			yourself.
 
 		depthStencilView := AGPUTextureViewDescription new.
-		depthStencilAttachment getFullViewDescription: depthStencilView.
+		depthStencilAttachment handle getFullViewDescription: depthStencilView.
 	].
 
 	colorAttachments ifNotEmpty: [ 
@@ -49,7 +53,7 @@ createFramebuffer
 		[ 
 			destPointer := colorViews.
 			colorAttachments do: [ :att |
-				att getFullViewDescription: (AGPUTextureViewDescription fromHandle: destPointer).
+				att handle getFullViewDescription: (AGPUTextureViewDescription fromHandle: destPointer).
 				destPointer := destPointer + AGPUTextureViewDescription structureSize
 			].
 		

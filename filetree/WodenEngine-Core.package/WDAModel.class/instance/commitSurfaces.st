@@ -1,3 +1,5 @@
 rendering process stages
 commitSurfaces
-	views do: #commitSurfaces
+	engine renderingProcessCritical: [ 
+		views do: #commitSurfaces
+	]

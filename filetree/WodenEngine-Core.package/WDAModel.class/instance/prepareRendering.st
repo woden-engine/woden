@@ -1,3 +1,5 @@
 rendering process stages
 prepareRendering
-	views do: #prepareRendering
+	engine renderingProcessCritical: [ 
+		views do: #prepareRendering
+	]

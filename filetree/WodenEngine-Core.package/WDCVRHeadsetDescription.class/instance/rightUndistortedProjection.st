@@ -1,0 +1,4 @@
+accessing
+rightUndistortedProjection
+	self computeProjectionMatrices.
+	^ rightUndistortedProjection

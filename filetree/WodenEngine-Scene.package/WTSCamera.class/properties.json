@@ -6,7 +6,11 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"state"
+		"nearDistance",
+		"farDistance",
+		"fieldOfView",
+		"focalDistance",
+		"isPerspective"
 	],
 	"name" : "WTSCamera",
 	"type" : "normal"

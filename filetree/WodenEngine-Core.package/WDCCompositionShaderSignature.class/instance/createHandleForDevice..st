@@ -8,7 +8,8 @@ createHandleForDevice: device
 
 		"Source"
 		beginBindingBank: 1000;
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "Texture"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "LeftTexture"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "RightTexture"
 
 		"Sampler"
 		beginBindingBank: 10;

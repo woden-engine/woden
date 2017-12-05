@@ -1,0 +1,3 @@
+screen display modes
+stereoTopDown
+	self screenDisplayMode: WDASceneViewStereoTopDownScreenDisplayMode new

@@ -1,0 +1,3 @@
+screen display modes
+anaglyph
+	self screenDisplayMode: WDASceneViewStereoAnaglyphScreenDisplayMode new

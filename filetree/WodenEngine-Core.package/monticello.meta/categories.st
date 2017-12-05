@@ -10,4 +10,5 @@ SystemOrganization addCategory: 'WodenEngine-Core-Shaders'!
 SystemOrganization addCategory: 'WodenEngine-Core-Sound'!
 SystemOrganization addCategory: 'WodenEngine-Core-Structures'!
 SystemOrganization addCategory: 'WodenEngine-Core-Texture'!
+SystemOrganization addCategory: 'WodenEngine-Core-VR'!
 SystemOrganization addCategory: 'WodenEngine-Core-Window'!
