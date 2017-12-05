@@ -6,7 +6,7 @@ updateFrameCameraStates: viewports
 		camera := viewport camera.
 		cameraState := viewport cameraState.
 		cameraState
-			transform: (camera renderTransform transformTransform: cameraState transform);
+			transform: (viewport cameraTransformFunction value: camera renderTransform);
 			currentTime: currentTime.
 				
 		gpuCameraState := frameStates at: index.

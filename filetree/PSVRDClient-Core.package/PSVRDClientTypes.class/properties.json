@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "SharedPool",
+	"category" : "PSVRDClient-Core-PSVRDClient-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"psvrd_client_connection_t",
+		"psvrd_client_error_t",
+		"psvrd_client_sensor_state_t",
+		"psvrd_quaternion_t",
+		"psvrd_vector3_t"
+	],
+	"instvars" : [ ],
+	"name" : "PSVRDClientTypes",
+	"type" : "normal"
+}

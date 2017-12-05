@@ -10,8 +10,9 @@ computeProjectionMatrices
 	leftProjectionMatrix := headsetDescription leftUndistortedProjection.
 	rightProjectionMatrix := headsetDescription rightUndistortedProjection.
 	
-	vrTransform := WMReversibleAffineTransformF identity.
+	headsetOrientation := WMMatrix3F identity.
+	headsetTranslation := WMVector3F new.
 	engine vrSensorReader ifNotNil: [ :sensor |
 		sensorState := sensor sensorState.
-		vrTransform orthonormal: sensorState orientation asWMMatrix3F
+		headsetOrientation := sensorState orientation asWMMatrix3F
 	].

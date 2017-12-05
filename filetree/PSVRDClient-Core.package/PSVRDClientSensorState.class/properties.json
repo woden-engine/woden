@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "FFIExternalStructure",
+	"category" : "PSVRDClient-Core-PSVRDClient-Core",
+	"classinstvars" : [ ],
+	"pools" : [
+		"PSVRDClientTypes"
+	],
+	"classvars" : [
+		"OFFSET_ORIENTATION",
+		"OFFSET_TRANSLATION"
+	],
+	"instvars" : [ ],
+	"name" : "PSVRDClientSensorState",
+	"type" : "normal"
+}

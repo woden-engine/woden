@@ -11,5 +11,5 @@ rightViewportForCamera: camera
 		renderTarget: rightRenderTarget;
 		resolveRenderTarget: rightResolveRenderTarget;
 		bounds: rightRenderTarget bounds;
-		cameraTransformFunction: [ :ct | ct transformTransform: self rightCameraTransform ];
+		cameraTransformFunction: [ :ct | self applyVRTransformToCamera: ct eye: (WMVector3F x: ipd * 0.5) ];
 		submode: #full

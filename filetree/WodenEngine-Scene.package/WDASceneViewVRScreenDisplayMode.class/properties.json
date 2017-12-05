@@ -8,7 +8,9 @@
 	"instvars" : [
 		"headsetDescription",
 		"vrState",
-		"vrTransform"
+		"vrTransform",
+		"headsetOrientation",
+		"headsetTranslation"
 	],
 	"name" : "WDASceneViewVRScreenDisplayMode",
 	"type" : "normal"

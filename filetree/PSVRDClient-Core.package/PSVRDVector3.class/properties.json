@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "FFIExternalStructure",
+	"category" : "PSVRDClient-Core-PSVRDClient-Core",
+	"classinstvars" : [ ],
+	"pools" : [
+		"PSVRDClientTypes"
+	],
+	"classvars" : [
+		"OFFSET_X",
+		"OFFSET_Y",
+		"OFFSET_Z"
+	],
+	"instvars" : [ ],
+	"name" : "PSVRDVector3",
+	"type" : "normal"
+}

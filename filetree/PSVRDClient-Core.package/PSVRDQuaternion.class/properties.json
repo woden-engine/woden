@@ -1,0 +1,18 @@
+{
+	"commentStamp" : "",
+	"super" : "FFIExternalStructure",
+	"category" : "PSVRDClient-Core-PSVRDClient-Core",
+	"classinstvars" : [ ],
+	"pools" : [
+		"PSVRDClientTypes"
+	],
+	"classvars" : [
+		"OFFSET_W",
+		"OFFSET_X",
+		"OFFSET_Y",
+		"OFFSET_Z"
+	],
+	"instvars" : [ ],
+	"name" : "PSVRDQuaternion",
+	"type" : "normal"
+}

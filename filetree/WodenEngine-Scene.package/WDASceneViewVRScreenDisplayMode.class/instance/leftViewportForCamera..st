@@ -11,5 +11,5 @@ leftViewportForCamera: camera
 		renderTarget: leftRenderTarget;
 		resolveRenderTarget: leftResolveRenderTarget;
 		bounds: leftRenderTarget bounds;
-		cameraTransformFunction: [ :ct | ct transformTransform: self leftCameraTransform ];
+		cameraTransformFunction: [ :ct | self applyVRTransformToCamera: ct eye: (WMVector3F x: ipd * -0.5) ];
 		submode: #full

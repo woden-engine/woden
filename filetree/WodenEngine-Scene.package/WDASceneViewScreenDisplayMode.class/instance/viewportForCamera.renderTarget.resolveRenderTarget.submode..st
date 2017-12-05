@@ -3,8 +3,7 @@ viewportForCamera: camera renderTarget: renderTarget resolveRenderTarget: resolv
 	| cameraState |
 	cameraState := WTCameraState new.
 	cameraState
-		projectionMatrix: (self computeProjectionMatrixFor: camera);
-		transform: WMReversibleAffineTransformF identity.
+		projectionMatrix: (self computeProjectionMatrixFor: camera).
 	
 	^ WTSViewport new
 		camera: camera;

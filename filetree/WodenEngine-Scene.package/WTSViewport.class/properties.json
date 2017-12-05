@@ -14,7 +14,8 @@
 		"submode",
 		"filter",
 		"renderTarget",
-		"resolveRenderTarget"
+		"resolveRenderTarget",
+		"cameraTransformFunction"
 	],
 	"name" : "WTSViewport",
 	"type" : "normal"
