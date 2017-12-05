@@ -1,0 +1,6 @@
+Structure <<< #WTCompositionState
+	slots: {
+		#screenExtents => WMVector4F.
+	};
+	package: 'Woden2-Structures-Core-Camera';
+	yourself.

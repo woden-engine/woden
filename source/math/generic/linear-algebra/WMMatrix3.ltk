@@ -62,6 +62,14 @@ WMMatrix3 class category: 'special matrices' methods: {
 		yourself
 ].
 
+:[ndcToTexcoord2D -> WMMatrix3.
+	^ WMMatrix3 newValue
+		m11: 0.5; m12: 0.0; m13: 0.5;
+		m21: 0.0; m22: 0.5; m23: 0.5;
+		m31: 0.0; m32: 0.0; m33: 1.0;
+		yourself
+].
+
 :[xrot: angle -> WMMatrix3.
 	let cos := angle cos castTo: Scalar.
 	let sin := angle sin castTo: Scalar.
@@ -248,6 +256,15 @@ WMMatrix3 category: 'comparing' methods: {
 }.
 
 WMMatrix3 category: 'converting' methods: {
+:[as2DProjectionVector -> WMVector4.
+	^ WMVector4 x: m11 y: m22 z: m13 w: m23
+].
+
+:[as2DInverseProjectionVector -> WMVector4.
+	^ WMVector4 x: 1.0 / m11 y: 1.0 / m22
+		z: m13 negated / m11 w: m23 negated / m22
+].
+
 :[asColumnMajorFloatArray -> _DynamicObject.
 	| result |
 	result := FloatArray new: 9.

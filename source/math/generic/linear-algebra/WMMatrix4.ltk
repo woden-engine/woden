@@ -289,6 +289,13 @@ WMMatrix4 category: 'comparing' methods: {
 }.
 
 WMMatrix4 category: 'converting' methods: {
+:[as2DProjectionMatrix -> WMMatrix3.
+	^ WMMatrix3
+		m11: m11 m12: 0.0 m13: m13
+		m21: 0.0 m22: m22 m23: m23
+		m31: 0.0 m32: 0.0 m33: 1.0
+].
+
 :[asColumnMajorFloatArray -> _DynamicObject.
 	| result |
 	result := FloatArray new: 16.

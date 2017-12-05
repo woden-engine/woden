@@ -1,5 +1,6 @@
 Structure <<< #WTVRState
 	slots: {
+		#compositionState => WTCompositionState.
 		#leftProjectionTransform => WMVector4F. 
 		#leftUndistortedProjectionInverseTransform => WMVector4F. 
 		#rightProjectionTransform => WMVector4F. 
