@@ -1,7 +1,7 @@
 multi eye rendering
 createRenderTargets
 	| extent sampleCount hasDepth hasStencil |
-	extent := view window validResolveRenderTarget extent.
+	extent := view window drawingSurfaceExtent.
 	sampleCount := view sampleCount.
 	hasDepth := view hasDepth.
 	hasStencil := view hasStencil.

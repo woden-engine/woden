@@ -1,7 +1,7 @@
 rendering process stages
 computeProjectionMatrices
 	| camera sensorState |
-	camera := view camera.
+	camera := view cameraSceneNode.
 	headsetDescription
 		nearDistance: camera nearDistance;
 		farDistance: camera farDistance;

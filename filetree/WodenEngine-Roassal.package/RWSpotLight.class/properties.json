@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "RWLight",
+	"category" : "WodenEngine-Roassal-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "RWSpotLight",
+	"type" : "normal"
+}

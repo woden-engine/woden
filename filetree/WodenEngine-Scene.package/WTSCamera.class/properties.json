@@ -10,7 +10,8 @@
 		"farDistance",
 		"fieldOfView",
 		"focalDistance",
-		"isPerspective"
+		"isPerspective",
+		"frustum"
 	],
 	"name" : "WTSCamera",
 	"type" : "normal"

@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "RWMouseEvent",
+	"category" : "WodenEngine-Roassal-Events",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "RWMouseEnter",
+	"type" : "normal"
+}

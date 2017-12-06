@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "RWMouseEvent",
+	"category" : "WodenEngine-Roassal-Events",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"delta"
+	],
+	"name" : "RWMouseMove",
+	"type" : "normal"
+}

@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "RWElement",
+	"category" : "WodenEngine-Roassal-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"controlPoints",
+		"from",
+		"to"
+	],
+	"name" : "RWEdge",
+	"type" : "normal"
+}

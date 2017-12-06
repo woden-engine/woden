@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "GLMRoassal2Presentation",
+	"category" : "WodenEngine-Roassal-Glamour",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "GLMWoden2Presentation",
+	"type" : "normal"
+}

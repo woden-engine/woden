@@ -1,0 +1,3 @@
+accessing
+depthElement: aValueOrASymbolOrAOneArgBlock
+	depth := aValueOrASymbolOrAOneArgBlock

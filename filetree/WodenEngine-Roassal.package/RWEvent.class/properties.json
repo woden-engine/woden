@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "Announcement",
+	"category" : "WodenEngine-Roassal-Events",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"element"
+	],
+	"name" : "RWEvent",
+	"type" : "normal"
+}

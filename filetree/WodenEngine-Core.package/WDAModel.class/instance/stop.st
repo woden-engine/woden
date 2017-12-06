@@ -1,0 +1,3 @@
+initialization
+stop
+	started := false

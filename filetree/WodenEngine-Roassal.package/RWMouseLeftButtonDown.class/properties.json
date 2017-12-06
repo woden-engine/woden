@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "RWMouseButtonDown",
+	"category" : "WodenEngine-Roassal-Events",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "RWMouseLeftButtonDown",
+	"type" : "normal"
+}

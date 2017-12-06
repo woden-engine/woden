@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "TRMorph",
+	"category" : "WodenEngine-Roassal-Trachel",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"engine"
+	],
+	"name" : "RWTRMorph",
+	"type" : "normal"
+}

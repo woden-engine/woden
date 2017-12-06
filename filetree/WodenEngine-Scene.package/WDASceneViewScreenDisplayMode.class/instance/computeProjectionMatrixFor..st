@@ -1,8 +1,8 @@
 as yet unclassified
 computeProjectionMatrixFor: camera
-	| aspect target |
-	target := view window validRenderTarget.
-	aspect := target width asFloat / target height asFloat.
+	| aspect extent |
+	extent := view window drawingSurfaceExtent.
+	aspect := extent x asFloat / extent y asFloat.
 	^ camera isPerspective ifTrue: [
 		WMMatrix4F reverseDepthPerspectiveFovY: camera fieldOfView aspect: aspect near: camera nearDistance far: camera farDistance invertedY: engine projectionInvertedY.
 	] ifFalse: [

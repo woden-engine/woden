@@ -8,7 +8,7 @@ performGpuStateUpdateWithCamera: aCamera
 	currentGpuState first value: objectState.
 	
 	instanceStateBuffer := currentGpuState second.
-	instanceStateBuffer ensureCapacityForAtLeast: children size.
+	instanceStateBuffer ensureCapacityForAtLeast: children size keepOldData: true.
 	
 	instanceStateSize := instanceStateBuffer elementSize.
 	instanceStatePointer := instanceStateBuffer validPointer getHandle.

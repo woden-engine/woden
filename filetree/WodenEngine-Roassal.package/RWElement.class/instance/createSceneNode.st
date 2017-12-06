@@ -1,0 +1,3 @@
+initialization
+createSceneNode
+	^ WTSSpatialObject new

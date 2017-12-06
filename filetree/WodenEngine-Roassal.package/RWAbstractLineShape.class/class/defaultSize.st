@@ -1,0 +1,3 @@
+configuration
+defaultSize
+	^ 2

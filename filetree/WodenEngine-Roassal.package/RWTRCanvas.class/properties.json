@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "TRCanvas",
+	"category" : "WodenEngine-Roassal-Trachel",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"customSurface",
+		"engine"
+	],
+	"name" : "RWTRCanvas",
+	"type" : "normal"
+}

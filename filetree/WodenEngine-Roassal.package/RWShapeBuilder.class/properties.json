@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "RWObject",
+	"category" : "WodenEngine-Roassal-Builder",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"shape",
+		"createdElements",
+		"shapeInitializer"
+	],
+	"name" : "RWShapeBuilder",
+	"type" : "normal"
+}

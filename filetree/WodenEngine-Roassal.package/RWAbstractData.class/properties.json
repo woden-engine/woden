@@ -1,0 +1,25 @@
+{
+	"commentStamp" : "",
+	"super" : "RWObject",
+	"category" : "WodenEngine-Roassal-Builder-Grapher",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"builder",
+		"maxX",
+		"maxY",
+		"maxZ",
+		"minX",
+		"minY",
+		"minZ",
+		"x",
+		"y",
+		"z",
+		"elements",
+		"barBuilder",
+		"elementActions"
+	],
+	"name" : "RWAbstractData",
+	"type" : "normal"
+}

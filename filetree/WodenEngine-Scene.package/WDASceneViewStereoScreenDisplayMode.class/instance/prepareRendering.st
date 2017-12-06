@@ -5,14 +5,15 @@ prepareRendering
 		checkRenderTargets;
 		updateCompositionState;
 		uploadCompositionState;
-		computeProjectionMatrices.
+		computeProjectionMatrices;
+		updateCameraFrustum.
 		
 	resolveTarget := view window validResolveRenderTarget.
 	^ view sceneRenderer
 		currentTime: view model currentTime;
 		renderScene: view model scene viewports: {
-			self leftViewportForCamera: view camera.
-			self rightViewportForCamera: view camera.
+			self leftViewportForCamera: view cameraSceneNode.
+			self rightViewportForCamera: view cameraSceneNode.
 		}
 		composeWith: [ :stateTracker |
 			self composeEyesIn: stateTracker

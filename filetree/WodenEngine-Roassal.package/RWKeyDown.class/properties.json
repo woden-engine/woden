@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "RWKeyEvent",
+	"category" : "WodenEngine-Roassal-Events",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "RWKeyDown",
+	"type" : "normal"
+}

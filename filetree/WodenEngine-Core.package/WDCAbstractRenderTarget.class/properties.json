@@ -17,7 +17,6 @@
 		"colorAttachmentFormats",
 		"depthStencilFormat",
 		"sampleCount",
-		"lock",
 		"mainRenderPass"
 	],
 	"name" : "WDCAbstractRenderTarget",

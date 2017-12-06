@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "RWLayout",
+	"category" : "WodenEngine-Roassal-Layout",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"radius",
+		"initialRadius",
+		"initialIncrementalAngle",
+		"initialAngle",
+		"factor"
+	],
+	"name" : "RWCircleLayout",
+	"type" : "normal"
+}

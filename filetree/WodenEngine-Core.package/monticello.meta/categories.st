@@ -4,6 +4,7 @@ SystemOrganization addCategory: 'WodenEngine-Core-Engine'!
 SystemOrganization addCategory: 'WodenEngine-Core-GPU-Resources'!
 SystemOrganization addCategory: 'WodenEngine-Core-Material'!
 SystemOrganization addCategory: 'WodenEngine-Core-Mesh'!
+SystemOrganization addCategory: 'WodenEngine-Core-Obsolete'!
 SystemOrganization addCategory: 'WodenEngine-Core-Pool'!
 SystemOrganization addCategory: 'WodenEngine-Core-Rendering'!
 SystemOrganization addCategory: 'WodenEngine-Core-Shaders'!

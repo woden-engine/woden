@@ -6,4 +6,5 @@ initialize
 	fieldOfView := 60.0.
 	focalDistance := 10.
 	isPerspective := true.
+	frustum := WMFrustumF new.
 	

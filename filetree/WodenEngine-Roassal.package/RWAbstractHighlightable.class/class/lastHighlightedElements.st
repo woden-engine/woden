@@ -1,0 +1,3 @@
+reset shape
+lastHighlightedElements
+	^ lastHighlightedElements

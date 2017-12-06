@@ -1,0 +1,3 @@
+accessing
+numberOfElements
+	^ elements size

@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "RWEvent",
+	"category" : "WodenEngine-Roassal-Events",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"which",
+		"button"
+	],
+	"name" : "RWJoyButtonEvent",
+	"type" : "normal"
+}

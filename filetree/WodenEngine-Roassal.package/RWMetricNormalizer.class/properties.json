@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "RTObject",
+	"category" : "WodenEngine-Roassal-Normalizer",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"elements",
+		"view",
+		"translator",
+		"edges"
+	],
+	"name" : "RWMetricNormalizer",
+	"type" : "normal"
+}

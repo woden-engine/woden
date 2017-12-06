@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "RWLineLayout",
+	"category" : "WodenEngine-Roassal-Layout",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "RWYLineLayout",
+	"type" : "normal"
+}

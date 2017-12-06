@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "RWObject",
+	"category" : "WodenEngine-Roassal-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"attributes",
+		"announcer"
+	],
+	"name" : "RWAnnounceableObject",
+	"type" : "normal"
+}

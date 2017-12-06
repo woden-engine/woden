@@ -1,3 +1,3 @@
 accessing
 continousUpdating
-	^ true
+	^ started

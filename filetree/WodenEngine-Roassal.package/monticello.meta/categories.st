@@ -1,0 +1,11 @@
+SystemOrganization addCategory: #'WodenEngine-Roassal'!
+SystemOrganization addCategory: 'WodenEngine-Roassal-Builder'!
+SystemOrganization addCategory: 'WodenEngine-Roassal-Builder-Grapher'!
+SystemOrganization addCategory: 'WodenEngine-Roassal-Core'!
+SystemOrganization addCategory: 'WodenEngine-Roassal-Events'!
+SystemOrganization addCategory: 'WodenEngine-Roassal-Examples'!
+SystemOrganization addCategory: 'WodenEngine-Roassal-Glamour'!
+SystemOrganization addCategory: 'WodenEngine-Roassal-Layout'!
+SystemOrganization addCategory: 'WodenEngine-Roassal-Normalizer'!
+SystemOrganization addCategory: 'WodenEngine-Roassal-Tests'!
+SystemOrganization addCategory: 'WodenEngine-Roassal-Trachel'!

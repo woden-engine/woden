@@ -1,0 +1,23 @@
+{
+	"commentStamp" : "",
+	"super" : "RWBuilder",
+	"category" : "WodenEngine-Roassal-Builder-Grapher",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"datasets",
+		"axisConfigurationX",
+		"axisConfigurationY",
+		"axisConfigurationZ",
+		"minX",
+		"maxX",
+		"minY",
+		"maxY",
+		"minZ",
+		"maxZ",
+		"extent"
+	],
+	"name" : "RWGrapher",
+	"type" : "normal"
+}

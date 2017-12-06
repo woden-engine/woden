@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "RWTest",
+	"category" : "WodenEngine-Roassal-Builder",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"builder",
+		"shapes"
+	],
+	"name" : "RWShapeBuilderTest",
+	"type" : "normal"
+}

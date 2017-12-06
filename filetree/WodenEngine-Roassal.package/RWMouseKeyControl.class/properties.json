@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "RWViewInteraction",
+	"category" : "WodenEngine-Roassal-Core",
+	"classinstvars" : [ ],
+	"pools" : [
+		"OSKeySymbols"
+	],
+	"classvars" : [ ],
+	"instvars" : [
+		"movement"
+	],
+	"name" : "RWMouseKeyControl",
+	"type" : "normal"
+}

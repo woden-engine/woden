@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "RTExampleSelection",
+	"category" : "WodenEngine-Roassal-Examples",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "RWExampleSelection",
+	"type" : "normal"
+}

@@ -1,10 +1,10 @@
 rendering process stages
 computeProjectionMatrices
-	| camera near far fovy fovyRad top ipd2 aspect focalWidth focalDistanceFactor invertedY target |
+	| camera near far fovy fovyRad top ipd2 aspect focalWidth focalDistanceFactor invertedY extent |
 	self flag: 'TODO: Support the orthographic projections.'.
-	camera := view camera.
-	target := view window validResolveRenderTarget.
-	aspect := target width asFloat / target height asFloat.
+	camera := view cameraSceneNode.
+	extent := view window drawingSurfaceExtent.
+	aspect := extent x asFloat / extent y asFloat.
 	invertedY := engine projectionInvertedY.
 	
 	near := camera nearDistance.

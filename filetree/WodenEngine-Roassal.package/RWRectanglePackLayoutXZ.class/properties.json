@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "YuriyTymchuk 12/1/2014 11:12",
+	"super" : "RWLayout",
+	"category" : "WodenEngine-Roassal-Layout",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"freeSpace",
+		"bounds",
+		"gap"
+	],
+	"name" : "RWRectanglePackLayoutXZ",
+	"type" : "normal"
+}

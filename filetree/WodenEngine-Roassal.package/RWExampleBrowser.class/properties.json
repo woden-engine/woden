@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "RTObject",
+	"category" : "WodenEngine-Roassal-Examples",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "RWExampleBrowser",
+	"type" : "normal"
+}

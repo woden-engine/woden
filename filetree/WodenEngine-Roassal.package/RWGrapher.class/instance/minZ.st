@@ -1,0 +1,3 @@
+accessing
+minZ
+	^ minZ

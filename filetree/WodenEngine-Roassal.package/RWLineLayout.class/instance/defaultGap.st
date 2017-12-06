@@ -1,0 +1,3 @@
+configuration
+defaultGap
+	^ 1

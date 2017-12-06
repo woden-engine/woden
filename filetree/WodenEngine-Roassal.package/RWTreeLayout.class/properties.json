@@ -1,0 +1,19 @@
+{
+	"commentStamp" : "",
+	"super" : "RWLayout",
+	"category" : "WodenEngine-Roassal-Layout",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"gap",
+		"nodes",
+		"edges",
+		"parents",
+		"children",
+		"roots",
+		"subtreeBounds"
+	],
+	"name" : "RWTreeLayout",
+	"type" : "normal"
+}

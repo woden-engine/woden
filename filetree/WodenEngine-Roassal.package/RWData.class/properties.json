@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "RWAbstractData",
+	"category" : "WodenEngine-Roassal-Builder-Grapher",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"dotBuilder"
+	],
+	"name" : "RWData",
+	"type" : "normal"
+}

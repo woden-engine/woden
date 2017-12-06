@@ -1,7 +1,7 @@
 accessing
 extent: anExtent
 	| extentChanged frameBufferCount |
-	lock critical: [ 
+	engine renderingProcessCritical: [ 
 		extentChanged := (width ~= anExtent x) or: [height ~= anExtent y].
 		width := anExtent x.
 		height := anExtent y.

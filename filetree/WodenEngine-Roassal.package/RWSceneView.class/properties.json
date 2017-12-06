@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "WDASceneView",
+	"category" : "WodenEngine-Roassal-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"dragElement",
+		"mouseFocusElement"
+	],
+	"name" : "RWSceneView",
+	"type" : "normal"
+}

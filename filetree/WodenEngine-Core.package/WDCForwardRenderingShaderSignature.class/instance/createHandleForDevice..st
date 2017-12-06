@@ -3,13 +3,13 @@ createHandleForDevice: device
 	^ device createShaderSignatureBuilder
 
 		"ObjectState"
-		beginBindingBank: 1000000;
+		beginBindingBank: 100000;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "ObjectState"
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_STORAGE_BUFFER bindingPointCount: 1; "InstanceObjectState"
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_STORAGE_BUFFER bindingPointCount: 1; "ExtraObjectState"
 
 		"CameraState"
-		beginBindingBank: 1000000;
+		beginBindingBank: 1000;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "ObjectState"
 
 		"LightingState"

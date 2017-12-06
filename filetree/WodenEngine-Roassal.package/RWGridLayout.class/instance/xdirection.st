@@ -1,0 +1,3 @@
+hooks
+xdirection
+	self subclassResponsibility 

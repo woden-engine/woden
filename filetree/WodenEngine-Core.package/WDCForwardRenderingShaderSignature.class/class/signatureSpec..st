@@ -7,14 +7,14 @@ signatureSpec: spec
 		name: #ForwardRenderer;
 		bank: #ObjectState with: [ :bank |
 			bank
-				maxBindings: 1000000;
+				maxBindings: 100000;
 				uniform: #ObjectState;
 				storage: #InstanceObjectState;
 				storage: #ExtraObjectState
 		];
 		bank: #CameraState with: [ :bank |
 			bank
-				maxBindings: 1000000;
+				maxBindings: 1000;
 				uniform: #ObjectState
 		];
 		bank: #LightingState with: [ :bank |

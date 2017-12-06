@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "RWTest",
+	"category" : "WodenEngine-Roassal-Tests",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"view"
+	],
+	"name" : "RWViewTest",
+	"type" : "normal"
+}

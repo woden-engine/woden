@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "RWLayout",
+	"category" : "WodenEngine-Roassal-Layout",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"gap"
+	],
+	"name" : "RWCubeLayout",
+	"type" : "normal"
+}

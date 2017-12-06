@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "RWInteraction",
+	"category" : "WodenEngine-Roassal-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"actions"
+	],
+	"name" : "RWMenuActivable",
+	"type" : "normal"
+}

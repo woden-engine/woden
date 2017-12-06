@@ -26,6 +26,7 @@ createSceneDependentData
 
 	updatedPerFrame ifFalse: [
 		instanceBuffer reallocatedAction: [ :newVector |
+			engine graphicsQueue finishExecution.
 			objectStateBindings do: [ :binding | binding bind: 1 storageBufferElement: newVector ]
 		]
 	].

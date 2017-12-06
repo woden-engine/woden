@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "RTTest",
+	"category" : "WodenEngine-Roassal-Tests",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "RWMenuActivableTest",
+	"type" : "normal"
+}

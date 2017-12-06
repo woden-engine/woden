@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "RWElementInteraction",
+	"category" : "WodenEngine-Roassal-Core",
+	"classinstvars" : [
+		"lastHighlightedElements",
+		"lastColor"
+	],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"highlightElements"
+	],
+	"name" : "RWAbstractHighlightable",
+	"type" : "normal"
+}

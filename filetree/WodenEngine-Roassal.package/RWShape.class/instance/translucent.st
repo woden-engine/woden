@@ -1,0 +1,3 @@
+changing transparency
+translucent
+	self transparencyMode: AdditiveAlphaTransparencyMode

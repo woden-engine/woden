@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "RWShape",
+	"category" : "WodenEngine-Roassal-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"width",
+		"height",
+		"depth"
+	],
+	"name" : "RWSimpleShape",
+	"type" : "normal"
+}

@@ -1,5 +1,6 @@
 instance creation
-checkRenderTargets	| innerExtent |
+checkRenderTargets
+	| innerExtent |
 	renderTarget ifNil: [
 		self createRenderTarget
 	].
