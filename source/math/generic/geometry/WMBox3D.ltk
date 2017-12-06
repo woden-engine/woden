@@ -305,12 +305,6 @@ WMBox3D category: 'converting' methods: {
 
 }.
 
-WMBox3D category: 'testing' methods: {
-:[isEmpty -> BooleanBit.
-	^ min x > max x
-].
-}.
-
 WMBox3D category: 'printing' methods: {
 :[printOn: aStream
 	aStream nextPutAll: WMBox3D name;
@@ -357,7 +351,7 @@ WMBox3D category: 'testing' methods: {
 ].
 
 :[isEmpty -> BooleanBit.
-	^ min x > max y
+	^ min x > max x
 ]
 }.
 

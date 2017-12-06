@@ -28,12 +28,22 @@ WMVector2 class category: 'construction' methods: {
 	^ WMVector2 x: v y: v
 ].
 
+:[zero -> WMVector2.
+	^ WMVector2 newValue
+].
 }.
 
 WMVector2 class category: 'serialization' methods: {
 :[loadFromJson: data -> WMVector2.
 	^ WMVector2 x: ((data at: 1) castTo: Scalar) y: ((data at: 2) castTo: Scalar)
 ].
+}.
+
+WMVector2 category: 'accessing' methods: {
+:[set: <WMVector2> other
+	x := other x.
+	y := other y.
+]
 }.
 
 WMVector2 category: 'arithmetic' methods: {

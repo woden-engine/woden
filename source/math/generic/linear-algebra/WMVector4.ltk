@@ -66,12 +66,25 @@ WMVector4 class category: 'construction' methods: {
 	^ WMVector4 x: v y: v z: v w: v
 ].
 
+:[zero -> WMVector4.
+	^ WMVector4 newValue
+].
+
 }.
 
 WMVector4 class category: 'serialization' methods: {
 :[loadFromJson: data -> WMVector4.
 	^ WMVector4 x: ((data at: 1) castTo: Scalar) y: ((data at: 2) castTo: Scalar) z: ((data at: 3) castTo: Scalar) w: ((data at: 4) castTo: Scalar)
 ].
+}.
+
+WMVector4 category: 'accessing' methods: {
+:[set: <WMVector4> other
+	x := other x.
+	y := other y.
+	z := other z.
+	w := other w.
+]
 }.
 
 WMVector4 category: 'accessing' methods: {

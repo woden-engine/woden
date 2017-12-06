@@ -75,4 +75,14 @@ WMRay category: 'intersection' methods: {
 :[testResultForDistance: distance value: value -> _DynamicObject.
 	^ WMRayIntersectionTestResult new distance: distance; value: value
 ]
-}
+}.
+
+WMRay category: 'transformations' methods: {
+:[transformedWith: <WMReversibleAffineTransform> transform -> WMRay.
+	^ WMRay origin: (transform transformPosition3: origin) direction: (transform transformVector3: direction)
+].
+
+:[transformedWithInverseOf: <WMReversibleAffineTransform> transform -> WMRay.
+	^ WMRay origin: (transform inverseTransformPosition3: origin) direction: (transform inverseTransformVector3: direction)
+].
+}.

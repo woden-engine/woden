@@ -1,0 +1,138 @@
+WMFrustum category: 'accessing' methods: {
+:[leftBottomFar
+	^ leftBottomFar
+].
+
+:[leftBottomNear
+	^ leftBottomNear
+].
+
+:[leftTopFar
+	^ leftTopFar
+].
+
+:[leftTopNear
+	^ leftTopNear
+].
+
+:[matrix
+	^ matrix
+].
+
+:[rightBottomFar
+	^ rightBottomFar
+].
+
+:[rightBottomNear
+	^ rightBottomNear
+].
+
+:[rightTopFar
+	^ rightTopFar
+].
+
+:[rightTopNear
+	^ rightTopNear
+].
+}.
+
+WMFrustum category: 'construction' methods: {
+:[frustumLeft: <Scalar> left right: <Scalar> right bottom: <Scalar> bottom top: <Scalar> top near: <Scalar> near far: <Scalar> far
+	| factor |
+	leftBottomNear := WMVector3 x: left y: bottom z: near negated.
+	rightBottomNear := WMVector3 x: right y: bottom z: near negated.
+	leftTopNear := WMVector3 x: left y: top z: near negated.
+	rightTopNear := WMVector3 x: right y: top z: near negated.
+
+	factor := far / near.	
+	leftBottomFar := leftBottomNear * factor.
+	rightBottomFar := rightBottomNear * factor.
+	leftTopFar := leftTopNear * factor.
+	rightTopFar := rightTopNear * factor.
+].
+
+:[frustumLeft: <Scalar> left right: <Scalar> right bottom: <Scalar> bottom top: <Scalar> top near: <Scalar> near far: <Scalar> far invertedY: <BooleanBit> invertedY
+	matrix := WMMatrix4 frustumLeft: left right: right bottom: bottom top: top near: near far: far invertedY: invertedY.
+	self frustumLeft: left right: right bottom: bottom top: top near: near far: far.
+].
+
+:[orthoLeft: <Scalar> left right: <Scalar> right bottom: <Scalar> bottom top: <Scalar> top near: <Scalar> near far: <Scalar> far
+	leftBottomNear := WMVector3 x: left y: bottom z: near negated.
+	rightBottomNear := WMVector3 x: right y: bottom z: near negated.
+	leftTopNear := WMVector3 x: left y: top z: near negated.
+	rightTopNear := WMVector3 x: right y: top z: near negated.
+	
+	leftBottomFar := WMVector3 x: left y: bottom z: far negated.
+	rightBottomFar := WMVector3 x: right y: bottom z: far negated.
+	leftTopFar := WMVector3 x: left y: top z: far negated.
+	rightTopFar := WMVector3 x: right y: top z: far negated.	
+].
+
+:[orthoLeft: <Scalar> left right: <Scalar> right bottom: <Scalar> bottom top: <Scalar> top near: <Scalar> near far: <Scalar> far invertedY: <BooleanBit> invertedY
+	matrix := WMMatrix4 orthoLeft: left right: right bottom: bottom top: top near: near far: far invertedY: invertedY.
+	self orthoLeft: left right: right bottom: bottom top: top near: near far: far.
+].
+
+:[perspectiveFovY: <Scalar> fovy aspect: <Scalar> aspect near: <Scalar> near far: <Scalar> far invertedY: <BooleanBit> invertedY
+	let fovyRad := (fovy degreesToRadians castTo: Scalar) * 0.5.
+	let top := near * (fovyRad tan castTo: Scalar).
+	let right := top * aspect.
+	^ self frustumLeft: right negated right: right bottom: top negated top: top near: near far: far invertedY: invertedY
+].
+
+:[reverseDepthFrustumLeft: <Scalar> left right: <Scalar> right bottom: <Scalar> bottom top: <Scalar> top near: <Scalar> near far: <Scalar> far invertedY: <BooleanBit> invertedY
+	matrix := WMMatrix4 reverseDepthFrustumLeft: left right: right bottom: bottom top: top near: near far: far invertedY: invertedY.
+	self frustumLeft: left right: right bottom: bottom top: top near: near far: far.	
+].
+
+:[reverseDepthOrthoLeft: <Scalar> left right: <Scalar> right bottom: <Scalar> bottom top: <Scalar> top near: <Scalar> near far: <Scalar> far invertedY: <BooleanBit> invertedY
+	matrix := WMMatrix4 reverseDepthOrthoLeft: left right: right bottom: bottom top: top near: near far: far invertedY: invertedY.
+	self orthoLeft: left right: right bottom: bottom top: top near: near far: far.
+].
+
+:[reverseDepthPerspectiveFovY: <Scalar> fovy aspect: <Scalar> aspect near: <Scalar> near far: <Scalar> far invertedY: <BooleanBit> invertedY
+	let fovyRad := (fovy degreesToRadians castTo: Scalar) * 0.5.
+	let top := near * (fovyRad tan castTo: Scalar).
+	let right := top * aspect.
+	^ self reverseDepthFrustumLeft: right negated right: right bottom: top negated top: top near: near far: far invertedY: invertedY
+].
+}.
+
+WMFrustum category: 'window points' methods: {
+:[farNormalizedPoint: normalizedPoint -> WMVector3.
+	^ self
+		lerp: (self lerp: (leftBottomFar castTo: WMVector3) end: (rightBottomFar castTo: WMVector3) alpha: (normalizedPoint x castTo: Scalar))
+		end: (self lerp: (leftTopFar castTo: WMVector3) end: (rightTopFar castTo: WMVector3) alpha: (normalizedPoint x castTo: Scalar))
+		alpha: (normalizedPoint y castTo: Scalar)
+].
+
+:[lerp: <WMVector3> start end: <WMVector3> end alpha: <Scalar> alpha -> WMVector3.
+	^ (start * (1.0 - alpha)) + (end * alpha)
+].
+
+:[localPoint: aPosition atDistance: <Scalar> depth -> WMVector3.
+	let nearPoint := self nearNormalizedPoint: aPosition.
+	let farPoint := self farNormalizedPoint: aPosition.
+	^ self lerp: nearPoint end: farPoint alpha: depth
+].
+
+:[localToNormalized: <WMVector3> local -> WMVector3.
+	let clipPosition := (matrix castTo: WMMatrix4) transformVector4: (WMVector4 x: local x y: local y z: local z w: 1.0).
+	let ndcPosition := WMVector3 x: clipPosition x / clipPosition w y: clipPosition y / clipPosition w z: clipPosition z / clipPosition w.
+	^ ndcPosition * 0.5 + (WMVector3 x: 0.5 y: 0.5 z: 0.5)
+].
+
+:[nearNormalizedPoint: normalizedPoint -> WMVector3.
+	^ self
+		lerp: (self lerp: (leftBottomNear castTo: WMVector3) end: (rightBottomNear castTo: WMVector3) alpha: (normalizedPoint x castTo: Scalar))
+		end: (self lerp: (leftTopNear castTo: WMVector3) end: (rightTopNear castTo: WMVector3) alpha: (normalizedPoint x castTo: Scalar))
+		alpha: (normalizedPoint y castTo: Scalar)
+].
+
+:[rayAtNormalizedPoint: normalizedPoint -> WMRay.
+	let nearPoint := self nearNormalizedPoint: normalizedPoint.
+	let farPoint := self farNormalizedPoint: normalizedPoint.
+	^ WMRay origin: nearPoint direction: (farPoint - nearPoint) normalized.
+].
+
+}
