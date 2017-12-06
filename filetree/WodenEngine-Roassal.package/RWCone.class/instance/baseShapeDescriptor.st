@@ -1,0 +1,3 @@
+hooks
+baseShapeDescriptor
+	^ {#UVConeShape . transparencyMode}

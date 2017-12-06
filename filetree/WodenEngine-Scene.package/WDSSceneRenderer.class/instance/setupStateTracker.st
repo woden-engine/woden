@@ -11,4 +11,4 @@ setupStateTracker
 		depthWriteMask: true;
 		depthFunction: AGPU_GREATER_EQUAL;
 
-		blendingAllEnabled: true sourceFactor: AGPU_BLENDING_SRC_ALPHA destFactor: AGPU_BLENDING_INVERTED_SRC_ALPHA operation: AGPU_BLENDING_OPERATION_ADD 
+		blendingAllMode: WDCBlendingMode replace.

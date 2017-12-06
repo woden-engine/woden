@@ -5,6 +5,7 @@ threeCubesAndLight
 	"
 	| v |
 	v := RWView new.
+	v blackBackground.
 	v add: (RWCube element).
 	v add: (RWPointLight new color: Color red).
 	v add: (RWCube element).

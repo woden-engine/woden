@@ -1,11 +1,3 @@
 comparing
 = other
-	^ self class == other class and:
-	[ enabled = other enabled and:
-	[ targetMask = other targetMask and:
-	[ sourceFactor = other sourceFactor and:
-	[ destFactor = other destFactor and:
-	[ operation = other operation and:
-	[ sourceAlphaFactor = other sourceAlphaFactor and:
-	[ destAlphaFactor = other destAlphaFactor and:
-	[ alphaOperation = other alphaOperation]]]]]]]]
+	^ super = other and: [ targetMask = other targetMask ]

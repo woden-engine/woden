@@ -10,7 +10,8 @@
 		"objectStateBuffer",
 		"objectStateBindings",
 		"renderableSceneData",
-		"gpuObjectStates"
+		"gpuObjectStates",
+		"blendingMode"
 	],
 	"name" : "WTSSpatialObject",
 	"type" : "normal"

@@ -1,3 +1,3 @@
 changing transparency
 translucent
-	self transparencyMode: AdditiveAlphaTransparencyMode
+	self transparencyMode: WDCBlendingMode addAlpha

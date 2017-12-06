@@ -1,3 +1,3 @@
 changing transparency
 isOpaque
-	^ transparencyMode == OpaqueTransparencyMode
+	^ transparencyMode = OpaqueTransparencyMode

@@ -5,7 +5,7 @@ initialize
 	"
 	super initialize.
 	
-	OpaqueTransparencyMode := #blendingReplace.
-	AdditiveTransparencyMode := #blendingAdditive.
-	AdditiveAlphaTransparencyMode := #blendingAdditiveAlpha.
-	AlphaOverTransparencyMode := #blendingOver.
+	OpaqueTransparencyMode := WDCBlendingMode replace.
+	AdditiveTransparencyMode := WDCBlendingMode add.
+	AdditiveAlphaTransparencyMode := WDCBlendingMode addAlpha.
+	AlphaOverTransparencyMode := WDCBlendingMode alphaOver.

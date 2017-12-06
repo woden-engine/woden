@@ -1,3 +1,3 @@
 changing transparency
 opaque
-	self transparencyMode: OpaqueTransparencyMode
+	self transparencyMode: WDCBlendingMode replace

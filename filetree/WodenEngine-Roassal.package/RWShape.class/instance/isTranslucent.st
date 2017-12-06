@@ -1,3 +1,3 @@
 changing transparency
 isTranslucent
-	^ self transparencyMode == AdditiveAlphaTransparencyMode
+	^ self transparencyMode = AdditiveAlphaTransparencyMode

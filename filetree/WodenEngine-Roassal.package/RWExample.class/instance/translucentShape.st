@@ -6,6 +6,9 @@ translucentShape
 	| view translucentShape opaqueShape elements |
 	view := RWView new.
 
+	"This requires a black background"
+	view blackBackground.
+
 	translucentShape := RWCube blue translucent.
 	opaqueShape := RWCube red.
 

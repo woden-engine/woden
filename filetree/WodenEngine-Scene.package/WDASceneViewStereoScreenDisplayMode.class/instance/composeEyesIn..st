@@ -10,7 +10,7 @@ composeEyesIn: stateTracker
 		frontFaceWinding: AGPU_COUNTER_CLOCKWISE;
 		cullMode: AGPU_CULL_MODE_NONE;
 		depthEnabled: false;
-		blendingAllEnabled: false sourceFactor: AGPU_BLENDING_SRC_ALPHA destFactor: AGPU_BLENDING_INVERTED_SRC_ALPHA operation: AGPU_BLENDING_OPERATION_ADD; 
+		blendingAllMode: WDCBlendingMode alphaOver; 
 		
 		beginRenderPass: renderPass renderTarget: resolveTarget bounds: resolveTarget bounds;
 	

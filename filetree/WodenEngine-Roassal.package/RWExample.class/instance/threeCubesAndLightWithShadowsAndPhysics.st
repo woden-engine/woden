@@ -5,6 +5,7 @@ threeCubesAndLightWithShadowsAndPhysics
 	"
 	| v floor light|
 	v := RWView new.
+	v blackBackground.
 	v add: (RWCube element mass: 1.0).
 	v add: (RWCube element mass: 1.0).
 	v add: (RWCube element mass: 1.0).

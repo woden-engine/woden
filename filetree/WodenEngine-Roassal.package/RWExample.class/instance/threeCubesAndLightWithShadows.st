@@ -5,6 +5,7 @@ threeCubesAndLightWithShadows
 	"
 	| v floor light|
 	v := RWView new.
+	v blackBackground.
 	v add: (RWCube element).
 	v add: (RWCube element).
 	v add: (RWCube element).

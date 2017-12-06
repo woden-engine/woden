@@ -1,3 +1,3 @@
 hooks
-baseShapeName
+baseShapeDescriptor
 	self subclassResponsibility

@@ -14,7 +14,9 @@
 		"commandListBuilder",
 		"mode",
 		"submode",
-		"activeMaterial"
+		"activeMaterial",
+		"objectBlendingMode",
+		"materialBlendingMode"
 	],
 	"name" : "WDCStateTracker",
 	"type" : "normal"

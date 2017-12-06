@@ -1,6 +1,6 @@
 {
 	"commentStamp" : "",
-	"super" : "Object",
+	"super" : "WDCBlendingMode",
 	"category" : "WodenEngine-Core-Rendering",
 	"classinstvars" : [ ],
 	"pools" : [
@@ -8,14 +8,7 @@
 	],
 	"classvars" : [ ],
 	"instvars" : [
-		"targetMask",
-		"enabled",
-		"sourceFactor",
-		"destFactor",
-		"operation",
-		"sourceAlphaFactor",
-		"destAlphaFactor",
-		"alphaOperation"
+		"targetMask"
 	],
 	"name" : "WDCPipelineStateBlendingState",
 	"type" : "normal"

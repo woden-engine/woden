@@ -1,0 +1,3 @@
+blending modes
+add
+	^ Add

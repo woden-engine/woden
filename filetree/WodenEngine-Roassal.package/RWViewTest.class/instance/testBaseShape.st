@@ -1,5 +1,5 @@
 tests
 testBaseShape
 	| baseShape |
-	baseShape := view baseShapeNodeNamed: #dummyShape.
+	baseShape := view baseShapeNodeFor: #dummyShape.
 	self assert: baseShape == nil
