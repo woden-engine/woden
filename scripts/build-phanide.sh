@@ -2,7 +2,7 @@
 source "$WODEN2_SRC_TOP/scripts/common_scripts.sh"
 fetch_git_dependency "https://github.com/ronsaldo/phanide.git" phanide
 
-if test `uname` == "Darwin"; then
+if test `uname` = "Darwin"; then
     exit
 fi
 

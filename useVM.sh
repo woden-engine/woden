@@ -11,7 +11,8 @@ cat > "$WODEN2_SRC_TOP/woden2.sh" <<EOF
 #!/bin/sh
 TOP="\$( cd "\$( dirname "$0" )" && pwd )"
 
-if test OS=`uname` = "Darwin"; then
+OS="\$(uname)"
+if test "\$OS" = "Darwin"; then
     export DYLD_LIBRARY_PATH="\$TOP/native-libraries-32:\$TOP/native-libraries-64:\$DYLD_LIBRARY_PATH"
 else
     export LD_LIBRARY_PATH="\$TOP/native-libraries-32:\$TOP/native-libraries-64:\$LD_LIBRARY_PATH"
