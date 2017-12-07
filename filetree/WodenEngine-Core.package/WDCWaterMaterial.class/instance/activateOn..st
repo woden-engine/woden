@@ -7,5 +7,6 @@ activateOn: stateTracker
 	
 	stateTracker
 		vertexShader: vertexShader;
-		fragmentShader: fragmentShader.
+		fragmentShader: fragmentShader;
+		materialBlendingMode: WDCBlendingMode alphaOver.
 	^ true

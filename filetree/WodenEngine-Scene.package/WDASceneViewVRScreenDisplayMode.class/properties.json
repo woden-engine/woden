@@ -10,7 +10,11 @@
 		"vrState",
 		"vrTransform",
 		"headsetOrientation",
-		"headsetTranslation"
+		"headsetTranslation",
+		"screenGridVertexBuffer",
+		"screenGridIndexBuffer",
+		"screenGridIndexCount",
+		"screenGridVertexBinding"
 	],
 	"name" : "WDASceneViewVRScreenDisplayMode",
 	"type" : "normal"

@@ -15,7 +15,8 @@
 		"filter",
 		"renderTarget",
 		"resolveRenderTarget",
-		"cameraTransformFunction"
+		"cameraTransformFunction",
+		"cameraTransform"
 	],
 	"name" : "WTSViewport",
 	"type" : "normal"

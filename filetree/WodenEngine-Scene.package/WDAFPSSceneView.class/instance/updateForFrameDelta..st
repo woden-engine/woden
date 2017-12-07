@@ -2,7 +2,11 @@ rendering process stages
 updateForFrameDelta: delta
 	| orientation |
 	cameraAngle := cameraAngle + (cameraAngularVelocity * (cameraAngularSpeed * delta)).
-	orientation := (WMMatrix3F yrot: cameraAngle y) * (WMMatrix3F xrot: cameraAngle x).
+	screenDisplayMode isVR ifTrue: [ 
+		orientation := WMMatrix3F yrot: cameraAngle y.
+	] ifFalse: [ 
+		orientation := (WMMatrix3F yrot: cameraAngle y) * (WMMatrix3F xrot: cameraAngle x).
+	].
 
 	"vrSensorReader ifNotNil: [ 
 		sensorState := vrSensorReader sensorState.

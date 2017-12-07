@@ -1,3 +1,3 @@
 viewport composition
 fragmentShaderFileName
-	^ 'shaders/composition/vrDistortion.dastrel'
+	^ 'shaders/composition/vrFragment.dastrel'

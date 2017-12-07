@@ -4,7 +4,7 @@ updateFrameLightingStates: viewports
 	lightingStates := globalLightingStates at: engine bufferingFrameIndex.
 	
 	viewports doWithIndex: [ :viewport :viewportIndex |
-		transform := viewport camera transform.
+		transform := viewport cameraTransform.
 		numberOfLights := visibleLightSources size min: 16.
 		1 to: numberOfLights do: [ :lightIndex |
 			lightSources at: lightIndex put: ((visibleLightSources at: lightIndex) viewStateFor: transform).
