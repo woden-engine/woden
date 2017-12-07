@@ -1,3 +1,4 @@
+
 "Load Phanide"
 Metacello new
   baseline: 'Phanide';
@@ -10,14 +11,29 @@ Metacello new
   repository: 'filetree://lowtalk/filetree';
   load.
 
+"Build the Lowtalk source code"
+[
+    | complationTarget compilerClass compiler |
+    complationTarget := (Smalltalk globals at: #SLVMCompilationTarget) forCurrentImage.
+    compilerClass := Smalltalk globals at: #LowtalkCompiler.
+
+    compiler := compilerClass compilationTarget: complationTarget.
+    compiler
+    	optimizationLevel: 1;
+    	evaluateFileNamed: 'source/woden2.ltk';
+	    buildModule;
+    	ssaModule.
+
+] value.
+
 "Load Woden 2"
-"FileStream stdout nextPutAll: 'Loading Woden2'; lf.
+FileStream stdout nextPutAll: 'Loading Woden2'; lf.
 Metacello new
-  baseline: 'Woden2';
+  baseline: 'WodenEngine';
   repository: 'filetree://filetree';
   load.
-"
+
 
 "Save the image"
-(Smalltalk saveAs: 'woden2')
+(Smalltalk saveAs: 'woden')
     ifFalse: [ Smalltalk snapshot: false andQuit: true ].
