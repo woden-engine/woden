@@ -33,6 +33,11 @@ baseline: spec
 					className: #ConfigurationOfOpenAL;
 					versionString: #'development';
 					repository: 'http://smalltalkhub.com/mc/ronsaldo/OpenAL/main' ].
+			spec project: 'Roassal2' with: [
+				spec
+					className: #ConfigurationOfRoassal2;
+					versionString: #'development';
+					repository: 'http://smalltalkhub.com/mc/ObjectProfile/Roassal2/main' ].
 		spec package: #'WodenEngine-Core' with: [
 				spec requires: #('NeoJSON' 'AbstractGPU' 'Dastrel')].
 		"spec package: #'WodenEngine-Athens' with: [
@@ -47,5 +52,8 @@ baseline: spec
 				spec requires: #('WodenEngine-Core' 'OpenAL')].
 		spec package: #'WodenEngine-GameSystem' with: [
 				spec requires: #('WodenEngine-Core' "'WodenEngine-Athens'" 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL')].
-		spec group: 'default' with: #('WodenEngine-Core' "'WodenEngine-Athens'" 'WodenEngine-Samples' 'WodenEngine-GameSystem')
+		spec package: #'WodenEngine-Roassal' with: [
+				spec requires: #('Roassal2' 'WodenEngine-Core' "'WodenEngine-Athens'" 'WodenEngine-Scene' 'WodenEngine-Physics')].
+
+		spec group: 'default' with: #('WodenEngine-Core' "'WodenEngine-Athens'" 'WodenEngine-Samples' 'WodenEngine-GameSystem' 'WodenEngine-Roassal')
 	]
