@@ -1,0 +1,14 @@
+Structure <<< #WTCompositionVertexF
+	slots: {
+		(#position => WMVector2F)
+			vertexLocation: 0;
+			vertexFormat: #float2.
+	};
+	package: 'Woden2-Structures-Core-Mesh';
+	yourself.
+
+WTCompositionVertexF class category: 'vertex layout' methods: {
+:[vertexLayoutName
+	^ #CompositionVertex
+].
+}.

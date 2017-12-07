@@ -1,5 +1,6 @@
 Compiler
     evaluateFileNamed: 'WTAnimationActionBoneFrame.ltk';
+    evaluateFileNamed: 'WTCompositionVertexF.ltk';
     evaluateFileNamed: 'WTGenericVertexF.ltk';
     evaluateFileNamed: 'WTSkinnedGenericVertexF.ltk';
 	yourself.
