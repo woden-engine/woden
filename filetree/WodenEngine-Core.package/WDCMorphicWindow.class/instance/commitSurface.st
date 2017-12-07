@@ -5,6 +5,7 @@ commitSurface
 	slicePitch := pitch * displayForm height.
 	displayForm unhibernate.
 	
-	resolveRenderTarget currentFramebuffer colorAttachments first
+	engine graphicsQueue finishExecution.
+	resolveRenderTarget currentFramebuffer colorAttachments first validHandle
 		readTextureData: 0 arrayIndex: 0 pitch: pitch slicePitch: slicePitch buffer: displayForm bits.
 	self changed
