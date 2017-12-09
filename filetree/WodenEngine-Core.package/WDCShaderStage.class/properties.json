@@ -7,7 +7,12 @@
 	"classvars" : [ ],
 	"instvars" : [
 		"source",
-		"handle"
+		"handle",
+		"engine",
+		"shaderLanguageTarget",
+		"stage",
+		"dependantPipelines",
+		"dependantPipelinesMutex"
 	],
 	"name" : "WDCShaderStage",
 	"type" : "normal"

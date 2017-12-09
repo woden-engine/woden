@@ -1,4 +1,5 @@
 initialization
 initialize
 	super initialize.
-	stages := OrderedCollection new.
+	stagesMutex := Semaphore forMutualExclusion.
+	stages := IdentitySet new.

@@ -6,10 +6,13 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
+		"engine",
 		"source",
+		"target",
 		"stages",
 		"entryFile",
-		"dependencies"
+		"dependencies",
+		"stagesMutex"
 	],
 	"name" : "WDCLowLevelShaderSource",
 	"type" : "normal"

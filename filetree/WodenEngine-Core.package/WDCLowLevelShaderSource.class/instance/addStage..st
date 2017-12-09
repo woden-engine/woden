@@ -1,3 +1,5 @@
 initialization
 addStage: aWDCShaderStage
-	stages add: aWDCShaderStage
+	stagesMutex critical: [ 
+		stages add: aWDCShaderStage
+	]
