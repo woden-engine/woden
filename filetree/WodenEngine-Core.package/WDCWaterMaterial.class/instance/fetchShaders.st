@@ -5,9 +5,9 @@ fetchShaders
 	].
 
 	fragmentShader ifNil: [ 
-		skyTexture ifNil: [
+		skyTexture ifNotNil: [
 			fragmentShader := engine loadFragmentShader: 'shaders/surface/waterSkyForward.dastrel'.
-		] ifNotNil: [ 
+		] ifNil: [ 
 			fragmentShader := engine loadFragmentShader: 'shaders/surface/waterColorForward.dastrel'.
 		].
 	].
