@@ -1,16 +1,14 @@
 {
 	"commentStamp" : "",
-	"super" : "WDSSceneRenderer",
+	"super" : "WDSLightedSceneRenderer",
 	"category" : "WodenEngine-Scene-Application",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
 		"lightSources",
-		"globalLightingStatePool",
 		"globalLightingStates",
-		"globalLightingStateBindings",
-		"globalLightingStateBinding"
+		"currentGlobalLigthingStates"
 	],
 	"name" : "WDSForwardSceneRenderer",
 	"type" : "normal"

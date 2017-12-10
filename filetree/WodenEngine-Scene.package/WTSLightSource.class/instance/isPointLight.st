@@ -1,0 +1,3 @@
+accessing
+isPointLight
+	^ type == #point

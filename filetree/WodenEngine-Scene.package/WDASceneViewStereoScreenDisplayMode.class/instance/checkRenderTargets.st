@@ -21,6 +21,6 @@ checkRenderTargets
 			sourceRenderTargetsBinding := self shaderSignature newSource
 		].
 		sourceRenderTargetsBinding
-			bindTexture: 0 renderTarget: leftResolveRenderTarget startMiplevel: 0 miplevels: -1 lodclamp: 100000.0;
-			bindTexture: 1 renderTarget: rightResolveRenderTarget startMiplevel: 0 miplevels: -1 lodclamp: 100000.0.
+			bind: 0 renderTarget: leftResolveRenderTarget startMiplevel: 0 miplevels: -1 lodclamp: 100000.0;
+			bind: 1 renderTarget: rightResolveRenderTarget startMiplevel: 0 miplevels: -1 lodclamp: 100000.0.
 	]

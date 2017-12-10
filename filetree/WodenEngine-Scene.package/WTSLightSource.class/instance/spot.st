@@ -2,5 +2,5 @@ accessing
 spot
 	type := #spot.
 	state
-		outerCosCutoff: DefaultSpotOuterCosCutoff;
-		innerCosCutoff: DefaultSpotInnerCosCutoff
+		outerCosCutoff: outerSpotCutoff degreeCos;
+		innerCosCutoff: innerSpotCutoff degreeCos

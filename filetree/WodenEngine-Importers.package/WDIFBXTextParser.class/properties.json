@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "WDIFBXTextGrammar",
+	"category" : "WodenEngine-Importers",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WDIFBXTextParser",
+	"type" : "normal"
+}

@@ -1,0 +1,30 @@
+{
+	"commentStamp" : "",
+	"super" : "PPCompositeParser",
+	"category" : "WodenEngine-Importers",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"newline",
+		"singleLineComment",
+		"ignorable",
+		"nodeBody",
+		"node",
+		"identifier",
+		"colon",
+		"attributes",
+		"optionalNodeBody",
+		"identStart",
+		"identInner",
+		"comma",
+		"lbracket",
+		"rbracket",
+		"attribute",
+		"string",
+		"number",
+		"optionalAttributes"
+	],
+	"name" : "WDIFBXTextGrammar",
+	"type" : "normal"
+}

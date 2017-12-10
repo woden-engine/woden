@@ -16,7 +16,6 @@
 		"vertexShader",
 		"fragmentShader",
 		"sourceRenderTargetsBinding",
-		"samplerBindings",
 		"compositionStateBinding",
 		"compositionStateBuffer",
 		"compositionState",

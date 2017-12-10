@@ -1,3 +1,3 @@
 generated shader signature methods
 newMaterialState
-	^ engine createShaderSignature: self resourceBinding: 3
+	^ engine createShaderSignature: self resourceBinding: 2 elements: 7

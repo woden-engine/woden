@@ -9,6 +9,5 @@ renderScene: scene viewports: viewports composeWith: aBlock mainResolveRenderTar
 	resolveFramebuffer validCommandAllocator reset.
 
 	^ self stateTracker commandList: resolveFramebuffer validCommandList rebuildWith: [
-		self setupStateTracker.
 		self renderViewports: viewports composeWith: aBlock.
 	].

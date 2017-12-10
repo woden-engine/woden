@@ -1,0 +1,3 @@
+rendering
+renderMode
+	^ WDCStateTrackerShadowRenderMode uniqueInstance

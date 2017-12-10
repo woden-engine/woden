@@ -6,7 +6,7 @@ createSceneDependentData
 	gpuObjectStates := scene genericObjectStatePool allocate: scene engine frameBufferingCount.
 	neutralInstanceState := scene neutralGenericObjectInstanceState.
 	objectStateBindings := gpuObjectStates collect: [ :state |
-		(scene engine createShaderSignature: scene shaderSignature resourceBinding: 0)
+		scene shaderSignature newObjectState
 			bind: 0 uniformBufferElement: state;
 			bind: 1 storageBufferElement: neutralInstanceState;
 			yourself.

@@ -1,0 +1,3 @@
+accessing
+optionalAttributes
+	^ attributes optional

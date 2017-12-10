@@ -1,6 +1,6 @@
 {
 	"commentStamp" : "",
-	"super" : "WDSSceneRenderer",
+	"super" : "WDSLightedSceneRenderer",
 	"category" : "WodenEngine-Scene-Application",
 	"classinstvars" : [ ],
 	"pools" : [ ],

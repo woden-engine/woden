@@ -16,7 +16,7 @@ signatureSpec: spec
 				texture: #LeftTexture;
 				texture: #RightTexture
 		];
-		bank: #Sampler with: [ :bank |
+		bank: #Samplers with: [ :bank |
 			bank
 				maxBindings: 10;
 				sampler: #Sampler

@@ -1,0 +1,3 @@
+accessing
+nodeBody
+	^ node star

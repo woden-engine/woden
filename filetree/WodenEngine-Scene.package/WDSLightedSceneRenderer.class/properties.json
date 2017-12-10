@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "WDSSceneRenderer",
+	"category" : "WodenEngine-Scene-Application",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"shadowSceneRenderer"
+	],
+	"name" : "WDSLightedSceneRenderer",
+	"type" : "normal"
+}

@@ -6,9 +6,8 @@ updateSceneNode
 			node state
 				intensity: intensity.
 			type == #spot ifTrue: [ 
-				node state
-					innerCosCutoff: innerSpotCutoff degreeCos;
-					outerCosCutoff: outerSpotCutoff degreeCos.
+				node innerSpotCutoff: innerSpotCutoff;
+					outerSpotCutoff: outerSpotCutoff.
 			]
 		]
 	]

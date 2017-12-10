@@ -1,6 +1,6 @@
-as yet unclassified
+initialization
 initialize
 	super initialize.
 	
-	DefaultSpotOuterCosCutoff := 45 degreeCos.
-	DefaultSpotInnerCosCutoff := 40 degreeCos.
+	DefaultSpotOuterCutoff := 45.
+	DefaultSpotInnerCutoff := 40.

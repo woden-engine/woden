@@ -11,7 +11,7 @@ createHandleForDevice: device
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "LeftTexture"
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "RightTexture"
 
-		"Sampler"
+		"Samplers"
 		beginBindingBank: 10;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLER bindingPointCount: 1; "Sampler"
 

@@ -1,0 +1,3 @@
+shadow mapping
+shadowRenderModeName
+	^ #shadow

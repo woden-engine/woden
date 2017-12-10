@@ -1,13 +1,16 @@
 rendering
 updateFrameLightingStates: viewports
-	| lightingStates transform numberOfLights lightingState |
-	lightingStates := globalLightingStates at: engine bufferingFrameIndex.
+	| transform numberOfLights lightingState gpuLightingStates lightSource shadowMapIndex |
+	self ensureLightingStatesFor: viewports size.
+	currentGlobalLigthingStates := globalLightingStates at: engine bufferingFrameIndex.
 	
 	viewports doWithIndex: [ :viewport :viewportIndex |
 		transform := viewport cameraTransform.
 		numberOfLights := visibleLightSources size min: 16.
 		1 to: numberOfLights do: [ :lightIndex |
-			lightSources at: lightIndex put: ((visibleLightSources at: lightIndex) viewStateFor: transform).
+			lightSource := (visibleLightSources at: lightIndex) first.
+			shadowMapIndex := shadowCastingLights indexOf: lightSource ifAbsent: [ 0 ].
+			lightSources at: lightIndex put: (lightSource viewStateFor: transform engine: engine shadowMapIndex: shadowMapIndex - 1).
 		].
 
 		lightingState := WTGlobalLightingState  new.
@@ -18,7 +21,6 @@ updateFrameLightingStates: viewports
 			numberOfLights: numberOfLights;
 			lightSources: lightSources.
 			
-		(lightingStates at: viewportIndex) value: lightingState
+		gpuLightingStates := (currentGlobalLigthingStates at: viewportIndex) slotValueAt: 0.
+		gpuLightingStates value: lightingState.
 	].
-
-	globalLightingStateBinding := globalLightingStateBindings at: engine bufferingFrameIndex.

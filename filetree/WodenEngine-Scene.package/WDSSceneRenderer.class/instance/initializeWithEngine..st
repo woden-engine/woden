@@ -5,7 +5,3 @@ initializeWithEngine: aWDCEngine
 	
 	visibleObjects := OrderedCollection new.
 	visibleLightSources := OrderedCollection new.
-	
-	self
-		createCameraStateBuffer;
-		createSamplers.

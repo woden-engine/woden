@@ -20,7 +20,7 @@ composeEyesIn: stateTracker
 		useIndexBuffer: screenGridIndexBuffer;
 		useShaderResources: compositionStateBinding;
 		useShaderResources: sourceRenderTargetsBinding;
-		useShaderResources: self samplerBindings;
+		useShaderResources: self shaderSignature defaultSamplers;
 		primitiveType: AGPU_TRIANGLES;
 		drawElements: screenGridIndexCount instance_count: 6 first_index: 0 base_vertex: 0 base_instance: 0;
 		endRenderPass

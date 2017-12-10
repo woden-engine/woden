@@ -12,7 +12,7 @@ createSceneDependentData
 	
 	objectStateBindings := gpuObjectStates collect: [ :state |
 		| binding |
-		binding := (scene engine createShaderSignature: scene shaderSignature resourceBinding: 0)
+		binding := scene shaderSignature newObjectState
 			bind: 0 uniformBufferElement: state first;
 			bind: 1 storageBufferElement: state second;
 			yourself.

@@ -17,11 +17,6 @@ signatureSpec: spec
 				maxBindings: 1000;
 				uniform: #ObjectState
 		];
-		bank: #LightingState with: [ :bank |
-			bank
-				maxBindings: 100;
-				uniform: #GlobalLightingState
-		];
 		bank: #MaterialState with: [ :bank |
 			bank
 				maxBindings: 10000;
@@ -33,5 +28,11 @@ signatureSpec: spec
 			bank
 				maxBindings: 10;
 				sampler: #Samplers count: 5
+		];
+		bank: #LightingState with: [ :bank |
+			bank
+				maxBindings: 1000;
+				uniform: #GlobalLightingState;
+				texture: #ShadowMaps count: 2
 		];
 		yourself

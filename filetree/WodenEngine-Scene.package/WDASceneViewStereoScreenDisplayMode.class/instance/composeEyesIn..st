@@ -18,7 +18,7 @@ composeEyesIn: stateTracker
 		fragmentShader: self fragmentShader;
 		useShaderResources: compositionStateBinding;
 		useShaderResources: sourceRenderTargetsBinding;
-		useShaderResources: self samplerBindings;
+		useShaderResources: self shaderSignature defaultSamplers;
 		primitiveType: AGPU_TRIANGLE_STRIP;
 		drawArrays: 4 instance_count: 1 first_vertex: 0 base_instance: 0;
 		

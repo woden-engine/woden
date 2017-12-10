@@ -12,6 +12,6 @@ bindResources
 	].
 
 	resourceBinding bind: 0 uniformBuffer: stateUniformBuffer.
-	normalTexture ifNotNil: [ resourceBinding bindTexture: 2 texture: normalTexture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0 ].
-	skyTexture ifNotNil: [ resourceBinding bindTexture: 3 texture: skyTexture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0 ].
+	normalTexture ifNotNil: [ resourceBinding bind: 2 texture: normalTexture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0 ].
+	skyTexture ifNotNil: [ resourceBinding bind: 3 texture: skyTexture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0 ].
 		

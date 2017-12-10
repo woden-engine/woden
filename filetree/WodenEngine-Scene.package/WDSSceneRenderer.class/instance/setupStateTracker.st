@@ -1,9 +1,10 @@
 rendering
 setupStateTracker
 	stateTracker
-		mode: self renderModeName;
+		reset;
+		mode: self renderMode;
 		shaderSignature: self shaderSignature;
-		useShaderResources: samplerBindings;
+		useShaderResources: self shaderSignature defaultSamplers;
 		
 		frontFaceWinding: AGPU_COUNTER_CLOCKWISE;
 		cullMode: AGPU_CULL_MODE_BACK;

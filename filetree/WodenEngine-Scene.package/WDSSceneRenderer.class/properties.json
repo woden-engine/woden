@@ -12,16 +12,17 @@
 		"stateTracker",
 		"engine",
 		"shaderSignature",
-		"cameraStatePool",
 		"cameraStates",
-		"cameraUniformBindings",
-		"samplerBindings",
 		"visibleObjects",
 		"visibleLightSources",
 		"mainCamera",
-		"cameraUniformBinding",
 		"currentTime",
-		"objectsPerViewport"
+		"objectsPerViewport",
+		"currentCameraStates",
+		"shadowCastingLights",
+		"shadowCastingLightCount",
+		"shadowMapBuffer",
+		"shadowMapRenderTargets"
 	],
 	"name" : "WDSSceneRenderer",
 	"type" : "normal"

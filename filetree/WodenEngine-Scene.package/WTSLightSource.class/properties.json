@@ -5,12 +5,16 @@
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [
-		"DefaultSpotInnerCosCutoff",
-		"DefaultSpotOuterCosCutoff"
+		"DefaultSpotInnerCutoff",
+		"DefaultSpotOuterCutoff"
 	],
 	"instvars" : [
 		"state",
-		"type"
+		"type",
+		"castShadows",
+		"shadowProjectionMatrix",
+		"outerSpotCutoff",
+		"innerSpotCutoff"
 	],
 	"name" : "WTSLightSource",
 	"type" : "normal"

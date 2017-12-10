@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "WDCStateTrackerRenderMode",
+	"category" : "WodenEngine-Core-Rendering",
+	"classinstvars" : [ ],
+	"pools" : [
+		"AGPUConstants"
+	],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "WDCStateTrackerShadowRenderMode",
+	"type" : "normal"
+}

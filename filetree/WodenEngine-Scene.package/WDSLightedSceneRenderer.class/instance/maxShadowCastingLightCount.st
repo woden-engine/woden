@@ -1,0 +1,3 @@
+shadow mapping
+maxShadowCastingLightCount
+	^ self class maxShadowCastingLightCount

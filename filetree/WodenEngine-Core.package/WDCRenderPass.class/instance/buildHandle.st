@@ -19,11 +19,13 @@ buildHandle
 			LibC memCopy: depthStencilAttachment getHandle to: depthStencilAttachmentBuffer size: AGPURenderpassDepthStencilDescription structureSize.
 		].
 		
-		description :=
-			AGPURenderpassDescription new
+		description := AGPURenderpassDescription new
 			color_attachment_count: colorAttachments size;
-			color_attachments: (AGPURenderpassColorAttachmentDescription fromHandle: colorAttachmentBuffer);
 			yourself.
+		colorAttachmentBuffer ifNotNil: [ 
+			description color_attachments: (AGPURenderpassColorAttachmentDescription fromHandle: colorAttachmentBuffer)
+		].
+			
 		depthStencilAttachment ifNotNil: [ 
 			description depth_stencil_attachment: (AGPURenderpassDepthStencilDescription fromHandle: depthStencilAttachmentBuffer).
 		].

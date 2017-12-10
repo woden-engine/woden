@@ -1,0 +1,3 @@
+accessing
+isSpotLight
+	^ type == #spot
