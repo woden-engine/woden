@@ -69,6 +69,15 @@ WMMatrix4 class category: 'special matrices' methods: {
 	^ WMMatrix4 newValue
 
 ].
+
+:[shadowMapBias -> WMMatrix4.
+	^ WMMatrix4 newValue
+		m11: 0.5; m14: 0.5;
+		m22: 0.5; m24: 0.5;
+		m33: 1.0;
+		m44: 1.0;
+		yourself
+].
 }.
 
 WMMatrix4 class category: 'projection matrices' methods: {

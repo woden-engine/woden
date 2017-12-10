@@ -7,6 +7,9 @@ Structure <<< #WTLightSourceData
 		#outerCosCutoff => Float32.
 		#spotExponent => Float32.
 		#radius => Float32.
+		
+		#shadowMapLayer => Float32.
+		#shadowMapTransform => WMMatrix4F.
 	};
 	package: 'Woden2-Structures-Core-Rendering';
 	yourself.
