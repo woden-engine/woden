@@ -1,8 +1,10 @@
 rendering
 updateSceneNodeFromRigidBody: rigidBody
-	| motionState |
+	| motionState rawTransform |
 	rigidBody sceneNode ifNil: [ ^ self ].
 	
 	motionState := rigidBody handle second.
+	rawTransform := APHYTransform new.
+	motionState getTransformInto: rawTransform.
 	rigidBody sceneNode
-		transform: (physicsEngine convertTransform: motionState getTransform)
+		transform: (physicsEngine convertTransform: rawTransform)

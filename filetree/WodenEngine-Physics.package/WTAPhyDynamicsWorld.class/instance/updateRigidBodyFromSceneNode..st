@@ -4,5 +4,5 @@ updateRigidBodyFromSceneNode: rigidBody
 	rigidBody sceneNode ifNil: [ ^ self ].
 	
 	transform := physicsEngine convertWMTransform: rigidBody sceneNode transform.
-	rigidBody handle first setTransform: transform.
-	rigidBody handle second setTransform: transform.
+	rigidBody handle first setTransformFrom: transform.
+	rigidBody handle second setTransformFrom: transform.
