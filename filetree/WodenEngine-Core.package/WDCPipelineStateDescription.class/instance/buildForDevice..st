@@ -1,6 +1,6 @@
 building
 buildForDevice: device
-	| builder |
+	| builder result logErrorLength logErrorBuffer |
 	builder := device createPipelineBuilder.
 
 	"Shaders"
@@ -29,4 +29,12 @@ buildForDevice: device
 
 	"Depth buffer"
 	builder setDepthState: depthEnabled writeMask: depthWriteMask function: depthFunction.
-	^ builder build
+	result := builder build.
+	result ifNil: [
+		logErrorLength := builder getBuildingLogLength.
+		logErrorBuffer := ExternalAddress gcallocate: logErrorLength.
+		builder getBuildingLog: logErrorLength buffer: logErrorBuffer.
+		self buildError: logErrorBuffer readString.
+	].
+
+	^ result

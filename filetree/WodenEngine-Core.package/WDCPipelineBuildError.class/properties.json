@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "RonieSalgado 3/3/2018 02:36",
+	"super" : "Error",
+	"category" : "WodenEngine-Core-Rendering",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"pipelineDescription"
+	],
+	"name" : "WDCPipelineBuildError",
+	"type" : "normal"
+}

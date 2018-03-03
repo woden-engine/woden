@@ -10,9 +10,12 @@ initializeForEngine: anEngine
 	streamingUniformBufferPools := IdentityDictionary new.
 	streamingStorageBufferPools := IdentityDictionary new.
 
-	shaderLanguageTarget := engine device getPreferredHighLevelShaderLanguage.
-	shaderLanguageTarget = AGPU_SHADER_LANGUAGE_NONE ifTrue: [
-		shaderLanguageTarget := engine device getPreferredShaderLanguage
+	shaderLanguageTarget := engine device getPreferredIntermediateShaderLanguage.
+	shaderLanguageTarget = AGPU_SHADER_LANGUAGE_NONE ifTrue: [ 
+		shaderLanguageTarget := engine device getPreferredHighLevelShaderLanguage.
+		shaderLanguageTarget = AGPU_SHADER_LANGUAGE_NONE ifTrue: [
+			shaderLanguageTarget := engine device getPreferredShaderLanguage
+		].
 	].
 
 	shaderLanguageTargetName := ShaderLanguageTargetMap at: shaderLanguageTarget.
