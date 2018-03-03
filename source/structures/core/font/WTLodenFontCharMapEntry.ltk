@@ -3,5 +3,5 @@ Structure <<< #WTLodenFontCharMapEntry
 		#character => Int32. 
 		#glyph => Int32.
 	};
-	package: 'Woden2-Structures-Core-Font';
+	package: 'WodenEngine-Structures-Core-Font';
 	yourself.

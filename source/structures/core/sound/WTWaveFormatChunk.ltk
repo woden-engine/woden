@@ -10,5 +10,5 @@ Structure <<< #WTWaveFormatChunk
 		#validBitsPerSample => UInt32. 
 		#subFormat => (UInt8 array: 16)
 	};
-	package: 'Woden2-Structures-Core-Sound';
+	package: 'WodenEngine-Structures-Core-Sound';
 	yourself.

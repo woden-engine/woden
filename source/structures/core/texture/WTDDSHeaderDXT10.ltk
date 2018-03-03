@@ -6,5 +6,5 @@ Structure <<< #WTDDSHeaderDXT10
 		#arraySize => UInt32.
 		#miscFlags2 => UInt32.
 	};
-	package: 'Woden2-Structures-Core-Texture';
+	package: 'WodenEngine-Structures-Core-Texture';
 	yourself.

@@ -6,5 +6,5 @@ Structure <<< #WTLodenFontHeader
 		#pointSize => Float32.
 		#flags => UInt32.
 	};
-	package: 'Woden2-Structures-Core-Font';
+	package: 'WodenEngine-Structures-Core-Font';
 	yourself.

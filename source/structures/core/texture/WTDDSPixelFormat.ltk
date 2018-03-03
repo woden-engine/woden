@@ -9,5 +9,5 @@ Structure <<< #WTDDSPixelFormat
 		#bBitMask => UInt32. 
 		#aBitMask => UInt32.
 	};
-	package: 'Woden2-Structures-Core-Texture';
+	package: 'WodenEngine-Structures-Core-Texture';
 	yourself.

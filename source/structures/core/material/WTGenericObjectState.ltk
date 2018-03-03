@@ -4,7 +4,7 @@ Structure <<< #WTGenericObjectState
 		#color => WMVector4F. 
 		#visible => Int32
 	};
-	package: 'Woden2-Structures-Core-Material';
+	package: 'WodenEngine-Structures-Core-Material';
 	yourself.
 
 WTGenericObjectState class category: 'constructing' methods: {

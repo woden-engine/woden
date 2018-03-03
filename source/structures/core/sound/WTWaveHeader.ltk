@@ -4,5 +4,5 @@ Structure <<< #WTWaveHeader
 		#chunkSize => UInt32. 
 		#waveID => UInt32
 	};
-	package: 'Woden2-Structures-Core-Sound';
+	package: 'WodenEngine-Structures-Core-Sound';
 	yourself.

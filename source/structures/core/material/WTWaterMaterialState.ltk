@@ -7,7 +7,7 @@ Structure <<< #WTWaterMaterialState
 		(#padding => WMVector2F) private. 
 		#harmonics => (WTWaterHarmonic array: 5)
 	};
-	package: 'Woden2-Structures-Core-Material';
+	package: 'WodenEngine-Structures-Core-Material';
 	yourself.
 
 WTWaterMaterialState category: 'accessing' methods: {

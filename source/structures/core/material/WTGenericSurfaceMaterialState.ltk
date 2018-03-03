@@ -4,5 +4,5 @@ Structure <<< #WTGenericSurfaceMaterialState
 		#fresnel => WMVector3F. 
 		#smoothness => Float32
 	};
-	package: 'Woden2-Structures-Core-Material';
+	package: 'WodenEngine-Structures-Core-Material';
 	yourself.

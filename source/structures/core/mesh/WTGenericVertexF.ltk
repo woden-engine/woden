@@ -16,7 +16,7 @@ Structure <<< #WTGenericVertexF
 			vertexLocation: 2;
 			vertexFormat: #float4.
 	};
-	package: 'Woden2-Structures-Core-Mesh';
+	package: 'WodenEngine-Structures-Core-Mesh';
 	yourself.
 
 WTGenericVertexF class category: 'vertex layout' methods: {

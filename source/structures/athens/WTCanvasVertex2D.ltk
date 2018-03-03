@@ -4,5 +4,5 @@ Structure <<< #WTCanvasVertex2D
 		#texcoord => WMVector2F. 
 		#color => WMVector4F
 	};
-	package: 'Woden2-Structures-Athens';
+	package: 'WodenEngine-Structures-Athens';
 	yourself.

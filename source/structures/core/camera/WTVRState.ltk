@@ -8,5 +8,5 @@ Structure <<< #WTVRState
 		#distortionCoefficients => WMVector2F. 
 		#ipd => Float32
 	};
-	package: 'Woden2-Structures-Core-Camera';
+	package: 'WodenEngine-Structures-Core-Camera';
 	yourself.

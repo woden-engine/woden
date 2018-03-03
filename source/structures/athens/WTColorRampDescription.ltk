@@ -3,5 +3,5 @@ Structure <<< #WTColorRampDescription
 		#firstIndex => Int32.
 		#count => Int32
 	};
-	package: 'Woden2-Structures-Athens';
+	package: 'WodenEngine-Structures-Athens';
 	yourself.

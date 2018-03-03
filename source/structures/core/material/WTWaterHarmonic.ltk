@@ -6,5 +6,5 @@ Structure <<< #WTWaterHarmonic
 		#radial => Int32.
 		(#padding => (Float32 array: 3)) private
 	};
-	package: 'Woden2-Structures-Core-Material';
+	package: 'WodenEngine-Structures-Core-Material';
 	yourself.

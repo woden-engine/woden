@@ -2,16 +2,18 @@ Structure <<< #WTLightSourceData
 	slots: {
 		#positionOrDirection => WMVector4F. 
 		#intensity => WMVector4F. 
-		#spotDirection => WMVector3F. 
+		
+		#spotDirection => WMCompactVector3F. 
+		#shadowMapLayer => Float32.
+		
 		#innerCosCutoff => Float32. 
 		#outerCosCutoff => Float32.
 		#spotExponent => Float32.
 		#radius => Float32.
 		
-		#shadowMapLayer => Float32.
 		#shadowMapTransform => WMMatrix4F.
 	};
-	package: 'Woden2-Structures-Core-Rendering';
+	package: 'WodenEngine-Structures-Core-Rendering';
 	yourself.
 
 WTLightSourceData category: 'accessing' methods: {

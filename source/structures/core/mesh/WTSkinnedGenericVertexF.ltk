@@ -22,7 +22,7 @@ Structure <<< #WTSkinnedGenericVertexF
 			vertexLocation: 6;
 			vertexFormat: #R16G16B16A16_SINT.
 	};
-	package: 'Woden2-Structures-Core-Mesh';
+	package: 'WodenEngine-Structures-Core-Mesh';
 	yourself.
 
 WTSkinnedGenericVertexF class category: 'vertex layout' methods: {

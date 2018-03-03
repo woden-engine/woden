@@ -3,7 +3,7 @@ Structure <<< #WTAnimationActionBoneFrame
 		#translation => WMVector3F. 
 		#rotation => WMQuaternionF
 	};
-	package: 'Woden2-Structures-Core-Mesh';
+	package: 'WodenEngine-Structures-Core-Mesh';
 	yourself.
 
 WTAnimationActionBoneFrame category: 'matrices' methods: {

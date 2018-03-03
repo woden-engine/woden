@@ -1,5 +1,5 @@
 Compiler
-	declarePackage: #'Woden2-Structures-Core';
+	declarePackage: #'WodenEngine-Structures-Core';
     evaluateFileNamed: 'camera/category.ltk';
     evaluateFileNamed: 'font/category.ltk';
     evaluateFileNamed: 'material/category.ltk';
