@@ -3,8 +3,9 @@ Structure <<< #WTWaterHarmonic
 		#center => WMVector2F. 
 		#amplitude => Float32. 
 		#frequency => Float32. 
+		
+		(#padding => WMCompactVector3F) private.
 		#radial => Int32.
-		(#padding => (Float32 array: 3)) private
 	};
 	package: 'WodenEngine-Structures-Core-Material';
 	yourself.

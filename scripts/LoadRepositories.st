@@ -13,11 +13,11 @@ Metacello new
 
 "Build the Lowtalk source code"
 [
-    | complationTarget compilerClass compiler |
-    complationTarget := (Smalltalk globals at: #SLVMCompilationTarget) forCurrentImage.
+    | compilationTarget compilerClass compiler |
+    compilationTarget := (Smalltalk globals at: #SLVMCompilationTarget) forCurrentImage.
     compilerClass := Smalltalk globals at: #LowtalkCompiler.
 
-    compiler := compilerClass compilationTarget: complationTarget.
+    compiler := compilerClass compilationTarget: compilationTarget.
     compiler
     	optimizationLevel: 1;
     	evaluateFileNamed: 'source/woden2.ltk';

@@ -1,9 +1,11 @@
 Structure <<< #WTGlobalLightingState
 	slots: {
-		#groundLighting => WMVector4F. 
-		#skyLighting => WMVector4F. 
-		#sunDirection => WMVector3F. 
+		#groundLighting => WMVector4F.
+		#skyLighting => WMVector4F.
+		
+		#sunDirection => WMCompactVector3F.
 		#numberOfLights => Int32. 
+		
 		#lightSources => (WTLightSourceData array: 16)
 	};
 	package: 'WodenEngine-Structures-Core-Rendering';
