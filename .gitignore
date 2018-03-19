@@ -24,7 +24,7 @@ phanide
 *.log
 *.sources
 Pharo*.zip
-woden2.sh
+woden.sh
 *pharo.cog*.zip
 *.tar.gz
 *.zip

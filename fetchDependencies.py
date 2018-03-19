@@ -118,19 +118,31 @@ class PharoVMDependency(Dependency):
         fileName += '-' + platformMode.canonicalPharoVMOSName() + '-stable.zip'
 
         print "Getting dependency %s" % self.name
+        # HACK: Use the Zeroconf scripts on linux, and os x
+        if platformMode.os in ['linux', 'osx']:
+            zeroconfScript = 'https://get.pharo.org/'
+            if platformMode.is64Bit():
+                zeroconfScript += '64/'
+            zeroconfScript += 'vm61'
+            os.system('curl %s | bash' % (zeroconfScript,))
+            self.createVMExecutionScript()
+            return
+
         print "Download PharoVM"
         downloadURLInto(self.baseURL + fileName, fileName)
 
         print "Extract PharoVM"
         self.extractDependencyFromArchive(fileName)
 
+        # Create a script for executing the VM on non-windows platforms.
         if platformMode.os != 'windows':
             self.createVMExecutionScript()
 
     def createVMExecutionScript(self):
-        vmName = 'pharo-ui'
+        vmName = '$TOP/pharo-ui'
         with open('woden.sh', 'w') as out:
             out.write(VM_EXECUTION_SCRIPT_TEMPLATE.replace(':VM_NAME:', vmName))
+        os.system('chmod +x woden.sh')
 
 class PharoImageDependency(Dependency):
     def __init__(self, name, baseURL):
