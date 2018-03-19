@@ -124,7 +124,7 @@ class PharoVMDependency(Dependency):
             if platformMode.is64Bit():
                 zeroconfScript += '64/'
             zeroconfScript += 'vm61'
-            os.system('curl %s | bash' % (zeroconfScript,))
+            os.system('wget -O- %s | bash' % (zeroconfScript,))
             self.createVMExecutionScript()
             return
 
