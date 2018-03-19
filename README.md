@@ -56,7 +56,8 @@ for some examples, or you can just run the following script for blue window:
 
 ```smalltalk
 model := WDAModel new.
-model openWith: (WDASolidColorViewSample new color: Color blue)```
+model openWith: (WDASolidColorViewSample new color: Color blue)
+```
 
 ## Bug reporting
 
