@@ -27,7 +27,7 @@ Metacello new
 ] value.
 
 "Load Woden 2"
-FileStream stdout nextPutAll: 'Loading Woden2'; lf.
+FileStream stdout nextPutAll: 'Loading Woden'; lf.
 Metacello new
   baseline: 'WodenEngine';
   repository: 'filetree://filetree';
