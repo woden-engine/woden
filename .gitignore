@@ -18,6 +18,7 @@ github-*.zip
 ProcessWrapperPlugin.dll
 PharoDebug.log
 Pharo*.app
+phanide
 *.image
 *.changes
 *.log
@@ -26,4 +27,12 @@ Pharo*.zip
 woden2.sh
 *pharo.cog*.zip
 *.tar.gz
-phanide
+*.zip
+*.pyc
+*.dll
+*.so
+*.ilk
+*.lib
+*.pdb
+*.exp
+AgpuIcd
