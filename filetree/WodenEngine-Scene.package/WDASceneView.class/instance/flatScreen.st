@@ -1,3 +1,0 @@
-screen display modes
-flatScreen
-	self screenDisplayMode: WDASceneViewFlatScreenDisplayMode new

@@ -1,3 +1,0 @@
-accessing
-numberOfRoots
-	^ roots size

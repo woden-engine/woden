@@ -1,3 +1,0 @@
-initialization
-createSceneNode
-	^ WTSCamera new

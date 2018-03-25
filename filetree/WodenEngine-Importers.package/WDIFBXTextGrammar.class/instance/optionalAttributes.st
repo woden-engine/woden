@@ -1,3 +1,0 @@
-accessing
-optionalAttributes
-	^ attributes optional

@@ -1,1 +1,0 @@
-I am local spatial object that contains a logical separate shape transform.

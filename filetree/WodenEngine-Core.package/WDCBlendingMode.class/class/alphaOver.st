@@ -1,3 +1,0 @@
-blending modes
-alphaOver
-	^ AlphaOver

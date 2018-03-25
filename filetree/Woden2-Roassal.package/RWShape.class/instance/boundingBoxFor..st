@@ -1,3 +1,0 @@
-computing
-boundingBoxFor: element
-	self subclassResponsibility

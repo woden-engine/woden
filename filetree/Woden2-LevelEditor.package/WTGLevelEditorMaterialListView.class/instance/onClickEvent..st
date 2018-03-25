@@ -1,9 +1,0 @@
-event handling
-onClickEvent: event
-	| newSelectedCell |
-	newSelectedCell := self findCellAtPosition: (self globalPointToLocal: event position - (0@verticalScroll)).
-	newSelectedCell ifNil: [ ^ self ].
-	
-	selectedCell := newSelectedCell.
-	editor
-		currentMaterialName: selectedCell value.

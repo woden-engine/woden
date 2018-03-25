@@ -1,2 +1,0 @@
-events
-onDragEndEvent: event

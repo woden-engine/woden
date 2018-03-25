@@ -1,3 +1,0 @@
-initialization
-stop
-	started := false

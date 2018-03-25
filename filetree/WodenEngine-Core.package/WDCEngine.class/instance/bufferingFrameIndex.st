@@ -1,3 +1,0 @@
-accessing
-bufferingFrameIndex
-	^ frameBufferingDriver bufferingFrameIndex

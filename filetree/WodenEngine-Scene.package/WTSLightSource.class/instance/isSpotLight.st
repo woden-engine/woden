@@ -1,3 +1,0 @@
-accessing
-isSpotLight
-	^ type == #spot

@@ -1,3 +1,0 @@
-hooks
-baseShapeDescriptor
-	^ {#Cylinder . transparencyMode}

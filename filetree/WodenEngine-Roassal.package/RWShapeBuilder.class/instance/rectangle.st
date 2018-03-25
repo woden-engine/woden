@@ -1,3 +1,0 @@
-accessing
-rectangle
-	^ self cube

@@ -2,17 +2,17 @@
 "Load Phanide"
 Metacello new
   baseline: 'Phanide';
-  repository: 'filetree://phanide/filetree';
+  repository: 'tonel://phanide/tonel';
   load.
 
 "Load Lowtalk"
 Metacello new
   baseline: 'Lowtalk';
-  repository: 'filetree://lowtalk/filetree';
+  repository: 'tonel://lowtalk/tonel';
   load.
 
 "Build the Lowtalk source code"
-[
+SourceFiles deferFlushDuring: [
     | compilationTarget compilerClass compiler |
     compilationTarget := (Smalltalk globals at: #SLVMCompilationTarget) forCurrentImage.
     compilerClass := Smalltalk globals at: #LowtalkCompiler.
@@ -20,17 +20,17 @@ Metacello new
     compiler := compilerClass compilationTarget: compilationTarget.
     compiler
     	optimizationLevel: 1;
-    	evaluateFileNamed: 'source/woden2.ltk';
+    	evaluateFileNamed: 'source/woden.ltk';
 	    buildModule;
     	ssaModule.
 
-] value.
+].
 
-"Load Woden 2"
+"Load WodenEngine"
 FileStream stdout nextPutAll: 'Loading Woden'; lf.
 Metacello new
   baseline: 'WodenEngine';
-  repository: 'filetree://filetree';
+  repository: 'tonel://tonel';
   load.
 
 

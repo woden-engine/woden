@@ -1,3 +1,0 @@
-private
-newExample
-	^ RWExampleSelection new

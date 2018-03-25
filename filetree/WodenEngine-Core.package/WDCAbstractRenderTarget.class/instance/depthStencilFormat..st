@@ -1,3 +1,0 @@
-accessing
-depthStencilFormat: aDepthStencilFormat
-	depthStencilFormat := aDepthStencilFormat

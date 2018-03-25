@@ -1,3 +1,0 @@
-serialization
-jsonTypeName
-	^ 'spatial-description'

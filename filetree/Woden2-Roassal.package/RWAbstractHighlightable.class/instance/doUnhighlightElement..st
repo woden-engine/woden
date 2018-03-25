@@ -1,3 +1,0 @@
-actions
-doUnhighlightElement: anElement
-	self subclassResponsibility

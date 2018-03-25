@@ -1,3 +1,0 @@
-accessing
-suspend
-	suspended := true

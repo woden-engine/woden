@@ -1,7 +1,0 @@
-resource loading
-loadTextureData: aFileNameOrReference
-	| textureFile extension |
-	textureFile := self resolveResourceFileReference: aFileNameOrReference.
-	extension := textureFile extension.
-	extension = 'dds' ifTrue: [ ^ WDCDDSTextureReader textureFromFileNamed: textureFile].
-	^ ImageReadWriter formFromFileNamed: textureFile

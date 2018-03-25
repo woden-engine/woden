@@ -1,3 +1,0 @@
-accessing
-thumbnail
-	^ thumbnail

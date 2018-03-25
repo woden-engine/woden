@@ -1,3 +1,0 @@
-enumerating
-frameBufferingCount
-	^ frameBufferingDriver frameBufferingCount

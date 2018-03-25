@@ -1,3 +1,0 @@
-pipeline state
-primitiveType: aPrimitiveType
-	pipelineStateDescription primitiveType: aPrimitiveType

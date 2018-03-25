@@ -1,3 +1,0 @@
-rendering
-activateShadowOn: stateTracker
-	^ false

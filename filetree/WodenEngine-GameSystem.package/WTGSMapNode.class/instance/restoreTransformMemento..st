@@ -1,2 +1,0 @@
-memento
-restoreTransformMemento: memento

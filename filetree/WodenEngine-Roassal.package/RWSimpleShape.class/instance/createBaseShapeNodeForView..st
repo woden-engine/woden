@@ -1,3 +1,0 @@
-hooks
-createBaseShapeNodeForView: aView
-	self subclassResponsibility

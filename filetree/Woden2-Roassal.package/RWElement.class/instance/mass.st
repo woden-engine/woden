@@ -1,3 +1,0 @@
-physics
-mass
-	^ mass

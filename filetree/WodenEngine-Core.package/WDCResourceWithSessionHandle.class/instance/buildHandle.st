@@ -1,3 +1,0 @@
-resource building
-buildHandle
-	self subclassResponsibility

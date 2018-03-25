@@ -1,3 +1,0 @@
-behaviors
-unsubscribeToTouchEvents
-	self map unregisterTouchListener: self

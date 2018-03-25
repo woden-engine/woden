@@ -1,1 +1,0 @@
-This is an utility class for moving a group of elements.

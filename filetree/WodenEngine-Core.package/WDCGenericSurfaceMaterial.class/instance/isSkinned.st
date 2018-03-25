@@ -1,3 +1,0 @@
-accessing
-isSkinned
-	^ isSkinned

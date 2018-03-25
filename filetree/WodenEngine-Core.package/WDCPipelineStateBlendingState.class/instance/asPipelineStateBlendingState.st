@@ -1,3 +1,0 @@
-converting
-asPipelineStateBlendingState
-	^ self copy

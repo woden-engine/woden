@@ -1,3 +1,0 @@
-accessing
-targetMask
-	^ targetMask

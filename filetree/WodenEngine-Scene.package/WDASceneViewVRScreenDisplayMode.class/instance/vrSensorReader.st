@@ -1,3 +1,0 @@
-accessing
-vrSensorReader
-	^ engine vrSensorReader

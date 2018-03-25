@@ -1,3 +1,0 @@
-accessing
-defaultFrameBufferingCount
-	^ 3

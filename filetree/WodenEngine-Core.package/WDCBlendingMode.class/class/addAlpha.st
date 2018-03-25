@@ -1,3 +1,0 @@
-blending modes
-addAlpha
-	^ AddAlpha

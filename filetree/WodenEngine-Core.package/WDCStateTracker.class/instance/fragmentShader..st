@@ -1,3 +1,0 @@
-pipeline state
-fragmentShader: aFragmentShader
-	pipelineStateDescription fragmentShader: aFragmentShader

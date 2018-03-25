@@ -1,3 +1,0 @@
-accessing
-colorAttachmentFormats: anArrayOfFormats
-	colorAttachmentFormats := anArrayOfFormats

@@ -1,3 +1,0 @@
-accessing
-defaultTargetFrameRate
-	^ 60

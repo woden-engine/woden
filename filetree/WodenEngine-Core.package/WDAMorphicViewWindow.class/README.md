@@ -1,1 +1,0 @@
-I am a morphic based view window for a Woden application.

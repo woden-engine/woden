@@ -1,3 +1,0 @@
-snapping
-primaryGridSize
-	^ gridSize

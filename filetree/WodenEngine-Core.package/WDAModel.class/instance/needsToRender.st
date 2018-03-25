@@ -1,3 +1,0 @@
-testing
-needsToRender
-	^ views isNotEmpty

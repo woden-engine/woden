@@ -1,3 +1,0 @@
-accessing
-diffuse
-	^ self color

@@ -1,3 +1,0 @@
-accessing
-frustum
-	^ sceneNode frustum

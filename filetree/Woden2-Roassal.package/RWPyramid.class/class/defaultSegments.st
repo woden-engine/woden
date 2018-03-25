@@ -1,3 +1,0 @@
-configuration
-defaultSegments
-	^ 2

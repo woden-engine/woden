@@ -1,3 +1,0 @@
-adding
-addRenderProcess: aRenderProcess
-	frameBufferingDriver addRenderProcess: aRenderProcess

@@ -1,3 +1,0 @@
-accessing
-yScale
-	^ scale y

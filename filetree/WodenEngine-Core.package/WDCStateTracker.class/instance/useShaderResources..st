@@ -1,3 +1,0 @@
-commands
-useShaderResources: shaderResource
-	commandListBuilder useShaderResources: shaderResource validHandle

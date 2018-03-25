@@ -1,3 +1,0 @@
-configuration
-defaultSlices
-	^ 32

@@ -1,3 +1,0 @@
-accessing
-fillColor
-	^ self color

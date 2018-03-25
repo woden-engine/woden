@@ -1,3 +1,0 @@
-accessing
-scene
-	^ view scene

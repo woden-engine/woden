@@ -1,3 +1,0 @@
-accessing
-shaderSignatureClass
-	^ WDCForwardRenderingShaderSignature

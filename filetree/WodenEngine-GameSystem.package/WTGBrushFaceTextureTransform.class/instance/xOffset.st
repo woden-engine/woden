@@ -1,3 +1,0 @@
-accessing
-xOffset
-	^ offset x

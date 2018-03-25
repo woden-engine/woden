@@ -1,3 +1,0 @@
-accessing
-modelName
-	^ modelName

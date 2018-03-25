@@ -1,3 +1,0 @@
-accessing
-yOffsetLess
-	^ yOffsetLess

@@ -1,3 +1,0 @@
-accessing
-swapBuffers
-	swapChain swapBuffers

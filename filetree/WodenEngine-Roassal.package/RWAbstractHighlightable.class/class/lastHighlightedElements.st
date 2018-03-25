@@ -1,3 +1,0 @@
-reset shape
-lastHighlightedElements
-	^ lastHighlightedElements

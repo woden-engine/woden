@@ -1,3 +1,0 @@
-updating
-changed
-	isChanged := true

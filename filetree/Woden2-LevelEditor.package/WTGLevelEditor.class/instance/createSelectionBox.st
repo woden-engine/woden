@@ -1,3 +1,0 @@
-initialization
-createSelectionBox
-	self selection: WTGLevelEditorSelectionBox empty.

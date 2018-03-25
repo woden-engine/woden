@@ -1,1 +1,0 @@
-I am a sample scene view that uses first person shooter game style controls for movement.

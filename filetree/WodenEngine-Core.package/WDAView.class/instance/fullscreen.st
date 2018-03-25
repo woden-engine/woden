@@ -1,3 +1,0 @@
-window handling
-fullscreen
-	^ fullscreen

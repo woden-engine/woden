@@ -1,3 +1,0 @@
-accessing
-pointEntity
-	^ pointEntity

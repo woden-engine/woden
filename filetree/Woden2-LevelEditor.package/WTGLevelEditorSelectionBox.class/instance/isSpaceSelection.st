@@ -1,3 +1,0 @@
-requirements
-isSpaceSelection
-	^ elements isEmpty

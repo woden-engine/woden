@@ -1,3 +1,0 @@
-rendering
-activateForwardOn: stateTracker
-	^ false

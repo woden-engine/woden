@@ -1,3 +1,0 @@
-*WodenEngine-Core
-isSessionPersistentExternalBuffer
-	^ false

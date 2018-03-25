@@ -1,3 +1,0 @@
-physics
-rigidBody
-	^ rigidBody

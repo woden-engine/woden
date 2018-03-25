@@ -1,3 +1,0 @@
-displaying
-close
-	opened := false.

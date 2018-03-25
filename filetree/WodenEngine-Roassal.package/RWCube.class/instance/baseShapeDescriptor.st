@@ -1,3 +1,0 @@
-hooks
-baseShapeDescriptor
-	^ {#CubeShape . transparencyMode}

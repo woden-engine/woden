@@ -1,3 +1,0 @@
-rendering
-renderTarget
-	^ renderTarget

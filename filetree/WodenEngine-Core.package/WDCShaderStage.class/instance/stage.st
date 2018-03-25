@@ -1,3 +1,0 @@
-accessing
-stage
-	^ stage

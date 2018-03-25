@@ -1,3 +1,0 @@
-serialization
-fuelIgnoredInstanceVariableNames
-	^ #('node')

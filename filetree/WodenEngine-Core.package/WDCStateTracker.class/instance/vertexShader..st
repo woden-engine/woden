@@ -1,3 +1,0 @@
-pipeline state
-vertexShader: aVertexShader
-	pipelineStateDescription vertexShader: aVertexShader

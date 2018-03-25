@@ -1,3 +1,0 @@
-hooks
-xdirection
-	self subclassResponsibility 

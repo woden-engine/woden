@@ -1,3 +1,0 @@
-accessing
-projectionInvertedY
-	^ projectionInvertedY

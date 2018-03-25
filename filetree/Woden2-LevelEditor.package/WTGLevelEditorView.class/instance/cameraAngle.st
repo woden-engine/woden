@@ -1,3 +1,0 @@
-accessing
-cameraAngle
-	^ cameraAngle

@@ -1,3 +1,0 @@
-accessing
-indexCount
-	^ indexCount

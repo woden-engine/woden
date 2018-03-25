@@ -1,3 +1,0 @@
-framebuffer description
-hasStencil
-	^ false

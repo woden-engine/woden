@@ -1,0 +1,228 @@
+"
+I am a morphic based view window for a Woden application.
+"
+Class {
+	#name : #WDAMorphicViewWindow,
+	#superclass : #WDCMorphicWindow,
+	#instVars : [
+		'view'
+	],
+	#classVars : [
+		'KeySymbolMap',
+		'MouseButtonMap'
+	],
+	#pools : [
+		'OSKeySymbols'
+	],
+	#category : 'WodenEngine-Core-Application'
+}
+
+{ #category : #'as yet unclassified' }
+WDAMorphicViewWindow class >> initialize [
+	"
+	self initialize
+	"
+	
+	KeySymbolMap := IdentityDictionary newFromPairs: { 
+		#A . OSK_a .
+		#B . OSK_b .
+		#C . OSK_c .
+		#D . OSK_d .
+		#E . OSK_e .
+		#F . OSK_f .
+		#G . OSK_g .
+		#H . OSK_h .
+		#I . OSK_i .
+		#J . OSK_j .
+		#K . OSK_k .
+		#L . OSK_l .
+		#M . OSK_m .
+		#N . OSK_n .
+		#O . OSK_o .
+		#P . OSK_p .
+		#Q . OSK_q .
+		#R . OSK_r .
+		#S . OSK_s .
+		#T . OSK_t .
+		#U . OSK_u .
+		#W . OSK_w .
+		#X . OSK_x .
+		#Y . OSK_y .
+		#Z . OSK_z .
+		#SPACE . OSK_SPACE .
+		#KP_SPACE . OSK_SPACE .
+		#EIGHT . OSK_UP .
+		#FOUR . OSK_LEFT .
+		#SIX . OSK_RIGHT .
+		#FIVE . OSK_DOWN .
+		#LESS . OSK_LCTRL.
+	}.
+	
+	MouseButtonMap := IdentityDictionary newFromPairs: #(
+		4 1 "Left"
+		2 3 "Right"
+		1 2 "Middle"
+	)
+]
+
+{ #category : #'rendering process stages' }
+WDAMorphicViewWindow >> commitSurfaces [
+]
+
+{ #category : #'event handling' }
+WDAMorphicViewWindow >> handleKeyDown: evt [
+	| event |
+	view ifNotNil: [
+		event := OSKeyDownEvent new.
+		event repeat: 0.
+		event symbol: (self keySymbolFor: evt keyValue).
+		self mousePosition: evt putOn: event.
+		self modifiers: evt putOn: event.
+		view handleEvent: event.
+	].
+]
+
+{ #category : #'event handling' }
+WDAMorphicViewWindow >> handleKeyUp: evt [
+	| event |
+	view ifNotNil: [
+		event := OSKeyUpEvent new.
+		event repeat: 0.
+		event symbol: (self keySymbolFor: evt keyValue).
+		self mousePosition: evt putOn: event.
+		self modifiers: evt putOn: event.
+		view handleEvent: event
+	]
+]
+
+{ #category : #'event handling' }
+WDAMorphicViewWindow >> handlesKeyboard: anEvent [
+	^ anEvent wasHandled not
+]
+
+{ #category : #'event handling' }
+WDAMorphicViewWindow >> handlesMouseDown: anEvent [
+	^ anEvent wasHandled not
+]
+
+{ #category : #'event handling' }
+WDAMorphicViewWindow >> handlesMouseOver: anEvent [
+	^ anEvent wasHandled not 
+]
+
+{ #category : #'event handling' }
+WDAMorphicViewWindow >> handlesMouseWheel: anEvent [
+	^ anEvent wasHandled not 
+]
+
+{ #category : #'framebuffer description' }
+WDAMorphicViewWindow >> hasDepth [
+	^ view hasDepth
+]
+
+{ #category : #'framebuffer description' }
+WDAMorphicViewWindow >> hasStencil [
+	^ view hasStencil
+]
+
+{ #category : #'event handling' }
+WDAMorphicViewWindow >> keyNameFor: keyValue [
+	^ (Smalltalk os keyForValue: keyValue) name asSymbol
+]
+
+{ #category : #'event handling' }
+WDAMorphicViewWindow >> keySymbolFor: keyValue [
+	^ KeySymbolMap at: (self keyNameFor: keyValue ) ifAbsent: [ OSK_UNKNOWN ]
+]
+
+{ #category : #'event handling' }
+WDAMorphicViewWindow >> mapMouseButton: button [
+	^ MouseButtonMap at: button
+]
+
+{ #category : #'event handling' }
+WDAMorphicViewWindow >> modifiers: anEvent putOn: osEvent [
+	osEvent modifiers
+		leftCtrl: anEvent controlKeyPressed;
+		leftAlt: anEvent altKeyPressed;
+		leftCmd: anEvent commandKeyPressed;
+		leftShift: anEvent shiftPressed.
+
+]
+
+{ #category : #'event handling' }
+WDAMorphicViewWindow >> mouseDown: evt [
+	| osEvent |
+	
+	evt hand newKeyboardFocus: self.
+	view ifNotNil: [
+		osEvent := OSMouseButtonPressEvent new.
+		osEvent button: (self mapMouseButton: (evt whichButton bitAnd: MouseEvent anyButton)).
+		self mouseEventCommon: evt putOn: osEvent.
+		view handleEvent: osEvent.
+	].
+	
+	evt wasHandled: true.
+	^ true.
+]
+
+{ #category : #'event handling' }
+WDAMorphicViewWindow >> mouseEventCommon: anEvent putOn: osEvent [
+	osEvent buttons
+			button1: anEvent redButtonPressed;
+			button2: anEvent yellowButtonPressed;
+			button3: anEvent blueButtonPressed.
+	self modifiers: anEvent putOn: osEvent.
+	self mousePosition: anEvent putOn: osEvent.
+]
+
+{ #category : #'event handling' }
+WDAMorphicViewWindow >> mousePosition: anEvent putOn: osEvent [
+	osEvent position: anEvent position - self bounds origin.
+	lastMousePosition := osEvent position.
+]
+
+{ #category : #'event handling' }
+WDAMorphicViewWindow >> mouseUp: evt [
+	| osEvent |
+	view ifNotNil: [
+		osEvent := OSMouseButtonReleaseEvent new.
+		osEvent button: (self mapMouseButton: evt whichButton).
+		self mouseEventCommon: evt putOn: osEvent.
+		view handleEvent: osEvent.
+	].
+
+	evt wasHandled: true.
+
+]
+
+{ #category : #'event handling' }
+WDAMorphicViewWindow >> mouseWheel: evt [
+	| osEvent |
+	view ifNotNil: [
+		osEvent := OSMouseWheelEvent new.
+		self mouseEventCommon: evt putOn: osEvent.
+		evt isUp ifTrue: [ evt scrollVertical: 1 ].
+		evt isDown ifTrue: [ evt scrollVertical: -1 ].
+		evt isLeft ifTrue: [ evt scrollHorizontal: -1 ].
+		evt isRight ifTrue: [ evt scrollHorizontal: 1 ].
+		view handleEvent: osEvent.
+	].
+
+	evt inspect
+]
+
+{ #category : #'framebuffer description' }
+WDAMorphicViewWindow >> sampleCount [
+	^ view sampleCount
+]
+
+{ #category : #accessing }
+WDAMorphicViewWindow >> view [
+	^ view
+]
+
+{ #category : #accessing }
+WDAMorphicViewWindow >> view: anObject [
+	view := anObject
+]

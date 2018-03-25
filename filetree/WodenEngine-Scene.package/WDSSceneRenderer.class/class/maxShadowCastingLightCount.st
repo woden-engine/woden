@@ -1,3 +1,0 @@
-accessing
-maxShadowCastingLightCount
-	^ 4

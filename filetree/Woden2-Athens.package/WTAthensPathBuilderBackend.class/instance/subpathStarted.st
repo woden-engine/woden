@@ -1,3 +1,0 @@
-commands
-subpathStarted
-	self subclassResponsibility

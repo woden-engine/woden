@@ -1,3 +1,0 @@
-accessing
-behaviorClassName
-	^ behaviorClassName

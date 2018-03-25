@@ -1,3 +1,0 @@
-accessing
-currentMaterialName
-	^ currentMaterialName

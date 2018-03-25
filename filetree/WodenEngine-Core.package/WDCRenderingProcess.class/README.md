@@ -1,1 +1,0 @@
-I am a rendering process. I am used to handle the explicit double and triple buffering, to solve synchronization issues.

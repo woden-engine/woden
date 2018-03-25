@@ -1,3 +1,0 @@
-accessing
-sourceFactor
-	^ sourceFactor

@@ -1,3 +1,0 @@
-accessing
-isPointSelected
-	^ false

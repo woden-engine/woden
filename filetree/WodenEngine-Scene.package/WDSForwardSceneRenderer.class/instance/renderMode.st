@@ -1,3 +1,0 @@
-accessing
-renderMode
-	^ WDCStateTrackerForwardRenderMode uniqueInstance

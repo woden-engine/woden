@@ -1,1 +1,0 @@
-I represent a light source in the Woden scene graph.

@@ -1,3 +1,0 @@
-accessing
-backgroundColor
-	^ scene backgroundColor

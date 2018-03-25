@@ -1,3 +1,0 @@
-gtinspector
-gtExamplesProvider
-	^ self new

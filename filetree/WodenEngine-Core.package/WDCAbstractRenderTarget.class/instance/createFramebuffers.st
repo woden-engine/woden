@@ -1,3 +1,0 @@
-accessing
-createFramebuffers
-	self subclassResponsibility

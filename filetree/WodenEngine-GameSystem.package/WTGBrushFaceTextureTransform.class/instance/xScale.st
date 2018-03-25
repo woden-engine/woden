@@ -1,3 +1,0 @@
-accessing
-xScale
-	^ scale x

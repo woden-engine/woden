@@ -1,3 +1,0 @@
-pipeline state
-frontFaceWinding: winding
-	pipelineStateDescription frontFaceWinding: winding

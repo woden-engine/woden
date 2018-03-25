@@ -1,3 +1,0 @@
-modes
-composeDefault
-	self composeOver
