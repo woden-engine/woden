@@ -1,7 +1,7 @@
 Class {
 	#name : #BaselineOfWodenEngine,
 	#superclass : #BaselineOf,
-	#category : 'BaselineOfWodenEngine'
+	#category : #BaselineOfWodenEngine
 }
 
 { #category : #baselines }
@@ -59,7 +59,7 @@ BaselineOfWodenEngine >> baseline: spec [
 		spec package: #'WodenEngine-GameSystem' with: [
 				spec requires: #('WodenEngine-Core' 'WodenEngine-Pompeii' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL')].
 		spec package: #'WodenEngine-Roassal' with: [
-				spec requires: #('Roassal2' 'WodenEngine-Core' 'WodenEngine-Pompeii' 'WodenEngine-Scene' 'WodenEngine-Physics')].
+				spec requires: #("'Roassal2'" 'WodenEngine-Core' 'WodenEngine-Pompeii' 'WodenEngine-Scene' 'WodenEngine-Physics')].
 
 		spec group: 'default' with: #('WodenEngine-Core' 'WodenEngine-Pompeii' 'WodenEngine-Samples' 'WodenEngine-GameSystem' 'WodenEngine-Roassal')
 	]
