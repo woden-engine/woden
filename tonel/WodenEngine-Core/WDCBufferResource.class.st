@@ -56,6 +56,16 @@ WDCBufferResource >> description: anObject [
 ]
 
 { #category : #'resource building' }
+WDCBufferResource >> destroy [
+	(description mapping_flags anyMask: AGPU_MAP_PERSISTENT_BIT) ifTrue: [ 
+		pointer := handle unmapBuffer.
+		pointer := nil.
+		handle := nil
+	].
+
+]
+
+{ #category : #'resource building' }
 WDCBufferResource >> initialData [
 	^ data isSessionPersistentExternalBuffer ifTrue: [ data data ] ifFalse: [ data ].
 ]

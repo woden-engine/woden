@@ -1,7 +1,0 @@
-Structure <<< #WTColorRampEntry
-	slots: {
-		#edge => Float32. 
-		#color => WMVector4F
-	};
-	package: 'WodenEngine-Structures-Athens';
-	yourself.

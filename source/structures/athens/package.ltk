@@ -1,7 +1,0 @@
-Compiler
-	declarePackage: #'WodenEngine-Structures-Athens';
-    evaluateFileNamed: 'WTCanvasVertex2D.ltk';
-    evaluateFileNamed: 'WTCanvasViewportUniformData.ltk';
-    evaluateFileNamed: 'WTColorRampDescription.ltk';
-    evaluateFileNamed: 'WTColorRampEntry.ltk';
-	yourself.

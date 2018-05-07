@@ -1,0 +1,14 @@
+Structure <<< #WDPCanvasVertex2D
+	slots: {
+		(#position => WMVector2F)
+			vertexLocation: 0;
+			vertexFormat: #float2.
+		(#texcoord => WMVector2F)
+			vertexLocation: 1;
+			vertexFormat: #float2.
+		(#color => WMVector4F)
+			vertexLocation: 2;
+			vertexFormat: #float4.
+	};
+	package: 'WodenEngine-Structures-Pompeii';
+	yourself.

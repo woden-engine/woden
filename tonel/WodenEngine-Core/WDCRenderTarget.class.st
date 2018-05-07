@@ -2,12 +2,13 @@ Class {
 	#name : #WDCRenderTarget,
 	#superclass : #WDCAbstractRenderTarget,
 	#instVars : [
-		'gpuOnly'
+		'gpuOnly',
+		'explicitSynchronization'
 	],
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Core-Window'
+	#category : #'WodenEngine-Core-Window'
 }
 
 { #category : #'instance creation' }
@@ -108,7 +109,7 @@ WDCRenderTarget >> createFramebufferWithColorAttachments: colorAttachments views
 
 { #category : #accessing }
 WDCRenderTarget >> createFramebuffers [
-	^ self createFramebuffers: (self gpuOnly ifTrue: [ 1 ] ifFalse: [engine frameBufferingCount])
+	^ self createFramebuffers: self framebufferingCount
 ]
 
 { #category : #accessing }
@@ -130,6 +131,21 @@ WDCRenderTarget >> createFramebuffersWithColorAttachments: colorAttachments view
 ]
 
 { #category : #accessing }
+WDCRenderTarget >> explicitSynchronization [
+	^ explicitSynchronization
+]
+
+{ #category : #accessing }
+WDCRenderTarget >> explicitSynchronization: anObject [
+	explicitSynchronization := anObject
+]
+
+{ #category : #accessing }
+WDCRenderTarget >> framebufferingCount [
+	^ ((gpuOnly or: [ explicitSynchronization ]) ifTrue: [ 1 ] ifFalse: [engine frameBufferingCount])
+]
+
+{ #category : #accessing }
 WDCRenderTarget >> gpuOnly [
 	^ gpuOnly
 ]
@@ -143,4 +159,5 @@ WDCRenderTarget >> gpuOnly: anObject [
 WDCRenderTarget >> initialize [
 	super initialize.
 	gpuOnly := true.
+	explicitSynchronization := false.
 ]

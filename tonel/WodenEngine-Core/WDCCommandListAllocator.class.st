@@ -72,7 +72,7 @@ WDCCommandListAllocator >> queueType: anObject [
 	queueType := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 WDCCommandListAllocator >> reset [
 	self validHandle reset.
 ]

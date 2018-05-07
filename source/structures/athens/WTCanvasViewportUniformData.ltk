@@ -1,7 +1,0 @@
-Structure <<< #WTCanvasViewportUniformData
-	slots: {
-		#projectionMatrix => WMMatrix4F. 
-		#viewMatrix => WMMatrix4F
-	};
-	package: 'WodenEngine-Structures-Athens';
-	yourself.
