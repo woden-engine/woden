@@ -32,7 +32,7 @@ RWViewTest >> testAddingElements [
 
 { #category : #tests }
 RWViewTest >> testBackgroundColor [
-	self assert: (view backgroundColor closeTo: Color black).
+	self assert: (view backgroundColor closeTo: Color white).
 	view backgroundColor: Color red.
 	self assert: (view backgroundColor closeTo: Color red).
 ]
@@ -47,8 +47,8 @@ RWViewTest >> testBaseShape [
 { #category : #tests }
 RWViewTest >> testBaseShapePutting [
 	| baseShape node |
-	node := WDInstancedGroupNode new.
-	baseShape := view baseShapeNodeNamed: #dummyShape ifAbsentPut: [ node ].
+	node := WTSSpatialObjectInstanceGroup new.
+	baseShape := view baseShapeNodeFor: #dummyShape ifAbsentPut: [ node ].
 	self assert: baseShape equals: node
 ]
 
@@ -60,9 +60,9 @@ RWViewTest >> testBoundingBox [
 
 { #category : #tests }
 RWViewTest >> testCameraLightColor [
-	self assert: (view cameraLightColor closeTo: Color lightGray).
+	self assert: (view cameraLightColor asColor closeTo: Color lightGray).
 	view cameraLightColor: Color red.
-	self assert: (view cameraLightColor closeTo: Color red).
+	self assert: (view cameraLightColor asColor closeTo: Color red).
 	
 ]
 

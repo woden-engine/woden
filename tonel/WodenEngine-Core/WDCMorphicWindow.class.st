@@ -36,6 +36,11 @@ WDCMorphicWindow >> checkSession [
 	].
 ]
 
+{ #category : #'initialize-release' }
+WDCMorphicWindow >> close [
+	^ self owner delete
+]
+
 { #category : #rendering }
 WDCMorphicWindow >> commitSurface [
 	| pitch slicePitch |

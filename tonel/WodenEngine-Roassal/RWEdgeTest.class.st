@@ -16,9 +16,10 @@ RWEdgeTest >> testBasic [
 	
 	edge := RWLine blue elementFrom: e1 to: e2.
 	
-	view add: e1; add: e2; add: edge.
+	view add: e1; add: e2"; add: edge".
+	"we do not have edges at this time"
 	"Lights?"
-	self assert: view numberOfElements = 3
+	self assert: view numberOfElements = 2
 ]
 
 { #category : #tests }

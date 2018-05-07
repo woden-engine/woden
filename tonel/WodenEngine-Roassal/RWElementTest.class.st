@@ -97,7 +97,7 @@ RWElementTest >> testPosition [
 { #category : #tests }
 RWElementTest >> testReplaceSceneNode [
 	| newNode |
-	newNode := WDSceneNode new.
+	newNode := WTSLocalShapedSpatialObject new.
 	self assert: element sceneNode ~~ newNode.
 	element replaceSceneNode: newNode.
 	self assert: element sceneNode == newNode.

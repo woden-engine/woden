@@ -36,7 +36,7 @@ RWHighlightableTest >> testColoring [
 	v addAll: es.
 
 	es first color: Color blue.
-	self assert: es second renderable color equals: Color white.
+	self assert: es second renderable color asColor equals: Color white.
 ]
 
 { #category : #tests }
@@ -116,10 +116,10 @@ RWHighlightableTest >> testScenario01 [
 	self deny: (es second hasAttribute: #originalColor).
 	RWHighlightable new doHighlightElement: es second.
 	
-	self assert: (es second attributes at: #originalColor) b equals: 1.0.
+	self assert: (es second attributes at: #originalColor) blue equals: 1.0.
 	RWHighlightable new doUnhighlightElement: es first.
 	
-	self assert: (es second attributes at: #originalColor) b equals: 1.0.
+	self assert: (es second attributes at: #originalColor) blue equals: 1.0.
 	RWHighlightable new doUnhighlightElement: es second.
 	
 	self assert: es second attributes size equals: 0

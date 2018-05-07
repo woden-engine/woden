@@ -35,6 +35,14 @@ WDCEngine class >> default [
 ]
 
 { #category : #accessing }
+WDCEngine class >> reset [
+	"
+	self reset
+	"
+	DefaultEngine := nil
+]
+
+{ #category : #accessing }
 WDCEngine class >> tracingEnabled [
 	^ TracingEnabled ifNil: [ TracingEnabled := false ]
 ]

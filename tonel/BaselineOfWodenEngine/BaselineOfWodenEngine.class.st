@@ -39,11 +39,11 @@ BaselineOfWodenEngine >> baseline: spec [
 					className: #ConfigurationOfOpenAL;
 					versionString: #'development';
 					repository: 'http://smalltalkhub.com/mc/ronsaldo/OpenAL/main' ].
-			spec project: 'Roassal2' with: [
+			"spec project: 'Roassal2' with: [
 				spec
 					className: #ConfigurationOfRoassal2;
 					versionString: #'development';
-					repository: 'http://smalltalkhub.com/mc/ObjectProfile/Roassal2/main' ].
+					repository: 'http://smalltalkhub.com/mc/ObjectProfile/Roassal2/main' ]."
 		spec package: #'WodenEngine-Core' with: [
 				spec requires: #('NeoJSON' 'AbstractGPU' 'Dastrel')].
 		spec package: #'WodenEngine-Pompeii' with: [
