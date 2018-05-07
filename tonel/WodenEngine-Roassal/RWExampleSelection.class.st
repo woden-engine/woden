@@ -1,6 +1,6 @@
 Class {
 	#name : #RWExampleSelection,
-	#superclass : #GtExample,
+	#superclass : #Object,
 	#category : #'WodenEngine-Roassal-Examples'
 }
 

@@ -1,7 +1,7 @@
 Class {
 	#name : #RWExampleBrowser,
-	#superclass : #RTObject,
-	#category : 'WodenEngine-Roassal-Examples'
+	#superclass : #RWObject,
+	#category : #'WodenEngine-Roassal-Examples'
 }
 
 { #category : #menu }
