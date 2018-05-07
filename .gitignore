@@ -3,7 +3,7 @@ build-64
 abstract-gpu
 abstract-physics
 core-assets
-lowtalk
+source-deps
 pharo-vm
 pharo
 pharo-ui
@@ -18,7 +18,6 @@ github-*.zip
 ProcessWrapperPlugin.dll
 PharoDebug.log
 Pharo*.app
-phanide
 *.image
 *.changes
 *.log

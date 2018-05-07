@@ -82,13 +82,16 @@ class Dependency:
 
 # I represent a dependency that is obtained by cloning a git repository.
 class GitDependency(Dependency):
-    def __init__(self, name, repository):
+    def __init__(self, name, repository, subfolder=None):
         self.name = name
         self.repository = repository
+        self.subfolder = ''
+        if subfolder is not None:
+            self.subfolder = '%s/' % subfolder
 
     def satisfyInPlatformMode(self, platformMode):
         print "Getting dependency %s from git" % self.name
-        os.system('git clone %s %s' % (self.repository, self.name))
+        os.system('git clone %s %s%s' % (self.repository, self.subfolder, self.name))
 
 # I represent a dependency that is obtained by downloading from bintray.
 class BintrayDependency(Dependency):
@@ -172,8 +175,9 @@ class PharoImageDependency(Dependency):
 # All of the external dependencies required by Woden
 AbstractGpu = BintrayDependency('abstract-gpu', user='ronsaldo', repository='abstract-gpu')
 AbstractPhysics = BintrayDependency('abstract-physics', user='ronsaldo', repository='abstract-physics')
-Phanide = GitDependency('phanide', 'https://github.com/ronsaldo/phanide.git')
-Lowtalk = GitDependency('lowtalk', 'https://github.com/ronsaldo/lowtalk.git')
+Phanide = GitDependency('phanide', 'https://github.com/ronsaldo/phanide.git', subfolder='source-deps')
+Lowtalk = GitDependency('lowtalk', 'https://github.com/ronsaldo/lowtalk.git', subfolder='source-deps')
+PompeiiGraphics = GitDependency('pompeii-graphics', 'git@github.com:ronsaldo/pompeii-graphics.git', subfolder='source-deps')
 CoreAssets = GitDependency('core-assets', 'https://github.com/ronsaldo/wloden-core-assets.git')
 PharoVM = PharoVMDependency('pharo-vm', 'https://files.pharo.org/get-files/61/')
 PharoImage = PharoImageDependency('pharo-image', 'https://files.pharo.org/get-files/61/')
@@ -184,6 +188,7 @@ dependencies = [
     CoreAssets,
     Phanide,
     Lowtalk,
+    PompeiiGraphics,
     PharoVM,
     PharoImage
 ]

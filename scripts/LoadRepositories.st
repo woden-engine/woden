@@ -1,16 +1,26 @@
 
 "Load Phanide"
 Metacello new
-  baseline: 'Phanide';
-  repository: 'tonel://phanide/tonel';
-  load.
+    baseline: 'Phanide';
+    repository: 'tonel://source-deps/phanide/tonel';
+    load.
 
 "Load Lowtalk"
 Metacello new
-  baseline: 'Lowtalk';
-  repository: 'tonel://lowtalk/tonel';
-  load.
+    baseline: 'Lowtalk';
+    repository: 'tonel://source-deps/lowtalk/tonel';
+    load.
 
+"Load PompeiiGraphics API"
+Metacello new
+    baseline: 'Pompeii';
+    repository: 'tonel://source-deps/pompeii-graphics/tonel';
+    load: #(API).
+Metacello new
+    baseline: 'VesuviusToolkit';
+    repository: 'tonel://source-deps/pompeii-graphics/tonel';
+    load.
+    
 "Build the Lowtalk source code"
 SourceFiles deferFlushDuring: [
     | compilationTarget compilerClass compiler |
