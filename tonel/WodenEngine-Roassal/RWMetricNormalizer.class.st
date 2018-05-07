@@ -1,13 +1,13 @@
 Class {
 	#name : #RWMetricNormalizer,
-	#superclass : #RTObject,
+	#superclass : #RWObject,
 	#instVars : [
 		'elements',
 		'view',
 		'translator',
 		'edges'
 	],
-	#category : 'WodenEngine-Roassal-Normalizer'
+	#category : #'WodenEngine-Roassal-Normalizer'
 }
 
 { #category : #accessing }

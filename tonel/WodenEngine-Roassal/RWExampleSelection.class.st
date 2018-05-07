@@ -1,7 +1,7 @@
 Class {
 	#name : #RWExampleSelection,
-	#superclass : #RTExampleSelection,
-	#category : 'WodenEngine-Roassal-Examples'
+	#superclass : #GtExample,
+	#category : #'WodenEngine-Roassal-Examples'
 }
 
 { #category : #ui }

@@ -1,10 +1,10 @@
 Class {
 	#name : #RWTRMorph,
-	#superclass : #TRMorph,
+	#superclass : #Object,
 	#instVars : [
 		'engine'
 	],
-	#category : 'WodenEngine-Roassal-Trachel'
+	#category : #'WodenEngine-Roassal-Trachel'
 }
 
 { #category : #accessing }

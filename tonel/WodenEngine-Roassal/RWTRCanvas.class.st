@@ -1,11 +1,11 @@
 Class {
 	#name : #RWTRCanvas,
-	#superclass : #TRCanvas,
+	#superclass : #Object,
 	#instVars : [
 		'customSurface',
 		'engine'
 	],
-	#category : 'WodenEngine-Roassal-Trachel'
+	#category : #'WodenEngine-Roassal-Trachel'
 }
 
 { #category : #'instance creation' }
