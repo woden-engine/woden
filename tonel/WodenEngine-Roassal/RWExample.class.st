@@ -284,6 +284,28 @@ RWExample >> gridLayout [
 	v open
 ]
 
+{ #category : #mesh }
+RWExample >> gridMesh [
+	"
+	self new gridMesh open
+	"
+	| view shape elements |
+	view := RWView new.
+	view
+		backgroundColor: Color black.
+
+	shape := RWMeshShape xzLineGridWithWidth: 10.0 height: 10.0 subdivisions: 32 for: view.
+	shape color: #yourself.
+
+	elements := shape elementsOn: {Color red. Color blue . Color green . Color white}.
+
+	RWXZGridLayout nogap on: elements.
+
+	view addAll: elements.
+	view addInteraction: RWMouseKeyControl.
+	^ view
+]
+
 { #category : #'as yet unclassified' }
 RWExample >> growingCubes [
 	" 

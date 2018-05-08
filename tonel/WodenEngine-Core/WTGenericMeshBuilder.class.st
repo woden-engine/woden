@@ -9,12 +9,13 @@ Class {
 		'currentMaterial',
 		'submeshes',
 		'baseVertex',
-		'vertexLayout'
+		'vertexLayout',
+		'boundingBox'
 	],
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Core-Mesh'
+	#category : #'WodenEngine-Core-Mesh'
 }
 
 { #category : #'instance creation' }
@@ -572,9 +573,10 @@ WTGenericMeshBuilder >> color: aMaterial [
 	self currentColor: aMaterial
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'display box access' }
 WTGenericMeshBuilder >> computeBoundingBox [
-	"TODO"
+	boundingBox := WMBox3DF empty.
+	vertices do: [ :vertex | boundingBox insertPoint: vertex position asWMVector3F ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -672,6 +674,7 @@ WTGenericMeshBuilder >> createMeshWithSubmeshes: newSubmeshes [
 	| mesh |
 	mesh := self instantiateMesh.
 	mesh
+		boundingBox: boundingBox;
 		vertexBinding: self createVertexBinding;
 		indexBuffer: self createIndexBuffer;
 		submeshes: newSubmeshes.
@@ -741,6 +744,7 @@ WTGenericMeshBuilder >> initialize [
 	super initialize.
 	vertices := SLVMNativeOrderedCollection for: WTGenericVertexF.
 	indices := SLVMNativeOrderedCollection for: #int.
+	boundingBox := WMBox3DF empty.
 	submeshes := OrderedCollection new.
 	baseVertex := 0.
 	currentColor := Color white asWMVector4F.

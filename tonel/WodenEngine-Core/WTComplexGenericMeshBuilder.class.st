@@ -107,6 +107,21 @@ WTComplexGenericMeshBuilder >> planeTextureTransform: textureMatrix [
 ]
 
 { #category : #accessing }
+WTComplexGenericMeshBuilder >> rotateDegreesOnX: radians [
+	transform rotateDegreesOnX: radians
+]
+
+{ #category : #accessing }
+WTComplexGenericMeshBuilder >> rotateDegreesOnY: radians [
+	transform rotateDegreesOnY: radians
+]
+
+{ #category : #accessing }
+WTComplexGenericMeshBuilder >> rotateDegreesOnZ: radians [
+	transform rotateDegreesOnZ: radians
+]
+
+{ #category : #accessing }
 WTComplexGenericMeshBuilder >> rotateRadiansOnX: radians [
 	transform rotateRadiansOnX: radians
 ]

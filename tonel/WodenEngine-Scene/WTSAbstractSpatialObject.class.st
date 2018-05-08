@@ -33,6 +33,11 @@ WTSAbstractSpatialObject >> initialize [
 	
 ]
 
+{ #category : #testing }
+WTSAbstractSpatialObject >> isSpatialObject [
+	^ true
+]
+
 { #category : #accessing }
 WTSAbstractSpatialObject >> objectState [
 	^ objectState

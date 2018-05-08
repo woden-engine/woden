@@ -117,6 +117,11 @@ WDCResourceCache >> defaultMaterial [
 ]
 
 { #category : #accessing }
+WDCResourceCache >> flatColorMaterial [
+	^ self loadMaterial: 'materials/basic/flat.json'
+]
+
+{ #category : #accessing }
 WDCResourceCache >> getOrCreateShaderSignature: aShaderSignatureClass [
 	| instance |
 	^ shaderSignatures at: aShaderSignatureClass ifAbsentPut: [

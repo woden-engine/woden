@@ -4,12 +4,12 @@ Class {
 	#category : 'WodenEngine-Roassal-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 RWGridLayoutTest >> testEmpty [
 	RWXZGridLayout on: #()
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 RWGridLayoutTest >> testGap [
 	| layout |
 	layout := RWXZGridLayout new.
@@ -18,9 +18,16 @@ RWGridLayoutTest >> testGap [
 	self assert: layout gap = 2.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 RWGridLayoutTest >> testGap2 [
 	| layout |
 	layout := RWXZGridLayout gap: 2.
 	self assert: layout gap = 2.
+]
+
+{ #category : #tests }
+RWGridLayoutTest >> testNoGap [
+	| layout |
+	layout := RWXZGridLayout nogap.
+	self assert: layout gap = 0.
 ]

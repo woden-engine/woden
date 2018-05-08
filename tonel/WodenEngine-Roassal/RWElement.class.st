@@ -43,6 +43,14 @@ RWElement >> addInteraction: anInteraction [
 RWElement >> addedIn: aView [
 	renderable := shape buildRenderableFor: self view: aView.
 	sceneNode isInstance ifFalse: [
+		self flag: 'TODO: Refactor this part'.
+		(renderable isNotNil and: [sceneNode isSpatialObject ]) ifTrue: [ 
+			sceneNode renderable: renderable. 
+		].
+		sceneNode isSpatialObject ifTrue: [ 
+			sceneNode color: (shape colorFor: self)
+		].
+	
 		aView validScene add: sceneNode.
 	].
 
@@ -81,6 +89,11 @@ RWElement >> buildRigidBodyForView: aView [
 
 { #category : #updating }
 RWElement >> changed [
+	self flag: 'TODO: Refactor this part'.
+	(sceneNode isSpatialObject and: [ sceneNode isInstance not ]) ifTrue: [
+		sceneNode color: (shape colorFor: self)
+	].
+
 	shape changedElement: self sceneNode: sceneNode renderable: renderable.
 	sceneNode stateChanged
 ]
@@ -155,7 +168,7 @@ RWElement >> isElement [
 
 { #category : #computing }
 RWElement >> localBoundingBox [
-	^ renderable ifNil: [ shape boundingBoxFor: self ] ifNotNil: [ renderable boundingBox ]
+	^ shape boundingBoxFor: self
 ]
 
 { #category : #orientation }

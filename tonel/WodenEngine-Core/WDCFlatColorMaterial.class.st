@@ -30,16 +30,6 @@ WDCFlatColorMaterial >> activateShadowOn: stateTracker [
 	^ true
 ]
 
-{ #category : #accessing }
-WDCFlatColorMaterial >> fragmentShader [
-	^ fragmentShader
-]
-
-{ #category : #accessing }
-WDCFlatColorMaterial >> fragmentShader: anObject [
-	^ fragmentShader := anObject
-]
-
 { #category : #parsing }
 WDCFlatColorMaterial >> parse: materialFileReference data: aDictionary [
 	useDepth := aDictionary at: 'use-depth' ifAbsent: [ true ].
@@ -91,16 +81,6 @@ WDCFlatColorMaterial >> validateCache [
 			fragmentShader := engine loadFragmentShader: 'shaders/surface/flatColorStipple.dastrel'.
 		].
 	]
-]
-
-{ #category : #accessing }
-WDCFlatColorMaterial >> vertexShader [
-	^ vertexShader
-]
-
-{ #category : #accessing }
-WDCFlatColorMaterial >> vertexShader: anObject [
-	^ vertexShader := anObject
 ]
 
 { #category : #accessing }

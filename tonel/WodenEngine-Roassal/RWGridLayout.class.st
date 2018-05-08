@@ -13,6 +13,11 @@ RWGridLayout class >> gap: anInteger [
 ]
 
 { #category : #accessing }
+RWGridLayout class >> nogap [
+	^ self new gap: 0
+]
+
+{ #category : #accessing }
 RWGridLayout >> gap [
 	^gap
 ]

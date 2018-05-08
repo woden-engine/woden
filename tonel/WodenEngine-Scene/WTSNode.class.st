@@ -181,6 +181,11 @@ WTSNode >> isMultiEyeCamera [
 	^ false
 ]
 
+{ #category : #testing }
+WTSNode >> isSpatialObject [
+	^ false
+]
+
 { #category : #accessing }
 WTSNode >> model [
 	^ model

@@ -343,6 +343,11 @@ WDCEngine >> device [
 	^ device
 ]
 
+{ #category : #accessing }
+WDCEngine >> engine [
+	^ self
+]
+
 { #category : #enumerating }
 WDCEngine >> frameBufferingCollect: aBlock [
 	^ frameBufferingDriver frameBufferingCollect: aBlock
