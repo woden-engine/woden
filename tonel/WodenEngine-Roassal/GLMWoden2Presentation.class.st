@@ -1,7 +1,7 @@
 Class {
 	#name : #GLMWoden2Presentation,
-	#superclass : #GLMRoassal2Presentation,
-	#category : 'WodenEngine-Roassal-Glamour'
+	#superclass : #Object,
+	#category : #'WodenEngine-Roassal-Glamour'
 }
 
 { #category : #'initialize-release' }

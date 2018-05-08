@@ -1,7 +1,7 @@
 Class {
 	#name : #RWMenuActivableTest,
-	#superclass : #RTTest,
-	#category : 'WodenEngine-Roassal-Tests'
+	#superclass : #TestCase,
+	#category : #'WodenEngine-Roassal-Tests'
 }
 
 { #category : #tests }

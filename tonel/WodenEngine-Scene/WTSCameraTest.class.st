@@ -7,9 +7,9 @@ Class {
 	#category : 'WodenEngine-Scene-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 WTSCameraTest >> testNew [
 	| camera |
 	camera := WTSCamera new.
-	self assert: camera cameraState isNotNil.
+	self assert: camera frustum isNotNil.
 ]

@@ -1,12 +1,12 @@
 Class {
 	#name : #RWExampleBrowser,
-	#superclass : #RTObject,
-	#category : 'WodenEngine-Roassal-Examples'
+	#superclass : #RWObject,
+	#category : #'WodenEngine-Roassal-Examples'
 }
 
 { #category : #menu }
 RWExampleBrowser class >> menuCommandOn: aBuilder [
-	<worldMenu>
+	"<worldMenu>
 	((aBuilder item: #Roassal3d) icon: RTIcon smallRoassal)
 	withSeparatorAfter;
 	with: [
@@ -15,7 +15,7 @@ RWExampleBrowser class >> menuCommandOn: aBuilder [
 			parent: #Roassal3d;
 			label: 'Roassal 3D examples';
 			icon: self smallRoassal;
-			action: [ self new open ] ]
+			action: [ self new open ] ]"
 ]
 
 { #category : #icon }

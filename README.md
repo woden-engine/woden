@@ -49,6 +49,10 @@ dependencies that are used by Woden, the Pharo VM, the Pharo image, the Pharo
 source. After downloading the required dependencies, this script will take of
 loading a clean Pharo image with Woden, which will be saved as woden.image
 
+```bash
+./woden.sh woden.image
+```
+
 ## Woden samples
 
 For checking the Woden samples, you should check the class side of WDASceneExamples

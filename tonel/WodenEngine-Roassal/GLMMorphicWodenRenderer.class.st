@@ -1,7 +1,7 @@
 Class {
 	#name : #GLMMorphicWodenRenderer,
-	#superclass : #GLMMorphicRoassal2Renderer,
-	#category : 'WodenEngine-Roassal-Glamour'
+	#superclass : #GLMMorphicWidgetRenderer,
+	#category : #'WodenEngine-Roassal-Glamour'
 }
 
 { #category : #rendering }

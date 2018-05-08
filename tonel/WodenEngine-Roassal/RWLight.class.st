@@ -47,5 +47,5 @@ RWLight >> rayCast: ray [
 
 { #category : #accessing }
 RWLight >> specular [
-	^ sceneNode specularColor
+	^ self color
 ]
