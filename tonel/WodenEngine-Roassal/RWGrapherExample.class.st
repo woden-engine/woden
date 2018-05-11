@@ -18,7 +18,7 @@ RWGrapherExample >> example01 [
 	d z: #third.
 	g add: d.
 	g build.
-	g view addInteraction: OrbitController.
+	"g view addInteraction: OrbitController."
 	^ g view
 
 ]

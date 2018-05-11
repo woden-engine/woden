@@ -4,6 +4,11 @@ Class {
 	#category : 'WodenEngine-Core-Mesh'
 }
 
+{ #category : #'extra per object rendering data' }
+WTNullRenderable >> createSceneDependentDataFor: engine into: objectStateBindings [
+	^ nil
+]
+
 { #category : #rendering }
 WTNullRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	"Do nothing"

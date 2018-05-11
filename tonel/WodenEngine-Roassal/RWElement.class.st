@@ -15,6 +15,12 @@ Class {
 	#category : 'WodenEngine-Roassal-Core'
 }
 
+{ #category : #'instance creation' }
+RWElement class >> on: anObject [
+
+	^ self new model: anObject; yourself
+]
+
 { #category : #interaction }
 RWElement >> @ anInteractionClassOrInstance [
 	"Add an interaction to the node"

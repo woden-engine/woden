@@ -33,7 +33,7 @@ RWMetricNormalizer >> checkNotEmpty [
 
 { #category : #'public translation' }
 RWMetricNormalizer >> directTranslation [
-	translator := RTDirectLayoutTranslator new
+	translator := RWDirectLayoutTranslator new
 ]
 
 { #category : #'public normalize color' }

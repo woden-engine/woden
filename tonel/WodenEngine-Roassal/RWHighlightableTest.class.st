@@ -16,7 +16,7 @@ RWHighlightableTest >> testBasic [
 	self assert: (box trachelShape color) = Color green.
 	
 	box announce: RWMouseEnter.
-	self assert: box trachelShape color = RTHighlightable highlightedColor.
+	self assert: box trachelShape color = RWHighlightable highlightedColor.
 	
 	box announce: RWMouseLeave.
 	self assert: (box trachelShape color) = Color green.
