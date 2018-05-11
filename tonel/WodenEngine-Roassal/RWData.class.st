@@ -52,7 +52,7 @@ RWData >> renderDotAndLinesIn: aView [
 	
 	RWMetricNormalizer new
 		elements: elements;
-		normalizeElementX: [ :anElement | x rtValue: anElement ]
+		normalizeElementX: [ :anElement | x rwValue: anElement ]
 			min: 0
 			max: builder extent x
 			minValue: minX
@@ -60,7 +60,7 @@ RWData >> renderDotAndLinesIn: aView [
 			
 	RWMetricNormalizer new
 		elements: elements;
-		normalizeElementY: [ :anElement | y rtValue: anElement ]
+		normalizeElementY: [ :anElement | y rwValue: anElement ]
 			min: 0
 			max: builder extent y negated
 			minValue: minY
@@ -68,13 +68,13 @@ RWData >> renderDotAndLinesIn: aView [
 
 	RWMetricNormalizer new
 		elements: elements;
-		normalizeElementZ: [ :anElement | z rtValue: anElement ]
+		normalizeElementZ: [ :anElement | z rwValue: anElement ]
 			min: 0
 			max: builder extent y negated
 			minValue: minY
 			maxValue: maxY.
 			
-	elementActions do: [ :act | act rtValue: elements ].
+	elementActions do: [ :act | act rwValue: elements ].
 			
 	"self renderLinesFor: elements in: aView"
 ]
@@ -87,7 +87,7 @@ RWData >> renderIn: aView [
 
 { #category : #'as yet unclassified' }
 RWData >> x: blockOrSymbol [
-	self xElement: [ :anElement | blockOrSymbol rtValue: anElement model ]
+	self xElement: [ :anElement | blockOrSymbol rwValue: anElement model ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -102,7 +102,7 @@ RWData >> y [
 
 { #category : #'as yet unclassified' }
 RWData >> y: blockOrSymbol [
-	self yElement: [ :anElement | blockOrSymbol rtValue: anElement model ]
+	self yElement: [ :anElement | blockOrSymbol rwValue: anElement model ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -117,7 +117,7 @@ RWData >> z [
 
 { #category : #'as yet unclassified' }
 RWData >> z: blockOrSymbol [
-	self zElement: [ :anElement | blockOrSymbol rtValue: anElement model ]
+	self zElement: [ :anElement | blockOrSymbol rwValue: anElement model ]
 ]
 
 { #category : #'as yet unclassified' }

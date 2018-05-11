@@ -48,7 +48,7 @@ RWAbstractHighlightable >> attributeIdentificator [
 RWAbstractHighlightable >> doHighlight: element [
 	| elements |
 	self unhighlightRecordedElements.
-	elements := highlightElements rtValue: element.
+	elements := highlightElements rwValue: element.
 	elements := elements copyWithout: nil.
 	elements do: [ :eachElement | self doHighlightElement: eachElement ].
 	element attributes at: self attributeIdentificator put: elements.
@@ -79,7 +79,7 @@ RWAbstractHighlightable >> highlight: aBlock [
 	"aBlock return an object or a list of objects to highlight"
 	highlightElements := [ :el | 
 		| objects |
-		objects := aBlock rtValue: el model.
+		objects := aBlock rwValue: el model.
 		(objects collect: [ :o | el view elementFromModel: o ]) copyWithout: nil
 		]
 ]

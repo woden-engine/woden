@@ -81,10 +81,10 @@ RWShapeBuilder >> hasSetShape [
 RWShapeBuilder >> if: conditionBlock color: colorBlock [
 	| oldBlockOrValue |
 	oldBlockOrValue := self color.
-	^self color: [ :aModel | (conditionBlock rtValue: aModel)
-									ifTrue: [ colorBlock rtValue: aModel ] 
+	^self color: [ :aModel | (conditionBlock rwValue: aModel)
+									ifTrue: [ colorBlock rwValue: aModel ] 
 									ifFalse: [ 
-										oldBlockOrValue rtValue: (RTElement on: aModel) ]].
+										oldBlockOrValue rwValue: (RWElement on: aModel) ]].
 							
 						
 ]
@@ -94,12 +94,12 @@ RWShapeBuilder >> if: conditionBlock fillColor: colorBlock [
 	"If conditionBlock is evaluated at true, then colorBlock is used to set the color of the node. Both conditionBlock and colorBlock are evaluated with the model value of the node."
 	| oldBlockOrValue |
 	oldBlockOrValue := self fillColor.
-	self fillColor: [ :aModel | (conditionBlock rtValue: aModel)
-									ifTrue: [ colorBlock rtValue: aModel ] 
+	self fillColor: [ :aModel | (conditionBlock rwValue: aModel)
+									ifTrue: [ colorBlock rwValue: aModel ] 
 									ifFalse: [ 
 										"Having to create a new element is rather ugly. 
 										Ideally, the oldBlockOrValue has to be 'unwrapped' for the translation"
-										oldBlockOrValue rtValue: (RTElement on: aModel) ]].
+										oldBlockOrValue rwValue: (RWElement on: aModel) ]].
 							
 						
 
@@ -110,12 +110,12 @@ RWShapeBuilder >> ifElement: conditionBlock fillColor: colorBlock [
 	"If conditionBlock is evaluated at true, then colorBlock is used to set the color of the node. Both conditionBlock and colorBlock are evaluated with the model value of the node."
 	| oldBlockOrValue |
 	oldBlockOrValue := self fillColor.
-	^self fillColorElement: [ :anElement | (conditionBlock rtValue: anElement)
-									ifTrue: [ colorBlock rtValue: anElement ] 
+	^self fillColorElement: [ :anElement | (conditionBlock rwValue: anElement)
+									ifTrue: [ colorBlock rwValue: anElement ] 
 									ifFalse: [ 
 										"Having to create a new element is rather ugly. 
 										Ideally, the oldBlockOrValue has to be 'unwrapped' for the translation"
-										oldBlockOrValue rtValue: anElement ]].
+										oldBlockOrValue rwValue: anElement ]].
 							
 						
 

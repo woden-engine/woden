@@ -98,7 +98,7 @@ RWMetricNormalizer >> getElementNormalizedValues: metricBlock min: min max: max 
 	
  	^ elements collect: [ :el | 
 			| tt t |
-			t := transformation rtValue: (metricBlock rtValue: el).
+			t := transformation rwValue: (metricBlock rwValue: el).
 			tt := min + ((max - min) * ( (t - minValue) / (maxValue - minValue))) asInteger ]
 ]
 
@@ -112,7 +112,7 @@ RWMetricNormalizer >> getNormalizedForLineWidthValues: metricBlock min: min max:
 	
  	^ self edges collect: [ :edge | 
 			| tt t |
-			t := transformation rtValue: (metricBlock value: edge from model value: edge to model).
+			t := transformation rwValue: (metricBlock value: edge from model value: edge to model).
 			tt := min + ((max - min) * ( (t - minValue) / (maxValue - minValue))) asInteger ]
 ]
 
@@ -126,7 +126,7 @@ RWMetricNormalizer >> getNormalizedValues: metricBlock min: min max: max minValu
 	
  	^ elements collect: [ :el | 
 			| tt t |
-			t := transformation rtValue: (metricBlock rtValue: el model).
+			t := transformation rwValue: (metricBlock rwValue: el model).
 			tt := min + ((max - min) * ( (t - minValue) / (maxValue - minValue))) asInteger ]
 ]
 
@@ -243,11 +243,11 @@ RWMetricNormalizer >> normalizeElementHeight: metricBlock min: min max: max usin
 	self checkNotEmpty.
 
 	"We get the min and the max of the metric for all the elements"
-	minValue := transformation rtValue: (metricBlock rtValue: elements anyOne model).
+	minValue := transformation rwValue: (metricBlock rwValue: elements anyOne model).
 	maxValue := minValue.
 	elements do: [ :el | 
 		| t |  
-		t := transformation rtValue: (metricBlock rtValue: el).
+		t := transformation rwValue: (metricBlock rwValue: el).
 		minValue := minValue min: t.
 		maxValue := maxValue max: t ].
 	
@@ -290,7 +290,7 @@ RWMetricNormalizer >> normalizeElementX: metricBlock min: min max: max minValue:
 	(maxValue - minValue) ~= 0 ifTrue: [
 		elements do: [ :el | 
 			| tt t |
-			t := transformation rtValue: (metricBlock rtValue: el).
+			t := transformation rwValue: (metricBlock rwValue: el).
 			tt := min + ((max - min) * ( (t - minValue) / (maxValue - minValue))) asInteger.
 			translator translate: el to: el position + (WMVector3F x: tt asFloat y: 0.0 z: 0.0) ] ] 
 ]
@@ -331,7 +331,7 @@ RWMetricNormalizer >> normalizeElementY: metricBlock min: min max: max minValue:
 	(maxValue - minValue) ~= 0 ifTrue: [
 		elements do: [ :el | 
 			| tt t |
-			t := transformation rtValue: (metricBlock rtValue: el).
+			t := transformation rwValue: (metricBlock rwValue: el).
 			tt := min + ((max - min) * ( (t - minValue) / (maxValue - minValue))) asInteger.
 			translator translate: el to: el position + (WMVector3F x: 0.0 y: tt asFloat z: 0.0) ] ] 
 ]
@@ -372,7 +372,7 @@ RWMetricNormalizer >> normalizeElementZ: metricBlock min: min max: max minValue:
 	(maxValue - minValue) ~= 0 ifTrue: [
 		elements do: [ :el | 
 			| tt t |
-			t := transformation rtValue: (metricBlock rtValue: el).
+			t := transformation rwValue: (metricBlock rwValue: el).
 			tt := min + ((max - min) * ( (t - minValue) / (maxValue - minValue))) asInteger.
 			translator translate: el to: el position + (WMVector3F x: 0.0 y: 0.0 z: tt asFloat) ] ] 
 ]
@@ -432,11 +432,11 @@ RWMetricNormalizer >> normalizeHeight: metricBlock min: min max: max using: tran
 	self checkNotEmpty.
 
 	"We get the min and the max of the metric for all the elements"
-	minValue := transformation rtValue: (metricBlock rtValue: elements anyOne model).
+	minValue := transformation rwValue: (metricBlock rwValue: elements anyOne model).
 	maxValue := minValue.
 	elements do: [ :el | 
 		| t |  
-		t := transformation rtValue: (metricBlock rtValue: el model).
+		t := transformation rwValue: (metricBlock rwValue: el model).
 		minValue := minValue min: t.
 		maxValue := maxValue max: t ].
 	
@@ -480,11 +480,11 @@ RWMetricNormalizer >> normalizeLineWidth: metricBlock min: min max: max using: t
 	"We get the min and the max of the metric for all the edges"
 	self edges ifEmpty: [ ^ self ].
 	e := self edges anyOne.
-	minValue := transformation rtValue: (metricBlock value: e from model value: e to model).
+	minValue := transformation rwValue: (metricBlock value: e from model value: e to model).
 	maxValue := minValue.
 	self edges do: [ :edge | 
 		| t |  
-		t := transformation rtValue: (metricBlock value: edge from model value: edge to model).
+		t := transformation rwValue: (metricBlock value: edge from model value: edge to model).
 		minValue := minValue min: t.
 		maxValue := maxValue max: t ].
 	
@@ -517,18 +517,18 @@ RWMetricNormalizer >> normalizePosition: metricBlock min: min max: max using: tr
 	
 	| minValue maxValue |
 	"We get the min and the max of the metric for all the elements"
-	minValue := transformation rtValue: (metricBlock rtValue: elements anyOne model).
+	minValue := transformation rwValue: (metricBlock rwValue: elements anyOne model).
 	maxValue := minValue.
 	elements do: [ :el | 
 		| t |  
-		t := transformation rtValue: (metricBlock rtValue: el model).
+		t := transformation rwValue: (metricBlock rwValue: el model).
 		minValue := minValue min: t.
 		maxValue := maxValue max: t ].
 	
 	(maxValue - minValue) ~= (0 @ 0) ifTrue: [ 
 		elements do: [ :el | 
 			| tt t |
-			t := transformation rtValue: (metricBlock rtValue: el model).
+			t := transformation rwValue: (metricBlock rwValue: el model).
 			"tt := minValue + (maxValue * (t - min) / max) asInteger."
 			tt := min + ((max - min) * ( (t - minValue) / (maxValue - minValue))) asIntegerPoint.
 			translator translate: el to: (tt) ] ] 
@@ -585,11 +585,11 @@ RWMetricNormalizer >> normalizeSize: metricBlock min: min max: max using: transf
 	elements size <= 1 ifTrue: [ ^ self ].
 
 	"We get the min and the max of the metric for all the elements"
-	minValue := transformation rtValue: (metricBlock rtValue: elements anyOne model).
+	minValue := transformation rwValue: (metricBlock rwValue: elements anyOne model).
 	maxValue := minValue.
 	elements do: [ :el | 
 		| t |  
-		t := transformation rtValue: (metricBlock rtValue: el model).
+		t := transformation rwValue: (metricBlock rwValue: el model).
 		minValue := minValue min: t.
 		maxValue := maxValue max: t ].
 	
@@ -651,7 +651,7 @@ RWMetricNormalizer >> normalizeTopLeftOfX: metricBlock min: min max: max minValu
 	(maxValue - minValue) ~= 0 ifTrue: [
 		elements do: [ :el | 
 			| tt t |
-			t := transformation rtValue: (metricBlock rtValue: el model).
+			t := transformation rwValue: (metricBlock rwValue: el model).
 			tt := self getValue: t min: min max: max minValue: minValue maxValue: maxValue.
 			translator translateTopLeftOf: el to: el encompassingRectangle topLeft + (tt @ 0) ] ] 
 ]
@@ -665,10 +665,10 @@ RWMetricNormalizer >> normalizeTopLeftOfX: metricBlock min: min max: max minValu
 	
 	| maxValue |
 	"We get the min and the max of the metric for all the elements"
-	maxValue := transformation rtValue: (metricBlock rtValue: elements anyOne model).
+	maxValue := transformation rwValue: (metricBlock rwValue: elements anyOne model).
 	elements do: [ :el | 
 		| t |  
-		t := transformation rtValue: (metricBlock rtValue: el model).
+		t := transformation rwValue: (metricBlock rwValue: el model).
 		maxValue := maxValue max: t ].
 	
 	self normalizeTopLeftOfX: metricBlock min: min max: max minValue: minValue maxValue: maxValue using: transformation
@@ -733,11 +733,11 @@ RWMetricNormalizer >> normalizeWidth: metricBlock min: min max: max minValue: mi
 	self checkNotEmpty.
 
 	"We get the max of the metric for all the elements"
-	maxValue := transformation rtValue: (metricBlock rtValue: elements anyOne model).
+	maxValue := transformation rwValue: (metricBlock rwValue: elements anyOne model).
 	
 	elements do: [ :el | 
 		| t |  
-		t := transformation rtValue: (metricBlock rtValue: el model).
+		t := transformation rwValue: (metricBlock becomeForward Value: el model).
 		maxValue := maxValue max: t ].
 
 	self normalizeWidth: metricBlock min: min max: max minValue: minValue maxValue: maxValue using: transformation
@@ -754,11 +754,11 @@ RWMetricNormalizer >> normalizeWidth: metricBlock min: min max: max using: trans
 	self checkNotEmpty.
 
 	"We get the min and the max of the metric for all the elements"
-	minValue := transformation rtValue: (metricBlock rtValue: elements anyOne model).
+	minValue := transformation rwValue: (metricBlock rwValue: elements anyOne model).
 	maxValue := minValue.
 	elements do: [ :el | 
 		| t |  
-		t := transformation rtValue: (metricBlock rtValue: el model).
+		t := transformation rwValue: (metricBlock rwValue: el model).
 		minValue := minValue min: t.
 		maxValue := maxValue max: t ].
 	
@@ -825,7 +825,7 @@ RWMetricNormalizer >> normalizeX: metricBlock min: min max: max minValue: minVal
 	(maxValue - minValue) ~= 0 ifTrue: [
 		elements do: [ :el | 
 			| tt t |
-			t := transformation rtValue: (metricBlock rtValue: el model).
+			t := transformation rwValue: (metricBlock rwValue: el model).
 			tt := self getValue: t min: min max: max minValue: minValue maxValue: maxValue.
 			translator translate: el to: el position + (WMVector3F x: tt asFloat y: 0.0 z: 0.0) ] ] 
 ]
@@ -839,10 +839,10 @@ RWMetricNormalizer >> normalizeX: metricBlock min: min max: max minValue: minVal
 	
 	| maxValue |
 	"We get the min and the max of the metric for all the elements"
-	maxValue := transformation rtValue: (metricBlock rtValue: elements anyOne model).
+	maxValue := transformation rwValue: (metricBlock rwValue: elements anyOne model).
 	elements do: [ :el | 
 		| t |  
-		t := transformation rtValue: (metricBlock rtValue: el model).
+		t := transformation rwValue: (metricBlock rwValue: el model).
 		maxValue := maxValue max: t ].
 	
 	self normalizeX: metricBlock min: min max: max minValue: minValue maxValue: maxValue using: transformation
@@ -857,11 +857,11 @@ RWMetricNormalizer >> normalizeX: metricBlock min: min max: max using: transform
 	
 	| minValue maxValue |
 	"We get the min and the max of the metric for all the elements"
-	minValue := transformation rtValue: (metricBlock rtValue: elements anyOne model).
+	minValue := transformation rwValue: (metricBlock rwValue: elements anyOne model).
 	maxValue := minValue.
 	elements do: [ :el | 
 		| t |  
-		t := transformation rtValue: (metricBlock rtValue: el model).
+		t := transformation rwValue: (metricBlock rwValue: el model).
 		minValue := minValue min: t.
 		maxValue := maxValue max: t ].
 	
@@ -920,7 +920,7 @@ RWMetricNormalizer >> normalizeY: metricBlock min: min max: max minValue: minVal
 	(maxValue - minValue) ~= 0 ifTrue: [
 		elements do: [ :el | 
 			| tt t |
-			t := transformation rtValue: (metricBlock rtValue: el model).
+			t := transformation rwValue: (metricBlock rwValue: el model).
 			tt := self getValue: t min: min max: max minValue: minValue maxValue: maxValue.
 			translator translate: el to: el position + (WMVector3F x: 0.0 y: tt asFloat z: 0.0) ] ] 
 ]
@@ -934,10 +934,10 @@ RWMetricNormalizer >> normalizeY: metricBlock min: min max: max minValue: minVal
 	
 	| maxValue |
 	"We get the min and the max of the metric for all the elements"
-	maxValue := transformation rtValue: (metricBlock rtValue: elements anyOne model).
+	maxValue := transformation rwValue: (metricBlock rwValue: elements anyOne model).
 	elements do: [ :el | 
 		| t |  
-		t := transformation rtValue: (metricBlock rtValue: el model).
+		t := transformation rwValue: (metricBlock rwValue: el model).
 		maxValue := maxValue max: t ].
 	
 	self normalizeY: metricBlock min: min max: max minValue: minValue maxValue: maxValue using: transformation
@@ -952,12 +952,12 @@ RWMetricNormalizer >> normalizeY: metricBlock min: min max: max using: transform
 	
 	| minValue maxValue |
 	"We get the min and the max of the metric for all the elements"
-	maxValue := transformation rtValue: (metricBlock rtValue: elements anyOne model).
+	maxValue := transformation rwValue: (metricBlock rwValue: elements anyOne model).
 	minValue := maxValue.
 	
 	elements do: [ :el | 
 		| t |  
-		t := transformation rtValue: (metricBlock rtValue: el model).
+		t := transformation rwValue: (metricBlock rwValue: el model).
 		minValue := minValue min: t.
 		maxValue := maxValue max: t ].
 	
@@ -1016,7 +1016,7 @@ RWMetricNormalizer >> normalizeZ: metricBlock min: min max: max minValue: minVal
 	(maxValue - minValue) ~= 0 ifTrue: [
 		elements do: [ :el | 
 			| tt t |
-			t := transformation rtValue: (metricBlock rtValue: el model).
+			t := transformation rwValue: (metricBlock rwValue: el model).
 			tt := self getValue: t min: min max: max minValue: minValue maxValue: maxValue.
 			translator translate: el to: el position + (WMVector3F x: 0.0 y: 0.0 z: tt asFloat) ] ] 
 ]
@@ -1030,10 +1030,10 @@ RWMetricNormalizer >> normalizeZ: metricBlock min: min max: max minValue: minVal
 	
 	| maxValue |
 	"We get the min and the max of the metric for all the elements"
-	maxValue := transformation rtValue: (metricBlock rtValue: elements anyOne model).
+	maxValue := transformation rwValue: (metricBlock rwValue: elements anyOne model).
 	elements do: [ :el | 
 		| t |  
-		t := transformation rtValue: (metricBlock rtValue: el model).
+		t := transformation rwValue: (metricBlock rwValue: el model).
 		maxValue := maxValue max: t ].
 	
 	self normalizeZ: metricBlock min: min max: max minValue: minValue maxValue: maxValue using: transformation
@@ -1048,12 +1048,12 @@ RWMetricNormalizer >> normalizeZ: metricBlock min: min max: max using: transform
 	
 	| minValue maxValue |
 	"We get the min and the max of the metric for all the elements"
-	maxValue := transformation rtValue: (metricBlock rtValue: elements anyOne model).
+	maxValue := transformation rwValue: (metricBlock rwValue: elements anyOne model).
 	minValue := maxValue.
 	
 	elements do: [ :el | 
 		| t |  
-		t := transformation rtValue: (metricBlock rtValue: el model).
+		t := transformation rwValue: (metricBlock rwValue: el model).
 		minValue := minValue min: t.
 		maxValue := maxValue max: t ].
 	

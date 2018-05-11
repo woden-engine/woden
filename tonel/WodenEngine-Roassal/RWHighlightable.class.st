@@ -40,7 +40,7 @@ RWHighlightable >> doUnhighlightElement: anElement [
 { #category : #utility }
 RWHighlightable >> highlightColorFor: anElement [
 	"Return the highlight color"
-	^ self highlightedColor rtValue: anElement model
+	^ self highlightedColor rwValue: anElement model
 ]
 
 { #category : #configuration }
