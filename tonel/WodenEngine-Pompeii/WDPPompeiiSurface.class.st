@@ -174,6 +174,7 @@ WDPPompeiiSurface >> asForm [
 { #category : #drawing }
 WDPPompeiiSurface >> beginRenderPassWithColor: aColor [
 	| pass |
+	renderTarget ifNil: [ ^ self ].
 	isInRenderPass ifTrue: [ self finishCurrentRenderPass ].
 	
 	pass := self solidRenderPass.
@@ -197,7 +198,6 @@ WDPPompeiiSurface >> createFenceIfNeeded [
 WDPPompeiiSurface >> doDrawBlock: aBlock [
 	| canvas |
 	self
-		allocateDrawingResources;
 		setupStateTracker;
 		setupCommonState.
 	canvas := WDPPompeiiCanvas new
@@ -307,6 +307,7 @@ WDPPompeiiSurface >> extent [
 
 { #category : #drawing }
 WDPPompeiiSurface >> finishCurrentRenderPass [
+	renderTarget ifNil: [ ^ self ].
 	isInRenderPass ifFalse: [ ^ self ].
 	
 	stateTracker endRenderPass.
@@ -515,13 +516,14 @@ WDPPompeiiSurface >> setupCommonState [
 WDPPompeiiSurface >> setupStateTracker [
 	stateTracker
 		reset;
-		mode: #pompeii;
+		mode: WDCStateTrackerPompeiiRenderMode uniqueInstance;
 		shaderSignature: self shaderSignature;
 		useShaderResources: self shaderSignature defaultSamplers;
 		
 		frontFaceWinding: AGPU_COUNTER_CLOCKWISE;
 		cullMode: AGPU_CULL_MODE_NONE;
 		depthEnabled: false;
+		depthWriteMask: false;
 
 		blendingAllMode: WDCBlendingMode alphaOver.
 
@@ -562,4 +564,14 @@ WDPPompeiiSurface >> validateQuickState [
 	quickState storeBytesIn: quickStateBuffer.
 	stateTracker pushConstants: 0 size: WDPQuickState structureSize values: quickStateBuffer.
 	hasValidQuickState := true.
+]
+
+{ #category : #drawing }
+WDPPompeiiSurface >> withStateTracker: aStateTracker drawDuring: aBlock [
+	stateTracker := aStateTracker.
+	driver critical: [
+		isInRenderPass := true.
+		self
+			doDrawBlock: aBlock.
+	]
 ]

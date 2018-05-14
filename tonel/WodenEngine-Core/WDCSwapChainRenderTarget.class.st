@@ -42,6 +42,9 @@ WDCSwapChainRenderTarget >> createFramebuffers: bufferCount [
 	framebuffers := (1 to: swapChain getFramebufferCount) collect: [:i |
 		WDCRenderTargetFramebuffer new
 			engine: engine;
+			width: width;
+			height: height;
+			sampleCount: sampleCount;
 			initializeExtraStateFrom: (oldFramebuffers ifNotNil: [oldFramebuffers at: i]);
 			yourself
 	].

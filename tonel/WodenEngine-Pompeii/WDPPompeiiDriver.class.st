@@ -97,6 +97,7 @@ WDPPompeiiDriver >> engine [
 WDPPompeiiDriver >> initialize [
 	super initialize.
 	engine ifNil: [ engine := WDCEngine default ].
+	engine pompeiiDriver: self
 	
 ]
 
@@ -114,6 +115,11 @@ WDPPompeiiDriver >> mapPrimitiveType: primitiveType [
 { #category : #'instance creation' }
 WDPPompeiiDriver >> surfaceWithExtent: anExtent [
 	^ WDPPompeiiSurface extent: anExtent driver: self
+]
+
+{ #category : #'instance creation' }
+WDPPompeiiDriver >> surfaceWithExtent: anExtent sampleCount: aSampleCount [
+	^ WDPPompeiiSurface extent: anExtent driver: self sampleCount: aSampleCount
 ]
 
 { #category : #shaders }

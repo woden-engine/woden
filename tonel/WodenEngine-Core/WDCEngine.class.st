@@ -12,7 +12,8 @@ Class {
 		'preferredDepthStencilFormat',
 		'resourceCache',
 		'soundDevice',
-		'vrSensorReader'
+		'vrSensorReader',
+		'pompeiiDriver'
 	],
 	#classVars : [
 		'DefaultEngine',
@@ -21,7 +22,7 @@ Class {
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Core-Engine'
+	#category : #'WodenEngine-Core-Engine'
 }
 
 { #category : #accessing }
@@ -411,6 +412,11 @@ WDCEngine >> loadFragmentShader: aFileName [
 { #category : #'resource loading' }
 WDCEngine >> loadVertexShader: aFileName [
 	^ resourceCache loadVertexShader: aFileName
+]
+
+{ #category : #accessing }
+WDCEngine >> pompeiiDriver: aPompeiiDriver [
+	pompeiiDriver := aPompeiiDriver
 ]
 
 { #category : #accessing }

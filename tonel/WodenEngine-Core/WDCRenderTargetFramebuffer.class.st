@@ -7,12 +7,17 @@ Class {
 		'engine',
 		'handle',
 		'commandAllocator',
-		'commandList'
+		'commandList',
+		'properties',
+		'width',
+		'height',
+		'extent',
+		'sampleCount'
 	],
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Core-Window'
+	#category : #'WodenEngine-Core-Window'
 }
 
 { #category : #accessing }
@@ -66,6 +71,16 @@ WDCRenderTargetFramebuffer >> engine: anObject [
 ]
 
 { #category : #accessing }
+WDCRenderTargetFramebuffer >> extent [
+	^ extent
+]
+
+{ #category : #accessing }
+WDCRenderTargetFramebuffer >> extent: anObject [
+	extent := anObject
+]
+
+{ #category : #accessing }
 WDCRenderTargetFramebuffer >> handle [
 	^ handle
 ]
@@ -75,12 +90,43 @@ WDCRenderTargetFramebuffer >> handle: anObject [
 	handle := anObject
 ]
 
+{ #category : #accessing }
+WDCRenderTargetFramebuffer >> height [
+	^ height
+]
+
+{ #category : #accessing }
+WDCRenderTargetFramebuffer >> height: anObject [
+	height := anObject
+]
+
 { #category : #initialization }
 WDCRenderTargetFramebuffer >> initializeExtraStateFrom: previousFramebuffer [
 	previousFramebuffer ifNil: [ ^ self ].
 	
 	commandAllocator := previousFramebuffer commandAllocator.
 	commandList := previousFramebuffer commandList.
+	properties := previousFramebuffer properties copy.
+]
+
+{ #category : #accessing }
+WDCRenderTargetFramebuffer >> properties [
+	^ properties ifNil: [ properties := Dictionary new ]
+]
+
+{ #category : #accessing }
+WDCRenderTargetFramebuffer >> propertyAt: aName [
+	^ self properties at: aName
+]
+
+{ #category : #accessing }
+WDCRenderTargetFramebuffer >> propertyAt: aName ifAbsent: absentBlock [
+	^ self properties at: aName ifAbsent: absentBlock
+]
+
+{ #category : #accessing }
+WDCRenderTargetFramebuffer >> propertyAt: aName ifAbsentPut: absentBlock [
+	^ self properties at: aName ifAbsentPut: absentBlock
 ]
 
 { #category : #dependencies }
@@ -90,6 +136,16 @@ WDCRenderTargetFramebuffer >> release [
 	depthStencilAttachment ifNotNil: [ depthStencilAttachment release . depthStencilAttachment ].
 	
 
+]
+
+{ #category : #accessing }
+WDCRenderTargetFramebuffer >> sampleCount [
+	^ sampleCount
+]
+
+{ #category : #accessing }
+WDCRenderTargetFramebuffer >> sampleCount: anObject [
+	sampleCount := anObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -106,4 +162,14 @@ WDCRenderTargetFramebuffer >> validCommandList [
 WDCRenderTargetFramebuffer >> validHandle [
 	self flag: 'Check the session'.
 	^ handle
+]
+
+{ #category : #accessing }
+WDCRenderTargetFramebuffer >> width [
+	^ width
+]
+
+{ #category : #accessing }
+WDCRenderTargetFramebuffer >> width: anObject [
+	width := anObject
 ]

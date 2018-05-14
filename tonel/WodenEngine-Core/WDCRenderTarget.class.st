@@ -85,6 +85,9 @@ WDCRenderTarget >> createFramebuffer [
 		engine: engine;
 		colorAttachments: colorAttachments;
 		depthStencilAttachment: depthStencilAttachment;
+		width: width;
+		height: height;
+		sampleCount: sampleCount;
 		handle: handle;
 		yourself
 ]
@@ -103,6 +106,9 @@ WDCRenderTarget >> createFramebufferWithColorAttachments: colorAttachments views
 		engine: engine;
 		colorAttachments: colorAttachments;
 		depthStencilAttachment: depthStencilAttachment;
+		width: width;
+		height: height;
+		sampleCount: sampleCount;
 		handle: handle;
 		yourself
 ]
