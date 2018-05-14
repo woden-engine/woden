@@ -32,7 +32,6 @@ Class {
 		'matrixBuffer',
 		'matrixBufferCapacity',
 		'matrixBufferBinding',
-		'flipY',
 		'hasValidQuickState',
 		'quickState',
 		'quickStateBuffer'
@@ -165,6 +164,10 @@ WDPPompeiiSurface >> asForm [
 	resolveRenderTarget currentFramebuffer colorAttachments first validHandle
 		readTextureData: 0 arrayIndex: 0 pitch: pitch slicePitch: slicePitch buffer: cpuForm bits.
 
+	driver engine device hasBottomLeftTextureCoordinates ~= 0 ifTrue: [ 
+		cpuForm flipHorizontally
+	].
+
 	^ cpuForm
 ]
 
@@ -206,8 +209,7 @@ WDPPompeiiSurface >> doDrawBlock: aBlock [
 
 { #category : #drawing }
 WDPPompeiiSurface >> drawDuring: aBlock [
-	driver critical: [ 
-		flipY := true.
+	driver critical: [
 		self
 			allocateDrawingResources;
 			allocateCommandList.
@@ -399,7 +401,7 @@ WDPPompeiiSurface >> projectionMatrix [
 		orthoLeft: 0.0 right: extent x asFloat
 		bottom: extent y asFloat top: 0.0
 		near: -1.0 far: 1.0
-		invertedY: (driver engine projectionInvertedY xor: [flipY])
+		invertedY: (driver engine projectionInvertedY)
 ]
 
 { #category : #drawing }

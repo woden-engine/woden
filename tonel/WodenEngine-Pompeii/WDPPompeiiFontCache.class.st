@@ -19,20 +19,7 @@ WDPPompeiiFontCache >> activateMaterialIn: aSurface [
 	aSurface stateTracker
 		vertexShader: driver vertexShader;
 		fragmentShader: driver colorFontShader;
-		useShaderResources: self validShaderBinding.
-
-	"| context program |
-	context := aSurface driver context.
-	program := aSurface driver textProgram.
-	aSurface useProgram: program.
-	program
-		uniform: #fontTexture int: 0;
-		uniform: #fontTextureInvertedSize float: self width asFloat reciprocal float: self height asFloat reciprocal.
-		
-	context gl
-		activeTexture: GL_TEXTURE0;
-		bindTexture_target: GL_TEXTURE_2D texture: (self textureFor: context) validHandle
-	"
+		useShaderResources: self validShaderBinding
 ]
 
 { #category : #accessing }
@@ -110,7 +97,6 @@ WDPPompeiiFontCache >> validTexture [
 	].
 
 	texture validHandle uploadTextureData: 0 arrayIndex: 0 pitch: self width slicePitch: self width * self height data: bits.
-	self inspect.
 	modified := false.
 	^ texture
 ]
