@@ -1,7 +1,0 @@
-Structure <<< #WDPColorRampDescription
-	slots: {
-		#firstIndex => Int32.
-		#count => Int32
-	};
-	package: 'WodenEngine-Structures-Pompeii';
-	yourself.

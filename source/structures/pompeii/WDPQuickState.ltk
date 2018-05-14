@@ -1,0 +1,10 @@
+Structure <<< #WDPQuickState
+	slots: {
+		#modelViewMatrixIndex => Int32.
+		#projectionMatrixIndex => Int32.
+
+		#colorRampIndex => Int32.
+		#colorRampSize => Int32.
+	};
+	package: 'WodenEngine-Structures-Pompeii';
+	yourself.

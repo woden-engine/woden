@@ -35,7 +35,51 @@ WDPPompeiiShaderSignature class >> signatureSpec: spec [
 				maxBindings: 10;
 				sampler: #Samplers count: 5
 		];
+		pushConstant: #ModelViewMatrixIndex;
+		pushConstant: #ProjectionMatrixIndex;
+		pushConstant: #ColorRampIndex;
+		pushConstant: #ColorRampSize;
 		yourself
+]
+
+{ #category : #'generated shader signature methods' }
+WDPPompeiiShaderSignature >> constantColorRampIndexOffset [
+	^ 8
+]
+
+{ #category : #'generated shader signature methods' }
+WDPPompeiiShaderSignature >> constantColorRampIndexSize [
+	^ 4
+]
+
+{ #category : #'generated shader signature methods' }
+WDPPompeiiShaderSignature >> constantColorRampSizeOffset [
+	^ 12
+]
+
+{ #category : #'generated shader signature methods' }
+WDPPompeiiShaderSignature >> constantColorRampSizeSize [
+	^ 4
+]
+
+{ #category : #'generated shader signature methods' }
+WDPPompeiiShaderSignature >> constantModelViewMatrixIndexOffset [
+	^ 0
+]
+
+{ #category : #'generated shader signature methods' }
+WDPPompeiiShaderSignature >> constantModelViewMatrixIndexSize [
+	^ 4
+]
+
+{ #category : #'generated shader signature methods' }
+WDPPompeiiShaderSignature >> constantProjectionMatrixIndexOffset [
+	^ 4
+]
+
+{ #category : #'generated shader signature methods' }
+WDPPompeiiShaderSignature >> constantProjectionMatrixIndexSize [
+	^ 4
 ]
 
 { #category : #'generated shader signature methods' }
@@ -59,6 +103,10 @@ WDPPompeiiShaderSignature >> createHandleForDevice: device [
 		beginBindingBank: 10;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLER bindingPointCount: 5; "Samplers"
 
+		addBindingConstant; "ModelViewMatrixIndex"
+		addBindingConstant; "ProjectionMatrixIndex"
+		addBindingConstant; "ColorRampIndex"
+		addBindingConstant; "ColorRampSize"
 		build
 
 ]

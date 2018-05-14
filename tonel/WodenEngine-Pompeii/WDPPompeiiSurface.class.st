@@ -32,7 +32,10 @@ Class {
 		'matrixBuffer',
 		'matrixBufferCapacity',
 		'matrixBufferBinding',
-		'flipY'
+		'flipY',
+		'hasValidQuickState',
+		'quickState',
+		'quickStateBuffer'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -311,7 +314,8 @@ WDPPompeiiSurface >> finishCurrentRenderPass [
 { #category : #'as yet unclassified' }
 WDPPompeiiSurface >> flushTransforms [
 	currentTransform ~= transform ifTrue: [
-		"self addCommand: (PompeiiOpenGLSetModelViewCommand new matrix: (self encodeFloatArray: transform asFloatMatrix4))."
+		self addCommand: (WDPPompeiiSetModelViewMatrixCommand new
+			matrix: (self pushMatrix: transform asWMMatrix4F)).
 		currentTransform := transform copy.
 	]
 ]
@@ -366,6 +370,7 @@ WDPPompeiiSurface >> initialize [
 	matrixBuffer := nil.
 	
 	matrices := SLVMNativeOrderedCollection for: WMMatrix4F.
+	quickStateBuffer := ByteArray new: WDPQuickState structureSize.
 ]
 
 { #category : #initialization }
@@ -382,6 +387,12 @@ WDPPompeiiSurface >> isInRenderPass [
 	^ isInRenderPass
 ]
 
+{ #category : #drawing }
+WDPPompeiiSurface >> modelViewMatrixIndex: aMatrixIndex [
+	quickState modelViewMatrixIndex: aMatrixIndex.
+	hasValidQuickState := false.
+]
+
 { #category : #accessing }
 WDPPompeiiSurface >> projectionMatrix [
 	^ WMMatrix4F
@@ -389,6 +400,12 @@ WDPPompeiiSurface >> projectionMatrix [
 		bottom: extent y asFloat top: 0.0
 		near: -1.0 far: 1.0
 		invertedY: (driver engine projectionInvertedY xor: [flipY])
+]
+
+{ #category : #drawing }
+WDPPompeiiSurface >> projectionMatrixIndex: aMatrixIndex [
+	quickState projectionMatrixIndex: aMatrixIndex.
+	hasValidQuickState := false.
 ]
 
 { #category : #initialization }
@@ -486,9 +503,10 @@ WDPPompeiiSurface >> setupCommonState [
 
 	drawingCommands removeAll.
 	matrices removeAll.
+	quickState := WDPQuickState new.
 	self
-		pushMatrix: self projectionMatrix;
-		pushMatrix: WMMatrix4F identity
+		projectionMatrixIndex: (self pushMatrix: self projectionMatrix);
+		modelViewMatrixIndex: (self pushMatrix: WMMatrix4F identity).
 ]
 
 { #category : #drawing }
@@ -534,4 +552,12 @@ WDPPompeiiSurface >> submitDrawingCommands [
 { #category : #accessing }
 WDPPompeiiSurface >> transform [
 	^ transform
+]
+
+{ #category : #drawing }
+WDPPompeiiSurface >> validateQuickState [
+	hasValidQuickState ifTrue: [ ^ self ].
+	quickState storeBytesIn: quickStateBuffer.
+	stateTracker pushConstants: 0 size: WDPQuickState structureSize values: quickStateBuffer.
+	hasValidQuickState := true.
 ]

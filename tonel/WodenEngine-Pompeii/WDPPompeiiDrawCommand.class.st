@@ -14,7 +14,9 @@ Class {
 { #category : #'as yet unclassified' }
 WDPPompeiiDrawCommand >> executeWith: stateTracker on: surface [
 	| firstIndex |
-	surface activateMaterial: submesh material.
+	surface
+		activateMaterial: submesh material;
+		validateQuickState.
 	firstIndex := (surface getMeshBaseIndex: mesh) + submesh startIndex.
 	
 	stateTracker
