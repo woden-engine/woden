@@ -521,7 +521,7 @@ WDPPompeiiSurface >> setupStateTracker [
 		cullMode: AGPU_CULL_MODE_NONE;
 		depthEnabled: false;
 
-		blendingAllMode: WDCBlendingMode replace.
+		blendingAllMode: WDCBlendingMode alphaOver.
 
 ]
 
