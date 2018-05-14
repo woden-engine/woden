@@ -13,12 +13,13 @@ Class {
 		'renderTarget',
 		'resolveRenderTarget',
 		'cameraTransformFunction',
-		'cameraTransform'
+		'cameraTransform',
+		'overlayRenderer'
 	],
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Scene-Graph'
+	#category : #'WodenEngine-Scene-Graph'
 }
 
 { #category : #accessing }
@@ -81,6 +82,16 @@ WTSViewport >> initialize [
 	super initialize.
 	filter := [ :object | true ].
 	cameraTransformFunction := [ :x | x ]
+]
+
+{ #category : #accessing }
+WTSViewport >> overlayRenderer [
+	^ overlayRenderer
+]
+
+{ #category : #accessing }
+WTSViewport >> overlayRenderer: anObject [
+	overlayRenderer := anObject
 ]
 
 { #category : #accessing }

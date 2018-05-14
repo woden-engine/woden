@@ -95,7 +95,8 @@ WDASceneViewScreenDisplayMode >> viewportForCamera: camera renderTarget: renderT
 		renderTarget: renderTarget;
 		resolveRenderTarget: resolveRenderTarget;
 		bounds: renderTarget bounds;
-		submode: submode
+		submode: submode;
+		overlayRenderer: view
 ]
 
 { #category : #accessing }

@@ -83,6 +83,10 @@ WDASceneView >> prepareRendering [
 
 ]
 
+{ #category : #rendering }
+WDASceneView >> renderViewport: viewport overlayWith: stateTracker [
+]
+
 { #category : #'rendering process stages' }
 WDASceneView >> sceneRenderer [
 	^ sceneRenderer ifNil: [sceneRenderer := WDSForwardSceneRenderer for: engine].

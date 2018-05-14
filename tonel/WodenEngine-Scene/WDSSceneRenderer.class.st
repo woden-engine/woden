@@ -190,6 +190,11 @@ WDSSceneRenderer >> renderViewport: viewport index: viewportIndex [
 	(objectsPerViewport at: viewportIndex) do: [ :object |
 		object renderOn: stateTracker
 	].
+
+	"Render the overlays"
+	viewport overlayRenderer ifNotNil: [ 
+		viewport overlayRenderer renderViewport: viewport overlayWith: stateTracker 
+	].
 	
 	"End rendering into the viewport"
 	stateTracker endRenderPass.

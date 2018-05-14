@@ -3,7 +3,7 @@ I am a sample scene view that uses first person shooter game style controls for 
 "
 Class {
 	#name : #WDAFPSSceneView,
-	#superclass : #WDASceneView,
+	#superclass : #WDASceneViewWithPompeii,
 	#instVars : [
 		'cameraVelocity',
 		'cameraSpeed',
@@ -11,7 +11,7 @@ Class {
 		'cameraAngularVelocity',
 		'cameraAngularSpeed'
 	],
-	#category : 'WodenEngine-Scene-Application'
+	#category : #'WodenEngine-Scene-Application'
 }
 
 { #category : #accessing }
