@@ -2,9 +2,10 @@ Class {
 	#name : #WDCForwardRenderingShaderSignature,
 	#superclass : #WDCShaderSignature,
 	#instVars : [
-		'defaultSamplers'
+		'defaultSamplers',
+		'defaultSamplersSession'
 	],
-	#category : 'WodenEngine-Core-Shaders'
+	#category : #'WodenEngine-Core-Shaders'
 }
 
 { #category : #'as yet unclassified' }
@@ -83,8 +84,7 @@ WDCForwardRenderingShaderSignature >> createHandleForDevice: device [
 { #category : #accessing }
 WDCForwardRenderingShaderSignature >> defaultSamplers [
 	| samplerDesc bindings |
-	self flag: 'Add session check.'.
-	defaultSamplers ifNotNil: [ ^ defaultSamplers ].
+	(defaultSamplersSession == Smalltalk session and: [ defaultSamplers isNotNil ]) ifTrue: [ ^ defaultSamplers ].
 	
 	samplerDesc := AGPUSamplerDescription new
 		filter: AGPU_FILTER_MIN_LINEAR_MAG_LINEAR_MIPMAP_LINEAR;
@@ -119,7 +119,9 @@ WDCForwardRenderingShaderSignature >> defaultSamplers [
 		max_lod: 10000.0;
 		yourself.
 	bindings
-		createSampler: 3 description: samplerDesc.		
+		createSampler: 3 description: samplerDesc.
+
+	defaultSamplersSession := Smalltalk session.
 	^ defaultSamplers := bindings
 ]
 

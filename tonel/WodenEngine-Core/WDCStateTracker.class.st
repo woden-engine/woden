@@ -234,6 +234,11 @@ WDCStateTracker >> primitiveType: aPrimitiveType [
 	pipelineStateDescription primitiveType: aPrimitiveType
 ]
 
+{ #category : #commands }
+WDCStateTracker >> pushConstants: offset size: size values: values [
+	commandListBuilder pushConstants: offset size: size values: values
+]
+
 { #category : #accessing }
 WDCStateTracker >> reset [
 	pipelineStateDescription reset.

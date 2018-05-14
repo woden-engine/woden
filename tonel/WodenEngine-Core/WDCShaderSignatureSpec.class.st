@@ -3,9 +3,10 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'name',
-		'elements'
+		'elements',
+		'pushConstantsSize'
 	],
-	#category : 'WodenEngine-Core-Shaders'
+	#category : #'WodenEngine-Core-Shaders'
 }
 
 { #category : #building }
@@ -26,7 +27,7 @@ WDCShaderSignatureSpec >> elements [
 WDCShaderSignatureSpec >> initialize [
 	super initialize.
 	elements := OrderedCollection new.
-	
+	pushConstantsSize := 0.
 ]
 
 { #category : #accessing }
@@ -37,4 +38,18 @@ WDCShaderSignatureSpec >> name [
 { #category : #accessing }
 WDCShaderSignatureSpec >> name: anObject [
 	name := anObject
+]
+
+{ #category : #building }
+WDCShaderSignatureSpec >> pushConstant: constantName [
+	| bank |
+	bank := WDCShaderSignatureSpecPushConstant new name: constantName; offset: pushConstantsSize; size: 4.
+	pushConstantsSize := pushConstantsSize + 4.
+	elements add: bank.
+	^ bank
+]
+
+{ #category : #accessing }
+WDCShaderSignatureSpec >> pushConstantsSize [
+	^ pushConstantsSize
 ]

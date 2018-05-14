@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'engine',
 		'colorShader',
-		'vertexShader'
+		'vertexShader',
+		'colorFontShader'
 	],
 	#classVars : [
 		'PrimitiveTypeMap'
@@ -33,6 +34,11 @@ WDPPompeiiDriver class >> initialize [
 { #category : #testing }
 WDPPompeiiDriver class >> isSupported [
 	^ true
+]
+
+{ #category : #shaders }
+WDPPompeiiDriver >> colorFontShader [
+	^ colorFontShader ifNil: [ colorFontShader := engine loadFragmentShader: 'shaders/pompeii/textColorFragment.dastrel' ]
 ]
 
 { #category : #shaders }
@@ -75,6 +81,11 @@ WDPPompeiiDriver >> convertMesh2D: aPompeiiMesh [
 		indices: indices asByteArray;
 		submeshes: submeshes;
 		yourself
+]
+
+{ #category : #'instance creation' }
+WDPPompeiiDriver >> createFontCache: aLogicalFont [
+	^ WDPPompeiiFontCache new driver: self; font: aLogicalFont; yourself
 ]
 
 { #category : #accessing }

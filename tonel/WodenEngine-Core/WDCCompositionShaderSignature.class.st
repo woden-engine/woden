@@ -2,9 +2,10 @@ Class {
 	#name : #WDCCompositionShaderSignature,
 	#superclass : #WDCShaderSignature,
 	#instVars : [
-		'defaultSamplers'
+		'defaultSamplers',
+		'defaultSamplersSession'
 	],
-	#category : 'WodenEngine-Core-Shaders'
+	#category : #'WodenEngine-Core-Shaders'
 }
 
 { #category : #'as yet unclassified' }
@@ -57,8 +58,7 @@ WDCCompositionShaderSignature >> createHandleForDevice: device [
 { #category : #accessing }
 WDCCompositionShaderSignature >> defaultSamplers [
 	| samplerDesc bindings |
-	self flag: 'Add session check.'.
-	defaultSamplers ifNotNil: [ ^ defaultSamplers ].
+	(defaultSamplersSession == Smalltalk session and: [ defaultSamplers isNotNil ]) ifTrue: [ ^ defaultSamplers ].
 	
 	samplerDesc := AGPUSamplerDescription new
 		filter: AGPU_FILTER_MIN_LINEAR_MAG_LINEAR_MIPMAP_NEAREST;
@@ -71,7 +71,8 @@ WDCCompositionShaderSignature >> defaultSamplers [
 	bindings := self shaderSignature newSamplers.
 	bindings
 		createSampler: 0 description: samplerDesc.
-		
+
+	defaultSamplersSession := Smalltalk session.
 	^ defaultSamplers := bindings
 ]
 
