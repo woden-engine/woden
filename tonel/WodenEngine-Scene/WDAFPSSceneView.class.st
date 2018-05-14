@@ -9,7 +9,8 @@ Class {
 		'cameraSpeed',
 		'cameraAngle',
 		'cameraAngularVelocity',
-		'cameraAngularSpeed'
+		'cameraAngularSpeed',
+		'lastFrameRateDrawing'
 	],
 	#category : #'WodenEngine-Scene-Application'
 }
@@ -62,6 +63,34 @@ WDAFPSSceneView >> cameraVelocity [
 { #category : #accessing }
 WDAFPSSceneView >> cameraVelocity: anObject [
 	cameraVelocity := anObject
+]
+
+{ #category : #'drawing 2d' }
+WDAFPSSceneView >> drawFrameRateOn: canvas [
+	| currentTime deltaTime builder mesh |
+	self flag: 'TODO: Use GPU timestamp query.'.
+	lastFrameRateDrawing ifNil: [ lastFrameRateDrawing := Time microsecondClockValue ].
+	currentTime := Time microsecondClockValue.
+	deltaTime := (currentTime - lastFrameRateDrawing)*0.001.
+	
+	builder := canvas driver mesh2DBuilder.
+	builder text
+		color: Color green;
+		font: self pompeiiDefaultFont;
+			position: (0 @ self pompeiiDefaultFont getPreciseAscent);
+			draw: ('CPU Frame Rate {1} ms / {2} FPS' format: {
+				deltaTime printShowingDecimalPlaces: 3 .
+				1000.0 / (deltaTime max: 0.01) printShowingDecimalPlaces: 3}).
+	mesh := builder mesh.
+	
+	canvas draw: mesh.
+		
+	lastFrameRateDrawing := currentTime.
+]
+
+{ #category : #rendering }
+WDAFPSSceneView >> drawOnPompeiiCanvas: canvas [
+	self drawFrameRateOn: canvas
 ]
 
 { #category : #initialization }

@@ -525,7 +525,7 @@ WDPPompeiiSurface >> setupStateTracker [
 		depthEnabled: false;
 		depthWriteMask: false;
 
-		blendingAllMode: WDCBlendingMode alphaOver.
+		blendingAllMode: WDCBlendingMode alphaOverCompose.
 
 ]
 

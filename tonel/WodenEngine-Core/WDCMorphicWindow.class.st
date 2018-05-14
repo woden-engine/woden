@@ -90,7 +90,9 @@ WDCMorphicWindow >> drawOn: aCanvas [
 	self checkSession.
 	self checkRenderTarget.
 	
-	aCanvas translucentImage: displayForm at: self bounds origin.
+	aCanvas
+		fillRectangle: self bounds color: Color black;
+		translucentImage: displayForm at: self bounds origin.
 ]
 
 { #category : #initialization }

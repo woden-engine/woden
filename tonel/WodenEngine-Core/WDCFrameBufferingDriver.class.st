@@ -111,7 +111,6 @@ WDCFrameBufferingDriver >> mainRenderingProcess [
 		frameDeltaTime := frameStartTime - lastFrameStartTime.
 		lastFrameStartTime := frameStartTime.
 	
-	
 		self swapRenderingProcesses.
 		self renderForDeltaMicroseconds: frameDeltaTime.
 		frontRenderingProcesses removeAll.

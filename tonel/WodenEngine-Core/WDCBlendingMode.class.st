@@ -14,12 +14,13 @@ Class {
 		'Add',
 		'AddAlpha',
 		'AlphaOver',
+		'AlphaOverCompose',
 		'Replace'
 	],
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Core-Rendering'
+	#category : #'WodenEngine-Core-Rendering'
 }
 
 { #category : #'blending modes' }
@@ -37,10 +38,16 @@ WDCBlendingMode class >> alphaOver [
 	^ AlphaOver
 ]
 
+{ #category : #'blending modes' }
+WDCBlendingMode class >> alphaOverCompose [
+	^ AlphaOverCompose
+]
+
 { #category : #initialization }
 WDCBlendingMode class >> initialize [
 	Replace := self sourceFactor: AGPU_BLENDING_ONE destFactor: AGPU_BLENDING_ZERO.
 	AlphaOver := self sourceFactor: AGPU_BLENDING_SRC_ALPHA destFactor: AGPU_BLENDING_INVERTED_SRC_ALPHA.
+	AlphaOverCompose := self sourceFactor: AGPU_BLENDING_SRC_ALPHA destFactor: AGPU_BLENDING_INVERTED_SRC_ALPHA sourceFactorAlpha: AGPU_BLENDING_ONE destFactorAlpha: AGPU_BLENDING_INVERTED_SRC_ALPHA.
 	Add := self sourceFactor: AGPU_BLENDING_ONE destFactor: AGPU_BLENDING_ONE.
 	AddAlpha := self sourceFactor: AGPU_BLENDING_SRC_ALPHA destFactor: AGPU_BLENDING_ONE.
 ]
@@ -59,6 +66,19 @@ WDCBlendingMode class >> sourceFactor: sourceFactor destFactor: destFactor [
 		operation: AGPU_BLENDING_OPERATION_ADD;
 		sourceAlphaFactor: sourceFactor;
 		destAlphaFactor: destFactor;
+		alphaOperation: AGPU_BLENDING_OPERATION_ADD;
+		yourself
+]
+
+{ #category : #construction }
+WDCBlendingMode class >> sourceFactor: sourceFactor destFactor: destFactor sourceFactorAlpha: sourceFactorAlpha destFactorAlpha: destFactorAlpha [
+	^ self new
+		enabled: true;
+		sourceFactor: sourceFactor;
+		destFactor: destFactor;
+		operation: AGPU_BLENDING_OPERATION_ADD;
+		sourceAlphaFactor: sourceFactorAlpha;
+		destAlphaFactor: destFactorAlpha;
 		alphaOperation: AGPU_BLENDING_OPERATION_ADD;
 		yourself
 ]
