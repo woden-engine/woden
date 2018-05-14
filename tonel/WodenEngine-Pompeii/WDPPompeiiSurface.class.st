@@ -215,6 +215,7 @@ WDPPompeiiSurface >> drawDuring: aBlock [
 			allocateCommandList.
 
 		self stateTracker commandList: commandList rebuildWith: [
+			stateTracker reset.
 			self
 				doDrawBlock: aBlock.
 			renderTarget ~~ resolveRenderTarget ifTrue: [
@@ -515,7 +516,6 @@ WDPPompeiiSurface >> setupCommonState [
 { #category : #drawing }
 WDPPompeiiSurface >> setupStateTracker [
 	stateTracker
-		reset;
 		mode: WDCStateTrackerPompeiiRenderMode uniqueInstance;
 		shaderSignature: self shaderSignature;
 		useShaderResources: self shaderSignature defaultSamplers;
