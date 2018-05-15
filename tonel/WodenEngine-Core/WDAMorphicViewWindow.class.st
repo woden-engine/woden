@@ -17,7 +17,7 @@ Class {
 	#category : 'WodenEngine-Core-Application'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 WDAMorphicViewWindow class >> initialize [
 	"
 	self initialize
@@ -51,11 +51,14 @@ WDAMorphicViewWindow class >> initialize [
 		#Z . OSK_z .
 		#SPACE . OSK_SPACE .
 		#KP_SPACE . OSK_SPACE .
-		#EIGHT . OSK_UP .
-		#FOUR . OSK_LEFT .
-		#SIX . OSK_RIGHT .
-		#FIVE . OSK_DOWN .
-		#LESS . OSK_LCTRL.
+		#KP_UP . OSK_UP .
+		#KP_LEFT . OSK_LEFT .
+		#KP_RIGHT . OSK_RIGHT .
+		#KP_DOWN . OSK_DOWN .
+		#CONTROL_L . OSK_LCTRL.
+		#SHIFT_L . OSK_LSHIFT.
+		#ALT_L . OSK_LALT.
+		#META_L . OSK_LGUI.
 	}.
 	
 	MouseButtonMap := IdentityDictionary newFromPairs: #(
@@ -174,6 +177,22 @@ WDAMorphicViewWindow >> mouseEventCommon: anEvent putOn: osEvent [
 			button3: anEvent blueButtonPressed.
 	self modifiers: anEvent putOn: osEvent.
 	self mousePosition: anEvent putOn: osEvent.
+]
+
+{ #category : #'event handling' }
+WDAMorphicViewWindow >> mouseMove: evt [
+	| osEvent |
+	
+	evt hand newKeyboardFocus: self.
+	view ifNotNil: [
+		osEvent := OSMouseMoveEvent new
+			delta: evt position - evt startPoint.
+		self mouseEventCommon: evt putOn: osEvent.
+		view handleEvent: osEvent.
+	].
+	
+	evt wasHandled: true.
+	^ true.
 ]
 
 { #category : #'event handling' }

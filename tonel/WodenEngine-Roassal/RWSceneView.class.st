@@ -1,12 +1,36 @@
 Class {
 	#name : #RWSceneView,
-	#superclass : #WDASceneView,
+	#superclass : #WDASceneViewWithPompeii,
 	#instVars : [
 		'dragElement',
 		'mouseFocusElement'
 	],
-	#category : 'WodenEngine-Roassal-Core'
+	#category : #'WodenEngine-Roassal-Core'
 }
+
+{ #category : #rendering }
+RWSceneView >> drawOnPompeiiCanvas: canvas [
+	| font builder mesh |
+	font := self pompeiiDefaultFont.
+		
+	builder := canvas driver mesh2DBuilder.
+	builder fill
+		gradientStart: 0@0 color: Color cyan end: 0@128 color: Color blue;
+		rectangle: (0@0 extent: 128@128) round: 15.
+	builder stroke
+		color: (Color black alpha: 0.5);
+		width: 3;
+		rectangle: (0@0 extent: 128@128) round: 15.
+	builder text
+		color: Color black;
+		font: font;
+		position: (30 @ (30 + font getPreciseAscent));
+		draw: 'Hello ';
+		color: Color red;
+		draw: 'World!'.
+	mesh := builder mesh.
+	canvas draw: mesh
+]
 
 { #category : #selection }
 RWSceneView >> elementInPosition: aPoint [
