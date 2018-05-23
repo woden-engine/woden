@@ -1,7 +1,7 @@
 Class {
 	#name : #RWInteraction,
 	#superclass : #RWObject,
-	#category : 'WodenEngine-Roassal-Core'
+	#category : #'WodenEngine-Roassal-Interaction'
 }
 
 { #category : #public }

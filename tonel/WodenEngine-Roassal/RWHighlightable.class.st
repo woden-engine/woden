@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'color'
 	],
-	#category : 'WodenEngine-Roassal-Core'
+	#category : #'WodenEngine-Roassal-Interaction'
 }
 
 { #category : #'reset shape' }

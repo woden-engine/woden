@@ -7,7 +7,7 @@ Class {
 	#pools : [
 		'OSKeySymbols'
 	],
-	#category : 'WodenEngine-Roassal-Core'
+	#category : #'WodenEngine-Roassal-Interaction'
 }
 
 { #category : #'as yet unclassified' }

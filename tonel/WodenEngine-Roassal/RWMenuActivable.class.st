@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'actions'
 	],
-	#category : 'WodenEngine-Roassal-Core'
+	#category : #'WodenEngine-Roassal-Interaction'
 }
 
 { #category : #public }
