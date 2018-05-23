@@ -17,7 +17,19 @@ Class {
 	#category : 'WodenEngine-Roassal-Builder-Grapher'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #public }
+RWGrapher class >> sampleData [
+	| res r |
+	r := SharedRandom globalGenerator.
+	
+	res := OrderedCollection new.
+	1 to: 20 do: [ :x | 
+		1 to: 20 do: [ :z |
+			res add: { x. r next * 10. z } ] ].
+	^ res
+]
+
+{ #category : #adding }
 RWGrapher >> add: aDataSet [
 	"Essential method. Add a dataset into the grapher. Only non-empty set are considered"
 	aDataSet numberOfPoints = 0 ifTrue: [ ^ self ].
@@ -26,40 +38,40 @@ RWGrapher >> add: aDataSet [
 	aDataSet addedInBuilder: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'public - axis' }
 RWGrapher >> axisX [
 	self checkIfDataSetHaveBeenAdded.
 	"^ super axisX"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'public - axis' }
 RWGrapher >> axisY [
 	self checkIfDataSetHaveBeenAdded.
 	"^ super axisX"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'public - axis' }
 RWGrapher >> axisZ [
 	self checkIfDataSetHaveBeenAdded.
 	"^ super axisX"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #utility }
 RWGrapher >> checkIfDataSetHaveBeenAdded [
 	datasets ifEmpty: [ self error: 'No dataset has been added?' ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'min - max' }
 RWGrapher >> datasetComputeMinAndMax [
 	datasets do: #computeMinAndMax
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RWGrapher >> datasets [
 	^ datasets copy
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #utility }
 RWGrapher >> defineAxesIfNecessary [
 	
 	self isXAxisDefined ifFalse: [ self axisX ].
@@ -72,12 +84,17 @@ RWGrapher >> extent [
 	^ extent
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
+RWGrapher >> extent: anArray [
+	extent := anArray
+]
+
+{ #category : #testing }
 RWGrapher >> hasDataSet [
 	^ self numberOfDataSets > 0
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'min - max' }
 RWGrapher >> homogenizeMinAndMax [
 	
 	minX := self minX.
@@ -95,7 +112,7 @@ RWGrapher >> homogenizeMinAndMax [
 		ds maxY: maxZ. ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 RWGrapher >> initialize [
 	super initialize.
 	
@@ -109,22 +126,22 @@ RWGrapher >> initialize [
 	maxY := 0.
 	maxZ := 0.
 	
-	extent := 15 @ 10.
+	extent := #(10 10 10).
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 RWGrapher >> isXAxisDefined [
 	"Return true is X axis has been defined"
 	^ axisConfigurationX notNil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 RWGrapher >> isYAxisDefined [
 	"Return true is X axis has been defined"
 	^ axisConfigurationY notNil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 RWGrapher >> isZAxisDefined [
 	"Return true is X axis has been defined"
 	^ axisConfigurationZ notNil
@@ -142,7 +159,7 @@ RWGrapher >> maxX: anObject [
 	maxX := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RWGrapher >> maxXFromDataSets [
 	^ (datasets collect: #maxX) max
 ]
@@ -159,7 +176,7 @@ RWGrapher >> maxY: anObject [
 	maxY := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RWGrapher >> maxYFromDataSets [
 	^ (datasets collect: #maxY) max
 ]
@@ -176,7 +193,7 @@ RWGrapher >> maxZ: anObject [
 	maxZ := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RWGrapher >> maxZFromDataSets [
 	^ (datasets collect: #maxZ) max
 ]
@@ -193,7 +210,7 @@ RWGrapher >> minX: anObject [
 	minX := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RWGrapher >> minXFromDataSets [
 	^ (datasets collect: #minX) min
 ]
@@ -210,7 +227,7 @@ RWGrapher >> minY: anObject [
 	minY := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RWGrapher >> minYFromDataSets [
 	^ (datasets collect: #minY) min
 ]
@@ -225,26 +242,26 @@ RWGrapher >> minZ: anObject [
 	minZ := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RWGrapher >> minZFromDataSets [
 	^ (datasets collect: #minZ) min
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RWGrapher >> numberOfDataSets [
 	^ datasets size
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #rendering }
 RWGrapher >> renderAxis [
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #rendering }
 RWGrapher >> renderDataSetsIn: aView [
 	datasets do: [ :aDataset | aDataset renderIn: aView ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #rendering }
 RWGrapher >> renderIn: aView [
 	self datasetComputeMinAndMax.
 	self defineAxesIfNecessary.

@@ -179,3 +179,8 @@ RWShapeBuilder >> shapeInitializer: aBlock [
 	"Invoked after a shape has been designed"
 	shapeInitializer := aBlock
 ]
+
+{ #category : #accessing }
+RWShapeBuilder >> sphere [
+	shape := RWUVSphere new.
+]

@@ -10,7 +10,7 @@ Class {
 
 { #category : #rendering }
 RWSceneView >> drawOnPompeiiCanvas: canvas [
-	| font builder mesh |
+	"| font builder mesh |
 	font := self pompeiiDefaultFont.
 		
 	builder := canvas driver mesh2DBuilder.
@@ -29,7 +29,7 @@ RWSceneView >> drawOnPompeiiCanvas: canvas [
 		color: Color red;
 		draw: 'World!'.
 	mesh := builder mesh.
-	canvas draw: mesh
+	canvas draw: mesh"
 ]
 
 { #category : #selection }

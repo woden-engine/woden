@@ -24,7 +24,7 @@ RWAbstractData >> addedInBuilder: aBuilder [
 	self builder: aBuilder.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RWAbstractData >> builder: aBuilder [
 	builder := aBuilder 
 ]
@@ -87,7 +87,7 @@ RWAbstractData >> defaultMinValue [
 	^ -1000000
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RWAbstractData >> elements [
 	"Private method - not meant to be used by a end user.
 	Return the elements added by the data"
@@ -101,7 +101,7 @@ RWAbstractData >> getModelForElement: element atIndex: index [
 	^ element model
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 RWAbstractData >> initialize [
 	super initialize.
 	elementActions := OrderedCollection new.

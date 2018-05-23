@@ -37,9 +37,8 @@ WDCEngine class >> default [
 
 { #category : #accessing }
 WDCEngine class >> reset [
-	"
-	self reset
-	"
+	<script: 'self reset'>
+	
 	DefaultEngine := nil
 ]
 

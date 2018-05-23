@@ -60,3 +60,36 @@ RWGrapherExample >> example03 [
 	^ g view
 
 ]
+
+{ #category : #'as yet unclassified' }
+RWGrapherExample >> example04 [
+	"
+	self new example04
+	"
+
+	| points g ds shape |
+	points := RWGrapher sampleData.
+	g := RWGrapher new.
+	g extent: {20 . 20 . 20}.
+	ds := RWData new.
+	ds dotShape sphere
+		size: 1;
+		color: [ Color random ].
+	ds points: points.
+	ds
+		x: #first;
+		y: #second;
+		z: #third.
+	g add: ds.
+	g build.
+	g view addInteraction: RWMouseKeyControl.
+	g view backgroundColor: Color white.
+	shape := RWMeshShape
+		xzLineGridWithWidth: 20
+		height: 20
+		subdivisions: 20
+		for: g view.
+	shape color: Color black.
+	g view add: shape element.
+	g view open
+]

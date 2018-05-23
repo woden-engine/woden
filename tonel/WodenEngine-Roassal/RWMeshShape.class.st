@@ -31,7 +31,7 @@ RWMeshShape class >> xyLineGridWithWidth: width height: height subdivisions: sub
 	^ self for: aViewOrEngine buildWith: [ :builder |
 		builder
 			currentMaterial: aViewOrEngine engine resourceCache flatColorMaterial;
-			addLineGridWithWidth: 2.0 height: 2.0 subdivisions: 32
+			addLineGridWithWidth: width height: height subdivisions: subdivisions
 	]
 ]
 
@@ -41,7 +41,7 @@ RWMeshShape class >> xzLineGridWithWidth: width height: height subdivisions: sub
 		builder
 			currentMaterial: aViewOrEngine engine resourceCache flatColorMaterial;
 			rotateDegreesOnX: 90;
-			addLineGridWithWidth: width height: width subdivisions: 32
+			addLineGridWithWidth: width height: height subdivisions: subdivisions
 	]
 ]
 
@@ -51,7 +51,7 @@ RWMeshShape class >> yzLineGridWithWidth: width height: height subdivisions: sub
 		builder
 			currentMaterial: aViewOrEngine engine resourceCache flatColorMaterial;
 			rotateDegreesOnY: 90;
-			addLineGridWithWidth: 2.0 height: 2.0 subdivisions: 32
+			addLineGridWithWidth: 2.0 height: 2.0 subdivisions: subdivisions
 	]
 ]
 
