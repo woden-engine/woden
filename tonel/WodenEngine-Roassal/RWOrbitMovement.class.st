@@ -1,6 +1,6 @@
 Class {
 	#name : #RWOrbitMovement,
-	#superclass : #Object,
+	#superclass : #RWElementBehavior,
 	#instVars : [
 		'camera',
 		'centre',
@@ -203,12 +203,12 @@ RWOrbitMovement >> updatePosition [
 	y := r * (phi cos).
 	
 	rotation := (WMMatrix3D yrot: theta) * (WMMatrix3D xrot: (phi -((Float pi)/2.0))).
-	disp := (WMVector3D x: x y: y z: z).
+	disp := (WMVector3F x: x y: y z: z).
 	"disp := rotation transformVector: disp."
 	
 	camera position: (disp + centre).
 	camera orientation: rotation.
-	camera distance: r.
+	"camera distance: r."
 ]
 
 { #category : #updating }

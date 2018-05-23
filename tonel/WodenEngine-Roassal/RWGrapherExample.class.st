@@ -4,7 +4,7 @@ Class {
 	#category : 'WodenEngine-Roassal-Builder-Grapher'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 RWGrapherExample >> example01 [
 	"
 	self new example01
@@ -23,7 +23,7 @@ RWGrapherExample >> example01 [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 RWGrapherExample >> example02 [
 	"
 	self new example02
@@ -42,7 +42,7 @@ RWGrapherExample >> example02 [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 RWGrapherExample >> example03 [
 	"
 	self new example01
@@ -61,7 +61,7 @@ RWGrapherExample >> example03 [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 RWGrapherExample >> example04 [
 	"
 	self new example04
@@ -82,7 +82,8 @@ RWGrapherExample >> example04 [
 		z: #third.
 	g add: ds.
 	g build.
-	g view addInteraction: RWMouseKeyControl.
+	
+	
 	g view backgroundColor: Color white.
 	shape := RWMeshShape
 		xzLineGridWithWidth: 20
@@ -91,5 +92,7 @@ RWGrapherExample >> example04 [
 		for: g view.
 	shape color: Color black.
 	g view add: shape element.
+	"g view addInteraction: RWMouseKeyControl."
+	g view addInteraction: RWOrbitController.
 	g view open
 ]

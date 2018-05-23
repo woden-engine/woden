@@ -53,10 +53,10 @@ RWOrbitController >> initializeElement: aView [
 	camera := aView camera.
 	orbitMovement := RWOrbitMovement new.
 	orbitMovement camera: camera.
-	camera attach: orbitMovement.
+	camera addBehavior: orbitMovement.
 	
 	orbitMovement centre: aView boundingBox center.
-	"self halt."
+	
 	orbitMovement theta: 0.0.
 	orbitMovement phi: (Float pi)/2.0.
 	

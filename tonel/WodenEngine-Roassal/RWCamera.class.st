@@ -13,8 +13,18 @@ RWCamera >> createSceneNode [
 ]
 
 { #category : #accessing }
+RWCamera >> distance: aDistance [
+	sceneNode focalDistance: aDistance
+]
+
+{ #category : #accessing }
 RWCamera >> frustum [
 	^ sceneNode frustum
+]
+
+{ #category : #accessing }
+RWCamera >> isPerspective: trueOrFalse [
+	sceneNode isPerspective: trueOrFalse
 ]
 
 { #category : #'camera projection' }
