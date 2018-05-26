@@ -3,8 +3,8 @@ Class {
 	#superclass : #RWViewInteraction,
 	#instVars : [
 		'camera',
-		'centre',
-		'orbitMovement'
+		'orbitMovement',
+		'center'
 	],
 	#pools : [
 		'OSKeySymbols'
@@ -36,10 +36,10 @@ RWOrbitController >> camera [
 ]
 
 { #category : #accessing }
-RWOrbitController >> centre: aPoint [
-	centre := aPoint.
+RWOrbitController >> center: aPoint [
+	center := aPoint.
 	
-	orbitMovement centre: aPoint
+	orbitMovement center: aPoint
 ]
 
 { #category : #defaults }
@@ -52,10 +52,9 @@ RWOrbitController >> initializeElement: aView [
 	| r |
 	camera := aView camera.
 	orbitMovement := RWOrbitMovement new.
-	orbitMovement camera: camera.
 	camera addBehavior: orbitMovement.
 	
-	orbitMovement centre: aView boundingBox center.
+	orbitMovement center: aView boundingBox center.
 	
 	orbitMovement theta: 0.0.
 	orbitMovement phi: (Float pi)/2.0.
@@ -63,8 +62,6 @@ RWOrbitController >> initializeElement: aView [
 	r := ((aView boundingBox width) + (aView boundingBox height) + (aView boundingBox depth )) /3.0.
 	r := r*1.1.
 	orbitMovement r: r.
-	
-	orbitMovement updatePosition.
 		
 	aView when: RWKeyDown do: [ :evt |
 		self onKeyDown: evt.
@@ -116,7 +113,6 @@ RWOrbitController >> onKeyDown: event [
 	symbol == OSK_r ifTrue: [ accp z: (step negated)].
 	symbol == OSK_f ifTrue: [ accp z: step ].		
 
-
 	orbitMovement updateAccelerationp: accp.
 ]
 
@@ -139,9 +135,9 @@ RWOrbitController >> onMouseDrag: event [
 	self camera isPerspective: true.
 	"self recentreCamera."
 	
-	orbitMovement updatePhi: ((event delta y)/100.0) negated.
-	orbitMovement updateTheta: ((event delta x)/100.0) negated.
-	orbitMovement updatePosition.
+	orbitMovement
+		deltaPhi: ((event delta y)/100.0) negated;
+		deltaTheta: ((event delta x)/100.0) negated
 ]
 
 { #category : #accessing }
@@ -150,11 +146,11 @@ RWOrbitController >> orbitMovement [
 ]
 
 { #category : #accessing }
-RWOrbitController >> recentreCamera [
+RWOrbitController >> recenterCamera [
 	| tmp |
-	orbitMovement centre: centre.
+	orbitMovement center: center.
 	
-	tmp := (orbitMovement camera position) - centre.
+	tmp := (orbitMovement camera position) - center.
 	orbitMovement r: (tmp length)
 ]
 

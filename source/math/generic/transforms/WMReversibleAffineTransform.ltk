@@ -43,6 +43,9 @@ WMReversibleAffineTransform category: 'accessing' methods: {
 :[orthonormal: <WMMatrix3> newMatrix
 	matrix := newMatrix.
 	inverseMatrix := newMatrix transposed.
+
+	"Recompute the inverse translation"
+	inverseTranslation4 := inverseMatrix transformVector4: translation4 negatedVec3.
 ].
 
 :[orthonormal: <WMMatrix3> newMatrix translation: <WMVector3> vector3
@@ -51,7 +54,7 @@ WMReversibleAffineTransform category: 'accessing' methods: {
 	translation4 x: vector3 x.
 	translation4 y: vector3 y.
 	translation4 z: vector3 z.
-	inverseTranslation4 := inverseMatrix transformVector4: translation4 negatedVec3.	
+	inverseTranslation4 := inverseMatrix transformVector4: translation4 negatedVec3.
 ].
 
 }.
@@ -94,7 +97,7 @@ WMReversibleAffineTransform category: 'converting' methods: {
 		inverseTranslation4: translation4 asWMVector4D;
 		yourself
 ].
- 
+
 }.
 
 WMReversibleAffineTransform category: 'special orientations' methods: {

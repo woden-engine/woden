@@ -2,61 +2,72 @@ Class {
 	#name : #RWOrbitMovement,
 	#superclass : #RWElementBehavior,
 	#instVars : [
-		'camera',
-		'centre',
 		'phi',
 		'r',
 		'theta',
 		'speedr',
 		'accelerationr',
 		'speedp',
-		'accelerationp'
+		'accelerationp',
+		'center'
 	],
 	#category : #'WodenEngine-Roassal-Interaction'
 }
+
+{ #category : #updating }
+RWOrbitMovement >> applyPositionToElement: anElement [
+	|x y z rotation disp |
+	
+	z := r * (theta cos) * (phi sin).
+	x := r * (theta sin) * (phi sin).
+	y := r * (phi cos).
+	
+	rotation := (WMMatrix3F yrot: theta) * (WMMatrix3F xrot: (phi -((Float pi)/2.0))).
+	disp := (WMVector3F x: x y: y z: z).
+	"disp := rotation transformVector: disp."
+	
+	anElement
+		orientation: rotation;
+		position: (disp + center)
+	"camera distance: r."
+]
 
 { #category : #defaults }
 RWOrbitMovement >> back [
 	theta := Float pi.
 	phi := (Float pi)/2.0.
-	
-	self updatePosition.
 ]
 
 { #category : #defaults }
 RWOrbitMovement >> bottom [
 	theta := 3.0 * (Float pi)/2.0.
 	phi := (Float pi).
-	
-	self updatePosition.
 ]
 
 { #category : #updating }
-RWOrbitMovement >> camera [ 
-	^camera
-]
-
-{ #category : #updating }
-RWOrbitMovement >> camera: aCamera [
-	camera := aCamera
+RWOrbitMovement >> center: aCentre [
+	center := aCentre
 ]
 
 { #category : #updating }
 RWOrbitMovement >> centre [
-	^centre
+	^center
 ]
 
 { #category : #updating }
-RWOrbitMovement >> centre: aCentre [
-	centre := aCentre
+RWOrbitMovement >> deltaPhi: anAngle [
+	phi := phi + anAngle.
+]
+
+{ #category : #updating }
+RWOrbitMovement >> deltaTheta: anAngle [
+	theta := theta + anAngle
 ]
 
 { #category : #defaults }
 RWOrbitMovement >> front [
 	theta := 0.0.
 	phi := (Float pi)/2.0.
-	
-	self updatePosition.
 ]
 
 { #category : #initialization }
@@ -77,8 +88,6 @@ RWOrbitMovement >> initialize [
 RWOrbitMovement >> left [
 	theta := (Float pi)/2.0.
 	phi := (Float pi)/2.0.
-	
-	self updatePosition.
 ]
 
 { #category : #updating }
@@ -105,8 +114,6 @@ RWOrbitMovement >> r: aRadius [
 RWOrbitMovement >> right [
 	theta := (Float pi)/2.0 negated.
 	phi := (Float pi)/2.0.
-	
-	self updatePosition.
 ]
 
 { #category : #updating }
@@ -114,8 +121,11 @@ RWOrbitMovement >> setPhi: aPhi theta: aTheta r: aRadius [
 	phi:=aPhi.
 	theta:=aTheta.
 	r:=aRadius.
-	
-	self updatePosition
+]
+
+{ #category : #'time simulation' }
+RWOrbitMovement >> simulateTime: delta onElement: anElement [
+	self applyPositionToElement: anElement
 ]
 
 { #category : #updating }
@@ -156,27 +166,6 @@ RWOrbitMovement >> theta: anAngle [
 RWOrbitMovement >> top [
 	theta := 3.0 * (Float pi)/2.0 negated.
 	phi := 2.0 * (Float pi).
-	
-	self updatePosition.
-]
-
-{ #category : #updating }
-RWOrbitMovement >> update: delta forNode: sceneNode [
-	| rotation tmp |
-	speedr := speedr + (accelerationr * 0.5 * delta).
-	r := r + (speedr * delta).
-	speedr := speedr + (accelerationr * 0.5 * delta).
-	
-	
-	rotation := (WMMatrix3D yrot: theta) * (WMMatrix3D xrot: (phi -((Float pi)/2.0))).
-	
-	speedp := speedp + (accelerationp * 0.5 * delta).
-	tmp := (speedp * delta).
-	tmp := rotation transformVector: tmp.
-	centre := centre + tmp.
-	speedp := speedp + (accelerationp * 0.5 * delta).
-	
-	self updatePosition.
 ]
 
 { #category : #updating }
@@ -187,31 +176,4 @@ RWOrbitMovement >> updateAccelerationp: update [
 { #category : #updating }
 RWOrbitMovement >> updateAccelerationr: update [
 	accelerationr := accelerationr + update.
-]
-
-{ #category : #updating }
-RWOrbitMovement >> updatePhi: anAngle [
-	phi := phi + anAngle.
-]
-
-{ #category : #updating }
-RWOrbitMovement >> updatePosition [
-	|x y z rotation disp |
-	
-	z := r * (theta cos) * (phi sin).
-	x := r * (theta sin) * (phi sin).
-	y := r * (phi cos).
-	
-	rotation := (WMMatrix3D yrot: theta) * (WMMatrix3D xrot: (phi -((Float pi)/2.0))).
-	disp := (WMVector3F x: x y: y z: z).
-	"disp := rotation transformVector: disp."
-	
-	camera position: (disp + centre).
-	camera orientation: rotation.
-	"camera distance: r."
-]
-
-{ #category : #updating }
-RWOrbitMovement >> updateTheta: anAngle [
-	theta := theta + anAngle
 ]

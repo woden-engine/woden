@@ -49,6 +49,14 @@ WDCFrameBufferingDriver >> addRenderProcess: process withError: error [
 
 ]
 
+{ #category : #'rendering process' }
+WDCFrameBufferingDriver >> beginFrame [
+	| fence |
+	fence := frameFences at: bufferingFrameIndex.
+	fence ifNotNil: [ fence waitOnClient ].
+
+]
+
 { #category : #accessing }
 WDCFrameBufferingDriver >> bufferingFrameIndex [
 	^ bufferingFrameIndex
@@ -67,6 +75,23 @@ WDCFrameBufferingDriver >> createFrameFences [
 { #category : #'rendering process' }
 WDCFrameBufferingDriver >> createMainRenderingProcess [
 	mainRenderingProcess := [ self mainRenderingProcess ] forkAt: Processor userInterruptPriority
+]
+
+{ #category : #'rendering process' }
+WDCFrameBufferingDriver >> endFrame [
+	| fence |
+	fence := frameFences at: bufferingFrameIndex.
+	fence ifNil: [ 
+		fence := engine device createFence.
+		frameFences at: bufferingFrameIndex put: fence.
+	].
+
+	engine graphicsQueue signalFence: fence.
+
+	frameIndex := frameIndex + 1.
+	bufferingFrameIndex := (frameIndex % self frameBufferingCount) + 1.
+	
+	^ bufferingFrameIndex
 ]
 
 { #category : #enumerating }
@@ -129,25 +154,6 @@ WDCFrameBufferingDriver >> mainRenderingProcess [
 ]
 
 { #category : #'rendering process' }
-WDCFrameBufferingDriver >> newFrame [
-	| fence |
-	fence := frameFences at: bufferingFrameIndex.
-	fence ifNil: [ 
-		fence := engine device createFence.
-		frameFences at: bufferingFrameIndex put: fence.
-	].
-
-	engine graphicsQueue signalFence: fence.
-
-	frameIndex := frameIndex + 1.
-	bufferingFrameIndex := (frameIndex % self frameBufferingCount) + 1.
-	
-	fence := frameFences at: bufferingFrameIndex.
-	fence ifNotNil: [ fence waitOnClient ].
-	^ bufferingFrameIndex
-]
-
-{ #category : #'rendering process' }
 WDCFrameBufferingDriver >> renderForDeltaMicroseconds: delta [
 	"Always update the simulations"
 	self renderingProcessesDo: [ :process | process updateForDeltaMicroseconds: delta ].
@@ -155,10 +161,12 @@ WDCFrameBufferingDriver >> renderForDeltaMicroseconds: delta [
 	"Only perform rendering if there is at least one process that needs to perform rendering."
 	frontRenderingProcesses detect: #needsToRender ifNone: [^ self].
 	
-	self newFrame.
-	self renderingProcessesRenderDo: #prepareRendering.
-	self renderingProcessesRenderDo: #sendRenderingCommands.
-	self renderingProcessesRenderDo: #commitSurfaces.
+	self
+		beginFrame;
+		renderingProcessesRenderDo: #prepareRendering;
+		renderingProcessesRenderDo: #sendRenderingCommands;
+		renderingProcessesRenderDo: #commitSurfaces;
+		endFrame
 ]
 
 { #category : #'rendering process' }
