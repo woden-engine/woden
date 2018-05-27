@@ -14,13 +14,20 @@ Class {
 		'resolveRenderTarget',
 		'cameraTransformFunction',
 		'cameraTransform',
-		'overlayRenderer'
+		'overlayRenderer',
+		'pompeiiCanvasSafeZoneTransform'
 	],
 	#pools : [
 		'AGPUConstants'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
+
+{ #category : #accessing }
+WTSViewport >> applyPompeiiCanvasSafeZoneTransform: aPompeiiCanvasTransform [
+	aPompeiiCanvasTransform loadIdentity.
+	pompeiiCanvasSafeZoneTransform ifNotNil: [ pompeiiCanvasSafeZoneTransform value: aPompeiiCanvasTransform ]
+]
 
 { #category : #accessing }
 WTSViewport >> bounds [
@@ -92,6 +99,16 @@ WTSViewport >> overlayRenderer [
 { #category : #accessing }
 WTSViewport >> overlayRenderer: anObject [
 	overlayRenderer := anObject
+]
+
+{ #category : #accessing }
+WTSViewport >> pompeiiCanvasSafeZoneTransform [
+	^ pompeiiCanvasSafeZoneTransform
+]
+
+{ #category : #accessing }
+WTSViewport >> pompeiiCanvasSafeZoneTransform: anObject [
+	pompeiiCanvasSafeZoneTransform := anObject
 ]
 
 { #category : #accessing }

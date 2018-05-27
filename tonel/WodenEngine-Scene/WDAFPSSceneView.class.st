@@ -10,7 +10,9 @@ Class {
 		'cameraAngle',
 		'cameraAngularVelocity',
 		'cameraAngularSpeed',
-		'lastFrameRateDrawing'
+		'lastFrameRateDrawing',
+		'lastFrameRateCountFrame',
+		'lastFrameDeltaTime'
 	],
 	#category : #'WodenEngine-Scene-Application'
 }
@@ -66,12 +68,27 @@ WDAFPSSceneView >> cameraVelocity: anObject [
 ]
 
 { #category : #'drawing 2d' }
-WDAFPSSceneView >> drawFrameRateOn: canvas [
-	| currentTime deltaTime builder mesh |
+WDAFPSSceneView >> computeFrameDeltaTime [
+	| currentTime |
 	self flag: 'TODO: Use GPU timestamp query.'.
 	lastFrameRateDrawing ifNil: [ lastFrameRateDrawing := Time microsecondClockValue ].
-	currentTime := Time microsecondClockValue.
-	deltaTime := (currentTime - lastFrameRateDrawing)*0.001.
+	lastFrameRateCountFrame ~~ engine frameBufferingDriver frameIndex ifTrue: [
+		currentTime := Time microsecondClockValue.
+		lastFrameDeltaTime := (currentTime - lastFrameRateDrawing) / 1000.0.
+		lastFrameRateDrawing := currentTime.
+		lastFrameRateCountFrame := engine frameBufferingDriver frameIndex
+	].
+
+	^ lastFrameDeltaTime
+
+
+
+]
+
+{ #category : #'drawing 2d' }
+WDAFPSSceneView >> drawFrameRateOn: canvas [
+	| deltaTime builder mesh |
+	deltaTime := self computeFrameDeltaTime.
 	
 	builder := canvas driver mesh2DBuilder.
 	builder text
@@ -84,8 +101,6 @@ WDAFPSSceneView >> drawFrameRateOn: canvas [
 	mesh := builder mesh.
 	
 	canvas draw: mesh.
-		
-	lastFrameRateDrawing := currentTime.
 ]
 
 { #category : #rendering }

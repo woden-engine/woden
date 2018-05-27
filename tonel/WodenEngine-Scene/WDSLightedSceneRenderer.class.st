@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'shadowSceneRenderer'
 	],
-	#category : 'WodenEngine-Scene-Application'
+	#category : #'WodenEngine-Scene-Rendering'
 }
 
 { #category : #'shadow mapping' }

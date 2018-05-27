@@ -22,6 +22,7 @@ WDASceneViewWithPompeii >> pompeiiDefaultFont [
 WDASceneViewWithPompeii >> renderViewport: viewport overlayWith: stateTracker [
 	pompeiiSurface := viewport resolveRenderTarget validPompeiiSurface.
 	pompeiiSurface withStateTracker: stateTracker drawDuring: [ :canvas |
+		viewport applyPompeiiCanvasSafeZoneTransform: canvas transform.
 		self drawOnPompeiiCanvas: canvas
 	]
 ]

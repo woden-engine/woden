@@ -1,7 +1,7 @@
 Class {
 	#name : #WDASceneViewStereoInterleavedScreenDisplayMode,
 	#superclass : #WDASceneViewStereoScreenDisplayMode,
-	#category : 'WodenEngine-Scene-Application'
+	#category : #'WodenEngine-Scene-Rendering'
 }
 
 { #category : #'viewport composition' }

@@ -16,12 +16,14 @@ Class {
 		'shadowCastingLights',
 		'shadowCastingLightCount',
 		'shadowMapBuffer',
-		'shadowMapRenderTargets'
+		'shadowMapRenderTargets',
+		'useLateLatching',
+		'currentCameraViewports'
 	],
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Scene-Application'
+	#category : #'WodenEngine-Scene-Rendering'
 }
 
 { #category : #'instance creation' }
@@ -37,6 +39,11 @@ WDSSceneRenderer class >> maxShadowCastingLightCount [
 { #category : #'shadow mapping' }
 WDSSceneRenderer class >> shadowMapExtent [
 	^ 512 @ 512
+]
+
+{ #category : #initialization }
+WDSSceneRenderer >> cameraStateFramebufferingCount [
+	^ useLateLatching ifTrue: [ 1 ] ifFalse: [ engine frameBufferingCount ]
 ]
 
 { #category : #'rendering preparations' }
@@ -77,7 +84,7 @@ WDSSceneRenderer >> currentTime: anObject [
 WDSSceneRenderer >> ensureCameraStatesFor: requiredNumberOfCameras [
 	| pool currentNumberOfCameras missingNumberOfCameras |
 	cameraStates ifNil: [ 
-		cameraStates := engine frameBufferingCollect: [ :f | #() ].
+		cameraStates := (1 to: self cameraStateFramebufferingCount) collect: [ :f | #() ].
 	].
 	
 	currentNumberOfCameras := cameraStates first size.
@@ -101,7 +108,8 @@ WDSSceneRenderer >> initializeWithEngine: aWDCEngine [
 	
 	visibleObjects := OrderedCollection new.
 	visibleLightSources := OrderedCollection new.
-
+	useLateLatching := false.
+	
 ]
 
 { #category : #'rendering preparations' }
@@ -175,6 +183,7 @@ WDSSceneRenderer >> renderScene: scene viewports: viewports intoStateTracker: aS
 { #category : #rendering }
 WDSSceneRenderer >> renderViewport: viewport index: viewportIndex [
 	| renderTarget resolveTarget renderPass |
+	self setupStateTracker.
 	renderTarget := viewport renderTarget.
 	resolveTarget := viewport resolveRenderTarget.
 
@@ -210,7 +219,6 @@ WDSSceneRenderer >> renderViewport: viewport index: viewportIndex [
 WDSSceneRenderer >> renderViewports: viewports composeWith: aBlock [
 	shadowCastingLightCount ~= 0 ifTrue: [ self renderShadowMaps ].
 	
-	self setupStateTracker.
 	viewports doWithIndex: [ :viewport :index | self renderViewport: viewport index: index ].
 	aBlock ifNotNil: [ aBlock cull: stateTracker ]
 ]
@@ -250,7 +258,9 @@ WDSSceneRenderer >> setupStateTracker [
 
 { #category : #rendering }
 WDSSceneRenderer >> setupViewportRendering: viewport index: viewportIndex [
-	stateTracker submode: viewport submode.
+	stateTracker 
+		mode: self renderMode;
+		submode: viewport submode.
 	stateTracker
 		useShaderResources: (currentCameraStates at: viewportIndex)
 ]
@@ -292,29 +302,47 @@ WDSSceneRenderer >> stateTracker [
 ]
 
 { #category : #'rendering preparations' }
-WDSSceneRenderer >> tryToCollectLightSource: lightSource for: camera [
-	"Nothing required here."
-]
-
-{ #category : #'rendering preparations' }
-WDSSceneRenderer >> updateFrameCameraStates: viewports [
-	| gpuCameraState cameraState |
-	self ensureCameraStatesFor: viewports size.
-	currentCameraStates := cameraStates at: engine bufferingFrameIndex.
-	viewports doWithIndex: [ :viewport :index |
+WDSSceneRenderer >> submitCurrentCameraStates [
+	| cameraState gpuCameraState |
+	currentCameraViewports doWithIndex: [ :viewport :index |
 		cameraState := viewport cameraState.
 		cameraState
 			transform: viewport cameraTransform;
 			currentTime: currentTime.
 				
 		gpuCameraState := (currentCameraStates at: index) slotValueAt: 0.
-		gpuCameraState value: cameraState.
+		gpuCameraState atomicSetValue: cameraState.
 	].
 
+]
+
+{ #category : #'rendering preparations' }
+WDSSceneRenderer >> tryToCollectLightSource: lightSource for: camera [
+	"Nothing required here."
+]
+
+{ #category : #'rendering preparations' }
+WDSSceneRenderer >> updateFrameCameraStates: viewports [
+	self ensureCameraStatesFor: viewports size.
+	currentCameraStates := useLateLatching
+		ifTrue: [ cameraStates first ]
+		ifFalse: [ cameraStates at: engine bufferingFrameIndex ].
+	currentCameraViewports := viewports.
+	self submitCurrentCameraStates
 ]
 
 { #category : #'rendering preparations' }
 WDSSceneRenderer >> updateRenderingStatesFor: viewports [
 	self
 		updateFrameCameraStates: viewports
+]
+
+{ #category : #accessing }
+WDSSceneRenderer >> useLateLatching [
+	^ useLateLatching
+]
+
+{ #category : #accessing }
+WDSSceneRenderer >> useLateLatching: anObject [
+	useLateLatching := anObject
 ]

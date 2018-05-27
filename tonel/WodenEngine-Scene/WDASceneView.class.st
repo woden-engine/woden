@@ -107,7 +107,8 @@ WDASceneView >> screenDisplayMode: aScreenDisplayMode [
 { #category : #'rendering process stages' }
 WDASceneView >> sendRenderingCommands [
 	commandList ifNil: [ ^ self ].
-	engine graphicsQueue addCommandList: commandList validHandle
+	engine graphicsQueue addCommandList: commandList validHandle.
+	screenDisplayMode submitLowLatencyData
 		
 ]
 

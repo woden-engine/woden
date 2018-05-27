@@ -8,7 +8,7 @@ Class {
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Scene-Application'
+	#category : #'WodenEngine-Scene-Rendering'
 }
 
 { #category : #'as yet unclassified' }
@@ -46,10 +46,18 @@ WDASceneViewScreenDisplayMode >> prepareRendering [
 	resolveTarget := view window validResolveRenderTarget.
 	self updateCameraFrustum.
 	^ view sceneRenderer
+		useLateLatching: self useLateLatching;
 		currentTime: view model currentTime;
 		renderScene: view model scene viewports: {
 			self viewportForCamera: view cameraSceneNode renderTarget: renderTarget resolveRenderTarget: resolveTarget
 		}
+]
+
+{ #category : #'as yet unclassified' }
+WDASceneViewScreenDisplayMode >> submitLowLatencyData [
+	self useLateLatching ifTrue: [
+		view sceneRenderer submitCurrentCameraStates
+	]
 ]
 
 { #category : #'rendering process stages' }
@@ -65,6 +73,11 @@ WDASceneViewScreenDisplayMode >> updateCameraFrustum [
 		"TODO: Compute a proper orthographic projection"
 		frustum reverseDepthPerspectiveFovY: camera fieldOfView aspect: aspect near: camera nearDistance far: camera farDistance invertedY: engine projectionInvertedY.
 	]
+]
+
+{ #category : #'rendering process stages' }
+WDASceneViewScreenDisplayMode >> useLateLatching [
+	^ false
 ]
 
 { #category : #accessing }

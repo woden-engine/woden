@@ -68,7 +68,7 @@ WDCCompositionShaderSignature >> defaultSamplers [
 		max_lod: 10000.0;
 		yourself.
 		
-	bindings := self shaderSignature newSamplers.
+	bindings := self newSamplers.
 	bindings
 		createSampler: 0 description: samplerDesc.
 

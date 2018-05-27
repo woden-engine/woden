@@ -10,6 +10,13 @@ Class {
 	#category : 'WodenEngine-Core-Pool'
 }
 
+{ #category : #accessing }
+WDCStreamingBufferPoolElement >> atomicSetValue: anObject [
+	| bytes |
+	bytes := anObject asByteArray.
+	LibC memCopy: bytes to: heap pointer + offset size: bytes size
+]
+
 { #category : #bindings }
 WDCStreamingBufferPoolElement >> bind: slot storageOn: binding [
 	binding bind: slot storageBuffer: heap buffer offset: offset size: heap elementSize value: self

@@ -53,11 +53,7 @@ WDCVRSensorReaderPSVRDClient >> recenter [
 
 { #category : #'session management' }
 WDCVRSensorReaderPSVRDClient >> requestSensorStream [
-	self checkSession.
-	sensorStreamRequested ifFalse: [
-		connection requestSensorStream.
-		sensorStreamRequested := true.
-	]
+	self checkSession
 ]
 
 { #category : #'session management' }

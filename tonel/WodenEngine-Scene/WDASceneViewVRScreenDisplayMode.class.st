@@ -12,7 +12,7 @@ Class {
 		'screenGridIndexCount',
 		'screenGridVertexBinding'
 	],
-	#category : 'WodenEngine-Scene-Application'
+	#category : #'WodenEngine-Scene-Rendering'
 }
 
 { #category : #'multi eye rendering' }
@@ -48,7 +48,7 @@ WDASceneViewVRScreenDisplayMode >> composeEyesIn: stateTracker [
 		useShaderResources: sourceRenderTargetsBinding;
 		useShaderResources: self shaderSignature defaultSamplers;
 		primitiveType: AGPU_TRIANGLES;
-		drawElements: screenGridIndexCount instance_count: 6 first_index: 0 base_vertex: 0 base_instance: 0;
+		drawElements: screenGridIndexCount instance_count: 2 first_index: 0 base_vertex: 0 base_instance: 0;
 		endRenderPass
 ]
 
@@ -152,7 +152,17 @@ WDASceneViewVRScreenDisplayMode >> leftViewportForCamera: camera [
 		resolveRenderTarget: leftResolveRenderTarget;
 		bounds: leftRenderTarget bounds;
 		cameraTransformFunction: [ :ct | self applyVRTransformToCamera: ct eye: (WMVector3F x: ipd * -0.5) ];
-		submode: #full
+		submode: #full;
+		overlayRenderer: view;
+		pompeiiCanvasSafeZoneTransform: [ :canvasTransform | self pompeiiSafeZoneTransform: canvasTransform ]
+]
+
+{ #category : #'multi eye rendering' }
+WDASceneViewVRScreenDisplayMode >> pompeiiSafeZoneTransform: aCanvasTransform [
+	aCanvasTransform
+		scaleX: 2.0 Y: 2.0;
+		translateX: 10.0 Y: 10.0
+
 ]
 
 { #category : #'rendering process stages' }
@@ -175,7 +185,9 @@ WDASceneViewVRScreenDisplayMode >> rightViewportForCamera: camera [
 		resolveRenderTarget: rightResolveRenderTarget;
 		bounds: rightRenderTarget bounds;
 		cameraTransformFunction: [ :ct | self applyVRTransformToCamera: ct eye: (WMVector3F x: ipd * 0.5) ];
-		submode: #full
+		submode: #full;
+		overlayRenderer: view;
+		pompeiiCanvasSafeZoneTransform: [ :canvasTransform | self pompeiiSafeZoneTransform: canvasTransform ]
 ]
 
 { #category : #'rendering process stages' }
@@ -188,6 +200,11 @@ WDASceneViewVRScreenDisplayMode >> updateCompositionState [
 { #category : #'rendering process stages' }
 WDASceneViewVRScreenDisplayMode >> uploadCompositionState [
 	vrState storeBytesIn: compositionStateBuffer validPointer getHandle position: 1.
+]
+
+{ #category : #'rendering process stages' }
+WDASceneViewVRScreenDisplayMode >> useLateLatching [
+	^ false
 ]
 
 { #category : #'viewport composition' }

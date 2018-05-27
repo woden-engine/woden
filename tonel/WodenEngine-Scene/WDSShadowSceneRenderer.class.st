@@ -1,7 +1,7 @@
 Class {
 	#name : #WDSShadowSceneRenderer,
 	#superclass : #WDSSceneRenderer,
-	#category : 'WodenEngine-Scene-Application'
+	#category : #'WodenEngine-Scene-Rendering'
 }
 
 { #category : #rendering }
@@ -12,6 +12,7 @@ WDSShadowSceneRenderer >> renderMode [
 { #category : #rendering }
 WDSShadowSceneRenderer >> renderViewport: viewport index: viewportIndex [
 	| renderTarget resolveTarget renderPass |
+	self setupStateTracker.
 	renderTarget := viewport renderTarget.
 	resolveTarget := viewport resolveRenderTarget.
 

@@ -18,7 +18,7 @@ Class {
 		'leftProjectionMatrix',
 		'rightProjectionMatrix'
 	],
-	#category : 'WodenEngine-Scene-Application'
+	#category : #'WodenEngine-Scene-Rendering'
 }
 
 { #category : #'instance creation' }
@@ -217,6 +217,7 @@ WDASceneViewStereoScreenDisplayMode >> prepareRendering [
 		
 	resolveTarget := view window validResolveRenderTarget.
 	^ view sceneRenderer
+		useLateLatching: self useLateLatching;
 		currentTime: view model currentTime;
 		renderScene: view model scene viewports: {
 			self leftViewportForCamera: view cameraSceneNode.

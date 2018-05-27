@@ -6,7 +6,7 @@ Class {
 		'globalLightingStates',
 		'currentGlobalLigthingStates'
 	],
-	#category : 'WodenEngine-Scene-Application'
+	#category : #'WodenEngine-Scene-Rendering'
 }
 
 { #category : #rendering }
