@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 from fetchDependencies import *
 from loadWoden import *
 
