@@ -46,5 +46,5 @@ WDAGSLevelModel >> spawn [
 { #category : #'as yet unclassified' }
 WDAGSLevelModel >> spawnPlayerAtPosition: aPosition [
 	self flag: 'TODO: Try to move this part into the view.'.
-	map spawnEntityWithBehavior: WTGSPlayerBehavior new position: aPosition.
+	map spawnEntityWithBehavior: WDGSPlayerBehavior new position: aPosition.
 ]

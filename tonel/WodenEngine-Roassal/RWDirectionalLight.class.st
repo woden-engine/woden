@@ -6,5 +6,5 @@ Class {
 
 { #category : #initialization }
 RWDirectionalLight >> createSceneNode [
-	^ WTSLightSource new directional
+	^ WDSGLightSource new directional
 ]

@@ -278,7 +278,7 @@ WDSSceneRenderer >> shaderSignatureClass [
 { #category : #'rendering preparations' }
 WDSSceneRenderer >> sortObjects: objectList perViewports: viewports [
 	| viewport forwardDirection translucentSortedPriority |
-	translucentSortedPriority := WTSNode renderPriorityTranslucentSorted.
+	translucentSortedPriority := WDSGNode renderPriorityTranslucentSorted.
 	
 	objectList doWithIndex: [ :objects :index |
 		viewport := viewports at: index.

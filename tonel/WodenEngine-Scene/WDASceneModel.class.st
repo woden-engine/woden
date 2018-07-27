@@ -43,9 +43,9 @@ WDASceneModel >> initialize [
 
 { #category : #'instance creation' }
 WDASceneModel >> newScene [
-	scene := WTSScene for: engine.
+	scene := WDSGScene for: engine.
 
-	camera := WTSCamera new.
+	camera := WDSGCamera new.
 	scene add: camera.
 	^ scene
 ]

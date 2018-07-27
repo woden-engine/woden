@@ -6,5 +6,5 @@ Class {
 
 { #category : #initialization }
 RWPointLight >> createSceneNode [
-	^ WTSLightSource new point
+	^ WDSGLightSource new point
 ]

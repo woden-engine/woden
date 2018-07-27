@@ -16,11 +16,11 @@ WDASceneExamples class >> example01Cube [
 	meshBuilder addCubeWithWidth: 1.0 height: 1.0 depth: 1.0.
 	mesh := meshBuilder mesh.
 	
-	cube := WTSSpatialObject new.
+	cube := WDSGSpatialObject new.
 	cube renderable: mesh.
 	scene add: cube.
 	
-	light := WTSLightSource new.
+	light := WDSGLightSource new.
 	light point.
 	light state
 		intensity: Color yellow asWMVector4F.
@@ -47,11 +47,11 @@ WDASceneExamples class >> example02TextureCube [
 		addCubeWithWidth: 1.0 height: 1.0 depth: 1.0.
 	mesh := meshBuilder mesh.
 	
-	cube := WTSSpatialObject new.
+	cube := WDSGSpatialObject new.
 	cube renderable: mesh.
 	scene add: cube.
 	
-	light := WTSLightSource new.
+	light := WDSGLightSource new.
 	light point.
 	light state
 		intensity: Color yellow asWMVector4F.
@@ -80,11 +80,11 @@ WDASceneExamples class >> example03Floor [
 		computeTangentsBitangents.
 	mesh := meshBuilder mesh.
 	
-	cube := WTSSpatialObject new.
+	cube := WDSGSpatialObject new.
 	cube renderable: mesh.
 	scene add: cube.
 	
-	light := WTSLightSource new.
+	light := WDSGLightSource new.
 	light point.
 	light state
 			intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.3 w: 1.0) * 0.8.
@@ -131,12 +131,12 @@ WDASceneExamples class >> example04Pool [
 		"Use a planar texture coordinates"
 		planeTextureScale: (WMVector2F x: 2.0 y: 2.0) offset: (WMVector2F x: 0.0 y: 0.0);
 		computeTangentsBitangents.
-	cube := WTSSpatialObject new.
+	cube := WDSGSpatialObject new.
 	cube renderable: meshBuilder mesh.
 	scene add: cube.
 
 	"Add a light"
-	sunLight := WTSLightSource new.
+	sunLight := WDSGLightSource new.
 	sunLight directional.
 	sunLight state
 			intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.8.
@@ -152,7 +152,7 @@ WDASceneExamples class >> example04Pool [
 		currentMaterial: skyMaterial;
 		addInteriorCubeWithWidth: 40.0 height: 40.0 depth: 40.0.
 
-	skyBox := WTSSpatialObject new.
+	skyBox := WDSGSpatialObject new.
 	skyBox renderable: meshBuilder mesh.
 	scene add: skyBox.
 
@@ -169,7 +169,7 @@ WDASceneExamples class >> example04Pool [
 		currentMaterial: waterMaterial;
 		addGridWithWidth: 5.0 height: 5.0 subdivisions: 64.
 		
-	waterSurface := WTSSpatialObject new.
+	waterSurface := WDSGSpatialObject new.
 	waterSurface translucentRenderPriority.
 	waterSurface renderable: meshBuilder mesh.
 	waterSurface transform translateToX: 0.0 y: -0.3 z: 0.0.
@@ -216,12 +216,12 @@ WDASceneExamples class >> example05DangerousPool [
 		"Use a planar texture coordinates"
 		planeTextureScale: (WMVector2F x: 2.0 y: 2.0) offset: (WMVector2F x: 0.0 y: 0.0);
 		computeTangentsBitangents.
-	cube := WTSSpatialObject new.
+	cube := WDSGSpatialObject new.
 	cube renderable: meshBuilder mesh.
 	scene add: cube.
 
 	"Add a light"
-	sunLight := WTSLightSource new.
+	sunLight := WDSGLightSource new.
 	sunLight directional.
 	sunLight state
 			intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.8.
@@ -237,7 +237,7 @@ WDASceneExamples class >> example05DangerousPool [
 		currentMaterial: skyMaterial;
 		addInteriorCubeWithWidth: 40.0 height: 40.0 depth: 40.0.
 
-	skyBox := WTSSpatialObject new.
+	skyBox := WDSGSpatialObject new.
 	skyBox renderable: meshBuilder mesh.
 	scene add: skyBox.
 
@@ -254,7 +254,7 @@ WDASceneExamples class >> example05DangerousPool [
 		currentMaterial: waterMaterial;
 		addGridWithWidth: 5.0 height: 5.0 subdivisions: 64.
 		
-	waterSurface := WTSSpatialObject new.
+	waterSurface := WDSGSpatialObject new.
 	waterSurface translucentRenderPriority.
 	waterSurface renderable: meshBuilder mesh.
 	waterSurface transform translateToX: 0.0 y: -0.3 z: 0.0.
@@ -264,7 +264,7 @@ WDASceneExamples class >> example05DangerousPool [
 		combineSubmeshesWithMaterial: 'materials/demos/magnum_fps.json';
 		meshFor: engine.
 		
-	pickedGun := WTSSpatialObject new.
+	pickedGun := WDSGSpatialObject new.
 	pickedGun renderable: magnumMesh.
 	camera addChild: pickedGun.
 
@@ -307,11 +307,11 @@ WDASceneExamples class >> example06MeshGrid [
 		addLineGridWithWidth: 2.0 height: 2.0 subdivisions: 32.
 	mesh := meshBuilder mesh.
 	
-	cube := WTSSpatialObject new.
+	cube := WDSGSpatialObject new.
 	cube renderable: mesh.
 	scene add: cube.
 	
-	light := WTSLightSource new.
+	light := WDSGLightSource new.
 	light point.
 	light state
 		intensity: Color yellow asWMVector4F.

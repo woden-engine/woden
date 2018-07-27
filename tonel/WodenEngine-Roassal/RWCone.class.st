@@ -22,7 +22,7 @@ RWCone >> baseShapeDescriptor [
 { #category : #hooks }
 RWCone >> createBaseShapeNodeForView: aView [
 	| node renderable engine |
-	node := WTSSpatialObjectInstanceGroup new.
+	node := WDSGSpatialObjectInstanceGroup new.
 	node updatedPerFrame: false.
 	engine := aView engine.
 	

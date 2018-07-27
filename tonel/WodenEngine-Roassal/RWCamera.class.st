@@ -9,7 +9,7 @@ Class {
 
 { #category : #initialization }
 RWCamera >> createSceneNode [
-	^ WTSCamera new
+	^ WDSGCamera new
 ]
 
 { #category : #accessing }

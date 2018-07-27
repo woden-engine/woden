@@ -1,7 +1,7 @@
 Class {
 	#name : #WDIFBXTextParser,
 	#superclass : #WDIFBXTextGrammar,
-	#category : 'WodenEngine-Importers'
+	#category : #'WodenEngine-Importers-FBX'
 }
 
 { #category : #accessing }

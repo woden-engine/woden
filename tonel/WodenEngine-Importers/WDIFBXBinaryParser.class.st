@@ -9,7 +9,7 @@ Class {
 		'MagicString',
 		'PropertyTypeParserDictionary'
 	],
-	#category : #'WodenEngine-Importers'
+	#category : #'WodenEngine-Importers-FBX'
 }
 
 { #category : #initialization }

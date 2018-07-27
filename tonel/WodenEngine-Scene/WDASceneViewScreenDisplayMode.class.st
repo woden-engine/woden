@@ -102,7 +102,7 @@ WDASceneViewScreenDisplayMode >> viewportForCamera: camera renderTarget: renderT
 	cameraState
 		projectionMatrix: (self computeProjectionMatrixFor: camera).
 	
-	^ WTSViewport new
+	^ WDSGViewport new
 		camera: camera;
 		cameraState: cameraState;
 		renderTarget: renderTarget;

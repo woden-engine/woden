@@ -6,5 +6,5 @@ Class {
 
 { #category : #initialization }
 RWSpotLight >> createSceneNode [
-	^ WTSLightSource new spot
+	^ WDSGLightSource new spot
 ]

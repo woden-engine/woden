@@ -22,7 +22,7 @@ RWCylinder >> baseShapeDescriptor [
 { #category : #hooks }
 RWCylinder >> createBaseShapeNodeForView: aView [
 	| engine node renderable |
-	node := WTSSpatialObjectInstanceGroup new.
+	node := WDSGSpatialObjectInstanceGroup new.
 	node updatedPerFrame: false.
 	engine := aView engine.
 	

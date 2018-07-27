@@ -47,7 +47,7 @@ RWViewTest >> testBaseShape [
 { #category : #tests }
 RWViewTest >> testBaseShapePutting [
 	| baseShape node |
-	node := WTSSpatialObjectInstanceGroup new.
+	node := WDSGSpatialObjectInstanceGroup new.
 	baseShape := view baseShapeNodeFor: #dummyShape ifAbsentPut: [ node ].
 	self assert: baseShape equals: node
 ]

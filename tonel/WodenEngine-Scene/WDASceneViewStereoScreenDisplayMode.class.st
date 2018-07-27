@@ -195,7 +195,7 @@ WDASceneViewStereoScreenDisplayMode >> leftViewportForCamera: camera [
 	cameraState
 		projectionMatrix: leftProjectionMatrix.
 	
-	^ WTSViewport new
+	^ WDSGViewport new
 		camera: camera;
 		cameraState: cameraState;
 		renderTarget: leftRenderTarget;
@@ -243,7 +243,7 @@ WDASceneViewStereoScreenDisplayMode >> rightViewportForCamera: camera [
 	cameraState
 		projectionMatrix: rightProjectionMatrix.
 	
-	^ WTSViewport new
+	^ WDSGViewport new
 		camera: camera;
 		cameraState: cameraState;
 		renderTarget: rightRenderTarget;

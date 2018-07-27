@@ -123,7 +123,7 @@ RWElement >> connectedEdges [
 
 { #category : #initialization }
 RWElement >> createSceneNode [
-	^ WTSSpatialObject new
+	^ WDSGSpatialObject new
 ]
 
 { #category : #accessing }

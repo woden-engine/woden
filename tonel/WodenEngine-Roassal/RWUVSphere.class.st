@@ -22,7 +22,7 @@ RWUVSphere >> baseShapeDescriptor [
 { #category : #'as yet unclassified' }
 RWUVSphere >> createBaseShapeNodeForView: aView [
 	| engine node renderable |
-	node := WTSSpatialObjectInstanceGroup new.
+	node := WDSGSpatialObjectInstanceGroup new.
 	node updatedPerFrame: false.
 	engine := aView engine.
 	

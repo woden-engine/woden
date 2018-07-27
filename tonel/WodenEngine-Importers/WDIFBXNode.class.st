@@ -6,7 +6,7 @@ Class {
 		'attributes',
 		'children'
 	],
-	#category : 'WodenEngine-Importers'
+	#category : #'WodenEngine-Importers-FBX'
 }
 
 { #category : #accessing }
@@ -17,6 +17,14 @@ WDIFBXNode >> attributes [
 { #category : #accessing }
 WDIFBXNode >> attributes: anObject [
 	attributes := anObject
+]
+
+{ #category : #accessing }
+WDIFBXNode >> childNamed: childName [
+	children do: [ :child |
+		child type = childName ifTrue: [ ^ child ]
+	].
+	^ nil
 ]
 
 { #category : #accessing }

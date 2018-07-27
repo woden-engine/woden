@@ -21,7 +21,7 @@ Class {
 		'number',
 		'optionalAttributes'
 	],
-	#category : 'WodenEngine-Importers'
+	#category : #'WodenEngine-Importers-FBX'
 }
 
 { #category : #accessing }

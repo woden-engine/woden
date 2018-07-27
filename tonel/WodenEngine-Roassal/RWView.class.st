@@ -81,7 +81,7 @@ RWView >> addAll: someElements [
 
 { #category : #scene }
 RWView >> addCameraLight: color [
-	cameraLight := WTSLightSource new directional.
+	cameraLight := WDSGLightSource new directional.
 	cameraLight state
 		intensity: color asWMVector4F.
 	camera sceneNode addChild: cameraLight.
@@ -217,7 +217,7 @@ RWView >> initializeModel [
 RWView >> initializeScene [
 
 	"Create the scene."
-	scene := WTSScene for: engine.
+	scene := WDSGScene for: engine.
 	scene backgroundColor: Color white.
 
 	"Add the camera"
