@@ -486,6 +486,11 @@ WDCEngine >> vertexLayoutFor: aVertexClass [
 	^ resourceCache vertexLayoutFor: aVertexClass
 ]
 
+{ #category : #'resource loading' }
+WDCEngine >> vertexLayoutForVertexChannelDescriptions: channelDescriptions [
+	^ resourceCache vertexLayoutForVertexChannelDescriptions: channelDescriptions
+]
+
 { #category : #accessing }
 WDCEngine >> vrSensorReader [
 	self flag: 'TODO: Do this properly'.

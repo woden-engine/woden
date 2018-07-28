@@ -1,5 +1,5 @@
 Class {
-	#name : #WTModel,
+	#name : #WDCModel,
 	#superclass : #Object,
 	#instVars : [
 		'vertices',
@@ -12,42 +12,42 @@ Class {
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Core-Mesh'
+	#category : #'WodenEngine-Core-Mesh'
 }
 
 { #category : #accessing }
-WTModel >> actions [
+WDCModel >> actions [
 	^ actions
 ]
 
 { #category : #accessing }
-WTModel >> actions: anObject [
+WDCModel >> actions: anObject [
 	actions := anObject
 ]
 
 { #category : #accessing }
-WTModel >> armature [
+WDCModel >> armature [
 	^ armature
 ]
 
 { #category : #accessing }
-WTModel >> armature: anObject [
+WDCModel >> armature: anObject [
 	armature := anObject
 ]
 
 { #category : #accessing }
-WTModel >> boundingBox [
+WDCModel >> boundingBox [
 	^ boundingBox
 ]
 
 { #category : #accessing }
-WTModel >> boundingBox: anObject [
+WDCModel >> boundingBox: anObject [
 	boundingBox := anObject
 ]
 
 { #category : #modifiers }
-WTModel >> combineSubmeshes [
-	submeshes := {WTModelSubmesh new
+WDCModel >> combineSubmeshes [
+	submeshes := {WDCModelSubmesh new
 		firstIndex: 0;
 		indexCount: indices size;
 		primitiveType: AGPU_TRIANGLES;
@@ -57,55 +57,46 @@ WTModel >> combineSubmeshes [
 ]
 
 { #category : #modifiers }
-WTModel >> combineSubmeshesWithMaterial: aMaterial [
+WDCModel >> combineSubmeshesWithMaterial: aMaterial [
 	self combineSubmeshes.
 	submeshes first material: aMaterial.
 ]
 
 { #category : #'as yet unclassified' }
-WTModel >> createIndexBufferFor: anEngine [
+WDCModel >> createIndexBufferFor: anEngine [
 	^ anEngine createIndex: indices elementSize elements: indices size immutableBuffer: indices rawData
 ]
 
 { #category : #'as yet unclassified' }
-WTModel >> createVertexBindingFor: anEngine [
-	| result vertexLayout |
-	vertexLayout := anEngine vertexLayoutFor: vertices elementType behavior.
-	result := anEngine createVertexBindingForLayout: vertexLayout.
-	result vertexBuffers: { self createVertexBufferFor: anEngine }.
-	^ result
-]
-
-{ #category : #'as yet unclassified' }
-WTModel >> createVertexBufferFor: anEngine [
-	^ anEngine createVertex: vertices elementSize elements: vertices size immutableBuffer: vertices rawData 
+WDCModel >> createVertexBindingFor: anEngine [
+	^ vertices createVertexBindingFor: anEngine
 ]
 
 { #category : #accessing }
-WTModel >> indices [
+WDCModel >> indices [
 	^ indices
 ]
 
 { #category : #accessing }
-WTModel >> indices: anObject [
+WDCModel >> indices: anObject [
 	indices := anObject
 ]
 
 { #category : #modifiers }
-WTModel >> mapMaterials: aDictionary [
+WDCModel >> mapMaterials: aDictionary [
 	submeshes do: [ :submesh | submesh material: (aDictionary at: submesh material) ]
 ]
 
 { #category : #'as yet unclassified' }
-WTModel >> meshFor: anEngine [
+WDCModel >> meshFor: anEngine [
 	| mesh |
 	armature ifNotNil: [
-		mesh := WTSkinnedGenericMesh new.
+		mesh := WDCSkinnedGenericMesh new.
 		mesh
 			armature: armature;
 			actions: actions
 	] ifNil: [ 
-		mesh := WTGenericMesh new.
+		mesh := WDCGenericMesh new.
 	].
 	mesh
 		boundingBox: boundingBox copy;
@@ -116,21 +107,21 @@ WTModel >> meshFor: anEngine [
 ]
 
 { #category : #accessing }
-WTModel >> submeshes [
+WDCModel >> submeshes [
 	^ submeshes
 ]
 
 { #category : #accessing }
-WTModel >> submeshes: anObject [
+WDCModel >> submeshes: anObject [
 	submeshes := anObject
 ]
 
 { #category : #accessing }
-WTModel >> vertices [
+WDCModel >> vertices [
 	^ vertices
 ]
 
 { #category : #accessing }
-WTModel >> vertices: anObject [
+WDCModel >> vertices: anObject [
 	vertices := anObject
 ]

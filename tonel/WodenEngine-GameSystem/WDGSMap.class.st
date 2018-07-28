@@ -58,7 +58,7 @@ WDGSMap >> createPointEntityInstanceGroup [
 	pointEntityInstanceGroup := WDSGSpatialObjectInstanceGroup new.
 	pointEntityInstanceGroup
 		updatedPerFrame: false;
-		renderable: ((WTGenericMeshBuilder for: scene engine)
+		renderable: ((WDCGenericMeshBuilder for: scene engine)
 		addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
 		mesh).
 	scene add: pointEntityInstanceGroup

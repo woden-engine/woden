@@ -1,5 +1,5 @@
 Class {
-	#name : #WTGenericSubmesh,
+	#name : #WDCGenericSubmesh,
 	#superclass : #Object,
 	#instVars : [
 		'firstIndex',
@@ -7,11 +7,11 @@ Class {
 		'primitiveType',
 		'material'
 	],
-	#category : 'WodenEngine-Core-Mesh'
+	#category : #'WodenEngine-Core-Mesh'
 }
 
 { #category : #comparing }
-WTGenericSubmesh >> = other [
+WDCGenericSubmesh >> = other [
 	^ self class = other class and:
 		[ firstIndex = other firstIndex and:
 		[ indexCount = other indexCount and:
@@ -20,17 +20,17 @@ WTGenericSubmesh >> = other [
 ]
 
 { #category : #accessing }
-WTGenericSubmesh >> firstIndex [
+WDCGenericSubmesh >> firstIndex [
 	^ firstIndex
 ]
 
 { #category : #accessing }
-WTGenericSubmesh >> firstIndex: anObject [
+WDCGenericSubmesh >> firstIndex: anObject [
 	firstIndex := anObject
 ]
 
 { #category : #comparing }
-WTGenericSubmesh >> hash [
+WDCGenericSubmesh >> hash [
 	^ self class hash bitXor:
 		(firstIndex hash bitXor:
 		(indexCount hash bitXor:
@@ -39,37 +39,37 @@ WTGenericSubmesh >> hash [
 ]
 
 { #category : #accessing }
-WTGenericSubmesh >> indexCount [
+WDCGenericSubmesh >> indexCount [
 	^ indexCount
 ]
 
 { #category : #accessing }
-WTGenericSubmesh >> indexCount: anObject [
+WDCGenericSubmesh >> indexCount: anObject [
 	indexCount := anObject
 ]
 
 { #category : #accessing }
-WTGenericSubmesh >> material [
+WDCGenericSubmesh >> material [
 	^ material
 ]
 
 { #category : #accessing }
-WTGenericSubmesh >> material: anObject [
+WDCGenericSubmesh >> material: anObject [
 	material := anObject
 ]
 
 { #category : #accessing }
-WTGenericSubmesh >> primitiveType [
+WDCGenericSubmesh >> primitiveType [
 	^ primitiveType
 ]
 
 { #category : #accessing }
-WTGenericSubmesh >> primitiveType: anObject [
+WDCGenericSubmesh >> primitiveType: anObject [
 	primitiveType := anObject
 ]
 
 { #category : #rendering }
-WTGenericSubmesh >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
+WDCGenericSubmesh >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	material ifNil: [ ^ self ].
 	(stateTracker activateMaterial: material) ifFalse: [ ^ self].
 	stateTracker
@@ -78,7 +78,7 @@ WTGenericSubmesh >> renderOn: stateTracker instanceCount: instanceCount baseInst
 ]
 
 { #category : #rendering }
-WTGenericSubmesh >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
+WDCGenericSubmesh >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	material ifNil: [ ^ self ].
 	(material activateOn: listBuilder primitiveType: primitiveType mode: renderMode submode: submode) ifFalse: [ ^ self].
 	listBuilder drawElements: indexCount instance_count: instanceCount first_index: firstIndex base_vertex: baseVertex base_instance: baseInstance

@@ -1,42 +1,42 @@
 Class {
-	#name : #WTRenderable,
+	#name : #WDCRenderable,
 	#superclass : #Object,
 	#instVars : [
 		'boundingBox',
 		'modificationCount'
 	],
-	#category : 'WodenEngine-Core-Mesh'
+	#category : #'WodenEngine-Core-Mesh'
 }
 
 { #category : #accessing }
-WTRenderable >> boundingBox [
+WDCRenderable >> boundingBox [
 	^ boundingBox
 ]
 
 { #category : #accessing }
-WTRenderable >> boundingBox: anObject [
+WDCRenderable >> boundingBox: anObject [
 	boundingBox := anObject.
 	modificationCount := modificationCount + 1.
 ]
 
 { #category : #initialization }
-WTRenderable >> initialize [
+WDCRenderable >> initialize [
 	super initialize.
 	modificationCount := 0.
 	boundingBox := WMBox3DF empty.
 ]
 
 { #category : #accessing }
-WTRenderable >> renderModificationCountFor: mode submode: submode [
+WDCRenderable >> renderModificationCountFor: mode submode: submode [
 	^ modificationCount
 ]
 
 { #category : #rendering }
-WTRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
+WDCRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	self subclassResponsibility
 ]
 
 { #category : #'as yet unclassified' }
-WTRenderable >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
+WDCRenderable >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	self subclassResponsibility
 ]

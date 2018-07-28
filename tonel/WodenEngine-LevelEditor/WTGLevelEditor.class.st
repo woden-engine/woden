@@ -136,7 +136,7 @@ WTGLevelEditor >> centerAxisMesh [
 	start := -10000.0.
 	end := start negated. 
 	
-	centerAxisMesh := (WTGenericMeshBuilder for: engine)
+	centerAxisMesh := (WDCGenericMeshBuilder for: engine)
 		material: self gridMaterial;
 		beginLines;
 		color: Color red;
@@ -539,7 +539,7 @@ WTGLevelEditor >> playInExternalWindow [
 { #category : #accessing }
 WTGLevelEditor >> primaryGridMesh [
 	primaryGridMesh ifNotNil: [ ^ primaryGridMesh ].
-	primaryGridMesh := (WTGenericMeshBuilder for: engine)
+	primaryGridMesh := (WDCGenericMeshBuilder for: engine)
 		material: self gridMaterial;
 		color: Color gray;
 		addLineGridWithWidth: 200 height: 200 subdivisions: 21;
@@ -614,7 +614,7 @@ WTGLevelEditor >> scene [
 { #category : #accessing }
 WTGLevelEditor >> secondaryGridMesh [
 	secondaryGridMesh ifNotNil: [ ^ secondaryGridMesh ].
-	secondaryGridMesh := (WTGenericMeshBuilder for: engine)
+	secondaryGridMesh := (WDCGenericMeshBuilder for: engine)
 		material: self gridMaterial;
 		color: Color darkGray;
 		addLineGridWithWidth: 200 height: 200 subdivisions: 201;

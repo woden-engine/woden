@@ -1,5 +1,5 @@
 Class {
-	#name : #WTModelSubmesh,
+	#name : #WDCModelSubmesh,
 	#superclass : #Object,
 	#instVars : [
 		'firstIndex',
@@ -7,58 +7,58 @@ Class {
 		'primitiveType',
 		'material'
 	],
-	#category : 'WodenEngine-Core-Mesh'
+	#category : #'WodenEngine-Core-Mesh'
 }
 
 { #category : #'as yet unclassified' }
-WTModelSubmesh >> actualMaterialFor: anEngine [
+WDCModelSubmesh >> actualMaterialFor: anEngine [
 	material isString ifTrue: [ ^ anEngine resourceCache loadMaterial: material ].
 	^ material
 ]
 
 { #category : #accessing }
-WTModelSubmesh >> firstIndex [
+WDCModelSubmesh >> firstIndex [
 	^ firstIndex
 ]
 
 { #category : #accessing }
-WTModelSubmesh >> firstIndex: anObject [
+WDCModelSubmesh >> firstIndex: anObject [
 	firstIndex := anObject
 ]
 
 { #category : #accessing }
-WTModelSubmesh >> indexCount [
+WDCModelSubmesh >> indexCount [
 	^ indexCount
 ]
 
 { #category : #accessing }
-WTModelSubmesh >> indexCount: anObject [
+WDCModelSubmesh >> indexCount: anObject [
 	indexCount := anObject
 ]
 
 { #category : #accessing }
-WTModelSubmesh >> material [
+WDCModelSubmesh >> material [
 	^ material
 ]
 
 { #category : #accessing }
-WTModelSubmesh >> material: anObject [
+WDCModelSubmesh >> material: anObject [
 	material := anObject
 ]
 
 { #category : #accessing }
-WTModelSubmesh >> primitiveType [
+WDCModelSubmesh >> primitiveType [
 	^ primitiveType
 ]
 
 { #category : #accessing }
-WTModelSubmesh >> primitiveType: anObject [
+WDCModelSubmesh >> primitiveType: anObject [
 	primitiveType := anObject
 ]
 
 { #category : #'as yet unclassified' }
-WTModelSubmesh >> subMeshFor: anEngine [
-	^ WTGenericSubmesh new
+WDCModelSubmesh >> subMeshFor: anEngine [
+	^ WDCGenericSubmesh new
 		firstIndex: firstIndex;
 		indexCount: indexCount;
 		primitiveType: primitiveType;

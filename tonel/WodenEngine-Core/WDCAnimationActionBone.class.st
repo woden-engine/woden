@@ -1,29 +1,29 @@
 Class {
-	#name : #WTAnimationActionBone,
+	#name : #WDCAnimationActionBone,
 	#superclass : #Object,
 	#instVars : [
 		'boneIndex',
 		'keyframes'
 	],
-	#category : 'WodenEngine-Core-Mesh'
+	#category : #'WodenEngine-Core-Mesh'
 }
 
 { #category : #accessing }
-WTAnimationActionBone >> boneIndex [
+WDCAnimationActionBone >> boneIndex [
 	^ boneIndex
 ]
 
 { #category : #accessing }
-WTAnimationActionBone >> boneIndex: anObject [
+WDCAnimationActionBone >> boneIndex: anObject [
 	boneIndex := anObject
 ]
 
 { #category : #accessing }
-WTAnimationActionBone >> keyframes [
+WDCAnimationActionBone >> keyframes [
 	^ keyframes
 ]
 
 { #category : #accessing }
-WTAnimationActionBone >> keyframes: anObject [
+WDCAnimationActionBone >> keyframes: anObject [
 	keyframes := anObject
 ]

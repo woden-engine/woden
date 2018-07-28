@@ -12,7 +12,7 @@ WDASceneExamples class >> example01Cube [
 	camera := model camera.
 	camera transform translateByZ: 3.0.
 	
-	meshBuilder := WTGenericMeshBuilder for: scene engine.
+	meshBuilder := WDCGenericMeshBuilder for: scene engine.
 	meshBuilder addCubeWithWidth: 1.0 height: 1.0 depth: 1.0.
 	mesh := meshBuilder mesh.
 	
@@ -41,7 +41,7 @@ WDASceneExamples class >> example02TextureCube [
 	
 	material := scene engine resourceCache loadMaterial: 'materials/basic/checkboard.json'.
 	
-	meshBuilder := WTGenericMeshBuilder for: scene engine.
+	meshBuilder := WDCGenericMeshBuilder for: scene engine.
 	meshBuilder
 		currentMaterial: material;
 		addCubeWithWidth: 1.0 height: 1.0 depth: 1.0.
@@ -72,7 +72,7 @@ WDASceneExamples class >> example03Floor [
 	
 	material := scene engine resourceCache loadMaterial: 'materials/demos/tile.json'.
 
-	meshBuilder := WTComplexGenericMeshBuilder for: scene engine.
+	meshBuilder := WDCComplexGenericMeshBuilder for: scene engine.
 	meshBuilder
 		currentMaterial: material;
 		addCubeWithWidth: 10.0 height: 0.5 depth: 10.0;
@@ -109,7 +109,7 @@ WDASceneExamples class >> example04Pool [
 	skyMaterial := engine resourceCache loadMaterial: 'materials/demos/skybox.json'.
 	
 	"Add the floor"
-	meshBuilder := WTComplexGenericMeshBuilder for: engine.
+	meshBuilder := WDCComplexGenericMeshBuilder for: engine.
 	meshBuilder
 		currentMaterial: floorMaterial;
 		"Bottom"
@@ -147,7 +147,7 @@ WDASceneExamples class >> example04Pool [
 	scene add: sunLight.
 		
 	"Add the sky box"
-	meshBuilder := WTGenericMeshBuilder for: engine.
+	meshBuilder := WDCGenericMeshBuilder for: engine.
 	meshBuilder
 		currentMaterial: skyMaterial;
 		addInteriorCubeWithWidth: 40.0 height: 40.0 depth: 40.0.
@@ -164,7 +164,7 @@ WDASceneExamples class >> example04Pool [
 		harmonicAt: 3 amplitude: 0.015 frequency: 1.80 direction: (WMVector2F x: 1.0).
 
 	"Add the water"
-	meshBuilder := WTGenericMeshBuilder for: engine.
+	meshBuilder := WDCGenericMeshBuilder for: engine.
 	meshBuilder
 		currentMaterial: waterMaterial;
 		addGridWithWidth: 5.0 height: 5.0 subdivisions: 64.
@@ -194,7 +194,7 @@ WDASceneExamples class >> example05DangerousPool [
 	skyMaterial := engine resourceCache loadMaterial: 'materials/demos/skybox.json'.
 	
 	"Add the floor"
-	meshBuilder := WTComplexGenericMeshBuilder for: engine.
+	meshBuilder := WDCComplexGenericMeshBuilder for: engine.
 	meshBuilder
 		currentMaterial: floorMaterial;
 		"Bottom"
@@ -232,7 +232,7 @@ WDASceneExamples class >> example05DangerousPool [
 	scene add: sunLight.
 		
 	"Add the sky box"
-	meshBuilder := WTGenericMeshBuilder for: engine.
+	meshBuilder := WDCGenericMeshBuilder for: engine.
 	meshBuilder
 		currentMaterial: skyMaterial;
 		addInteriorCubeWithWidth: 40.0 height: 40.0 depth: 40.0.
@@ -249,7 +249,7 @@ WDASceneExamples class >> example05DangerousPool [
 		harmonicAt: 3 amplitude: 0.015 frequency: 1.80 direction: (WMVector2F x: 1.0).
 
 	"Add the water"
-	meshBuilder := WTGenericMeshBuilder for: engine.
+	meshBuilder := WDCGenericMeshBuilder for: engine.
 	meshBuilder
 		currentMaterial: waterMaterial;
 		addGridWithWidth: 5.0 height: 5.0 subdivisions: 64.
@@ -301,7 +301,7 @@ WDASceneExamples class >> example06MeshGrid [
 	
 	material := scene engine resourceCache loadMaterial: 'materials/basic/flat.json'.
 	
-	meshBuilder := WTGenericMeshBuilder for: scene engine.
+	meshBuilder := WDCGenericMeshBuilder for: scene engine.
 	meshBuilder
 		currentMaterial: material;
 		addLineGridWithWidth: 2.0 height: 2.0 subdivisions: 32.

@@ -68,7 +68,7 @@ RWMeshShape >> depthFor: anElement [
 { #category : #morphic }
 RWMeshShape >> for: aViewOrEngine buildWith: aBlock [
 	| builder |
-	builder := (WTComplexGenericMeshBuilder for: aViewOrEngine engine).
+	builder := (WDCComplexGenericMeshBuilder for: aViewOrEngine engine).
 	aBlock value: builder.
 	builder computeBoundingBox.
 	self mesh: builder mesh

@@ -23,6 +23,10 @@ Float category: '*WodenMath-Core' methods: {
 	^ (self * 16rFFFF) asInteger min: 16rFFFF max: 0
 ].
 
+:[asNormalizedShort
+	^ (self * 16r7FFF) asInteger bitAnd: 16rFFFF
+].
+
 :[encodeSRGBComponent
 	"
 	From: https://en.wikipedia.org/wiki/SRGB

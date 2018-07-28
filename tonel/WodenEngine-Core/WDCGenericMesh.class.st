@@ -1,37 +1,37 @@
 Class {
-	#name : #WTGenericMesh,
-	#superclass : #WTRenderable,
+	#name : #WDCGenericMesh,
+	#superclass : #WDCRenderable,
 	#instVars : [
 		'vertexBinding',
 		'indexBuffer',
 		'submeshes'
 	],
-	#category : 'WodenEngine-Core-Mesh'
+	#category : #'WodenEngine-Core-Mesh'
 }
 
 { #category : #'extra per object rendering data' }
-WTGenericMesh >> createSceneDependentDataFor: engine into: bindings [
+WDCGenericMesh >> createSceneDependentDataFor: engine into: bindings [
 	^ nil
 ]
 
 { #category : #accessing }
-WTGenericMesh >> indexBuffer [
+WDCGenericMesh >> indexBuffer [
 	^ indexBuffer
 ]
 
 { #category : #accessing }
-WTGenericMesh >> indexBuffer: anObject [
+WDCGenericMesh >> indexBuffer: anObject [
 	indexBuffer := anObject.
 	modificationCount := modificationCount + 1.
 ]
 
 { #category : #'extra per object rendering data' }
-WTGenericMesh >> performGpuStateUpdateFor: engine frameIndex: frameIndex into: renderableSceneData [
+WDCGenericMesh >> performGpuStateUpdateFor: engine frameIndex: frameIndex into: renderableSceneData [
 	
 ]
 
 { #category : #rendering }
-WTGenericMesh >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
+WDCGenericMesh >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	stateTracker
 		useVertexBinding: vertexBinding;
 		useIndexBuffer: indexBuffer.
@@ -39,7 +39,7 @@ WTGenericMesh >> renderOn: stateTracker instanceCount: instanceCount baseInstanc
 ]
 
 { #category : #rendering }
-WTGenericMesh >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
+WDCGenericMesh >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	listBuilder
 		useVertexBinding: vertexBinding validHandle;
 		useIndexBuffer: indexBuffer validHandle.
@@ -47,23 +47,23 @@ WTGenericMesh >> renderOn: listBuilder mode: renderMode submode: submode instanc
 ]
 
 { #category : #accessing }
-WTGenericMesh >> submeshes [
+WDCGenericMesh >> submeshes [
 	^ submeshes
 ]
 
 { #category : #accessing }
-WTGenericMesh >> submeshes: anObject [
+WDCGenericMesh >> submeshes: anObject [
 	submeshes := anObject.
 	modificationCount := modificationCount + 1.
 ]
 
 { #category : #accessing }
-WTGenericMesh >> vertexBinding [
+WDCGenericMesh >> vertexBinding [
 	^ vertexBinding
 ]
 
 { #category : #accessing }
-WTGenericMesh >> vertexBinding: anObject [
+WDCGenericMesh >> vertexBinding: anObject [
 	vertexBinding := anObject.
 	modificationCount := modificationCount + 1.
 ]

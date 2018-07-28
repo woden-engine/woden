@@ -110,6 +110,14 @@ WDCResourceCache >> createDefaultMaterial [
 	defaultMaterial := WDCGenericSurfaceMaterial for: engine.
 ]
 
+{ #category : #'resource loading' }
+WDCResourceCache >> createVertexLayoutForChannelDescriptions: channelDescriptions [
+	| layout |
+	layout := WDCVertexLayout new buffers: (channelDescriptions collect: #asWodenVertexStructureDescription).
+	self buildVertexLayout: layout.
+	^ layout
+]
+
 { #category : #accessing }
 WDCResourceCache >> defaultMaterial [
 	defaultMaterial ifNil: [ self createDefaultMaterial ].
@@ -250,7 +258,7 @@ WDCResourceCache >> perform3DModelLoading: modelFileReference [
 	| extension |
 	extension := modelFileReference extension.
 	extension = 'fmdl' ifTrue: [ ^ FLMaterializer materializeFromByteArray: (self binaryContentsOf: modelFileReference) ].
-	extension = 'wmjson' ifTrue: [ ^ WTModelImporter new importFromFileNamed: modelFileReference ].
+	extension = 'wmjson' ifTrue: [ ^ WDCModelImporter new importFromFileNamed: modelFileReference ].
 	self error: 'Unsupported model format.'
 ]
 
@@ -379,4 +387,9 @@ WDCResourceCache >> stringifyPath: aPath [
 { #category : #'resource loading' }
 WDCResourceCache >> vertexLayoutFor: aVertexClass [
 	^ vertexLayouts at: aVertexClass ifAbsentPut: [ self loadVertexLayoutFrom: aVertexClass ]
+]
+
+{ #category : #'resource loading' }
+WDCResourceCache >> vertexLayoutForVertexChannelDescriptions: channelDescriptions [
+	^ vertexLayouts at: channelDescriptions ifAbsentPut: [ self createVertexLayoutForChannelDescriptions: channelDescriptions ]
 ]

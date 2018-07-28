@@ -119,7 +119,7 @@ WDASceneViewVRScreenDisplayMode >> createScreenGrid [
 	screenGridIndexCount := indices size.
 	
 	screenGridVertexBinding := engine createVertexBindingForLayout: (engine vertexLayoutFor: WTCompositionVertexF).
-	screenGridVertexBinding vertexBuffers: { screenGridVertexBuffer }
+	screenGridVertexBinding vertexBuffers: { screenGridVertexBuffer }; offsets: { 0 }
 ]
 
 { #category : #'viewport composition' }

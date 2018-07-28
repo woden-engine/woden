@@ -29,6 +29,14 @@ Structure <<< #WMVector2S
 	package: 'WodenMath-Core-CompressedVectors';
 	yourself.
 
+WMVector2S class category: 'constructing' methods: {
+:[x: <Int16> x y: <Int16> y -> WMVector2S.
+	^ WMVector2S newValue
+		x: x; y: y;
+		yourself
+]
+}.
+
 Structure <<< #WMVector3S
 	slots: {
 		#x => Int16.
@@ -37,6 +45,14 @@ Structure <<< #WMVector3S
 	};
 	package: 'WodenMath-Core-CompressedVectors';
 	yourself.
+
+WMVector3S class category: 'constructing' methods: {
+:[x: <Int16> x y: <Int16> y z: <Int16> z -> WMVector3S.
+	^ WMVector3S newValue
+		x: x; y: y; z: z;
+		yourself
+]
+}.
 
 Structure <<< #WMVector4S
 	slots: {
@@ -47,7 +63,36 @@ Structure <<< #WMVector4S
 	};
 	package: 'WodenMath-Core-CompressedVectors';
 	yourself.
-	
+
+WMVector4S class category: 'constructing' methods: {
+:[x: <Int16> x y: <Int16> y z: <Int16> z w: <Int16> w -> WMVector4S.
+	^ WMVector4S newValue
+		x: x; y: y; z: z; w: w;
+		yourself
+]
+}.
+
+Structure <<< #WMVector4NS
+	slots: {
+		#x => Int16.
+		#y => Int16.
+		#z => Int16.
+		#w => Int16.
+	};
+	package: 'WodenMath-Core-CompressedVectors';
+	yourself.
+
+WMVector4NS class category: 'constructing' methods: {
+:[x: <Float32> x y: <Float32> y z: <Float32> z w: <Float32> w -> WMVector4NS.
+	^ WMVector4NS newValue
+		x: (x asNormalizedShort castTo: Int16);
+		y: (y asNormalizedShort castTo: Int16);
+		z: (z asNormalizedShort castTo: Int16);
+		w: (w asNormalizedShort castTo: Int16);
+		yourself
+]
+}.
+
 Structure <<< #WMVector4US
 	slots: {
 		#x => UInt16.
@@ -74,4 +119,25 @@ WMVector4US category: 'converting' methods: {
 		z: (z asFloatFromNormalizedUShort castTo: Float32)
 		w: (w asFloatFromNormalizedUShort castTo: Float32)
 ].
+}.
+
+Structure <<< #WMVector4NUS
+	slots: {
+		#x => UInt16.
+		#y => UInt16.
+		#z => UInt16.
+		#w => UInt16.
+	};
+	package: 'WodenMath-Core-CompressedVectors';
+	yourself.
+
+WMVector4NUS class category: 'constructing' methods: {
+:[x: <UInt16> x y: <UInt16> y z: <UInt16> z w: <UInt16> w -> WMVector4US.
+	^ WMVector4US newValue
+		x: (x asNormalizedUShort castTo: UInt16);
+		y: (y asNormalizedUShort castTo: UInt16);
+		z: (z asNormalizedUShort castTo: UInt16);
+		w: (w asNormalizedUShort castTo: UInt16);
+		yourself
+]
 }.

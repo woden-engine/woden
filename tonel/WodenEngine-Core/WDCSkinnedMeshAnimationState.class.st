@@ -1,5 +1,5 @@
 Class {
-	#name : #WTSkinnedMeshAnimationState,
+	#name : #WDCSkinnedMeshAnimationState,
 	#superclass : #Object,
 	#instVars : [
 		'mesh',
@@ -8,26 +8,26 @@ Class {
 		'poseMatrices',
 		'poseForwardMatrices'
 	],
-	#category : 'WodenEngine-Core-Mesh'
+	#category : #'WodenEngine-Core-Mesh'
 }
 
 { #category : #'as yet unclassified' }
-WTSkinnedMeshAnimationState >> actionNamed: actionName [
+WDCSkinnedMeshAnimationState >> actionNamed: actionName [
 	^ mesh actions at: actionName
 ]
 
 { #category : #adding }
-WTSkinnedMeshAnimationState >> addAction: action frame: frame [
+WDCSkinnedMeshAnimationState >> addAction: action frame: frame [
 	^ self addAction: action repeated: false frame: frame
 ]
 
 { #category : #adding }
-WTSkinnedMeshAnimationState >> addAction: action repeated: repeated frame: frame [
+WDCSkinnedMeshAnimationState >> addAction: action repeated: repeated frame: frame [
 	action bones do: [ :bone | self addActionBone: bone repeated: repeated frame: frame ]
 ]
 
 { #category : #adding }
-WTSkinnedMeshAnimationState >> addActionBone: actionBone repeated: repeated frame: frame [
+WDCSkinnedMeshAnimationState >> addActionBone: actionBone repeated: repeated frame: frame [
 	| floorFrameIndex ceilingFrameIndex alpha floorFrame ceilingFrame interpolatedFrame |
 	floorFrameIndex := self computeFrameIndex: frame floor asInteger actionBone: actionBone repeated: repeated.
 	ceilingFrameIndex := self computeFrameIndex: frame ceiling asInteger actionBone: actionBone repeated: repeated.
@@ -41,7 +41,7 @@ WTSkinnedMeshAnimationState >> addActionBone: actionBone repeated: repeated fram
 ]
 
 { #category : #adding }
-WTSkinnedMeshAnimationState >> computeFrameIndex: frame actionBone: actionBone repeated: repeated [
+WDCSkinnedMeshAnimationState >> computeFrameIndex: frame actionBone: actionBone repeated: repeated [
 	| result |
 	result := repeated
 		ifTrue: [ frame % actionBone keyframes size ]
@@ -50,7 +50,7 @@ WTSkinnedMeshAnimationState >> computeFrameIndex: frame actionBone: actionBone r
 ]
 
 { #category : #'as yet unclassified' }
-WTSkinnedMeshAnimationState >> computePoseMatrices [
+WDCSkinnedMeshAnimationState >> computePoseMatrices [
 	| parents bone parentIndex forwardMatrix restPoseInverseMatrices restPoseInverseMatrix parentForwardMatrix |
 	parents := mesh armature boneParents. 
 	restPoseInverseMatrices := mesh armature restPoseInverseMatrices.
@@ -73,7 +73,7 @@ WTSkinnedMeshAnimationState >> computePoseMatrices [
 ]
 
 { #category : #adding }
-WTSkinnedMeshAnimationState >> interpolateFrame: a with: b alpha: alpha [
+WDCSkinnedMeshAnimationState >> interpolateFrame: a with: b alpha: alpha [
 	| translation rotation |
 	translation := (a translation * (1.0 - alpha)) + (b translation * alpha).
 	rotation := ((a rotation * (1.0 - alpha)) + (b rotation * alpha)) normalized.
@@ -81,56 +81,56 @@ WTSkinnedMeshAnimationState >> interpolateFrame: a with: b alpha: alpha [
 ]
 
 { #category : #accessing }
-WTSkinnedMeshAnimationState >> mesh [
+WDCSkinnedMeshAnimationState >> mesh [
 	^ mesh
 ]
 
 { #category : #accessing }
-WTSkinnedMeshAnimationState >> mesh: anObject [
+WDCSkinnedMeshAnimationState >> mesh: anObject [
 	mesh := anObject
 ]
 
 { #category : #accessing }
-WTSkinnedMeshAnimationState >> pose [
+WDCSkinnedMeshAnimationState >> pose [
 	^ pose
 ]
 
 { #category : #accessing }
-WTSkinnedMeshAnimationState >> pose: anObject [
+WDCSkinnedMeshAnimationState >> pose: anObject [
 	pose := anObject.
 	poseMatrices := SLVMNativeArray for: WMMatrix4F new: pose size.
 	poseForwardMatrices := SLVMNativeArray for: WMMatrix4F new: pose size.
 ]
 
 { #category : #accessing }
-WTSkinnedMeshAnimationState >> poseBuffer [
+WDCSkinnedMeshAnimationState >> poseBuffer [
 	^ poseBuffer
 ]
 
 { #category : #accessing }
-WTSkinnedMeshAnimationState >> poseBuffer: anObject [
+WDCSkinnedMeshAnimationState >> poseBuffer: anObject [
 	poseBuffer := anObject
 ]
 
 { #category : #accessing }
-WTSkinnedMeshAnimationState >> poseMatrices [
+WDCSkinnedMeshAnimationState >> poseMatrices [
 	^ poseMatrices
 ]
 
 { #category : #'as yet unclassified' }
-WTSkinnedMeshAnimationState >> setRestPose [
+WDCSkinnedMeshAnimationState >> setRestPose [
 	LibC memCopy: mesh armature bones rawData to: pose rawData size: pose rawDataSize.
 	
 ]
 
 { #category : #'as yet unclassified' }
-WTSkinnedMeshAnimationState >> setRestPoseAndMatrices [
+WDCSkinnedMeshAnimationState >> setRestPoseAndMatrices [
 	self
 		setRestPose;
 		setRestPoseMatrices
 ]
 
 { #category : #'as yet unclassified' }
-WTSkinnedMeshAnimationState >> setRestPoseMatrices [
+WDCSkinnedMeshAnimationState >> setRestPoseMatrices [
 	LibC memCopy: mesh armature restPoseMatrices rawData to: poseMatrices rawData size: poseMatrices rawDataSize.
 ]

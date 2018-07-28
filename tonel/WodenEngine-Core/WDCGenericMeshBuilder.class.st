@@ -1,5 +1,5 @@
 Class {
-	#name : #WTGenericMeshBuilder,
+	#name : #WDCGenericMeshBuilder,
 	#superclass : #Object,
 	#instVars : [
 		'engine',
@@ -19,12 +19,12 @@ Class {
 }
 
 { #category : #'instance creation' }
-WTGenericMeshBuilder class >> for: anEngine [
+WDCGenericMeshBuilder class >> for: anEngine [
 	^ self new engine: anEngine
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addCircleCenter: center radius: radius slices: slices isTop: isTop [
+WDCGenericMeshBuilder >> addCircleCenter: center radius: radius slices: slices isTop: isTop [
 	| normal position phi x z firstSlice secondSlice|
 	self beginTriangles.
 	
@@ -48,7 +48,7 @@ WTGenericMeshBuilder >> addCircleCenter: center radius: radius slices: slices is
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addConeRadius: baseRadius height: height segments: segments slices: slices [
+WDCGenericMeshBuilder >> addConeRadius: baseRadius height: height segments: segments slices: slices [
 	| normal position texcoord radius phi x y z firstRow secondRow firstSlice secondSlice |
 	self beginTriangles.
 	"Add the vertices"
@@ -84,7 +84,7 @@ WTGenericMeshBuilder >> addConeRadius: baseRadius height: height segments: segme
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addCubeWithWidth: width height: height depth: depth [
+WDCGenericMeshBuilder >> addCubeWithWidth: width height: height depth: depth [
 	| px py pz nx ny nz |
 	self beginTriangles.
 	
@@ -146,7 +146,7 @@ WTGenericMeshBuilder >> addCubeWithWidth: width height: height depth: depth [
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addCylinderRadius: radius height: height segments: segments slices: slices [
+WDCGenericMeshBuilder >> addCylinderRadius: radius height: height segments: segments slices: slices [
 	| normal position texcoord phi x y z firstRow secondRow firstSlice secondSlice |
 	self beginTriangles.
 	"Add the vertices"
@@ -182,7 +182,7 @@ WTGenericMeshBuilder >> addCylinderRadius: radius height: height segments: segme
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addFloorWithWidth: width height: height depth: depth [
+WDCGenericMeshBuilder >> addFloorWithWidth: width height: height depth: depth [
 	| px   nx   py pz ny nz |
 	"Voxel style a cube but in voxel heavy :-)"
 	self beginTriangle.
@@ -264,7 +264,7 @@ WTGenericMeshBuilder >> addFloorWithWidth: width height: height depth: depth [
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addGridWithWidth: width height: height subdivisions: subdivisions [
+WDCGenericMeshBuilder >> addGridWithWidth: width height: height subdivisions: subdivisions [
 	| dx dy sx sy x y s t rs rd|
 	self beginTriangles.
 	
@@ -300,14 +300,14 @@ WTGenericMeshBuilder >> addGridWithWidth: width height: height subdivisions: sub
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addI1: i1 i2: i2 [
+WDCGenericMeshBuilder >> addI1: i1 i2: i2 [
 	indices
 		add: i1 + baseVertex - 1;
 		add: i2 + baseVertex - 1
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addI1: i1 i2: i2 i3: i3 [
+WDCGenericMeshBuilder >> addI1: i1 i2: i2 i3: i3 [
 	indices
 		add: i1 + baseVertex - 1;
 		add: i2 + baseVertex - 1;
@@ -315,7 +315,7 @@ WTGenericMeshBuilder >> addI1: i1 i2: i2 i3: i3 [
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addInteriorCubeWithWidth: width height: height depth: depth [
+WDCGenericMeshBuilder >> addInteriorCubeWithWidth: width height: height depth: depth [
 	| px py pz nx ny nz |
 	self beginTriangles.
 	
@@ -377,7 +377,7 @@ WTGenericMeshBuilder >> addInteriorCubeWithWidth: width height: height depth: de
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addLineGridWithWidth: width height: height subdivisions: subdivisions [
+WDCGenericMeshBuilder >> addLineGridWithWidth: width height: height subdivisions: subdivisions [
 	| dx dy x y px py nx ny tc  |
 	
 	"Add vertices"
@@ -412,17 +412,17 @@ WTGenericMeshBuilder >> addLineGridWithWidth: width height: height subdivisions:
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addP: position [
+WDCGenericMeshBuilder >> addP: position [
 	vertices add: (WTGenericVertexF new position: position; color: currentColor; yourself)
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addP: position N: normal [
+WDCGenericMeshBuilder >> addP: position N: normal [
 	vertices add: (WTGenericVertexF new position: position; normal: normal; color: currentColor; yourself)
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addP: position N: normal T4: tangent4 TC: texcoord [
+WDCGenericMeshBuilder >> addP: position N: normal T4: tangent4 TC: texcoord [
 	vertices add: (WTGenericVertexF new
 		position: position;
 		normal: normal;
@@ -433,23 +433,23 @@ WTGenericMeshBuilder >> addP: position N: normal T4: tangent4 TC: texcoord [
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addP: position N: normal TC: texcoord [
+WDCGenericMeshBuilder >> addP: position N: normal TC: texcoord [
 	vertices add: (WTGenericVertexF new position: position; normal: normal; texcoord: texcoord; color: currentColor; yourself)
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addP: position TC: texcoord [
+WDCGenericMeshBuilder >> addP: position TC: texcoord [
 	vertices add: (WTGenericVertexF new position: position; texcoord: texcoord; color: currentColor; yourself)
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addQuadI1: i1 i2: i2 i3: i3 i4: i4 [
+WDCGenericMeshBuilder >> addQuadI1: i1 i2: i2 i3: i3 i4: i4 [
 	self addI1: i1 i2: i2 i3: i3.
 	self addI1: i3 i2: i4 i3: i1
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addUVSphereRadius: radius segments: segments slices: slices [
+WDCGenericMeshBuilder >> addUVSphereRadius: radius segments: segments slices: slices [
 	| normal position texcoord phi theta x y z firstRow secondRow firstSlice secondSlice |
 	self beginTriangles.
 
@@ -483,7 +483,7 @@ WTGenericMeshBuilder >> addUVSphereRadius: radius segments: segments slices: sli
 ]
 
 { #category : #adding }
-WTGenericMeshBuilder >> addWireCubeWithWidth: width height: height depth: depth [
+WDCGenericMeshBuilder >> addWireCubeWithWidth: width height: height depth: depth [
 	| px py pz nx ny nz |
 	self beginLines.
 	
@@ -524,14 +524,14 @@ WTGenericMeshBuilder >> addWireCubeWithWidth: width height: height depth: depth 
 ]
 
 { #category : #'as yet unclassified' }
-WTGenericMeshBuilder >> beginLines [
+WDCGenericMeshBuilder >> beginLines [
 	self
 		beginSubMeshWith: AGPU_LINES material: currentMaterial;
 		beginWithNewBaseVertex
 ]
 
 { #category : #'as yet unclassified' }
-WTGenericMeshBuilder >> beginSubMeshWith: primitiveType material: newMaterial [
+WDCGenericMeshBuilder >> beginSubMeshWith: primitiveType material: newMaterial [
 	| submesh last |
 	submeshes ifNotEmpty: [ 
 		last := submeshes last.
@@ -548,19 +548,19 @@ WTGenericMeshBuilder >> beginSubMeshWith: primitiveType material: newMaterial [
 ]
 
 { #category : #'as yet unclassified' }
-WTGenericMeshBuilder >> beginTriangles [
+WDCGenericMeshBuilder >> beginTriangles [
 	self
 		beginSubMeshWith: AGPU_TRIANGLES material: currentMaterial;
 		beginWithNewBaseVertex
 ]
 
 { #category : #public }
-WTGenericMeshBuilder >> beginWithNewBaseVertex [
+WDCGenericMeshBuilder >> beginWithNewBaseVertex [
 	baseVertex := vertices size.
 ]
 
 { #category : #accessing }
-WTGenericMeshBuilder >> clear [
+WDCGenericMeshBuilder >> clear [
 	vertices removeAll.
 	indices removeAll.
 	submeshes removeAll.
@@ -569,18 +569,18 @@ WTGenericMeshBuilder >> clear [
 ]
 
 { #category : #accessing }
-WTGenericMeshBuilder >> color: aMaterial [
+WDCGenericMeshBuilder >> color: aMaterial [
 	self currentColor: aMaterial
 ]
 
 { #category : #'display box access' }
-WTGenericMeshBuilder >> computeBoundingBox [
+WDCGenericMeshBuilder >> computeBoundingBox [
 	boundingBox := WMBox3DF empty.
 	vertices do: [ :vertex | boundingBox insertPoint: vertex position asWMVector3F ]
 ]
 
 { #category : #'as yet unclassified' }
-WTGenericMeshBuilder >> computeTangentsBitangents [
+WDCGenericMeshBuilder >> computeTangentsBitangents [
 	| vertex normal tangent bitangent tangents bitangents scaleFactor |
 	self finishSubmesh.
 	tangents := SLVMNativeArray for: WMVector3F new: vertices size.
@@ -606,7 +606,7 @@ WTGenericMeshBuilder >> computeTangentsBitangents [
 ]
 
 { #category : #'as yet unclassified' }
-WTGenericMeshBuilder >> computeTangentsBitangentsFor: submesh tangents: tangents bitangents: bitangents [
+WDCGenericMeshBuilder >> computeTangentsBitangentsFor: submesh tangents: tangents bitangents: bitangents [
 	| triangleCount indexBase i1 i2 i3 vi1 vi2 vi3 p1 p2 p3 u v tc1 tc2 tc3 det den tangent bitangent v1 v2 v3 du1 dv1 du2 dv2 |
 	submesh primitiveType ~= AGPU_TRIANGLES ifTrue: [ ^ self ].
 	triangleCount := submesh indexCount // 3.
@@ -665,12 +665,12 @@ WTGenericMeshBuilder >> computeTangentsBitangentsFor: submesh tangents: tangents
 ]
 
 { #category : #'as yet unclassified' }
-WTGenericMeshBuilder >> createIndexBuffer [
+WDCGenericMeshBuilder >> createIndexBuffer [
 	^ engine createIndex: 4 elements: indices size immutableBuffer: indices asByteArray 
 ]
 
 { #category : #'as yet unclassified' }
-WTGenericMeshBuilder >> createMeshWithSubmeshes: newSubmeshes [
+WDCGenericMeshBuilder >> createMeshWithSubmeshes: newSubmeshes [
 	| mesh |
 	mesh := self instantiateMesh.
 	mesh
@@ -682,57 +682,57 @@ WTGenericMeshBuilder >> createMeshWithSubmeshes: newSubmeshes [
 ]
 
 { #category : #'as yet unclassified' }
-WTGenericMeshBuilder >> createSubmeshObject [
-	^ WTGenericSubmesh new.
+WDCGenericMeshBuilder >> createSubmeshObject [
+	^ WDCGenericSubmesh new.
 ]
 
 { #category : #'as yet unclassified' }
-WTGenericMeshBuilder >> createVertexBinding [
+WDCGenericMeshBuilder >> createVertexBinding [
 	| result |
 	result := engine createVertexBindingForLayout: vertexLayout.
-	result vertexBuffers: { self createVertexBuffer }.
+	result vertexBuffers: { self createVertexBuffer }; offsets: { 0 }.
 	^ result
 ]
 
 { #category : #'as yet unclassified' }
-WTGenericMeshBuilder >> createVertexBuffer [
+WDCGenericMeshBuilder >> createVertexBuffer [
 	^ engine createVertex: WTGenericVertexF structureSize elements: vertices size immutableBuffer: vertices asByteArray 
 ]
 
 { #category : #accessing }
-WTGenericMeshBuilder >> currentColor [
+WDCGenericMeshBuilder >> currentColor [
 	^ currentColor
 ]
 
 { #category : #accessing }
-WTGenericMeshBuilder >> currentColor: aColorOrWMVector4F [
+WDCGenericMeshBuilder >> currentColor: aColorOrWMVector4F [
 	currentColor := aColorOrWMVector4F asWMVector4F
 ]
 
 { #category : #accessing }
-WTGenericMeshBuilder >> currentMaterial [
+WDCGenericMeshBuilder >> currentMaterial [
 	^ currentMaterial
 ]
 
 { #category : #accessing }
-WTGenericMeshBuilder >> currentMaterial: anObject [
+WDCGenericMeshBuilder >> currentMaterial: anObject [
 	currentMaterial := anObject
 ]
 
 { #category : #accessing }
-WTGenericMeshBuilder >> engine [
+WDCGenericMeshBuilder >> engine [
 	^ engine
 ]
 
 { #category : #accessing }
-WTGenericMeshBuilder >> engine: anObject [
+WDCGenericMeshBuilder >> engine: anObject [
 	engine := anObject.
 	currentMaterial ifNil: [ currentMaterial := engine defaultMaterial ].
 	vertexLayout := self retrieveVertexLayout.
 ]
 
 { #category : #'as yet unclassified' }
-WTGenericMeshBuilder >> finishSubmesh [
+WDCGenericMeshBuilder >> finishSubmesh [
 	| last |
 	submeshes ifEmpty: [ ^ self ].
 	last := submeshes last.
@@ -740,7 +740,7 @@ WTGenericMeshBuilder >> finishSubmesh [
 ]
 
 { #category : #initialization }
-WTGenericMeshBuilder >> initialize [
+WDCGenericMeshBuilder >> initialize [
 	super initialize.
 	vertices := SLVMNativeOrderedCollection for: WTGenericVertexF.
 	indices := SLVMNativeOrderedCollection for: #int.
@@ -751,17 +751,17 @@ WTGenericMeshBuilder >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-WTGenericMeshBuilder >> instantiateMesh [
-	^ WTGenericMesh new
+WDCGenericMeshBuilder >> instantiateMesh [
+	^ WDCGenericMesh new
 ]
 
 { #category : #accessing }
-WTGenericMeshBuilder >> material: aMaterial [
+WDCGenericMeshBuilder >> material: aMaterial [
 	self currentMaterial: aMaterial
 ]
 
 { #category : #'as yet unclassified' }
-WTGenericMeshBuilder >> mesh [
+WDCGenericMeshBuilder >> mesh [
 	vertices ifEmpty: [ ^ nil ].
 	indices ifEmpty: [ ^ nil ].
 	self finishSubmesh.
@@ -770,6 +770,6 @@ WTGenericMeshBuilder >> mesh [
 ]
 
 { #category : #'as yet unclassified' }
-WTGenericMeshBuilder >> retrieveVertexLayout [
+WDCGenericMeshBuilder >> retrieveVertexLayout [
 	^ engine vertexLayoutFor: WTGenericVertexF
 ]

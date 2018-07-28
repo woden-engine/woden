@@ -26,7 +26,7 @@ RWCone >> createBaseShapeNodeForView: aView [
 	node updatedPerFrame: false.
 	engine := aView engine.
 	
-	renderable := (WTGenericMeshBuilder for: engine)
+	renderable := (WDCGenericMeshBuilder for: engine)
 		material: (self wodenMaterialForView: aView);
 		addConeRadius: 1.0 height: 2.0 segments: self class defaultSegments slices: self class defaultSlices;
 		computeBoundingBox;

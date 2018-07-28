@@ -1,6 +1,6 @@
 Class {
-	#name : #WTDynamicGenericMeshBuilder,
-	#superclass : #WTGenericMeshBuilder,
+	#name : #WDCDynamicGenericMeshBuilder,
+	#superclass : #WDCGenericMeshBuilder,
 	#instVars : [
 		'vertexBuffer',
 		'vertexBufferCapacity',
@@ -9,11 +9,11 @@ Class {
 		'vertexBinding',
 		'instantiatedMesh'
 	],
-	#category : 'WodenEngine-Core-Mesh'
+	#category : #'WodenEngine-Core-Mesh'
 }
 
 { #category : #'as yet unclassified' }
-WTDynamicGenericMeshBuilder >> createIndexBuffer [
+WDCDynamicGenericMeshBuilder >> createIndexBuffer [
 	(indexBuffer isNil or: [ indexBufferCapacity < indices size ]) ifTrue: [
 		indexBufferCapacity := indices capacity.
 		indexBuffer := engine createIndex: indices elementSize streamingElements: indexBufferCapacity.
@@ -24,7 +24,7 @@ WTDynamicGenericMeshBuilder >> createIndexBuffer [
 ]
 
 { #category : #'as yet unclassified' }
-WTDynamicGenericMeshBuilder >> createMeshWithSubmeshes: newSubmeshes [
+WDCDynamicGenericMeshBuilder >> createMeshWithSubmeshes: newSubmeshes [
 	(instantiatedMesh isNotNil and: [ newSubmeshes = instantiatedMesh submeshes ]) ifTrue: [
 		self
 			createVertexBuffer;
@@ -36,17 +36,17 @@ WTDynamicGenericMeshBuilder >> createMeshWithSubmeshes: newSubmeshes [
 ]
 
 { #category : #'as yet unclassified' }
-WTDynamicGenericMeshBuilder >> createVertexBinding [
+WDCDynamicGenericMeshBuilder >> createVertexBinding [
 	vertexBinding ifNil: [
 		vertexBinding := super createVertexBinding
 	] ifNotNil: [
-		vertexBinding vertexBuffers: { self createVertexBuffer }
+		vertexBinding vertexBuffers: { self createVertexBuffer }; offsets: { 0 }
 	].
 	^ vertexBinding
 ]
 
 { #category : #'as yet unclassified' }
-WTDynamicGenericMeshBuilder >> createVertexBuffer [
+WDCDynamicGenericMeshBuilder >> createVertexBuffer [
 	(vertexBuffer isNil or: [ vertexBufferCapacity < vertices size ]) ifTrue: [
 		vertexBufferCapacity := vertices capacity.
 		vertexBuffer := engine createVertex: WTGenericVertexF structureSize streamingElements: vertexBufferCapacity.
@@ -57,13 +57,13 @@ WTDynamicGenericMeshBuilder >> createVertexBuffer [
 ]
 
 { #category : #'as yet unclassified' }
-WTDynamicGenericMeshBuilder >> instantiateMesh [
+WDCDynamicGenericMeshBuilder >> instantiateMesh [
 	instantiatedMesh ifNil: [ instantiatedMesh := super instantiateMesh ].
 	^ instantiatedMesh
 ]
 
 { #category : #'as yet unclassified' }
-WTDynamicGenericMeshBuilder >> mesh [
+WDCDynamicGenericMeshBuilder >> mesh [
 	self finishSubmesh.
 	
 	^ self createMeshWithSubmeshes: submeshes asArray.

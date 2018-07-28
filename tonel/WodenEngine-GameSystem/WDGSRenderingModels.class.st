@@ -73,7 +73,7 @@ WDGSRenderingModels >> createSolidModel [
 
 { #category : #rendering }
 WDGSRenderingModels >> createSolidModelBuilderFor: anEngine [
-	solidModelBuilder := WTDynamicGenericMeshBuilder for: anEngine.
+	solidModelBuilder := WDCDynamicGenericMeshBuilder for: anEngine.
 	solidModelMaterial := anEngine resourceCache loadMaterial: 'materials/basic/white.json'.
 ]
 
@@ -102,7 +102,7 @@ WDGSRenderingModels >> createTexturedModel [
 
 { #category : #rendering }
 WDGSRenderingModels >> createTexturedModelBuilderFor: anEngine [
-	texturedModelBuilder := WTDynamicGenericMeshBuilder for: anEngine.
+	texturedModelBuilder := WDCDynamicGenericMeshBuilder for: anEngine.
 ]
 
 { #category : #rendering }
@@ -122,7 +122,7 @@ WDGSRenderingModels >> createWireModel [
 
 { #category : #rendering }
 WDGSRenderingModels >> createWireModelBuilderFor: anEngine [
-	wireModelBuilder := WTDynamicGenericMeshBuilder for: anEngine.
+	wireModelBuilder := WDCDynamicGenericMeshBuilder for: anEngine.
 	wireModelMaterial := anEngine resourceCache loadMaterial: 'materials/basic/flat.json'.
 ]
 

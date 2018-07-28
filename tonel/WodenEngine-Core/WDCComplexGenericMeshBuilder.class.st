@@ -1,6 +1,6 @@
 Class {
-	#name : #WTComplexGenericMeshBuilder,
-	#superclass : #WTGenericMeshBuilder,
+	#name : #WDCComplexGenericMeshBuilder,
+	#superclass : #WDCGenericMeshBuilder,
 	#instVars : [
 		'transform'
 	],
@@ -10,11 +10,11 @@ Class {
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Core-Mesh'
+	#category : #'WodenEngine-Core-Mesh'
 }
 
 { #category : #'as yet unclassified' }
-WTComplexGenericMeshBuilder class >> initialize [
+WDCComplexGenericMeshBuilder class >> initialize [
 	"
 	self initialize
 	"
@@ -32,7 +32,7 @@ WTComplexGenericMeshBuilder class >> initialize [
 ]
 
 { #category : #adding }
-WTComplexGenericMeshBuilder >> addP: position N: normal TC: texcoord [
+WDCComplexGenericMeshBuilder >> addP: position N: normal TC: texcoord [
 	vertices add: (WTGenericVertexF new
 		position: (transform transformPosition3: position);
 		normal: (transform transformNormal: normal);
@@ -42,7 +42,7 @@ WTComplexGenericMeshBuilder >> addP: position N: normal TC: texcoord [
 ]
 
 { #category : #adding }
-WTComplexGenericMeshBuilder >> addP: position TC: texcoord [
+WDCComplexGenericMeshBuilder >> addP: position TC: texcoord [
 	vertices add: (WTGenericVertexF new
 		position: (transform transformPosition3: position);
 		texcoord: texcoord;
@@ -51,12 +51,12 @@ WTComplexGenericMeshBuilder >> addP: position TC: texcoord [
 ]
 
 { #category : #'as yet unclassified' }
-WTComplexGenericMeshBuilder >> bitangentForAxis: normalAxis [
+WDCComplexGenericMeshBuilder >> bitangentForAxis: normalAxis [
 	^ NormalAxis at: ((normalAxis + 3) rem: NormalAxis size) + 1
 ]
 
 { #category : #'as yet unclassified' }
-WTComplexGenericMeshBuilder >> computeNormalAxis: normal [
+WDCComplexGenericMeshBuilder >> computeNormalAxis: normal [
 	| amount bestAmount best |
 	bestAmount := -1000.0.
 	best := -1.
@@ -74,18 +74,18 @@ WTComplexGenericMeshBuilder >> computeNormalAxis: normal [
 ]
 
 { #category : #initialization }
-WTComplexGenericMeshBuilder >> initialize [
+WDCComplexGenericMeshBuilder >> initialize [
 	super initialize.
 	transform := WMReversibleAffineTransformF identity.
 ]
 
 { #category : #'as yet unclassified' }
-WTComplexGenericMeshBuilder >> planeTextureScale: texScale offset: texOffset [
+WDCComplexGenericMeshBuilder >> planeTextureScale: texScale offset: texOffset [
 	self planeTextureTransform: (WMMatrix3F texScale: texScale offset: texOffset).
 ]
 
 { #category : #'as yet unclassified' }
-WTComplexGenericMeshBuilder >> planeTextureTransform: textureMatrix [
+WDCComplexGenericMeshBuilder >> planeTextureTransform: textureMatrix [
 	| vertex normal position normalAxis tangent bitangent uv |
 	1 to: vertices size do: [ :vi |
 		vertex := vertices at: vi.
@@ -107,51 +107,51 @@ WTComplexGenericMeshBuilder >> planeTextureTransform: textureMatrix [
 ]
 
 { #category : #accessing }
-WTComplexGenericMeshBuilder >> rotateDegreesOnX: radians [
+WDCComplexGenericMeshBuilder >> rotateDegreesOnX: radians [
 	transform rotateDegreesOnX: radians
 ]
 
 { #category : #accessing }
-WTComplexGenericMeshBuilder >> rotateDegreesOnY: radians [
+WDCComplexGenericMeshBuilder >> rotateDegreesOnY: radians [
 	transform rotateDegreesOnY: radians
 ]
 
 { #category : #accessing }
-WTComplexGenericMeshBuilder >> rotateDegreesOnZ: radians [
+WDCComplexGenericMeshBuilder >> rotateDegreesOnZ: radians [
 	transform rotateDegreesOnZ: radians
 ]
 
 { #category : #accessing }
-WTComplexGenericMeshBuilder >> rotateRadiansOnX: radians [
+WDCComplexGenericMeshBuilder >> rotateRadiansOnX: radians [
 	transform rotateRadiansOnX: radians
 ]
 
 { #category : #accessing }
-WTComplexGenericMeshBuilder >> rotateRadiansOnY: radians [
+WDCComplexGenericMeshBuilder >> rotateRadiansOnY: radians [
 	transform rotateRadiansOnY: radians
 ]
 
 { #category : #accessing }
-WTComplexGenericMeshBuilder >> rotateRadiansOnZ: radians [
+WDCComplexGenericMeshBuilder >> rotateRadiansOnZ: radians [
 	transform rotateRadiansOnZ: radians
 ]
 
 { #category : #'as yet unclassified' }
-WTComplexGenericMeshBuilder >> tangentForAxis: normalAxis [
+WDCComplexGenericMeshBuilder >> tangentForAxis: normalAxis [
 	^ NormalAxis at: ((normalAxis + 1) rem: NormalAxis size) + 1
 ]
 
 { #category : #accessing }
-WTComplexGenericMeshBuilder >> transform [
+WDCComplexGenericMeshBuilder >> transform [
 	^ transform
 ]
 
 { #category : #accessing }
-WTComplexGenericMeshBuilder >> transform: aTransform [
+WDCComplexGenericMeshBuilder >> transform: aTransform [
 	transform := aTransform
 ]
 
 { #category : #accessing }
-WTComplexGenericMeshBuilder >> translateToX: tx y: ty z: tz [
+WDCComplexGenericMeshBuilder >> translateToX: tx y: ty z: tz [
 	transform translateToX: tx y: ty z: tz
 ]

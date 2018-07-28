@@ -7,7 +7,7 @@ Class {
 { #category : #hooks }
 RWNullShape >> buildRenderableFor: anElement view: aView [
 	"Do nothing"
-	^ WTNullRenderable new
+	^ WDCNullRenderable new
 ]
 
 { #category : #hooks }

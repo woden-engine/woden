@@ -1,34 +1,34 @@
 Class {
-	#name : #WTAnimationAction,
+	#name : #WDCAnimationAction,
 	#superclass : #Object,
 	#instVars : [
 		'name',
 		'bones'
 	],
-	#category : 'WodenEngine-Core-Mesh'
+	#category : #'WodenEngine-Core-Mesh'
 }
 
 { #category : #accessing }
-WTAnimationAction >> bones [
+WDCAnimationAction >> bones [
 	^ bones
 ]
 
 { #category : #accessing }
-WTAnimationAction >> bones: anObject [
+WDCAnimationAction >> bones: anObject [
 	bones := anObject
 ]
 
 { #category : #accessing }
-WTAnimationAction >> name [
+WDCAnimationAction >> name [
 	^ name
 ]
 
 { #category : #accessing }
-WTAnimationAction >> name: anObject [
+WDCAnimationAction >> name: anObject [
 	name := anObject
 ]
 
 { #category : #'as yet unclassified' }
-WTAnimationAction >> numberOfFrames [
+WDCAnimationAction >> numberOfFrames [
 	^ bones first keyframes size
 ]

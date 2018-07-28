@@ -298,7 +298,7 @@ WDPPompeiiSurface >> ensureVertexBufferCapacity: requiredSize [
 	
 	"Create the vertex binding"
 	vertexBinding ifNil: [vertexBinding := engine createVertexBindingForLayout: (engine vertexLayoutFor: WDPCanvasVertex2D)].
-	vertexBinding vertexBuffers: { vertexBuffer }
+	vertexBinding vertexBuffers: { vertexBuffer }; offsets: { 0 }
 ]
 
 { #category : #accessing }

@@ -28,7 +28,7 @@ RWCube >> createBaseShapeNodeForView: aView [
 	
 	"We create a cube of size 1, the size of the cube is then changed by a matrix transformation.
 	The matrix is computed in #shapeMatrixFor:"
-	renderable := (WTGenericMeshBuilder for: engine)
+	renderable := (WDCGenericMeshBuilder for: engine)
 		material: (self wodenMaterialForView: aView);
 		addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
 		computeBoundingBox;

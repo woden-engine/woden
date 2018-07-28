@@ -313,7 +313,7 @@ WDGSPlayerBehavior >> spawn [
 	bullets := OrderedCollection new.
 	bulletsNode := WDSGSpatialObjectInstanceGroup new.
 	bulletsNode updatedPerFrame: false.
-	bulletsNode renderable: ((WTComplexGenericMeshBuilder for: self engine)
+	bulletsNode renderable: ((WDCComplexGenericMeshBuilder for: self engine)
 		rotateRadiansOnX: Float halfPi;
 		addCylinderRadius: 0.0254*0.357*0.5 height: 0.03 segments: 2 slices: 6;
 		mesh).
