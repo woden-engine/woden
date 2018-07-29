@@ -3,11 +3,7 @@ I represent an array of structures style representation for vertex data.
 "
 Class {
 	#name : #WDCInterleavedVertexData,
-	#superclass : #Object,
-	#instVars : [
-		'data',
-		'vertexClass'
-	],
+	#superclass : #WDCAbstractMeshVertexData,
 	#pools : [
 		'AGPUConstants'
 	],

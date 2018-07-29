@@ -1,3 +1,6 @@
+"
+I am a null renderable.
+"
 Class {
 	#name : #WDCNullRenderable,
 	#superclass : #WDCRenderable,

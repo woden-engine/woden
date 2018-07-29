@@ -1,3 +1,6 @@
+"
+I represent an abstract renderable. An abstract renderable is an object that is rendered in a scene.
+"
 Class {
 	#name : #WDCRenderable,
 	#superclass : #Object,

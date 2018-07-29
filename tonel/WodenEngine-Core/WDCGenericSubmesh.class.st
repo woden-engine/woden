@@ -1,3 +1,6 @@
+"
+I represent a generic submesh.
+"
 Class {
 	#name : #WDCGenericSubmesh,
 	#superclass : #Object,

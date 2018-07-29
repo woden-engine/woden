@@ -1,3 +1,6 @@
+"
+I represent a mesh vertx channel.
+"
 Class {
 	#name : #WDCMeshVertexChannel,
 	#superclass : #Object,
@@ -14,6 +17,16 @@ Class {
 { #category : #accessing }
 WDCMeshVertexChannel >> alignment [
 	^ description alignment
+]
+
+{ #category : #accessing }
+WDCMeshVertexChannel >> at: anIndex [
+	^ data at: anIndex
+]
+
+{ #category : #accessing }
+WDCMeshVertexChannel >> at: anIndex put: aValue [
+	^ data at: anIndex put: aValue
 ]
 
 { #category : #accessing }
@@ -49,6 +62,11 @@ WDCMeshVertexChannel >> description [
 { #category : #accessing }
 WDCMeshVertexChannel >> description: anObject [
 	description := anObject
+]
+
+{ #category : #accessing }
+WDCMeshVertexChannel >> name [
+	^ description name
 ]
 
 { #category : #printing }

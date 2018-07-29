@@ -1,3 +1,6 @@
+"
+I am a generic mesh renderable
+"
 Class {
 	#name : #WDCGenericMesh,
 	#superclass : #WDCRenderable,

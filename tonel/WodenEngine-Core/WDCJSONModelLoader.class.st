@@ -1,6 +1,6 @@
 Class {
-	#name : #WDCModelImporter,
-	#superclass : #Object,
+	#name : #WDCJSONModelLoader,
+	#superclass : #WDCModelLoader,
 	#instVars : [
 		'interleaveVertexData',
 		'vertices',
@@ -9,9 +9,6 @@ Class {
 		'baseIndex',
 		'addExplicitWhiteColor'
 	],
-	#classVars : [
-		'VertexChannelDescription'
-	],
 	#pools : [
 		'AGPUConstants'
 	],
@@ -19,9 +16,9 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-WDCModelImporter class >> convert: modelFileName materialMap: materialMapOrArray toFuel: fuelModel [
+WDCJSONModelLoader class >> convert: modelFileName materialMap: materialMapOrArray toFuel: fuelModel [
 	| model materialMap |
-	model := self new importFromFileNamed: modelFileName.
+	model := self new loadFromFileNamed: modelFileName.
 	materialMap := materialMapOrArray.
 	materialMap isArray ifTrue: [
 		materialMap := Dictionary newFrom: materialMap.
@@ -32,33 +29,20 @@ WDCModelImporter class >> convert: modelFileName materialMap: materialMapOrArray
 ]
 
 { #category : #'as yet unclassified' }
-WDCModelImporter class >> convert: modelFileName singleMaterial: materialName toFuel: fuelModel [
+WDCJSONModelLoader class >> convert: modelFileName singleMaterial: materialName toFuel: fuelModel [
 	| model |
-	model := self new importFromFileNamed: modelFileName.
+	model := self new loadFromFileNamed: modelFileName.
 	model combineSubmeshesWithMaterial: materialName.
 	FLSerializer serialize: model toFileNamed: fuelModel
 ]
 
-{ #category : #initialization }
-WDCModelImporter class >> initialize [
-	super initialize.
-	VertexChannelDescription := Dictionary new.
-	
-	{ 
-		WDCStructureField name: #positions typeNamed: #float3 binding: 0.
-		WDCStructureField name: #texcoords typeNamed: #float2 binding: 1.
-		WDCStructureField name: #colors typeNamed: #float4 binding: 2.
-		WDCStructureField name: #normals typeNamed: #float3 binding: 3.
-		WDCStructureField name: #tangents4 typeNamed: #float4 binding: 4.
-		WDCStructureField name: #boneWeights typeNamed: #R16G16B16A16_UNORM binding: 5.
-		WDCStructureField name: #boneIndices typeNamed: #R16G16B16A16_SINT binding: 6.
-	} do: [ :field |
-		VertexChannelDescription at: field name put: field
-	]
+{ #category : #accessing }
+WDCJSONModelLoader class >> extension [
+	^ 'wmjson'
 ]
 
 { #category : #'as yet unclassified' }
-WDCModelImporter class >> scriptsUsed [
+WDCJSONModelLoader class >> scriptsUsed [
 	"
 	model := WTModelImporter new
 		importFromFileNamed: 'magnum_357.wmjson'.
@@ -74,9 +58,9 @@ WDCModelImporter class >> scriptsUsed [
 ]
 
 { #category : #'vertex data loading' }
-WDCModelImporter >> createWhiteColorChannelOfSize: vertexCount [
+WDCJSONModelLoader >> createWhiteColorChannelOfSize: vertexCount [
 	| description channelData vectorClass white |
-	description := VertexChannelDescription at: #colors.
+	description := WDCSeparatedVertexData vertexChannelDescriptions at: #colors.
 
 	vectorClass := description type slvmType.
 	
@@ -94,20 +78,15 @@ WDCModelImporter >> createWhiteColorChannelOfSize: vertexCount [
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
-WDCModelImporter >> importFromFileNamed: fileName [
-	^ self loadFrom: (NeoJSONReader fromString: fileName asFileReference contents)
-]
-
 { #category : #initialization }
-WDCModelImporter >> initialize [
+WDCJSONModelLoader >> initialize [
 	super initialize.
 	interleaveVertexData := false.
 	addExplicitWhiteColor := true.
 ]
 
 { #category : #'as yet unclassified' }
-WDCModelImporter >> loadAction: actionData [
+WDCJSONModelLoader >> loadAction: actionData [
 	| actionBones |
 	actionBones := (actionData at: 'bones') collect: [:actionBone | self loadActionBone: actionBone ].
 	^ WDCAnimationAction new
@@ -117,7 +96,7 @@ WDCModelImporter >> loadAction: actionData [
 ]
 
 { #category : #'as yet unclassified' }
-WDCModelImporter >> loadActionBone: actionBoneData [
+WDCJSONModelLoader >> loadActionBone: actionBoneData [
 	| boneIndex keyframes keyframesData |
 	boneIndex := actionBoneData at: 'index'.
 	keyframesData := actionBoneData at: 'keyframes'.
@@ -137,7 +116,7 @@ WDCModelImporter >> loadActionBone: actionBoneData [
 ]
 
 { #category : #'as yet unclassified' }
-WDCModelImporter >> loadActions: actionsData [
+WDCJSONModelLoader >> loadActions: actionsData [
 	| actions |
 	actions := Dictionary new.
 	actionsData do: [ :actionData |
@@ -148,7 +127,7 @@ WDCModelImporter >> loadActions: actionsData [
 ]
 
 { #category : #'as yet unclassified' }
-WDCModelImporter >> loadArmature: armatureData [
+WDCJSONModelLoader >> loadArmature: armatureData [
 	| bones names location orientation parentIndex boneParents |
 	names := armatureData collect: [ :boneData | boneData at: 'name' ].
 	boneParents := SLVMNativeArray for: #int new: armatureData size.
@@ -168,7 +147,7 @@ WDCModelImporter >> loadArmature: armatureData [
 ]
 
 { #category : #'vertex data loading' }
-WDCModelImporter >> loadBoneWeightsChannelClass: vectorClass elements: channelElements sourceData: sourceData [
+WDCJSONModelLoader >> loadBoneWeightsChannelClass: vectorClass elements: channelElements sourceData: sourceData [
 	| result sourceIndex x y z w sum den |
 	result := SLVMNativeArray for: vectorClass new: channelElements.
 	sourceIndex := 1.
@@ -187,7 +166,7 @@ WDCModelImporter >> loadBoneWeightsChannelClass: vectorClass elements: channelEl
 ]
 
 { #category : #'as yet unclassified' }
-WDCModelImporter >> loadBoundingBox: bboxData [
+WDCJSONModelLoader >> loadBoundingBox: bboxData [
 	| min max |
 	min := WMVector3F x: (bboxData at: 1) y: (bboxData at: 2) z: (bboxData at: 3).
 	max := WMVector3F x: (bboxData at: 4) y: (bboxData at: 5) z: (bboxData at: 6).
@@ -195,7 +174,7 @@ WDCModelImporter >> loadBoundingBox: bboxData [
 ]
 
 { #category : #'vertex data loading' }
-WDCModelImporter >> loadChannelNamed: channelName vectorSize: vectorSize vectorClass: vectorClass elements: channelElements sourceData: sourceData [
+WDCJSONModelLoader >> loadChannelNamed: channelName vectorSize: vectorSize vectorClass: vectorClass elements: channelElements sourceData: sourceData [
 	channelName = #boneWeights ifTrue: [ ^ self loadBoneWeightsChannelClass: vectorClass elements: channelElements sourceData: sourceData ].
 	vectorSize = 1 ifTrue: [ ^ self loadScalarChannelClass: vectorClass elements: channelElements sourceData: sourceData].
 	vectorSize = 2 ifTrue: [ ^ self loadVector2ChannelClass: vectorClass elements: channelElements sourceData: sourceData].
@@ -205,7 +184,7 @@ WDCModelImporter >> loadChannelNamed: channelName vectorSize: vectorSize vectorC
 ]
 
 { #category : #private }
-WDCModelImporter >> loadFrom: jsonData [
+WDCJSONModelLoader >> loadFrom: jsonData [
 	| boundingBox armature actions |
 	self loadVertices: (jsonData at: 'vertices').
 	submeshes := self loadSubmeshes: (jsonData at: 'submeshes').
@@ -224,8 +203,13 @@ WDCModelImporter >> loadFrom: jsonData [
 		yourself.
 ]
 
+{ #category : #loading }
+WDCJSONModelLoader >> loadFromFileReference: fileReference [
+	^ self loadFrom: (NeoJSONReader fromString: fileReference contents)
+]
+
 { #category : #'as yet unclassified' }
-WDCModelImporter >> loadInterleavedVertices: verticesData [
+WDCJSONModelLoader >> loadInterleavedVertices: verticesData [
 	| positions normals texcoords tangents4 numberOfVertices vertex normal boneIndices boneWeights isSkinned vertexClass weights den vertexBuffer |
 	positions := verticesData at: 'positions' ifAbsent: [ self error: 'Position data is not present.' ].
 	normals := verticesData at: 'normals' ifAbsent: [ nil ].
@@ -283,7 +267,7 @@ WDCModelImporter >> loadInterleavedVertices: verticesData [
 ]
 
 { #category : #'as yet unclassified' }
-WDCModelImporter >> loadQuaternion: quaternionData [
+WDCJSONModelLoader >> loadQuaternion: quaternionData [
 	^ WMQuaternionF 
 		r: (quaternionData at: 1) asFloat
 		i: (quaternionData at: 2) asFloat
@@ -292,7 +276,7 @@ WDCModelImporter >> loadQuaternion: quaternionData [
 ]
 
 { #category : #'vertex data loading' }
-WDCModelImporter >> loadScalarChannelClass: vectorClass elements: channelElements sourceData: sourceData [
+WDCJSONModelLoader >> loadScalarChannelClass: vectorClass elements: channelElements sourceData: sourceData [
 	| result |
 	result := SLVMNativeArray for: vectorClass new: channelElements.
 	1 to: channelElements do: [ :destIndex |
@@ -302,7 +286,7 @@ WDCModelImporter >> loadScalarChannelClass: vectorClass elements: channelElement
 ]
 
 { #category : #'vertex data loading' }
-WDCModelImporter >> loadSplittedVertices: verticesData [
+WDCJSONModelLoader >> loadSeparatedVertices: verticesData [
 	| channels channelIndex vertexCount channel |
 	channels := Array new: verticesData size.
 	channelIndex := 1.
@@ -315,22 +299,22 @@ WDCModelImporter >> loadSplittedVertices: verticesData [
 		vertexCount := vertexCount min: channel size.		
 	].
 
-	addExplicitWhiteColor ifTrue: [ 
-		verticesData at: #colors ifAbsent: [
-			channels := channels , { self createWhiteColorChannelOfSize: vertexCount }
-		]
-	].
-
 	channels sort: [ :a :b | a binding <= b binding ].
 	
-	vertices := WDCSplittedVertexData new
+	vertices := WDCSeparatedVertexData new
 		channels: channels;
 		vertexCount: vertexCount;
-		yourself
+		yourself.
+		
+	addExplicitWhiteColor ifTrue: [ 
+		verticesData at: #colors ifAbsent: [
+			vertices generateWhiteColorChannel
+		]
+	].
 ]
 
 { #category : #'as yet unclassified' }
-WDCModelImporter >> loadSubmesh: submeshData [
+WDCJSONModelLoader >> loadSubmesh: submeshData [
 	| triangles numberOfTriangles submesh |
 	triangles := submeshData at: 'triangles'.
 	numberOfTriangles := triangles size.
@@ -350,7 +334,7 @@ WDCModelImporter >> loadSubmesh: submeshData [
 ]
 
 { #category : #'as yet unclassified' }
-WDCModelImporter >> loadSubmeshes: submeshesData [
+WDCJSONModelLoader >> loadSubmeshes: submeshesData [
 	| totalNumberOfIndices |
 	totalNumberOfIndices := 0.
 	submeshesData do: [ :sm | totalNumberOfIndices := totalNumberOfIndices + (sm at: 'triangles') size ].
@@ -366,7 +350,7 @@ WDCModelImporter >> loadSubmeshes: submeshesData [
 ]
 
 { #category : #'vertex data loading' }
-WDCModelImporter >> loadVector2ChannelClass: vectorClass elements: channelElements sourceData: sourceData [
+WDCJSONModelLoader >> loadVector2ChannelClass: vectorClass elements: channelElements sourceData: sourceData [
 	| result sourceIndex |
 	result := SLVMNativeArray for: vectorClass new: channelElements.
 	sourceIndex := 1.
@@ -381,7 +365,7 @@ WDCModelImporter >> loadVector2ChannelClass: vectorClass elements: channelElemen
 ]
 
 { #category : #'as yet unclassified' }
-WDCModelImporter >> loadVector3: vectorData [
+WDCJSONModelLoader >> loadVector3: vectorData [
 	^ WMVector3F
 		x: (vectorData at: 1) asFloat
 		y: (vectorData at: 2) asFloat
@@ -389,7 +373,7 @@ WDCModelImporter >> loadVector3: vectorData [
 ]
 
 { #category : #'vertex data loading' }
-WDCModelImporter >> loadVector3ChannelClass: vectorClass elements: channelElements sourceData: sourceData [
+WDCJSONModelLoader >> loadVector3ChannelClass: vectorClass elements: channelElements sourceData: sourceData [
 	| result sourceIndex |
 	result := SLVMNativeArray for: vectorClass new: channelElements.
 	sourceIndex := 1.
@@ -405,7 +389,7 @@ WDCModelImporter >> loadVector3ChannelClass: vectorClass elements: channelElemen
 ]
 
 { #category : #'vertex data loading' }
-WDCModelImporter >> loadVector4ChannelClass: vectorClass elements: channelElements sourceData: sourceData [
+WDCJSONModelLoader >> loadVector4ChannelClass: vectorClass elements: channelElements sourceData: sourceData [
 	| result sourceIndex |
 	result := SLVMNativeArray for: vectorClass new: channelElements.
 	sourceIndex := 1.
@@ -422,9 +406,9 @@ WDCModelImporter >> loadVector4ChannelClass: vectorClass elements: channelElemen
 ]
 
 { #category : #'vertex data loading' }
-WDCModelImporter >> loadVertexChannel: channelName data: sourceData [
+WDCJSONModelLoader >> loadVertexChannel: channelName data: sourceData [
 	| description channelData vectorSize rows channelElements vectorClass |
-	description := VertexChannelDescription at: channelName ifAbsent: [
+	description := WDCSeparatedVertexData vertexChannelDescriptions at: channelName ifAbsent: [
 		self error: 'Unsupported/unknown vertex channel ' , channelName printString
 	].
 
@@ -447,8 +431,8 @@ WDCModelImporter >> loadVertexChannel: channelName data: sourceData [
 ]
 
 { #category : #'as yet unclassified' }
-WDCModelImporter >> loadVertices: verticesData [
+WDCJSONModelLoader >> loadVertices: verticesData [
 	^ interleaveVertexData
 		ifTrue: [ self loadInterleavedVertices: verticesData ]
-		ifFalse: [ self loadSplittedVertices: verticesData ]
+		ifFalse: [ self loadSeparatedVertices: verticesData ]
 ]

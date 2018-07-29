@@ -1,3 +1,6 @@
+"
+I am a stream for reading little endian encoded binary data.
+"
 Class {
 	#name : #WDCBinaryLittleEndianReadStream,
 	#superclass : #DecoratorStream,

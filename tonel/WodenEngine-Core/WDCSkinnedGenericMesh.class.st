@@ -1,3 +1,6 @@
+"
+I am a generic mesh that is also deformed by an armature.
+"
 Class {
 	#name : #WDCSkinnedGenericMesh,
 	#superclass : #WDCGenericMesh,

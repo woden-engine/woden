@@ -322,6 +322,16 @@ WDASceneExamples class >> example06MeshGrid [
 	model openWith: WDAFPSSceneView.
 ]
 
+{ #category : #'example models' }
+WDASceneExamples class >> exampleModelBunny [
+	(WDCEngine default resourceCache load3DModel: 'models/stanford/bun_zipper.ply') openViewer
+]
+
+{ #category : #'example models' }
+WDASceneExamples class >> exampleModelCube [
+	(WDCEngine default resourceCache load3DModel: 'models/obj/cube.obj') openViewer
+]
+
 { #category : #'see class side' }
 WDASceneExamples >> seeClassSide [
 ]

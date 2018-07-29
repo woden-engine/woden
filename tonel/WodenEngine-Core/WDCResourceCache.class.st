@@ -105,6 +105,16 @@ WDCResourceCache >> buildVertexLayout: vertexLayout [
 
 ]
 
+{ #category : #'lazy resource loading' }
+WDCResourceCache >> concretizeSRGBTexture: aTextureDescription [
+	^ aTextureDescription concretizeWodenSRGBTextureWithResourceCache: self
+]
+
+{ #category : #'lazy resource loading' }
+WDCResourceCache >> concretizeTexture: aTextureDescription [
+	^ aTextureDescription concretizeWodenTextureWithResourceCache: self
+]
+
 { #category : #private }
 WDCResourceCache >> createDefaultMaterial [
 	defaultMaterial := WDCGenericSurfaceMaterial for: engine.
@@ -166,7 +176,7 @@ WDCResourceCache >> initializeForEngine: anEngine [
 WDCResourceCache >> load3DModel: aFileNameOrReference [
 	| modelFile |
 	modelFile := self resolveResourceFileReference: aFileNameOrReference.
-	^ self resourceAt: modelFile -> #model ifAbsentPut: [ self perform3DModelLoading: modelFile ].
+	^ self resourceAt: modelFile -> #model ifAbsentPut: [ WDCModelLoader loadFromFile: modelFile ].
 
 ]
 
@@ -251,15 +261,6 @@ WDCResourceCache >> loadVertexShader: aFileNameOrReference [
 	| shaderFile |
 	shaderFile := self resolveResourceFileReference: aFileNameOrReference.
 	^ self resourceAt: shaderFile -> #vertexShader ifAbsentPut: [ self performShaderLoading: shaderFile stage: AGPU_VERTEX_SHADER ].
-]
-
-{ #category : #'3d models' }
-WDCResourceCache >> perform3DModelLoading: modelFileReference [
-	| extension |
-	extension := modelFileReference extension.
-	extension = 'fmdl' ifTrue: [ ^ FLMaterializer materializeFromByteArray: (self binaryContentsOf: modelFileReference) ].
-	extension = 'wmjson' ifTrue: [ ^ WDCModelImporter new importFromFileNamed: modelFileReference ].
-	self error: 'Unsupported model format.'
 ]
 
 { #category : #shaders }

@@ -28,6 +28,16 @@ WDCTexture >> canUploadData [
 	^ data isNotNil and: [ description flags anyMask: AGPU_TEXTURE_FLAG_UPLOADED ]
 ]
 
+{ #category : #'as yet unclassified' }
+WDCTexture >> concretizeWodenSRGBTextureWithResourceCache: aResourceCache [
+	^ self
+]
+
+{ #category : #'as yet unclassified' }
+WDCTexture >> concretizeWodenTextureWithResourceCache: aResourceCache [
+	^ self
+]
+
 { #category : #accessing }
 WDCTexture >> data [
 	^ data

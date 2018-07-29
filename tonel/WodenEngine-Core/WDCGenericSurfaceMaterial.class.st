@@ -83,6 +83,17 @@ WDCGenericSurfaceMaterial >> bindResources [
 	fresnelTexture ifNotNil: [ resourceBinding bind: 4 texture: fresnelTexture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0 ].
 ]
 
+{ #category : #'as yet unclassified' }
+WDCGenericSurfaceMaterial >> concretizeMaterial [
+	| resourceCache |
+	super concretizeMaterial.
+	resourceCache := engine resourceCache.
+	albedoTexture := engine resourceCache concretizeTexture: albedoTexture.
+	normalTexture := engine resourceCache concretizeTexture: normalTexture.
+	fresnelTexture := engine resourceCache concretizeTexture: fresnelTexture.
+	smoothnessTexture := engine resourceCache concretizeTexture: smoothnessTexture.
+]
+
 { #category : #'state binding' }
 WDCGenericSurfaceMaterial >> fetchShaders [
 

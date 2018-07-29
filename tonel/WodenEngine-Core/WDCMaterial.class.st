@@ -32,6 +32,16 @@ WDCMaterial >> activateShadowOn: stateTracker [
 	^ false
 ]
 
+{ #category : #'as yet unclassified' }
+WDCMaterial >> concreteMaterialFor: anEngine [
+	^ self copy engine: anEngine; concretizeMaterial
+]
+
+{ #category : #'as yet unclassified' }
+WDCMaterial >> concretizeMaterial [
+	"This is the place for concretizing the textures."
+]
+
 { #category : #accessing }
 WDCMaterial >> engine [
 	^ engine
@@ -45,6 +55,11 @@ WDCMaterial >> engine: anObject [
 { #category : #testing }
 WDCMaterial >> isMaterial [
 	^ true
+]
+
+{ #category : #testing }
+WDCMaterial >> isMaterialDescription [
+	^ engine isNil
 ]
 
 { #category : #parsing }

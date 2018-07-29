@@ -1,3 +1,6 @@
+"
+I represent an offline 3D model. I am created by converting a 3D model from a 3D design application.
+"
 Class {
 	#name : #WDCModel,
 	#superclass : #Object,
@@ -8,6 +11,9 @@ Class {
 		'boundingBox',
 		'armature',
 		'actions'
+	],
+	#classVars : [
+		'VertexChannelDescriptions'
 	],
 	#pools : [
 		'AGPUConstants'
