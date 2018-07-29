@@ -22,12 +22,12 @@ Class {
 }
 
 { #category : #'class initialization' }
-WDCStructureFieldType class >> initialize [
+WDCStructureFieldType class >> initializeFieldTypes [
+	<script>
 	"
-	self initialize
+	self initializeFieldTypes
 	"
 	| formatId componentType components normalized size alignment type slvmType |
-	super initialize.
 
 	FieldTypes := Dictionary new.
 	#(
@@ -177,6 +177,7 @@ WDCStructureFieldType class >> parseOptionalSLVMType: typeName [
 
 { #category : #accessing }
 WDCStructureFieldType class >> typeNamed: typeName [
+	FieldTypes ifNil: [ self initializeFieldTypes ].
 	^ FieldTypes at: typeName asSymbol
 ]
 
