@@ -182,6 +182,11 @@ WDSGNode >> isMultiEyeCamera [
 ]
 
 { #category : #testing }
+WDSGNode >> isOpaqueShadowCaster [
+	^ false
+]
+
+{ #category : #testing }
 WDSGNode >> isSpatialObject [
 	^ false
 ]

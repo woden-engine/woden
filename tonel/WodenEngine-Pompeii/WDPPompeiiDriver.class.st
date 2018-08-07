@@ -5,7 +5,9 @@ Class {
 		'engine',
 		'colorShader',
 		'vertexShader',
-		'colorFontShader'
+		'colorFontShader',
+		'textureColorShader',
+		'textureArrayColorShader'
 	],
 	#classVars : [
 		'PrimitiveTypeMap'
@@ -88,6 +90,23 @@ WDPPompeiiDriver >> createFontCache: aLogicalFont [
 	^ WDPPompeiiFontCache new driver: self; font: aLogicalFont; yourself
 ]
 
+{ #category : #'instance creation' }
+WDPPompeiiDriver >> createMaterialForTexture: aTexture [
+	^ WDPPompeiiTextureMaterial new
+		driver: self;
+		texture: aTexture;
+		yourself
+]
+
+{ #category : #'instance creation' }
+WDPPompeiiDriver >> createMaterialForTextureArray: aTextureArray element: aTextureElementIndex [
+	^ WDPPompeiiTextureArrayElementMaterial new
+		driver: self;
+		textureArray: aTextureArray;
+		elementIndex: aTextureElementIndex;
+		yourself
+]
+
 { #category : #accessing }
 WDPPompeiiDriver >> engine [
 	^ engine
@@ -120,6 +139,16 @@ WDPPompeiiDriver >> surfaceWithExtent: anExtent [
 { #category : #'instance creation' }
 WDPPompeiiDriver >> surfaceWithExtent: anExtent sampleCount: aSampleCount [
 	^ WDPPompeiiSurface extent: anExtent driver: self sampleCount: aSampleCount
+]
+
+{ #category : #shaders }
+WDPPompeiiDriver >> textureArrayColorShader [
+	^ textureArrayColorShader ifNil: [ textureArrayColorShader := engine loadFragmentShader: 'shaders/pompeii/texturedArrayFragment.dastrel' ]
+]
+
+{ #category : #shaders }
+WDPPompeiiDriver >> textureColorShader [
+	^ textureColorShader ifNil: [ textureColorShader := engine loadFragmentShader: 'shaders/pompeii/texturedFragment.dastrel' ]
 ]
 
 { #category : #shaders }

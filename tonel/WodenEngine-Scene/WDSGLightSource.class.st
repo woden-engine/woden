@@ -37,13 +37,6 @@ WDSGLightSource >> castShadows: anObject [
 	castShadows := anObject
 ]
 
-{ #category : #'as yet unclassified' }
-WDSGLightSource >> computeShadowMapMatrixForCameraTransform: cameraTransform engine: engine [
-	shadowProjectionMatrix := (WMMatrix4F reverseDepthPerspectiveFovY: outerSpotCutoff * 2.0 aspect: 1.0 near: 0.01 far: 30.0 invertedY: engine projectionInvertedY).
-
-	^ shadowProjectionMatrix * renderTransform inverseMatrix4 * cameraTransform matrix4
-]
-
 { #category : #accessing }
 WDSGLightSource >> directional [
 	type := #directional.
@@ -58,6 +51,7 @@ WDSGLightSource >> initialize [
 	castShadows := false.
 	outerSpotCutoff := DefaultSpotOuterCutoff.
 	innerSpotCutoff := DefaultSpotInnerCutoff.
+	shadowProjectionMatrix := WMMatrix4F identity.
 	state := WTLightSourceData new.
 	state
 		intensity: Color white asWMVector4F;
@@ -94,6 +88,11 @@ WDSGLightSource >> isPointLight [
 ]
 
 { #category : #accessing }
+WDSGLightSource >> isShadowCasting [
+	^ castShadows and: [ self isSpotLight or: [ self isDirectionalLight ] ]
+]
+
+{ #category : #accessing }
 WDSGLightSource >> isSpotLight [
 	^ type == #spot
 ]
@@ -121,6 +120,16 @@ WDSGLightSource >> point [
 		innerCosCutoff: -1.0
 ]
 
+{ #category : #'shadow mapping' }
+WDSGLightSource >> setupRenderingWithShadowMap: shadowMapIndex mainCamera: mainCamera engine: engine [
+	^ WDSGLightRenderingState new
+		light: self;
+		mainCamera: mainCamera;
+		engine: engine;
+		setupShadowMapWithIndex: shadowMapIndex;
+		yourself
+]
+
 { #category : #accessing }
 WDSGLightSource >> spot [
 	type := #spot.
@@ -134,46 +143,27 @@ WDSGLightSource >> state [
 	^ state
 ]
 
-{ #category : #'as yet unclassified' }
-WDSGLightSource >> viewStateFor: cameraTansform engine: engine shadowMapIndex: shadowMapIndex [
-	| result |
+{ #category : #'shadow mapping' }
+WDSGLightSource >> viewStateForRenderingState: renderingState cameraTransform: cameraTransform [
+	| result shadowMapIndex |
+	shadowMapIndex := renderingState shadowMapIndex asFloat.
 	result := state copy.
 	result
-		shadowMapLayer: shadowMapIndex asFloat.
+		shadowMapLayer: shadowMapIndex.
 	type == #directional ifTrue: [
-		result direction: (cameraTansform inverseTransformVector3: (renderTransform transformVector3: (WMVector3F z: 1.0))).
+		result direction: (cameraTransform inverseTransformVector3: (renderTransform transformVector3: (WMVector3F z: 1.0))).
 	] ifFalse: [
-		result position: (cameraTansform inverseTransformPosition3: renderTransform translation).
+		result position: (cameraTransform inverseTransformPosition3: renderTransform translation).
 	].
 
 	type == #spot ifTrue: [ 
-		result spotDirection: (cameraTansform inverseTransformVector3: (renderTransform transformVector3: (WMVector3F z: 1.0))).
-		shadowMapIndex >= 0.0 ifTrue: [
-			result
-				shadowMapTransform: (self computeShadowMapMatrixForCameraTransform: cameraTansform engine: engine)
-		]
+		result spotDirection: (cameraTransform inverseTransformVector3: (renderTransform transformVector3: (WMVector3F z: -1.0))).
+	].
+
+	shadowMapIndex >= 0.0 ifTrue: [
+		result
+			shadowMapTransform: (renderingState shadowMapMatrixForCameraTransform: cameraTransform)
 	].
 
 	^ result
-]
-
-{ #category : #'as yet unclassified' }
-WDSGLightSource >> viewportForShadowMap: renderTarget camera: camera [
-	^ self viewportForShadowMap: renderTarget camera: camera submode: #full
-]
-
-{ #category : #'as yet unclassified' }
-WDSGLightSource >> viewportForShadowMap: renderTarget camera: camera submode: submode [
-	| cameraState |
-	cameraState := WTCameraState new.
-	cameraState
-		projectionMatrix: shadowProjectionMatrix.
-
-	^ WDSGViewport new
-		camera: self;
-		cameraState: cameraState;
-		renderTarget: renderTarget;
-		resolveRenderTarget: renderTarget;
-		bounds: renderTarget bounds;
-		submode: submode
 ]

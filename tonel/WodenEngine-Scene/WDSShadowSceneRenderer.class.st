@@ -4,6 +4,12 @@ Class {
 	#category : #'WodenEngine-Scene-Rendering'
 }
 
+{ #category : #'rendering preparations' }
+WDSShadowSceneRenderer >> collectVisibleObject: node [
+	node isOpaqueShadowCaster ifFalse: [ ^ self ].
+	^ super collectVisibleObject: node
+]
+
 { #category : #rendering }
 WDSShadowSceneRenderer >> renderMode [
 	^ WDCStateTrackerShadowRenderMode uniqueInstance

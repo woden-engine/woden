@@ -4,23 +4,14 @@ Class {
 	#instVars : [
 		'driver',
 		'modified',
-		'texture',
-		'shaderBinding'
+		'shaderBinding',
+		'texture'
 	],
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : #'WodenEngine-Pompeii'
+	#category : #'WodenEngine-Pompeii-Font'
 }
-
-{ #category : #initialization }
-WDPPompeiiFontCache >> activateMaterialIn: aSurface [
-	self validTexture.
-	aSurface stateTracker
-		vertexShader: driver vertexShader;
-		fragmentShader: driver colorFontShader;
-		useShaderResources: self validShaderBinding
-]
 
 { #category : #accessing }
 WDPPompeiiFontCache >> driver [

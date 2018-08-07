@@ -50,16 +50,11 @@ WDSGCamera >> frustum [
 	^ frustum
 ]
 
-{ #category : #accessing }
-WDSGCamera >> frustum: anObject [
-	frustum := anObject
-]
-
 { #category : #initialization }
 WDSGCamera >> initialize [
 	super initialize.
 	nearDistance := 0.01.
-	farDistance := 1000.0.
+	farDistance := 100.0.
 	fieldOfView := 60.0.
 	focalDistance := 10.
 	isPerspective := true.

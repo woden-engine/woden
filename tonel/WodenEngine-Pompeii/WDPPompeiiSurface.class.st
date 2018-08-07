@@ -59,6 +59,15 @@ WDPPompeiiSurface class >> extent: anExtent driver: aDriver sampleCount: aSample
 	
 ]
 
+{ #category : #'material activation' }
+WDPPompeiiSurface >> activateFontMaterial: fontMaterial [
+	fontMaterial validTexture.
+	stateTracker
+		vertexShader: driver vertexShader;
+		fragmentShader: driver colorFontShader;
+		useShaderResources: fontMaterial validShaderBinding
+]
+
 { #category : #commands }
 WDPPompeiiSurface >> activateMaterial: aMaterial [
 	activeMaterial == aMaterial ifTrue: [ ^ self ].
@@ -78,6 +87,15 @@ WDPPompeiiSurface >> activateNullMaterial [
 		vertexShader: driver vertexShader;
 		fragmentShader: driver colorShader.
 	activeMaterial := nil.
+]
+
+{ #category : #'material activation' }
+WDPPompeiiSurface >> activateTextureArrayElementMaterial: textureArrayMaterial [
+	textureArrayMaterial validTexture.
+	stateTracker
+		vertexShader: driver vertexShader;
+		fragmentShader: driver textureArrayColorShader;
+		useShaderResources: textureArrayMaterial validShaderBinding
 ]
 
 { #category : #adding }

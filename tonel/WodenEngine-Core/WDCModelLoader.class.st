@@ -12,13 +12,13 @@ WDCModelLoader class >> extension [
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 WDCModelLoader class >> loadFromFile: aFileName [
 	| fileReference loader |
 	fileReference := aFileName asFileReference.
 	loader := self loaderForExtension: fileReference extension.
 	loader ifNil: [ self error: 'Unsupported model format' ].
-	^ loader loadFromFileReference: aFileName
+	^ loader loadFromFileReference: fileReference
 ]
 
 { #category : #'as yet unclassified' }

@@ -2,7 +2,6 @@ Class {
 	#name : #WDSForwardSceneRenderer,
 	#superclass : #WDSLightedSceneRenderer,
 	#instVars : [
-		'lightSources',
 		'globalLightingStates',
 		'currentGlobalLigthingStates'
 	],
@@ -34,8 +33,7 @@ WDSForwardSceneRenderer >> ensureLightingStatesFor: requiredNumberOfCameras [
 { #category : #initialization }
 WDSForwardSceneRenderer >> initializeWithEngine: aWDCEngine [
 	super initializeWithEngine: aWDCEngine.
-	
-	lightSources := SLVMNativeArray for: WTLightSourceData new: 16
+
 ]
 
 { #category : #accessing }
@@ -57,19 +55,20 @@ WDSForwardSceneRenderer >> shaderSignatureClass [
 
 { #category : #rendering }
 WDSForwardSceneRenderer >> updateFrameLightingStates: viewports [
-	| transform numberOfLights lightingState gpuLightingStates lightSource shadowMapIndex |
+	| transform numberOfLights lightingState gpuLightingStates lightSources |
 	self ensureLightingStatesFor: viewports size.
 	currentGlobalLigthingStates := globalLightingStates at: engine bufferingFrameIndex.
+
+	numberOfLights := usedLights size.
 	
 	viewports doWithIndex: [ :viewport :viewportIndex |
 		transform := viewport cameraTransform.
-		numberOfLights := visibleLightSources size min: 16.
-		1 to: numberOfLights do: [ :lightIndex |
-			lightSource := (visibleLightSources at: lightIndex) first.
-			shadowMapIndex := shadowCastingLights indexOf: lightSource ifAbsent: [ 0 ].
-			lightSources at: lightIndex put: (lightSource viewStateFor: transform engine: engine shadowMapIndex: shadowMapIndex - 1).
-		].
 
+		lightSources := SLVMNativeArray for: WTLightSourceData new: 16.
+		usedLights doWithIndex: [ :lightSource :lightIndex |
+			lightSources at: lightIndex put: (lightSource viewStateForCameraTransform: transform).
+		].
+		
 		lightingState := WTGlobalLightingState  new.
 		lightingState
 			skyLighting: Color darkGray asWMVector4F;

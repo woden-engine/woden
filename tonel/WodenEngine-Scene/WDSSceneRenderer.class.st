@@ -8,15 +8,10 @@ Class {
 		'shaderSignature',
 		'cameraStates',
 		'visibleObjects',
-		'visibleLightSources',
 		'mainCamera',
 		'currentTime',
 		'objectsPerViewport',
 		'currentCameraStates',
-		'shadowCastingLights',
-		'shadowCastingLightCount',
-		'shadowMapBuffer',
-		'shadowMapRenderTargets',
 		'useLateLatching',
 		'currentCameraViewports'
 	],
@@ -31,25 +26,19 @@ WDSSceneRenderer class >> for: aWDCEngine [
 	^ self new initializeWithEngine: aWDCEngine
 ]
 
-{ #category : #accessing }
-WDSSceneRenderer class >> maxShadowCastingLightCount [
-	^ 4
-]
-
-{ #category : #'shadow mapping' }
-WDSSceneRenderer class >> shadowMapExtent [
-	^ 512 @ 512
-]
-
 { #category : #initialization }
 WDSSceneRenderer >> cameraStateFramebufferingCount [
 	^ useLateLatching ifTrue: [ 1 ] ifFalse: [ engine frameBufferingCount ]
 ]
 
 { #category : #'rendering preparations' }
+WDSSceneRenderer >> collectVisibleObject: node [
+	visibleObjects add: node
+]
+
+{ #category : #'rendering preparations' }
 WDSSceneRenderer >> collectVisibleObjectsFor: camera [
 	visibleObjects removeAll.
-	visibleLightSources removeAll.
 	currentScene roots do: [ :r |
 		self collectVisibleObjectsFor: camera from: r
 	]
@@ -60,7 +49,7 @@ WDSSceneRenderer >> collectVisibleObjectsFor: camera [
 WDSSceneRenderer >> collectVisibleObjectsFor: camera from: node [
 	node visible ifFalse: [ ^ self ].
 	
-	visibleObjects add: node.
+	self collectVisibleObject: node.
 	node isLightSource ifTrue: [ self tryToCollectLightSource: node for: camera ].
 	
 	node isInstanceGroup ifFalse: [
@@ -78,6 +67,10 @@ WDSSceneRenderer >> currentTime [
 { #category : #accessing }
 WDSSceneRenderer >> currentTime: anObject [
 	currentTime := anObject
+]
+
+{ #category : #'as yet unclassified' }
+WDSSceneRenderer >> debugDrawOnPompeiiCanvas: canvas [
 ]
 
 { #category : #initialization }
@@ -107,7 +100,6 @@ WDSSceneRenderer >> initializeWithEngine: aWDCEngine [
 	currentTime := 0.0.
 	
 	visibleObjects := OrderedCollection new.
-	visibleLightSources := OrderedCollection new.
 	useLateLatching := false.
 	
 ]
@@ -216,26 +208,9 @@ WDSSceneRenderer >> renderViewport: viewport index: viewportIndex [
 ]
 
 { #category : #rendering }
-WDSSceneRenderer >> renderViewports: viewports composeWith: aBlock [
-	shadowCastingLightCount ~= 0 ifTrue: [ self renderShadowMaps ].
-	
+WDSSceneRenderer >> renderViewports: viewports composeWith: aBlock [	
 	viewports doWithIndex: [ :viewport :index | self renderViewport: viewport index: index ].
 	aBlock ifNotNil: [ aBlock cull: stateTracker ]
-]
-
-{ #category : #'rendering preparations' }
-WDSSceneRenderer >> selectShadowCastingLights [
-	| lightSource |
-	shadowCastingLights := Array new: self maxShadowCastingLightCount.
-	shadowCastingLightCount := 0.
-	visibleLightSources do: [ :l |
-		lightSource := l first.
-		lightSource isSpotLight ifTrue: [
-			shadowCastingLightCount := shadowCastingLightCount + 1.
-			shadowCastingLights at: shadowCastingLightCount put: lightSource.
-			shadowCastingLightCount = shadowCastingLights ifTrue: [ ^ self ]
-		]
-	]
 ]
 
 { #category : #rendering }

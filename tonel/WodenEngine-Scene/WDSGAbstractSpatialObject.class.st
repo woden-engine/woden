@@ -5,6 +5,7 @@ Class {
 	#name : #WDSGAbstractSpatialObject,
 	#superclass : #WDSGNode,
 	#instVars : [
+		'isOpaqueShadowCaster',
 		'objectState',
 		'renderPriority'
 	],
@@ -26,11 +27,22 @@ WDSGAbstractSpatialObject >> color: aColor [
 WDSGAbstractSpatialObject >> initialize [
 	super initialize.
 	renderPriority := RenderPriorityDefault.
+	isOpaqueShadowCaster := true.
 	objectState := WTGenericObjectState new.
 	objectState
 		visible: 1;
 		color: Color white asWMVector4F.
 	
+]
+
+{ #category : #accessing }
+WDSGAbstractSpatialObject >> isOpaqueShadowCaster [
+	^ isOpaqueShadowCaster
+]
+
+{ #category : #accessing }
+WDSGAbstractSpatialObject >> isOpaqueShadowCaster: anObject [
+	isOpaqueShadowCaster := anObject
 ]
 
 { #category : #testing }

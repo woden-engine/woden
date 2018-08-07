@@ -97,7 +97,7 @@ WDASceneExamples class >> example03Floor [
 
 { #category : #examples }
 WDASceneExamples class >> example04Pool [
-	| model meshBuilder cube scene camera engine floorMaterial waterMaterial skyMaterial sunLight skyBox waterSurface view |
+	| model meshBuilder cube scene camera engine floorMaterial waterMaterial skyMaterial sunLight skyBox waterSurface view floor mesh |
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
@@ -131,13 +131,24 @@ WDASceneExamples class >> example04Pool [
 		"Use a planar texture coordinates"
 		planeTextureScale: (WMVector2F x: 2.0 y: 2.0) offset: (WMVector2F x: 0.0 y: 0.0);
 		computeTangentsBitangents.
+	floor := WDSGSpatialObject new.
+	floor renderable: meshBuilder mesh.
+	scene add: floor.
+	
+	"Add a cube"
+	meshBuilder := WDCGenericMeshBuilder for: scene engine.
+	meshBuilder addCubeWithWidth: 1.0 height: 1.0 depth: 1.0.
+	mesh := meshBuilder mesh.
+	
 	cube := WDSGSpatialObject new.
-	cube renderable: meshBuilder mesh.
+	cube renderable: mesh.
+	cube transform translateByX: 4.5 y: 0.5 z: 0.0.
 	scene add: cube.
+
 
 	"Add a light"
 	sunLight := WDSGLightSource new.
-	sunLight directional.
+	sunLight directional; castShadows: true.
 	sunLight state
 			intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.8.
 	sunLight transform
@@ -153,7 +164,8 @@ WDASceneExamples class >> example04Pool [
 		addInteriorCubeWithWidth: 40.0 height: 40.0 depth: 40.0.
 
 	skyBox := WDSGSpatialObject new.
-	skyBox renderable: meshBuilder mesh.
+	skyBox isOpaqueShadowCaster: false;
+		renderable: meshBuilder mesh.
 	scene add: skyBox.
 
 	"Setup the water material"
@@ -170,8 +182,9 @@ WDASceneExamples class >> example04Pool [
 		addGridWithWidth: 5.0 height: 5.0 subdivisions: 64.
 		
 	waterSurface := WDSGSpatialObject new.
-	waterSurface translucentRenderPriority.
-	waterSurface renderable: meshBuilder mesh.
+	waterSurface translucentRenderPriority;
+		isOpaqueShadowCaster: false;
+		renderable: meshBuilder mesh.
 	waterSurface transform translateToX: 0.0 y: -0.3 z: 0.0.
 	scene add: waterSurface.
 	
@@ -222,7 +235,7 @@ WDASceneExamples class >> example05DangerousPool [
 
 	"Add a light"
 	sunLight := WDSGLightSource new.
-	sunLight directional.
+	sunLight directional; castShadows: true.
 	sunLight state
 			intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.8.
 	sunLight transform
@@ -238,7 +251,8 @@ WDASceneExamples class >> example05DangerousPool [
 		addInteriorCubeWithWidth: 40.0 height: 40.0 depth: 40.0.
 
 	skyBox := WDSGSpatialObject new.
-	skyBox renderable: meshBuilder mesh.
+	skyBox isOpaqueShadowCaster: false;
+		renderable: meshBuilder mesh.
 	scene add: skyBox.
 
 	"Setup the water material"
@@ -255,8 +269,9 @@ WDASceneExamples class >> example05DangerousPool [
 		addGridWithWidth: 5.0 height: 5.0 subdivisions: 64.
 		
 	waterSurface := WDSGSpatialObject new.
-	waterSurface translucentRenderPriority.
-	waterSurface renderable: meshBuilder mesh.
+	waterSurface translucentRenderPriority;
+		isOpaqueShadowCaster: false;
+		renderable: meshBuilder mesh.
 	waterSurface transform translateToX: 0.0 y: -0.3 z: 0.0.
 	scene add: waterSurface.
 	

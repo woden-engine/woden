@@ -44,7 +44,7 @@ WMFrustum category: 'construction' methods: {
 	leftTopNear := WMVector3 x: left y: top z: near negated.
 	rightTopNear := WMVector3 x: right y: top z: near negated.
 
-	factor := far / near.	
+	factor := far / near.
 	leftBottomFar := leftBottomNear * factor.
 	rightBottomFar := rightBottomNear * factor.
 	leftTopFar := leftTopNear * factor.
@@ -61,11 +61,11 @@ WMFrustum category: 'construction' methods: {
 	rightBottomNear := WMVector3 x: right y: bottom z: near negated.
 	leftTopNear := WMVector3 x: left y: top z: near negated.
 	rightTopNear := WMVector3 x: right y: top z: near negated.
-	
+
 	leftBottomFar := WMVector3 x: left y: bottom z: far negated.
 	rightBottomFar := WMVector3 x: right y: bottom z: far negated.
 	leftTopFar := WMVector3 x: left y: top z: far negated.
-	rightTopFar := WMVector3 x: right y: top z: far negated.	
+	rightTopFar := WMVector3 x: right y: top z: far negated.
 ].
 
 :[orthoLeft: <Scalar> left right: <Scalar> right bottom: <Scalar> bottom top: <Scalar> top near: <Scalar> near far: <Scalar> far invertedY: <BooleanBit> invertedY
@@ -82,7 +82,7 @@ WMFrustum category: 'construction' methods: {
 
 :[reverseDepthFrustumLeft: <Scalar> left right: <Scalar> right bottom: <Scalar> bottom top: <Scalar> top near: <Scalar> near far: <Scalar> far invertedY: <BooleanBit> invertedY
 	matrix := WMMatrix4 reverseDepthFrustumLeft: left right: right bottom: bottom top: top near: near far: far invertedY: invertedY.
-	self frustumLeft: left right: right bottom: bottom top: top near: near far: far.	
+	self frustumLeft: left right: right bottom: bottom top: top near: near far: far.
 ].
 
 :[reverseDepthOrthoLeft: <Scalar> left right: <Scalar> right bottom: <Scalar> bottom top: <Scalar> top near: <Scalar> near far: <Scalar> far invertedY: <BooleanBit> invertedY
@@ -133,6 +133,35 @@ WMFrustum category: 'window points' methods: {
 	let nearPoint := self nearNormalizedPoint: normalizedPoint.
 	let farPoint := self farNormalizedPoint: normalizedPoint.
 	^ WMRay origin: nearPoint direction: (farPoint - nearPoint) normalized.
+].
+
+:[corners
+	^ {
+		leftBottomNear .
+		rightBottomNear .
+		leftTopNear .
+		rightTopNear .
+
+		leftBottomFar .
+		rightBottomFar .
+		leftTopFar .
+		rightTopFar .
+	}
+].
+
+:[boundingBox -> WMBox3D.
+	^ WMBox3D empty
+		insertPoint: (leftBottomNear castTo: WMVector3);
+		insertPoint: (rightBottomNear castTo: WMVector3);
+		insertPoint: (leftTopNear castTo: WMVector3);
+		insertPoint: (rightTopNear castTo: WMVector3);
+
+		insertPoint: (leftBottomFar castTo: WMVector3);
+		insertPoint: (rightBottomFar castTo: WMVector3);
+		insertPoint: (leftTopFar castTo: WMVector3);
+		insertPoint: (rightTopFar castTo: WMVector3);
+
+		yourself
 ].
 
 }
