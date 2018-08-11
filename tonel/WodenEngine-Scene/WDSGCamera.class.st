@@ -10,10 +10,22 @@ Class {
 		'fieldOfView',
 		'focalDistance',
 		'isPerspective',
-		'frustum'
+		'frustum',
+		'aspectRatio',
+		'projectionInvertedY'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
+
+{ #category : #accessing }
+WDSGCamera >> aspectRatio [
+	^ aspectRatio
+]
+
+{ #category : #accessing }
+WDSGCamera >> aspectRatio: anObject [
+	aspectRatio := anObject
+]
 
 { #category : #accessing }
 WDSGCamera >> farDistance [
@@ -50,11 +62,24 @@ WDSGCamera >> frustum [
 	^ frustum
 ]
 
+{ #category : #'as yet unclassified' }
+WDSGCamera >> frustumForNearDistance: newNearDistance farDistance: newFarDistance [
+	| result |
+	result := WMFrustumF new.
+	self isPerspective ifTrue: [
+		result reverseDepthPerspectiveFovY: fieldOfView aspect: aspectRatio near: newNearDistance far: newFarDistance invertedY: projectionInvertedY.
+	] ifFalse: [
+		self flag: 'TODO: Compute a proper orthographic projection'.
+		result reverseDepthPerspectiveFovY: fieldOfView aspect: aspectRatio near: newNearDistance far: newFarDistance invertedY: projectionInvertedY.
+	].
+	^ result
+]
+
 { #category : #initialization }
 WDSGCamera >> initialize [
 	super initialize.
 	nearDistance := 0.01.
-	farDistance := 100.0.
+	farDistance := 1000.0.
 	fieldOfView := 60.0.
 	focalDistance := 10.
 	isPerspective := true.
@@ -85,6 +110,23 @@ WDSGCamera >> nearDistance [
 { #category : #accessing }
 WDSGCamera >> nearDistance: anObject [
 	nearDistance := anObject
+]
+
+{ #category : #'as yet unclassified' }
+WDSGCamera >> updateFrustumWithAspectRatio: newAspectRatio projectionInvertedY: newProjectionInvertedY [
+	aspectRatio := newAspectRatio.
+	projectionInvertedY := newProjectionInvertedY.
+	^ self updateSymmetricalFrustum
+]
+
+{ #category : #'as yet unclassified' }
+WDSGCamera >> updateSymmetricalFrustum [
+	self isPerspective ifTrue: [
+		frustum reverseDepthPerspectiveFovY: fieldOfView aspect: aspectRatio near: nearDistance far: farDistance invertedY: projectionInvertedY.
+	] ifFalse: [
+		self flag: 'TODO: Compute a proper orthographic projection'.
+		frustum reverseDepthPerspectiveFovY: fieldOfView aspect: aspectRatio near: nearDistance far: farDistance invertedY: projectionInvertedY.
+	]
 ]
 
 { #category : #'viewport construction' }

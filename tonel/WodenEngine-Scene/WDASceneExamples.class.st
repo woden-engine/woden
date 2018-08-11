@@ -101,6 +101,7 @@ WDASceneExamples class >> example04Pool [
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
+	camera farDistance: 100.0.
 	camera transform translateToX: 0.0 y: 1.0 z: -4.0.
 	engine := scene engine.
 	
@@ -199,6 +200,7 @@ WDASceneExamples class >> example05DangerousPool [
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
+	camera farDistance: 100.0.
 	camera transform translateToX: 0.0 y: 1.0 z: -4.0.
 	engine := scene engine.
 	

@@ -10,9 +10,11 @@ Class {
 		'castShadows',
 		'shadowProjectionMatrix',
 		'outerSpotCutoff',
-		'innerSpotCutoff'
+		'innerSpotCutoff',
+		'extraShadowDistanceFactor'
 	],
 	#classVars : [
+		'DefaultExtraShadowDistanceFactor',
 		'DefaultSpotInnerCutoff',
 		'DefaultSpotOuterCutoff'
 	],
@@ -25,6 +27,7 @@ WDSGLightSource class >> initialize [
 	
 	DefaultSpotOuterCutoff := 45.
 	DefaultSpotInnerCutoff := 40.
+	DefaultExtraShadowDistanceFactor := 50.0.
 ]
 
 { #category : #accessing }
@@ -45,12 +48,23 @@ WDSGLightSource >> directional [
 		innerCosCutoff: -1.0
 ]
 
+{ #category : #accessing }
+WDSGLightSource >> extraShadowDistanceFactor [
+	^ extraShadowDistanceFactor
+]
+
+{ #category : #accessing }
+WDSGLightSource >> extraShadowDistanceFactor: aNumber [
+	extraShadowDistanceFactor := aNumber
+]
+
 { #category : #initialization }
 WDSGLightSource >> initialize [
 	super initialize.
 	castShadows := false.
 	outerSpotCutoff := DefaultSpotOuterCutoff.
 	innerSpotCutoff := DefaultSpotInnerCutoff.
+	extraShadowDistanceFactor := DefaultExtraShadowDistanceFactor.
 	shadowProjectionMatrix := WMMatrix4F identity.
 	state := WTLightSourceData new.
 	state
@@ -97,6 +111,13 @@ WDSGLightSource >> isSpotLight [
 	^ type == #spot
 ]
 
+{ #category : #'shadow mapping' }
+WDSGLightSource >> lightRenderingStateClass [
+	self isSpotLight ifTrue: [ ^ WDSGSpotLightRenderingState ].
+	self isDirectionalLight ifTrue: [ ^ WDSGCascadeDirectionalLightRenderingState ].
+	^ WDSGNonShadowingLightRenderingState
+]
+
 { #category : #accessing }
 WDSGLightSource >> outerSpotCutoff [
 	^ outerSpotCutoff
@@ -122,12 +143,19 @@ WDSGLightSource >> point [
 
 { #category : #'shadow mapping' }
 WDSGLightSource >> setupRenderingWithShadowMap: shadowMapIndex mainCamera: mainCamera engine: engine [
-	^ WDSGLightRenderingState new
+	^ self lightRenderingStateClass new
 		light: self;
 		mainCamera: mainCamera;
 		engine: engine;
 		setupShadowMapWithIndex: shadowMapIndex;
 		yourself
+]
+
+{ #category : #'as yet unclassified' }
+WDSGLightSource >> shadowLayerCount [
+	self isSpotLight ifTrue: [ ^ 1 ].
+	self isDirectionalLight ifTrue: [ ^ 3 ].
+	^ 0
 ]
 
 { #category : #accessing }
@@ -145,11 +173,9 @@ WDSGLightSource >> state [
 
 { #category : #'shadow mapping' }
 WDSGLightSource >> viewStateForRenderingState: renderingState cameraTransform: cameraTransform [
-	| result shadowMapIndex |
-	shadowMapIndex := renderingState shadowMapIndex asFloat.
+	| result |
 	result := state copy.
-	result
-		shadowMapLayer: shadowMapIndex.
+	result shadowMapLayer: -1.0.
 	type == #directional ifTrue: [
 		result direction: (cameraTransform inverseTransformVector3: (renderTransform transformVector3: (WMVector3F z: 1.0))).
 	] ifFalse: [
@@ -158,11 +184,6 @@ WDSGLightSource >> viewStateForRenderingState: renderingState cameraTransform: c
 
 	type == #spot ifTrue: [ 
 		result spotDirection: (cameraTransform inverseTransformVector3: (renderTransform transformVector3: (WMVector3F z: 1.0))).
-	].
-
-	shadowMapIndex >= 0.0 ifTrue: [
-		result
-			shadowMapTransform: (renderingState shadowMapMatrixForCameraTransform: cameraTransform)
 	].
 
 	^ result

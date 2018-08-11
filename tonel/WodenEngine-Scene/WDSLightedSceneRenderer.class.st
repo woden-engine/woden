@@ -91,14 +91,16 @@ WDSLightedSceneRenderer >> selectLights [
 	usedLights := (1 to: numberOfLights) collect: [ :lightIndex |
 		lightSource := (visibleLightSources at: lightIndex) first.
 		shadowMapIndex := -1.
-		(lightSource isShadowCasting and: [ shadowCastingLightCount < shadowCastingLights size ]) ifTrue: [
+		(lightSource isShadowCasting and: [ shadowCastingLightCount + lightSource shadowLayerCount <= shadowCastingLights size ]) ifTrue: [
 			shadowMapIndex := shadowCastingLightCount
 		].
 	
 		lightRenderingState := lightSource setupRenderingWithShadowMap: shadowMapIndex mainCamera: mainCamera engine: engine.
-		shadowMapIndex >= 0 ifTrue: [ 
-			shadowCastingLightCount := shadowCastingLightCount + 1.
-			shadowCastingLights at: shadowCastingLightCount put: lightRenderingState.
+		shadowMapIndex >= 0 ifTrue: [
+			lightRenderingState cascades do: [ :cascade |
+				shadowCastingLightCount := shadowCastingLightCount + 1.
+				shadowCastingLights at: shadowCastingLightCount put: cascade.
+			].
 		].
 
 		lightRenderingState

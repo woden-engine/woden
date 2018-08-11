@@ -10,8 +10,13 @@ Structure <<< #WTLightSourceData
 		#outerCosCutoff => Float32.
 		#spotExponent => Float32.
 		#radius => Float32.
+
+        #cascadeSplitOffsets => WMVector4F.
+        #cascadeFrustumPlane => WMVector4F.
 		
 		#shadowMapTransform => WMMatrix4F.
+        #shadowMapTransform2 => WMMatrix4F.
+        #shadowMapTransform3 => WMMatrix4F.
 	};
 	package: 'WodenEngine-Structures-Core-Rendering';
 	yourself.

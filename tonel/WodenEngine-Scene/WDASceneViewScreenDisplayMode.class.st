@@ -62,17 +62,11 @@ WDASceneViewScreenDisplayMode >> submitLowLatencyData [
 
 { #category : #'rendering process stages' }
 WDASceneViewScreenDisplayMode >> updateCameraFrustum [
-	| camera frustum extent aspect |
+	| camera extent aspect |
 	camera := view cameraSceneNode.
-	frustum := camera frustum.
 	extent := view window drawingSurfaceExtent.
 	aspect := extent x asFloat / extent y asFloat.
-	camera isPerspective ifTrue: [
-		frustum reverseDepthPerspectiveFovY: camera fieldOfView aspect: aspect near: camera nearDistance far: camera farDistance invertedY: engine projectionInvertedY.
-	] ifFalse: [
-		"TODO: Compute a proper orthographic projection"
-		frustum reverseDepthPerspectiveFovY: camera fieldOfView aspect: aspect near: camera nearDistance far: camera farDistance invertedY: engine projectionInvertedY.
-	]
+	camera updateFrustumWithAspectRatio: aspect projectionInvertedY: engine projectionInvertedY
 ]
 
 { #category : #'rendering process stages' }
