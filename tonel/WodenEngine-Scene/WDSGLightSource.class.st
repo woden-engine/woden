@@ -157,7 +157,7 @@ WDSGLightSource >> viewStateForRenderingState: renderingState cameraTransform: c
 	].
 
 	type == #spot ifTrue: [ 
-		result spotDirection: (cameraTransform inverseTransformVector3: (renderTransform transformVector3: (WMVector3F z: -1.0))).
+		result spotDirection: (cameraTransform inverseTransformVector3: (renderTransform transformVector3: (WMVector3F z: 1.0))).
 	].
 
 	shadowMapIndex >= 0.0 ifTrue: [
