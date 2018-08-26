@@ -34,7 +34,10 @@ Class {
 		'matrixBufferBinding',
 		'hasValidQuickState',
 		'quickState',
-		'quickStateBuffer'
+		'quickStateBuffer',
+		'currentWindow',
+		'hasSubmittedFence',
+		'destroyed'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -134,7 +137,7 @@ WDPPompeiiSurface >> allocateDrawingResources [
 
 { #category : #drawing }
 WDPPompeiiSurface >> allocateRenderTarget [
-	renderTarget ifNotNil: [ ^ self ].
+	(renderTarget isNotNil and: [renderTarget extent = extent]) ifTrue: [ ^ self ].
 	
 	renderTarget := WDCRenderTarget for: driver engine extent: extent.
 	renderTarget
@@ -169,7 +172,10 @@ WDPPompeiiSurface >> asForm [
 	gpuOnly ifTrue: [ self error: 'Cannot get a cpuForm from a GPU only surface.' ].
 	fence ifNil: [ self error: 'Cannot get a cpuForm from a surface that has not been drawn.' ].
 	
-	fence ifNotNil: [ fence waitOnClient ].
+	(fence isNotNil and: [hasSubmittedFence]) ifTrue: [
+		fence waitOnClient.
+		hasSubmittedFence := false.
+	].
 	
 	cpuForm ifNil: [
 		cpuForm := Form extent: extent depth: 32.
@@ -207,9 +213,22 @@ WDPPompeiiSurface >> beginRenderPassWithColor: aColor [
 WDPPompeiiSurface >> createFenceIfNeeded [
 	fence ifNil: [
 		fence := driver engine device createFence.
+		hasSubmittedFence := false.
 	] ifNotNil: [
-		fence waitOnClient
+		hasSubmittedFence ifTrue: [ 
+			fence waitOnClient.
+			hasSubmittedFence := false.
+		].
 	].
+]
+
+{ #category : #initialize }
+WDPPompeiiSurface >> destroy [
+	driver critical: [ 
+		destroyed := true.
+		self forcedSynchronization.
+	].
+
 ]
 
 { #category : #drawing }
@@ -226,23 +245,40 @@ WDPPompeiiSurface >> doDrawBlock: aBlock [
 ]
 
 { #category : #drawing }
+WDPPompeiiSurface >> doDrawDuring: aBlock [
+	self
+		allocateDrawingResources;
+		allocateCommandList.
+
+	self stateTracker commandList: commandList rebuildWith: [
+		stateTracker reset.
+		self
+			doDrawBlock: aBlock.
+		renderTarget ~~ resolveRenderTarget ifTrue: [
+			stateTracker
+				resolveRenderTarget: renderTarget into: resolveRenderTarget
+		]
+	].
+	
+	self submitDrawingCommands
+]
+
+{ #category : #drawing }
 WDPPompeiiSurface >> drawDuring: aBlock [
+	destroyed ifTrue: [ ^ self ].
+	driver critical: [
+		self doDrawDuring: aBlock
+	]
+]
+
+{ #category : #drawing }
+WDPPompeiiSurface >> drawToOSWindow: anOSWindow during: aBlock [
+	destroyed ifTrue: [ ^ self ].
 	driver critical: [
 		self
-			allocateDrawingResources;
-			allocateCommandList.
-
-		self stateTracker commandList: commandList rebuildWith: [
-			stateTracker reset.
-			self
-				doDrawBlock: aBlock.
-			renderTarget ~~ resolveRenderTarget ifTrue: [
-				stateTracker
-					resolveRenderTarget: renderTarget into: resolveRenderTarget
-			]
-		].
-	
-		self submitDrawingCommands
+			setupRenderTargetsForOSWindow: anOSWindow;
+			doDrawDuring: aBlock.
+		resolveRenderTarget swapBuffers
 	]
 ]
 
@@ -324,6 +360,15 @@ WDPPompeiiSurface >> extent [
 	^ extent
 ]
 
+{ #category : #accessing }
+WDPPompeiiSurface >> extent: aNewExtent [
+	driver critical: [ 
+		extent := aNewExtent.
+		cpuForm := nil.
+	]
+
+]
+
 { #category : #drawing }
 WDPPompeiiSurface >> finishCurrentRenderPass [
 	renderTarget ifNil: [ ^ self ].
@@ -344,7 +389,11 @@ WDPPompeiiSurface >> flushTransforms [
 
 { #category : #'as yet unclassified' }
 WDPPompeiiSurface >> forcedSynchronization [
-	fence ifNil: [ driver engine graphicsQueue finishExecution ]
+	fence ifNil: [
+		driver engine graphicsQueue finishExecution
+	] ifNotNil: [
+		self waitFence
+	]
 ]
 
 { #category : #formatting }
@@ -393,6 +442,8 @@ WDPPompeiiSurface >> initialize [
 	
 	matrices := SLVMNativeOrderedCollection for: WMMatrix4F.
 	quickStateBuffer := ByteArray new: WDPQuickState structureSize.
+	
+	destroyed := false.
 ]
 
 { #category : #initialization }
@@ -532,6 +583,42 @@ WDPPompeiiSurface >> setupCommonState [
 ]
 
 { #category : #drawing }
+WDPPompeiiSurface >> setupRenderTargetsForOSWindow: anOSWindow [
+	| engine |
+	(renderTarget isNotNil and:
+	 [currentWindow == anOSWindow and:
+	 [renderTarget extent = extent ] ]) ifTrue: [ ^ self ].
+
+	engine := driver engine.
+	self sampleCount > 1 ifTrue: [
+		renderTarget := WDCRenderTarget for: engine extent: extent.
+		renderTarget
+			hasDepth: false;
+			hasStencil: false;
+			sampleCount: self sampleCount;
+			createFramebuffers.
+
+		resolveRenderTarget := WDCSwapChainRenderTarget for: engine extent: extent windowHandle: anOSWindow platformSpecificHandle.
+		resolveRenderTarget
+			hasDepth: false;
+			hasStencil: false;
+			sampleCount: 1;
+			createFramebuffers.
+	] ifFalse: [
+		resolveRenderTarget := WDCSwapChainRenderTarget for: engine extent: extent windowHandle: anOSWindow platformSpecificHandle.
+		resolveRenderTarget
+			hasDepth: false;
+			hasStencil: false;
+			sampleCount: 1;
+			createFramebuffers.
+
+		renderTarget := resolveRenderTarget
+	].
+
+	currentWindow := anOSWindow.
+]
+
+{ #category : #drawing }
 WDPPompeiiSurface >> setupStateTracker [
 	stateTracker
 		mode: WDCStateTrackerPompeiiRenderMode uniqueInstance;
@@ -568,7 +655,10 @@ WDPPompeiiSurface >> submitDrawingCommands [
 	queue := driver engine graphicsQueue.
 	queue addCommandList: commandList validHandle.
 	
-	fence ifNotNil: [ queue signalFence: fence ]
+	fence ifNotNil: [
+		queue signalFence: fence.
+		hasSubmittedFence := true
+	]
 ]
 
 { #category : #accessing }
@@ -582,6 +672,13 @@ WDPPompeiiSurface >> validateQuickState [
 	quickState storeBytesIn: quickStateBuffer.
 	stateTracker pushConstants: 0 size: WDPQuickState structureSize values: quickStateBuffer.
 	hasValidQuickState := true.
+]
+
+{ #category : #'as yet unclassified' }
+WDPPompeiiSurface >> waitFence [
+	fence ifNil: [ ^ self ].
+	hasSubmittedFence ifTrue: [ fence waitOnClient ].
+	hasSubmittedFence := false
 ]
 
 { #category : #drawing }
