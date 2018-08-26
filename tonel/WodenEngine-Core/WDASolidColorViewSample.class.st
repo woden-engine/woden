@@ -11,9 +11,10 @@ Class {
 	#instVars : [
 		'color',
 		'commandList',
-		'renderPass'
+		'renderPass',
+		'perFrameCommandLists'
 	],
-	#category : 'WodenEngine-Core-Application'
+	#category : #'WodenEngine-Core-Application'
 }
 
 { #category : #accessing }
@@ -28,24 +29,29 @@ WDASolidColorViewSample >> color: anObject [
 
 { #category : #initialization }
 WDASolidColorViewSample >> initialize [
+	super initialize.
 	color := Color blue
 ]
 
 { #category : #'rendering process stages' }
 WDASolidColorViewSample >> prepareRendering [
-	| resolveFramebuffer renderTarget resolveTarget renderFramebuffer |
+	| resolveFramebuffer renderTarget resolveTarget renderFramebuffer currentCommandLists |
+	super prepareRendering.
+	perFrameCommandLists ifNil: [ perFrameCommandLists := WDCPerFrameSimpleCommandList for: engine ].
+	currentCommandLists := perFrameCommandLists currentList.
+	
 	renderTarget :=  window validRenderTarget.
 	resolveTarget := window validResolveRenderTarget.
 	
 	renderFramebuffer := renderTarget currentFramebuffer.
 	
 	resolveFramebuffer := resolveTarget currentFramebuffer.
-	resolveFramebuffer validCommandAllocator reset.
+	currentCommandLists validCommandAllocator reset.
 	
 	renderPass ifNil: [ renderPass := renderTarget createRenderPassWithColor: Color white ].
 	renderPass setColorClearValue: 0 value: color asAGPUColor4f.
 	
-	commandList := resolveFramebuffer validCommandList.
+	commandList := currentCommandLists validCommandList.
 	commandList withPipelineState: nil rebuild: [ :builder |
 		builder
 			beginRenderPass: renderPass validHandle framebuffer: renderFramebuffer validHandle bundle_content: false asBit;
@@ -58,6 +64,7 @@ WDASolidColorViewSample >> prepareRendering [
 
 { #category : #'rendering process stages' }
 WDASolidColorViewSample >> sendRenderingCommands [
+	super sendRenderingCommands.
 	commandList ifNil: [ ^ self ].
 	engine graphicsQueue
 		addCommandList: commandList validHandle

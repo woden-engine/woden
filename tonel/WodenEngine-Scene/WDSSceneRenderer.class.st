@@ -13,7 +13,8 @@ Class {
 		'objectsPerViewport',
 		'currentCameraStates',
 		'useLateLatching',
-		'currentCameraViewports'
+		'currentCameraViewports',
+		'directCommandLists'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -101,7 +102,8 @@ WDSSceneRenderer >> initializeWithEngine: aWDCEngine [
 	
 	visibleObjects := OrderedCollection new.
 	useLateLatching := false.
-	
+	directCommandLists := WDCPerFrameSimpleCommandList for: engine
+
 ]
 
 { #category : #'rendering preparations' }
@@ -140,22 +142,15 @@ WDSSceneRenderer >> renderScene: scene viewports: viewports [
 
 { #category : #rendering }
 WDSSceneRenderer >> renderScene: scene viewports: viewports composeWith: aBlock [
-	viewports ifEmpty: [ ^ nil ].
-
-	^ self renderScene: scene viewports: viewports composeWith: aBlock mainResolveRenderTarget: viewports first resolveRenderTarget
-]
-
-{ #category : #rendering }
-WDSSceneRenderer >> renderScene: scene viewports: viewports composeWith: aBlock mainResolveRenderTarget: resolveRenderTarget [
-	| resolveFramebuffer |
+	| currentSimpleList |
 	(viewports isEmpty and: [aBlock isNil]) ifTrue: [ ^ nil ].
 
 	self prepareScene: scene renderingForViewports: viewports.	
 
-	resolveFramebuffer := resolveRenderTarget currentFramebuffer.
-	resolveFramebuffer validCommandAllocator reset.
+	currentSimpleList := directCommandLists currentList.
+	currentSimpleList validCommandAllocator reset.
 
-	^ self stateTracker commandList: resolveFramebuffer validCommandList rebuildWith: [
+	^ self stateTracker commandList: currentSimpleList validCommandList rebuildWith: [
 		self renderViewports: viewports composeWith: aBlock.
 	].
 

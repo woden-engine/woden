@@ -148,16 +148,6 @@ WDCRenderTargetFramebuffer >> sampleCount: anObject [
 	sampleCount := anObject
 ]
 
-{ #category : #'as yet unclassified' }
-WDCRenderTargetFramebuffer >> validCommandAllocator [
-	^ commandAllocator ifNil: [ commandAllocator := engine createGraphicsDirectCommandListAllocator ]
-]
-
-{ #category : #accessing }
-WDCRenderTargetFramebuffer >> validCommandList [
-	^ commandList ifNil: [ commandList := self validCommandAllocator createListNow ]
-]
-
 { #category : #accessing }
 WDCRenderTargetFramebuffer >> validHandle [
 	self flag: 'Check the session'.

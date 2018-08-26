@@ -123,6 +123,7 @@ WDAFPSSceneView >> initialize [
 { #category : #'rendering process stages' }
 WDAFPSSceneView >> updateForFrameDelta: delta [
 	| orientation |
+	super updateForFrameDelta: delta.
 	cameraAngle := cameraAngle + (cameraAngularVelocity * (cameraAngularSpeed * delta)).
 	screenDisplayMode isVR ifTrue: [ 
 		orientation := WMMatrix3F yrot: cameraAngle y.

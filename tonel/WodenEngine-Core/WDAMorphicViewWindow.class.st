@@ -17,6 +17,14 @@ Class {
 	#category : 'WodenEngine-Core-Application'
 }
 
+{ #category : #'instance creation' }
+WDAMorphicViewWindow class >> for: aView [
+	^ self basicNew
+		view: aView;
+		initialize;
+		yourself
+]
+
 { #category : #initialization }
 WDAMorphicViewWindow class >> initialize [
 	"
@@ -70,6 +78,11 @@ WDAMorphicViewWindow class >> initialize [
 
 { #category : #'rendering process stages' }
 WDAMorphicViewWindow >> commitSurfaces [
+]
+
+{ #category : #accessing }
+WDAMorphicViewWindow >> defaultExtent [
+	^ view defaultExtent
 ]
 
 { #category : #'event handling' }

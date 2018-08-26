@@ -45,9 +45,14 @@ WDASceneView >> anaglyph [
 	self screenDisplayMode: WDASceneViewStereoAnaglyphScreenDisplayMode new
 ]
 
-{ #category : #'rendering process stages' }
+{ #category : #accessing }
 WDASceneView >> camera [
 	^ camera ifNil: [camera := model camera]
+]
+
+{ #category : #accessing }
+WDASceneView >> camera: aCamera [
+	camera := aCamera
 ]
 
 { #category : #accessing }
@@ -79,6 +84,7 @@ WDASceneView >> initialize [
 
 { #category : #'rendering process stages' }
 WDASceneView >> prepareRendering [
+	super prepareRendering.
 	commandList := screenDisplayMode prepareRendering.
 
 ]
@@ -87,7 +93,7 @@ WDASceneView >> prepareRendering [
 WDASceneView >> renderViewport: viewport overlayWith: stateTracker [
 ]
 
-{ #category : #'rendering process stages' }
+{ #category : #accessing }
 WDASceneView >> sceneRenderer [
 	^ sceneRenderer ifNil: [sceneRenderer := WDSForwardSceneRenderer for: engine].
 
@@ -106,6 +112,7 @@ WDASceneView >> screenDisplayMode: aScreenDisplayMode [
 
 { #category : #'rendering process stages' }
 WDASceneView >> sendRenderingCommands [
+	super sendRenderingCommands.
 	commandList ifNil: [ ^ self ].
 	engine graphicsQueue addCommandList: commandList validHandle.
 	screenDisplayMode submitLowLatencyData

@@ -8,18 +8,24 @@ Class {
 		'engine',
 		'model',
 		'window',
-		'fullscreen'
+		'fullscreen',
+		'subViews'
 	],
 	#pools : [
 		'AGPUConstants',
 		'OSKeySymbols'
 	],
-	#category : 'WodenEngine-Core-Application'
+	#category : #'WodenEngine-Core-Application'
 }
 
 { #category : #'as yet unclassified' }
 WDAView class >> engine: engine model: aModel [
 	^ self new engine: engine model: aModel
+]
+
+{ #category : #adding }
+WDAView >> addSubView: aSubView [
+	subViews := (subViews copyWithout: aSubView) copyWith: aSubView
 ]
 
 { #category : #opening }
@@ -34,7 +40,13 @@ WDAView >> closed [
 
 { #category : #'rendering process stages' }
 WDAView >> commitSurfaces [
+	subViews do: #commitSurfaces.
 	window commitSurface
+]
+
+{ #category : #accessing }
+WDAView >> defaultExtent [
+	^ 640@480
 ]
 
 { #category : #accessing }
@@ -81,6 +93,7 @@ WDAView >> initialize [
 	super initialize.
 	
 	fullscreen := false.
+	subViews := #().
 ]
 
 { #category : #accessing }
@@ -95,20 +108,40 @@ WDAView >> model: anObject [
 
 { #category : #opening }
 WDAView >> openInMorphic [
-	window := WDAMorphicViewWindow new view: self; engine: engine; yourself.
+	window := (WDAMorphicViewWindow for: self) engine: engine; yourself.
 	window openInWindow.
+	self openedWithWindow: window.
 	^ window
 ]
 
 { #category : #opening }
 WDAView >> openInOSWindow [
-	window := WDAOSWindowViewWindow new view: self; engine: engine; yourself.
+	window := (WDAOSWindowViewWindow for: self) engine: engine; yourself.
 	window open.
+	self openedWithWindow: window.
 	^ window
+]
+
+{ #category : #opening }
+WDAView >> openInVirtualWindow [
+	window := (WDAVirtualWindowViewWindow for: self) engine: engine; yourself.
+	window open.
+	self openedWithWindow: window.
+	^ window
+]
+
+{ #category : #opening }
+WDAView >> openedWithWindow: aWindow [
 ]
 
 { #category : #'rendering process stages' }
 WDAView >> prepareRendering [
+	subViews do: #prepareRendering.
+]
+
+{ #category : #adding }
+WDAView >> removeSubView: aSubView [
+	subViews := subViews copyWithout: aSubView
 ]
 
 { #category : #'framebuffer description' }
@@ -118,6 +151,7 @@ WDAView >> sampleCount [
 
 { #category : #'rendering process stages' }
 WDAView >> sendRenderingCommands [
+	subViews do: #sendRenderingCommands.
 ]
 
 { #category : #'window handling' }
@@ -127,6 +161,7 @@ WDAView >> toggleFullscreen [
 
 { #category : #'rendering process stages' }
 WDAView >> updateForFrameDelta: delta [
+	subViews do: [:sv | sv updateForFrameDelta: delta].
 ]
 
 { #category : #accessing }

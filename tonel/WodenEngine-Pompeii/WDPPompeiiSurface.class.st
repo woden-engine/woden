@@ -101,6 +101,15 @@ WDPPompeiiSurface >> activateTextureArrayElementMaterial: textureArrayMaterial [
 		useShaderResources: textureArrayMaterial validShaderBinding
 ]
 
+{ #category : #'material activation' }
+WDPPompeiiSurface >> activateTextureMaterial: textureMaterial [
+	textureMaterial validTexture.
+	stateTracker
+		vertexShader: driver vertexShader;
+		fragmentShader: driver textureColorShader;
+		useShaderResources: textureMaterial validShaderBinding
+]
+
 { #category : #adding }
 WDPPompeiiSurface >> addCommand: aCommand [
 	drawingCommands add: aCommand
@@ -259,15 +268,17 @@ WDPPompeiiSurface >> doDrawDuring: aBlock [
 				resolveRenderTarget: renderTarget into: resolveRenderTarget
 		]
 	].
-	
-	self submitDrawingCommands
+
 ]
 
 { #category : #drawing }
 WDPPompeiiSurface >> drawDuring: aBlock [
 	destroyed ifTrue: [ ^ self ].
 	driver critical: [
-		self doDrawDuring: aBlock
+		self
+			doDrawDuring: aBlock;
+			submitDrawingCommands
+		
 	]
 ]
 
@@ -277,9 +288,22 @@ WDPPompeiiSurface >> drawToOSWindow: anOSWindow during: aBlock [
 	driver critical: [
 		self
 			setupRenderTargetsForOSWindow: anOSWindow;
-			doDrawDuring: aBlock.
+			doDrawDuring: aBlock;
+			submitDrawingCommands.
 		resolveRenderTarget swapBuffers
 	]
+]
+
+{ #category : #drawing }
+WDPPompeiiSurface >> drawToWodenWindow: aWodenWindow during: aBlock [
+	destroyed ifTrue: [ ^ self ].
+	driver critical: [
+		self
+			setupRenderTargetsForWodenWindow: aWodenWindow;
+			doDrawDuring: aBlock.
+	].
+
+	^ commandList
 ]
 
 { #category : #accessing }
@@ -616,6 +640,14 @@ WDPPompeiiSurface >> setupRenderTargetsForOSWindow: anOSWindow [
 	].
 
 	currentWindow := anOSWindow.
+]
+
+{ #category : #drawing }
+WDPPompeiiSurface >> setupRenderTargetsForWodenWindow: aWodenWindow [
+	sampleCount := aWodenWindow sampleCount.
+	extent := aWodenWindow drawingSurfaceExtent.
+	renderTarget := aWodenWindow validRenderTarget.
+	resolveRenderTarget := aWodenWindow validResolveRenderTarget.
 ]
 
 { #category : #drawing }

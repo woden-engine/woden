@@ -226,8 +226,6 @@ WDASceneViewStereoScreenDisplayMode >> prepareRendering [
 		composeWith: [ :stateTracker |
 			self composeEyesIn: stateTracker
 		]
-		mainResolveRenderTarget: resolveTarget
-		
 ]
 
 { #category : #'multi eye rendering' }

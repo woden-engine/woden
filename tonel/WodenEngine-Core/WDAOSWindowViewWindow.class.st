@@ -11,9 +11,22 @@ Class {
 }
 
 { #category : #'instance creation' }
+WDAOSWindowViewWindow class >> for: aView [
+	^ self basicNew
+		view: aView;
+		initialize;
+		yourself
+]
+
+{ #category : #'instance creation' }
 WDAOSWindowViewWindow >> close [
 	view ifNotNil: [view closed].
 	super close
+]
+
+{ #category : #accessing }
+WDAOSWindowViewWindow >> defaultExtent [
+	^ view defaultExtent
 ]
 
 { #category : #'event processing' }

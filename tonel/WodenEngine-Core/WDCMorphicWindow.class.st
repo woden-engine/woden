@@ -83,6 +83,11 @@ WDCMorphicWindow >> createRenderTarget [
 	].
 ]
 
+{ #category : #accessing }
+WDCMorphicWindow >> defaultExtent [
+	^ 640@480
+]
+
 { #category : #initialization }
 WDCMorphicWindow >> drawOn: aCanvas [
 	engine ifNil: [ ^ self ].
@@ -130,7 +135,7 @@ WDCMorphicWindow >> hasStencil [
 WDCMorphicWindow >> initialize [
 	super initialize.
 	
-	self extent: 640@480.
+	self extent: self defaultExtent.
 	self clipSubmorphs: true.
 ]
 
