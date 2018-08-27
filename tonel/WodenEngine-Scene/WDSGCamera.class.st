@@ -64,13 +64,16 @@ WDSGCamera >> frustum [
 
 { #category : #'as yet unclassified' }
 WDSGCamera >> frustumForNearDistance: newNearDistance farDistance: newFarDistance [
-	| result |
+	| result hh hw |
 	result := WMFrustumF new.
 	self isPerspective ifTrue: [
 		result reverseDepthPerspectiveFovY: fieldOfView aspect: aspectRatio near: newNearDistance far: newFarDistance invertedY: projectionInvertedY.
 	] ifFalse: [
-		self flag: 'TODO: Compute a proper orthographic projection'.
-		result reverseDepthPerspectiveFovY: fieldOfView aspect: aspectRatio near: newNearDistance far: newFarDistance invertedY: projectionInvertedY.
+		hh := (fieldOfView * 0.5) degreesToRadians tan * focalDistance.
+		hw := hh * aspectRatio.
+		result reverseDepthOrthoLeft: hw negated right: hw
+			bottom: hh negated top: hh
+			near: newNearDistance far: newFarDistance invertedY: projectionInvertedY
 	].
 	^ result
 ]
@@ -121,11 +124,15 @@ WDSGCamera >> updateFrustumWithAspectRatio: newAspectRatio projectionInvertedY: 
 
 { #category : #'as yet unclassified' }
 WDSGCamera >> updateSymmetricalFrustum [
+	| hh hw |
 	self isPerspective ifTrue: [
 		frustum reverseDepthPerspectiveFovY: fieldOfView aspect: aspectRatio near: nearDistance far: farDistance invertedY: projectionInvertedY.
 	] ifFalse: [
-		self flag: 'TODO: Compute a proper orthographic projection'.
-		frustum reverseDepthPerspectiveFovY: fieldOfView aspect: aspectRatio near: nearDistance far: farDistance invertedY: projectionInvertedY.
+		hh := (fieldOfView * 0.5 ) degreesToRadians tan * focalDistance.
+		hw := hh * aspectRatio.
+		frustum reverseDepthOrthoLeft: hw negated right: hw
+			bottom: hh negated top: hh
+			near: nearDistance far: farDistance invertedY: projectionInvertedY
 	]
 ]
 

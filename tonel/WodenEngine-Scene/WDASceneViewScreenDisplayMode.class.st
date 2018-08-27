@@ -13,15 +13,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 WDASceneViewScreenDisplayMode >> computeProjectionMatrixFor: camera [
-	| aspect extent |
-	extent := view window drawingSurfaceExtent.
-	aspect := extent x asFloat / extent y asFloat.
-	^ camera isPerspective ifTrue: [
-		WMMatrix4F reverseDepthPerspectiveFovY: camera fieldOfView aspect: aspect near: camera nearDistance far: camera farDistance invertedY: engine projectionInvertedY.
-	] ifFalse: [
-		"TODO: Compute a proper orthographic projection"
-		WMMatrix4F reverseDepthPerspectiveFovY: camera fieldOfView aspect: aspect near: camera nearDistance far: camera farDistance invertedY: engine projectionInvertedY.
-	]
+	^ camera frustum matrix
 ]
 
 { #category : #accessing }
@@ -103,7 +95,8 @@ WDASceneViewScreenDisplayMode >> viewportForCamera: camera renderTarget: renderT
 		resolveRenderTarget: resolveRenderTarget;
 		bounds: renderTarget bounds;
 		submode: submode;
-		overlayRenderer: view
+		overlayRenderer: view;
+		filter: (view filterForCameraViewport: camera)
 ]
 
 { #category : #accessing }

@@ -4,8 +4,32 @@ Class {
 	#instVars : [
 		'levelViews'
 	],
+	#classVars : [
+		'DefaultSettingsForViews'
+	],
 	#category : #'WodenEngine-LevelEditor-View'
 }
+
+{ #category : #initialization }
+WDGSLevelEditorMainFrame class >> initialize [
+
+	DefaultSettingsForViews := {
+		"Top Left"
+		[ :view | view orthographic; wireframe; topView ].
+	
+		"Top Right"
+		[ :view |
+			view perspective; solid; frontView. 
+			view cameraTransform translateByZ: 3.0; translateByY: 1.0.
+		].
+		
+		"Bottom Left"
+		[ :view | view orthographic; wireframe; frontView ].
+		
+		"Bottom Right"
+		[ :view | view orthographic; wireframe; sideView ].
+	}
+]
 
 { #category : #'window layout' }
 WDGSLevelEditorMainFrame >> createLevelViews [
@@ -17,19 +41,15 @@ WDGSLevelEditorMainFrame >> createLevelViews [
 	
 	levelViews := { topLeft . topRight . bottomLeft . bottomRight }.
 	vsWindow addAll: levelViews.
-	topLeft backgroundColor: Color red.
-	topRight backgroundColor: Color green.
-	bottomLeft backgroundColor: Color yellow.
-	bottomRight backgroundColor: Color magenta.
 	
 	^ VsTkVerticalBoxSizer new
 		element: (VsTkHorizontalBoxSizer new
-			element: topLeft do: [ :el | el proportion: 1; expand];
-			element: topRight do: [ :el | el proportion: 1; expand]
+			element: topLeft do: [ :el | el proportion: 1; expand; allBorders; borderSize: 2];
+			element: topRight do: [ :el | el proportion: 1; expand; allBorders; borderSize: 2]
 		) do: [ :el | el proportion: 1; expand];
 		element: (VsTkHorizontalBoxSizer new
-			element: bottomLeft do: [ :el | el proportion: 1; expand];
-			element: bottomRight do: [ :el | el proportion: 1; expand]
+			element: bottomLeft do: [ :el | el proportion: 1; expand; allBorders; borderSize: 2];
+			element: bottomRight do: [ :el | el proportion: 1; expand; allBorders; borderSize: 2]
 		) do: [ :el | el proportion: 1; expand];
 		yourself
 ]
@@ -87,5 +107,17 @@ WDGSLevelEditorMainFrame >> initialize [
 
 { #category : #opening }
 WDGSLevelEditorMainFrame >> openedWithWindow: aWindow [
-	levelViews do: #createSceneView
+	levelViews do: #createSceneView.
+	levelViews doWithIndex: [ :view :index | (DefaultSettingsForViews at: index) value: view ].
+	
+]
+
+{ #category : #accessing }
+WDGSLevelEditorMainFrame >> scene [
+	^ model scene
+]
+
+{ #category : #accessing }
+WDGSLevelEditorMainFrame >> selectionBox [
+	^ model selectionBox
 ]

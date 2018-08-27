@@ -66,6 +66,11 @@ WDASceneView >> engineChanged [
 	screenDisplayMode engine: engine
 ]
 
+{ #category : #'as yet unclassified' }
+WDASceneView >> filterForCameraViewport: aCamera [
+	^ [ :o | true ]
+]
+
 { #category : #'screen display modes' }
 WDASceneView >> flatScreen [
 	self screenDisplayMode: WDASceneViewFlatScreenDisplayMode new

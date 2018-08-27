@@ -117,7 +117,7 @@ WDGSMap >> initialize [
 	editorMode := false.
 	timeListeners := Set new.
 	touchListeners := Set new.
-	backgroundColor := Color veryDarkGray.
+	backgroundColor := Color black
 ]
 
 { #category : #accessing }
