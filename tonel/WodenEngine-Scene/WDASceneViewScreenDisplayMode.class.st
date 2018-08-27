@@ -78,7 +78,7 @@ WDASceneViewScreenDisplayMode >> view: anObject [
 
 { #category : #'as yet unclassified' }
 WDASceneViewScreenDisplayMode >> viewportForCamera: camera renderTarget: renderTarget resolveRenderTarget: resolveTarget [
-	^ self viewportForCamera: camera renderTarget: renderTarget resolveRenderTarget: resolveTarget submode: #full
+	^ self viewportForCamera: camera renderTarget: renderTarget resolveRenderTarget: resolveTarget submode: view renderSubMode
 ]
 
 { #category : #'as yet unclassified' }

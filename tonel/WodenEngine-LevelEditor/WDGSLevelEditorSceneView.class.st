@@ -28,6 +28,11 @@ WDGSLevelEditorSceneView >> prepareRendering [
 	super prepareRendering
 ]
 
+{ #category : #accessing }
+WDGSLevelEditorSceneView >> renderSubMode [
+	^ panel renderMode
+]
+
 { #category : #'rendering process stages' }
 WDGSLevelEditorSceneView >> updateForFrameDelta: delta [
 	super updateForFrameDelta: delta.

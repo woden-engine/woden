@@ -94,6 +94,11 @@ WDASceneView >> prepareRendering [
 
 ]
 
+{ #category : #accessing }
+WDASceneView >> renderSubMode [
+	^ #full
+]
+
 { #category : #rendering }
 WDASceneView >> renderViewport: viewport overlayWith: stateTracker [
 ]

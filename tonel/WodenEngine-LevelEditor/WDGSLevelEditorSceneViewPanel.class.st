@@ -456,6 +456,11 @@ WDGSLevelEditorSceneViewPanel >> rayAtWindowCoord: coord [
 	^ ray asWMRayD transformedWith: cameraTransform
 ]
 
+{ #category : #accessing }
+WDGSLevelEditorSceneViewPanel >> renderMode [
+	^ renderMode
+]
+
 { #category : #camera }
 WDGSLevelEditorSceneViewPanel >> resetCameraState [
 	cameraTransform := WMReversibleAffineTransformD identity.
