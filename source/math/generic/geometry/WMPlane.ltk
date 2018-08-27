@@ -45,6 +45,13 @@ WMPlane category: 'accessing' methods: {
 
 }.
 
+WMPlane category: 'arithmetic' methods: {
+:[negated -> WMPlane.
+    ^ WMPlane nx: nx negated ny: ny negated nz: nz negated d: d negated
+].
+
+}.
+
 WMPlane category: 'distance functions' methods: {
 :[pointDistance: <WMVector3> point -> Scalar.
 	^ (nx*point x) + (ny*point y) + (nz*point z) - d
@@ -61,10 +68,38 @@ WMPlane category: 'intersection' methods: {
 	let point := WMVector3 x: d y: second d z: third d.
 	^ matrix solveSystemAtPoint: point.
 ].
+
+:[intersectWithSegment: <WMVector3> startPoint end: <WMVector3> endPoint -> _DynamicObject.
+
+	let startFront := self isInFront: startPoint.
+	let endFront := self isInFront: endPoint.
+
+	"Check for the existence of the intersection."
+	startFront = endFront ifTrue: [ ^ nil ].
+
+	let dir := endPoint - startPoint.
+	let n := self normal.
+	let den := dir dot: self normal.
+	(den closeTo: 0) ifTrue: [ ^ nil ].
+
+	let t := (self distance - (startPoint dot: self normal)) / den .
+    ^ startPoint + (dir * t)
+]
+
 }.
 
 WMPlane category: 'printing' methods: {
 :[printOn: aStream
 	aStream nextPutAll: WMPlane name; nextPutAll: ' nx: '; print: nx; nextPutAll: ' ny: '; print: ny; nextPutAll: ' nz: '; print: nz; nextPutAll: ' d: '; print: d.
+].
+}.
+
+WMPlane category: 'testing' methods: {
+:[isBehind: <WMVector3> point -> BooleanBit.
+    ^ (self pointDistance: point) < 0.0
+].
+
+:[isInFront: <WMVector3> point -> BooleanBit.
+    ^ (self pointDistance: point) > 0.0
 ].
 }.

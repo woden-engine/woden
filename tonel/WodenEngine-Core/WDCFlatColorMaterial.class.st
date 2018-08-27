@@ -78,7 +78,7 @@ WDCFlatColorMaterial >> validateCache [
 		stipple ifFalse: [
 			fragmentShader := engine loadFragmentShader: 'shaders/surface/flatColorForward.dastrel'.
 		] ifTrue: [ 
-			fragmentShader := engine loadFragmentShader: 'shaders/surface/flatColorStipple.dastrel'.
+			fragmentShader := engine loadFragmentShader: 'shaders/surface/flatColorStippleForward.dastrel'.
 		].
 	]
 ]

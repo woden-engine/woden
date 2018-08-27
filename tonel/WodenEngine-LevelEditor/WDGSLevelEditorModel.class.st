@@ -13,14 +13,93 @@ Class {
 		'levelViews',
 		'primaryGridMesh',
 		'centerAxisMesh',
-		'secondaryGridMesh'
+		'secondaryGridMesh',
+		'mapFileName'
 	],
 	#category : #'WodenEngine-LevelEditor-Model'
 }
 
+{ #category : #actions }
+WDGSLevelEditorModel >> addCubeBrushAtSelectionCube [
+	| brush |
+	(selectionBox isEmpty or: [ selectionBox isSpaceSelection not ]) ifTrue: [ ^ self ].
+	
+	brush := WDGSBrush box: selectionBox box.
+	brush material: currentMaterialName.
+	map entities first addComponent: brush.
+	
+	selectionBox addElement: brush.
+]
+
+{ #category : #actions }
+WDGSLevelEditorModel >> addGunItem: aPosition [
+	(self addPointEntity: aPosition) addBehaviorClass: WDGSMagnumItemBehavior.
+]
+
 { #category : #adding }
 WDGSLevelEditorModel >> addLevelView: aLevelView [
 	levelViews := (levelViews copyWithout: aLevelView) copyWith: aLevelView
+]
+
+{ #category : #actions }
+WDGSLevelEditorModel >> addLightEntity: aPosition [
+	| entity |
+	entity := WDGSEntity new.
+	entity
+		addComponent: WDGSSpatialDescription new lookDown;
+		addComponent: WDGSLightSourceComponent new.
+	entity spatialDescription translation: aPosition.
+	map addEntity: entity.
+]
+
+{ #category : #actions }
+WDGSLevelEditorModel >> addModel: modelName [
+	self addModel: modelName position: WMVector3D new.
+]
+
+{ #category : #actions }
+WDGSLevelEditorModel >> addModel: modelName position: aPosition [
+	| entity model |
+	model := engine resourceCache loadModel: modelName.
+	entity := WDGSEntity new.
+	entity
+		addComponent: WDGSSpatialDescription new;
+		addComponent: (WDGSModel new modelName: modelName).
+	entity spatialDescription
+		localBoundingBox: model boundingBox asWMBox3DD;
+		translation: aPosition.
+	map addEntity: entity.
+	^ entity
+]
+
+{ #category : #actions }
+WDGSLevelEditorModel >> addPlayerSpawnPoint: aPosition [
+	| entity |
+	entity := WDGSEntity new.
+	entity
+		addComponent: WDGSSpatialDescription new;
+		addComponent: (WDGSBehaviorClass new behaviorClassName: WDGSPlayerSpawnPointBehavior name).
+	entity spatialDescription
+		translation: aPosition;
+		localBoundingBox: (WMBox3DD halfExtent: WDGSPlayerBehavior halfExtent).
+	map addEntity: entity.
+]
+
+{ #category : #actions }
+WDGSLevelEditorModel >> addPointEntity: aPosition [
+	| entity |
+	entity := WDGSEntity new.
+	entity
+		addComponent: WDGSSpatialDescription new.
+	entity spatialDescription translation: aPosition.
+	map addEntity: entity.
+	^ entity
+]
+
+{ #category : #actions }
+WDGSLevelEditorModel >> applyCurrentMaterialToSelection [
+	self flag: 'Add a memento or something for undo/redo'.
+	selection elements do: [ :element | element material: currentMaterialName ]
 ]
 
 { #category : #meshes }
@@ -58,6 +137,14 @@ WDGSLevelEditorModel >> clearScene [
 	self createSelectionBox
 ]
 
+{ #category : #selection }
+WDGSLevelEditorModel >> clearSelection [
+	faceSelectMode
+		ifTrue: [ self selection: WDGSLevelEditorSelection new. ]
+		ifFalse: [ self selection: WDGSLevelEditorSelectionBox empty. ]
+	
+]
+
 { #category : #initialization }
 WDGSLevelEditorModel >> createMap [
 	| world |
@@ -72,12 +159,88 @@ WDGSLevelEditorModel >> createMap [
 
 { #category : #selection }
 WDGSLevelEditorModel >> createSelectionBox [
-	self selection: WTGLevelEditorSelectionBox empty.
+	self selection: WDGSLevelEditorSelectionBox empty.
 ]
 
 { #category : #'as yet unclassified' }
 WDGSLevelEditorModel >> defaultViewClass [
 	^ WDGSLevelEditorMainFrame
+]
+
+{ #category : #selection }
+WDGSLevelEditorModel >> elementsAlongRay: ray do: aBlock [
+	| selectionMode |
+	selectionMode := self isFaceSelectMode
+		ifTrue: [ #face ]
+		ifFalse: [ #entity"#brush" ].
+	map elementsAlongRay: ray mode: selectionMode do: aBlock
+]
+
+{ #category : #selection }
+WDGSLevelEditorModel >> faceSelectMode: mode [
+	faceSelectMode := mode.
+	faceSelectMode ifTrue: [
+		self selection: selection asElementSelection
+	] ifFalse: [
+		self selection: selection asBoxSelection
+	]
+]
+
+{ #category : #actions }
+WDGSLevelEditorModel >> fileOpen [
+	self fileOpenDialog: 'Open Level' extensions: #('json') callback: [ :fileName |
+		fileName ifNotNil: [
+			[ self loadMapFromFileNamed: fileName ] fork
+		]
+	] 
+]
+
+{ #category : #dialogs }
+WDGSLevelEditorModel >> fileOpenDialog: title extensions: extensions callback: callback [
+	^ self fileOpenDialog: title extensions: extensions path: nil preview: nil callback: callback
+]
+
+{ #category : #dialogs }
+WDGSLevelEditorModel >> fileOpenDialog: title extensions: extensions path: path callback: callback [
+	^ self fileOpenDialog: title extensions: extensions path: path preview: nil callback: callback
+]
+
+{ #category : #dialogs }
+WDGSLevelEditorModel >> fileOpenDialog: title extensions: extensions path: path preview: preview callback: callback [
+	| dialog |
+	dialog := FileDialogWindow new
+		title: title;
+		previewType: preview;
+		initialize;
+		title: title;
+		answerPathName.
+	extensions ifNotNil: [dialog validExtensions: extensions].
+	path ifNotNil: [dialog selectPathName: path].
+	dialog extent: 640@480;
+		openInExternalWindowModalCallback: [ callback value: dialog answer ]
+]
+
+{ #category : #dialogs }
+WDGSLevelEditorModel >> fileSaveDialog: title extensions: extensions callback: callback [
+	^ self fileSaveDialog: title initialAnswer: '' extensions: extensions path: nil callback: callback
+]
+
+{ #category : #dialogs }
+WDGSLevelEditorModel >> fileSaveDialog: title initialAnswer: fileName extensions: extensions callback: callback [
+	^ self fileSaveDialog: title initialAnswer: fileName extensions: extensions path: nil callback: callback
+]
+
+{ #category : #dialogs }
+WDGSLevelEditorModel >> fileSaveDialog: title initialAnswer: fileName extensions: extensions path: path callback: callback [
+	| dialog |
+	dialog := FileDialogWindow new
+		extent: 640@480;
+		title: title;
+		fileNameText: fileName;
+		answerSaveFile.
+	extensions ifNotNil: [dialog validExtensions: extensions].
+	path ifNotNil: [dialog selectPathName: path].
+	dialog openInExternalWindowModalCallback: [ callback value: dialog answer ]
 ]
 
 { #category : #meshes }
@@ -97,6 +260,40 @@ WDGSLevelEditorModel >> initializeModel [
 		createMap
 ]
 
+{ #category : #actions }
+WDGSLevelEditorModel >> inspectSelection [
+	currentInspector ifNotNil: [ ^ self ].
+	currentInspector := GTInspector new.
+	(currentInspector openInExternalWindowOn: self)
+		extent: 640@480;
+		closeCallback: [ currentInspector := nil ].
+]
+
+{ #category : #selection }
+WDGSLevelEditorModel >> isFaceSelectMode [
+	^ faceSelectMode
+]
+
+{ #category : #actions }
+WDGSLevelEditorModel >> loadMapFromFileNamed: fileName [
+	| newMap |
+	newMap := WDGSMap loadJsonFromFileNamed: fileName.
+	newMap editorMode: true.
+	mapFileName := fileName.
+	map ifNotNil: [ map scene: nil ].
+	map := newMap.
+	map scene: scene.
+]
+
+{ #category : #actions }
+WDGSLevelEditorModel >> makeBrushEntity [
+	| selectedBrushes |
+	selectedBrushes := selection elements select: #isBrush.
+	selectedBrushes ifEmpty: [ ^ self ].
+	
+	Transcript show: selectedBrushes; cr.
+]
+
 { #category : #accessing }
 WDGSLevelEditorModel >> map [
 	^ map
@@ -105,6 +302,32 @@ WDGSLevelEditorModel >> map [
 { #category : #accessing }
 WDGSLevelEditorModel >> map: anObject [
 	map := anObject
+]
+
+{ #category : #'mouse over' }
+WDGSLevelEditorModel >> mouseOverNone [
+	self selectionBoxViewsDo: [ :view | view mouseOverIndex: -1 ].
+]
+
+{ #category : #actions }
+WDGSLevelEditorModel >> openTextureTransformEditor [
+	| textureTransformEditorWindow |
+	textureTransformEditor ifNotNil: [ ^ self ].
+	textureTransformEditor := WTGLevelEditorTextureTransformSpec new editor: self.
+	self flag: 'Spec should provide a mechanism for this'.
+	textureTransformEditorWindow := textureTransformEditor openExternalWindowWithSpec window value.
+	textureTransformEditorWindow closeCallback: [ textureTransformEditor := nil ].
+	textureTransformEditor selectionChanged.
+	textureTransformEditorWindow changed
+]
+
+{ #category : #actions }
+WDGSLevelEditorModel >> playInExternalWindow [
+	WDGSLevelPlayer new
+		"initializeWithEngine: engine;"
+		map: map playModeCopy;
+		spawn;
+		openInOSWindow.
 ]
 
 { #category : #meshes }
@@ -123,11 +346,39 @@ WDGSLevelEditorModel >> primaryGridSize [
 	^ gridSize
 ]
 
+{ #category : #actions }
+WDGSLevelEditorModel >> removeSelectedComponents [
+	selection elements do: [ :element | element removeFromMap ].
+	self selection: WDGSLevelEditorSelectionBox empty
+]
+
 { #category : #snapping }
 WDGSLevelEditorModel >> roundToGrid: value [
 	| quantum |
 	quantum := self secondaryGridSize.
 	^ ((value / quantum) + 0.5) floor * quantum
+]
+
+{ #category : #actions }
+WDGSLevelEditorModel >> save [
+	mapFileName ifNil: [ ^ self saveAs ].
+	self saveMapToFileNamed: mapFileName.
+	
+]
+
+{ #category : #actions }
+WDGSLevelEditorModel >> saveAs [
+	self fileSaveDialog: 'Save Level' extensions: #('json') callback: [ :fileName |
+		fileName ifNotNil: [
+			[ self saveMapToFileNamed: fileName ] fork
+		]
+	] 
+]
+
+{ #category : #actions }
+WDGSLevelEditorModel >> saveMapToFileNamed: fileName [
+	map saveJsonToFile: fileName.
+	mapFileName := fileName.
 ]
 
 { #category : #meshes }
@@ -156,7 +407,7 @@ WDGSLevelEditorModel >> selection: aSelection [
 	aSelection isSelectionBox ifTrue: [
 		self useNewSelectionBox: aSelection.
 	] ifFalse: [
-		self useNewSelectionBox: WTGLevelEditorSelectionBox empty.
+		self useNewSelectionBox: WDGSLevelEditorSelectionBox empty.
 		selection := aSelection.
 		selection setSelectedState.
 	].
@@ -166,6 +417,11 @@ WDGSLevelEditorModel >> selection: aSelection [
 { #category : #selection }
 WDGSLevelEditorModel >> selectionBox [
 	^ selectionBox
+]
+
+{ #category : #'mouse over' }
+WDGSLevelEditorModel >> selectionBoxMouseOver: boxIndex [
+	self selectionBoxViewsDo: [ :view | view mouseOverIndex: boxIndex ].
 ]
 
 { #category : #selection }
@@ -192,6 +448,29 @@ WDGSLevelEditorModel >> snapTranslation: translation [
 		x: (self roundToGrid: translation x)
 		y: (self roundToGrid: translation y)
 		z: (self roundToGrid: translation z)
+]
+
+{ #category : #actions }
+WDGSLevelEditorModel >> subtractSelectedBrushes [
+	| affectedBrushes newBrushes entity |
+	selectionBox elements ifEmpty: [ ^ self ].
+	affectedBrushes := map findBrushesIntersectingSelectedBrushesProperly: selectionBox.
+	affectedBrushes ifEmpty: [ ^ self ].
+	
+	self flag: 'Add a memento or something for undo/redo'.
+	affectedBrushes do: [ :brush |
+		selectionBox elements do: [ :subtractor |
+			newBrushes := brush subtract: subtractor.
+			entity := brush entity.
+			entity removeComponent: brush.
+			entity addComponents: newBrushes
+		]
+	]
+]
+
+{ #category : #selection }
+WDGSLevelEditorModel >> toggleFaceSelectMode [
+	self faceSelectMode: faceSelectMode not.
 ]
 
 { #category : #selection }

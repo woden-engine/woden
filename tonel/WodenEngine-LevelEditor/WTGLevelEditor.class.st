@@ -177,8 +177,8 @@ WTGLevelEditor >> clearScene [
 { #category : #selection }
 WTGLevelEditor >> clearSelection [
 	faceSelectMode
-		ifTrue: [ self selection: WTGLevelEditorSelection new. ]
-		ifFalse: [ self selection: WTGLevelEditorSelectionBox empty. ]
+		ifTrue: [ self selection: WDGSLevelEditorSelection new. ]
+		ifFalse: [ self selection: WDGSLevelEditorSelectionBox empty. ]
 	
 ]
 
@@ -281,7 +281,7 @@ WTGLevelEditor >> createRightToolPane [
 
 { #category : #initialization }
 WTGLevelEditor >> createSelectionBox [
-	self selection: WTGLevelEditorSelectionBox empty.
+	self selection: WDGSLevelEditorSelectionBox empty.
 ]
 
 { #category : #rendering }
@@ -560,7 +560,7 @@ WTGLevelEditor >> releaseMouse [
 { #category : #actions }
 WTGLevelEditor >> removeSelectedComponents [
 	selection elements do: [ :element | element removeFromMap ].
-	self selection: WTGLevelEditorSelectionBox empty
+	self selection: WDGSLevelEditorSelectionBox empty
 ]
 
 { #category : #rendering }
@@ -637,7 +637,7 @@ WTGLevelEditor >> selection: aSelection [
 	aSelection isSelectionBox ifTrue: [
 		self useNewSelectionBox: aSelection.
 	] ifFalse: [
-		self useNewSelectionBox: WTGLevelEditorSelectionBox empty.
+		self useNewSelectionBox: WDGSLevelEditorSelectionBox empty.
 		selection := aSelection.
 		selection setSelectedState.
 	].

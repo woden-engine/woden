@@ -1,21 +1,21 @@
 Class {
-	#name : #WTGEDragRotate,
-	#superclass : #WTGEDragTool,
+	#name : #WDGSEDragRotate,
+	#superclass : #WDGSEDragTool,
 	#instVars : [
 		'pivotPoint',
 		'onNewRotation',
 		'startPosition'
 	],
-	#category : #'WodenEngine-LevelEditor-Old'
+	#category : #'WodenEngine-LevelEditor-Tools'
 }
 
 { #category : #'as yet unclassified' }
-WTGEDragRotate >> needsMouseCapture [
+WDGSEDragRotate >> needsMouseCapture [
 	^ false
 ]
 
 { #category : #'as yet unclassified' }
-WTGEDragRotate >> onDragEvent: event [
+WDGSEDragRotate >> onDragEvent: event [
 	| newPosition u v rotation angle |
 	newPosition := view globalPointToLocal: event position.
 	
@@ -32,27 +32,27 @@ WTGEDragRotate >> onDragEvent: event [
 ]
 
 { #category : #'as yet unclassified' }
-WTGEDragRotate >> onDragStartEvent: event [
+WDGSEDragRotate >> onDragStartEvent: event [
 	startPosition := view globalPointToLocal: event position.
 	
 ]
 
 { #category : #accessing }
-WTGEDragRotate >> onNewRotation [
+WDGSEDragRotate >> onNewRotation [
 	^ onNewRotation
 ]
 
 { #category : #accessing }
-WTGEDragRotate >> onNewRotation: anObject [
+WDGSEDragRotate >> onNewRotation: anObject [
 	onNewRotation := anObject
 ]
 
 { #category : #accessing }
-WTGEDragRotate >> pivotPoint [
+WDGSEDragRotate >> pivotPoint [
 	^ pivotPoint
 ]
 
 { #category : #accessing }
-WTGEDragRotate >> pivotPoint: anObject [
+WDGSEDragRotate >> pivotPoint: anObject [
 	pivotPoint := anObject
 ]

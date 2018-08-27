@@ -21,7 +21,9 @@ Class {
 		'secondaryGrid',
 		'centerAxis',
 		'toolController',
-		'lastDragEndPosition'
+		'lastDragEndPosition',
+		'lastClickElements',
+		'nextClickElementIndex'
 	],
 	#classVars : [
 		'OrthographicFarDistance',
@@ -117,15 +119,15 @@ WDGSLevelEditorSceneViewPanel >> createCamera [
 WDGSLevelEditorSceneViewPanel >> createGrid [
 	baseGridSize := 10.0.
 	primaryGrid := WDSGSpatialObject new
-		model: (WTGLevelEditorElementModel new view: self);
+		model: (WDGSLevelEditorElementModel new view: self);
 		renderable: self editor primaryGridMesh.
 			
 	secondaryGrid := WDSGSpatialObject new
-		model: (WTGLevelEditorElementModel new view: self);
+		model: (WDGSLevelEditorElementModel new view: self);
 		renderable: self editor secondaryGridMesh.
 		
 	centerAxis := WDSGSpatialObject new
-		model: (WTGLevelEditorElementModel new view: self);
+		model: (WDGSLevelEditorElementModel new view: self);
 		renderable: self editor centerAxisMesh.
 
 	self scene
@@ -149,7 +151,7 @@ WDGSLevelEditorSceneViewPanel >> createSceneView [
 
 { #category : #initialization }
 WDGSLevelEditorSceneViewPanel >> createSelectionBoxView [
-	selectionBoxView := WTGESelectionBoxView new editor: self editor view: self
+	selectionBoxView := WDGSESelectionBoxView new editor: self editor view: self
 
 	
 ]
@@ -161,6 +163,51 @@ WDGSLevelEditorSceneViewPanel >> depthAtCameraDistance: distance [
 		ifFalse: [ (distance - OrthographicNearDistance) / (OrthographicFarDistance - OrthographicNearDistance) ]
 ]
 
+{ #category : #selection }
+WDGSLevelEditorSceneViewPanel >> elementsAlongRay: ray do: aBlock [
+	selectionBoxView elementsAlongRay: ray do: aBlock.
+
+	^ self editor elementsAlongRay: ray do: aBlock
+]
+
+{ #category : #selection }
+WDGSLevelEditorSceneViewPanel >> findBestElementAtGlobalCoord: aPosition [
+	^ self findBestElementAtWindowCoord: aPosition
+]
+
+{ #category : #selection }
+WDGSLevelEditorSceneViewPanel >> findBestElementAtWindowCoord: coord [
+	| ray bestResult |
+	ray := self rayAtWindowCoord: coord.
+	bestResult := nil.
+	self elementsAlongRay: ray do: [ :result |
+		(bestResult isNil or: [ result < bestResult ]) ifTrue: [ 
+			bestResult := result
+		]
+	].
+
+	^ bestResult
+
+]
+
+{ #category : #selection }
+WDGSLevelEditorSceneViewPanel >> findElementsAtGlobalCoord: aPosition [
+	^ self findElementsAtWindowCoord: aPosition
+]
+
+{ #category : #selection }
+WDGSLevelEditorSceneViewPanel >> findElementsAtWindowCoord: coord [
+	| ray elements|
+	ray := self rayAtWindowCoord: coord.
+	elements := OrderedCollection new.
+	self elementsAlongRay: ray do: [ :result |
+		elements add: result
+	].
+
+	elements sort: [:a :b | a < b].
+	^ elements
+]
+
 { #category : #'view side' }
 WDGSLevelEditorSceneViewPanel >> frontView [
 	cameraAngle := WMVector3D new.
@@ -168,7 +215,48 @@ WDGSLevelEditorSceneViewPanel >> frontView [
 ]
 
 { #category : #'event handling' }
-WDGSLevelEditorSceneViewPanel >> handleDragEndEvent: anEvent [
+WDGSLevelEditorSceneViewPanel >> handleClick: anEvent [
+	| elements currentElement |
+	anEvent position = lastDragEndPosition ifTrue: [ 
+		lastDragEndPosition := nil.
+		^ self
+	].
+
+	elements := (self findElementsAtGlobalCoord: anEvent position) collect: #value.
+	
+	elements ifNotEmpty: [
+		lastClickElements = elements ifTrue: [
+			(anEvent modifiers ctrl not and: [ anEvent modifiers shift not ]) ifTrue: [ 
+				nextClickElementIndex := (nextClickElementIndex + 1) % lastClickElements size
+			].
+		] ifFalse: [ 
+			nextClickElementIndex := 0
+		].
+
+		lastClickElements := elements.		
+		currentElement := elements at: nextClickElementIndex + 1.
+	].
+
+	currentElement := currentElement asNodeModelForLevelEditor: self editor.
+	currentElement ifNotNil: [
+		(anEvent modifiers ctrl and: [ anEvent modifiers shift not ]) ifTrue: [
+			currentElement view: self selectToggleOnEditor: self editor
+		].
+		(anEvent modifiers ctrl not and: [ anEvent modifiers shift ]) ifTrue: [
+			currentElement view: self selectAddOnEditor: self editor
+		].
+		(anEvent modifiers ctrl not and: [ anEvent modifiers shift not ]) ifTrue: [
+			currentElement view: self selectSingleOnEditor: self editor
+		]
+	] ifNil: [
+		(anEvent modifiers ctrl not and: [ anEvent modifiers shift not ]) ifTrue: [ 
+			self editor clearSelection
+		]
+	]
+]
+
+{ #category : #'event handling' }
+WDGSLevelEditorSceneViewPanel >> handleDragEnd: anEvent [
 	lastDragEndPosition := anEvent position.
 	toolController ifNotNil: [ toolController onDragEndEvent: anEvent ].
 	self releaseMouseWithHost
@@ -182,7 +270,7 @@ WDGSLevelEditorSceneViewPanel >> handleDragEvent: anEvent [
 ]
 
 { #category : #'event handling' }
-WDGSLevelEditorSceneViewPanel >> handleDragStartEvent: anEvent [
+WDGSLevelEditorSceneViewPanel >> handleDragStart: anEvent [
 	| element |
 	self updateCameraProjection.
 	toolController ifNil: [
@@ -190,7 +278,7 @@ WDGSLevelEditorSceneViewPanel >> handleDragStartEvent: anEvent [
 			element := (self findBestElementAtGlobalCoord: anEvent position) value asNodeModelForLevelEditor: self editor.
 			element ifNil: [
 				self editor isFaceSelectMode ifFalse: [
-					self startDragController: WTGEDragMakeSelectionBox new event: anEvent.
+					self startDragController: WDGSEDragMakeSelectionBox new event: anEvent.
 				]
 			] ifNotNil: [
 				self startDragController: (element view: self dragControllerFor: anEvent) event: anEvent.
@@ -198,11 +286,11 @@ WDGSLevelEditorSceneViewPanel >> handleDragStartEvent: anEvent [
 		].
 
 		anEvent isSecondaryButtonDrag ifTrue: [
-			self startDragController: WTGEDragCameraTranslate new event: anEvent.
+			self startDragController: WDGSEDragCameraTranslate new event: anEvent.
 		].
 
 		anEvent isMiddleButtonDrag ifTrue: [
-			self startDragController: WTGEDragCameraRotate new event: anEvent.
+			self startDragController: WDGSEDragCameraRotate new event: anEvent.
 		].
 	].
 
@@ -286,6 +374,17 @@ WDGSLevelEditorSceneViewPanel >> handleKeyUp: event [
 	super handleKeyUp: event
 ]
 
+{ #category : #'event handling' }
+WDGSLevelEditorSceneViewPanel >> handleMouseMove: anEvent [
+	| element |
+	super handleMouseMove: anEvent.
+	self updateCameraProjection.
+	element := (self findBestElementAtGlobalCoord: anEvent position) value asNodeModelForLevelEditor: self editor.
+	element
+		ifNil: [ self editor mouseOverNone ]
+		ifNotNil: [ element view: self mouseOver: anEvent ]
+]
+
 { #category : #initialization }
 WDGSLevelEditorSceneViewPanel >> initialize [
 	super initialize.
@@ -295,6 +394,11 @@ WDGSLevelEditorSceneViewPanel >> initialize [
 		solid;
 		perspective
 	
+]
+
+{ #category : #accessing }
+WDGSLevelEditorSceneViewPanel >> isPerspective [
+	^ isPerspective
 ]
 
 { #category : #'coordinate systems' }
@@ -342,6 +446,14 @@ WDGSLevelEditorSceneViewPanel >> perspective [
 { #category : #accessing }
 WDGSLevelEditorSceneViewPanel >> primaryGridSize [
 	^ self editor primaryGridSize
+]
+
+{ #category : #selection }
+WDGSLevelEditorSceneViewPanel >> rayAtWindowCoord: coord [
+	| ray |
+	camera frustum ifNil: [ self updateCameraProjection ].
+	ray := camera frustum rayAtNormalizedPoint: (self normalizedPosition: coord).
+	^ ray asWMRayD transformedWith: cameraTransform
 ]
 
 { #category : #camera }
@@ -393,6 +505,16 @@ WDGSLevelEditorSceneViewPanel >> simulateCameraMovement: delta [
 		orthonormal: orientation;
 		translateBy: (orientation transformVector3: (cameraVelocity * (cameraSpeed * delta))).
 
+]
+
+{ #category : #snapping }
+WDGSLevelEditorSceneViewPanel >> snapBox: box [
+	^ self editor snapBox: box
+]
+
+{ #category : #snapping }
+WDGSLevelEditorSceneViewPanel >> snapTranslation: translation [
+	^ self editor snapTranslation: translation
 ]
 
 { #category : #'rendering mode' }
@@ -494,6 +616,16 @@ WDGSLevelEditorSceneViewPanel >> updateGridTransform [
 	centerAxis renderPriority: renderPriority + 2.
 ]
 
+{ #category : #accessing }
+WDGSLevelEditorSceneViewPanel >> viewScale [
+	^ viewScale
+]
+
+{ #category : #accessing }
+WDGSLevelEditorSceneViewPanel >> viewScaleFactor [
+	^ viewScale / 3.0
+]
+
 { #category : #'coordinate systems' }
 WDGSLevelEditorSceneViewPanel >> windowGlobalToLocal: aPosition depth: aDepth [
 	^ self windowToLocal: aPosition depth: aDepth
@@ -501,7 +633,7 @@ WDGSLevelEditorSceneViewPanel >> windowGlobalToLocal: aPosition depth: aDepth [
 
 { #category : #'coordinate systems' }
 WDGSLevelEditorSceneViewPanel >> windowGlobalToWorld: aPosition depth: aDepth [
-	^ self windowToWorld: (self globalPointToLocal: aPosition) depth: aDepth
+	^ self windowToWorld: aPosition depth: aDepth
 ]
 
 { #category : #'coordinate systems' }

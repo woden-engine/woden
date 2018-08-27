@@ -1,32 +1,32 @@
 Class {
-	#name : #WTGEDragTranslate,
-	#superclass : #WTGEDragTool,
+	#name : #WDGSEDragTranslate,
+	#superclass : #WDGSEDragTool,
 	#instVars : [
 		'depthPoint',
 		'onNewTranslation',
 		'totalDelta'
 	],
-	#category : #'WodenEngine-LevelEditor-Old'
+	#category : #'WodenEngine-LevelEditor-Tools'
 }
 
 { #category : #accessing }
-WTGEDragTranslate >> depthPoint [
+WDGSEDragTranslate >> depthPoint [
 	^ depthPoint
 ]
 
 { #category : #accessing }
-WTGEDragTranslate >> depthPoint: anObject [
+WDGSEDragTranslate >> depthPoint: anObject [
 	depthPoint := anObject
 ]
 
 { #category : #events }
-WTGEDragTranslate >> initialize [
+WDGSEDragTranslate >> initialize [
 	super initialize.
 	totalDelta := 0@0.
 ]
 
 { #category : #events }
-WTGEDragTranslate >> onDragEvent: event [
+WDGSEDragTranslate >> onDragEvent: event [
 	| dragDelta depth |
 	depth := view depthAtCameraDistance: 3.0.
 	totalDelta := totalDelta + event delta.
@@ -35,11 +35,11 @@ WTGEDragTranslate >> onDragEvent: event [
 ]
 
 { #category : #accessing }
-WTGEDragTranslate >> onNewTranslation [
+WDGSEDragTranslate >> onNewTranslation [
 	^ onNewTranslation
 ]
 
 { #category : #accessing }
-WTGEDragTranslate >> onNewTranslation: anObject [
+WDGSEDragTranslate >> onNewTranslation: anObject [
 	onNewTranslation := anObject
 ]

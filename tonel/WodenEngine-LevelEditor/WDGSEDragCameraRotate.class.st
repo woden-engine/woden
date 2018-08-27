@@ -1,11 +1,11 @@
 Class {
-	#name : #WTGEDragCameraRotate,
-	#superclass : #WTGEDragTool,
-	#category : #'WodenEngine-LevelEditor-Old'
+	#name : #WDGSEDragCameraRotate,
+	#superclass : #WDGSEDragTool,
+	#category : #'WodenEngine-LevelEditor-Tools'
 }
 
 { #category : #events }
-WTGEDragCameraRotate >> onDragEvent: event [
+WDGSEDragCameraRotate >> onDragEvent: event [
 	| dragDelta angleDeltaVector |
 	dragDelta := event delta.
 	angleDeltaVector := WMVector3D x: dragDelta y negated degreesToRadians y: dragDelta x degreesToRadians negated.

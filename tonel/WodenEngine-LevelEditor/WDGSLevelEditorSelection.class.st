@@ -1,21 +1,21 @@
 Class {
-	#name : #WTGLevelEditorSelection,
-	#superclass : #WTGLevelEditorElementModel,
+	#name : #WDGSLevelEditorSelection,
+	#superclass : #WDGSLevelEditorElementModel,
 	#instVars : [
 		'editor',
 		'elements',
 		'lastElement'
 	],
-	#category : #'WodenEngine-LevelEditor-Old'
+	#category : #'WodenEngine-LevelEditor-Model'
 }
 
 { #category : #adding }
-WTGLevelEditorSelection >> addAllElements: aCollection [
+WDGSLevelEditorSelection >> addAllElements: aCollection [
 	aCollection do: [ :element | self addElement: element ]
 ]
 
 { #category : #adding }
-WTGLevelEditorSelection >> addElement: anElement [
+WDGSLevelEditorSelection >> addElement: anElement [
 	editor ifNotNil: [
 		lastElement ifNotNil: [ lastElement lastSelected: false].		
 		anElement selected: true; lastSelected: true
@@ -27,46 +27,46 @@ WTGLevelEditorSelection >> addElement: anElement [
 ]
 
 { #category : #transforming }
-WTGLevelEditorSelection >> applyTransformation: aTransform [
+WDGSLevelEditorSelection >> applyTransformation: aTransform [
 	elements do: [ :element | element applyTransformation: aTransform ]
 ]
 
 { #category : #converting }
-WTGLevelEditorSelection >> asBoxSelection [
-	^ WTGLevelEditorSelectionBox empty
+WDGSLevelEditorSelection >> asBoxSelection [
+	^ WDGSLevelEditorSelectionBox empty
 		addAllElements: elements;
 		lastElement: lastElement;
 		yourself
 ]
 
 { #category : #converting }
-WTGLevelEditorSelection >> asElementSelection [
+WDGSLevelEditorSelection >> asElementSelection [
 	^ self
 ]
 
 { #category : #'as yet unclassified' }
-WTGLevelEditorSelection >> clearSelectedState [
+WDGSLevelEditorSelection >> clearSelectedState [
 	elements do: [ :element | element selected: false; lastSelected: false ].
 
 ]
 
 { #category : #accessing }
-WTGLevelEditorSelection >> editor [
+WDGSLevelEditorSelection >> editor [
 	^ editor
 ]
 
 { #category : #accessing }
-WTGLevelEditorSelection >> editor: anObject [
+WDGSLevelEditorSelection >> editor: anObject [
 	editor := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorSelection >> elements [
+WDGSLevelEditorSelection >> elements [
 	^ elements
 ]
 
 { #category : #initialization }
-WTGLevelEditorSelection >> initialize [
+WDGSLevelEditorSelection >> initialize [
 	super initialize.
 
 	elements := Set new.
@@ -74,7 +74,7 @@ WTGLevelEditorSelection >> initialize [
 ]
 
 { #category : #intersection }
-WTGLevelEditorSelection >> intersectsWithBrushProperly: brush [
+WDGSLevelEditorSelection >> intersectsWithBrushProperly: brush [
 	elements do: [:element |
 		(element intersectsWithBrushProperly: brush) ifTrue: [ ^ true ]
 	].
@@ -82,27 +82,27 @@ WTGLevelEditorSelection >> intersectsWithBrushProperly: brush [
 ]
 
 { #category : #testing }
-WTGLevelEditorSelection >> isSelectionBox [
+WDGSLevelEditorSelection >> isSelectionBox [
 	^ false
 ]
 
 { #category : #testing }
-WTGLevelEditorSelection >> isSpaceSelection [
+WDGSLevelEditorSelection >> isSpaceSelection [
 	^ false
 ]
 
 { #category : #accessing }
-WTGLevelEditorSelection >> lastElement [
+WDGSLevelEditorSelection >> lastElement [
 	^ lastElement
 ]
 
 { #category : #accessing }
-WTGLevelEditorSelection >> lastElement: anObject [
+WDGSLevelEditorSelection >> lastElement: anObject [
 	^ lastElement := anObject
 ]
 
 { #category : #adding }
-WTGLevelEditorSelection >> removeElement: anElement [
+WDGSLevelEditorSelection >> removeElement: anElement [
 	editor ifNotNil: [ anElement selected: false; lastSelected: false. ].
 	elements remove: anElement.
 	elements ifEmpty: [
@@ -119,12 +119,12 @@ WTGLevelEditorSelection >> removeElement: anElement [
 ]
 
 { #category : #memento }
-WTGLevelEditorSelection >> restoreTransformMemento: memento [
+WDGSLevelEditorSelection >> restoreTransformMemento: memento [
 	memento do: [ :assoc | assoc key restoreTransformMemento: assoc value ]
 ]
 
 { #category : #transforming }
-WTGLevelEditorSelection >> rotate: angle axis: axis pivot: pivot [
+WDGSLevelEditorSelection >> rotate: angle axis: axis pivot: pivot [
 	| quaternion transformation |
 	quaternion := WMQuaternionD axis: axis asWMVector3D angle: angle.
 	transformation := WMReversibleAffineTransformD identity
@@ -135,29 +135,29 @@ WTGLevelEditorSelection >> rotate: angle axis: axis pivot: pivot [
 ]
 
 { #category : #'as yet unclassified' }
-WTGLevelEditorSelection >> setSelectedState [
+WDGSLevelEditorSelection >> setSelectedState [
 	elements ifEmpty: [ ^ true ].
 	elements do: [ :element | element selected: true ].
 	lastElement lastSelected: true.
 ]
 
 { #category : #'texture transform' }
-WTGLevelEditorSelection >> textureRotation [
+WDGSLevelEditorSelection >> textureRotation [
 	^ self textureTransformsValueCollect: [:transform | transform rotation]
 ]
 
 { #category : #'texture transform' }
-WTGLevelEditorSelection >> textureRotation: newValue [
+WDGSLevelEditorSelection >> textureRotation: newValue [
 	self textureTransformsDo: [ :transform | transform rotation: newValue ]
 ]
 
 { #category : #'texture transform' }
-WTGLevelEditorSelection >> textureTransformsDo: aBlock [
+WDGSLevelEditorSelection >> textureTransformsDo: aBlock [
 	elements do: [:element | element textureTransformsDo: aBlock ]
 ]
 
 { #category : #'texture transform' }
-WTGLevelEditorSelection >> textureTransformsValueCollect: aBlock [
+WDGSLevelEditorSelection >> textureTransformsValueCollect: aBlock [
 	| result newResult |
 	result := nil.
 	self textureTransformsDo: [ :transform |
@@ -169,64 +169,64 @@ WTGLevelEditorSelection >> textureTransformsValueCollect: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-WTGLevelEditorSelection >> toggleManipulationMode [
+WDGSLevelEditorSelection >> toggleManipulationMode [
 ]
 
 { #category : #adding }
-WTGLevelEditorSelection >> toggleSelectedElement: anElement [
+WDGSLevelEditorSelection >> toggleSelectedElement: anElement [
 	(elements includes: anElement)
 		ifTrue: [ self removeElement: anElement ]
 		ifFalse: [ self addElement: anElement ]
 ]
 
 { #category : #memento }
-WTGLevelEditorSelection >> transformMemento [
+WDGSLevelEditorSelection >> transformMemento [
 	^ elements collect: [:element | element -> element transformMemento ]
 ]
 
 { #category : #transforming }
-WTGLevelEditorSelection >> translateBy: translation [
+WDGSLevelEditorSelection >> translateBy: translation [
 	| transform |
 	transform := WMReversibleAffineTransformD identity translateBy: translation.
 	self applyTransformation: transform
 ]
 
 { #category : #'texture transform' }
-WTGLevelEditorSelection >> xTextureOffset [
+WDGSLevelEditorSelection >> xTextureOffset [
 	^ self textureTransformsValueCollect: [:transform | transform offset x]
 ]
 
 { #category : #'texture transform' }
-WTGLevelEditorSelection >> xTextureOffset: newValue [
+WDGSLevelEditorSelection >> xTextureOffset: newValue [
 	self textureTransformsDo: [ :transform | transform offset: (transform offset x: newValue) ]
 ]
 
 { #category : #'texture transform' }
-WTGLevelEditorSelection >> xTextureScale [
+WDGSLevelEditorSelection >> xTextureScale [
 	^ self textureTransformsValueCollect:[:transform | transform scale x]
 ]
 
 { #category : #'texture transform' }
-WTGLevelEditorSelection >> xTextureScale: newValue [
+WDGSLevelEditorSelection >> xTextureScale: newValue [
 	self textureTransformsDo: [ :transform | transform scale: (transform scale x: newValue) ]
 ]
 
 { #category : #'texture transform' }
-WTGLevelEditorSelection >> yTextureOffset [
+WDGSLevelEditorSelection >> yTextureOffset [
 	^ self textureTransformsValueCollect: [:transform | transform offset y]
 ]
 
 { #category : #'texture transform' }
-WTGLevelEditorSelection >> yTextureOffset: newValue [
+WDGSLevelEditorSelection >> yTextureOffset: newValue [
 	self textureTransformsDo: [ :transform | transform offset: (transform offset y: newValue) ]
 ]
 
 { #category : #'texture transform' }
-WTGLevelEditorSelection >> yTextureScale [
+WDGSLevelEditorSelection >> yTextureScale [
 	^ self textureTransformsValueCollect:[:transform | transform scale y]
 ]
 
 { #category : #'texture transform' }
-WTGLevelEditorSelection >> yTextureScale: newValue [
+WDGSLevelEditorSelection >> yTextureScale: newValue [
 	self textureTransformsDo: [ :transform | transform scale: (transform scale y: newValue) ]
 ]

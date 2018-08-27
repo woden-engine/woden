@@ -1,6 +1,6 @@
 Class {
-	#name : #WTGLevelEditorSelectionBox,
-	#superclass : #WTGLevelEditorSelection,
+	#name : #WDGSLevelEditorSelectionBox,
+	#superclass : #WDGSLevelEditorSelection,
 	#instVars : [
 		'box',
 		'rotationMode'
@@ -11,22 +11,22 @@ Class {
 		'SpaceSelectionColor',
 		'SpaceSelectionHighlightColor'
 	],
-	#category : #'WodenEngine-LevelEditor-Old'
+	#category : #'WodenEngine-LevelEditor-Model'
 }
 
 { #category : #construction }
-WTGLevelEditorSelectionBox class >> box: abox [
+WDGSLevelEditorSelectionBox class >> box: abox [
 	^ self new box: abox
 	
 ]
 
 { #category : #construction }
-WTGLevelEditorSelectionBox class >> empty [
+WDGSLevelEditorSelectionBox class >> empty [
 	^ self new box: WMBox3DD empty
 ]
 
 { #category : #'class initialization' }
-WTGLevelEditorSelectionBox class >> initialize [
+WDGSLevelEditorSelectionBox class >> initialize [
 	super initialize.
 	
 	SpaceSelectionColor := Color veryLightGray.
@@ -37,7 +37,7 @@ WTGLevelEditorSelectionBox class >> initialize [
 ]
 
 { #category : #adding }
-WTGLevelEditorSelectionBox >> addElement: anElement [
+WDGSLevelEditorSelectionBox >> addElement: anElement [
 	super addElement: anElement.
 	box ifNil: [ box := anElement boundingBox copy ]
 		ifNotNil: [ box insertBox: anElement boundingBox ].
@@ -49,31 +49,31 @@ WTGLevelEditorSelectionBox >> addElement: anElement [
 ]
 
 { #category : #transforming }
-WTGLevelEditorSelectionBox >> applyTransformation: aTransform [
+WDGSLevelEditorSelectionBox >> applyTransformation: aTransform [
 	super applyTransformation: aTransform.
 	self box: (box transformedWith: aTransform)
 ]
 
 { #category : #converting }
-WTGLevelEditorSelectionBox >> asBoxSelection [
+WDGSLevelEditorSelectionBox >> asBoxSelection [
 	^ self
 ]
 
 { #category : #converting }
-WTGLevelEditorSelectionBox >> asElementSelection [
-	^ WTGLevelEditorSelection new
+WDGSLevelEditorSelectionBox >> asElementSelection [
+	^ WDGSLevelEditorSelection new
 		addAllElements: elements;
 		lastElement: lastElement;
 		yourself
 ]
 
 { #category : #accessing }
-WTGLevelEditorSelectionBox >> box [
+WDGSLevelEditorSelectionBox >> box [
 	^ box
 ]
 
 { #category : #accessing }
-WTGLevelEditorSelectionBox >> box: anObject [
+WDGSLevelEditorSelectionBox >> box: anObject [
 	box := anObject.
 	editor ifNotNil: [
 		editor selectionBoxViewsDo: #updateNodes
@@ -81,85 +81,85 @@ WTGLevelEditorSelectionBox >> box: anObject [
 ]
 
 { #category : #adding }
-WTGLevelEditorSelectionBox >> buildBoxFromBoundingBoxes [
+WDGSLevelEditorSelectionBox >> buildBoxFromBoundingBoxes [
 	box := WMBox3DD empty.
 	elements do: [ :element | box insertBox: element boundingBox ].
 	editor ifNotNil: [ editor selectionBoxViewsDo: #updateNodes ]
 ]
 
 { #category : #accessing }
-WTGLevelEditorSelectionBox >> color [
+WDGSLevelEditorSelectionBox >> color [
 	^ self isSpaceSelection ifTrue: [ SpaceSelectionColor ] ifFalse: [ ElementSelectionColor ]
 ]
 
 { #category : #accessing }
-WTGLevelEditorSelectionBox >> highlightColor [
+WDGSLevelEditorSelectionBox >> highlightColor [
 	^ self isSpaceSelection ifTrue: [ SpaceSelectionHighlightColor ] ifFalse: [ ElementSelectionHighlightColor ]
 ]
 
 { #category : #testing }
-WTGLevelEditorSelectionBox >> includes: element [
+WDGSLevelEditorSelectionBox >> includes: element [
 	^ elements includes: element
 ]
 
 { #category : #initialization }
-WTGLevelEditorSelectionBox >> initialize [
+WDGSLevelEditorSelectionBox >> initialize [
 	super initialize.
 	rotationMode := false
 ]
 
 { #category : #requirements }
-WTGLevelEditorSelectionBox >> isEmpty [
+WDGSLevelEditorSelectionBox >> isEmpty [
 	^ box isEmpty
 ]
 
 { #category : #testing }
-WTGLevelEditorSelectionBox >> isPointSelection [
+WDGSLevelEditorSelectionBox >> isPointSelection [
 	^ elements isNotEmpty and: [ elements size = 1 and: [ elements anyOne isPointSelected ] ]
 ]
 
 { #category : #testing }
-WTGLevelEditorSelectionBox >> isSelectionBox [
+WDGSLevelEditorSelectionBox >> isSelectionBox [
 	^ true
 ]
 
 { #category : #requirements }
-WTGLevelEditorSelectionBox >> isSpaceSelection [
+WDGSLevelEditorSelectionBox >> isSpaceSelection [
 	^ elements isEmpty
 ]
 
 { #category : #copying }
-WTGLevelEditorSelectionBox >> postCopy [
+WDGSLevelEditorSelectionBox >> postCopy [
 	elements := elements copy.
 	box := box copy.
 ]
 
 { #category : #adding }
-WTGLevelEditorSelectionBox >> removeElement: anElement [
+WDGSLevelEditorSelectionBox >> removeElement: anElement [
 	super removeElement: anElement.
 	elements size = 0 ifTrue: [ editor ifNotNil: [ editor selectionBoxViewsDo: #updateColors ] ].
 	self buildBoxFromBoundingBoxes.
 ]
 
 { #category : #'as yet unclassified' }
-WTGLevelEditorSelectionBox >> restoreTransformMemento: memento [
+WDGSLevelEditorSelectionBox >> restoreTransformMemento: memento [
 	super restoreTransformMemento: memento first.
 	self box: memento second
 ]
 
 { #category : #accessing }
-WTGLevelEditorSelectionBox >> rotationMode [
+WDGSLevelEditorSelectionBox >> rotationMode [
 	^ rotationMode
 ]
 
 { #category : #'as yet unclassified' }
-WTGLevelEditorSelectionBox >> toggleManipulationMode [
+WDGSLevelEditorSelectionBox >> toggleManipulationMode [
 	rotationMode := rotationMode not.
 	editor selectionBoxViewsDo: #updateNodes.
 ]
 
 { #category : #accessing }
-WTGLevelEditorSelectionBox >> transformIntoBox: aBox [
+WDGSLevelEditorSelectionBox >> transformIntoBox: aBox [
 	| transformation |
 	elements ifNotEmpty: [ 
 		transformation := box computeTransformationInto: aBox.
@@ -171,6 +171,6 @@ WTGLevelEditorSelectionBox >> transformIntoBox: aBox [
 ]
 
 { #category : #'as yet unclassified' }
-WTGLevelEditorSelectionBox >> transformMemento [
+WDGSLevelEditorSelectionBox >> transformMemento [
 	^ { super transformMemento . box copy }
 ]

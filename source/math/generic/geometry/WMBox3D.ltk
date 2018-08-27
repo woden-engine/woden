@@ -71,7 +71,7 @@ WMBox3D category: 'accessing' methods: {
 		self nearBottomRight .
 		self nearTopLeft .
 		self nearTopRight .
-		
+
 		self farBottomLeft .
 		self farBottomRight .
 		self farTopLeft .
@@ -161,7 +161,7 @@ WMBox3D category: 'accessing' methods: {
 		self nearBottomRight .
 		self nearTopLeft .
 		self nearTopRight .
-		
+
 		self farBottomLeft .
 		self farBottomRight .
 		self farTopLeft .
@@ -171,26 +171,26 @@ WMBox3D category: 'accessing' methods: {
 		self nearRightPoint .
 		self nearTopPoint .
 		self nearBottomPoint .
-		
+
 		self farLeftPoint .
 		self farRightPoint .
 		self farTopPoint .
 		self farBottomPoint .
 
-		self leftBottomPoint .		
+		self leftBottomPoint .
 		self rightBottomPoint .
 		self leftTopPoint .
 		self rightTopPoint .
-		
+
 		self leftPoint .
 		self rightPoint .
 		self bottomPoint .
-		self topPoint .		
+		self topPoint .
 		self nearPoint .
 		self farPoint .
-		
+
 		self center .
-		
+
 	 }
 ].
 
@@ -248,13 +248,13 @@ WMBox3D category: 'accessing' methods: {
 		self nearBottomRight .
 		self nearTopLeft .
 		self nearTopRight .
-		
+
 		self farBottomLeft .
 		self farBottomRight .
 		self farTopLeft .
 		self farTopRight .
 
-		self center		
+		self center
 	 }
 ].
 
@@ -362,7 +362,7 @@ WMBox3D category: 'transforming' methods: {
 
 :[transformedWith: <WMReversibleAffineTransform> transformation -> WMBox3D.
 	let result := WMBox3D empty.
-	
+
 	result insertPoint: (transformation transformPosition3: self nearBottomLeft).
 	result insertPoint: (transformation transformPosition3: self nearBottomRight).
 	result insertPoint: (transformation transformPosition3: self nearTopLeft).
@@ -373,7 +373,19 @@ WMBox3D category: 'transforming' methods: {
 	result insertPoint: (transformation transformPosition3: self farTopLeft).
 	result insertPoint: (transformation transformPosition3: self farTopRight).
 	^ result
-]
+].
+
+:[computeTransformationInto: <WMBox3D>box -> WMReversibleAffineTransform.
+	^ (self isEmpty or: [ box isEmpty ]) ifTrue: [
+        WMReversibleAffineTransform identity
+    ] ifFalse: [
+        WMReversibleAffineTransform identity
+            translateBy: self center negated;
+            scaleBy: box halfExtent / self halfExtent;
+            translateBy: box center;
+            yourself
+    ].
+].
 }.
 
 WMBox3D category: 'volume insertion' methods: {

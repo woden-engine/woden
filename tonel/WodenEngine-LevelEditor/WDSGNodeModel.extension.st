@@ -7,7 +7,7 @@ WDSGNodeModel >> asNodeModelForLevelEditor: editor [
 
 { #category : #'*WodenEngine-LevelEditor' }
 WDSGNodeModel >> view: view dragControllerFor: anEvent [
-	^ WTGEDragMakeSelectionBox new
+	^ WDGSEDragMakeSelectionBox new
 ]
 
 { #category : #'*WodenEngine-LevelEditor' }

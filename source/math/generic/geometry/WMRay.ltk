@@ -11,7 +11,7 @@ WMRay category: 'initialization' methods: {
 :[origin: <WMVector3> newOrigin direction: <WMVector3> newDirection
 	origin := newOrigin.
 	direction := newDirection.
-	invertedDirection := direction reciprocalFloatQuiet.	
+	invertedDirection := direction reciprocalFloatQuiet.
 	signs x := (invertedDirection x < 0.0) asBit castTo: Int16.
 	signs y := (invertedDirection y < 0.0) asBit castTo: Int16.
 	signs z := (invertedDirection z < 0.0) asBit castTo: Int16.
@@ -47,20 +47,20 @@ WMRay category: 'intersection' methods: {
 	let txmax := ((box boundsAtSign: 1 - signs x) x - (origin x)) * invertedDirection x.
 	let tymin := ((box boundsAtSign: signs y) y - (origin y)) * invertedDirection y.
 	let tymax := ((box boundsAtSign: 1 - signs y) y - (origin y)) * invertedDirection y.
-	
+
 	(txmin > tymax or: [ tymin > txmax ]) ifTrue: [ ^ nil ].
 	tymin > txmin ifTrue: [ txmin := tymin ].
 	tymax < txmax ifTrue: [ txmax := tymax ].
-	
+
 	let tzmin := ((box boundsAtSign: signs z) z - (origin z)) * invertedDirection z.
 	let tzmax := ((box boundsAtSign: 1 - signs z) z - (origin z)) * invertedDirection z.
-	
+
 	(txmin > tzmax or: [ tzmin > txmax ]) ifTrue: [ ^ nil ].
 	tzmin > txmin ifTrue: [ txmin := tzmin ].
 	tzmax < txmax ifTrue: [ txmax := tzmax ].
-	
+
 	^ txmax > 0.0 ifTrue: [ txmin ] ifFalse: [ nil ].
-	
+
 ].
 
 :[intersectionDistanceWithPlane: <WMPlane> plane -> _DynamicObject.
@@ -68,8 +68,8 @@ WMRay category: 'intersection' methods: {
 	let normal := plane normal.
 	let det := direction dot: normal.
 	(det closeTo: 0.0) ifTrue: [ ^ nil ].
-	
-	^ (plane distance - (normal dot: origin)) / det.	
+
+	^ (plane distance - (normal dot: origin)) / det.
 ].
 
 :[testResultForDistance: distance value: value -> _DynamicObject.
@@ -85,4 +85,26 @@ WMRay category: 'transformations' methods: {
 :[transformedWithInverseOf: <WMReversibleAffineTransform> transform -> WMRay.
 	^ WMRay origin: (transform inverseTransformPosition3: origin) direction: (transform inverseTransformVector3: direction)
 ].
+}.
+
+WMRay category: 'converting' methods: {
+
+:[asWMRayD -> WMRayD.
+	^ WMRayD newValue
+        origin: origin asWMVector3D;
+        direction: direction asWMVector3D;
+        invertedDirection: invertedDirection asWMVector3D;
+        signs: signs asWMVector3D;
+        yourself
+].
+
+:[asWMRayF -> WMRayF.
+	^ WMRayF newValue
+        origin: origin asWMVector3F;
+        direction: direction asWMVector3F;
+        invertedDirection: invertedDirection asWMVector3F;
+        signs: signs asWMVector3F;
+        yourself
+].
+
 }.

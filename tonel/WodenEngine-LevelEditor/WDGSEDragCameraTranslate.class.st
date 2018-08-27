@@ -1,11 +1,11 @@
 Class {
-	#name : #WTGEDragCameraTranslate,
-	#superclass : #WTGEDragTool,
-	#category : #'WodenEngine-LevelEditor-Old'
+	#name : #WDGSEDragCameraTranslate,
+	#superclass : #WDGSEDragTool,
+	#category : #'WodenEngine-LevelEditor-Tools'
 }
 
 { #category : #events }
-WTGEDragCameraTranslate >> onDragEvent: event [
+WDGSEDragCameraTranslate >> onDragEvent: event [
 	| dragDelta depth |
 	depth := view depthAtCameraDistance: 3.0.
 	dragDelta := (view windowGlobalToLocal: event delta depth: depth) - (view windowGlobalToLocal: 0@0 depth: depth).

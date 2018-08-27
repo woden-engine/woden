@@ -1,36 +1,36 @@
 Class {
-	#name : #WTGLevelEditorBoxManipulator,
-	#superclass : #WTGLevelEditorElementModel,
+	#name : #WDGSLevelEditorBoxManipulator,
+	#superclass : #WDGSLevelEditorElementModel,
 	#instVars : [
 		'boxIndex',
 		'direction',
 		'node'
 	],
-	#category : #'WodenEngine-LevelEditor-Old'
+	#category : #'WodenEngine-LevelEditor-Model'
 }
 
 { #category : #accessing }
-WTGLevelEditorBoxManipulator >> boxIndex [
+WDGSLevelEditorBoxManipulator >> boxIndex [
 	^ boxIndex
 ]
 
 { #category : #accessing }
-WTGLevelEditorBoxManipulator >> boxIndex: anObject [
+WDGSLevelEditorBoxManipulator >> boxIndex: anObject [
 	boxIndex := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorBoxManipulator >> direction [
+WDGSLevelEditorBoxManipulator >> direction [
 	^ direction
 ]
 
 { #category : #accessing }
-WTGLevelEditorBoxManipulator >> direction: anObject [
+WDGSLevelEditorBoxManipulator >> direction: anObject [
 	direction := anObject
 ]
 
 { #category : #'as yet unclassified' }
-WTGLevelEditorBoxManipulator >> expand: actualExpansion direction: expandDirection box: oldBox [
+WDGSLevelEditorBoxManipulator >> expand: actualExpansion direction: expandDirection box: oldBox [
 
 	| left right bottom top near far |
 	
@@ -67,17 +67,17 @@ WTGLevelEditorBoxManipulator >> expand: actualExpansion direction: expandDirecti
 ]
 
 { #category : #accessing }
-WTGLevelEditorBoxManipulator >> node [
+WDGSLevelEditorBoxManipulator >> node [
 	^ node
 ]
 
 { #category : #accessing }
-WTGLevelEditorBoxManipulator >> node: anObject [
+WDGSLevelEditorBoxManipulator >> node: anObject [
 	node := anObject
 ]
 
 { #category : #'as yet unclassified' }
-WTGLevelEditorBoxManipulator >> view: view dragControllerFor: anEvent [
+WDGSLevelEditorBoxManipulator >> view: view dragControllerFor: anEvent [
 	| oldBox actualExpansion expandedBox forward isBoxTranslation fullTranslation expandDirection memento pivot transformation |
 	oldBox := view editor selectionBox box copy.
 	forward := view cameraTransform matrix thirdColumn negated.
@@ -90,7 +90,7 @@ WTGLevelEditorBoxManipulator >> view: view dragControllerFor: anEvent [
 	memento := view editor selectionBox transformMemento.
 	(isBoxTranslation not and: [ view editor selectionBox rotationMode ]) ifTrue: [
 		pivot := oldBox center.
-		^ WTGEDragRotate new
+		^ WDGSEDragRotate new
 			pivotPoint: (view worldToWindow: pivot);
 			onNewRotation: [ :rotation |
 				view editor selection restoreTransformMemento: memento.
@@ -98,7 +98,7 @@ WTGLevelEditorBoxManipulator >> view: view dragControllerFor: anEvent [
 			]
 	].
 
-	^ WTGEDragTranslate new
+	^ WDGSEDragTranslate new
 		depthPoint: node transform translation;
 		onNewTranslation: [ :translation |
 			view editor selection restoreTransformMemento: memento.
@@ -114,12 +114,12 @@ WTGLevelEditorBoxManipulator >> view: view dragControllerFor: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-WTGLevelEditorBoxManipulator >> view: view mouseOver: anEvent [
+WDGSLevelEditorBoxManipulator >> view: view mouseOver: anEvent [
 	view editor selectionBoxMouseOver: boxIndex
 ]
 
 { #category : #'as yet unclassified' }
-WTGLevelEditorBoxManipulator >> view: view selectSingleOnEditor: editor [
+WDGSLevelEditorBoxManipulator >> view: view selectSingleOnEditor: editor [
 	((view isPerspective and: [ direction closeTo: WMVector3D new ]) or:
 	[view isPerspective not and: [ (direction * view xyDragDirection) closeTo: WMVector3D new ] ])
 	ifTrue: [
@@ -128,6 +128,6 @@ WTGLevelEditorBoxManipulator >> view: view selectSingleOnEditor: editor [
 ]
 
 { #category : #testing }
-WTGLevelEditorBoxManipulator >> visibleForView: aView [
+WDGSLevelEditorBoxManipulator >> visibleForView: aView [
 	^ aView isPerspective or: [ (aView zBackwardDirection dot: direction) > 0 ]
 ]

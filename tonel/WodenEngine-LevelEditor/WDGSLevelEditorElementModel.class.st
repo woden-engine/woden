@@ -1,38 +1,38 @@
 Class {
-	#name : #WTGLevelEditorElementModel,
+	#name : #WDGSLevelEditorElementModel,
 	#superclass : #WDSGNodeModel,
 	#instVars : [
 		'visibleView'
 	],
-	#category : #'WodenEngine-LevelEditor-Old'
+	#category : #'WodenEngine-LevelEditor-Model'
 }
 
 { #category : #accessing }
-WTGLevelEditorElementModel >> view [
+WDGSLevelEditorElementModel >> view [
 	^ visibleView
 ]
 
 { #category : #accessing }
-WTGLevelEditorElementModel >> view: anObject [
+WDGSLevelEditorElementModel >> view: anObject [
 	visibleView := anObject
 ]
 
 { #category : #'as yet unclassified' }
-WTGLevelEditorElementModel >> view: view selectAddOnEditor: editor [
+WDGSLevelEditorElementModel >> view: view selectAddOnEditor: editor [
 	"By default, do nothing"
 ]
 
 { #category : #'as yet unclassified' }
-WTGLevelEditorElementModel >> view: view selectSingleOnEditor: editor [
+WDGSLevelEditorElementModel >> view: view selectSingleOnEditor: editor [
 	"By default, do nothing"
 ]
 
 { #category : #'as yet unclassified' }
-WTGLevelEditorElementModel >> view: view selectToggleOnEditor: editor [
+WDGSLevelEditorElementModel >> view: view selectToggleOnEditor: editor [
 	"By default, do nothing"
 ]
 
 { #category : #testing }
-WTGLevelEditorElementModel >> visibleForView: aView [
+WDGSLevelEditorElementModel >> visibleForView: aView [
 	^ visibleView isNil or: [ visibleView == aView ]
 ]

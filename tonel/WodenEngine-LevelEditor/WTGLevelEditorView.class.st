@@ -88,15 +88,15 @@ WTGLevelEditorView >> createCamera [
 WTGLevelEditorView >> createGrid [
 	baseGridSize := 10.0.
 	primaryGrid := WDSGSpatialObject new
-		model: (WTGLevelEditorElementModel new view: self);
+		model: (WDGSLevelEditorElementModel new view: self);
 		renderable: editor primaryGridMesh.
 			
 	secondaryGrid := WDSGSpatialObject new
-		model: (WTGLevelEditorElementModel new view: self);
+		model: (WDGSLevelEditorElementModel new view: self);
 		renderable: editor secondaryGridMesh.
 		
 	centerAxis := WDSGSpatialObject new
-		model: (WTGLevelEditorElementModel new view: self);
+		model: (WDGSLevelEditorElementModel new view: self);
 		renderable: editor centerAxisMesh.
 
 	self scene
@@ -108,7 +108,7 @@ WTGLevelEditorView >> createGrid [
 
 { #category : #'initialize-release' }
 WTGLevelEditorView >> createSelectionBoxView [
-	selectionBoxView := WTGESelectionBoxView new editor: editor view: self.
+	selectionBoxView := WDGSESelectionBoxView new editor: editor view: self.
 ]
 
 { #category : #'coordinate systems' }
@@ -376,7 +376,7 @@ WTGLevelEditorView >> onDragStartEvent: anEvent [
 			element := (self findBestElementAtGlobalCoord: anEvent position) value asNodeModelForLevelEditor: editor.
 			element ifNil: [
 				editor isFaceSelectMode ifFalse: [
-					self startDragController: WTGEDragMakeSelectionBox new event: anEvent.
+					self startDragController: WDGSEDragMakeSelectionBox new event: anEvent.
 				]
 			] ifNotNil: [
 				self startDragController: (element view: self dragControllerFor: anEvent) event: anEvent.
@@ -384,11 +384,11 @@ WTGLevelEditorView >> onDragStartEvent: anEvent [
 		].
 
 		anEvent isSecondaryButtonDrag ifTrue: [
-			self startDragController: WTGEDragCameraTranslate new event: anEvent.
+			self startDragController: WDGSEDragCameraTranslate new event: anEvent.
 		].
 
 		anEvent isMiddleButtonDrag ifTrue: [
-			self startDragController: WTGEDragCameraRotate new event: anEvent.
+			self startDragController: WDGSEDragCameraRotate new event: anEvent.
 		].
 	].
 

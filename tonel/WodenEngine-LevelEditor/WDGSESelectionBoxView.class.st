@@ -1,5 +1,5 @@
 Class {
-	#name : #WTGESelectionBoxView,
+	#name : #WDGSESelectionBoxView,
 	#superclass : #Object,
 	#instVars : [
 		'editor',
@@ -12,28 +12,29 @@ Class {
 		'manipulatorNodesInstanceGroup',
 		'view'
 	],
-	#category : #'WodenEngine-LevelEditor-Old'
+	#category : #'WodenEngine-LevelEditor-View'
 }
 
 { #category : #'as yet unclassified' }
-WTGESelectionBoxView >> createManipulatorsAtPositions: positions center: center [
+WDGSESelectionBoxView >> createManipulatorsAtPositions: positions center: center [
 	| halfExtent baseBox manipulatorBox manip |
 	halfExtent := 0.08 * self manipBoxScale.
 	baseBox := WMBox3DD halfExtent: (WMVector3D x: halfExtent y: halfExtent z: halfExtent).
 	positions doWithIndex: [ :corner :index |
 		manipulatorBox := baseBox translatedBy: corner.
 		manipulatorBoxes at: index put: manipulatorBox.
+
 		manip := manipulatorNodes at: index.
 		manip model direction: (corner - center) normalized.
 		manip visible: manipulatorBox isEmpty not.
-		manip visible ifTrue: [ manip transform setForBox: manipulatorBox ]
+		manip visible ifTrue: [ manip transform setForBox: manipulatorBox asWMBox3DF ]
 	].
 ]
 
 { #category : #initialization }
-WTGESelectionBoxView >> createSelectionBox [
+WDGSESelectionBoxView >> createSelectionBox [
 	node := WDSGSpatialObject new
-		model: (WTGLevelEditorElementModel new view: view);
+		model: (WDGSLevelEditorElementModel new view: view);
 		renderable: boxMesh;
 		visible: false;
 		renderPriority: WDSGNode renderPriorityEditorTranslucentAfter;
@@ -42,7 +43,7 @@ WTGESelectionBoxView >> createSelectionBox [
 ]
 
 { #category : #initialization }
-WTGESelectionBoxView >> createSelectionBoxManipulatorMesh [
+WDGSESelectionBoxView >> createSelectionBoxManipulatorMesh [
 	| flatColorMaterial |
 	flatColorMaterial := editor engine resourceCache loadMaterial: 'materials/basic/flat-xray.json'.
 	manipulatorMesh := (WDCGenericMeshBuilder for: editor engine)
@@ -53,11 +54,11 @@ WTGESelectionBoxView >> createSelectionBoxManipulatorMesh [
 ]
 
 { #category : #initialization }
-WTGESelectionBoxView >> createSelectionBoxManipulators [
+WDGSESelectionBoxView >> createSelectionBoxManipulators [
 	| manipulatorNode corners |
 	corners := WMBox3DD unitCube manipulationCorners.
 	manipulatorNodesInstanceGroup := WDSGSpatialObjectInstanceGroup new
-		model: (WTGLevelEditorElementModel new view: view);
+		model: (WDGSLevelEditorElementModel new view: view);
 		useViewportCamera: true;
 		depthSorted: true;
 		renderable: manipulatorMesh;
@@ -71,7 +72,7 @@ WTGESelectionBoxView >> createSelectionBoxManipulators [
 			visible: false;
 			renderPriority: WDSGNode renderPriorityEditorTranslucentAfter + 1;
 			yourself.
-		manipulatorNode model: (WTGLevelEditorBoxManipulator new
+		manipulatorNode model: (WDGSLevelEditorBoxManipulator new
 				node: manipulatorNode;
 				boxIndex: index;
 				direction: corner normalized).
@@ -84,7 +85,7 @@ WTGESelectionBoxView >> createSelectionBoxManipulators [
 ]
 
 { #category : #initialization }
-WTGESelectionBoxView >> createSelectionBoxMesh [
+WDGSESelectionBoxView >> createSelectionBoxMesh [
 	| selectionCubeMaterial |
 	selectionCubeMaterial := editor engine resourceCache loadMaterial: 'materials/basic/stipple.json'.
 	boxMesh := (WDCGenericMeshBuilder for: editor engine)
@@ -96,32 +97,31 @@ WTGESelectionBoxView >> createSelectionBoxMesh [
 ]
 
 { #category : #rendering }
-WTGESelectionBoxView >> createTranslationAndRotationManipulators [
-	node transform setForBox: editor selectionBox box.
+WDGSESelectionBoxView >> createTranslationAndRotationManipulators [
+	node transform setForBox: editor selectionBox box asWMBox3DF.
 	self createManipulatorsAtPositions: editor selectionBox box rotationManipulationCorners center: editor selectionBox box center.
 
 ]
 
 { #category : #rendering }
-WTGESelectionBoxView >> createTranslationAndScaleManipulators [
-	node transform setForBox: editor selectionBox box.
+WDGSESelectionBoxView >> createTranslationAndScaleManipulators [
+	node transform setForBox: editor selectionBox box asWMBox3DF.
 	self createManipulatorsAtPositions: editor selectionBox box manipulationCorners center: editor selectionBox box center.
-
 ]
 
 { #category : #rendering }
-WTGESelectionBoxView >> createTranslationManipulators [
-	node transform setForBox: editor selectionBox box.
+WDGSESelectionBoxView >> createTranslationManipulators [
+	node transform setForBox: editor selectionBox box asWMBox3DF.
 	self createManipulatorsAtPositions: { editor selectionBox box center} center: editor selectionBox box center
 ]
 
 { #category : #accessing }
-WTGESelectionBoxView >> editor [
+WDGSESelectionBoxView >> editor [
 	^ editor
 ]
 
 { #category : #accessing }
-WTGESelectionBoxView >> editor: anObject view: aView [
+WDGSESelectionBoxView >> editor: anObject view: aView [
 	editor := anObject.
 	view := aView.
 	
@@ -134,58 +134,58 @@ WTGESelectionBoxView >> editor: anObject view: aView [
 ]
 
 { #category : #selection }
-WTGESelectionBoxView >> elementsAlongRay: ray do: aBlock [
+WDGSESelectionBoxView >> elementsAlongRay: ray do: aBlock [
 	| distance model |
 	distance := nil.
 	manipulatorBoxes doWithIndex: [ :box :index |
 		(box isEmpty not and: [ (distance := ray intersectionDistanceWithBox: box) isNotNil ]) ifTrue: [
 			model := (manipulatorNodes at: index) model.
-			aBlock value: (WMRayIntersectionTestResult priority: -1 distance: distance value: model)
+			aBlock value: (WMRayIntersectionTestResultD new priority: -1; distance: distance; value: model)
 		]
 	].
 ]
 
 { #category : #rendering }
-WTGESelectionBoxView >> makeManipulatorsEmpty [
+WDGSESelectionBoxView >> makeManipulatorsEmpty [
 	manipulatorBoxes do: [ :box | box makeEmpty ].
 	manipulatorNodes do: [ :mnode | mnode visible: false ].
 	
 ]
 
 { #category : #'as yet unclassified' }
-WTGESelectionBoxView >> manipBoxScale [
+WDGSESelectionBoxView >> manipBoxScale [
 	view isPerspective ifTrue: [ ^ 0.3 ].
 	^ view viewScaleFactor
 ]
 
 { #category : #accessing }
-WTGESelectionBoxView >> manipulatorBoxes [
+WDGSESelectionBoxView >> manipulatorBoxes [
 	^ manipulatorBoxes
 ]
 
 { #category : #accessing }
-WTGESelectionBoxView >> manipulatorNodes [
+WDGSESelectionBoxView >> manipulatorNodes [
 	^ manipulatorNodes
 ]
 
 { #category : #accessing }
-WTGESelectionBoxView >> mouseOverIndex [
+WDGSESelectionBoxView >> mouseOverIndex [
 	^ mouseOverIndex
 ]
 
 { #category : #accessing }
-WTGESelectionBoxView >> mouseOverIndex: anObject [
+WDGSESelectionBoxView >> mouseOverIndex: anObject [
 	mouseOverIndex := anObject.
 	self updateColors
 ]
 
 { #category : #accessing }
-WTGESelectionBoxView >> node [
+WDGSESelectionBoxView >> node [
 	^ node
 ]
 
 { #category : #rendering }
-WTGESelectionBoxView >> updateColors [
+WDGSESelectionBoxView >> updateColors [
 	| selectionBox |
 	selectionBox := editor selectionBox.
 	node color: selectionBox color.
@@ -195,7 +195,7 @@ WTGESelectionBoxView >> updateColors [
 ]
 
 { #category : #rendering }
-WTGESelectionBoxView >> updateNodes [
+WDGSESelectionBoxView >> updateNodes [
 	node visible: editor selectionBox isEmpty not.
 	node visible ifFalse: [
 		self makeManipulatorsEmpty.

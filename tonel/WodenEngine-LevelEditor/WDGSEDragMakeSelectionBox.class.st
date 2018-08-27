@@ -1,6 +1,6 @@
 Class {
-	#name : #WTGEDragMakeSelectionBox,
-	#superclass : #WTGEDragTool,
+	#name : #WDGSEDragMakeSelectionBox,
+	#superclass : #WDGSEDragTool,
 	#instVars : [
 		'xdirection',
 		'ydirection',
@@ -10,19 +10,19 @@ Class {
 		'nearPosition',
 		'farPosition'
 	],
-	#category : #'WodenEngine-LevelEditor-Old'
+	#category : #'WodenEngine-LevelEditor-Tools'
 }
 
-{ #category : #'as yet unclassified' }
-WTGEDragMakeSelectionBox >> onDragEvent: event [
+{ #category : #events }
+WDGSEDragMakeSelectionBox >> onDragEvent: event [
 	| depth |
 	depth := view depthAtCameraDistance: 3.0.
 	endPoint := (view windowGlobalToWorld: event position depth: depth).
 	self updateSelectionBox.
 ]
 
-{ #category : #'as yet unclassified' }
-WTGEDragMakeSelectionBox >> onDragStartEvent: event [
+{ #category : #events }
+WDGSEDragMakeSelectionBox >> onDragStartEvent: event [
 	| depth selectionBox |
 	depth := view depthAtCameraDistance: 3.0.
 	startPoint := (view windowGlobalToWorld: event position depth: depth).
@@ -38,12 +38,14 @@ WTGEDragMakeSelectionBox >> onDragStartEvent: event [
 		nearPosition := zdirection dot: (selectionBox box support: zdirection negated).
 		farPosition := zdirection dot: (selectionBox box support: zdirection).
 	].
+
+	Transcript show: startPoint; show: nearPosition; space; show: farPosition; cr.
 	
-	view editor selection: WTGLevelEditorSelectionBox empty.
+	view editor selection: WDGSLevelEditorSelectionBox empty.
 ]
 
 { #category : #'as yet unclassified' }
-WTGEDragMakeSelectionBox >> updateSelectionBox [
+WDGSEDragMakeSelectionBox >> updateSelectionBox [
 	| leftPosition rightPosition bottomPosition topPosition near far min max box |
 	leftPosition := xdirection dot: startPoint.
 	rightPosition := xdirection dot: endPoint.
