@@ -12,6 +12,22 @@ WDVsTkVirtualHostWindow >> dispatchHidden: shownEvent [
 ]
 
 { #category : #'oswindow event dispatching' }
+WDVsTkVirtualHostWindow >> dispatchMouseEvent: event [
+	| oldMouseCapture result |
+	[
+		oldMouseCapture := self mouseCaptureOwner.
+
+		self mouseCaptureOwner ifNil: [
+			result := self processEvent: event
+		] ifNotNil: [
+			result := self mouseCaptureOwner processEvent: (event toLocalOrigin: self mouseCaptureOwner hostPosition) 
+		]
+	] doWhileTrue: [ oldMouseCapture ~~ self mouseCaptureOwner and: [ oldMouseCapture isNotNil ]].
+
+	^ result
+]
+
+{ #category : #'oswindow event dispatching' }
 WDVsTkVirtualHostWindow >> dispatchMove: anEvent [
 ]
 

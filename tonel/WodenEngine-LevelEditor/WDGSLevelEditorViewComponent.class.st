@@ -4,6 +4,9 @@ Class {
 	#instVars : [
 		'mainFrame'
 	],
+	#pools : [
+		'OSKeySymbols'
+	],
 	#category : #'WodenEngine-LevelEditor-View'
 }
 

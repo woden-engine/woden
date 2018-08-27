@@ -84,8 +84,8 @@ WMReversibleAffineTransform category: 'converting' methods: {
 	^ WMReversibleAffineTransformF newValue
 		matrix: matrix asWMMatrix3F;
 		translation4: translation4 asWMVector4F;
-		inverseMatrix: matrix asWMMatrix3F;
-		inverseTranslation4: translation4 asWMVector4F;
+		inverseMatrix: inverseMatrix asWMMatrix3F;
+		inverseTranslation4: inverseTranslation4 asWMVector4F;
 		yourself
 ].
 
@@ -93,8 +93,8 @@ WMReversibleAffineTransform category: 'converting' methods: {
 	^ WMReversibleAffineTransformD newValue
 		matrix: matrix asWMMatrix3D;
 		translation4: translation4 asWMVector4D;
-		inverseMatrix: matrix asWMMatrix3D;
-		inverseTranslation4: translation4 asWMVector4D;
+		inverseMatrix: inverseMatrix asWMMatrix3D;
+		inverseTranslation4: inverseTranslation4 asWMVector4D;
 		yourself
 ].
 

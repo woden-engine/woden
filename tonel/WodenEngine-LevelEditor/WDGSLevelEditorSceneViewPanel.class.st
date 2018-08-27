@@ -20,7 +20,8 @@ Class {
 		'primaryGrid',
 		'secondaryGrid',
 		'centerAxis',
-		'cameraFrustum'
+		'toolController',
+		'lastDragEndPosition'
 	],
 	#classVars : [
 		'OrthographicFarDistance',
@@ -59,11 +60,41 @@ WDGSLevelEditorSceneViewPanel >> buildMeshContentOn: meshBuilder [
 ]
 
 { #category : #accessing }
+WDGSLevelEditorSceneViewPanel >> camera [
+	^ camera
+]
+
+{ #category : #accessing }
+WDGSLevelEditorSceneViewPanel >> cameraAngle [
+	^ cameraAngle
+]
+
+{ #category : #accessing }
+WDGSLevelEditorSceneViewPanel >> cameraAngle: anEulerAngle [
+	cameraAngle := anEulerAngle
+]
+
+{ #category : #accessing }
 WDGSLevelEditorSceneViewPanel >> cameraTransform [
 	^ cameraTransform
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
+WDGSLevelEditorSceneViewPanel >> canHaveDragEvents [
+	^ true
+]
+
+{ #category : #testing }
+WDGSLevelEditorSceneViewPanel >> canHaveKeyboardFocus [
+	^ true
+]
+
+{ #category : #testing }
+WDGSLevelEditorSceneViewPanel >> canHaveMouseFocus [
+	^ true
+]
+
+{ #category : #camera }
 WDGSLevelEditorSceneViewPanel >> computeAspectRatio [
 	| myExtent |
 	myExtent := self extent.
@@ -123,10 +154,136 @@ WDGSLevelEditorSceneViewPanel >> createSelectionBoxView [
 	
 ]
 
+{ #category : #'coordinate systems' }
+WDGSLevelEditorSceneViewPanel >> depthAtCameraDistance: distance [
+	^ isPerspective
+		ifTrue: [ (distance - PerspectiveNearDistance) / (PerspectiveFarDistance - PerspectiveNearDistance) ]
+		ifFalse: [ (distance - OrthographicNearDistance) / (OrthographicFarDistance - OrthographicNearDistance) ]
+]
+
 { #category : #'view side' }
 WDGSLevelEditorSceneViewPanel >> frontView [
 	cameraAngle := WMVector3D new.
 	gridOrientation := WMMatrix3F lookAtFront.
+]
+
+{ #category : #'event handling' }
+WDGSLevelEditorSceneViewPanel >> handleDragEndEvent: anEvent [
+	lastDragEndPosition := anEvent position.
+	toolController ifNotNil: [ toolController onDragEndEvent: anEvent ].
+	self releaseMouseWithHost
+]
+
+{ #category : #'event handling' }
+WDGSLevelEditorSceneViewPanel >> handleDragEvent: anEvent [
+	self flag: 'CHECK ME: is this update really needed here?'.
+	self updateCameraProjection.
+	toolController ifNotNil: [ toolController onDragEvent: anEvent ].
+]
+
+{ #category : #'event handling' }
+WDGSLevelEditorSceneViewPanel >> handleDragStartEvent: anEvent [
+	| element |
+	self updateCameraProjection.
+	toolController ifNil: [
+		anEvent isPrimaryButtonDrag ifTrue: [
+			element := (self findBestElementAtGlobalCoord: anEvent position) value asNodeModelForLevelEditor: self editor.
+			element ifNil: [
+				self editor isFaceSelectMode ifFalse: [
+					self startDragController: WTGEDragMakeSelectionBox new event: anEvent.
+				]
+			] ifNotNil: [
+				self startDragController: (element view: self dragControllerFor: anEvent) event: anEvent.
+			]
+		].
+
+		anEvent isSecondaryButtonDrag ifTrue: [
+			self startDragController: WTGEDragCameraTranslate new event: anEvent.
+		].
+
+		anEvent isMiddleButtonDrag ifTrue: [
+			self startDragController: WTGEDragCameraRotate new event: anEvent.
+		].
+	].
+
+	toolController ifNotNil: [ toolController onDragStartEvent: anEvent ].
+	(toolController isNotNil and: [ toolController needsMouseCapture ]) ifTrue: [ 
+		self captureMouseWithHost.
+	]
+	
+]
+
+{ #category : #'event handling' }
+WDGSLevelEditorSceneViewPanel >> handleKeyDown: event [
+	| keyValue |
+	toolController ifNotNil: [ ^ toolController onKeyDownEvent: event ].
+	self flag: 'Refactor this into key bindings.'.
+	keyValue := event symbol.
+	
+	(event modifiers cmd or: [ event modifiers ctrl ]) ifTrue: [
+		(event modifiers shift not and: [ event modifiers alt ]) ifTrue: [
+			keyValue = OSK_s ifTrue: [ self editor saveAs ].
+		].
+
+		(event modifiers shift and: [ event modifiers alt not ]) ifTrue: [ 
+			keyValue = OSK_p ifTrue: [ self editor addPlayerSpawnPoint: cameraTransform translation ].
+		].
+
+		(event modifiers shift and: [ event modifiers alt ]) ifTrue: [ 
+			keyValue = OSK_i ifTrue: [ self inspect ]
+		].
+
+		(event modifiers shift not and: [ event modifiers alt not]) ifTrue: [ 
+			keyValue = OSK_a ifTrue: [ self editor addPointEntity: cameraTransform translation ].
+			keyValue = OSK_l ifTrue: [ self editor addLightEntity: cameraTransform translation ].
+			keyValue = OSK_g ifTrue: [ self editor addGunItem: cameraTransform translation ].
+			keyValue = OSK_b ifTrue: [ self editor makeBrushEntity ].
+			
+			keyValue = OSK_p ifTrue: [ self editor playInExternalWindow ].
+						
+			keyValue = OSK_s ifTrue: [ self editor save ].
+			keyValue = OSK_o ifTrue: [ self editor fileOpen ].
+			"keyValue = OSK_t ifTrue: [ self editor openTextureTransform: self editor ]."
+			
+			keyValue = OSK_i ifTrue: [ self editor inspectSelection ]
+		].
+	
+	] ifFalse: [ 
+		(event modifiers shift not and: [ event modifiers alt not]) ifTrue: [ 
+			(keyValue = OSK_MINUS or: [keyValue = OSK_KP_MINUS]) ifTrue: [ self editor subtractSelectedBrushes ].
+		
+			keyValue = OSK_KP_7 ifTrue: [ self topView ].
+			keyValue = OSK_KP_1 ifTrue: [ self frontView ].
+			keyValue = OSK_KP_3 ifTrue: [ self sideView ].
+			keyValue = OSK_KP_5 ifTrue: [ isPerspective := isPerspective not ].
+				
+			keyValue = OSK_RETURN ifTrue: [ self editor addCubeBrushAtSelectionCube ].	
+			keyValue = OSK_DELETE ifTrue: [ self editor removeSelectedComponents ].
+	
+			keyValue = OSK_w ifTrue: [ self wireframe ].
+			keyValue = OSK_s ifTrue: [ self solid ].
+			keyValue = OSK_t ifTrue: [ self textured ].	
+				
+			keyValue = OSK_f ifTrue: [ self editor toggleFaceSelectMode ].	
+		].
+
+		(event modifiers shift not and: [ event modifiers alt ]) ifTrue: [ 
+		].
+
+		(event modifiers shift and: [ event modifiers alt not ]) ifTrue: [ 
+		].
+
+		(event modifiers shift and: [ event modifiers alt ]) ifTrue: [ 
+		].
+	].
+
+	super handleKeyDown: event
+]
+
+{ #category : #'event handling' }
+WDGSLevelEditorSceneViewPanel >> handleKeyUp: event [
+	toolController ifNotNil: [ ^ toolController onKeyUpEvent: event ].
+	super handleKeyUp: event
 ]
 
 { #category : #initialization }
@@ -138,6 +295,38 @@ WDGSLevelEditorSceneViewPanel >> initialize [
 		solid;
 		perspective
 	
+]
+
+{ #category : #'coordinate systems' }
+WDGSLevelEditorSceneViewPanel >> normalizedPosition: aPosition [
+	| x y myExtent |
+	myExtent := self extent asIntegerPoint.
+	
+	x := aPosition x / myExtent x.
+	y := 1.0 - (aPosition y / myExtent y).
+	^ x asFloat @ y
+]
+
+{ #category : #'coordinate systems' }
+WDGSLevelEditorSceneViewPanel >> normalizedToLocal: aPosition depth: aDepth [
+	camera frustum ifNil: [ self updateCameraProjection ].
+	^ (camera frustum localPoint: aPosition atDistance: aDepth) asWMVector3D
+]
+
+{ #category : #'coordinate systems' }
+WDGSLevelEditorSceneViewPanel >> normalizedToWindow: aVector3 [
+	| myExtent x y |
+	myExtent := self extent asIntegerPoint.
+	
+	x := myExtent x * aVector3 x.
+	y := myExtent y * (1.0 - aVector3 y).
+	^ x @ y
+]
+
+{ #category : #'coordinate systems' }
+WDGSLevelEditorSceneViewPanel >> normalizedToWorld: aPosition depth: aDepth [
+	camera frustum ifNil: [ self updateCameraProjection ].
+	^ cameraTransform transformPosition3: (camera frustum localPoint: aPosition atDistance: aDepth) asWMVector3D
 ]
 
 { #category : #'projection mode' }
@@ -155,7 +344,7 @@ WDGSLevelEditorSceneViewPanel >> primaryGridSize [
 	^ self editor primaryGridSize
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #camera }
 WDGSLevelEditorSceneViewPanel >> resetCameraState [
 	cameraTransform := WMReversibleAffineTransformD identity.
 	
@@ -194,7 +383,7 @@ WDGSLevelEditorSceneViewPanel >> sideView [
 	gridOrientation := WMMatrix3F lookAtLeft.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #camera }
 WDGSLevelEditorSceneViewPanel >> simulateCameraMovement: delta [
 	| orientation |
 	cameraAngle := cameraAngle + (cameraAngularVelocity * (cameraAngularSpeed * delta)).
@@ -211,6 +400,15 @@ WDGSLevelEditorSceneViewPanel >> solid [
 	renderMode := #solid
 ]
 
+{ #category : #'event handling' }
+WDGSLevelEditorSceneViewPanel >> startDragController: aDrawToolController event: anEvent [
+	aDrawToolController ifNotNil: [
+		aDrawToolController view: self.
+	].
+
+	self toolController: aDrawToolController.
+]
+
 { #category : #'rendering mode' }
 WDGSLevelEditorSceneViewPanel >> textured [
 	renderMode := #textured
@@ -221,13 +419,28 @@ WDGSLevelEditorSceneViewPanel >> togglePerspective [
 	isPerspective := isPerspective not
 ]
 
+{ #category : #accessing }
+WDGSLevelEditorSceneViewPanel >> toolController [
+	^ toolController
+]
+
+{ #category : #accessing }
+WDGSLevelEditorSceneViewPanel >> toolController: aToolController [
+	toolController := aToolController
+]
+
+{ #category : #'event handling' }
+WDGSLevelEditorSceneViewPanel >> toolControllerFinished [
+	self toolController: nil
+]
+
 { #category : #'view side' }
 WDGSLevelEditorSceneViewPanel >> topView [
 	cameraAngle := WMVector3D x: Float halfPi negated.
 	gridOrientation := WMMatrix3F lookAtBottom.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #camera }
 WDGSLevelEditorSceneViewPanel >> updateCameraProjection [
 	camera isPerspective: isPerspective.
 	camera focalDistance: (viewScale / ((camera fieldOfView * 0.5) degreesToRadians tan)).
@@ -238,7 +451,7 @@ WDGSLevelEditorSceneViewPanel >> updateCameraProjection [
 	]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #camera }
 WDGSLevelEditorSceneViewPanel >> updateCameraStateForRendering [
 	self
 		updateCameraProjection;
@@ -246,7 +459,7 @@ WDGSLevelEditorSceneViewPanel >> updateCameraStateForRendering [
 	camera transform: cameraTransform
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #grid }
 WDGSLevelEditorSceneViewPanel >> updateGridTransform [
 	| orientation scale renderPriority u v cameraTranslation du dv translation |
 	orientation := isPerspective ifTrue: [ WMMatrix3F lookAtBottom ] ifFalse: [ gridOrientation ].
@@ -281,7 +494,57 @@ WDGSLevelEditorSceneViewPanel >> updateGridTransform [
 	centerAxis renderPriority: renderPriority + 2.
 ]
 
+{ #category : #'coordinate systems' }
+WDGSLevelEditorSceneViewPanel >> windowGlobalToLocal: aPosition depth: aDepth [
+	^ self windowToLocal: aPosition depth: aDepth
+]
+
+{ #category : #'coordinate systems' }
+WDGSLevelEditorSceneViewPanel >> windowGlobalToWorld: aPosition depth: aDepth [
+	^ self windowToWorld: (self globalPointToLocal: aPosition) depth: aDepth
+]
+
+{ #category : #'coordinate systems' }
+WDGSLevelEditorSceneViewPanel >> windowToLocal: aPosition depth: aDepth [
+	^ self normalizedToLocal: (self normalizedPosition: aPosition) depth: aDepth
+]
+
+{ #category : #'coordinate systems' }
+WDGSLevelEditorSceneViewPanel >> windowToWorld: aPosition depth: aDepth [
+	^ self normalizedToWorld: (self normalizedPosition: aPosition) depth: aDepth
+]
+
 { #category : #'rendering mode' }
 WDGSLevelEditorSceneViewPanel >> wireframe [
 	renderMode := #wire
+]
+
+{ #category : #'coordinate systems' }
+WDGSLevelEditorSceneViewPanel >> worldToWindow: aPoint [
+	^ self normalizedToWindow: (camera frustum localToNormalized: (cameraTransform inverseTransformPosition3: aPoint) asWMVector3F)
+]
+
+{ #category : #'coordinate systems' }
+WDGSLevelEditorSceneViewPanel >> xDragDirection [
+	^ cameraTransform matrix firstColumn
+]
+
+{ #category : #'coordinate systems' }
+WDGSLevelEditorSceneViewPanel >> xyDragDirection [
+	^ self xDragDirection + self yDragDirection
+]
+
+{ #category : #'coordinate systems' }
+WDGSLevelEditorSceneViewPanel >> yDragDirection [
+	^ cameraTransform matrix secondColumn
+]
+
+{ #category : #'coordinate systems' }
+WDGSLevelEditorSceneViewPanel >> zBackwardDirection [
+	^ cameraTransform matrix thirdColumn
+]
+
+{ #category : #'coordinate systems' }
+WDGSLevelEditorSceneViewPanel >> zDragDirection [
+	^ cameraTransform matrix thirdColumn negated
 ]

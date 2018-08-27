@@ -6,7 +6,9 @@ Class {
 
 { #category : #events }
 WTGEDragCameraRotate >> onDragEvent: event [
-	| dragDelta |
+	| dragDelta angleDeltaVector |
 	dragDelta := event delta.
-	view cameraAngle: view cameraAngle + (WMVector3D x: dragDelta y negated degreesToRadians y: dragDelta x degreesToRadians negated)
+	angleDeltaVector := WMVector3D x: dragDelta y negated degreesToRadians y: dragDelta x degreesToRadians negated.
+	
+	view cameraAngle: view cameraAngle + angleDeltaVector
 ]
