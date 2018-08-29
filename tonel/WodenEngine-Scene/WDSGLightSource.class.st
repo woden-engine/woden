@@ -113,6 +113,8 @@ WDSGLightSource >> isSpotLight [
 
 { #category : #'shadow mapping' }
 WDSGLightSource >> lightRenderingStateClass [
+	castShadows ifFalse: [ ^ WDSGNonShadowingLightRenderingState ].
+	
 	self isSpotLight ifTrue: [ ^ WDSGSpotLightRenderingState ].
 	self isDirectionalLight ifTrue: [ ^ WDSGCascadeDirectionalLightRenderingState ].
 	^ WDSGNonShadowingLightRenderingState

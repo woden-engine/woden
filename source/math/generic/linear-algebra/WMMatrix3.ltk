@@ -112,34 +112,42 @@ WMMatrix3 class category: 'special matrices' methods: {
 ].
 
 :[xyzRotation: <WMVector3> angles -> WMMatrix3.
+    <inline>
 	^ (WMMatrix3 xrot: angles x) * (WMMatrix3 yrot: angles y) * (WMMatrix3 zrot: angles z) castTo: WMMatrix3
 ].
 
 :[zyxRotation: <WMVector3> angles -> WMMatrix3.
+    <inline>
 	^ (WMVector3 zrot: angles z) * (WMVector3 yrot: angles y) * (WMVector3 xrot: angles x) castTo: WMMatrix3
 ].
 
 :[lookAtBack -> WMMatrix3.
+    <inline>
 	^ WMMatrix3 yrot: (Float pi castTo: Scalar)
 ].
 
 :[lookAtBottom -> WMMatrix3.
+    <inline>
 	^ WMMatrix3 xrot: (Float halfPi negated castTo: Scalar)
 ].
 
 :[lookAtFront -> WMMatrix3.
+    <inline>
 	^ WMMatrix3 identity
 ].
 
 :[lookAtLeft -> WMMatrix3.
+    <inline>
 	^ WMMatrix3 yrot: (Float halfPi castTo: Scalar)
 ].
 
 :[lookAtRight -> WMMatrix3.
+    <inline>
 	^ WMMatrix3 yrot: (Float halfPi negated castTo: Scalar)
 ].
 
 :[lookAtTop -> WMMatrix3.
+    <inline>
 	^ WMMatrix3 xrot: (Float halfPi castTo: Scalar)
 ].
 
@@ -147,30 +155,37 @@ WMMatrix3 class category: 'special matrices' methods: {
 
 WMMatrix3 category: 'accessing' methods: {
 :[firstColumn -> WMVector3.
+    <inline>
 	^ WMVector3 x: m11 y: m21 z: m31
 ].
 
 :[firstRow -> WMVector3.
+    <inline>
 	^ WMVector3 x: m11 y: m12 z: m13
 ].
 
 :[secondColumn -> WMVector3.
+    <inline>
 	^ WMVector3 x: m12 y: m22 z: m32
 ].
 
 :[secondRow -> WMVector3.
+    <inline>
 	^ WMVector3 x: m21 y: m22 z: m23
 ].
 
 :[thirdColumn -> WMVector3.
+    <inline>
 	^ WMVector3 x: m13 y: m23 z: m33
 ].
 
 :[thirdRow -> WMVector3.
+    <inline>
 	^ WMVector3 x: m31 y: m32 z: m33
 ].
 
 :[topLeft2x2 -> WMMatrix2.
+    <inline>
 	^ WMMatrix2
 		m11: m11 m12: m12
 		m21: m21 m22: m22
@@ -180,6 +195,7 @@ WMMatrix3 category: 'accessing' methods: {
 
 WMMatrix3 category: 'arithmetic' methods: {
 :[+ <WMMatrix3> other -> WMMatrix3.
+    <inline>
 	^ WMMatrix3 newValue
 		m11: m11 + other m11; m12: m12 + other m12; m13: m13 + other m13;
 		m21: m21 + other m21; m22: m22 + other m22; m23: m23 + other m23;
@@ -188,6 +204,7 @@ WMMatrix3 category: 'arithmetic' methods: {
 ].
 
 :[- <WMMatrix3> other -> WMMatrix3.
+    <inline>
 	^ WMMatrix3 newValue
 		m11: m11 - other m11; m12: m12 - other m12; m13: m13 - other m13;
 		m21: m21 - other m21; m22: m22 - other m22; m23: m23 - other m23;
@@ -196,6 +213,7 @@ WMMatrix3 category: 'arithmetic' methods: {
 ].
 
 :[* <WMMatrix3> other -> WMMatrix3.
+    <inline>
 	^ WMMatrix3 newValue
 		m11: (m11 * other m11) + (m12 * other m21) + (m13 * other m31);
 		m12: (m11 * other m12) + (m12 * other m22) + (m13 * other m32);
@@ -212,6 +230,7 @@ WMMatrix3 category: 'arithmetic' methods: {
 ].
 
 :[transposed -> WMMatrix3.
+    <inline>
 	^ WMMatrix3 newValue
 		m11: m11; m12: m21; m13: m31;
 		m21: m12; m22: m22; m23: m32;
