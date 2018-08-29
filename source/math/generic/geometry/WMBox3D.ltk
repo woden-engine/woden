@@ -1,9 +1,11 @@
 WMBox3D class category: 'construction' methods: {
 :[empty -> WMBox3D.
+    <inline>
 	^ WMBox3D min: WMVector3 infinity max: WMVector3 negativeInfinity
 ].
 
 :[min: <WMVector3>min max: <WMVector3>max -> WMBox3D.
+    <inline>
 	^ WMBox3D newValue
 		min: min;
 		max: max;
@@ -11,6 +13,7 @@ WMBox3D class category: 'construction' methods: {
 ].
 
 :[halfExtent: <WMVector3>halfExtent -> WMBox3D.
+    <inline>
 	^ WMBox3D newValue
 		min: halfExtent negated;
 		max: halfExtent;
@@ -18,6 +21,7 @@ WMBox3D class category: 'construction' methods: {
 ].
 
 :[halfExtent: <WMVector3>halfExtent center: <WMVector3>center -> WMBox3D.
+    <inline>
 	^ WMBox3D newValue
 		min: center - halfExtent;
 		max: center + halfExtent;
@@ -26,6 +30,7 @@ WMBox3D class category: 'construction' methods: {
 
 :[nx: <Scalar>nx ny: <Scalar>ny nz: <Scalar>nz
   px: <Scalar>px py: <Scalar>py pz: <Scalar>pz -> WMBox3D.
+    <inline>
 	let result := WMBox3D newValue.
 	result min x := nx.
 	result min y := ny.
@@ -37,6 +42,7 @@ WMBox3D class category: 'construction' methods: {
 ].
 
 :[unitCube -> WMBox3D.
+    <inline>
 	^ WMBox3D nx: -0.5 ny: -0.5 nz: -0.5 px: 0.5 py: 0.5 pz: 0.5
 ].
 
@@ -54,7 +60,7 @@ WMBox3D class category: 'construction' methods: {
 
 WMBox3D category: 'accessing' methods: {
 :[bottomPoint -> WMVector3.
-	^ (self leftBottomPoint + self rightBottomPoint) * 0.5
+	^ (self leftBottomPoint + self rightBottomPoint) scale: 0.5
 ].
 
 :[boundsAtSign: sign -> WMVector3.
@@ -62,7 +68,8 @@ WMBox3D category: 'accessing' methods: {
 ].
 
 :[center -> WMVector3.
-	^ (max + min) * 0.5
+    <inline>
+	^ (max + min) scale: 0.5
 ].
 
 :[corners -> _DynamicObject.
@@ -92,67 +99,83 @@ WMBox3D category: 'accessing' methods: {
 ].
 
 :[depth -> Scalar.
+    <inline>
 	^ max z - min z
 ].
 
 :[extent -> WMVector3.
+    <inline>
 	^ max - min
 ].
 
 :[farBottomLeft -> WMVector3.
+    <inline>
 	^ WMVector3 x: min x y: min y z: max z
 ].
 
 :[farBottomPoint -> WMVector3.
-	^ (self farBottomLeft + self farBottomRight) * 0.5
+    <inline>
+	^ (self farBottomLeft + self farBottomRight) scale: 0.5
 ].
 
 :[farBottomRight -> WMVector3.
+    <inline>
 	^ WMVector3 x: max x y: min y z: max z
 ].
 
 :[farLeftPoint -> WMVector3.
-	^ (self farBottomLeft + self farTopLeft) * 0.5
+    <inline>
+	^ (self farBottomLeft + self farTopLeft) scale: 0.5
 ].
 
 :[farPoint -> WMVector3.
-	^ (self farLeftPoint + self farRightPoint) * 0.5
+    <inline>
+	^ (self farLeftPoint + self farRightPoint) scale: 0.5
 ].
 
 :[farRightPoint -> WMVector3.
-	^ (self farBottomRight + self farTopRight) * 0.5
+    <inline>
+	^ (self farBottomRight + self farTopRight) scale: 0.5
 ].
 
 :[farTopLeft -> WMVector3.
+    <inline>
 	^ WMVector3 x: min x y: max y z: max z
 ].
 
 :[farTopPoint -> WMVector3.
-	^ (self farTopLeft + self farTopRight) * 0.5
+    <inline>
+	^ (self farTopLeft + self farTopRight) scale: 0.5
 ].
 
 :[farTopRight -> WMVector3.
+    <inline>
 	^ max
 ].
 
 :[halfExtent -> WMVector3.
-	^ (max - min) * 0.5
+    <inline>
+	^ (max - min) scale: 0.5
 ].
 
 :[height -> Scalar.
+    <inline>
 	^ max y - min y
 ].
 
 :[leftBottomPoint -> WMVector3.
-	^ (self nearBottomLeft + self farBottomLeft) * 0.5
+    <inline>
+	^ (self nearBottomLeft + self farBottomLeft) scale: 0.5
 ].
 
 :[leftPoint -> WMVector3.
-	^ (self leftBottomPoint + self leftTopPoint) * 0.5
+    <inline>
+	^ (self leftBottomPoint + self leftTopPoint) scale: 0.5
 ].
 
 :[leftTopPoint -> WMVector3.
-	^ (self nearTopLeft + self farTopLeft) * 0.5
+    <inline>
+	^ (self nearTopLeft + self farTopLeft) scale: 0.5
 ].
 
 :[manipulationCorners -> _DynamicObject.
@@ -195,51 +218,63 @@ WMBox3D category: 'accessing' methods: {
 ].
 
 :[nearBottomLeft -> WMVector3.
+    <inline>
 	^ min
 ].
 
 :[nearBottomPoint -> WMVector3.
-	^ (self nearBottomLeft + self nearBottomRight) * 0.5
+    <inline>
+	^ (self nearBottomLeft + self nearBottomRight) scale: 0.5
 ].
 
 :[nearBottomRight -> WMVector3.
+    <inline>
 	^ WMVector3 x: max x y: min y z: min z
 ].
 
 :[nearLeftPoint -> WMVector3.
-	^ (self nearBottomLeft + self nearTopLeft) * 0.5
+    <inline>
+	^ (self nearBottomLeft + self nearTopLeft) scale: 0.5
 ].
 
 :[nearPoint -> WMVector3.
-	^ (self nearLeftPoint + self nearRightPoint) * 0.5
+    <inline>
+	^ (self nearLeftPoint + self nearRightPoint) scale: 0.5
 ].
 
 :[nearRightPoint -> WMVector3.
-	^ (self nearBottomRight + self nearTopRight) * 0.5
+    <inline>
+	^ (self nearBottomRight + self nearTopRight) scale: 0.5
 ].
 
 :[nearTopLeft -> WMVector3.
+    <inline>
 	^ WMVector3 x: min x y: max y z: min z
 ].
 
 :[nearTopPoint -> WMVector3.
-	^ (self nearTopLeft + self nearTopRight) * 0.5
+    <inline>
+	^ (self nearTopLeft + self nearTopRight) scale: 0.5
 ].
 
 :[nearTopRight -> WMVector3.
+    <inline>
 	^ WMVector3 x: max x y: max y z: min z
 ].
 
 :[rightBottomPoint -> WMVector3.
-	^ (self nearBottomRight + self farBottomRight) * 0.5
+    <inline>
+	^ (self nearBottomRight + self farBottomRight) scale: 0.5
 ].
 
 :[rightPoint -> WMVector3.
-	^ (self rightBottomPoint + self rightTopPoint) * 0.5
+    <inline>
+	^ (self rightBottomPoint + self rightTopPoint) scale: 0.5
 ].
 
 :[rightTopPoint -> WMVector3.
-	^ (self nearTopRight + self farTopRight) * 0.5
+    <inline>
+	^ (self nearTopRight + self farTopRight) scale: 0.5
 ].
 
 :[rotationManipulationCorners -> _DynamicObject.
@@ -259,10 +294,12 @@ WMBox3D category: 'accessing' methods: {
 ].
 
 :[topPoint -> WMVector3.
-	^ (self leftTopPoint + self rightTopPoint) * 0.5
+    <inline>
+	^ (self leftTopPoint + self rightTopPoint) scale: 0.5
 ].
 
 :[width -> Scalar.
+    <inline>
 	^ max x - min x
 ].
 
@@ -270,6 +307,7 @@ WMBox3D category: 'accessing' methods: {
 
 WMBox3D category: 'content manipulation' methods: {
 :[makeEmpty
+    <inline>
 	max := WMVector3 negativeInfinity.
 	min := WMVector3 infinity.
 ].
@@ -296,10 +334,12 @@ WMBox3D category: 'converting' methods: {
 ].
 
 :[asWMBox3DD -> WMBox3DD.
+    <inline>
 	^ WMBox3DD min: min asWMVector3D max: max asWMVector3D
 ].
 
 :[asWMBox3DF -> WMBox3DF.
+    <inline>
 	^ WMBox3DF min: min asWMVector3F max: max asWMVector3F
 ].
 
@@ -351,12 +391,14 @@ WMBox3D category: 'testing' methods: {
 ].
 
 :[isEmpty -> BooleanBit.
+    <inline>
 	^ min x > max x
 ]
 }.
 
 WMBox3D category: 'transforming' methods: {
 :[translatedBy: <WMVector3> translation -> WMBox3D.
+    <inline>
 	^ WMBox3D min: min + translation max: max + translation
 ].
 
@@ -376,15 +418,15 @@ WMBox3D category: 'transforming' methods: {
 ].
 
 :[computeTransformationInto: <WMBox3D>box -> WMReversibleAffineTransform.
-	^ (self isEmpty or: [ box isEmpty ]) ifTrue: [
-        WMReversibleAffineTransform identity
-    ] ifFalse: [
-        WMReversibleAffineTransform identity
+	(self isEmpty or: [ box isEmpty ]) ifTrue: [
+        ^ WMReversibleAffineTransform identity
+    ].
+
+    ^ WMReversibleAffineTransform identity
             translateBy: self center negated;
-            scaleBy: box halfExtent / self halfExtent;
+            scaleByVector: (box halfExtent divideWithVector: self halfExtent);
             translateBy: box center;
             yourself
-    ].
 ].
 }.
 

@@ -10,11 +10,13 @@ WMMatrix3 class category: 'construction' methods: {
 
 WMMatrix3 class category: 'special matrices' methods: {
 :[zeros -> WMMatrix3.
+    <inline>
 	^ WMMatrix3 newValue
 
 ].
 
 :[ones -> WMMatrix3.
+    <inline>
 	^ WMMatrix3 newValue
 		m11: 1.0; m12: 1.0; m13: 1.0;
 		m21: 1.0; m22: 1.0; m23: 1.0;
@@ -23,12 +25,14 @@ WMMatrix3 class category: 'special matrices' methods: {
 ].
 
 :[identity -> WMMatrix3.
+    <inline>
 	^ WMMatrix3 newValue
 		m11: 1.0; m22: 1.0; m33: 1.0;
 		yourself
 ].
 
 :[scaleX: <Scalar> x y: <Scalar> y z: <Scalar> z -> WMMatrix3.
+    <inline>
 	^ WMMatrix3 newValue
 		m11:   x; m12: 0.0; m13: 0.0;
 		m21: 0.0; m22:   y; m23: 0.0;
@@ -37,6 +41,7 @@ WMMatrix3 class category: 'special matrices' methods: {
 ].
 
 :[texScale: <WMVector3> scale offset: <WMVector2> offset -> WMMatrix3.
+    <inline>
 	"Computes a texture matrix that performs a scale and a translation. Scale and offset are 2D points"
 	^ WMMatrix3
 		m11: scale x m12: 0.0 m13: offset x
@@ -46,6 +51,7 @@ WMMatrix3 class category: 'special matrices' methods: {
 
 
 :[translate2DX: <Scalar> x y: <Scalar> y -> WMMatrix3.
+    <inline>
 	^ WMMatrix3
 		m11: 1.0 m12: 0.0 m13: x
 		m21: 0.0 m22: 1.0 m23: y
@@ -55,6 +61,7 @@ WMMatrix3 class category: 'special matrices' methods: {
 :[m11: <Scalar> m11 m12: <Scalar> m12 m13: <Scalar> m13
   m21: <Scalar> m21 m22: <Scalar> m22 m23: <Scalar> m23
   m31: <Scalar> m31 m32: <Scalar> m32 m33: <Scalar> m33 -> WMMatrix3.
+     <inline>
 	^ WMMatrix3 newValue
 		m11: m11; m12: m12; m13: m13;
 		m21: m21; m22: m22; m23: m23;
@@ -63,6 +70,7 @@ WMMatrix3 class category: 'special matrices' methods: {
 ].
 
 :[ndcToTexcoord2D -> WMMatrix3.
+    <inline>
 	^ WMMatrix3 newValue
 		m11: 0.5; m12: 0.0; m13: 0.5;
 		m21: 0.0; m22: 0.5; m23: 0.5;
@@ -71,6 +79,7 @@ WMMatrix3 class category: 'special matrices' methods: {
 ].
 
 :[xrot: angle -> WMMatrix3.
+    <inline>
 	let cos := angle cos castTo: Scalar.
 	let sin := angle sin castTo: Scalar.
 	^ WMMatrix3 newValue
@@ -81,6 +90,7 @@ WMMatrix3 class category: 'special matrices' methods: {
 ].
 
 :[yrot: angle -> WMMatrix3.
+    <inline>
 	let cos := angle cos castTo: Scalar.
 	let sin := angle sin castTo: Scalar.
 	^ WMMatrix3 newValue
@@ -91,6 +101,7 @@ WMMatrix3 class category: 'special matrices' methods: {
 ].
 
 :[zrot: angle -> WMMatrix3.
+    <inline>
 	let cos := angle cos castTo: Scalar.
 	let sin := angle sin castTo: Scalar.
 	^ WMMatrix3 newValue
@@ -189,11 +200,11 @@ WMMatrix3 category: 'arithmetic' methods: {
 		m11: (m11 * other m11) + (m12 * other m21) + (m13 * other m31);
 		m12: (m11 * other m12) + (m12 * other m22) + (m13 * other m32);
 		m13: (m11 * other m13) + (m12 * other m23) + (m13 * other m33);
-		
+
 		m21: (m21 * other m11) + (m22 * other m21) + (m23 * other m31);
 		m22: (m21 * other m12) + (m22 * other m22) + (m23 * other m32);
 		m23: (m21 * other m13) + (m22 * other m23) + (m23 * other m33);
-		
+
 		m31: (m31 * other m11) + (m32 * other m21) + (m33 * other m31);
 		m32: (m31 * other m12) + (m32 * other m22) + (m33 * other m32);
 		m33: (m31 * other m13) + (m32 * other m23) + (m33 * other m33);
@@ -211,11 +222,11 @@ WMMatrix3 category: 'arithmetic' methods: {
 
 WMMatrix3 category: 'comparing' methods: {
 :[= other -> BooleanBit.
-	^ WMMatrix3 == other class and:  
+	^ WMMatrix3 == other class and:
 		[ (m11 = other m11) and:
 		[ (m12 = other m12) and:
 		[ (m13 = other m13) and:
-		
+
 		[ (m21 = other m21) and:
 		[ (m22 = other m22) and:
 		[ (m23 = other m23) and:
@@ -229,7 +240,7 @@ WMMatrix3 category: 'comparing' methods: {
 	^ (m11 closeTo: other m11) and:
 		[ (m12 closeTo: other m12) and:
 		[ (m13 closeTo: other m13) and:
-		
+
 		[ (m21 closeTo: other m21) and:
 		[ (m22 closeTo: other m22) and:
 		[ (m23 closeTo: other m23) and:
@@ -244,11 +255,11 @@ WMMatrix3 category: 'comparing' methods: {
 		( m11 hash bitXor:
 		( m12 hash bitXor:
 		( m13 hash bitXor:
-		
+
 		( m21 hash bitXor:
 		( m22 hash bitXor:
 		( m23 hash bitXor:
-		
+
 		( m31 hash bitXor:
 		( m32 hash bitXor:
 		( m33 hash )))))))))
@@ -272,11 +283,11 @@ WMMatrix3 category: 'converting' methods: {
 		at: 1 put: m11;
 		at: 2 put: m21;
 		at: 3 put: m31;
-		
+
 		at: 4 put: m12;
 		at: 5 put: m22;
 		at: 6 put: m32;
-		
+
 		at: 7 put: m13;
 		at: 8 put: m23;
 		at: 9 put: m33.
@@ -284,7 +295,7 @@ WMMatrix3 category: 'converting' methods: {
 ].
 
 :[asJsonData -> _DynamicObject.
-	^ self asRowMajorArray 
+	^ self asRowMajorArray
 ].
 
 :[asRowMajorArray -> _DynamicObject.
@@ -294,11 +305,11 @@ WMMatrix3 category: 'converting' methods: {
 		at: 1 put: m11;
 		at: 2 put: m12;
 		at: 3 put: m13;
-		
+
 		at: 4 put: m21;
 		at: 5 put: m22;
 		at: 6 put: m23;
-		
+
 		at: 7 put: m31;
 		at: 8 put: m32;
 		at: 9 put: m33.
@@ -312,11 +323,11 @@ WMMatrix3 category: 'converting' methods: {
 		at: 1 put: m11;
 		at: 2 put: m12;
 		at: 3 put: m13;
-		
+
 		at: 4 put: m21;
 		at: 5 put: m22;
 		at: 6 put: m23;
-		
+
 		at: 7 put: m31;
 		at: 8 put: m32;
 		at: 9 put: m33.
@@ -364,12 +375,12 @@ WMMatrix3 category: 'linear algebra' methods: {
 	let u3 := self thirdColumn.
 	u3 := u3 - (u1 * (u3 dot: u1)).
 	u3 := (u3 - (u2 * (u3 dot: u2))) normalized.
-	
+
 	let q := WMMatrix3
 		m11: u1 x m12: u2 x m13: u3 x
 		m21: u1 y m22: u2 y m23: u3 y
 		m31: u1 z m32: u2 z m33: u3 z.
-		
+
 	let r := q transposed * self.
 	^ { q . r }
 ].
@@ -394,43 +405,49 @@ WMMatrix3 category: 'linear algebra' methods: {
 
 WMMatrix3 category: 'transformation' methods: {
 :[transformPosition2: <WMVector2>position2 -> WMVector2.
+    <inline>
 	^ WMVector2
 		x: (m11 * position2 x) + (m12 * position2 y) + m13
 		y: (m21 * position2 x) + (m22 * position2 y) + m23
 ].
 
 :[transformPosition3: <WMVector3>position3 -> WMVector3.
+    <inline>
 	^ WMVector3
-		x: (m11 * position3 x) + (m12 * position3 y) + (m13 * position3 z) 
-		y: (m21 * position3 x) + (m22 * position3 y) + (m23 * position3 z) 
+		x: (m11 * position3 x) + (m12 * position3 y) + (m13 * position3 z)
+		y: (m21 * position3 x) + (m22 * position3 y) + (m23 * position3 z)
 		z: (m31 * position3 x) + (m32 * position3 y) + (m33 * position3 z)
 ].
 
 :[transformVector2: <WMVector2>vector2 -> WMVector2.
+    <inline>
 	^ WMVector2
 		x: (m11 * vector2 x) + (m12 * vector2 y)
 		y: (m21 * vector2 x) + (m22 * vector2 y)
 ].
 
 :[transformVector3: <WMVector3>vector3 -> WMVector3.
+    <inline>
 	^ WMVector3
-		x: (m11 * vector3 x) + (m12 * vector3 y) + (m13 * vector3 z) 
-		y: (m21 * vector3 x) + (m22 * vector3 y) + (m23 * vector3 z) 
+		x: (m11 * vector3 x) + (m12 * vector3 y) + (m13 * vector3 z)
+		y: (m21 * vector3 x) + (m22 * vector3 y) + (m23 * vector3 z)
 		z: (m31 * vector3 x) + (m32 * vector3 y) + (m33 * vector3 z)
 ].
 
 :[transformVector4: <WMVector4>vector4 -> WMVector4.
+    <inline>
 	^ WMVector4
-		x: (m11 * vector4 x) + (m12 * vector4 y) + (m13 * vector4 z) 
-		y: (m21 * vector4 x) + (m22 * vector4 y) + (m23 * vector4 z) 
+		x: (m11 * vector4 x) + (m12 * vector4 y) + (m13 * vector4 z)
+		y: (m21 * vector4 x) + (m22 * vector4 y) + (m23 * vector4 z)
 		z: (m31 * vector4 x) + (m32 * vector4 y) + (m33 * vector4 z)
 		w: vector4 w
 ].
 
 :[transposedTransformVector3: <WMVector3>vector3 -> WMVector3.
+    <inline>
 	^ WMVector3
-		x: (m11 * vector3 x) + (m21 * vector3 y) + (m31 * vector3 z) 
-		y: (m12 * vector3 x) + (m22 * vector3 y) + (m32 * vector3 z) 
+		x: (m11 * vector3 x) + (m21 * vector3 y) + (m31 * vector3 z)
+		y: (m12 * vector3 x) + (m22 * vector3 y) + (m32 * vector3 z)
 		z: (m13 * vector3 x) + (m23 * vector3 y) + (m33 * vector3 z)
 ].
 }.
