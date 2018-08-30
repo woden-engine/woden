@@ -118,7 +118,7 @@ WMMatrix3 class category: 'special matrices' methods: {
 
 :[zyxRotation: <WMVector3> angles -> WMMatrix3.
     <inline>
-	^ (WMVector3 zrot: angles z) * (WMVector3 yrot: angles y) * (WMVector3 xrot: angles x) castTo: WMMatrix3
+	^ (WMMatrix3 zrot: angles z) * (WMMatrix3 yrot: angles y) * (WMMatrix3 xrot: angles x) castTo: WMMatrix3
 ].
 
 :[lookAtBack -> WMMatrix3.
