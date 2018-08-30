@@ -339,6 +339,43 @@ WDASceneExamples class >> example06MeshGrid [
 	model openWith: WDAFPSSceneView.
 ]
 
+{ #category : #examples }
+WDASceneExamples class >> example07SmallTerrain [
+	| model material mesh terrain light scene camera |
+	model := WDASampleSceneModel new.
+	scene := model newScene.
+	camera := model camera.
+	camera transform translateByZ: 3.0; translateByY: 1.0.
+
+	material := WDCTerrainMaterial for: scene engine.
+	material heightMapTexture: (scene engine resourceCache grayTextureExtent: 128@128 renderWith: [ :s :t |
+		| x y |
+		x := s *2.0 - 1.0.
+		y := t *2.0 - 1.0.
+		1.0 - (x abs max: y abs)
+	]).
+	
+	mesh := (WDCGenericMeshBuilder for: scene engine)
+		currentMaterial: material;
+		addGridWithWidth: 5.0 height: 5.0 subdivisions: 64;
+		mesh.
+		
+	terrain := WDSGSpatialObject new.
+	terrain transform translateByY: -1.0.
+	terrain renderable: mesh.
+	scene add: terrain.
+	
+	light := WDSGLightSource new.
+	light point.
+	light state
+		intensity: Color yellow asWMVector4F.
+	light transform
+		translateByX: -1.5 y: 1.5 z: 1.6.
+	scene add: light.
+
+	model openWith: WDAFPSSceneView.
+]
+
 { #category : #'example models' }
 WDASceneExamples class >> exampleModelBunny [
 	(WDCEngine default resourceCache load3DModel: 'models/stanford/bun_zipper.ply') openViewer

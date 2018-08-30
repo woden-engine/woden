@@ -3,4 +3,5 @@ Compiler
     evaluateFileNamed: 'WTGenericSurfaceMaterialState.ltk';
     evaluateFileNamed: 'WTWaterHarmonic.ltk';
     evaluateFileNamed: 'WTWaterMaterialState.ltk';
+    evaluateFileNamed: 'WDCTerrainMaterialState.ltk';
 	yourself.

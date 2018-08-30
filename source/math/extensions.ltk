@@ -19,6 +19,14 @@ Number category: '*WodenMath-Core' methods: {
 }.
 
 Float category: '*WodenMath-Core' methods: {
+:[asNormalizedUByte
+	^ (self * 16rFF) asInteger min: 16rFF max: 0
+].
+
+:[asNormalizedSByte
+	^ (self * 16r7F) asInteger bitAnd: 16rFF
+].
+
 :[asNormalizedUShort
 	^ (self * 16rFFFF) asInteger min: 16rFFFF max: 0
 ].

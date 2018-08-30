@@ -47,6 +47,11 @@ WDCResourceCache >> binaryContentsOf: aFileReference [
 	]
 ]
 
+{ #category : #textures }
+WDCResourceCache >> blackTexture [
+	^ self getOrCreateColorTexture: Color black
+]
+
 { #category : #'pipeline states' }
 WDCResourceCache >> buildPipelineStateWithDescription: description [
 	| handle result |
@@ -120,6 +125,33 @@ WDCResourceCache >> createDefaultMaterial [
 	defaultMaterial := WDCGenericSurfaceMaterial for: engine.
 ]
 
+{ #category : #textures }
+WDCResourceCache >> createOnePixelFormWith: aColor [
+	^ (Form extent: 1@1 depth: 32)
+		fillColor: aColor;
+		yourself
+]
+
+{ #category : #textures }
+WDCResourceCache >> createSRGBTextureWithColor: aColor [
+	^ self createSRGBTextureWithForm: (self createOnePixelFormWith: aColor)
+]
+
+{ #category : #textures }
+WDCResourceCache >> createSRGBTextureWithForm: aForm [
+	^ aForm asSRGBTextureFor: engine
+]
+
+{ #category : #textures }
+WDCResourceCache >> createTextureWithColor: aColor [
+	^ self createTextureWithForm: (self createOnePixelFormWith: aColor)
+]
+
+{ #category : #textures }
+WDCResourceCache >> createTextureWithForm: aForm [
+	^ aForm asTextureFor: engine
+]
+
 { #category : #'resource loading' }
 WDCResourceCache >> createVertexLayoutForChannelDescriptions: channelDescriptions [
 	| layout |
@@ -134,9 +166,24 @@ WDCResourceCache >> defaultMaterial [
 	^ defaultMaterial
 ]
 
+{ #category : #textures }
+WDCResourceCache >> defaultNormalTexture [
+	^ self getOrCreateColorTexture: Color blue
+]
+
 { #category : #accessing }
 WDCResourceCache >> flatColorMaterial [
 	^ self loadMaterial: 'materials/basic/flat.json'
+]
+
+{ #category : #'resource loading' }
+WDCResourceCache >> getOrCreateColorTexture: aColor [
+	^ self resourceAt: aColor -> #colorTexture ifAbsentPut: [ self createTextureWithColor: aColor ].
+]
+
+{ #category : #'resource loading' }
+WDCResourceCache >> getOrCreateSRGBColorTexture: aColor [
+	^ self resourceAt: aColor -> #srgbColorTexture ifAbsentPut: [ self createSRGBTextureWithColor: aColor ].
 ]
 
 { #category : #accessing }
@@ -147,6 +194,13 @@ WDCResourceCache >> getOrCreateShaderSignature: aShaderSignatureClass [
 		instance handle: (instance createHandleForDevice: engine device).
 		instance
 	]
+]
+
+{ #category : #textures }
+WDCResourceCache >> grayTextureExtent: extent renderWith: aBlock [
+	| data |
+	data := WDCTextureData extent: extent grayRenderWith: aBlock.
+	^ data asTextureFor: engine
 ]
 
 { #category : #initialization }
@@ -393,4 +447,9 @@ WDCResourceCache >> vertexLayoutFor: aVertexClass [
 { #category : #'resource loading' }
 WDCResourceCache >> vertexLayoutForVertexChannelDescriptions: channelDescriptions [
 	^ vertexLayouts at: channelDescriptions ifAbsentPut: [ self createVertexLayoutForChannelDescriptions: channelDescriptions ]
+]
+
+{ #category : #textures }
+WDCResourceCache >> whiteTexture [
+	^ self getOrCreateColorTexture: Color white
 ]

@@ -15,25 +15,6 @@ WDCForwardRenderingShaderSignature class >> signatureSpec: spec [
 	"
 	spec
 		name: #ForwardRenderer;
-		bank: #ObjectState with: [ :bank |
-			bank
-				maxBindings: 100000;
-				uniform: #ObjectState;
-				storage: #InstanceObjectState;
-				storage: #ExtraObjectState
-		];
-		bank: #CameraState with: [ :bank |
-			bank
-				maxBindings: 1000;
-				uniform: #ObjectState
-		];
-		bank: #MaterialState with: [ :bank |
-			bank
-				maxBindings: 10000;
-				uniform: #Attributes;
-				storage: #BigAttributes;
-				texture: #Textures count: 5
-		];
 		bank: #Samplers with: [ :bank |
 			bank
 				maxBindings: 10;
@@ -45,28 +26,31 @@ WDCForwardRenderingShaderSignature class >> signatureSpec: spec [
 				uniform: #GlobalLightingState;
 				texture: #ShadowMaps count: 2
 		];
+		bank: #CameraState with: [ :bank |
+			bank
+				maxBindings: 1000;
+				uniform: #ObjectState
+		];
+		bank: #ObjectState with: [ :bank |
+			bank
+				maxBindings: 100000;
+				uniform: #ObjectState;
+				storage: #InstanceObjectState;
+				storage: #ExtraObjectState
+		];
+		bank: #MaterialState with: [ :bank |
+			bank
+				maxBindings: 10000;
+				uniform: #Attributes;
+				storage: #BigAttributes;
+				texture: #Textures count: 15
+		];
 		yourself
 ]
 
 { #category : #'generated shader signature methods' }
 WDCForwardRenderingShaderSignature >> createHandleForDevice: device [
 	^ device createShaderSignatureBuilder
-
-		"ObjectState"
-		beginBindingBank: 100000;
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "ObjectState"
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_STORAGE_BUFFER bindingPointCount: 1; "InstanceObjectState"
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_STORAGE_BUFFER bindingPointCount: 1; "ExtraObjectState"
-
-		"CameraState"
-		beginBindingBank: 1000;
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "ObjectState"
-
-		"MaterialState"
-		beginBindingBank: 10000;
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "Attributes"
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_STORAGE_BUFFER bindingPointCount: 1; "BigAttributes"
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 5; "Textures"
 
 		"Samplers"
 		beginBindingBank: 10;
@@ -76,6 +60,22 @@ WDCForwardRenderingShaderSignature >> createHandleForDevice: device [
 		beginBindingBank: 1000;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "GlobalLightingState"
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 2; "ShadowMaps"
+
+		"CameraState"
+		beginBindingBank: 1000;
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "ObjectState"
+
+		"ObjectState"
+		beginBindingBank: 100000;
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "ObjectState"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_STORAGE_BUFFER bindingPointCount: 1; "InstanceObjectState"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_STORAGE_BUFFER bindingPointCount: 1; "ExtraObjectState"
+
+		"MaterialState"
+		beginBindingBank: 10000;
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "Attributes"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_STORAGE_BUFFER bindingPointCount: 1; "BigAttributes"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 15; "Textures"
 
 		build
 
@@ -127,25 +127,25 @@ WDCForwardRenderingShaderSignature >> defaultSamplers [
 
 { #category : #'generated shader signature methods' }
 WDCForwardRenderingShaderSignature >> newCameraState [
-	^ engine createShaderSignature: self resourceBinding: 1 elements: 1
+	^ engine createShaderSignature: self resourceBinding: 2 elements: 1
 ]
 
 { #category : #'generated shader signature methods' }
 WDCForwardRenderingShaderSignature >> newLightingState [
-	^ engine createShaderSignature: self resourceBinding: 4 elements: 3
+	^ engine createShaderSignature: self resourceBinding: 1 elements: 3
 ]
 
 { #category : #'generated shader signature methods' }
 WDCForwardRenderingShaderSignature >> newMaterialState [
-	^ engine createShaderSignature: self resourceBinding: 2 elements: 7
+	^ engine createShaderSignature: self resourceBinding: 4 elements: 17
 ]
 
 { #category : #'generated shader signature methods' }
 WDCForwardRenderingShaderSignature >> newObjectState [
-	^ engine createShaderSignature: self resourceBinding: 0 elements: 3
+	^ engine createShaderSignature: self resourceBinding: 3 elements: 3
 ]
 
 { #category : #'generated shader signature methods' }
 WDCForwardRenderingShaderSignature >> newSamplers [
-	^ engine createShaderSignature: self resourceBinding: 3 elements: 5
+	^ engine createShaderSignature: self resourceBinding: 0 elements: 5
 ]

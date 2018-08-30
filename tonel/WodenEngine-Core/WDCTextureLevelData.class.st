@@ -12,6 +12,24 @@ Class {
 	#category : 'WodenEngine-Core-Texture'
 }
 
+{ #category : #'cpu rendering' }
+WDCTextureLevelData >> colorRenderWith: aBlock [
+	| inverseHeight inverseWidth destIndex destRow value |
+	inverseHeight := 1.0 / height.
+	inverseWidth := 1.0 / height.
+	destRow := 1.
+	0 to: height - 1 do: [ :y |
+		destIndex := destRow.
+		0 to: width - 1 do: [ :x |
+			value := (aBlock value: x * inverseWidth value: y * inverseHeight) pixelWordForDepth: 32.
+			data unsignedLongAt: destIndex put: value.
+			destIndex := destIndex + 4
+		].
+	
+		destRow := destRow + pitch
+	]
+]
+
 { #category : #accessing }
 WDCTextureLevelData >> data [
 	^ data
@@ -32,6 +50,24 @@ WDCTextureLevelData >> depth: anObject [
 	depth := anObject
 ]
 
+{ #category : #'cpu rendering' }
+WDCTextureLevelData >> grayRenderWith: aBlock [
+	| inverseHeight inverseWidth destIndex destRow value |
+	inverseHeight := 1.0 / height.
+	inverseWidth := 1.0 / height.
+	destRow := 1.
+	0 to: height - 1 do: [ :y |
+		destIndex := destRow.
+		0 to: width - 1 do: [ :x |
+			value := (aBlock value: x * inverseWidth value: y * inverseHeight) asNormalizedUByte.
+			data at: destIndex put: value.
+			destIndex := destIndex + 1
+		].
+	
+		destRow := destRow + pitch
+	]
+]
+
 { #category : #accessing }
 WDCTextureLevelData >> height [
 	^ height
@@ -50,6 +86,28 @@ WDCTextureLevelData >> pitch [
 { #category : #accessing }
 WDCTextureLevelData >> pitch: anObject [
 	pitch := anObject
+]
+
+{ #category : #'cpu rendering' }
+WDCTextureLevelData >> rgRenderWith: aBlock [
+	| inverseHeight inverseWidth destIndex destRow rg |
+	inverseHeight := 1.0 / height.
+	inverseWidth := 1.0 / height.
+	destRow := 1.
+	0 to: height - 1 do: [ :y |
+		destIndex := destRow.
+		0 to: width - 1 do: [ :x |
+			rg := aBlock value: x * inverseWidth value: y * inverseHeight.
+
+			data at: destIndex put: rg x asNormalizedUByte.
+			destIndex := destIndex + 1.
+
+			data at: destIndex put: rg y asNormalizedUByte.
+			destIndex := destIndex + 1.
+		].
+	
+		destRow := destRow + pitch
+	]
 ]
 
 { #category : #accessing }
