@@ -110,9 +110,10 @@ class BintrayDependency(Dependency):
         moveAllInDirInto(os.path.join(self.repository, 'lib'), '.')
 
 class PharoVMDependency(Dependency):
-    def __init__(self, name, baseURL):
+    def __init__(self, name, baseURL, versionString):
         self.name = name
         self.baseURL = baseURL
+        self.versionString = versionString
 
     def satisfyInPlatformMode(self, platformMode):
         fileName = 'pharo'
@@ -126,7 +127,7 @@ class PharoVMDependency(Dependency):
             zeroconfScript = 'https://get.pharo.org/'
             if platformMode.is64Bit():
                 zeroconfScript += '64/'
-            zeroconfScript += 'vm61'
+            zeroconfScript += 'vm' + self.versionString
             os.system('wget -O- %s | bash' % (zeroconfScript,))
             self.createVMExecutionScript()
             return
@@ -179,8 +180,13 @@ Phanide = GitDependency('phanide', 'https://github.com/ronsaldo/phanide.git', su
 Lowtalk = GitDependency('lowtalk', 'https://github.com/ronsaldo/lowtalk.git', subfolder='source-deps')
 PompeiiGraphics = GitDependency('pompeii-graphics', 'https://github.com/ronsaldo/pompeii-graphics.git', subfolder='source-deps')
 CoreAssets = GitDependency('core-assets', 'https://github.com/ronsaldo/wloden-core-assets.git')
-PharoVM = PharoVMDependency('pharo-vm', 'https://files.pharo.org/get-files/61/')
-PharoImage = PharoImageDependency('pharo-image', 'https://files.pharo.org/get-files/61/')
+
+if '-pharo7' in sys.argv:
+    PharoVM = PharoVMDependency('pharo-vm', 'https://files.pharo.org/get-files/70/', '70')
+    PharoImage = PharoImageDependency('pharo-image', 'https://files.pharo.org/get-files/70/')
+else:
+    PharoVM = PharoVMDependency('pharo-vm', 'https://files.pharo.org/get-files/61/', '61')
+    PharoImage = PharoImageDependency('pharo-image', 'https://files.pharo.org/get-files/61/')
 
 dependencies = [
     AbstractGpu,

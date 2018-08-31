@@ -7,4 +7,5 @@ rm -rf vm build build-dist pharo-vm native-libraries native-libraries-64 build-6
     play-cache github-cache package-cache github-*.zip \
     abstract-gpu abstract-physics core-assets pharo-local \
     __MACOSX woden2.sh Pharo* woden2.changes woden2.image \
-    cog_*.tar
+    *.tar *.tar.gz *.zip *.so *.dylib *.dll *.pyc AgpuIcd source-deps \
+    pharo pharo-ui woden.sh
