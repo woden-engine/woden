@@ -341,7 +341,17 @@ WDASceneExamples class >> example06MeshGrid [
 
 { #category : #examples }
 WDASceneExamples class >> example07SmallTerrain [
-	| model material mesh terrain light scene camera |
+	| model material mesh terrain light scene camera heightMap |
+	
+	"Some procedural textures used by the demo"
+	heightMap := WDCTextureData extent: 128@128 grayRenderWith: [ :s :t |
+		|st|
+		st := s@t.
+		st*3.0 fractionalBrownianMotionOctaves: 5 lacunarity: 1.45 initialAmplitude: 0.5 with: [ :c : a|
+			(c signedGradientNoise *a) abs
+		]
+	].
+	
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
@@ -352,20 +362,7 @@ WDASceneExamples class >> example07SmallTerrain [
 	material
 		heightMapScale: (WMVector2F x: 1.0 y: 1.0)/10.0;
 		heightScale: 8.0;
-		heightMapTexture: (scene engine resourceCache grayTextureExtent: 128@128 renderWith: [ :s :t |
-		|coord lacunarity amplitude result |
-	
-		coord := (s@t)*3.0.
-		lacunarity := 1.45.
-		amplitude := 0.5.	
-		result := 0.0.
-		1 to: 5 do: [ :i |
-			result := result + (coord signedGradientNoise * amplitude) abs.
-			amplitude := amplitude / lacunarity.
-			coord := coord * lacunarity
-		].
-		result.
-	]).
+		heightMapTexture: (heightMap asTextureFor: scene engine).
 	
 	mesh := (WDCGenericMeshBuilder for: scene engine)
 		currentMaterial: material;

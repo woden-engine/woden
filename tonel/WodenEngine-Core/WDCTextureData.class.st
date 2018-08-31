@@ -523,7 +523,7 @@ WDCTextureData >> grayRenderWith: aBlock [
 
 { #category : #'as yet unclassified' }
 WDCTextureData >> gtInspectorFormIn: composite [
-	<gtInspectorPresentationOrder: 90>  
+	<gtInspectorPresentationOrder: 0>  
 	self canBeDecoded ifFalse: [ ^ self ].
 	
 	^ composite morph 

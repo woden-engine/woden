@@ -21,7 +21,7 @@ WDCTextureLevelData >> colorRenderWith: aBlock [
 	0 to: height - 1 do: [ :y |
 		destIndex := destRow.
 		0 to: width - 1 do: [ :x |
-			value := (aBlock value: x * inverseWidth value: y * inverseHeight) pixelWordForDepth: 32.
+			value := (aBlock value: (x + 0.5) * inverseWidth value: (y + 0.5) * inverseHeight) pixelWordForDepth: 32.
 			data unsignedLongAt: destIndex put: value.
 			destIndex := destIndex + 4
 		].
@@ -59,7 +59,7 @@ WDCTextureLevelData >> grayRenderWith: aBlock [
 	0 to: height - 1 do: [ :y |
 		destIndex := destRow.
 		0 to: width - 1 do: [ :x |
-			value := (aBlock value: x * inverseWidth value: y * inverseHeight) asNormalizedUByte.
+			value := (aBlock value: (x + 0.5) * inverseWidth value: (y + 0.5) * inverseHeight) asNormalizedUByte.
 			data at: destIndex put: value.
 			destIndex := destIndex + 1
 		].
@@ -97,7 +97,7 @@ WDCTextureLevelData >> rgRenderWith: aBlock [
 	0 to: height - 1 do: [ :y |
 		destIndex := destRow.
 		0 to: width - 1 do: [ :x |
-			rg := aBlock value: x * inverseWidth value: y * inverseHeight.
+			rg := aBlock value: (x + 0.5) * inverseWidth value: (y + 0.5) * inverseHeight.
 
 			data at: destIndex put: rg x asNormalizedUByte.
 			destIndex := destIndex + 1.
