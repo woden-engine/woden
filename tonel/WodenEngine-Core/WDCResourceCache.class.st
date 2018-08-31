@@ -168,7 +168,7 @@ WDCResourceCache >> defaultMaterial [
 
 { #category : #textures }
 WDCResourceCache >> defaultNormalTexture [
-	^ self getOrCreateColorTexture: Color blue
+	^ self getOrCreateColorTexture: (Color r: 0.5 g: 0.5 b: 1.0)
 ]
 
 { #category : #accessing }

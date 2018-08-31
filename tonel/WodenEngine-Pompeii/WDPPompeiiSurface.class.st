@@ -554,13 +554,14 @@ WDPPompeiiSurface >> sendMatricesToMemory [
 { #category : #drawing }
 WDPPompeiiSurface >> sendMeshesToMemory [
 	| tmp vertexBufferSize indexBufferSize vertexMemory indexMemory nextVertexOffset nextIndexOffset map |
+	meshesInMemory removeAll.
+	meshMemoryMap removeAll.
+
 	"Swap the mesh sets."
 	tmp := meshesInMemory.
 	meshesInMemory := meshesToSend.
 	meshesToSend := tmp.
 	
-	meshMemoryMap removeAll.
-
 	"Compute the total memory requirement."	
 	vertexBufferSize := 0.
 	indexBufferSize := 0.

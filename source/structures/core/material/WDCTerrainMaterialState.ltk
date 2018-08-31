@@ -2,6 +2,8 @@ Structure <<< #WDCTerrainMaterialState
 	slots: {
         #heightMapScale => WMVector2F.
         #heightMapOffset => WMVector2F.
+        #heightScale => Float32.
+        #heightOffset => Float32.
 
 		#albedo => WMVector4F.
 		#fresnel => WMCompactVector3F.

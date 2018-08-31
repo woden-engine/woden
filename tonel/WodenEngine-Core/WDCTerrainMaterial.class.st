@@ -37,6 +37,12 @@ WDCTerrainMaterial >> activateShadowOn: stateTracker [
 	stateTracker
 		vertexShader: vertexShader;
 		fragmentShader: nil.
+
+	"For the height map"		
+	resourceBinding ifNotNil: [ 
+		stateTracker useShaderResources: resourceBinding.
+	].
+
 	^ true
 ]
 
@@ -47,11 +53,11 @@ WDCTerrainMaterial >> albedoTextures [
 
 { #category : #accessing }
 WDCTerrainMaterial >> albedoTextures: anArray [
-	self assert: (anArray isArray and: [ anArray size = 4 ]).
+	self assert: (anArray isArray and: [ anArray size = 5 ]).
 	albedoTextures := anArray
 ]
 
-{ #category : #initialization }
+{ #category : #'state binding' }
 WDCTerrainMaterial >> bindResources [
 	| signature resourceCache |
 	resourceBinding ifNil: [ 
@@ -70,6 +76,14 @@ WDCTerrainMaterial >> bindResources [
 	resourceBinding bind: 2 texture: (heightMapTexture ifNil: [resourceCache blackTexture] ) startMiplevel: 0 miplevels: -1 lodclamp: 100000.0.
 	resourceBinding bind: 3 texture: (splattingTexture ifNil: [resourceCache blackTexture]) startMiplevel: 0 miplevels: -1 lodclamp: 100000.0.
 	
+	0 to: 4 do: [ :i |
+		resourceBinding bind: 4 + i texture: (self validAlbedoTexture: i + 1) startMiplevel: 0 miplevels: -1 lodclamp: 100000.0.
+	].
+
+	0 to: 4 do: [ :i |
+		resourceBinding bind: 9 + i texture: (self validNormalTexture: i + 1) startMiplevel: 0 miplevels: -1 lodclamp: 100000.0.
+	].
+	
 ]
 
 { #category : #'state binding' }
@@ -86,6 +100,16 @@ WDCTerrainMaterial >> fetchShaders [
 ]
 
 { #category : #accessing }
+WDCTerrainMaterial >> heightMapOffset: aVector2 [
+	materialState heightMapOffset: aVector2
+]
+
+{ #category : #accessing }
+WDCTerrainMaterial >> heightMapScale: aVector2 [
+	materialState heightMapScale: aVector2
+]
+
+{ #category : #accessing }
 WDCTerrainMaterial >> heightMapTexture [
 	^ heightMapTexture
 ]
@@ -95,18 +119,29 @@ WDCTerrainMaterial >> heightMapTexture: anObject [
 	heightMapTexture := anObject
 ]
 
+{ #category : #accessing }
+WDCTerrainMaterial >> heightOffset: aFloat [
+	materialState heightOffset: aFloat
+]
+
+{ #category : #accessing }
+WDCTerrainMaterial >> heightScale: aFloat [
+	materialState heightScale: aFloat
+]
+
 { #category : #initialization }
 WDCTerrainMaterial >> initialize [
 	materialState := WDCTerrainMaterialState new
 		heightMapScale: (WMVector2F x: 1.0 y: 1.0);
 		heightMapOffset: WMVector2F zero;
+		heightScale: 1.0;
 
 		albedo: Color white asWMVector4F;
 		fresnel: (WMVector3F x: 0.03 y: 0.03 z: 0.03);
 		smoothness: 0.45;
 		yourself.
-	albedoTextures := { nil . nil . nil . nil }.
-	normalTextures := { nil . nil . nil . nil }.
+	albedoTextures := { nil . nil . nil . nil . nil }.
+	normalTextures := { nil . nil . nil . nil . nil }.
 	self invalidateCache.
 ]
 
@@ -132,7 +167,7 @@ WDCTerrainMaterial >> normalTextures [
 
 { #category : #accessing }
 WDCTerrainMaterial >> normalTextures: anArray [
-	self assert: (anArray isArray and: [ anArray size = 4 ]).
+	self assert: (anArray isArray and: [ anArray size = 5 ]).
 	normalTextures := anArray
 ]
 
@@ -152,6 +187,16 @@ WDCTerrainMaterial >> uploadMaterialStateData [
 		materialState storeBytesIn: stateUniformBuffer validPointer getHandle.
 	]
 	
+]
+
+{ #category : #'as yet unclassified' }
+WDCTerrainMaterial >> validAlbedoTexture: textureIndex [
+	^ (albedoTextures at: textureIndex) ifNil: [ engine resourceCache whiteTexture ]
+]
+
+{ #category : #'as yet unclassified' }
+WDCTerrainMaterial >> validNormalTexture: textureIndex [
+	^ (normalTextures at: textureIndex) ifNil: [ engine resourceCache defaultNormalTexture ]
 ]
 
 { #category : #'state binding' }

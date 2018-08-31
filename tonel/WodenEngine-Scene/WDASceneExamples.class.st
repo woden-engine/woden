@@ -345,19 +345,31 @@ WDASceneExamples class >> example07SmallTerrain [
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
+	camera farDistance: 100.0.
 	camera transform translateByZ: 3.0; translateByY: 1.0.
 
 	material := WDCTerrainMaterial for: scene engine.
-	material heightMapTexture: (scene engine resourceCache grayTextureExtent: 128@128 renderWith: [ :s :t |
-		| x y |
-		x := s *2.0 - 1.0.
-		y := t *2.0 - 1.0.
-		1.0 - (x abs max: y abs)
+	material
+		heightMapScale: (WMVector2F x: 1.0 y: 1.0)/10.0;
+		heightScale: 8.0;
+		heightMapTexture: (scene engine resourceCache grayTextureExtent: 128@128 renderWith: [ :s :t |
+		|coord lacunarity amplitude result |
+	
+		coord := (s@t)*3.0.
+		lacunarity := 1.45.
+		amplitude := 0.5.	
+		result := 0.0.
+		1 to: 5 do: [ :i |
+			result := result + (coord signedGradientNoise * amplitude) abs.
+			amplitude := amplitude / lacunarity.
+			coord := coord * lacunarity
+		].
+		result.
 	]).
 	
 	mesh := (WDCGenericMeshBuilder for: scene engine)
 		currentMaterial: material;
-		addGridWithWidth: 5.0 height: 5.0 subdivisions: 64;
+		addGridWithWidth: 20.0 height: 20.0 subdivisions: 256;
 		mesh.
 		
 	terrain := WDSGSpatialObject new.
@@ -366,11 +378,13 @@ WDASceneExamples class >> example07SmallTerrain [
 	scene add: terrain.
 	
 	light := WDSGLightSource new.
-	light point.
+	light directional; castShadows: true.
 	light state
-		intensity: Color yellow asWMVector4F.
+		intensity: (Color fromHexString: 'f1efd7') asWMVector4F.
 	light transform
-		translateByX: -1.5 y: 1.5 z: 1.6.
+		rotateDegreesOnX: -45;
+		rotateDegreesOnY: 135;
+		translateToX: 0.0 y: 1.5 z: 2.5.
 	scene add: light.
 
 	model openWith: WDAFPSSceneView.
