@@ -97,7 +97,7 @@ WDASceneExamples class >> example03Floor [
 
 { #category : #examples }
 WDASceneExamples class >> example04Pool [
-	| model meshBuilder cube scene camera engine floorMaterial waterMaterial skyMaterial sunLight skyBox waterSurface view floor mesh |
+	| model meshBuilder cube scene camera engine floorMaterial waterMaterial skyMaterial sunLight skyBox waterSurface view floor mesh waterMesh |
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
@@ -177,15 +177,15 @@ WDASceneExamples class >> example04Pool [
 		harmonicAt: 3 amplitude: 0.015 frequency: 1.80 direction: (WMVector2F x: 1.0).
 
 	"Add the water"
-	meshBuilder := WDCGenericMeshBuilder for: engine.
-	meshBuilder
-		currentMaterial: waterMaterial;
-		addGridWithWidth: 5.0 height: 5.0 subdivisions: 64.
+	waterMesh := (WDCTerrainMeshBuilder for: scene engine)
+		material: waterMaterial;
+		createGridWithSize: (WMVector2F x: 5.0 y: 5.0) subdivisions: 64;
+		mesh.
 		
 	waterSurface := WDSGSpatialObject new.
 	waterSurface translucentRenderPriority;
 		isOpaqueShadowCaster: false;
-		renderable: meshBuilder mesh.
+		renderable: waterMesh.
 	waterSurface transform translateToX: 0.0 y: -0.3 z: 0.0.
 	scene add: waterSurface.
 	
@@ -196,7 +196,7 @@ WDASceneExamples class >> example04Pool [
 
 { #category : #examples }
 WDASceneExamples class >> example05DangerousPool [
-	| model meshBuilder cube scene camera engine floorMaterial waterMaterial skyMaterial sunLight skyBox waterSurface view magnumMesh pickedGun animationState gunAction gunActionFrame gunActionRepeated |
+	| model meshBuilder cube scene camera engine floorMaterial waterMaterial skyMaterial sunLight skyBox waterSurface view magnumMesh pickedGun animationState gunAction gunActionFrame gunActionRepeated waterMesh |
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
@@ -265,15 +265,15 @@ WDASceneExamples class >> example05DangerousPool [
 		harmonicAt: 3 amplitude: 0.015 frequency: 1.80 direction: (WMVector2F x: 1.0).
 
 	"Add the water"
-	meshBuilder := WDCGenericMeshBuilder for: engine.
-	meshBuilder
-		currentMaterial: waterMaterial;
-		addGridWithWidth: 5.0 height: 5.0 subdivisions: 64.
+	waterMesh := (WDCTerrainMeshBuilder for: scene engine)
+		material: waterMaterial;
+		createGridWithSize: (WMVector2F x: 5.0 y: 5.0) subdivisions: 64;
+		mesh.
 		
 	waterSurface := WDSGSpatialObject new.
 	waterSurface translucentRenderPriority;
 		isOpaqueShadowCaster: false;
-		renderable: meshBuilder mesh.
+		renderable: waterMesh.
 	waterSurface transform translateToX: 0.0 y: -0.3 z: 0.0.
 	scene add: waterSurface.
 	

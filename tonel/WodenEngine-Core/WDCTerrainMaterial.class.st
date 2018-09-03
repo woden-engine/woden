@@ -22,7 +22,9 @@ WDCTerrainMaterial >> activateForwardOn: stateTracker [
 	
 	stateTracker
 		vertexShader: vertexShader;
-		fragmentShader: fragmentShader.
+		fragmentShader: fragmentShader;
+		materialBlendingMode: WDCBlendingMode alphaOver.
+	self flag: 'TODO: Use alpha testing here.'.
 	
 	resourceBinding ifNotNil: [ 
 		stateTracker useShaderResources: resourceBinding.
@@ -36,7 +38,9 @@ WDCTerrainMaterial >> activateShadowOn: stateTracker [
 	self validateCache.
 	stateTracker
 		vertexShader: vertexShader;
-		fragmentShader: nil.
+		fragmentShader: nil;
+		materialBlendingMode: WDCBlendingMode alphaOver.
+	self flag: 'TODO: Use alpha testing here.'.
 
 	"For the height map"		
 	resourceBinding ifNotNil: [ 
