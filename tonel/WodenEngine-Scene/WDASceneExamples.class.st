@@ -364,9 +364,57 @@ WDASceneExamples class >> example07SmallTerrain [
 		heightScale: 8.0;
 		heightMapTexture: (heightMap asTextureFor: scene engine).
 	
-	mesh := (WDCGenericMeshBuilder for: scene engine)
-		currentMaterial: material;
-		addGridWithWidth: 20.0 height: 20.0 subdivisions: 256;
+	mesh := (WDCTerrainMeshBuilder for: scene engine)
+		material: material;
+		createGridWithSize: (WMVector2F x: 20.0 y: 20.0) subdivisions: 128;
+		mesh.
+		
+	terrain := WDSGSpatialObject new.
+	terrain transform translateByY: -1.0.
+	terrain renderable: mesh.
+	scene add: terrain.
+	
+	light := WDSGLightSource new.
+	light directional; castShadows: true.
+	light state
+		intensity: (Color fromHexString: 'f1efd7') asWMVector4F.
+	light transform
+		rotateDegreesOnX: -45;
+		rotateDegreesOnY: 135;
+		translateToX: 0.0 y: 1.5 z: 2.5.
+	scene add: light.
+
+	model openWith: WDAFPSSceneView.
+]
+
+{ #category : #examples }
+WDASceneExamples class >> example08MediumTerrain [
+	| model material mesh terrain light scene camera heightMap |
+	
+	"Some procedural textures used by the demo"
+	heightMap := WDCTextureData extent: 256@256 grayRenderWith: [ :s :t |
+		|st|
+		st := s@t.
+		st*10.0 fractionalBrownianMotionOctaves: 8 lacunarity: 1.45 initialAmplitude: 0.5 with: [ :c : a|
+			(c signedGradientNoise *a) abs
+		]
+	].
+	
+	model := WDASampleSceneModel new.
+	scene := model newScene.
+	camera := model camera.
+	camera farDistance: 100.0.
+	camera transform translateByZ: 3.0; translateByY: 1.0.
+
+	material := WDCTerrainMaterial for: scene engine.
+	material
+		heightMapScale: (WMVector2F x: 1.0 y: 1.0)/100.0;
+		heightScale: 8.0;
+		heightMapTexture: (heightMap asTextureFor: scene engine).
+	
+	mesh := (WDCTerrainMeshBuilder for: scene engine)
+		material: material;
+		createClipMapWithLevels: 3 size: (WMVector2F x: 20.0 y: 20.0) subdivisions: 128;
 		mesh.
 		
 	terrain := WDSGSpatialObject new.

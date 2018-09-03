@@ -84,8 +84,8 @@ Point >> signedGradientNoise [
 	maxY := minY + 1.0.
 	fx := x - minX.
 	fy := y - minY.
-	ix := fx cubicHemineCurve.
-	iy := fy cubicHemineCurve.
+	ix := fx cubicHemiteCurve.
+	iy := fy cubicHemiteCurve.
 
 	l := ((minX@minY) randomGradientVector dotProduct: fx@fy)
 		interpolateTo: ((maxX@minY) randomGradientVector dotProduct: (fx - 1.0)@fy)
@@ -105,8 +105,8 @@ Point >> signedGradientNoiseTiledWith: tilingPeriod [
 	maxY := minY + 1.0 floorModule: tilingPeriod y.
 	fx := x - minX.
 	fy := y - minY.
-	ix := fx cubicHemineCurve.
-	iy := fy cubicHemineCurve.
+	ix := fx cubicHemiteCurve.
+	iy := fy cubicHemiteCurve.
 
 	l := ((minX@minY) randomGradientVector dotProduct: fx@fy)
 		interpolateTo: ((maxX@minY) randomGradientVector dotProduct: (fx - 1.0)@fy)
@@ -150,8 +150,8 @@ Point >> valueNoise [
 	minY := y floor.
 	maxX := minX + 1.0.
 	maxY := minY + 1.0.
-	fx := (x - minX) cubicHemineCurve.
-	fy := (y - minY) cubicHemineCurve.
+	fx := (x - minX) cubicHemiteCurve.
+	fy := (y - minY) cubicHemiteCurve.
 
 	l := (minX@minY) randomNoise interpolateTo: (maxX@minY) randomNoise at: fx.
 	t := (minX@maxY) randomNoise interpolateTo: (maxX@maxY) randomNoise at: fx.
@@ -165,8 +165,8 @@ Point >> valueNoiseTiledWith: tilingPeriod [
 	minY := y floor floorModule: tilingPeriod y.
 	maxX := minX + 1.0 floorModule: tilingPeriod x.
 	maxY := minY + 1.0 floorModule: tilingPeriod y.
-	fx := (x - minX) cubicHemineCurve.
-	fy := (y - minY) cubicHemineCurve.
+	fx := (x - minX) cubicHemiteCurve.
+	fy := (y - minY) cubicHemiteCurve.
 
 	l := (minX@minY) randomNoise interpolateTo: (maxX@minY) randomNoise at: fx.
 	t := (minX@maxY) randomNoise interpolateTo: (maxX@maxY) randomNoise at: fx.

@@ -3,4 +3,5 @@ Compiler
     evaluateFileNamed: 'WTCompositionVertexF.ltk';
     evaluateFileNamed: 'WTGenericVertexF.ltk';
     evaluateFileNamed: 'WTSkinnedGenericVertexF.ltk';
+    evaluateFileNamed: 'WDCTerrainMeshVertexF.ltk';
 	yourself.

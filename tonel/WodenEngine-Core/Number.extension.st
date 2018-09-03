@@ -1,7 +1,7 @@
 Extension { #name : #Number }
 
 { #category : #'*WodenEngine-Core' }
-Number >> cubicHemineCurve [
+Number >> cubicHemiteCurve [
 	^ self * self * (3.0 - (2.0*self))
 ]
 
@@ -74,12 +74,19 @@ Number >> signedValueNoise [
 
 { #category : #'*WodenEngine-Core' }
 Number >> smoothInterpolateTo: aNumber at: param [
-	^ self interpolateTo: aNumber at: param cubicHemineCurve
+	^ self interpolateTo: aNumber at: param cubicHemiteCurve
+]
+
+{ #category : #'*WodenEngine-Core' }
+Number >> smoothStepFrom: leftEdge to: rightEdge [
+	self <= leftEdge ifTrue: [ ^ 0.0 ].
+	self >= rightEdge ifTrue: [ ^ 1.0 ].
+	^ ((self - leftEdge) / (rightEdge - leftEdge)) cubicHemiteCurve
 ]
 
 { #category : #'*WodenEngine-Core' }
 Number >> valueNoise [
 	| lower |
 	lower := self floor.
-	^ lower randomNoise interpolateTo: (lower + 1.0) randomNoise at: (self - lower) cubicHemineCurve
+	^ lower randomNoise interpolateTo: (lower + 1.0) randomNoise at: (self - lower) cubicHemiteCurve
 ]

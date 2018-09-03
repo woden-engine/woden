@@ -59,7 +59,7 @@ WDCTextureLevelData >> grayRenderWith: aBlock [
 	0 to: height - 1 do: [ :y |
 		destIndex := destRow.
 		0 to: width - 1 do: [ :x |
-			value := (aBlock value: (x + 0.5) * inverseWidth value: (y + 0.5) * inverseHeight) asNormalizedUByte.
+			value := (aBlock cull: (x + 0.5) * inverseWidth cull: (y + 0.5) * inverseHeight cull: width cull: height) asNormalizedUByte.
 			data at: destIndex put: value.
 			destIndex := destIndex + 1
 		].
