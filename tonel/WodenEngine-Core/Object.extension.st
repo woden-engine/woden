@@ -4,3 +4,13 @@ Extension { #name : #Object }
 Object >> isSessionPersistentExternalBuffer [
 	^ false
 ]
+
+{ #category : #'*WodenEngine-Core' }
+Object >> resultForLinearInterpolation [
+	^ self
+]
+
+{ #category : #'*WodenEngine-Core' }
+Object >> valueForLinearInterpolation [
+	^ self
+]

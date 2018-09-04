@@ -4,6 +4,81 @@ Class {
 	#category : 'WodenEngine-Scene-Examples'
 }
 
+{ #category : #'examples procedural' }
+WDASceneExamples class >> cloudTexture [
+	"
+	self cloudTexture inspect
+	"
+	| textureSize skyColor colorRamp |
+	textureSize := 5.0.
+	skyColor := Color fromHexString: '68e3ee'.
+	colorRamp := WDCLinearRamp with: { 
+		0.4 -> skyColor.
+		1.0 -> Color white.
+	}.
+
+	^ WDCTextureData extent: 128@128 colorRenderWith: [ :s :t |
+		|st cloud |
+		st := (s@t)*textureSize.
+		cloud := (st fractionalBrownianMotionOctaves: 4 lacunarity: 2.0 initialAmplitude: 0.9 with: #signedGradientNoise)*0.5 +0.5.
+	
+		colorRamp value: cloud.
+	]
+]
+
+{ #category : #'examples procedural' }
+WDASceneExamples class >> createIslandTerrainObjectFor: engine [
+	| heightMap splatterMap material mesh terrain |
+	heightMap := self islandHeightMap: 128.
+	splatterMap := self islandSplatterMap: 128.
+		
+	material := WDCTerrainMaterial for: engine.
+	material
+		heightMapScale: (WMVector2F x: 1.0 y: 1.0)/100.0;
+		heightScale: 110.0;
+		heightMapTexture: (heightMap asTextureFor: engine);
+		splattingTexture: (splatterMap asTextureFor: engine);
+		albedoTextures: {
+			(self sandTexture) asSRGBTextureFor: engine.
+			(self grassTexture) asSRGBTextureFor: engine.
+			(self rockTexture) asSRGBTextureFor: engine.
+			(self snowTexture) asSRGBTextureFor: engine.
+			nil
+		}.
+	
+	mesh := (WDCTerrainMeshBuilder for: engine)
+		material: material;
+		createClipMapWithLevels: 3 size: (WMVector2F x: 20.0 y: 20.0) subdivisions: 128;
+		mesh.
+		
+	terrain := WDSGSpatialObject new.
+	terrain renderable: mesh.
+	
+	^ terrain
+]
+
+{ #category : #'examples procedural' }
+WDASceneExamples class >> createIslandWaterObjectFor: engine [
+	"Setup the water material"
+	| material mesh waterObject |
+	material := engine resourceCache loadMaterial: 'materials/demos/water.json'.
+	material
+		harmonicAt: 1 amplitude: 0.02 frequency: 2.23 direction: (WMVector2F y: 1.0);
+		harmonicAt: 2 amplitude: 0.015 frequency: 1.80 direction: (WMVector2F x: 1.0).
+
+	"Add the water"
+	mesh := (WDCTerrainMeshBuilder for: engine)
+		material: material;
+		createClipMapWithLevels: 3 size: (WMVector2F x: 20.0 y: 20.0) subdivisions: 128;
+		mesh.
+		
+	waterObject := WDSGSpatialObject new.
+	waterObject translucentRenderPriority;
+		isOpaqueShadowCaster: false;
+		renderable: mesh.
+	^ waterObject
+]
+
 { #category : #examples }
 WDASceneExamples class >> example01Cube [
 	| model meshBuilder mesh cube light scene camera |
@@ -344,7 +419,7 @@ WDASceneExamples class >> example07SmallTerrain [
 	| model material mesh terrain light scene camera heightMap |
 	
 	"Some procedural textures used by the demo"
-	heightMap := WDCTextureData extent: 128@128 grayRenderWith: [ :s :t |
+	heightMap := WDCTextureData extent: 128@128 signedHeightRenderWith: [ :s :t |
 		|st|
 		st := s@t.
 		st*3.0 fractionalBrownianMotionOctaves: 5 lacunarity: 1.45 initialAmplitude: 0.5 with: [ :c : a|
@@ -392,7 +467,7 @@ WDASceneExamples class >> example08MediumTerrain [
 	| model material mesh terrain light scene camera heightMap |
 	
 	"Some procedural textures used by the demo"
-	heightMap := WDCTextureData extent: 256@256 grayRenderWith: [ :s :t |
+	heightMap := WDCTextureData extent: 256@256 signedHeightRenderWith: [ :s :t |
 		|st|
 		st := s@t.
 		st*10.0 fractionalBrownianMotionOctaves: 8 lacunarity: 1.45 initialAmplitude: 0.5 with: [ :c : a|
@@ -435,6 +510,35 @@ WDASceneExamples class >> example08MediumTerrain [
 	model openWith: WDAFPSSceneView.
 ]
 
+{ #category : #examples }
+WDASceneExamples class >> example09Island [
+	| model terrain light scene camera water |
+	
+	model := WDASampleSceneModel new.
+	scene := model newScene.
+	camera := model camera.
+	camera farDistance: 200.0.
+	camera transform translateByZ: 110.0; translateByY: 1.0.
+
+	terrain := self createIslandTerrainObjectFor: scene engine.
+	scene add: terrain.
+
+	water := self createIslandWaterObjectFor: scene engine.
+	scene add: water.
+	
+	light := WDSGLightSource new.
+	light directional; castShadows: true.
+	light state
+		intensity: (Color fromHexString: 'f1efd7') asWMVector4F.
+	light transform
+		rotateDegreesOnX: -45;
+		rotateDegreesOnY: 135;
+		translateToX: 0.0 y: 1.5 z: 2.5.
+	scene add: light.
+
+	model openWith: WDAFPSSceneView.
+]
+
 { #category : #'example models' }
 WDASceneExamples class >> exampleModelBunny [
 	(WDCEngine default resourceCache load3DModel: 'models/stanford/bun_zipper.ply') openViewer
@@ -443,6 +547,117 @@ WDASceneExamples class >> exampleModelBunny [
 { #category : #'example models' }
 WDASceneExamples class >> exampleModelCube [
 	(WDCEngine default resourceCache load3DModel: 'models/obj/cube.obj') openViewer
+]
+
+{ #category : #'examples procedural' }
+WDASceneExamples class >> grassTexture [
+	^ WDCTextureData extent: 128@128 colorRenderWith: [ :s :t |
+		Color green
+	].
+]
+
+{ #category : #'examples procedural' }
+WDASceneExamples class >> islandHeightMap: textureExtent [
+| islandOuterRadius islandInnerRadius maximumHeight seabedLevel heightScale islandBaseLevel |
+islandOuterRadius := 100.0.
+islandInnerRadius := islandOuterRadius - 50.0.
+maximumHeight := 100.0.
+seabedLevel := -10.0.
+islandBaseLevel := 1.0.
+heightScale := 110.0.
+
+^ WDCTextureData extent: textureExtent@textureExtent signedHeightRenderWith: [ :s :t |
+	| st p r theta innerRadius
+	 boundaries heightAttenuation
+	 islandInterior mountainHeight
+	 heightValue|
+	"Compute the coordinates"
+	st := s@t.
+	p := (st*2.0 - 1.0) * islandOuterRadius.
+
+	r := p distanceTo: 0@0.
+	theta := p theta.
+	
+	"Generate the island boundaries"
+	innerRadius := islandOuterRadius - 50.0 - (((theta*1.5 + 12.0) turbulence)*35.0) min: islandOuterRadius.
+	boundaries := (r smoothStepFrom: innerRadius to: islandOuterRadius ) fuzzyNot.
+	heightAttenuation := (r smoothStepFrom: 0.0 to: innerRadius) fuzzyNot.
+
+	"Generate the mountains"
+	mountainHeight := (st*5.0 fractionalBrownianMotionOctaves: 5 lacunarity: 2.1245 initialAmplitude: 1.0 with: [:c | c signedGradientNoise])*0.5 + 0.5 * (maximumHeight * heightAttenuation).
+	
+	"Generate the stuff in the island interior"
+	islandInterior := islandBaseLevel + mountainHeight.
+
+	heightValue := seabedLevel interpolateTo: islandInterior at: boundaries.
+	heightValue / heightScale.
+]
+]
+
+{ #category : #'examples procedural' }
+WDASceneExamples class >> islandSplatterMap: textureExtent [
+| islandOuterRadius islandInnerRadius maximumHeight seabedLevel heightScale islandBaseLevel snowStartHeight |
+islandOuterRadius := 100.0.
+islandInnerRadius := islandOuterRadius - 50.0.
+maximumHeight := 100.0.
+seabedLevel := -10.0.
+islandBaseLevel := 1.0.
+heightScale := 110.0.
+
+snowStartHeight := 45.0.
+
+^ WDCTextureData extent: textureExtent@textureExtent colorRenderWith: [ :s :t |
+	| st p r theta innerRadius
+	 heightAttenuation
+	 islandInterior mountainHeight
+	 sand rock grass snow notInSnow|
+	"Compute the coordinates"
+	st := s@t.
+	p := (st*2.0 - 1.0) * islandOuterRadius.
+
+	r := p distanceTo: 0@0.
+	theta := p theta.
+	
+	"Generate the island boundaries"
+	innerRadius := islandOuterRadius - 50.0 - (((theta*1.5 + 12.0) turbulence)*35.0) min: islandOuterRadius.
+	sand := r smoothStepFrom: innerRadius to: islandOuterRadius.
+	heightAttenuation := (r smoothStepFrom: 0.0 to: innerRadius) fuzzyNot.
+
+	"Generate the mountains"
+	mountainHeight := (st*5.0 fractionalBrownianMotionOctaves: 5 lacunarity: 2.1245 initialAmplitude: 1.0 with: [:c | c signedGradientNoise])*0.5 + 0.5 * (maximumHeight * heightAttenuation).
+
+	snow := mountainHeight smoothStepFrom: snowStartHeight to: snowStartHeight + 2.0.
+	notInSnow := snow fuzzyNot.
+	grass := ((st*13.0) turbulence - ((mountainHeight max: 0.0)/maximumHeight*10.0) + 0.1 max: 0.0) productFuzzyAnd: sand fuzzyNot.
+	rock := snow fuzzyNot productFuzzyAnd: sand fuzzyNot.
+	
+	"Generate the stuff in the island interior"
+	islandInterior := mountainHeight.
+
+	Color forSplattingElements: { sand . grass . rock . snow . 0.0}.
+	"Color r: sand g: 0.0 b: 0.0 alpha: 1.0."
+]
+]
+
+{ #category : #'examples procedural' }
+WDASceneExamples class >> rockTexture [
+	^ WDCTextureData extent: 128@128 colorRenderWith: [ :s :t |
+		Color brown
+	].
+]
+
+{ #category : #'examples procedural' }
+WDASceneExamples class >> sandTexture [
+	^ WDCTextureData extent: 128@128 colorRenderWith: [ :s :t |
+		Color yellow
+	].
+]
+
+{ #category : #'examples procedural' }
+WDASceneExamples class >> snowTexture [
+	^ WDCTextureData extent: 128@128 colorRenderWith: [ :s :t |
+		Color white
+	].
 ]
 
 { #category : #'see class side' }

@@ -21,9 +21,11 @@ WDCTextureLevelData >> colorRenderWith: aBlock [
 	0 to: height - 1 do: [ :y |
 		destIndex := destRow.
 		0 to: width - 1 do: [ :x |
-			value := (aBlock value: (x + 0.5) * inverseWidth value: (y + 0.5) * inverseHeight) pixelWordForDepth: 32.
-			data unsignedLongAt: destIndex put: value.
-			destIndex := destIndex + 4
+			value := (aBlock value: (x + 0.5) * inverseWidth value: (y + 0.5) * inverseHeight).
+			data at: destIndex put: value blue asNormalizedUByte. destIndex := destIndex + 1.
+			data at: destIndex put: value green asNormalizedUByte. destIndex := destIndex + 1.
+			data at: destIndex put: value red asNormalizedUByte. destIndex := destIndex + 1.
+			data at: destIndex put: value alpha asNormalizedUByte. destIndex := destIndex + 1.
 		].
 	
 		destRow := destRow + pitch
@@ -59,7 +61,7 @@ WDCTextureLevelData >> grayRenderWith: aBlock [
 	0 to: height - 1 do: [ :y |
 		destIndex := destRow.
 		0 to: width - 1 do: [ :x |
-			value := (aBlock cull: (x + 0.5) * inverseWidth cull: (y + 0.5) * inverseHeight cull: width cull: height) asNormalizedUByte.
+			value := (aBlock cull: (x + 0.5) * inverseWidth cull: (y + 0.5) * inverseHeight cull: width cull: height) encodeSRGBComponent asNormalizedUByte.
 			data at: destIndex put: value.
 			destIndex := destIndex + 1
 		].
@@ -89,6 +91,42 @@ WDCTextureLevelData >> pitch: anObject [
 ]
 
 { #category : #'cpu rendering' }
+WDCTextureLevelData >> r16RenderWith: aBlock [
+	| inverseHeight inverseWidth destIndex destRow value |
+	inverseHeight := 1.0 / height.
+	inverseWidth := 1.0 / height.
+	destRow := 1.
+	0 to: height - 1 do: [ :y |
+		destIndex := destRow.
+		0 to: width - 1 do: [ :x |
+			value := (aBlock cull: (x + 0.5) * inverseWidth cull: (y + 0.5) * inverseHeight cull: width cull: height) asNormalizedUShort.
+			data unsignedShortAt: destIndex put: value.
+			destIndex := destIndex + 2
+		].
+	
+		destRow := destRow + pitch
+	]
+]
+
+{ #category : #'cpu rendering' }
+WDCTextureLevelData >> rRenderWith: aBlock [
+	| inverseHeight inverseWidth destIndex destRow value |
+	inverseHeight := 1.0 / height.
+	inverseWidth := 1.0 / height.
+	destRow := 1.
+	0 to: height - 1 do: [ :y |
+		destIndex := destRow.
+		0 to: width - 1 do: [ :x |
+			value := (aBlock cull: (x + 0.5) * inverseWidth cull: (y + 0.5) * inverseHeight cull: width cull: height) asNormalizedUByte.
+			data at: destIndex put: value.
+			destIndex := destIndex + 1
+		].
+	
+		destRow := destRow + pitch
+	]
+]
+
+{ #category : #'cpu rendering' }
 WDCTextureLevelData >> rgRenderWith: aBlock [
 	| inverseHeight inverseWidth destIndex destRow rg |
 	inverseHeight := 1.0 / height.
@@ -104,6 +142,24 @@ WDCTextureLevelData >> rgRenderWith: aBlock [
 
 			data at: destIndex put: rg y asNormalizedUByte.
 			destIndex := destIndex + 1.
+		].
+	
+		destRow := destRow + pitch
+	]
+]
+
+{ #category : #'cpu rendering' }
+WDCTextureLevelData >> signedR16RenderWith: aBlock [
+	| inverseHeight inverseWidth destIndex destRow value |
+	inverseHeight := 1.0 / height.
+	inverseWidth := 1.0 / height.
+	destRow := 1.
+	0 to: height - 1 do: [ :y |
+		destIndex := destRow.
+		0 to: width - 1 do: [ :x |
+			value := (aBlock cull: (x + 0.5) * inverseWidth cull: (y + 0.5) * inverseHeight cull: width cull: height) asNormalizedShort.
+			data unsignedShortAt: destIndex put: value.
+			destIndex := destIndex + 2
 		].
 	
 		destRow := destRow + pitch

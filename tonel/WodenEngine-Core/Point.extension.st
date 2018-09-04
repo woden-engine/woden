@@ -53,17 +53,25 @@ Point >> gradientNoiseTiledWith: tilingPeriod [
 
 { #category : #'*WodenEngine-Core' }
 Point >> randomGradientVector [
-	| gx gy il |
-	self flag: 'Improve this more'.
+	| gx gy |
 	gx := self signedRandomNoise.
-	gy :=(gx*(x*x + y*y)) signedRandomNoise.
-	il := 1.0 / (gx*gx + gy*gy max: 1.0).
-	^ (gx * il) @ (gy *il)
+	gy := self signedRandomNoise_second.
+	^ gx@gy
 ]
 
 { #category : #'*WodenEngine-Core' }
 Point >> randomNoise [
 	^ (self dotProduct: 37.466001434934327 @ 974.4145860776373) randomNoise
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> randomNoise2 [
+	^ self randomNoise @ self randomNoise_second
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> randomNoise_second [
+	^ (self dotProduct: 718.2194021149629 @  53.063644586626275) randomNoise
 ]
 
 { #category : #'*WodenEngine-Core' }
@@ -124,6 +132,12 @@ Point >> signedRandomNoise [
 ]
 
 { #category : #'*WodenEngine-Core' }
+Point >> signedRandomNoise_second [
+	^ self randomNoise_second * 2.0 - 1.0
+
+]
+
+{ #category : #'*WodenEngine-Core' }
 Point >> signedValueNoise [
 	^ self valueNoise * 2.0 - 1.0
 ]
@@ -141,6 +155,17 @@ Point >> signedWorleyNoise [
 { #category : #'*WodenEngine-Core' }
 Point >> signedWorleyNoiseTiledWith: tilingPeriod [
 	^ (self worleyNoiseTiledWith: tilingPeriod)*2.0 - 1.0
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> turbulence [
+	^ self turbulenceScales: 4
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> turbulenceScales: scale [
+	^ self fractionalBrownianMotionOctaves: scale lacunarity: 2.0 gain: 0.5 initialAmplitude: 1.0 with: #signedGradientNoise
+
 ]
 
 { #category : #'*WodenEngine-Core' }
