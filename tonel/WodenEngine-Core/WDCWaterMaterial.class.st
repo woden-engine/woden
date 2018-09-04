@@ -24,7 +24,8 @@ WDCWaterMaterial >> activateForwardOn: stateTracker [
 	stateTracker
 		vertexShader: vertexShader;
 		fragmentShader: fragmentShader;
-		materialBlendingMode: WDCBlendingMode alphaOver.
+		materialBlendingMode: WDCBlendingMode alphaOver;
+		materialCullMode: AGPU_CULL_MODE_NONE.
 	^ true
 ]
 
@@ -45,6 +46,11 @@ WDCWaterMaterial >> bindResources [
 	normalTexture ifNotNil: [ resourceBinding bind: 2 texture: normalTexture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0 ].
 	skyTexture ifNotNil: [ resourceBinding bind: 3 texture: skyTexture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0 ].
 		
+]
+
+{ #category : #accessing }
+WDCWaterMaterial >> clipMapPeriod: aVector2 [
+	materialState clipMapPeriod: aVector2
 ]
 
 { #category : #'state binding' }

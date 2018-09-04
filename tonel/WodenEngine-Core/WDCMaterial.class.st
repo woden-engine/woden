@@ -4,7 +4,10 @@ Class {
 	#instVars : [
 		'engine'
 	],
-	#category : 'WodenEngine-Core-Material'
+	#pools : [
+		'AGPUConstants'
+	],
+	#category : #'WodenEngine-Core-Material'
 }
 
 { #category : #'instance creation' }

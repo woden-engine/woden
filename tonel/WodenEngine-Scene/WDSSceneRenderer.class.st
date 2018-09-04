@@ -217,7 +217,7 @@ WDSSceneRenderer >> setupStateTracker [
 		useShaderResources: self shaderSignature defaultSamplers;
 		
 		frontFaceWinding: AGPU_COUNTER_CLOCKWISE;
-		cullMode: AGPU_CULL_MODE_BACK;
+		objectCullMode: AGPU_CULL_MODE_BACK;
 		depthEnabled: true;
 		depthWriteMask: true;
 		depthFunction: AGPU_GREATER_EQUAL;

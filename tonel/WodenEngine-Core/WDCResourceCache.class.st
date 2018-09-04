@@ -23,6 +23,27 @@ Class {
 	#category : 'WodenEngine-Core-Engine'
 }
 
+{ #category : #'as yet unclassified' }
+WDCResourceCache class >> cachedValueFor: anObjectDescription ifPresent: ifPresentBlock [
+	^ self cachedValueFor: anObjectDescription ifPresent: ifPresentBlock ifAbsentPut: [ ^ self ]
+]
+
+{ #category : #'as yet unclassified' }
+WDCResourceCache class >> cachedValueFor: anObjectDescription ifPresent: ifPresentBlock ifAbsentPut: ifAbsentPutBlock [
+	| fileName valueToSave |
+	fileName := self fileNameForCachedValue: anObjectDescription.
+	fileName exists ifTrue: [ ^ ifPresentBlock value: (FLMaterializer materializeFromFileNamed: fileName fullName)].
+	
+	valueToSave := ifAbsentPutBlock value.
+	FLSerializer serialize: valueToSave toFileNamed: fileName fullName
+]
+
+{ #category : #'as yet unclassified' }
+WDCResourceCache class >> fileNameForCachedValue: anObjectDescription [
+	^ self proceduralContentDiskCache
+		/ ((SHA256 hashMessage: anObjectDescription printString) hex , '.fuel')
+]
+
 { #category : #initialization }
 WDCResourceCache class >> initialize [
 	ShaderLanguageTargetMap := Dictionary newFromPairs: {
@@ -33,6 +54,14 @@ WDCResourceCache class >> initialize [
     	AGPU_SHADER_LANGUAGE_METAL . #metal.
 	}.
 	
+]
+
+{ #category : #'as yet unclassified' }
+WDCResourceCache class >> proceduralContentDiskCache [
+	| result |
+	result := FileSystem workingDirectory / 'procedural-content-cache'.
+	result exists ifFalse: [ result createDirectory ].
+	^ result
 ]
 
 { #category : #adding }

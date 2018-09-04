@@ -28,23 +28,6 @@ WDCTextureData class >> extent: anExtent bpp: bitsPerPixel format: pixelFormat [
 
 { #category : #'as yet unclassified' }
 WDCTextureData class >> extent: anExtent bpp: bitsPerPixel format: pixelFormat srgbFormat: srgbPixelFormat [
-	| pitch slicePitch data |
-	pitch := anExtent x * bitsPerPixel / 8 alignedTo: 4.
-	slicePitch := pitch * anExtent y.
-	data := ByteArray new: slicePitch.
-	^ self extent: anExtent format: pixelFormat srgbFormat: srgbPixelFormat pitch: pitch slicePitch: slicePitch data: data
-
-]
-
-{ #category : #'as yet unclassified' }
-WDCTextureData class >> extent: anExtent colorRenderWith: aBlock [
-	^ (self extent: anExtent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM srgbFormat: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB)
-		colorRenderWith: aBlock;
-		yourself
-]
-
-{ #category : #'as yet unclassified' }
-WDCTextureData class >> extent: anExtent format: pixelFormat srgbFormat: srgbPixelFormat pitch: pitch slicePitch: slicePitch data: data [
 	| w h |
 	w := anExtent x.
 	h := anExtent y.
@@ -58,16 +41,17 @@ WDCTextureData class >> extent: anExtent format: pixelFormat srgbFormat: srgbPix
 			width: w;
 			height: h;
 			depth: 1;
-			levels: { WDCTextureLevelData new
-				width: w;
-				height: h;
-				depth: 1;
-				pitch: pitch;
-				slicePitch: slicePitch;
-				data: data
-			} };
+			generateLevelsWithBpp: bitsPerPixel};
 		type: AGPU_TEXTURE_2D;
 		miplevels: 1;
+		yourself
+
+]
+
+{ #category : #'as yet unclassified' }
+WDCTextureData class >> extent: anExtent colorRenderWith: aBlock [
+	^ (self extent: anExtent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM srgbFormat: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB)
+		colorRenderWith: aBlock;
 		yourself
 ]
 
@@ -114,6 +98,18 @@ WDCTextureData class >> extent: anExtent signedR16RenderWith: aBlock [
 	^ (self extent: anExtent bpp: 16 format: AGPU_TEXTURE_FORMAT_R16_SNORM)
 		signedR16RenderWith: aBlock;
 		yourself
+]
+
+{ #category : #'cpu rendering' }
+WDCTextureData class >> extent: extent terrainMapsRenderWith: aBlock [
+	^ { 
+	self extent: extent signedHeightRenderWith: [ :s :t |
+		(aBlock value: s value: t) first
+	].
+	self extent: extent colorRenderWith: [ :s :t |
+		Color forSplattingElements: (aBlock value: s value: t) second
+	].
+}
 ]
 
 { #category : #initialization }

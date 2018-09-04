@@ -1,5 +1,7 @@
 Structure <<< #WDCTerrainMaterialState
 	slots: {
+        #clipMapPeriod => WMVector2F.
+
         #heightMapScale => WMVector2F.
         #heightMapOffset => WMVector2F.
         #heightScale => Float32.
@@ -7,7 +9,10 @@ Structure <<< #WDCTerrainMaterialState
 
 		#albedo => WMVector4F.
 		#fresnel => WMCompactVector3F.
-		#smoothness => Float32
+		#smoothness => Float32.
+
+        #textureScales => (WMVector2F array: 5).
+        #textureOffsets => (WMVector2F array: 5).
 	};
 	package: 'WodenEngine-Structures-Core-Material';
 	yourself.

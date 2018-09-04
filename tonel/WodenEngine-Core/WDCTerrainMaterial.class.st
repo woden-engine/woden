@@ -90,6 +90,11 @@ WDCTerrainMaterial >> bindResources [
 	
 ]
 
+{ #category : #accessing }
+WDCTerrainMaterial >> clipMapPeriod: aVector2 [
+	materialState clipMapPeriod: aVector2
+]
+
 { #category : #'state binding' }
 WDCTerrainMaterial >> fetchShaders [
 
@@ -143,6 +148,8 @@ WDCTerrainMaterial >> initialize [
 		albedo: Color white asWMVector4F;
 		fresnel: (WMVector3F x: 0.03 y: 0.03 z: 0.03);
 		smoothness: 0.45;
+		
+		textureScales: ((SLVMNativeArray for: WMVector2F new: 5) atAllPut: (WMVector2F x: 1.0 y: 1.0));
 		yourself.
 	albedoTextures := { nil . nil . nil . nil . nil }.
 	normalTextures := { nil . nil . nil . nil . nil }.

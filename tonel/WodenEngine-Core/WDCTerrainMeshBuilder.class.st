@@ -24,13 +24,25 @@ WDCTerrainMeshBuilder class >> for: anEngine [
 ]
 
 { #category : #'as yet unclassified' }
+WDCTerrainMeshBuilder >> clipMapPeriodForGridSize: size subdivisions: subdivisions [
+	material ifNil: [ ^ self ].
+	material clipMapPeriod: size / (subdivisions + 1)
+]
+
+{ #category : #'as yet unclassified' }
 WDCTerrainMeshBuilder >> createClipMapWithLevels: levelCount size: size subdivisions: subdivisions [
-	| gridEdges |
-	gridEdges := self createGridWithSize: size offset: WMVector2F zero subdivisions: subdivisions lodLevel: 0.
-	
-	levelCount > 1 ifTrue: [ 
-		 self createRingWithLevels: levelCount - 1 size: size subdivisions: subdivisions / 2 radius: size / 2 interiorEdges: gridEdges lodLevel: 1.
+	(indices isEmpty and: [ vertices isEmpty ]) ifTrue: [ 
+		^ WDCResourceCache cachedValueFor: { self class . #clipmap . levelCount . size . subdivisions}
+			ifPresent: [ :cachedGeometry |
+				vertices := cachedGeometry first.
+				indices := cachedGeometry second.
+				boundingBox := WMBox3DF loadFromJson: cachedGeometry third.
+		] ifAbsentPut: [
+			self doCreateClipMapWithLevels: levelCount size: size subdivisions: subdivisions.
+			{ vertices . indices . boundingBox asJsonData }
+		]
 	].
+	self doCreateClipMapWithLevels: levelCount size: size subdivisions: subdivisions
 
 ]
 
@@ -126,6 +138,8 @@ WDCTerrainMeshBuilder >> createRingWithLevels: levelCount size: size subdivision
 			top: (allCellEdges at: 7) top , (allCellEdges at: 8) top allButFirst , (allCellEdges at: 9) top allButFirst ;
 			yourself.
 		 self createRingWithLevels: levelCount - 1 size: size*3.0 subdivisions: subdivisions * 3 / 2 radius: radius + size interiorEdges: nextGridEdges lodLevel: lodLevel + 1.0.
+	] ifFalse: [
+		self clipMapPeriodForGridSize: size subdivisions: subdivisions
 	]
 ]
 
@@ -150,6 +164,19 @@ WDCTerrainMeshBuilder >> createVertexBinding [
 { #category : #'mesh building' }
 WDCTerrainMeshBuilder >> createVertexBuffer [
 	^ engine createVertex: WDCTerrainMeshVertexF structureSize elements: vertices size immutableBuffer: vertices asByteArray
+]
+
+{ #category : #'as yet unclassified' }
+WDCTerrainMeshBuilder >> doCreateClipMapWithLevels: levelCount size: size subdivisions: subdivisions [
+	| gridEdges |
+	gridEdges := self createGridWithSize: size offset: WMVector2F zero subdivisions: subdivisions lodLevel: 0.
+	
+	levelCount > 1 ifTrue: [ 
+		 self createRingWithLevels: levelCount - 1 size: size subdivisions: subdivisions / 2 radius: size / 2 interiorEdges: gridEdges lodLevel: 1.
+	] ifFalse: [
+		self clipMapPeriodForGridSize: size subdivisions: subdivisions
+	]
+
 ]
 
 { #category : #accessing }

@@ -1,6 +1,11 @@
 Extension { #name : #Object }
 
 { #category : #'*WodenEngine-Core' }
+Object >> closureDescriptionForCaching [
+	^ self
+]
+
+{ #category : #'*WodenEngine-Core' }
 Object >> isSessionPersistentExternalBuffer [
 	^ false
 ]

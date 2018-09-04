@@ -1,13 +1,15 @@
 Structure <<< #WTWaterMaterialState
 	slots: {
-		#albedo => WMVector4F. 
-		
+        #clipMapPeriod => WMVector2F.
+
+		#albedo => WMVector4F.
+
 		#fresnel => WMCompactVector3F.
-		#smoothness => Float32. 
-		
+		#smoothness => Float32.
+
 		(#padding => WMCompactVector3F) private.
-		#propagationSpeed => Float32. 
-		
+		#propagationSpeed => Float32.
+
 		#harmonics => (WTWaterHarmonic array: 5)
 	};
 	package: 'WodenEngine-Structures-Core-Material';
