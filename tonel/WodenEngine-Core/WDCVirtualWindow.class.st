@@ -6,7 +6,8 @@ Class {
 		'extent',
 		'renderTarget',
 		'resolveRenderTarget',
-		'session'
+		'session',
+		'eventQueue'
 	],
 	#category : #'WodenEngine-Core-Window'
 }
@@ -85,6 +86,11 @@ WDCVirtualWindow >> engine: anObject [
 	engine := anObject
 ]
 
+{ #category : #'event processing' }
+WDCVirtualWindow >> enqueueEvent: anEvent [
+	eventQueue nextPut: anEvent
+]
+
 { #category : #accessing }
 WDCVirtualWindow >> extent [
 	^ extent
@@ -95,8 +101,10 @@ WDCVirtualWindow >> extent: anObject [
 	extent := anObject
 ]
 
-{ #category : #events }
+{ #category : #'event processing' }
 WDCVirtualWindow >> handleEvent: anEvent [
+	self enqueueEvent: anEvent.
+
 ]
 
 { #category : #'framebuffer description' }
@@ -113,6 +121,7 @@ WDCVirtualWindow >> hasStencil [
 WDCVirtualWindow >> initialize [
 	super initialize.
 	
+	eventQueue := WaitfreeQueue new.
 	self extent: self defaultExtent.
 ]
 
@@ -128,6 +137,19 @@ WDCVirtualWindow >> initializeForNewSession [
 
 { #category : #'instance creation' }
 WDCVirtualWindow >> open [
+]
+
+{ #category : #'event processing' }
+WDCVirtualWindow >> processEvent: anEvent [
+]
+
+{ #category : #'event processing' }
+WDCVirtualWindow >> processEvents [
+	[eventQueue isEmpty ] whileFalse: [ 
+		eventQueue nextOrNil ifNotNil: [ :event |
+			self processEvent: event
+		]
+	]
 ]
 
 { #category : #'framebuffer description' }

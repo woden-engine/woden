@@ -163,7 +163,11 @@ WDCFrameBufferingDriver >> mainRenderingProcessIteration [
 { #category : #'rendering process' }
 WDCFrameBufferingDriver >> renderForDeltaMicroseconds: delta [
 	"Always update the simulations"
-	self renderingProcessesDo: [ :process | process updateForDeltaMicroseconds: delta ].
+	self renderingProcessesDo: [ :process |
+		process
+			processEvents;
+			updateForDeltaMicroseconds: delta
+	].
 
 	"Only perform rendering if there is at least one process that needs to perform rendering."
 	frontRenderingProcesses detect: #needsToRender ifNone: [^ self].

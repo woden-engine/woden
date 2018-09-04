@@ -80,6 +80,40 @@ WDCTextureLevelData >> height: anObject [
 	height := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDCTextureLevelData >> mipDownSampleLoopInto: target pixelSize: pixelSize with: aBlock [
+	| sourceData targetData targetPitch targetWidth targetHeight sourceRowIndex destRowIndex sourceIndex destIndex sourceTopLeft sourceTopRight sourceBottomLeft sourceBottomRight |
+	sourceData := data.
+	targetData := target data.
+	targetPitch := target pitch.
+	targetWidth := target width.
+	targetHeight := target height.
+
+	sourceRowIndex := 1.
+	destRowIndex := 1.
+	1 to: targetHeight do: [ :y |
+		sourceIndex := sourceRowIndex.
+		destIndex := destRowIndex.
+		1 to: targetWidth do: [ :x |
+			sourceTopLeft := sourceIndex.
+			sourceTopRight := sourceIndex + pixelSize.
+			sourceBottomLeft := sourceIndex + pitch.
+			sourceBottomRight := sourceIndex + pixelSize + pitch.
+			
+			aBlock value: sourceData value: targetData
+				value: {sourceTopLeft . sourceTopRight . sourceBottomLeft . sourceBottomRight}
+				value: destIndex.
+			
+			sourceIndex := sourceIndex + pixelSize + pixelSize.
+			destIndex := destIndex + pixelSize.
+		].
+
+		sourceRowIndex := sourceRowIndex + pitch + pitch.
+		destRowIndex := destRowIndex + targetPitch.
+	].	
+
+]
+
 { #category : #accessing }
 WDCTextureLevelData >> pitch [
 	^ pitch

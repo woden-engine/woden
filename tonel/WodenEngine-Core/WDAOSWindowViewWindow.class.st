@@ -29,14 +29,6 @@ WDAOSWindowViewWindow >> defaultExtent [
 	^ view defaultExtent
 ]
 
-{ #category : #'event processing' }
-WDAOSWindowViewWindow >> handleEvent: anEvent [
-	super handleEvent: anEvent.
-	handledHere ifTrue: [ ^ self ].
-	
-	view ifNotNil: [ view handleEvent: anEvent ]
-]
-
 { #category : #'framebuffer description' }
 WDAOSWindowViewWindow >> hasDepth [
 	^ view hasDepth
@@ -45,6 +37,14 @@ WDAOSWindowViewWindow >> hasDepth [
 { #category : #'framebuffer description' }
 WDAOSWindowViewWindow >> hasStencil [
 	^ view hasStencil
+]
+
+{ #category : #'event processing' }
+WDAOSWindowViewWindow >> processEvent: anEvent [
+	super processEvent: anEvent.
+	handledHere ifTrue: [ ^ self ].
+	
+	view ifNotNil: [ view handleEvent: anEvent ]
 ]
 
 { #category : #'framebuffer description' }

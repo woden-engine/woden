@@ -3,6 +3,18 @@ Number category: '*WodenMath-Core' methods: {
 	^ self asFloat / 65535.0
 ].
 
+:[asFloatFromNormalizedUByte
+	^ self asFloat / 255.0
+].
+
+:[asFloatFromNormalizedSShort
+	^ self asFloat / 16r7FFF.0 min: 1.0 max: -1.0
+].
+
+:[asFloatFromNormalizedSByte
+	^ self asFloat / 16r7F min: 1.0 max: -1.0
+].
+
 :[asWMComplexF -> WMComplexF.
 	^ WMComplexF r: (self asFloat castTo: Float32)
 ].

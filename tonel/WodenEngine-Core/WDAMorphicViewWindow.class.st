@@ -94,7 +94,7 @@ WDAMorphicViewWindow >> handleKeyDown: evt [
 		event symbol: (self keySymbolFor: evt keyValue).
 		self mousePosition: evt putOn: event.
 		self modifiers: evt putOn: event.
-		view handleEvent: event.
+		self enqueueEvent: event.
 	].
 ]
 
@@ -107,7 +107,7 @@ WDAMorphicViewWindow >> handleKeyUp: evt [
 		event symbol: (self keySymbolFor: evt keyValue).
 		self mousePosition: evt putOn: event.
 		self modifiers: evt putOn: event.
-		view handleEvent: event
+		self enqueueEvent: event.
 	]
 ]
 
@@ -175,7 +175,7 @@ WDAMorphicViewWindow >> mouseDown: evt [
 		osEvent := OSMouseButtonPressEvent new.
 		osEvent button: (self mapMouseButton: (evt whichButton bitAnd: MouseEvent anyButton)).
 		self mouseEventCommon: evt putOn: osEvent.
-		view handleEvent: osEvent.
+		self enqueueEvent: osEvent.
 	].
 	
 	evt wasHandled: true.
@@ -201,7 +201,7 @@ WDAMorphicViewWindow >> mouseMove: evt [
 		osEvent := OSMouseMoveEvent new
 			delta: evt position - evt startPoint.
 		self mouseEventCommon: evt putOn: osEvent.
-		view handleEvent: osEvent.
+		self enqueueEvent: osEvent.
 	].
 	
 	evt wasHandled: true.
@@ -221,7 +221,7 @@ WDAMorphicViewWindow >> mouseUp: evt [
 		osEvent := OSMouseButtonReleaseEvent new.
 		osEvent button: (self mapMouseButton: evt whichButton).
 		self mouseEventCommon: evt putOn: osEvent.
-		view handleEvent: osEvent.
+		self enqueueEvent: osEvent.
 	].
 
 	evt wasHandled: true.
@@ -238,10 +238,18 @@ WDAMorphicViewWindow >> mouseWheel: evt [
 		evt isDown ifTrue: [ evt scrollVertical: -1 ].
 		evt isLeft ifTrue: [ evt scrollHorizontal: -1 ].
 		evt isRight ifTrue: [ evt scrollHorizontal: 1 ].
-		view handleEvent: osEvent.
+		self enqueueEvent: osEvent.
 	].
 
 	evt inspect
+]
+
+{ #category : #'events-processing' }
+WDAMorphicViewWindow >> processOSWindowEvent: anEvent [
+	super processOSWindowEvent: anEvent.
+	handledHere ifTrue: [ ^ self ].
+	
+	view ifNotNil: [ view handleEvent: anEvent ]
 ]
 
 { #category : #'framebuffer description' }

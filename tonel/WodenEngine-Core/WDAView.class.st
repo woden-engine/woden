@@ -139,6 +139,11 @@ WDAView >> prepareRendering [
 	subViews do: #prepareRendering.
 ]
 
+{ #category : #'event processing' }
+WDAView >> processEvents [
+	window ifNotNil: #processEvents
+]
+
 { #category : #adding }
 WDAView >> removeSubView: aSubView [
 	subViews := subViews copyWithout: aSubView

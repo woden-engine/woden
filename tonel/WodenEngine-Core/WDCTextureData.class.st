@@ -28,22 +28,23 @@ WDCTextureData class >> extent: anExtent bpp: bitsPerPixel format: pixelFormat [
 
 { #category : #'as yet unclassified' }
 WDCTextureData class >> extent: anExtent bpp: bitsPerPixel format: pixelFormat srgbFormat: srgbPixelFormat [
-	| w h |
+	| w h layer |
 	w := anExtent x.
 	h := anExtent y.
+	layer := WDCTextureLayerData new
+			width: w;
+			height: h;
+			depth: 1;
+			generateLevelsWithBpp: bitsPerPixel.
 	^ self new
 		width: anExtent x;
 		height: anExtent y;
 		pixelFormat: pixelFormat;
 		srgbPixelFormat: srgbPixelFormat;
 		depth: 1;
-		layers: { WDCTextureLayerData new
-			width: w;
-			height: h;
-			depth: 1;
-			generateLevelsWithBpp: bitsPerPixel};
+		layers: { layer };
 		type: AGPU_TEXTURE_2D;
-		miplevels: 1;
+		miplevels: layer levels size;
 		yourself
 
 ]
@@ -97,6 +98,13 @@ WDCTextureData class >> extent: anExtent signedHeightRenderWith: aBlock [
 WDCTextureData class >> extent: anExtent signedR16RenderWith: aBlock [
 	^ (self extent: anExtent bpp: 16 format: AGPU_TEXTURE_FORMAT_R16_SNORM)
 		signedR16RenderWith: aBlock;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
+WDCTextureData class >> extent: anExtent srgbColorRenderWith: aBlock [
+	^ (self extent: anExtent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM srgbFormat: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB)
+		srgbColorRenderWith: aBlock;
 		yourself
 ]
 
@@ -194,7 +202,8 @@ WDCTextureData >> canBeDecoded [
 
 { #category : #'cpu rendering' }
 WDCTextureData >> colorRenderWith: aBlock [
-	self allLevelsDo: [ :level | level colorRenderWith: aBlock ]
+	self mainLevelsDo: [ :level | level colorRenderWith: aBlock ].
+	layers do: #computeMipMaps_RGBA8
 ]
 
 { #category : #converting }
@@ -614,7 +623,8 @@ WDCTextureData >> firstLayerLevelAsForm [
 
 { #category : #'cpu rendering' }
 WDCTextureData >> grayRenderWith: aBlock [
-	self allLevelsDo: [ :level | level grayRenderWith: aBlock ]
+	self mainLevelsDo: [ :level | level grayRenderWith: aBlock ].
+	layers do: #computeMipMaps_gray
 ]
 
 { #category : #'as yet unclassified' }
@@ -647,6 +657,11 @@ WDCTextureData >> layers: anObject [
 	layers := anObject
 ]
 
+{ #category : #'cpu rendering' }
+WDCTextureData >> mainLevelsDo: aBlock [
+	layers do: [ :layer | aBlock value: layer levels first ].
+]
+
 { #category : #accessing }
 WDCTextureData >> miplevels [
 	^ miplevels
@@ -669,17 +684,26 @@ WDCTextureData >> pixelFormat: anObject [
 
 { #category : #'cpu rendering' }
 WDCTextureData >> r16RenderWith: aBlock [
-	self allLevelsDo: [ :level | level r16RenderWith: aBlock ]
+	self mainLevelsDo: [ :level | level r16RenderWith: aBlock ].
+	layers do: #computeMipMaps_R16
 ]
 
 { #category : #'cpu rendering' }
 WDCTextureData >> rgRenderWith: aBlock [
-	self allLevelsDo: [ :level | level rgRenderWith: aBlock ]
+	self mainLevelsDo: [ :level | level rgRenderWith: aBlock ].
+	layers do: #computeMipMaps_RG8
 ]
 
 { #category : #'cpu rendering' }
 WDCTextureData >> signedR16RenderWith: aBlock [
-	self allLevelsDo: [ :level | level signedR16RenderWith: aBlock ]
+	self mainLevelsDo: [ :level | level signedR16RenderWith: aBlock ].
+	layers do: #computeMipMaps_SR16
+]
+
+{ #category : #'cpu rendering' }
+WDCTextureData >> srgbColorRenderWith: aBlock [
+	self mainLevelsDo: [ :level | level colorRenderWith: aBlock ].
+	layers do: #computeMipMaps_sRGB_A8
 ]
 
 { #category : #accessing }

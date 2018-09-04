@@ -55,6 +55,16 @@ WMVector4 class category: 'construction' methods: {
 		yourself
 ].
 
+:[r: <Scalar>r g: <Scalar>g b: <Scalar>b a: <Scalar>a -> WMVector4.
+    <inline>
+	^ WMVector4 newValue
+		r: r;
+		g: g;
+		b: b;
+		a: a;
+		yourself
+].
+
 :[xyz: <WMVector3> xyz w: <Scalar>w -> WMVector4.
     <inline>
 	^ WMVector4 newValue
@@ -91,6 +101,26 @@ WMVector4 class category: 'serialization' methods: {
 }.
 
 WMVector4 category: 'accessing' methods: {
+:[r -> Scalar.
+    <inline>
+	^ x
+].
+
+:[g -> Scalar.
+    <inline>
+	^ y
+].
+
+:[b -> Scalar.
+    <inline>
+	^ z
+].
+
+:[a -> Scalar.
+    <inline>
+	^ w
+].
+
 :[set: <WMVector4> other
     <inline>
 	x := other x.

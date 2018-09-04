@@ -141,6 +141,14 @@ WDAModel >> prepareRendering [
 
 ]
 
+{ #category : #'rendering process stages' }
+WDAModel >> processEvents [
+	engine renderingProcessCritical: [ 
+		views do: #processEvents
+	]
+
+]
+
 { #category : #adding }
 WDAModel >> removeView: aView [
 	engine renderingProcessCritical: [

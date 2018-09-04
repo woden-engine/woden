@@ -8,9 +8,11 @@ Class {
 		'framebuffer',
 		'displayForm',
 		'resolveRenderTarget',
-		'lastMousePosition'
+		'lastMousePosition',
+		'handledHere',
+		'eventQueue'
 	],
-	#category : 'WodenEngine-Core-Window'
+	#category : #'WodenEngine-Core-Window'
 }
 
 { #category : #initialization }
@@ -117,6 +119,11 @@ WDCMorphicWindow >> engine: anObject [
 	self changed.
 ]
 
+{ #category : #'events-processing' }
+WDCMorphicWindow >> enqueueEvent: anEvent [
+	eventQueue nextPut: anEvent
+]
+
 { #category : #accessing }
 WDCMorphicWindow >> fullscreen: aBoolean [
 ]
@@ -135,6 +142,7 @@ WDCMorphicWindow >> hasStencil [
 WDCMorphicWindow >> initialize [
 	super initialize.
 	
+	eventQueue := WaitfreeQueue new.
 	self extent: self defaultExtent.
 	self clipSubmorphs: true.
 ]
@@ -148,6 +156,21 @@ WDCMorphicWindow >> initializeForNewSession [
 
 	session := Smalltalk session.
 	
+]
+
+{ #category : #'events-processing' }
+WDCMorphicWindow >> processEvents [
+	[eventQueue isEmpty ] whileFalse: [ 
+		eventQueue nextOrNil ifNotNil: [ :event |
+			self processOSWindowEvent: event
+		]
+	]
+]
+
+{ #category : #'events-processing' }
+WDCMorphicWindow >> processOSWindowEvent: anEvent [
+	handledHere := false.
+
 ]
 
 { #category : #rendering }

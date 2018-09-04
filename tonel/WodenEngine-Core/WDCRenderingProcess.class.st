@@ -40,6 +40,10 @@ WDCRenderingProcess >> prepareRendering [
 ]
 
 { #category : #'rendering process stages' }
+WDCRenderingProcess >> processEvents [
+]
+
+{ #category : #'rendering process stages' }
 WDCRenderingProcess >> sendRenderingCommands [
 ]
 

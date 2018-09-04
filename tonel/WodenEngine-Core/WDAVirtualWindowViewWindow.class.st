@@ -29,11 +29,6 @@ WDAVirtualWindowViewWindow >> defaultExtent [
 	^ view defaultExtent
 ]
 
-{ #category : #events }
-WDAVirtualWindowViewWindow >> handleEvent: anEvent [
-	view ifNotNil: [ view handleEvent: anEvent ]
-]
-
 { #category : #testing }
 WDAVirtualWindowViewWindow >> hasDepth [
 	^ view hasDepth
@@ -42,6 +37,11 @@ WDAVirtualWindowViewWindow >> hasDepth [
 { #category : #testing }
 WDAVirtualWindowViewWindow >> hasStencil [
 	^ view hasStencil
+]
+
+{ #category : #events }
+WDAVirtualWindowViewWindow >> processEvent: anEvent [
+	view ifNotNil: [ view handleEvent: anEvent ]
 ]
 
 { #category : #'framebuffer description' }

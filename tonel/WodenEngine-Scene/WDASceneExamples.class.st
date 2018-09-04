@@ -17,7 +17,7 @@ WDASceneExamples class >> cloudTexture [
 		1.0 -> Color white.
 	}.
 
-	^ WDCTextureData extent: 128@128 colorRenderWith: [ :s :t |
+	^ WDCTextureData extent: 128@128 srgbColorRenderWith: [ :s :t |
 		|st cloud |
 		st := (s@t)*textureSize.
 		cloud := (st fractionalBrownianMotionOctaves: 4 lacunarity: 2.0 initialAmplitude: 0.9 with: #signedGradientNoise)*0.5 +0.5.
@@ -569,7 +569,7 @@ WDASceneExamples class >> exampleModelCube [
 
 { #category : #'examples procedural' }
 WDASceneExamples class >> grassTexture [
-	^ WDCTextureData extent: 128@128 colorRenderWith: [ :s :t |
+	^ WDCTextureData extent: 128@128 srgbColorRenderWith: [ :s :t |
 		Color green
 	].
 ]
@@ -623,7 +623,7 @@ WDASceneExamples class >> islandTerrainMaps: textureExtent [
 
 { #category : #'examples procedural' }
 WDASceneExamples class >> rockTexture [
-	^ WDCTextureData extent: 128@128 colorRenderWith: [ :s :t |
+	^ WDCTextureData extent: 128@128 srgbColorRenderWith: [ :s :t |
 		Color brown
 	].
 ]
@@ -637,7 +637,7 @@ WDASceneExamples class >> sandTexture [
 		1.0 -> Color yellow muchLighter.
 	}.
 	
-	^ [ WDCTextureData extent: 128@128 colorRenderWith: [ :s :t |
+	^ [ WDCTextureData extent: 128@128 srgbColorRenderWith: [ :s :t |
 		st := s@t.
 		sandFunction := st*textureSize fractionalBrownianMotionOctaves: 4 lacunarity: 2.145 initialAmplitude: 0.6 tiledWith: textureSize with: #gradientNoiseTiledWith:.
 		colorRamp value: sandFunction
@@ -653,7 +653,7 @@ WDASceneExamples class >> snowTexture [
 		1.0 -> Color gray.
 	}.
 	
-	^ [ WDCTextureData extent: 128@128 colorRenderWith: [ :s :t |
+	^ [ WDCTextureData extent: 128@128 srgbColorRenderWith: [ :s :t |
 		st := s@t.
 		snowFunction := st*textureSize fractionalBrownianMotionOctaves: 3 lacunarity: 2.145 initialAmplitude: 0.6 tiledWith: textureSize with: #worleyNoiseTiledWith:.
 		colorRamp value: snowFunction

@@ -6,9 +6,10 @@ Class {
 		'window',
 		'renderTarget',
 		'resolveRenderTarget',
-		'handledHere'
+		'handledHere',
+		'eventQueue'
 	],
-	#category : 'WodenEngine-Core-Window'
+	#category : #'WodenEngine-Core-Window'
 }
 
 { #category : #'instance creation' }
@@ -89,6 +90,11 @@ WDCOSWindow >> engine: anObject [
 	engine := anObject
 ]
 
+{ #category : #'event processing' }
+WDCOSWindow >> enqueueEvent: anEvent [
+	eventQueue nextPut: anEvent
+]
+
 { #category : #accessing }
 WDCOSWindow >> fullscreen: aBoolean [
 	window fullscreen: aBoolean
@@ -96,8 +102,8 @@ WDCOSWindow >> fullscreen: aBoolean [
 
 { #category : #'event processing' }
 WDCOSWindow >> handleEvent: anEvent [
-	handledHere := false.
-	anEvent accept: self.
+	anEvent suppressDefaultAction.
+	self enqueueEvent: anEvent.
 
 ]
 
@@ -109,6 +115,12 @@ WDCOSWindow >> hasDepth [
 { #category : #'framebuffer description' }
 WDCOSWindow >> hasStencil [
 	^ false
+]
+
+{ #category : #initialization }
+WDCOSWindow >> initialize [
+	super initialize.
+	eventQueue := WaitfreeQueue new.
 ]
 
 { #category : #'instance creation' }
@@ -126,6 +138,22 @@ WDCOSWindow >> open [
 	
 	self createRenderTarget.
 
+]
+
+{ #category : #'event processing' }
+WDCOSWindow >> processEvent: anEvent [
+	handledHere := false.
+	anEvent accept: self.
+
+]
+
+{ #category : #'event processing' }
+WDCOSWindow >> processEvents [
+	[eventQueue isEmpty ] whileFalse: [ 
+		eventQueue nextOrNil ifNotNil: [ :event |
+			self processEvent: event
+		]
+	]
 ]
 
 { #category : #'framebuffer description' }
@@ -147,7 +175,6 @@ WDCOSWindow >> validResolveRenderTarget [
 
 { #category : #'event processing' }
 WDCOSWindow >> visitWindowCloseEvent: anEvent [
-	anEvent suppressDefaultAction.
 	self close.
 	handledHere := true.
 ]
