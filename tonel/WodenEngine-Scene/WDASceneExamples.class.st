@@ -655,7 +655,7 @@ WDASceneExamples class >> snowTexture [
 	
 	^ [ WDCTextureData extent: 128@128 srgbColorRenderWith: [ :s :t |
 		st := s@t.
-		snowFunction := st*textureSize fractionalBrownianMotionOctaves: 3 lacunarity: 2.145 initialAmplitude: 0.6 tiledWith: textureSize with: #worleyNoiseTiledWith:.
+		snowFunction := st*textureSize fractionalBrownianMotionOctaves: 3 lacunarity: 2.145 initialAmplitude: 0.6 tiledWith: textureSize with: #voronoiNoiseTiledWith:.
 		colorRamp value: snowFunction
 	] ] valueCachedInDisk.
 ]

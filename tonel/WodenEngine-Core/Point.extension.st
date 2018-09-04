@@ -153,6 +153,36 @@ Point >> signedValueNoiseTiledWith: tilingPeriod [
 ]
 
 { #category : #'*WodenEngine-Core' }
+Point >> signedVoronoiNoise [
+	^ self voronoiNoise*2.0 - 1.0
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> signedVoronoiNoiseF1 [
+	^ self voronoiNoiseF1*2.0 - 1.0
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> signedVoronoiNoiseF1TiledWith: tilingPeriod [
+	^ (self voronoiNoiseF1TiledWith: tilingPeriod)*2.0 - 1.0
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> signedVoronoiNoiseF2 [
+	^ self voronoiNoiseF2*2.0 - 1.0
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> signedVoronoiNoiseF2TiledWith: tilingPeriod [
+	^ (self voronoiNoiseF2TiledWith: tilingPeriod)*2.0 - 1.0
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> signedVoronoiNoiseTiledWith: tilingPeriod [
+	^ (self voronoiNoiseTiledWith: tilingPeriod)*2.0 - 1.0
+]
+
+{ #category : #'*WodenEngine-Core' }
 Point >> signedWorleyNoise [
 	^ self worleyNoise*2.0 - 1.0
 ]
@@ -204,14 +234,20 @@ Point >> valueNoiseTiledWith: tilingPeriod [
 ]
 
 { #category : #'*WodenEngine-Core' }
-Point >> worleyNoise [
-	| startCellX startCellY fx fy result cellX cellY point dx dy |
+Point >> voronoiNoise [
+	^ self voronoiNoiseComponents first
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> voronoiNoiseComponents [
+	| startCellX startCellY fx fy cellX cellY point dx dy f1 f2 value |
 	startCellX := x floor.
 	startCellY := y floor.
 	fx := x - startCellX.
 	fy := y - startCellY.
 	
-	result := Float infinity.
+	f1 := Float infinity.
+	f2 := Float infinity.
 	-1 to: 1 do: [ :cdy |
 		-1 to: 1 do: [ :cdx |
 			cellX := startCellX + cdx.
@@ -220,22 +256,31 @@ Point >> worleyNoise [
 
 			dx := fx - (point x + cdx).
 			dy := fy - (point y + cdy).
-			result := result min: (dx*dx) + (dy*dy)
+			value := (dx*dx) + (dy*dy).
+			value < f1 ifTrue: [
+				f2 := f1.
+				f1 := value
+			] ifFalse: [
+				value < f2 ifTrue: [ 
+					f2 := value
+				]
+			]
 		]
 	].
 
-	^ result sqrt
+	^ {f1 sqrt . f2 sqrt}
 ]
 
 { #category : #'*WodenEngine-Core' }
-Point >> worleyNoiseTiledWith: tilingPeriod [
-	| startCellX startCellY fx fy result cellX cellY point dx dy |
+Point >> voronoiNoiseComponentsTiledWith: tilingPeriod [
+	| startCellX startCellY fx fy cellX cellY point dx dy f1 f2 value |
 	startCellX := x floor.
 	startCellY := y floor.
 	fx := x - startCellX.
 	fy := y - startCellY.
 	
-	result := Float infinity.
+	f1 := Float infinity.
+	f2 := Float infinity.
 	-1 to: 1 do: [ :cdy |
 		-1 to: 1 do: [ :cdx |
 			cellX := startCellX + cdx floorModule: tilingPeriod x.
@@ -244,9 +289,56 @@ Point >> worleyNoiseTiledWith: tilingPeriod [
 
 			dx := fx - (point x + cdx).
 			dy := fy - (point y + cdy).
-			result := result min: (dx*dx) + (dy*dy)
+			value := (dx*dx) + (dy*dy).
+			value < f1 ifTrue: [
+				f2 := f1.
+				f1 := value
+			] ifFalse: [
+				value < f2 ifTrue: [ 
+					f2 := value
+				]
+			]
 		]
 	].
 
-	^ result sqrt
+	^ {f1 sqrt . f2 sqrt}
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> voronoiNoiseF1 [
+	^ self voronoiNoiseComponents first
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> voronoiNoiseF1TiledWith: tilingPeriod [
+	^ (self voronoiNoiseComponentsTiledWith: tilingPeriod) first
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> voronoiNoiseF2 [
+	^ self voronoiNoiseComponents second
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> voronoiNoiseF2TiledWith: tilingPeriod [
+	^ (self voronoiNoiseComponentsTiledWith: tilingPeriod) second
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> voronoiNoiseTiledWith: tilingPeriod [
+	^ (self voronoiNoiseComponentsTiledWith: tilingPeriod) first
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> worleyNoise [
+	| components |
+	components := self voronoiNoiseComponents.
+	^ components second - components first
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> worleyNoiseTiledWith: tilingPeriod [
+	| components |
+	components := self voronoiNoiseComponentsTiledWith: tilingPeriod.
+	^ components second - components first
 ]
