@@ -147,3 +147,8 @@ WDCMaterial >> parse: materialFileReference data: aDictionary [
 WDCMaterial >> parseError: errorMessage at: fileReference [
 	self error: fileReference printString , ': ' , errorMessage
 ]
+
+{ #category : #preview }
+WDCMaterial >> thumbnail [
+	^ WDCResourceThumbnail type: self class name value: Color magenta
+]

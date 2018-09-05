@@ -69,6 +69,21 @@ WDCResourceCache >> addedAssetSearchPath: searchPathReference [
 	"Nothing to do. My job is lazy"
 ]
 
+{ #category : #thumbnail }
+WDCResourceCache >> allMaterialNames [
+	| result materialsSubdir |
+	result := OrderedCollection new.
+	engine assetSearchPaths do: [ :searchPath |
+		materialsSubdir := searchPath / 'materials'.
+		materialsSubdir isDirectory ifTrue: [
+			result addAll: ((materialsSubdir allChildrenMatching: '*.json') collect: [ :fileRef |
+				self stringifyPath: (fileRef relativeToPath: searchPath) ])
+		]
+	].
+
+	^ result
+]
+
 { #category : #'resource loading' }
 WDCResourceCache >> binaryContentsOf: aFileReference [
 	^ aFileReference readStreamDo: [ :in |
@@ -198,6 +213,15 @@ WDCResourceCache >> defaultMaterial [
 { #category : #textures }
 WDCResourceCache >> defaultNormalTexture [
 	^ self getOrCreateColorTexture: (Color r: 0.5 g: 0.5 b: 1.0)
+]
+
+{ #category : #thumbnail }
+WDCResourceCache >> ensureAllMaterialThumbnailsInDB: thumbnailDB [
+	self allMaterialNames do: [ :materialName |
+		thumbnailDB thumbnailFor: materialName ifAbsentPut: [
+			(self loadMaterial: materialName) thumbnail
+		]
+	]
 ]
 
 { #category : #accessing }

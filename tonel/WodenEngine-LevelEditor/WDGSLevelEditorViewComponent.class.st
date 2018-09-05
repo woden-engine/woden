@@ -25,6 +25,12 @@ WDGSLevelEditorViewComponent >> engine [
 	^ self editor engine
 ]
 
+{ #category : #initialization }
+WDGSLevelEditorViewComponent >> initialize [
+	super initialize.
+	self backgroundColor: Color veryDarkGray
+]
+
 { #category : #accessing }
 WDGSLevelEditorViewComponent >> mainFrame [
 	^ mainFrame

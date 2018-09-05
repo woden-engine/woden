@@ -1,5 +1,5 @@
 Class {
-	#name : #WTGLevelEditorTextureTransformSpec,
+	#name : #WDGSLevelEditorTextureTransformSpec,
 	#superclass : #ComposableModel,
 	#instVars : [
 		'editor',
@@ -24,11 +24,11 @@ Class {
 		'rotationMore',
 		'rotationLess'
 	],
-	#category : #'WodenEngine-LevelEditor-Old'
+	#category : #'WodenEngine-LevelEditor-Specs'
 }
 
 { #category : #specs }
-WTGLevelEditorTextureTransformSpec class >> defaultSpec [
+WDGSLevelEditorTextureTransformSpec class >> defaultSpec [
 	<spec: #default>
 	
 	^ SpecLayout composed
@@ -78,7 +78,7 @@ WTGLevelEditorTextureTransformSpec class >> defaultSpec [
 ]
 
 { #category : #initialization }
-WTGLevelEditorTextureTransformSpec >> addAmount: amount with: getter to: setter [
+WDGSLevelEditorTextureTransformSpec >> addAmount: amount with: getter to: setter [
 	editor selection textureTransformsDo: [ :transform |
 		transform perform: setter with: (getter value: transform) + amount. 
 	].
@@ -87,7 +87,7 @@ WTGLevelEditorTextureTransformSpec >> addAmount: amount with: getter to: setter 
 ]
 
 { #category : #'as yet unclassified' }
-WTGLevelEditorTextureTransformSpec >> convertToFloat: string thenSetWith: selector [
+WDGSLevelEditorTextureTransformSpec >> convertToFloat: string thenSetWith: selector [
 	| selection number |
 	selection := editor selection.
 	selection elements ifEmpty: [ ^ self ].
@@ -98,7 +98,7 @@ WTGLevelEditorTextureTransformSpec >> convertToFloat: string thenSetWith: select
 ]
 
 { #category : #initialization }
-WTGLevelEditorTextureTransformSpec >> decrease: getter with: setter [
+WDGSLevelEditorTextureTransformSpec >> decrease: getter with: setter [
 	editor selection textureTransformsDo: [ :transform |
 		transform perform: setter with: (getter value: transform) / 2.0
 	].
@@ -107,17 +107,17 @@ WTGLevelEditorTextureTransformSpec >> decrease: getter with: setter [
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> editor [
+WDGSLevelEditorTextureTransformSpec >> editor [
 	^ editor
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> editor: anObject [
+WDGSLevelEditorTextureTransformSpec >> editor: anObject [
 	editor := anObject
 ]
 
 { #category : #initialization }
-WTGLevelEditorTextureTransformSpec >> increase: getter with: setter [
+WDGSLevelEditorTextureTransformSpec >> increase: getter with: setter [
 	editor selection textureTransformsDo: [ :transform |
 		transform perform: setter with: (getter value: transform) * 2.0
 	].
@@ -126,7 +126,7 @@ WTGLevelEditorTextureTransformSpec >> increase: getter with: setter [
 ]
 
 { #category : #initialization }
-WTGLevelEditorTextureTransformSpec >> initializeWidgets [
+WDGSLevelEditorTextureTransformSpec >> initializeWidgets [
 	self flag: 'Use text input field'.
 	
 	self instantiateModels: #(
@@ -187,53 +187,53 @@ WTGLevelEditorTextureTransformSpec >> initializeWidgets [
 ]
 
 { #category : #'as yet unclassified' }
-WTGLevelEditorTextureTransformSpec >> optionalValueToString: anObject [
+WDGSLevelEditorTextureTransformSpec >> optionalValueToString: anObject [
 	anObject ifNil: [ ^ '' ].
 	^ anObject asString
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> rotation [
+WDGSLevelEditorTextureTransformSpec >> rotation [
 	^ rotation
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> rotation: anObject [
+WDGSLevelEditorTextureTransformSpec >> rotation: anObject [
 	rotation := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> rotationLabel [
+WDGSLevelEditorTextureTransformSpec >> rotationLabel [
 	^ rotationLabel
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> rotationLabel: anObject [
+WDGSLevelEditorTextureTransformSpec >> rotationLabel: anObject [
 	rotationLabel := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> rotationLess [
+WDGSLevelEditorTextureTransformSpec >> rotationLess [
 	^ rotationLess
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> rotationLess: anObject [
+WDGSLevelEditorTextureTransformSpec >> rotationLess: anObject [
 	rotationLess := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> rotationMore [
+WDGSLevelEditorTextureTransformSpec >> rotationMore [
 	^ rotationMore
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> rotationMore: anObject [
+WDGSLevelEditorTextureTransformSpec >> rotationMore: anObject [
 	rotationMore := anObject
 ]
 
 { #category : #'event handling' }
-WTGLevelEditorTextureTransformSpec >> selectionChanged [
+WDGSLevelEditorTextureTransformSpec >> selectionChanged [
 	| selection |
 	editor ifNil: [ ^ self ].
 	
@@ -246,161 +246,161 @@ WTGLevelEditorTextureTransformSpec >> selectionChanged [
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> xOffset [
+WDGSLevelEditorTextureTransformSpec >> xOffset [
 	^ xOffset
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> xOffset: anObject [
+WDGSLevelEditorTextureTransformSpec >> xOffset: anObject [
 	xOffset := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> xOffsetLabel [
+WDGSLevelEditorTextureTransformSpec >> xOffsetLabel [
 	^ xOffsetLabel
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> xOffsetLabel: anObject [
+WDGSLevelEditorTextureTransformSpec >> xOffsetLabel: anObject [
 	xOffsetLabel := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> xOffsetLess [
+WDGSLevelEditorTextureTransformSpec >> xOffsetLess [
 	^ xOffsetLess
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> xOffsetLess: anObject [
+WDGSLevelEditorTextureTransformSpec >> xOffsetLess: anObject [
 	xOffsetLess := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> xOffsetMore [
+WDGSLevelEditorTextureTransformSpec >> xOffsetMore [
 	^ xOffsetMore
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> xOffsetMore: anObject [
+WDGSLevelEditorTextureTransformSpec >> xOffsetMore: anObject [
 	xOffsetMore := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> xScale [
+WDGSLevelEditorTextureTransformSpec >> xScale [
 	^ xScale
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> xScale: anObject [
+WDGSLevelEditorTextureTransformSpec >> xScale: anObject [
 	xScale := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> xScaleLabel [
+WDGSLevelEditorTextureTransformSpec >> xScaleLabel [
 	^ xScaleLabel
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> xScaleLabel: anObject [
+WDGSLevelEditorTextureTransformSpec >> xScaleLabel: anObject [
 	xScaleLabel := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> xScaleLess [
+WDGSLevelEditorTextureTransformSpec >> xScaleLess [
 	^ xScaleLess
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> xScaleLess: anObject [
+WDGSLevelEditorTextureTransformSpec >> xScaleLess: anObject [
 	xScaleLess := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> xScaleMore [
+WDGSLevelEditorTextureTransformSpec >> xScaleMore [
 	^ xScaleMore
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> xScaleMore: anObject [
+WDGSLevelEditorTextureTransformSpec >> xScaleMore: anObject [
 	xScaleMore := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> yOffset [
+WDGSLevelEditorTextureTransformSpec >> yOffset [
 	^ yOffset
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> yOffset: anObject [
+WDGSLevelEditorTextureTransformSpec >> yOffset: anObject [
 	yOffset := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> yOffsetLabel [
+WDGSLevelEditorTextureTransformSpec >> yOffsetLabel [
 	^ yOffsetLabel
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> yOffsetLabel: anObject [
+WDGSLevelEditorTextureTransformSpec >> yOffsetLabel: anObject [
 	yOffsetLabel := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> yOffsetLess [
+WDGSLevelEditorTextureTransformSpec >> yOffsetLess [
 	^ yOffsetLess
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> yOffsetLess: anObject [
+WDGSLevelEditorTextureTransformSpec >> yOffsetLess: anObject [
 	yOffsetLess := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> yOffsetMore [
+WDGSLevelEditorTextureTransformSpec >> yOffsetMore [
 	^ yOffsetMore
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> yOffsetMore: anObject [
+WDGSLevelEditorTextureTransformSpec >> yOffsetMore: anObject [
 	yOffsetMore := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> yScale [
+WDGSLevelEditorTextureTransformSpec >> yScale [
 	^ yScale
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> yScale: anObject [
+WDGSLevelEditorTextureTransformSpec >> yScale: anObject [
 	yScale := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> yScaleLabel [
+WDGSLevelEditorTextureTransformSpec >> yScaleLabel [
 	^ yScaleLabel
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> yScaleLabel: anObject [
+WDGSLevelEditorTextureTransformSpec >> yScaleLabel: anObject [
 	yScaleLabel := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> yScaleLess [
+WDGSLevelEditorTextureTransformSpec >> yScaleLess [
 	^ yScaleLess
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> yScaleLess: anObject [
+WDGSLevelEditorTextureTransformSpec >> yScaleLess: anObject [
 	yScaleLess := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> yScaleMore [
+WDGSLevelEditorTextureTransformSpec >> yScaleMore [
 	^ yScaleMore
 ]
 
 { #category : #accessing }
-WTGLevelEditorTextureTransformSpec >> yScaleMore: anObject [
+WDGSLevelEditorTextureTransformSpec >> yScaleMore: anObject [
 	yScaleMore := anObject
 ]

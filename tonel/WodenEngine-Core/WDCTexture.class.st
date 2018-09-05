@@ -9,6 +9,18 @@ Class {
 }
 
 { #category : #converting }
+WDCTexture >> asSRGBTextureFor: anEngine [
+	self assert: engine == anEngine.
+	^ self
+]
+
+{ #category : #converting }
+WDCTexture >> asTextureFor: anEngine [
+	self assert: engine == anEngine.
+	^ self
+]
+
+{ #category : #converting }
 WDCTexture >> athensFillRectangle: rectangle on: canvas [
 	
 ]

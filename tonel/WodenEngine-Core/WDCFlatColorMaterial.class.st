@@ -49,6 +49,11 @@ WDCFlatColorMaterial >> stipple: anObject [
 	stipple := anObject
 ]
 
+{ #category : #preview }
+WDCFlatColorMaterial >> thumbnail [
+	^ WDCResourceThumbnail type: thumbnailType value: Color white
+]
+
 { #category : #accessing }
 WDCFlatColorMaterial >> thumbnailType [
 	^ thumbnailType

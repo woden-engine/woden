@@ -7,7 +7,10 @@ Class {
 		'vertexShader',
 		'colorFontShader',
 		'textureColorShader',
-		'textureArrayColorShader'
+		'textureArrayColorShader',
+		'formTextureCache',
+		'textureMaterialCache',
+		'textureArrayMaterialCache'
 	],
 	#classVars : [
 		'PrimitiveTypeMap'
@@ -85,26 +88,40 @@ WDPPompeiiDriver >> convertMesh2D: aPompeiiMesh [
 		yourself
 ]
 
+{ #category : #texture }
+WDPPompeiiDriver >> convertTexture: aTexture [
+	^ formTextureCache at: aTexture ifAbsentPut: [ aTexture asSRGBTextureFor: engine ]
+]
+
+{ #category : #texture }
+WDPPompeiiDriver >> convertTextureArray: aTextureArray [
+	^ formTextureCache at: aTextureArray ifAbsentPut: [ aTextureArray asSRGBTextureFor: engine ]
+]
+
 { #category : #'instance creation' }
 WDPPompeiiDriver >> createFontCache: aLogicalFont [
 	^ WDPPompeiiFontCache new driver: self; font: aLogicalFont; yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : #'as yet unclassified' }
 WDPPompeiiDriver >> createMaterialForTexture: aTexture [
-	^ WDPPompeiiTextureMaterial new
-		driver: self;
-		texture: aTexture;
-		yourself
+	^ textureMaterialCache at: aTexture ifAbsentPut: [
+		WDPPompeiiTextureMaterial new
+			driver: self;
+			texture: (self convertTexture: aTexture);
+			yourself
+		]
 ]
 
-{ #category : #'instance creation' }
+{ #category : #'as yet unclassified' }
 WDPPompeiiDriver >> createMaterialForTextureArray: aTextureArray element: aTextureElementIndex [
-	^ WDPPompeiiTextureArrayElementMaterial new
-		driver: self;
-		textureArray: aTextureArray;
-		elementIndex: aTextureElementIndex;
-		yourself
+	^ textureArrayMaterialCache at: {aTextureArray . aTextureElementIndex} ifAbsentPut: [
+		WDPPompeiiTextureArrayElementMaterial new
+			driver: self;
+			textureArray: (self convertTextureArray: aTextureArray);
+			elementIndex: aTextureElementIndex;
+			yourself
+		]
 ]
 
 { #category : #accessing }
@@ -116,8 +133,10 @@ WDPPompeiiDriver >> engine [
 WDPPompeiiDriver >> initialize [
 	super initialize.
 	engine ifNil: [ engine := WDCEngine default ].
-	engine pompeiiDriver: self
-	
+	engine pompeiiDriver: self.
+	formTextureCache := WeakValueDictionary new.
+	textureMaterialCache := WeakValueDictionary new.
+	textureArrayMaterialCache := WeakValueDictionary new.
 ]
 
 { #category : #initialization }

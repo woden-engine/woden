@@ -1,5 +1,5 @@
 Class {
-	#name : #WTGLevelEditorMaterialListCell,
+	#name : #WDGSLevelEditorMaterialListCell,
 	#superclass : #Object,
 	#instVars : [
 		'thumbnail',
@@ -10,11 +10,11 @@ Class {
 	#pools : [
 		'OSKeySymbols'
 	],
-	#category : #'WodenEngine-LevelEditor-Old'
+	#category : #'WodenEngine-LevelEditor-View'
 }
 
 { #category : #'as yet unclassified' }
-WTGLevelEditorMaterialListCell >> <= other [
+WDGSLevelEditorMaterialListCell >> <= other [
 	category = other category ifTrue: [ 
 		^ label <= other label
 	].
@@ -22,41 +22,41 @@ WTGLevelEditorMaterialListCell >> <= other [
 ]
 
 { #category : #accessing }
-WTGLevelEditorMaterialListCell >> category [
+WDGSLevelEditorMaterialListCell >> category [
 	^ category
 ]
 
 { #category : #accessing }
-WTGLevelEditorMaterialListCell >> category: anObject [
+WDGSLevelEditorMaterialListCell >> category: anObject [
 	category := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorMaterialListCell >> label [
+WDGSLevelEditorMaterialListCell >> label [
 	^ label
 ]
 
 { #category : #accessing }
-WTGLevelEditorMaterialListCell >> label: anObject [
+WDGSLevelEditorMaterialListCell >> label: anObject [
 	label := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorMaterialListCell >> thumbnail [
+WDGSLevelEditorMaterialListCell >> thumbnail [
 	^ thumbnail
 ]
 
 { #category : #accessing }
-WTGLevelEditorMaterialListCell >> thumbnail: anObject [
+WDGSLevelEditorMaterialListCell >> thumbnail: anObject [
 	thumbnail := anObject
 ]
 
 { #category : #accessing }
-WTGLevelEditorMaterialListCell >> value [
+WDGSLevelEditorMaterialListCell >> value [
 	^ value
 ]
 
 { #category : #accessing }
-WTGLevelEditorMaterialListCell >> value: anObject [
+WDGSLevelEditorMaterialListCell >> value: anObject [
 	value := anObject
 ]

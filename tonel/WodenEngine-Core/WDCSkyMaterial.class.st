@@ -71,6 +71,12 @@ WDCSkyMaterial >> skyTexture: anObject [
 	skyTexture := anObject
 ]
 
+{ #category : #preview }
+WDCSkyMaterial >> thumbnail [
+	skyTexture ifNotNil: [ ^ WDCResourceThumbnail type: #sky value: skyTexture thumbnail ].
+	^ WDCResourceThumbnail type: #sky value: Color blue
+]
+
 { #category : #'state binding' }
 WDCSkyMaterial >> validateCache [
 	(vertexShader isNil or: [ fragmentShader isNil ]) ifTrue: [ self fetchShaders ].

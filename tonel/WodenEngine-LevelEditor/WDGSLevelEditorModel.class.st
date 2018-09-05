@@ -14,10 +14,20 @@ Class {
 		'primaryGridMesh',
 		'centerAxisMesh',
 		'secondaryGridMesh',
-		'mapFileName'
+		'mapFileName',
+		'materialThumbDB'
+	],
+	#classVars : [
+		'MaterialThumbDBFileName'
 	],
 	#category : #'WodenEngine-LevelEditor-Model'
 }
+
+{ #category : #initialization }
+WDGSLevelEditorModel class >> initialize [
+	super initialize.
+	MaterialThumbDBFileName := 'WDGSLevelEditorModel_MaterialThumb.db'.
+]
 
 { #category : #actions }
 WDGSLevelEditorModel >> addCubeBrushAtSelectionCube [
@@ -162,6 +172,16 @@ WDGSLevelEditorModel >> createSelectionBox [
 	self selection: WDGSLevelEditorSelectionBox empty.
 ]
 
+{ #category : #accessing }
+WDGSLevelEditorModel >> currentMaterialName [
+	^ currentMaterialName
+]
+
+{ #category : #accessing }
+WDGSLevelEditorModel >> currentMaterialName: aMaterialName [
+	currentMaterialName := aMaterialName
+]
+
 { #category : #'as yet unclassified' }
 WDGSLevelEditorModel >> defaultViewClass [
 	^ WDGSLevelEditorMainFrame
@@ -251,6 +271,7 @@ WDGSLevelEditorModel >> gridMaterial [
 { #category : #initialization }
 WDGSLevelEditorModel >> initializeModel [
 	super initializeModel.
+	self loadMaterialThumbDB.
 	levelViews := #().
 	currentMaterialName := ''.
 	faceSelectMode := false.
@@ -285,6 +306,13 @@ WDGSLevelEditorModel >> loadMapFromFileNamed: fileName [
 	map scene: scene.
 ]
 
+{ #category : #thumbnail }
+WDGSLevelEditorModel >> loadMaterialThumbDB [
+	materialThumbDB := WDCResourceThumbnailDB tryToLoadFromFileNamed: MaterialThumbDBFileName.
+	engine resourceCache ensureAllMaterialThumbnailsInDB: materialThumbDB.
+	materialThumbDB saveTo: MaterialThumbDBFileName
+]
+
 { #category : #actions }
 WDGSLevelEditorModel >> makeBrushEntity [
 	| selectedBrushes |
@@ -304,6 +332,11 @@ WDGSLevelEditorModel >> map: anObject [
 	map := anObject
 ]
 
+{ #category : #accessing }
+WDGSLevelEditorModel >> materialThumbDB [
+	^ materialThumbDB
+]
+
 { #category : #'mouse over' }
 WDGSLevelEditorModel >> mouseOverNone [
 	self selectionBoxViewsDo: [ :view | view mouseOverIndex: -1 ].
@@ -313,7 +346,7 @@ WDGSLevelEditorModel >> mouseOverNone [
 WDGSLevelEditorModel >> openTextureTransformEditor [
 	| textureTransformEditorWindow |
 	textureTransformEditor ifNotNil: [ ^ self ].
-	textureTransformEditor := WTGLevelEditorTextureTransformSpec new editor: self.
+	textureTransformEditor := WDGSLevelEditorTextureTransformSpec new editor: self.
 	self flag: 'Spec should provide a mechanism for this'.
 	textureTransformEditorWindow := textureTransformEditor openExternalWindowWithSpec window value.
 	textureTransformEditorWindow closeCallback: [ textureTransformEditor := nil ].

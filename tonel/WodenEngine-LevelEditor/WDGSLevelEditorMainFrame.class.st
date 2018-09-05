@@ -32,6 +32,13 @@ WDGSLevelEditorMainFrame class >> initialize [
 ]
 
 { #category : #'window layout' }
+WDGSLevelEditorMainFrame >> createCenterViews [
+	^ VsTkHorizontalBoxSizer new
+		element: self createLevelViews do: [ :el | el proportion: 3; expand];
+		element: self createMaterialListView do: [ :el | el proportion: 1; expand]
+]
+
+{ #category : #'window layout' }
 WDGSLevelEditorMainFrame >> createLevelViews [
 	| topLeft topRight bottomLeft bottomRight |
 	topLeft := WDGSLevelEditorSceneViewPanel for: self.
@@ -55,10 +62,36 @@ WDGSLevelEditorMainFrame >> createLevelViews [
 ]
 
 { #category : #'window layout' }
+WDGSLevelEditorMainFrame >> createMaterialListView [
+	| view |
+	view := WDGSLevelEditorMaterialListView for: self.
+	vsWindow add: view.
+	
+	^ view
+]
+
+{ #category : #'window layout' }
 WDGSLevelEditorMainFrame >> createMenuBar [
 	| menuBar |
 	menuBar := VsTkMenuBar new.
 	vsWindow add: menuBar.
+	
+	menuBar
+		addMenuItem: 'File' menuWith: [ :menu |
+			menu
+				addMenuItem: 'Open' action: [ :evt | model fileOpen ];
+				addMenuItem: 'Save' action: [ :evt | model save ];
+				addMenuItem: 'Save As' action: [ :evt | model saveAs ];
+				addMenuSeparator;
+				addMenuItem: 'Exit' action: [ :evt |  ]
+		 ];
+		addMenuItem: 'Object' menuWith: [ :menu |
+			menu
+				addMenuItem: 'Inspect' action: [ :evt | model inspectSelection ];
+				addMenuItem: 'Texture Transform' action: [ :evt | model openTextureTransformEditor ];
+				addMenuItem: 'Subtract' action: [ :evt | model subtractSelectedBrushes ];
+				addMenuItem: 'Make Brush Entity' action: [ :evt | model makeBrushEntity ]
+		].
 	
 	^ menuBar
 ]
@@ -88,7 +121,7 @@ WDGSLevelEditorMainFrame >> createWindowLayout [
 	layout := VsTkVerticalBoxSizer new
 		element: self createMenuBar do: [ :el | el expand ];
 		element: self createToolBar do: [ :el | el expand ];
-		element: self createLevelViews do: [ :el | el proportion: 1; expand];
+		element: self createCenterViews do: [ :el | el proportion: 1; expand];
 		element: self createStatusBar do: [ :el | el expand ];
 		yourself.
 	vsWindow sizer: layout

@@ -242,6 +242,18 @@ WDCGenericSurfaceMaterial >> stateUniformBuffer: anObject [
 	stateUniformBuffer := anObject
 ]
 
+{ #category : #preview }
+WDCGenericSurfaceMaterial >> thumbnail [
+	albedoTexture ifNotNil: [ ^ WDCResourceThumbnail type: self thumbnailType value: albedoTexture thumbnail ].
+	^ WDCResourceThumbnail type: self thumbnailType value: self albedoColor asColor
+]
+
+{ #category : #preview }
+WDCGenericSurfaceMaterial >> thumbnailType [
+	isSkinned ifTrue: [ ^ #skinned ].
+	^ #generic
+]
+
 { #category : #'state binding' }
 WDCGenericSurfaceMaterial >> uploadMaterialStateData [
 	stateUniformBuffer ifNotNil: [ 
