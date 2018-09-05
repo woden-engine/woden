@@ -553,8 +553,7 @@ WDASceneExamples class >> example09Island [
 		translateToX: 0.0 y: 1.5 z: 2.5.
 	scene add: light.
 
-	view := model openWith: WDAFPSSceneView.
-	view cameraAngle: (WMVector3F y: Float pi).
+	view := model openWith: WDAFPSSceneView
 ]
 
 { #category : #'example models' }
@@ -569,9 +568,19 @@ WDASceneExamples class >> exampleModelCube [
 
 { #category : #'examples procedural' }
 WDASceneExamples class >> grassTexture [
-	^ WDCTextureData extent: 128@128 srgbColorRenderWith: [ :s :t |
-		Color green
-	].
+	| textureSize colorRamp |
+	textureSize := 40.0@40.0.
+	colorRamp := WDCLinearRamp with: { 
+		0.3 -> Color green muchDarker.
+		1.0 -> Color green.
+	}.
+	
+	^ [ WDCTextureData extent: 256@256 srgbColorRenderWith: [ :s :t |
+		| st grassFunction |
+		st := s@t.
+		grassFunction := st*textureSize fractionalBrownianMotionOctaves: 4 lacunarity: 2.0 initialAmplitude: 0.5 tiledWith: textureSize with: #gradientNoiseTiledWith:.
+		colorRamp value: grassFunction
+	] ] valueCachedInDisk
 ]
 
 { #category : #'examples procedural' }
@@ -623,9 +632,23 @@ WDASceneExamples class >> islandTerrainMaps: textureExtent [
 
 { #category : #'examples procedural' }
 WDASceneExamples class >> rockTexture [
-	^ WDCTextureData extent: 128@128 srgbColorRenderWith: [ :s :t |
-		Color brown
-	].
+	| textureSize colorRamp |
+	textureSize := 7.0@7.0.
+	colorRamp := WDCLinearRamp with: { 
+		0.0 -> '8a6025' asColor.
+		1.0 -> 'f7d8ac' asColor.
+	}.
+	
+	^ [WDCTextureData extent: 256@256 srgbColorRenderWith: [ :s :t |
+		| cracks st bumps height |
+		st := s@t.
+
+		cracks := (st*textureSize fractionalBrownianMotionOctaves: 3 lacunarity: 2.0 initialAmplitude: 0.6 tiledWith: textureSize with: #worleyNoiseTiledWith:)*3.0 min: 1.0.
+		bumps := st*textureSize*4.0 fractionalBrownianMotionOctaves: 4 lacunarity: 2.0 initialAmplitude: 1.0 tiledWith: textureSize*4.0 with: #signedGradientNoiseTiledWith:.
+		height := (cracks*0.5) + (bumps*0.3).
+		
+		colorRamp value: height
+	]] valueCachedInDisk
 ]
 
 { #category : #'examples procedural' }
@@ -634,30 +657,31 @@ WDASceneExamples class >> sandTexture [
 	textureSize := 30.0@30.0.
 	colorRamp := WDCLinearRamp with: { 
 		0.0 -> Color black.
-		1.0 -> Color yellow muchLighter.
+		1.0 -> (Color fromHexString: 'b7a18b').
 	}.
 	
 	^ [ WDCTextureData extent: 128@128 srgbColorRenderWith: [ :s :t |
 		st := s@t.
-		sandFunction := st*textureSize fractionalBrownianMotionOctaves: 4 lacunarity: 2.145 initialAmplitude: 0.6 tiledWith: textureSize with: #gradientNoiseTiledWith:.
+		sandFunction := st*textureSize fractionalBrownianMotionOctaves: 4 lacunarity: 2.0 initialAmplitude: 0.6 tiledWith: textureSize with: #gradientNoiseTiledWith:.
 		colorRamp value: sandFunction
 	] ] valueCachedInDisk.
 ]
 
 { #category : #'examples procedural' }
 WDASceneExamples class >> snowTexture [
-	| textureSize colorRamp st snowFunction |
-	textureSize := 30.0@30.0.
+	| textureSize colorRamp |
+	textureSize := 20.0@20.0.
 	colorRamp := WDCLinearRamp with: { 
-		0.0 -> Color white.
-		1.0 -> Color gray.
+		0.05 -> '25525c' asColor.
+		0.4 -> Color white.
 	}.
 	
-	^ [ WDCTextureData extent: 128@128 srgbColorRenderWith: [ :s :t |
+	^ [WDCTextureData extent: 256@256 srgbColorRenderWith: [ :s :t |
+		| st snowFunction |
 		st := s@t.
-		snowFunction := st*textureSize fractionalBrownianMotionOctaves: 3 lacunarity: 2.145 initialAmplitude: 0.6 tiledWith: textureSize with: #voronoiNoiseTiledWith:.
+		snowFunction := st*textureSize fractionalBrownianMotionOctaves: 4 lacunarity: 2.0 initialAmplitude: 0.4 tiledWith: textureSize with: #gradientNoiseTiledWith:.
 		colorRamp value: snowFunction
-	] ] valueCachedInDisk.
+	] ] valueCachedInDisk
 ]
 
 { #category : #'see class side' }

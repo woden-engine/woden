@@ -80,15 +80,6 @@ Point >> randomNoise_second [
 ]
 
 { #category : #'*WodenEngine-Core' }
-Point >> randomVector [
-	| gx gy |
-	self flag: 'Improve this more'.
-	gx := self randomNoise.
-	gy :=(gx*(x*x + y*y)) randomNoise.
-	^ gx @ gy
-]
-
-{ #category : #'*WodenEngine-Core' }
 Point >> signedGradientNoise [
 	| minX minY maxX maxY fx fy ix iy l t |
 	minX := x floor.
@@ -252,7 +243,7 @@ Point >> voronoiNoiseComponents [
 		-1 to: 1 do: [ :cdx |
 			cellX := startCellX + cdx.
 			cellY := startCellY + cdy.
-			point := (cellX@cellY) randomVector.
+			point := (cellX@cellY) randomNoise2.
 
 			dx := fx - (point x + cdx).
 			dy := fy - (point y + cdy).
@@ -285,7 +276,7 @@ Point >> voronoiNoiseComponentsTiledWith: tilingPeriod [
 		-1 to: 1 do: [ :cdx |
 			cellX := startCellX + cdx floorModule: tilingPeriod x.
 			cellY := startCellY + cdy floorModule: tilingPeriod y.
-			point := (cellX@cellY) randomVector.
+			point := (cellX@cellY) randomNoise2.
 
 			dx := fx - (point x + cdx).
 			dy := fy - (point y + cdy).
