@@ -37,7 +37,9 @@ Class {
 		'quickStateBuffer',
 		'currentWindow',
 		'hasSubmittedFence',
-		'destroyed'
+		'destroyed',
+		'clipRectangleStack',
+		'currentClipRectangle'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -117,7 +119,9 @@ WDPPompeiiSurface >> addCommand: aCommand [
 
 { #category : #adding }
 WDPPompeiiSurface >> addDrawingCommandMesh: mesh submesh: submesh [
-	self flushTransforms.
+	self
+		flushTransforms;
+		flushClippingRectangles.
 	meshesToSend add: mesh.
 	drawingCommands add: (WDPPompeiiDrawCommand new
 		mesh: mesh;
@@ -229,6 +233,13 @@ WDPPompeiiSurface >> createFenceIfNeeded [
 			hasSubmittedFence := false.
 		].
 	].
+]
+
+{ #category : #clipping }
+WDPPompeiiSurface >> currentClipRectangle [
+	^ clipRectangleStack
+		ifEmpty: [ 0@0 extent: extent ]
+		ifNotEmpty: [ clipRectangleStack top ]
 ]
 
 { #category : #initialize }
@@ -403,6 +414,17 @@ WDPPompeiiSurface >> finishCurrentRenderPass [
 ]
 
 { #category : #'as yet unclassified' }
+WDPPompeiiSurface >> flushClippingRectangles [
+	| clipRectangleToUse |
+	clipRectangleToUse := self currentClipRectangle.
+	currentClipRectangle ~= clipRectangleToUse ifTrue: [
+		self addCommand: (WDPPompeiiSetClipRectangleCommand new
+			rectangle: clipRectangleToUse).
+		currentClipRectangle := clipRectangleToUse.
+	]
+]
+
+{ #category : #'as yet unclassified' }
 WDPPompeiiSurface >> flushTransforms [
 	currentTransform ~= transform ifTrue: [
 		self addCommand: (WDPPompeiiSetModelViewMatrixCommand new
@@ -451,11 +473,13 @@ WDPPompeiiSurface >> initialize [
 	gpuOnly := false.
 	transform := PompeiiGenericTransform new.
 	currentTransform := nil.
+	currentClipRectangle := nil.
 	
 	meshesInMemory := IdentitySet new.
 	meshesToSend := IdentitySet new.
 	drawingCommands := OrderedCollection new.
 	meshMemoryMap := IdentityDictionary new.
+	clipRectangleStack := Stack new.
 	
 	vertexBufferCapacity := 0.
 	vertexBuffer := nil.
@@ -490,6 +514,11 @@ WDPPompeiiSurface >> modelViewMatrixIndex: aMatrixIndex [
 	hasValidQuickState := false.
 ]
 
+{ #category : #clipping }
+WDPPompeiiSurface >> popClipRectangle [
+	clipRectangleStack pop
+]
+
 { #category : #accessing }
 WDPPompeiiSurface >> projectionMatrix [
 	^ WMMatrix4F
@@ -503,6 +532,13 @@ WDPPompeiiSurface >> projectionMatrix [
 WDPPompeiiSurface >> projectionMatrixIndex: aMatrixIndex [
 	quickState projectionMatrixIndex: aMatrixIndex.
 	hasValidQuickState := false.
+]
+
+{ #category : #clipping }
+WDPPompeiiSurface >> pushClipRectangle: aRectangle [
+	| newClipRectangle |
+	newClipRectangle := self currentClipRectangle intersect: (self transformClipRectangle: aRectangle).
+	clipRectangleStack push: newClipRectangle
 ]
 
 { #category : #initialization }
@@ -598,9 +634,11 @@ WDPPompeiiSurface >> sendMeshesToMemory [
 WDPPompeiiSurface >> setupCommonState [
 	transform := PompeiiGenericTransform new.
 	currentTransform := nil.
+	currentClipRectangle := nil.
 
 	drawingCommands removeAll.
 	matrices removeAll.
+	clipRectangleStack removeAll.
 	quickState := WDPQuickState new.
 	self
 		projectionMatrixIndex: (self pushMatrix: self projectionMatrix);
@@ -697,6 +735,11 @@ WDPPompeiiSurface >> submitDrawingCommands [
 { #category : #accessing }
 WDPPompeiiSurface >> transform [
 	^ transform
+]
+
+{ #category : #clipping }
+WDPPompeiiSurface >> transformClipRectangle: aRectangle [
+	^ (transform transform: aRectangle origin) corner: (transform transform: aRectangle corner)
 ]
 
 { #category : #drawing }

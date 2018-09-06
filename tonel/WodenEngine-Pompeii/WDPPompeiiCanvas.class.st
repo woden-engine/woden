@@ -31,6 +31,16 @@ WDPPompeiiCanvas >> driver [
 	^ surface driver
 ]
 
+{ #category : #'as yet unclassified' }
+WDPPompeiiCanvas >> popClipRectangle [
+	surface popClipRectangle
+]
+
+{ #category : #'as yet unclassified' }
+WDPPompeiiCanvas >> pushClipRectangle: aRectangle [
+	surface pushClipRectangle: aRectangle
+]
+
 { #category : #accessing }
 WDPPompeiiCanvas >> surface [
 	^ surface

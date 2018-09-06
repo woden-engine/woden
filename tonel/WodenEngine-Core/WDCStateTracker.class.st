@@ -12,7 +12,8 @@ Class {
 		'objectBlendingMode',
 		'materialBlendingMode',
 		'materialCullMode',
-		'objectCullMode'
+		'objectCullMode',
+		'currentViewport'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -83,7 +84,8 @@ WDCStateTracker >> beginRenderPass: renderPass renderTarget: renderTarget x: x y
 		beginRenderPass: renderPass validHandle framebuffer: renderTarget currentFramebuffer validHandle bundle_content: 0;
 		setViewport: x y: y w: width h: height;
 		setScissor: x y: y w: width h: height.
-		
+
+	currentViewport := { x . y . width . height }.
 	pipelineStateDescription
 		renderTargetFormats: renderTarget colorAttachmentFormats;
 		depthStencilFormat: renderTarget depthStencilFormat;
@@ -146,6 +148,16 @@ WDCStateTracker >> commitPipelineState [
 { #category : #'pipeline state' }
 WDCStateTracker >> cullMode: cullMode [
 	pipelineStateDescription cullMode: cullMode
+]
+
+{ #category : #accessing }
+WDCStateTracker >> currentViewport [
+	^ currentViewport
+]
+
+{ #category : #accessing }
+WDCStateTracker >> currentViewportRectangle [
+	^ currentViewport first @ currentViewport second extent: currentViewport third @ currentViewport fourth
 ]
 
 { #category : #'pipeline state' }
@@ -281,6 +293,12 @@ WDCStateTracker >> resolveRenderTarget: sourceRenderTarget into: targetRenderTar
 	commandListBuilder
 		resolveFramebuffer: targetRenderTarget currentFramebuffer validHandle
 		sourceFramebuffer: sourceRenderTarget currentFramebuffer validHandle
+]
+
+{ #category : #commands }
+WDCStateTracker >> scissorRectangle: aRectangle [
+	commandListBuilder
+		setScissor: aRectangle origin x y: aRectangle origin y w: aRectangle width h: aRectangle height
 ]
 
 { #category : #commands }

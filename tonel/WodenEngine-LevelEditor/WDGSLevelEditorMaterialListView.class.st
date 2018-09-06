@@ -215,17 +215,12 @@ WDGSLevelEditorMaterialListView >> handleMouseMove: event [
 ]
 
 { #category : #'event handling' }
-WDGSLevelEditorMaterialListView >> handleScrollEvent: event [
-	event direction = Character arrowUp ifTrue: [ 
-		verticalScroll := verticalScroll + VerticalScrollAmount.
-		self snapScrolling.
-	].
-	event direction = Character arrowDown ifTrue: [ 
-		verticalScroll := verticalScroll - VerticalScrollAmount.
-		self snapScrolling.
-	].
+WDGSLevelEditorMaterialListView >> handleMouseWheel: event [
+	verticalScroll := verticalScroll + (VerticalScrollAmount * event scrollVertical).
+	self snapScrolling.
+
 	self highlightCellAtPosition: event position.
-	^ super handleScrollEvent: event
+	^ super handleMouseWheel: event
 ]
 
 { #category : #'event handling' }
@@ -237,5 +232,11 @@ WDGSLevelEditorMaterialListView >> highlightCellAtPosition: cellPosition [
 { #category : #initialization }
 WDGSLevelEditorMaterialListView >> initialize [
 	super initialize.
+	self meshScope: true.
 	verticalScroll := 0.
+]
+
+{ #category : #'event handling' }
+WDGSLevelEditorMaterialListView >> snapScrolling [
+	verticalScroll := verticalScroll min: 0 max: (self computeCellHeight * (self computeGridSize y - 1) max: 0) negated
 ]
