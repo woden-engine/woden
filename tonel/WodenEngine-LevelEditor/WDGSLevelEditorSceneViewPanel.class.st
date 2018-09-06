@@ -385,6 +385,16 @@ WDGSLevelEditorSceneViewPanel >> handleMouseMove: anEvent [
 		ifNotNil: [ element view: self mouseOver: anEvent ]
 ]
 
+{ #category : #'event handling' }
+WDGSLevelEditorSceneViewPanel >> handleMouseWheel: event [
+	isPerspective ifTrue: [
+		cameraTransform translateBy: (cameraTransform matrix transformVector3: (WMVector3D z: -0.2*event scrollVertical)).
+	] ifFalse: [
+		viewScale := viewScale *(1.0 - (event scrollVertical*0.1) max:0.1).
+		selectionBoxView ifNotNil: [ selectionBoxView updateNodes ]
+]
+]
+
 { #category : #initialization }
 WDGSLevelEditorSceneViewPanel >> initialize [
 	super initialize.
