@@ -29,7 +29,7 @@ WDGSMapNode >> changedSelectionState [
 
 { #category : #accessing }
 WDGSMapNode >> engine [
-	^ self scene engine
+	^ self scene ifNotNil: [:scene | scene engine]
 ]
 
 { #category : #initialization }

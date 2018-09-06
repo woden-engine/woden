@@ -21,6 +21,36 @@ Class {
 	#category : #'WodenEngine-Core-Mesh'
 }
 
+{ #category : #'model conversion' }
+WDCModel class >> convertModelFile: aFileName modifyingWith: aBlock [
+	| fileRef loadedModel targetFileRef |
+	fileRef := aFileName asFileReference.
+	loadedModel := self loadFromFile: fileRef.
+	aBlock value: loadedModel.
+
+	targetFileRef := fileRef withExtension: 'fmdl'.
+	loadedModel saveTo: targetFileRef
+]
+
+{ #category : #initialization }
+WDCModel class >> loadFromFile: aFileName [
+	^ WDCModelLoader loadFromFile: aFileName
+]
+
+{ #category : #'model conversion' }
+WDCModel class >> modelConversionScript [
+	<script>
+	#(
+		('core-assets/models/demos/magnum.wmjson' 'materials/demos/magnum.json')
+		('core-assets/models/demos/magnum_fps.wmjson' 'materials/demos/magnum_fps.json')
+	) do: [ :asset |
+		self convertModelFile: asset first modifyingWith: [ :loadedModel |
+			loadedModel combineSubmeshesWithMaterial: asset second.
+		]
+	]
+
+]
+
 { #category : #accessing }
 WDCModel >> actions [
 	^ actions
@@ -110,6 +140,11 @@ WDCModel >> meshFor: anEngine [
 		indexBuffer: (self createIndexBufferFor: anEngine);
 		submeshes: (submeshes collect: [:sm | sm subMeshFor: anEngine]).
 	^ mesh
+]
+
+{ #category : #fileout }
+WDCModel >> saveTo: aFileName [
+	WDCModelWriter save: self toFile: aFileName
 ]
 
 { #category : #accessing }

@@ -86,6 +86,11 @@ WDGSEntity >> boundingBox [
 	^ self localBoundingBox
 ]
 
+{ #category : #accessing }
+WDGSEntity >> cameraSceneNode [
+	^ self view ifNotNil: [ :view | view cameraSceneNode ]
+]
+
 { #category : #changing }
 WDGSEntity >> changedSelectionState [
 	pointEntityNode ifNil: [ ^ self ].
@@ -440,6 +445,11 @@ WDGSEntity >> transformMemento [
 { #category : #behaviors }
 WDGSEntity >> unsubscribeToTouchEvents [
 	self map unregisterTouchListener: self
+]
+
+{ #category : #accessing }
+WDGSEntity >> view [
+	^ (components at: #'view' ifAbsent: [ ^ nil ]) first view
 ]
 
 { #category : #accessing }

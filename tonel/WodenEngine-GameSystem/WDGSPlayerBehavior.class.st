@@ -37,17 +37,21 @@ WDGSPlayerBehavior class >> halfExtent [
 
 { #category : #adding }
 WDGSPlayerBehavior >> activateWeapon: aWeapon [
+	| camera |
 	currentWeapon := aWeapon.
 	weaponSceneNode ifNotNil: [
 		self flag: 'Try to avoid removing the old scene node.'.
 		weaponSceneNode removeFromScene
 	].
-	
-	weaponSceneNode := WDSGSpatialObject new.
-	currentWeapon precacheResourcesFor: self engine.
-	weaponSceneNode renderable: (currentWeapon fpsModelFor: self engine).
-	self levelPlayer camera addChild: weaponSceneNode.
 
+	camera := self cameraSceneNode.
+	camera ifNotNil: [ 
+		weaponSceneNode := WDSGSpatialObject new.
+		currentWeapon precacheResourcesFor: self engine.
+		weaponSceneNode renderable: (currentWeapon fpsModelFor: self engine).
+		camera addChild: weaponSceneNode.
+	].
+ 	
 	self runWeaponAnimationAction: 'Draw'.
 ]
 
@@ -264,12 +268,13 @@ WDGSPlayerBehavior >> shoot [
 
 { #category : #'map events' }
 WDGSPlayerBehavior >> simulateTime: delta [
-	| camera spatialDesc orientation transform |
+	| spatialDesc transform camera orientation |
 	linearVelocity := velocityDirection * speed.
 	super simulateTime: delta.
-	camera := self levelPlayer camera.
 	spatialDesc := entity spatialDescription.
 	transform := spatialDesc transform.
+	
+	camera := self cameraSceneNode.
 	camera ifNotNil: [
 		orientation := (WMMatrix3F yrot: angle y) * (WMMatrix3F xrot: angle x).
 		
@@ -320,7 +325,7 @@ WDGSPlayerBehavior >> spawn [
 	self scene add: bulletsNode.
 		
 	self setBoundingBox: (Box3D halfExtent: self class halfExtent).
-	self levelPlayer playerEventHandler: (WDGSPlayerBehaviorEventHandler new behavior: self).
+	self view ifNotNil: [ :view | view playerEventHandler: (WDGSPlayerBehaviorEventHandler new behavior: self)].
 	self subscribeToTouchEvents.
 
 ]

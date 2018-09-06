@@ -3,6 +3,10 @@ Trait {
 	#category : #'WodenEngine-GameSystem-LevelPlayer'
 }
 
+{ #category : #adding }
+TWDGSLevelPlayer >> addPlayerSpawnPosition: aPosition [
+]
+
 { #category : #accessing }
 TWDGSLevelPlayer >> camera [
 	^ self explicitRequirement

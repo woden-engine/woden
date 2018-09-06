@@ -29,6 +29,10 @@ WDCRenderable >> initialize [
 	boundingBox := WMBox3DF empty.
 ]
 
+{ #category : #'extra per object rendering data' }
+WDCRenderable >> performGpuStateUpdateFor: engine frameIndex: frameIndex into: renderableSceneData [
+]
+
 { #category : #accessing }
 WDCRenderable >> renderModificationCountFor: mode submode: submode [
 	^ modificationCount

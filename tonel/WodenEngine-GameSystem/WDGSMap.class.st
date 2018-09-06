@@ -53,14 +53,35 @@ WDGSMap >> backgroundColor: anObject [
 	
 ]
 
+{ #category : #spawning }
+WDGSMap >> createEntityWithBehavior: behavior position: aPosition [
+	| entity |
+	entity := WDGSEntity new.
+	entity
+		addComponent: (WDGSSpatialDescription new translation: aPosition);
+		addComponent: behavior.
+	self addEntity: entity.
+	^ entity
+]
+
 { #category : #accessing }
 WDGSMap >> createPointEntityInstanceGroup [
+
+	| solidColorMaterial |
+	solidColorMaterial := self engine resourceCache loadMaterial: 'materials/basic/flat.json'.
+	
 	pointEntityInstanceGroup := WDSGSpatialObjectInstanceGroup new.
 	pointEntityInstanceGroup
 		updatedPerFrame: false;
-		renderable: ((WDCGenericMeshBuilder for: scene engine)
-		addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
-		mesh).
+		renderable: (WDCRenderableWithAlternatives new
+			addDefaultAlternative:((WDCGenericMeshBuilder for: scene engine)
+				addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+				mesh);
+			addAlternative:((WDCGenericMeshBuilder for: scene engine)
+				currentMaterial: solidColorMaterial;
+				addWireCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+				mesh) submode: #wire;
+				yourself).
 	scene add: pointEntityInstanceGroup
 ]
 
@@ -157,6 +178,14 @@ WDGSMap >> loadMaterial: aMaterialName [
 { #category : #accessing }
 WDGSMap >> numberOfEntities [
 	^ entities size
+]
+
+{ #category : #playing }
+WDGSMap >> play [
+	^ (WDAGSLevelModel for: self engine)
+		map: self;
+		spawn;
+		open
 ]
 
 { #category : #'as yet unclassified' }
@@ -262,14 +291,9 @@ WDGSMap >> spawn [
 
 { #category : #spawning }
 WDGSMap >> spawnEntityWithBehavior: behavior position: aPosition [
-	| entity |
-	entity := WDGSEntity new.
-	entity
-		addComponent: (WDGSSpatialDescription new translation: aPosition);
-		addComponent: behavior.
-	self addEntity: entity.
-	entity spawn.
-	^ entity
+	^ (self createEntityWithBehavior: behavior position: aPosition)
+		spawn;
+		yourself
 ]
 
 { #category : #'as yet unclassified' }

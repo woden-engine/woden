@@ -356,11 +356,7 @@ WDGSLevelEditorModel >> openTextureTransformEditor [
 
 { #category : #actions }
 WDGSLevelEditorModel >> playInExternalWindow [
-	WDGSLevelPlayer new
-		"initializeWithEngine: engine;"
-		map: map playModeCopy;
-		spawn;
-		openInOSWindow.
+	map playModeCopy play
 ]
 
 { #category : #meshes }

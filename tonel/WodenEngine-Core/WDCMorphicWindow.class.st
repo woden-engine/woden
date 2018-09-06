@@ -15,6 +15,10 @@ Class {
 	#category : #'WodenEngine-Core-Window'
 }
 
+{ #category : #'mouse capture' }
+WDCMorphicWindow >> captureMouse [
+]
+
 { #category : #initialization }
 WDCMorphicWindow >> checkRenderTarget [
 	| innerExtent |
@@ -171,6 +175,10 @@ WDCMorphicWindow >> processEvents [
 WDCMorphicWindow >> processOSWindowEvent: anEvent [
 	handledHere := false.
 
+]
+
+{ #category : #'mouse capture' }
+WDCMorphicWindow >> releaseMouse [
 ]
 
 { #category : #rendering }

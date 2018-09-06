@@ -23,30 +23,30 @@ WDCTerrainMeshBuilder class >> for: anEngine [
 	^ self new engine: anEngine
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> clipMapPeriodForGridSize: size subdivisions: subdivisions [
 	material ifNil: [ ^ self ].
 	material clipMapPeriod: size / (subdivisions + 1)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> createClipMapWithLevels: levelCount size: size subdivisions: subdivisions [
 	(indices isEmpty and: [ vertices isEmpty ]) ifTrue: [ 
 		^ WDCResourceCache cachedValueFor: { self class . #clipmap . levelCount . size . subdivisions}
 			ifPresent: [ :cachedGeometry |
 				vertices := cachedGeometry first.
 				indices := cachedGeometry second.
-				boundingBox := WMBox3DF loadFromJson: cachedGeometry third.
+				boundingBox := cachedGeometry third.
 		] ifAbsentPut: [
 			self doCreateClipMapWithLevels: levelCount size: size subdivisions: subdivisions.
-			{ vertices . indices . boundingBox asJsonData }
+			{ vertices . indices . boundingBox }
 		]
 	].
 	self doCreateClipMapWithLevels: levelCount size: size subdivisions: subdivisions
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> createGridWithSize: size offset: offset subdivisions: subdivisions lodLevel: lodLevel [
 	| baseVertex y x vertex verticesPerRow currentRow nextRow currentRowElement nextRowElement dx dy sx sy gridEdges |
 	baseVertex := vertices size.
@@ -97,7 +97,7 @@ WDCTerrainMeshBuilder >> createGridWithSize: size offset: offset subdivisions: s
 		yourself.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> createGridWithSize: size subdivisions: subdivisions [
 	^ self createGridWithSize: size offset: WMVector2F zero subdivisions: subdivisions lodLevel: 0
 ]
@@ -107,7 +107,7 @@ WDCTerrainMeshBuilder >> createIndexBuffer [
 	^ engine createIndex: 4 elements: indices size immutableBuffer: indices asByteArray
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> createRingWithLevels: levelCount size: size subdivisions: subdivisions radius: radius interiorEdges: gridEdges lodLevel: lodLevel [
 	| cellOffset nextGridEdges allCellEdges cellEdges |
 	"Generate the outer ring cells."
@@ -166,7 +166,7 @@ WDCTerrainMeshBuilder >> createVertexBuffer [
 	^ engine createVertex: WDCTerrainMeshVertexF structureSize elements: vertices size immutableBuffer: vertices asByteArray
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> doCreateClipMapWithLevels: levelCount size: size subdivisions: subdivisions [
 	| gridEdges |
 	gridEdges := self createGridWithSize: size offset: WMVector2F zero subdivisions: subdivisions lodLevel: 0.
@@ -231,7 +231,7 @@ WDCTerrainMeshBuilder >> retrieveVertexLayout [
 	^ engine vertexLayoutFor: WDCTerrainMeshVertexF
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> stitchInnerEdge: innerEdge withOuterEdge: outerEdge flipOrientation: flip [
 	| ii i0 i1 i2 o0 o1 |
 	self assert: ((outerEdge size - 1) * 2) = (innerEdge size - 1).

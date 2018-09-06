@@ -317,6 +317,14 @@ WDCResourceCache >> loadMaterial: aFileNameOrReference fallback: aBlock [
 
 ]
 
+{ #category : #'3d models' }
+WDCResourceCache >> loadMesh: aFileNameOrReference [
+	| modelFile |
+	modelFile := self resolveResourceFileReference: aFileNameOrReference.
+	^ self resourceAt: modelFile -> #mesh ifAbsentPut: [ (self load3DModel: modelFile) meshFor: engine  ].
+
+]
+
 { #category : #'resource loading' }
 WDCResourceCache >> loadSRGBTexture: aFileNameOrReference [
 	| textureFile |

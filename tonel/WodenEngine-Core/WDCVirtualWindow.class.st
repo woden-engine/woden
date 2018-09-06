@@ -12,6 +12,10 @@ Class {
 	#category : #'WodenEngine-Core-Window'
 }
 
+{ #category : #'mouse capture' }
+WDCVirtualWindow >> captureMouse [
+]
+
 { #category : #initialization }
 WDCVirtualWindow >> checkRenderTarget [
 	renderTarget ifNil: [
@@ -150,6 +154,10 @@ WDCVirtualWindow >> processEvents [
 			self processEvent: event
 		]
 	]
+]
+
+{ #category : #'mouse capture' }
+WDCVirtualWindow >> releaseMouse [
 ]
 
 { #category : #'framebuffer description' }

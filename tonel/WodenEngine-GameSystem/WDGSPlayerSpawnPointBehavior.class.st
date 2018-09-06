@@ -6,5 +6,5 @@ Class {
 
 { #category : #'map events' }
 WDGSPlayerSpawnPointBehavior >> spawn [
-	self levelPlayer spawnPlayerAtPosition: entity position.
+	self levelPlayer addPlayerSpawnPosition: entity position.
 ]

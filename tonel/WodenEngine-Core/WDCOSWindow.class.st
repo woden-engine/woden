@@ -12,6 +12,11 @@ Class {
 	#category : #'WodenEngine-Core-Window'
 }
 
+{ #category : #'mouse capture' }
+WDCOSWindow >> captureMouse [
+	window captureMouse
+]
+
 { #category : #'instance creation' }
 WDCOSWindow >> checkRenderTargets [
 	| innerExtent |
@@ -154,6 +159,11 @@ WDCOSWindow >> processEvents [
 			self processEvent: event
 		]
 	]
+]
+
+{ #category : #'mouse capture' }
+WDCOSWindow >> releaseMouse [
+	window releaseMouse
 ]
 
 { #category : #'framebuffer description' }

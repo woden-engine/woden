@@ -1,3 +1,6 @@
+"
+I am custom JSON based woden model loader.
+"
 Class {
 	#name : #WDCJSONModelLoader,
 	#superclass : #WDCModelLoader,
@@ -39,22 +42,6 @@ WDCJSONModelLoader class >> convert: modelFileName singleMaterial: materialName 
 { #category : #accessing }
 WDCJSONModelLoader class >> extension [
 	^ 'wmjson'
-]
-
-{ #category : #'as yet unclassified' }
-WDCJSONModelLoader class >> scriptsUsed [
-	"
-	model := WTModelImporter new
-		importFromFileNamed: 'magnum_357.wmjson'.
-	model combineSubmeshesWithMaterial: 'materials/demos/magnum.json'.
-	FLSerializer serialize: model toFileNamed: 'magnum.fmdl'.
-	
-	model := WTModelImporter new
-		importFromFileNamed: 'magnum_357_fps.wmjson'.
-	model combineSubmeshesWithMaterial: 'materials/demos/magnum_fps.json'.
-	FLSerializer serialize: model toFileNamed: 'magnum_fps.fmdl'.
-
-	"
 ]
 
 { #category : #'vertex data loading' }

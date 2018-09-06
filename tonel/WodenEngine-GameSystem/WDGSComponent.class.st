@@ -51,6 +51,11 @@ WDGSComponent >> bucket [
 ]
 
 { #category : #accessing }
+WDGSComponent >> cameraSceneNode [
+	^ entity cameraSceneNode
+]
+
+{ #category : #accessing }
 WDGSComponent >> entity [
 	^ entity
 ]
@@ -114,4 +119,9 @@ WDGSComponent >> scene [
 { #category : #accessing }
 WDGSComponent >> selected: anObject [
 	selected := anObject
+]
+
+{ #category : #accessing }
+WDGSComponent >> view [
+	^ entity view
 ]

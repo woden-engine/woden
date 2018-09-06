@@ -28,11 +28,6 @@ WDCGenericMesh >> indexBuffer: anObject [
 	modificationCount := modificationCount + 1.
 ]
 
-{ #category : #'extra per object rendering data' }
-WDCGenericMesh >> performGpuStateUpdateFor: engine frameIndex: frameIndex into: renderableSceneData [
-	
-]
-
 { #category : #rendering }
 WDCGenericMesh >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	stateTracker

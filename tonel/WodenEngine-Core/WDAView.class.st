@@ -28,6 +28,11 @@ WDAView >> addSubView: aSubView [
 	subViews := (subViews copyWithout: aSubView) copyWith: aSubView
 ]
 
+{ #category : #'mouse capture' }
+WDAView >> captureMouse [
+	window captureMouse
+]
+
 { #category : #opening }
 WDAView >> close [
 	window ifNotNil: [ window close ]
@@ -142,6 +147,11 @@ WDAView >> prepareRendering [
 { #category : #'event processing' }
 WDAView >> processEvents [
 	window ifNotNil: #processEvents
+]
+
+{ #category : #'mouse capture' }
+WDAView >> releaseMouse [
+	window releaseMouse
 ]
 
 { #category : #adding }

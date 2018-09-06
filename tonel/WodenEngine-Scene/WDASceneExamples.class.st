@@ -366,10 +366,8 @@ WDASceneExamples class >> example05DangerousPool [
 	waterSurface transform translateToX: 0.0 y: -0.3 z: 0.0.
 	scene add: waterSurface.
 	
-	magnumMesh := (engine resourceCache load3DModel: 'models/demos/magnum_fps.wmjson')
-		combineSubmeshesWithMaterial: 'materials/demos/magnum_fps.json';
-		meshFor: engine.
-		
+	magnumMesh := engine resourceCache loadMesh: 'models/demos/magnum_fps.fmdl'.
+	
 	pickedGun := WDSGSpatialObject new.
 	pickedGun renderable: magnumMesh.
 	camera addChild: pickedGun.

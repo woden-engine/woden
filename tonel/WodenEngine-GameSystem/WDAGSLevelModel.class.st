@@ -3,10 +3,47 @@ Class {
 	#superclass : #WDASceneModel,
 	#instVars : [
 		'map',
-		'playerEventHandler'
+		'playerEventHandler',
+		'playerSpawnPositions'
 	],
-	#category : 'WodenEngine-GameSystem-LevelPlayer'
+	#category : #'WodenEngine-GameSystem-LevelPlayer'
 }
+
+{ #category : #'as yet unclassified' }
+WDAGSLevelModel class >> loadJsonFromFileNamed: aFileName [
+	^ self new loadJsonFromFileNamed: aFileName
+]
+
+{ #category : #adding }
+WDAGSLevelModel >> addPlayerSpawnPosition: aPosition [
+	playerSpawnPositions add: aPosition
+]
+
+{ #category : #'as yet unclassified' }
+WDAGSLevelModel >> createPlayer [
+	^ self createPlayerAtPosition: self selectPlayerSpawnPosition
+]
+
+{ #category : #'as yet unclassified' }
+WDAGSLevelModel >> createPlayerAtPosition: aPosition [
+	^ map createEntityWithBehavior: WDGSPlayerBehavior new position: aPosition.
+]
+
+{ #category : #'as yet unclassified' }
+WDAGSLevelModel >> defaultViewClass [
+	^ WDAGSLevelPlayerView
+]
+
+{ #category : #initialization }
+WDAGSLevelModel >> initializeModel [
+	super initializeModel.
+	playerSpawnPositions := OrderedCollection new.
+]
+
+{ #category : #'as yet unclassified' }
+WDAGSLevelModel >> loadJsonFromFileNamed: aFileName [
+	self map: (WDGSMap loadJsonFromFileNamed: aFileName)
+]
 
 { #category : #accessing }
 WDAGSLevelModel >> map [
@@ -28,14 +65,11 @@ WDAGSLevelModel >> map: anObject [
 	
 ]
 
-{ #category : #accessing }
-WDAGSLevelModel >> playerEventHandler [
-	^ playerEventHandler
-]
-
-{ #category : #accessing }
-WDAGSLevelModel >> playerEventHandler: anObject [
-	playerEventHandler := anObject
+{ #category : #'as yet unclassified' }
+WDAGSLevelModel >> selectPlayerSpawnPosition [
+	^ playerSpawnPositions
+		ifEmpty: [ WMVector3D zero ]
+		ifNotEmpty: [ playerSpawnPositions first ]
 ]
 
 { #category : #'map events' }
@@ -43,8 +77,8 @@ WDAGSLevelModel >> spawn [
 	self map spawn
 ]
 
-{ #category : #'as yet unclassified' }
-WDAGSLevelModel >> spawnPlayerAtPosition: aPosition [
-	self flag: 'TODO: Try to move this part into the view.'.
-	map spawnEntityWithBehavior: WDGSPlayerBehavior new position: aPosition.
+{ #category : #'rendering process stages' }
+WDAGSLevelModel >> updateForFrameDelta: delta [
+	super updateForFrameDelta: delta.
+	map simulateTime: delta
 ]

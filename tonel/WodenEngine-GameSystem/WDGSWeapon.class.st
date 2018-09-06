@@ -56,5 +56,5 @@ WDGSWeapon >> shootWithPlayer: player [
 		player runRepeatedWeaponAnimation: 'Idle'
 	].
 
-	player fireBulletSpeed: 30.0 
+	player fireBulletSpeed: 30.
 ]

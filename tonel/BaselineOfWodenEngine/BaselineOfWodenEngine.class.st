@@ -55,10 +55,12 @@ BaselineOfWodenEngine >> baseline: spec [
 				spec requires: #('WodenEngine-Core' 'OpenAL')].
 		spec package: #'WodenEngine-GameSystem' with: [
 				spec requires: #('WodenEngine-Core' 'WodenEngine-Pompeii' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL')].
+		spec package: #'WodenEngine-LevelEditor' with: [
+				spec requires: #('WodenEngine-Core' 'WodenEngine-Pompeii' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL' 'WodenEngine-GameSystem')].
 		spec package: #'WodenEngine-Roassal' with: [
 				spec requires: #('WodenEngine-Core' 'WodenEngine-Pompeii' 'WodenEngine-Scene' 'WodenEngine-Physics')].
 
-		spec group: 'default' with: #('WodenEngine-Core' 'WodenEngine-Pompeii' 'WodenEngine-Samples' 'WodenEngine-GameSystem' 'WodenEngine-Roassal')
+		spec group: 'default' with: #('WodenEngine-Core' 'WodenEngine-Pompeii' 'WodenEngine-Samples' 'WodenEngine-GameSystem' 'WodenEngine-LevelEditor' 'WodenEngine-Roassal')
 	]
 
 ]
