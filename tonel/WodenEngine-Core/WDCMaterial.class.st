@@ -66,6 +66,21 @@ WDCMaterial >> isMaterialDescription [
 ]
 
 { #category : #parsing }
+WDCMaterial >> parse: data at: materialFileReference array: name size: size nativeType: nativeType ifAbsent: ifAbsentBlock [
+	| result |
+	result := SLVMNativeArray for: nativeType new: size.
+	result atAllPut: ifAbsentBlock value.
+	data at: name ifPresent: [ :array |
+		array withIndexDo: [ :element :index |
+			index <= size ifTrue: [
+				result at: index put: (nativeType loadFromJson: element)
+			]
+		]
+	].
+	^ result
+]
+
+{ #category : #parsing }
 WDCMaterial >> parse: data at: fileReference color: name ifAbsent: aBlock [
 	^ data at: name
 		ifPresent: [ :colorData |
@@ -93,6 +108,14 @@ WDCMaterial >> parse: data at: fileReference optionalTexture: name [
 ]
 
 { #category : #parsing }
+WDCMaterial >> parse: data at: fileReference scalar: name ifAbsent: aBlock [
+	^ data at: name
+		ifPresent: [ :scalar | scalar ]
+		ifAbsent: [ aBlock value asFloat ] .
+	
+]
+
+{ #category : #parsing }
 WDCMaterial >> parse: data at: fileReference srgbColor: name ifAbsent: aBlock [
 	^ data at: name
 		ifPresent: [ :colorData |
@@ -110,11 +133,41 @@ WDCMaterial >> parse: data at: fileReference srgbColor: name ifAbsent: aBlock [
 ]
 
 { #category : #parsing }
+WDCMaterial >> parse: data at: materialFileReference srgbTexture: name arrayOfSize: size [
+	| result |
+	result := Array new: size.
+	data at: name ifPresent: [ :textureNames |
+		textureNames doWithIndex: [ :textureName :index |
+			index <= size ifTrue: [
+				result at: index put: (engine resourceCache loadSRGBTexture: textureName)
+			]
+		]
+	].
+
+	^ result
+]
+
+{ #category : #parsing }
 WDCMaterial >> parse: data at: fileReference srgbTexture: name ifAbsent: aBlock [
 	^ data at: name
 		ifPresent: [ :textureName | engine resourceCache loadSRGBTexture: textureName ]
 		ifAbsent: aBlock .
 	
+]
+
+{ #category : #parsing }
+WDCMaterial >> parse: data at: materialFileReference texture: name arrayOfSize: size [
+	| result |
+	result := Array new: size.
+	data at: name ifPresent: [ :textureNames |
+		textureNames doWithIndex: [ :textureName :index |
+			index <= size ifTrue: [
+				result at: index put: (engine resourceCache loadTexture: textureName)
+			]
+		]
+	].
+
+	^ result
 ]
 
 { #category : #parsing }
@@ -126,14 +179,38 @@ WDCMaterial >> parse: data at: fileReference texture: name ifAbsent: aBlock [
 ]
 
 { #category : #parsing }
+WDCMaterial >> parse: data at: fileReference vector2: name ifAbsent: aBlock [
+	^ data at: name
+		ifPresent: [ :vector2 |
+					WMVector2F x: (vector2 at: 1) 
+							y: (vector2 at: 2)
+		]
+		ifAbsent: [ aBlock value asWMVector2F ] .
+	
+]
+
+{ #category : #parsing }
 WDCMaterial >> parse: data at: fileReference vector3: name ifAbsent: aBlock [
 	^ data at: name
-		ifPresent: [ :colorData |
-					WMVector3F x: (colorData at: 1) 
-							y: (colorData at: 2)
-							z: (colorData at: 3)
+		ifPresent: [ :vector3 |
+					WMVector3F x: (vector3 at: 1) 
+							y: (vector3 at: 2)
+							z: (vector3 at: 3)
 		]
 		ifAbsent: [ aBlock value asWMVector3F ] .
+	
+]
+
+{ #category : #parsing }
+WDCMaterial >> parse: data at: fileReference vector4: name ifAbsent: aBlock [
+	^ data at: name
+		ifPresent: [ :vector4 |
+					WMVector4F x: (vector4 at: 1) 
+							y: (vector4 at: 2)
+							z: (vector4 at: 3)
+							w: (vector4 at: 4)
+		]
+		ifAbsent: [ aBlock value asWMVector4F ]
 	
 ]
 

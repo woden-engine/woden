@@ -182,8 +182,22 @@ WDCTerrainMaterial >> normalTextures: anArray [
 
 { #category : #parsing }
 WDCTerrainMaterial >> parse: materialFileReference data: data [
-	heightMapTexture := self parse: data at: materialFileReference optionalTexture: 'heightMapTexture'.
-	splattingTexture := self parse: data at: materialFileReference optionalTexture: 'splattingTexture'.
+	materialState
+		heightMapScale: (self parse: data at: materialFileReference vector2: 'height-map-scale' ifAbsent: [ (WMVector2F x: 1.0 y: 1.0) ]);
+		heightMapOffset: (self parse: data at: materialFileReference vector2: 'height-map-offset' ifAbsent: [ WMVector2F zero ]);
+		heightScale: (self parse: data at: materialFileReference scalar: 'height-scale' ifAbsent: [ 1.0 ]);
+		
+		albedo: (self parse: data at: materialFileReference srgbColor: 'albedo-color' ifAbsent: [ Color white ]);
+		fresnel: (self parse: data at: materialFileReference vector3: 'fresnel-constant' ifAbsent: [ WMVector3F x: 0.03 y: 0.03 z: 0.03 ]);
+		smoothness: (data at: 'smoothness' ifAbsent: [ materialState smoothness ]);
+		
+		textureScales: (self parse: data at: materialFileReference array: 'texture-scales' size: 5 nativeType: WMVector2F ifAbsent: [ WMVector2F x: 1.0 y: 1.0]);
+		textureOffsets: (self parse: data at: materialFileReference array: 'texture-offsets' size: 5 nativeType: WMVector2F ifAbsent: [ WMVector2F x: 0.0 y: 0.0]).
+
+	heightMapTexture := self parse: data at: materialFileReference optionalTexture: 'height-map'.
+	splattingTexture := self parse: data at: materialFileReference optionalTexture: 'splatter'.
+	albedoTextures := self parse: data at: materialFileReference srgbTexture: 'albedo-textures' arrayOfSize: 5.
+	normalTextures := self parse: data at: materialFileReference texture: 'normal-textures' arrayOfSize: 5.
 	self invalidateCache.
 ]
 
@@ -195,6 +209,14 @@ WDCTerrainMaterial >> splattingTexture [
 { #category : #accessing }
 WDCTerrainMaterial >> splattingTexture: anObject [
 	splattingTexture := anObject
+]
+
+{ #category : #preview }
+WDCTerrainMaterial >> thumbnail [
+	heightMapTexture ifNotNil: [ ^ WDCResourceThumbnail type: #terrain value: heightMapTexture thumbnail ].
+	splattingTexture ifNotNil: [ ^ WDCResourceThumbnail type: #terrain value: splattingTexture thumbnail ].
+
+	^ WDCResourceThumbnail type: #terrain value: Color brown
 ]
 
 { #category : #'state binding' }

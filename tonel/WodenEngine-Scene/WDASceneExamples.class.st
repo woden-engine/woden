@@ -29,19 +29,7 @@ WDASceneExamples class >> cloudTexture [
 { #category : #'examples procedural' }
 WDASceneExamples class >> createIslandTerrainObjectFor: engine [
 	| material mesh terrain |
-	material := WDCTerrainMaterial for: engine.
-	material
-		heightMapScale: (WMVector2F x: 1.0 y: 1.0)/100.0;
-		heightScale: 110.0;
-		heightMapTexture: (engine resourceCache loadTexture: 'textures/procedural/terrain/island.sttex?texture=height');
-		splattingTexture: (engine resourceCache loadTexture: 'textures/procedural/terrain/island.sttex?texture=splatter');
-		albedoTextures: {
-			engine resourceCache loadSRGBTexture: 'textures/procedural/terrain/sand.sttex'.
-			engine resourceCache loadSRGBTexture: 'textures/procedural/terrain/grass.sttex'.
-			engine resourceCache loadSRGBTexture: 'textures/procedural/terrain/rock.sttex'.
-			engine resourceCache loadSRGBTexture: 'textures/procedural/terrain/snow.sttex'.
-			nil
-		}.
+	material := engine resourceCache loadMaterial: 'materials/demos/island.json'.
 	
 	mesh := (WDCTerrainMeshBuilder for: engine)
 		material: material;
@@ -426,7 +414,7 @@ WDASceneExamples class >> example06MeshGrid [
 
 { #category : #examples }
 WDASceneExamples class >> example07SmallTerrain [
-	| model material mesh terrain light scene camera heightMap |
+	| model material mesh terrain light scene camera heightMap cube |
 	
 	"Some procedural textures used by the demo"
 	heightMap := WDCTextureData extent: 128@128 signedHeightRenderWith: [ :s :t |
@@ -457,6 +445,14 @@ WDASceneExamples class >> example07SmallTerrain [
 	terrain := WDSGSpatialObject new.
 	terrain transform translateByY: -1.0.
 	terrain renderable: mesh.
+	
+	cube := WDSGSpatialObject new.
+	cube renderable: ((WDCGenericMeshBuilder for: scene engine)
+		addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+		mesh).
+	cube transform translateByY: 3.0.	
+	scene add: cube.
+	
 	scene add: terrain.
 	
 	light := WDSGLightSource new.

@@ -265,6 +265,15 @@ WMReversibleAffineTransform category: 'transformations' methods: {
 	^ inverseMatrix transformVector3: aVector3
 ].
 
+:[inverseTransformTransform: <WMReversibleAffineTransform>transform -> WMReversibleAffineTransform.
+	^ WMReversibleAffineTransform newValue
+		initialize;
+		matrix: inverseMatrix * transform matrix;
+		inverseMatrix: transform inverseMatrix * matrix;
+		translation: self inverseTranslation + (inverseMatrix transformVector3: transform translation);
+		yourself
+].
+
 :[transformNormal: <WMVector3> aNormal -> WMVector3.
 	^ inverseMatrix transposedTransformVector3: aNormal
 ].
