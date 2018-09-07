@@ -1,6 +1,6 @@
 Class {
-	#name : #WTAPhyDynamicsWorld,
-	#superclass : #WTDynamicsWorld,
+	#name : #WDAPhyDynamicsWorld,
+	#superclass : #WDPhyDynamicsWorld,
 	#instVars : [
 		'physicsEngine',
 		'handle',
@@ -8,11 +8,11 @@ Class {
 		'onSimulation',
 		'kinematicObjects'
 	],
-	#category : 'WodenEngine-Physics-AbstractPhysics'
+	#category : #'WodenEngine-Physics-AbstractPhysics'
 }
 
 { #category : #adding }
-WTAPhyDynamicsWorld >> addRigidBody: rigidBody [
+WDAPhyDynamicsWorld >> addRigidBody: rigidBody [
 	| rigidBodyHandle |
 	rigidBodyHandle := physicsEngine validateRigidBodyHandle: rigidBody.
 	handle addRigidBody: rigidBodyHandle first.
@@ -33,22 +33,22 @@ WTAPhyDynamicsWorld >> addRigidBody: rigidBody [
 ]
 
 { #category : #accessing }
-WTAPhyDynamicsWorld >> gravity: gravity [
+WDAPhyDynamicsWorld >> gravity: gravity [
 	handle setGravity: gravity x y: gravity y z: gravity z
 ]
 
 { #category : #accessing }
-WTAPhyDynamicsWorld >> handle [
+WDAPhyDynamicsWorld >> handle [
 	^ handle
 ]
 
 { #category : #accessing }
-WTAPhyDynamicsWorld >> handle: anObject [
+WDAPhyDynamicsWorld >> handle: anObject [
 	handle := anObject
 ]
 
 { #category : #initialization }
-WTAPhyDynamicsWorld >> initialize [
+WDAPhyDynamicsWorld >> initialize [
 	super initialize.
 	rigidBodies := OrderedCollection new.
 	kinematicObjects := OrderedCollection new.
@@ -56,17 +56,17 @@ WTAPhyDynamicsWorld >> initialize [
 ]
 
 { #category : #accessing }
-WTAPhyDynamicsWorld >> physicsEngine [
+WDAPhyDynamicsWorld >> physicsEngine [
 	^ physicsEngine
 ]
 
 { #category : #accessing }
-WTAPhyDynamicsWorld >> physicsEngine: anObject [
+WDAPhyDynamicsWorld >> physicsEngine: anObject [
 	physicsEngine := anObject
 ]
 
 { #category : #rendering }
-WTAPhyDynamicsWorld >> simulateTime: delta [
+WDAPhyDynamicsWorld >> simulateTime: delta [
 	onSimulation := true.
 	[
 		handle stepSimulation: delta max_sub_steps: 2 fixed_time_step: 1.0/120.0.
@@ -75,7 +75,7 @@ WTAPhyDynamicsWorld >> simulateTime: delta [
 ]
 
 { #category : #rendering }
-WTAPhyDynamicsWorld >> updateRigidBodyFromSceneNode: rigidBody [
+WDAPhyDynamicsWorld >> updateRigidBodyFromSceneNode: rigidBody [
 	| transform |
 	rigidBody sceneNode ifNil: [ ^ self ].
 	
@@ -85,7 +85,7 @@ WTAPhyDynamicsWorld >> updateRigidBodyFromSceneNode: rigidBody [
 ]
 
 { #category : #rendering }
-WTAPhyDynamicsWorld >> updateSceneNodeFromRigidBody: rigidBody [
+WDAPhyDynamicsWorld >> updateSceneNodeFromRigidBody: rigidBody [
 	| motionState rawTransform |
 	rigidBody sceneNode ifNil: [ ^ self ].
 	

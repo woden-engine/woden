@@ -1,24 +1,24 @@
 Class {
-	#name : #WTAPhyEngine,
-	#superclass : #WTPhysicsEngine,
+	#name : #WDAPhyEngine,
+	#superclass : #WDPhyPhysicsEngine,
 	#instVars : [
 		'handle'
 	],
-	#category : 'WodenEngine-Physics-AbstractPhysics'
+	#category : #'WodenEngine-Physics-AbstractPhysics'
 }
 
 { #category : #'as yet unclassified' }
-WTAPhyEngine class >> isSupported [
+WDAPhyEngine class >> isSupported [
 	^ true
 ]
 
 { #category : #rendering }
-WTAPhyEngine >> buildCollisionShape: collisionShape [
+WDAPhyEngine >> buildCollisionShape: collisionShape [
 	collisionShape handle: (collisionShape accept: self)
 ]
 
 { #category : #rendering }
-WTAPhyEngine >> buildRigidBody: rigidBody [
+WDAPhyEngine >> buildRigidBody: rigidBody [
 	| collisionShape localInertia motionState rigidBodyHandle |
 	collisionShape := self validateCollisionShapeHandle: rigidBody shape.
 	localInertia := APHYVector3 new.
@@ -31,7 +31,7 @@ WTAPhyEngine >> buildRigidBody: rigidBody [
 ]
 
 { #category : #rendering }
-WTAPhyEngine >> convertMatrix3: matrix3 [
+WDAPhyEngine >> convertMatrix3: matrix3 [
 	| firstRow secondRow thirdRow |
 	firstRow := matrix3 firstRow.
 	secondRow := matrix3 secondRow.
@@ -43,7 +43,7 @@ WTAPhyEngine >> convertMatrix3: matrix3 [
 ]
 
 { #category : #rendering }
-WTAPhyEngine >> convertTransform: transform [
+WDAPhyEngine >> convertTransform: transform [
 	| matrix translation |
 	matrix := self convertMatrix3: transform rotation.
 	translation := self convertVector3: transform origin.
@@ -51,12 +51,12 @@ WTAPhyEngine >> convertTransform: transform [
 ]
 
 { #category : #rendering }
-WTAPhyEngine >> convertVector3: vector3 [
+WDAPhyEngine >> convertVector3: vector3 [
 	^ WMVector3F x: vector3 x y: vector3 y z: vector3 z
 ]
 
 { #category : #rendering }
-WTAPhyEngine >> convertWMMatrix3: matrix [
+WDAPhyEngine >> convertWMMatrix3: matrix [
 	^ APHYMatrix3x3 new
 		firstRow: (self convertWMVector3: matrix firstRow);
 		secondRow: (self convertWMVector3: matrix secondRow);
@@ -65,7 +65,7 @@ WTAPhyEngine >> convertWMMatrix3: matrix [
 ]
 
 { #category : #rendering }
-WTAPhyEngine >> convertWMTransform: transform [
+WDAPhyEngine >> convertWMTransform: transform [
 	^ APHYTransform new
 		rotation: (self convertWMMatrix3: transform matrix);
 		origin: (self convertWMVector3: transform translation);
@@ -73,7 +73,7 @@ WTAPhyEngine >> convertWMTransform: transform [
 ]
 
 { #category : #rendering }
-WTAPhyEngine >> convertWMVector3: vector [
+WDAPhyEngine >> convertWMVector3: vector [
 	^ APHYVector3 new
 		x: vector x;
 		y: vector y;
@@ -82,7 +82,7 @@ WTAPhyEngine >> convertWMVector3: vector [
 ]
 
 { #category : #'as yet unclassified' }
-WTAPhyEngine >> createDynamicsWorld [
+WDAPhyEngine >> createDynamicsWorld [
 	| collisionConfiguration collisionDispatcher broadphase constraintSolver world |
 	collisionConfiguration := handle createDefaultCollisionConfiguration.
 	collisionDispatcher := handle createDefaultCollisionDispatcher: collisionConfiguration.
@@ -92,23 +92,23 @@ WTAPhyEngine >> createDynamicsWorld [
 
 	world := handle createDynamicsWorld: collisionDispatcher broadphase: broadphase constraint_solver: 	constraintSolver collision_configuration: collisionConfiguration.
 		
-	^ WTAPhyDynamicsWorld new physicsEngine: self; handle: world; yourself
+	^ WDAPhyDynamicsWorld new physicsEngine: self; handle: world; yourself
 ]
 
 { #category : #accessing }
-WTAPhyEngine >> handle [
+WDAPhyEngine >> handle [
 	^ handle
 ]
 
 { #category : #'as yet unclassified' }
-WTAPhyEngine >> initialize [
+WDAPhyEngine >> initialize [
 	super initialize.
 	handle := APHY firstEngine.
 	
 ]
 
 { #category : #rendering }
-WTAPhyEngine >> validateCollisionShapeHandle: collisionShape [
+WDAPhyEngine >> validateCollisionShapeHandle: collisionShape [
 	(collisionShape handle isNil or: [ collisionShape handle isNull ]) ifTrue: [
 		self buildCollisionShape: collisionShape
 	].
@@ -116,14 +116,34 @@ WTAPhyEngine >> validateCollisionShapeHandle: collisionShape [
 ]
 
 { #category : #rendering }
-WTAPhyEngine >> validateRigidBodyHandle: rigidBody [
+WDAPhyEngine >> validateRigidBodyHandle: rigidBody [
 	(rigidBody handle isNil or: [ rigidBody handle isNull ]) ifTrue: [
 		self buildRigidBody: rigidBody
 	].
 	^ rigidBody handle
 ]
 
-{ #category : #rendering }
-WTAPhyEngine >> visitBoxShape: boxShape [
+{ #category : #'collision shape convertion' }
+WDAPhyEngine >> visitBoxShape: boxShape [
 	^ handle createBoxShape: boxShape halfExtent x half_height: boxShape halfExtent y half_depth: boxShape halfExtent z
+]
+
+{ #category : #'collision shape convertion' }
+WDAPhyEngine >> visitCompoundShape: compoundShape [
+	| compoundHandle localTransform localShape |
+	compoundHandle := handle createCompoundShape.
+	compoundShape components do: [ :component |
+		localTransform := self convertWMTransform: component transform.
+		localShape := self validateCollisionShapeHandle: component shape.
+		compoundHandle addLocalShapeWithTransformFrom: localShape transform: localTransform.
+	].
+	^ compoundHandle
+]
+
+{ #category : #'collision shape convertion' }
+WDAPhyEngine >> visitConvexHullShape: convexHullShape [
+	| points |
+	points := convexHullShape points.
+	^ handle createConvexHullShape: points rawData num_points: points size stride: points elementSize
+
 ]

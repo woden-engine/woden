@@ -1,6 +1,6 @@
 Class {
 	#name : #WDCMaterial,
-	#superclass : #Object,
+	#superclass : #WDCResourceWithDependants,
 	#instVars : [
 		'engine'
 	],

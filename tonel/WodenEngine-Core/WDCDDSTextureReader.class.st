@@ -1,6 +1,6 @@
 Class {
 	#name : #WDCDDSTextureReader,
-	#superclass : #Object,
+	#superclass : #WDCTextureReader,
 	#classVars : [
 		'DDPF_ALPHA',
 		'DDPF_ALPHAPIXELS',
@@ -40,8 +40,13 @@ Class {
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Core-Texture'
+	#category : #'WodenEngine-Core-Texture'
 }
+
+{ #category : #accessing }
+WDCDDSTextureReader class >> extension [
+	^ 'dds'
+]
 
 { #category : #'as yet unclassified' }
 WDCDDSTextureReader class >> fourCC: string [
@@ -102,18 +107,18 @@ WDCDDSTextureReader class >> initialize [
 	
 ]
 
-{ #category : #'as yet unclassified' }
-WDCDDSTextureReader class >> textureFromFileNamed: fileName [
+{ #category : #loading }
+WDCDDSTextureReader class >> loadFromFileReference: fileName withQuery: textureFileAndQuery [
 	| stream |
 	stream := FileStream readOnlyFileNamed: fileName.
 	[
 		stream binary.
-		^ self textureFromStream: stream
+		^ self loadFromStream: stream
 	] ensure: [ stream close ]
 ]
 
-{ #category : #'as yet unclassified' }
-WDCDDSTextureReader class >> textureFromStream: aBinaryStream [
+{ #category : #reading }
+WDCDDSTextureReader class >> loadFromStream: aBinaryStream [
 	^ self new loadFromStream: aBinaryStream
 ]
 

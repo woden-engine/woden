@@ -1,6 +1,10 @@
 Extension { #name : #Object }
 
 { #category : #'*WodenEngine-Core' }
+Object >> addWodenResourceDependant: dependant [
+]
+
+{ #category : #'*WodenEngine-Core' }
 Object >> closureDescriptionForCaching [
 	^ self
 ]
@@ -8,6 +12,10 @@ Object >> closureDescriptionForCaching [
 { #category : #'*WodenEngine-Core' }
 Object >> isSessionPersistentExternalBuffer [
 	^ false
+]
+
+{ #category : #'*WodenEngine-Core' }
+Object >> removeWodenResourceDependant: dependant [
 ]
 
 { #category : #'*WodenEngine-Core' }

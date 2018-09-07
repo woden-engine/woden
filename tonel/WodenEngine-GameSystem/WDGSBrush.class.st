@@ -86,6 +86,7 @@ WDGSBrush >> addedToEntity: anEntity [
 		entity
 			ensureSpatialObject;
 			ensureRenderingModels;
+			ensurePhysicsComponent;
 			invalidateModels
 	].
 ]
@@ -202,6 +203,21 @@ WDGSBrush >> containsPoint: aPoint [
 WDGSBrush >> containsPointInside: aPoint [
 	faces do: [ :face | (face plane isBehind: aPoint) ifFalse: [ ^false ] ].
 	^ true
+]
+
+{ #category : #physics }
+WDGSBrush >> createCollisionShapeComponent [
+	| center centeredPositions |
+	center := self boundingBox center.
+	centeredPositions := SLVMNativeArray for: WMVector3F new: positions size.
+	positions doWithIndex: [ :p :i |
+		centeredPositions at: i put: (p - center) asWMVector3F
+	].
+
+	^ WDPhyCompoundCollisionShapeComponent new
+		translation: center asWMVector3F;
+		shape: (WDPhyConvexHullCollisionShape new points: centeredPositions);
+		yourself
 ]
 
 { #category : #accessing }

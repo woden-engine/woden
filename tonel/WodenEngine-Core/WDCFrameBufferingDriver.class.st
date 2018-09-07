@@ -12,7 +12,11 @@ Class {
 		'frontRenderingProcesses',
 		'backRenderingProcesses',
 		'renderingProcessMutex',
-		'lastFrameStartTime'
+		'lastFrameStartTime',
+		'currentFrameTargetTime',
+		'nextFrameTargetTime',
+		'currentFrameStartTime',
+		'lastFrameEndTime'
 	],
 	#category : #'WodenEngine-Core-Engine'
 }
@@ -78,6 +82,16 @@ WDCFrameBufferingDriver >> createMainRenderingProcess [
 	mainRenderingProcess := [ self mainRenderingProcess ] forkAt: Processor userInterruptPriority
 ]
 
+{ #category : #accessing }
+WDCFrameBufferingDriver >> currentFrameCPUDeltaTime [
+	^ (self currentFrameStartTime - self lastFrameStartTime) * 1e-6
+]
+
+{ #category : #accessing }
+WDCFrameBufferingDriver >> currentFrameStartTime [
+	^ currentFrameStartTime ifNil: [ Time microsecondClockValue ]
+]
+
 { #category : #'rendering process' }
 WDCFrameBufferingDriver >> endFrame [
 	| fence |
@@ -123,11 +137,25 @@ WDCFrameBufferingDriver >> initializeWithEngine: anEngine [
 	self createMainRenderingProcess.
 ]
 
+{ #category : #accessing }
+WDCFrameBufferingDriver >> lastFrameCPUConsumption [
+	^ (self lastFrameEndTime - self lastFrameStartTime) * 1e-6
+]
+
+{ #category : #accessing }
+WDCFrameBufferingDriver >> lastFrameEndTime [
+	^ lastFrameEndTime ifNil: [ Time microsecondClockValue ]
+]
+
+{ #category : #accessing }
+WDCFrameBufferingDriver >> lastFrameStartTime [
+	^ lastFrameStartTime ifNil: [ Time microsecondClockValue ]
+]
+
 { #category : #'rendering process' }
 WDCFrameBufferingDriver >> mainRenderingProcess [
 	| session |
 	session := Smalltalk session.
-	lastFrameStartTime := Time microsecondClockValue.
 	yieldSemaphore := Semaphore new.
 	
 	[ session == Smalltalk session ] whileTrue: [
@@ -138,23 +166,38 @@ WDCFrameBufferingDriver >> mainRenderingProcess [
 { #category : #'rendering process' }
 WDCFrameBufferingDriver >> mainRenderingProcessIteration [
 	"Compute the delta"
-	| frameStartTime frameDeltaTime nextFrameTargetTime delayTime |
-	frameStartTime := Time microsecondClockValue.
-	frameDeltaTime := frameStartTime - lastFrameStartTime.
-	lastFrameStartTime := frameStartTime.
+	| frameDeltaTime delayTime |
+	currentFrameTargetTime ifNil: [ currentFrameTargetTime := Time microsecondClockValue ].
+	nextFrameTargetTime ifNil: [ nextFrameTargetTime := Time microsecondClockValue ].
+
+	"If the delay is too long."
+	Time microsecondClockValue > (nextFrameTargetTime + (1000000 // self targetFrameRate)) ifTrue: [ 
+		nextFrameTargetTime := Time microsecondClockValue
+	].
+
+	"Compute the delta time for the frame."
+	frameDeltaTime := nextFrameTargetTime - currentFrameTargetTime.
+	currentFrameTargetTime := nextFrameTargetTime.
 	
+	lastFrameStartTime := currentFrameStartTime.
+	currentFrameStartTime := Time microsecondClockValue.
+	
+	engine resourceCache reloadPendingResources.
 	self swapRenderingProcesses.
 	self renderForDeltaMicroseconds: frameDeltaTime.
 	frontRenderingProcesses removeAll.
 	
-	nextFrameTargetTime := frameStartTime + (1000000 / self targetFrameRate).
-	self flag: 'Support delays in microseconds.'.
-	delayTime := (nextFrameTargetTime - Time microsecondClockValue) / 1000.
-		
+	
+	nextFrameTargetTime := currentFrameTargetTime + (1000000 // self targetFrameRate).
+	self flag: 'TODO: Support delays in microseconds.'.
+	lastFrameEndTime := Time microsecondClockValue.
+	delayTime := (nextFrameTargetTime - lastFrameEndTime) // 1000.
+	
 	delayTime > 0 ifTrue: [ 
 		(Delay forMilliseconds: delayTime) wait
 	] ifFalse: [
 		"Allow processing time to the processes with the lower priority"
+		nextFrameTargetTime := Time microsecondClockValue.
 		self yield
 	]
 
@@ -163,9 +206,10 @@ WDCFrameBufferingDriver >> mainRenderingProcessIteration [
 { #category : #'rendering process' }
 WDCFrameBufferingDriver >> renderForDeltaMicroseconds: delta [
 	"Always update the simulations"
+	frontRenderingProcesses reject: #suspended thenDo: #processEvents.
+
 	self renderingProcessesDo: [ :process |
 		process
-			processEvents;
 			updateForDeltaMicroseconds: delta
 	].
 

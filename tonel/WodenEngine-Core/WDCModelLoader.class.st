@@ -28,7 +28,7 @@ WDCModelLoader class >> loadFromFileReference: aFileReference [
 
 { #category : #'as yet unclassified' }
 WDCModelLoader class >> loaderForExtension: anExtension [
-	self allSubclassesDo: [ :sc |
+	self withAllSubclassesDo: [ :sc |
 		sc extension = anExtension ifTrue: [ ^ sc ]
 	].
 

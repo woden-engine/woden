@@ -56,6 +56,11 @@ WDGSComponent >> cameraSceneNode [
 ]
 
 { #category : #accessing }
+WDGSComponent >> dynamicsWorld [
+	^ self map dynamicsWorld
+]
+
+{ #category : #accessing }
 WDGSComponent >> entity [
 	^ entity
 ]
@@ -119,6 +124,11 @@ WDGSComponent >> scene [
 { #category : #accessing }
 WDGSComponent >> selected: anObject [
 	selected := anObject
+]
+
+{ #category : #accessing }
+WDGSComponent >> validDynamicsWorld [
+	^ self map validDynamicsWorld
 ]
 
 { #category : #accessing }

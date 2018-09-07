@@ -1,33 +1,33 @@
 Class {
-	#name : #WTBoxCollisionShape,
-	#superclass : #WTCollisionShape,
+	#name : #WDPhyBoxCollisionShape,
+	#superclass : #WDPhyCollisionShape,
 	#instVars : [
 		'halfExtent'
 	],
-	#category : 'WodenEngine-Physics-Interface'
+	#category : #'WodenEngine-Physics-Interface'
 }
 
 { #category : #construction }
-WTBoxCollisionShape class >> halfExtent: aWDVector3 [
+WDPhyBoxCollisionShape class >> halfExtent: aWDVector3 [
 	^self new halfExtent: aWDVector3; yourself
 ]
 
 { #category : #'as yet unclassified' }
-WTBoxCollisionShape >> accept: aVisitor [
+WDPhyBoxCollisionShape >> accept: aVisitor [
 	^ aVisitor visitBoxShape: self
 ]
 
 { #category : #accessing }
-WTBoxCollisionShape >> halfExtent [
+WDPhyBoxCollisionShape >> halfExtent [
 	^ halfExtent copy
 ]
 
 { #category : #accessing }
-WTBoxCollisionShape >> halfExtent: aWDVector3 [
+WDPhyBoxCollisionShape >> halfExtent: aWDVector3 [
 	halfExtent set: aWDVector3
 ]
 
 { #category : #accessing }
-WTBoxCollisionShape >> initialize [
+WDPhyBoxCollisionShape >> initialize [
 	halfExtent := WMVector3F x: 1.0 y: 1.0 z: 1.0
 ]

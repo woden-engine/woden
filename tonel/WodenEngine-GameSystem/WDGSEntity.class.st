@@ -7,7 +7,8 @@ Class {
 		'map',
 		'pointEntity',
 		'worldEntity',
-		'pointEntityNode'
+		'pointEntityNode',
+		'spawning'
 	],
 	#category : #'WodenEngine-GameSystem-Level'
 }
@@ -34,6 +35,7 @@ WDGSEntity >> addComponent: aComponent [
 	componentsCollection add: aComponent.
 	aComponent addedToEntity: self.
 	numberOfComponents := numberOfComponents + 1.
+	self isSpawning ifTrue: [ aComponent spawn ]
 ]
 
 { #category : #adding }
@@ -210,6 +212,17 @@ WDGSEntity >> elementsAlongRay: ray mode: mode do: aBlock [
 ]
 
 { #category : #adding }
+WDGSEntity >> ensurePhysicsComponent [
+	| nodes component |
+	nodes := components at: #physicsComponent ifAbsentPut: [ OrderedCollection new ].
+	nodes isEmpty ifTrue: [
+		component := WDGSPhysicsComponent new.
+		self setupPhysicsComponent: component.
+		self addComponent: component.
+	].
+]
+
+{ #category : #adding }
 WDGSEntity >> ensureRenderingModels [
 	| nodes |
 	nodes := components at: #renderingModels ifAbsentPut: [ OrderedCollection new ].
@@ -257,11 +270,13 @@ WDGSEntity >> initialize [
 	numberOfComponents := 0.
 	pointEntity := true.
 	worldEntity := false.
+	spawning := false.
 ]
 
 { #category : #rendering }
 WDGSEntity >> invalidateModels [
 	self renderingModels ifNotNil: [:models | models invalidate].
+	self physicsComponent ifNotNil: [:models | models invalidate].
 ]
 
 { #category : #rendering }
@@ -277,6 +292,11 @@ WDGSEntity >> isEntity [
 { #category : #accessing }
 WDGSEntity >> isPointSelected [
 	^ pointEntity
+]
+
+{ #category : #testing }
+WDGSEntity >> isSpawning [
+	^ spawning
 ]
 
 { #category : #accessing }
@@ -310,6 +330,11 @@ WDGSEntity >> map [
 { #category : #accessing }
 WDGSEntity >> numberOfComponents [
 	^ numberOfComponents
+]
+
+{ #category : #accessing }
+WDGSEntity >> physicsComponent [
+	^ (components at: #physicsComponent ifAbsent: [ ^ nil ]) first
 ]
 
 { #category : #copying }
@@ -407,6 +432,11 @@ WDGSEntity >> sendToBehaviors: selector withArguments: arguments [
 	]
 ]
 
+{ #category : #physics }
+WDGSEntity >> setupPhysicsComponent: aComponent [
+	self behaviorsDo: [ :behavior | behavior setupPhysicsComponent: aComponent ]
+]
+
 { #category : #rendering }
 WDGSEntity >> simulateTime: delta [
 ]
@@ -419,9 +449,13 @@ WDGSEntity >> spatialDescription [
 { #category : #'map events' }
 WDGSEntity >> spawn [
 	| allComponents |
-	allComponents := self componentsCollect: #yourself.
-	"Copy the list of components because they could be calling spawn recursively."
-	allComponents do: #spawn
+	spawning := true.
+	[ 
+		allComponents := self componentsCollect: #yourself.
+		"Copy the list of components because they could be calling spawn recursively."
+		allComponents do: #spawn
+	] ensure: [ spawning := false ].
+
 ]
 
 { #category : #behaviors }

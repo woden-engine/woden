@@ -42,12 +42,7 @@ WDCLowLevelShaderSource >> compile [
 	engine autoReloadChanges ifTrue: [
 		(newDependencies asSet difference: oldDependencies asSet) do: [ :dep |
 			PhanideFileSystemMonitor on: dep when: PhanideFileEventCloseWrite do: [ :event |
-				[ 
-					self reload
-				] on: Error do: [ :err |
-					err freeze.
-					[ err debug ] fork
-				]			
+				engine resourceCache enqueueResourceReloadAction: [ self reload ]
 			].
 		].
 	].

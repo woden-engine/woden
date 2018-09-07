@@ -9,7 +9,8 @@ Class {
 		'timeListeners',
 		'levelPlayer',
 		'backgroundColor',
-		'touchListeners'
+		'touchListeners',
+		'dynamicsWorld'
 	],
 	#category : #'WodenEngine-GameSystem-Level'
 }
@@ -53,6 +54,14 @@ WDGSMap >> backgroundColor: anObject [
 	
 ]
 
+{ #category : #physics }
+WDGSMap >> createDynamicsWorld [
+	| world |
+	world := WDPhyPhysicsEngine current createDynamicsWorld.
+	world gravity: (WMVector3F x: 0.0 y: -9.8 z: 0.0).
+	^ world
+]
+
 { #category : #spawning }
 WDGSMap >> createEntityWithBehavior: behavior position: aPosition [
 	| entity |
@@ -89,6 +98,11 @@ WDGSMap >> createPointEntityInstanceGroup [
 WDGSMap >> destroyPointEntityInstanceGroup [
 	pointEntityInstanceGroup removeFromScene.
 	pointEntityInstanceGroup := nil.
+]
+
+{ #category : #physics }
+WDGSMap >> dynamicsWorld [
+	^ dynamicsWorld
 ]
 
 { #category : #accessing }
@@ -278,15 +292,22 @@ WDGSMap >> sendTouchEvents [
 	]
 ]
 
-{ #category : #rendering }
+{ #category : #physics }
+WDGSMap >> simulatePhysicsTime: deltaTime [
+	dynamicsWorld ifNil: [ ^ self ].
+	dynamicsWorld simulateTime: deltaTime.
+]
+
+{ #category : #'map events' }
 WDGSMap >> simulateTime: delta [
+	self simulatePhysicsTime: delta.
 	timeListeners do: [ :listener | listener simulateTime: delta ].
 	self sendTouchEvents.
 ]
 
 { #category : #'menu messages' }
 WDGSMap >> spawn [
-	entities do: #spawn
+	entities do: #spawn.
 ]
 
 { #category : #spawning }
@@ -304,4 +325,9 @@ WDGSMap >> unregisterTimeListener: aTimeListener [
 { #category : #'as yet unclassified' }
 WDGSMap >> unregisterTouchListener: aTouchListener [
 	touchListeners add: aTouchListener
+]
+
+{ #category : #physics }
+WDGSMap >> validDynamicsWorld [
+	^ dynamicsWorld ifNil: [ dynamicsWorld := self createDynamicsWorld ]
 ]

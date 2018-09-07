@@ -180,6 +180,13 @@ WDCTerrainMaterial >> normalTextures: anArray [
 	normalTextures := anArray
 ]
 
+{ #category : #parsing }
+WDCTerrainMaterial >> parse: materialFileReference data: data [
+	heightMapTexture := self parse: data at: materialFileReference optionalTexture: 'heightMapTexture'.
+	splattingTexture := self parse: data at: materialFileReference optionalTexture: 'splattingTexture'.
+	self invalidateCache.
+]
+
 { #category : #accessing }
 WDCTerrainMaterial >> splattingTexture [
 	^ splattingTexture

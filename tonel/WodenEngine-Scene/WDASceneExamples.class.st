@@ -28,20 +28,18 @@ WDASceneExamples class >> cloudTexture [
 
 { #category : #'examples procedural' }
 WDASceneExamples class >> createIslandTerrainObjectFor: engine [
-	| material mesh terrain terrainMaps |
-	terrainMaps := self islandTerrainMaps: 128.
-		
+	| material mesh terrain |
 	material := WDCTerrainMaterial for: engine.
 	material
 		heightMapScale: (WMVector2F x: 1.0 y: 1.0)/100.0;
 		heightScale: 110.0;
-		heightMapTexture: (terrainMaps first asTextureFor: engine);
-		splattingTexture: (terrainMaps second asTextureFor: engine);
+		heightMapTexture: (engine resourceCache loadTexture: 'textures/procedural/terrain/island.sttex?texture=height');
+		splattingTexture: (engine resourceCache loadTexture: 'textures/procedural/terrain/island.sttex?texture=splatter');
 		albedoTextures: {
-			(self sandTexture) asSRGBTextureFor: engine.
-			(self grassTexture) asSRGBTextureFor: engine.
-			(self rockTexture) asSRGBTextureFor: engine.
-			(self snowTexture) asSRGBTextureFor: engine.
+			engine resourceCache loadSRGBTexture: 'textures/procedural/terrain/sand.sttex'.
+			engine resourceCache loadSRGBTexture: 'textures/procedural/terrain/grass.sttex'.
+			engine resourceCache loadSRGBTexture: 'textures/procedural/terrain/rock.sttex'.
+			engine resourceCache loadSRGBTexture: 'textures/procedural/terrain/snow.sttex'.
 			nil
 		}.
 	
@@ -562,124 +560,6 @@ WDASceneExamples class >> exampleModelBunny [
 { #category : #'example models' }
 WDASceneExamples class >> exampleModelCube [
 	(WDCEngine default resourceCache load3DModel: 'models/obj/cube.obj') openViewer
-]
-
-{ #category : #'examples procedural' }
-WDASceneExamples class >> grassTexture [
-	| textureSize colorRamp |
-	textureSize := 40.0@40.0.
-	colorRamp := WDCLinearRamp with: { 
-		0.3 -> Color green muchDarker.
-		1.0 -> Color green.
-	}.
-	
-	^ [ WDCTextureData extent: 256@256 srgbColorRenderWith: [ :s :t |
-		| st grassFunction |
-		st := s@t.
-		grassFunction := st*textureSize fractionalBrownianMotionOctaves: 4 lacunarity: 2.0 initialAmplitude: 0.5 tiledWith: textureSize with: #gradientNoiseTiledWith:.
-		colorRamp value: grassFunction
-	] ] valueCachedInDisk
-]
-
-{ #category : #'examples procedural' }
-WDASceneExamples class >> islandTerrainMaps: textureExtent [
-	| islandOuterRadius islandInnerRadius maximumHeight seabedLevel heightScale islandBaseLevel snowStartHeight |
-	islandOuterRadius := 100.0.
-	islandInnerRadius := islandOuterRadius - 50.0.
-	maximumHeight := 100.0.
-	seabedLevel := -10.0.
-	islandBaseLevel := 1.0.
-	heightScale := 110.0.
-
-	snowStartHeight := 45.0.
-	
-	^ [WDCTextureData extent: textureExtent@textureExtent terrainMapsRenderWith: [ :s :t |
-		| st p r theta innerRadius
-		 boundaries heightAttenuation
-		 islandInterior mountainHeight
-		 sand rock grass snow notInSnow
-		 heightValue|
-		"Compute the coordinates"
-		st := s@t.
-		p := (st*2.0 - 1.0) * islandOuterRadius.
-
-		r := p distanceTo: 0@0.
-		theta := p theta.
-	
-		"Generate the island boundaries"
-		innerRadius := islandOuterRadius - 50.0 - (((theta*1.5 + 12.0) turbulence)*35.0) min: islandOuterRadius.
-		sand := r smoothStepFrom: innerRadius to: islandOuterRadius.
-		boundaries := (r smoothStepFrom: innerRadius to: islandOuterRadius ) fuzzyNot.
-		heightAttenuation := (r smoothStepFrom: 0.0 to: innerRadius) fuzzyNot.
-
-		"Generate the mountains"
-		mountainHeight := (st*5.0 fractionalBrownianMotionOctaves: 5 lacunarity: 2.1245 initialAmplitude: 1.0 with: [:c | c signedGradientNoise])*0.5 + 0.5 * (maximumHeight * heightAttenuation).
-
-		snow := mountainHeight smoothStepFrom: snowStartHeight to: snowStartHeight + 2.0.
-		notInSnow := snow fuzzyNot.
-		grass := ((st*13.0) turbulence - ((mountainHeight max: 0.0)/maximumHeight*10.0) + 0.1 max: 0.0) productFuzzyAnd: sand fuzzyNot.
-		rock := snow fuzzyNot productFuzzyAnd: sand fuzzyNot.
-	
-		"Generate the stuff in the island interior"
-		islandInterior := islandBaseLevel + mountainHeight.
-
-		heightValue := seabedLevel interpolateTo: islandInterior at: boundaries.
-		{heightValue / heightScale . {sand . grass . rock . snow . 0.0}}.
-] ] valueCachedInDisk
-]
-
-{ #category : #'examples procedural' }
-WDASceneExamples class >> rockTexture [
-	| textureSize colorRamp |
-	textureSize := 7.0@7.0.
-	colorRamp := WDCLinearRamp with: { 
-		0.0 -> '8a6025' asColor.
-		1.0 -> 'f7d8ac' asColor.
-	}.
-	
-	^ [WDCTextureData extent: 256@256 srgbColorRenderWith: [ :s :t |
-		| cracks st bumps height |
-		st := s@t.
-
-		cracks := (st*textureSize fractionalBrownianMotionOctaves: 3 lacunarity: 2.0 initialAmplitude: 0.6 tiledWith: textureSize with: #worleyNoiseTiledWith:)*3.0 min: 1.0.
-		bumps := st*textureSize*4.0 fractionalBrownianMotionOctaves: 4 lacunarity: 2.0 initialAmplitude: 1.0 tiledWith: textureSize*4.0 with: #signedGradientNoiseTiledWith:.
-		height := (cracks*0.5) + (bumps*0.3).
-		
-		colorRamp value: height
-	]] valueCachedInDisk
-]
-
-{ #category : #'examples procedural' }
-WDASceneExamples class >> sandTexture [
-	| textureSize colorRamp st sandFunction |
-	textureSize := 30.0@30.0.
-	colorRamp := WDCLinearRamp with: { 
-		0.0 -> Color black.
-		1.0 -> (Color fromHexString: 'b7a18b').
-	}.
-	
-	^ [ WDCTextureData extent: 128@128 srgbColorRenderWith: [ :s :t |
-		st := s@t.
-		sandFunction := st*textureSize fractionalBrownianMotionOctaves: 4 lacunarity: 2.0 initialAmplitude: 0.6 tiledWith: textureSize with: #gradientNoiseTiledWith:.
-		colorRamp value: sandFunction
-	] ] valueCachedInDisk.
-]
-
-{ #category : #'examples procedural' }
-WDASceneExamples class >> snowTexture [
-	| textureSize colorRamp |
-	textureSize := 20.0@20.0.
-	colorRamp := WDCLinearRamp with: { 
-		0.05 -> '25525c' asColor.
-		0.4 -> Color white.
-	}.
-	
-	^ [WDCTextureData extent: 256@256 srgbColorRenderWith: [ :s :t |
-		| st snowFunction |
-		st := s@t.
-		snowFunction := st*textureSize fractionalBrownianMotionOctaves: 4 lacunarity: 2.0 initialAmplitude: 0.4 tiledWith: textureSize with: #gradientNoiseTiledWith:.
-		colorRamp value: snowFunction
-	] ] valueCachedInDisk
 ]
 
 { #category : #'see class side' }

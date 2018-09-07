@@ -1,15 +1,15 @@
 Class {
-	#name : #WTPhysicsEngine,
+	#name : #WDPhyPhysicsEngine,
 	#superclass : #Object,
 	#classVars : [
 		'CurrentEngine',
 		'PhysicsSession'
 	],
-	#category : 'WodenEngine-Physics-Interface'
+	#category : #'WodenEngine-Physics-Interface'
 }
 
 { #category : #accessing }
-WTPhysicsEngine class >> checkAndLoadEngine [
+WDPhyPhysicsEngine class >> checkAndLoadEngine [
 	(CurrentEngine == nil or: [ PhysicsSession ~~ Smalltalk session ]) ifTrue: [ 
 		CurrentEngine := self pickEngine.
 		PhysicsSession := Smalltalk session.
@@ -17,30 +17,30 @@ WTPhysicsEngine class >> checkAndLoadEngine [
 ]
 
 { #category : #accessing }
-WTPhysicsEngine class >> current [
+WDPhyPhysicsEngine class >> current [
 	self checkAndLoadEngine.
 	CurrentEngine ifNil: [ self error: 'Not supported physics engine found.' ].
 	^ CurrentEngine
 ]
 
 { #category : #testing }
-WTPhysicsEngine class >> isAvailable [
+WDPhyPhysicsEngine class >> isAvailable [
 	self checkAndLoadEngine.
 	^ CurrentEngine ~~ nil.
 ]
 
 { #category : #testing }
-WTPhysicsEngine class >> isSupported [
+WDPhyPhysicsEngine class >> isSupported [
 	^ false
 ]
 
 { #category : #initialisation }
-WTPhysicsEngine class >> pickEngine [
+WDPhyPhysicsEngine class >> pickEngine [
 	self allSubclasses do: [ :sc  | sc isSupported ifTrue: [ ^ sc new ] ].
 	^ nil
 ]
 
 { #category : #factory }
-WTPhysicsEngine >> createDynamicsWorld [
+WDPhyPhysicsEngine >> createDynamicsWorld [
 	self subclassResponsibility
 ]

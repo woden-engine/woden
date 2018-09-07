@@ -86,7 +86,7 @@ RWElement >> buildRigidBodyForView: aView [
 	| collisionShape |
 	mass ifNil: [ ^ self ].
 	collisionShape := shape buildCollisionShapeFor: self.
-	rigidBody := WTRigidBody new
+	rigidBody := WDPhyRigidBody new
 					sceneNode: sceneNode;
 					mass: mass;
 					shape: collisionShape.

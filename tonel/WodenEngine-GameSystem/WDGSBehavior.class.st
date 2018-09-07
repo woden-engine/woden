@@ -28,6 +28,12 @@ WDGSBehavior class >> initialize [
 
 ]
 
+{ #category : #adding }
+WDGSBehavior >> addedToEntity: anEntity [
+	super addedToEntity: anEntity.
+	anEntity physicsComponent ifNotNil: [ :physics |self setupPhysicsComponent: physics ]
+]
+
 { #category : #accessing }
 WDGSBehavior >> bucket [
 	^ #behavior
@@ -36,6 +42,11 @@ WDGSBehavior >> bucket [
 { #category : #'resource loading' }
 WDGSBehavior >> loadMesh: modelName [
 	^ self engine resourceCache loadMesh: modelName
+]
+
+{ #category : #utility }
+WDGSBehavior >> localBoundingBox [
+	^ entity spatialDescription localBoundingBox
 ]
 
 { #category : #utility }
@@ -49,6 +60,10 @@ WDGSBehavior >> setMeshNamed: meshName [
 	mesh := self loadMesh: meshName.
 	entity ensureSpatialObject node renderable: mesh.
 	^ mesh
+]
+
+{ #category : #physics }
+WDGSBehavior >> setupPhysicsComponent: aPhysicsComponent [
 ]
 
 { #category : #behaviors }

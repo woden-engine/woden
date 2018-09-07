@@ -22,6 +22,11 @@ WDCResourceWithSessionHandle class >> for: anEngine handle: aHandle [
 	^ self new engine: anEngine; handle: aHandle; yourself
 ]
 
+{ #category : #dependencies }
+WDCResourceWithSessionHandle >> addResourceDependency: dependency [
+	dependency addWodenResourceDependant: self
+]
+
 { #category : #'resource building' }
 WDCResourceWithSessionHandle >> buildHandle [
 	self subclassResponsibility
@@ -34,6 +39,11 @@ WDCResourceWithSessionHandle >> checkSession [
 		self buildHandle.
 		session := Smalltalk session.
 	]
+]
+
+{ #category : #dependencies }
+WDCResourceWithSessionHandle >> dependencyChange: dependency [
+
 ]
 
 { #category : #accessing }
@@ -60,6 +70,11 @@ WDCResourceWithSessionHandle >> handle: aHandle [
 { #category : #testing }
 WDCResourceWithSessionHandle >> hasValidHandle [
 	^ handle isNotNil and: [ session == Smalltalk session ]
+]
+
+{ #category : #dependencies }
+WDCResourceWithSessionHandle >> removeResourceDependency: dependency [
+	dependency removeWodenResourceDependant: self
 ]
 
 { #category : #accessing }

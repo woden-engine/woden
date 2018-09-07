@@ -1,30 +1,30 @@
 Class {
-	#name : #WTCollisionShape,
+	#name : #WDPhyCollisionShape,
 	#superclass : #Object,
 	#instVars : [
 		'handle'
 	],
-	#category : 'WodenEngine-Physics-Interface'
+	#category : #'WodenEngine-Physics-Interface'
 }
 
 { #category : #'as yet unclassified' }
-WTCollisionShape >> accept: aVisitor [
+WDPhyCollisionShape >> accept: aVisitor [
 	self subclassResponsibility
 ]
 
 { #category : #accessing }
-WTCollisionShape >> handle [
+WDPhyCollisionShape >> handle [
 	
 	^ handle
 ]
 
 { #category : #accessing }
-WTCollisionShape >> handle: anObject [
+WDPhyCollisionShape >> handle: anObject [
 	
 	handle := anObject
 ]
 
 { #category : #'as yet unclassified' }
-WTCollisionShape >> hasValidHandle [
+WDPhyCollisionShape >> hasValidHandle [
 	^ handle ~~ nil and: [ handle isValid ]
 ]

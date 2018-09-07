@@ -107,6 +107,23 @@ WDCWaterMaterial >> invalidateCache [
 	resourceBindingsAreUpdated := false.
 ]
 
+{ #category : #'resource reloading' }
+WDCWaterMaterial >> loadStateFromOldVersion: oldVersion [
+	| oldMaterialState |
+	super loadStateFromOldVersion: oldVersion.
+	self skyTexture: oldVersion skyTexture.
+	oldMaterialState := oldVersion materialState.
+	materialState
+		clipMapPeriod: oldMaterialState clipMapPeriod;
+		harmonics: oldMaterialState harmonics;
+		yourself
+]
+
+{ #category : #accessing }
+WDCWaterMaterial >> materialState [
+	^ materialState
+]
+
 { #category : #parsing }
 WDCWaterMaterial >> parse: materialFileReference data: data [
 	materialState

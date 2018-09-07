@@ -9,10 +9,7 @@ Class {
 		'cameraSpeed',
 		'cameraAngle',
 		'cameraAngularVelocity',
-		'cameraAngularSpeed',
-		'lastFrameRateDrawing',
-		'lastFrameRateCountFrame',
-		'lastFrameDeltaTime'
+		'cameraAngularSpeed'
 	],
 	#category : #'WodenEngine-Scene-Application'
 }
@@ -68,27 +65,9 @@ WDAFPSSceneView >> cameraVelocity: anObject [
 ]
 
 { #category : #'drawing 2d' }
-WDAFPSSceneView >> computeFrameDeltaTime [
-	| currentTime |
-	self flag: 'TODO: Use GPU timestamp query.'.
-	lastFrameRateDrawing ifNil: [ lastFrameRateDrawing := Time microsecondClockValue ].
-	lastFrameRateCountFrame ~~ engine frameBufferingDriver frameIndex ifTrue: [
-		currentTime := Time microsecondClockValue.
-		lastFrameDeltaTime := (currentTime - lastFrameRateDrawing) / 1000.0.
-		lastFrameRateDrawing := currentTime.
-		lastFrameRateCountFrame := engine frameBufferingDriver frameIndex
-	].
-
-	^ lastFrameDeltaTime
-
-
-
-]
-
-{ #category : #'drawing 2d' }
 WDAFPSSceneView >> drawFrameRateOn: canvas [
 	| deltaTime builder mesh |
-	deltaTime := self computeFrameDeltaTime.
+	deltaTime := engine frameBufferingDriver currentFrameCPUDeltaTime.
 	
 	builder := canvas driver mesh2DBuilder.
 	builder text
@@ -96,8 +75,13 @@ WDAFPSSceneView >> drawFrameRateOn: canvas [
 		font: self pompeiiDefaultFont;
 			position: (0 @ self pompeiiDefaultFont getPreciseAscent);
 			draw: ('CPU Frame Rate {1} ms / {2} FPS' format: {
-				deltaTime printShowingDecimalPlaces: 3 .
-				1000.0 / (deltaTime max: 0.01) printShowingDecimalPlaces: 3}).
+				(deltaTime*1000.0) printShowingDecimalPlaces: 3 .
+				1.0 / (deltaTime max: 0.01) printShowingDecimalPlaces: 3.
+				engine frameBufferingDriver lastFrameCPUConsumption * 1000.0 printShowingDecimalPlaces: 3});
+			newline;
+			draw: ('CPU Consumption {1} ms' format: {
+				engine frameBufferingDriver lastFrameCPUConsumption * 1000.0 printShowingDecimalPlaces: 3}).
+				
 	mesh := builder mesh.
 	
 	canvas draw: mesh.

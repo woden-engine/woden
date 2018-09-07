@@ -57,8 +57,18 @@ WDCTexture >> data [
 
 { #category : #accessing }
 WDCTexture >> data: anObject [
+	data ifNotNil: [ self removeResourceDependency: data ].
 	data := anObject.
+	data ifNotNil: [ self addResourceDependency: data ].
 	(self hasValidHandle and: [ self canUploadData ]) ifTrue: [ self uploadTextureData ]
+]
+
+{ #category : #dependencies }
+WDCTexture >> dependencyChange: dependency [
+	(dependency == data and: [self hasValidHandle and: [ self canUploadData ]]) ifTrue: [
+		self uploadTextureData
+	]
+
 ]
 
 { #category : #accessing }

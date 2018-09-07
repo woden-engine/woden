@@ -12,7 +12,8 @@ Class {
 		'pipelineStates',
 		'streamingUniformBufferPools',
 		'streamingStorageBufferPools',
-		'poolsMutex'
+		'poolsMutex',
+		'pendingResourceReloadActions'
 	],
 	#classVars : [
 		'ShaderLanguageTargetMap'
@@ -20,8 +21,13 @@ Class {
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Core-Engine'
+	#category : #'WodenEngine-Core-Engine'
 }
+
+{ #category : #'as yet unclassified' }
+WDCResourceCache class >> cachedValueFor: anObjectDescription ifAbsentPut: ifAbsentPutBlock [
+	^ self cachedValueFor: anObjectDescription ifPresent: [ :previous | previous ] ifAbsentPut: ifAbsentPutBlock
+]
 
 { #category : #'as yet unclassified' }
 WDCResourceCache class >> cachedValueFor: anObjectDescription ifPresent: ifPresentBlock [
@@ -35,7 +41,8 @@ WDCResourceCache class >> cachedValueFor: anObjectDescription ifPresent: ifPrese
 	fileName exists ifTrue: [ ^ ifPresentBlock value: (FLMaterializer materializeFromFileNamed: fileName fullName)].
 	
 	valueToSave := ifAbsentPutBlock value.
-	FLSerializer serialize: valueToSave toFileNamed: fileName fullName
+	FLSerializer serialize: valueToSave toFileNamed: fileName fullName.
+	^ valueToSave
 ]
 
 { #category : #'as yet unclassified' }
@@ -215,6 +222,27 @@ WDCResourceCache >> defaultNormalTexture [
 	^ self getOrCreateColorTexture: (Color r: 0.5 g: 0.5 b: 1.0)
 ]
 
+{ #category : #materials }
+WDCResourceCache >> doActualMaterialLoading: materialFileReference [
+	| materialData materialType materialClassName materialClass |
+	materialData := NeoJSONReader fromString: materialFileReference contents.
+	materialType := materialData at: 'type' ifAbsent: [
+		self error: 'Material does not have a valid type.'
+	].
+
+	materialClassName := ('WDC' , materialType , 'Material') asSymbol.
+	materialClass := Smalltalk at: materialClassName ifAbsent: [ self error: 'Failed to find material class for material type ' , materialType ].
+	self assert: materialClass isMaterialClass.
+	^ (materialClass for: engine)
+		parse: materialFileReference data: materialData;
+		yourself
+]
+
+{ #category : #'auto reloading' }
+WDCResourceCache >> enqueueResourceReloadAction: aBlock [
+	pendingResourceReloadActions nextPut: aBlock
+]
+
 { #category : #thumbnail }
 WDCResourceCache >> ensureAllMaterialThumbnailsInDB: thumbnailDB [
 	self allMaterialNames do: [ :materialName |
@@ -277,6 +305,7 @@ WDCResourceCache >> initializeForEngine: anEngine [
 	].
 
 	shaderLanguageTargetName := ShaderLanguageTargetMap at: shaderLanguageTarget.
+	pendingResourceReloadActions := WaitfreeQueue new.
 ]
 
 { #category : #'3d models' }
@@ -305,7 +334,9 @@ WDCResourceCache >> loadLowLevelShaderCode: aFileNameOrReference [
 WDCResourceCache >> loadMaterial: aFileNameOrReference [
 	| materialFile |
 	materialFile := self resolveResourceFileReference: aFileNameOrReference.
-	^ self resourceAt: materialFile -> #material ifAbsentPut: [ self performMaterialLoading: materialFile ].
+	^ self resourceAt: materialFile -> #material ifAbsentPut: [
+		self performMaterialLoading: materialFile
+	].
 
 ]
 
@@ -349,18 +380,18 @@ WDCResourceCache >> loadSoundSampleData: aFileNameOrReference [
 { #category : #'resource loading' }
 WDCResourceCache >> loadTexture: aFileNameOrReference [
 	| textureFile |
-	textureFile := self resolveResourceFileReference: aFileNameOrReference.
+	textureFile := self resolveResourceFileReferenceWithQuery: aFileNameOrReference.
 	^ self resourceAt: textureFile -> #texture ifAbsentPut: [ (self loadTextureData: textureFile) asTextureFor: engine ].
 
 ]
 
 { #category : #'resource loading' }
 WDCResourceCache >> loadTextureData: aFileNameOrReference [
-	| textureFile extension |
-	textureFile := self resolveResourceFileReference: aFileNameOrReference.
-	extension := textureFile extension.
-	extension = 'dds' ifTrue: [ ^ WDCDDSTextureReader textureFromFileNamed: textureFile].
-	^ ImageReadWriter formFromFileNamed: textureFile
+	| textureFileAndQuery |
+	textureFileAndQuery := self resolveResourceFileReferenceWithQuery: aFileNameOrReference.
+	^ self resourceAt: textureFileAndQuery -> #textureData ifAbsentPut: [
+		self performLoadTextureDataFile: textureFileAndQuery first withQuery: textureFileAndQuery second
+	]
 ]
 
 { #category : #'resource loading' }
@@ -378,6 +409,70 @@ WDCResourceCache >> loadVertexShader: aFileNameOrReference [
 	^ self resourceAt: shaderFile -> #vertexShader ifAbsentPut: [ self performShaderLoading: shaderFile stage: AGPU_VERTEX_SHADER ].
 ]
 
+{ #category : #private }
+WDCResourceCache >> parseQuery: queryString [
+	| query in |
+	query := OrderedDictionary new.
+	
+	in := queryString readStream.
+	[in atEnd] whileFalse: [
+		(self parseQueryElement: in) ifNotNil: [ :element |
+			query add: element
+		].
+	].
+	^ query
+]
+
+{ #category : #private }
+WDCResourceCache >> parseQueryElement: in [
+	| key value |
+	key := self parseQueryTerm: in.
+	value := nil.
+	in peek = $= ifTrue: [
+		in next.
+		value := self parseQueryTerm: in
+	].
+	
+	in peek = $& ifTrue: [ in next ].
+	^ key -> value
+]
+
+{ #category : #private }
+WDCResourceCache >> parseQueryTerm: in [
+	| c |
+	^ ByteString streamContents: [ :out |
+		[in atEnd not and: [in peek ~= $& and: [in peek ~= $=] ]] whileTrue: [
+			c := in next.
+			c = $+ ifTrue: [
+				out space
+			] ifFalse: [
+				c = $% ifTrue: [
+					out nextPut: (Integer readFrom: (in next: 2) base: 16) asCharacter.
+				] ifFalse: [
+					out nextPut: c
+				] 
+			]
+		]
+	]
+]
+
+{ #category : #'resource loading' }
+WDCResourceCache >> performLoadTextureDataFile: textureFile withQuery: query [
+	| result |
+	result := WDCTextureReader loadFromFile: textureFile withQuery: query.
+	engine autoReloadChanges ifTrue: [
+		PhanideFileSystemMonitor on: textureFile when: PhanideFileEventCloseWrite do: [ :event |
+			self enqueueResourceReloadAction: [
+				| reloadedTexture |
+				reloadedTexture := WDCTextureReader loadFromFile: textureFile withQuery: query.
+				result reloadReplacement: reloadedTexture
+			]
+		].
+	].
+
+	^ result
+]
+
 { #category : #shaders }
 WDCResourceCache >> performLowLevelShaderLoading: shaderFile [
 	| lowLevelShaderSource |
@@ -393,18 +488,19 @@ WDCResourceCache >> performLowLevelShaderLoading: shaderFile [
 
 { #category : #materials }
 WDCResourceCache >> performMaterialLoading: materialFileReference [
-	| materialData materialType materialClassName materialClass |
-	materialData := NeoJSONReader fromString: materialFileReference contents.
-	materialType := materialData at: 'type' ifAbsent: [
-		self error: 'Material does not have a valid type.'
+	| material |
+	material := self doActualMaterialLoading: materialFileReference.
+	engine autoReloadChanges ifTrue: [
+		PhanideFileSystemMonitor on: materialFileReference when: PhanideFileEventCloseWrite do: [ :event |
+			self enqueueResourceReloadAction: [
+				| reloadedMaterial |
+				reloadedMaterial := self doActualMaterialLoading: materialFileReference.
+				material reloadReplacement: reloadedMaterial
+			]
+		].
 	].
 
-	materialClassName := ('WDC' , materialType , 'Material') asSymbol.
-	materialClass := Smalltalk at: materialClassName ifAbsent: [ self error: 'Failed to find material class for material type ' , materialType ].
-	self assert: materialClass isMaterialClass.
-	^ (materialClass for: engine)
-		parse: materialFileReference data: materialData;
-		yourself
+	^ material
 ]
 
 { #category : #shaders }
@@ -434,6 +530,25 @@ WDCResourceCache >> pipelineStateForDescription: description [
 	^ pso
 ]
 
+{ #category : #'auto reloading' }
+WDCResourceCache >> reloadPendingResources [
+	| action hasSynchronizedWithGpu |
+	hasSynchronizedWithGpu := false.
+	[ action := pendingResourceReloadActions nextOrNil ] whileNotNil: [ 
+		hasSynchronizedWithGpu ifFalse: [
+			engine graphicsQueue finishExecution.
+			hasSynchronizedWithGpu := true
+		].
+	
+		[
+			action value
+		] on: Error do: [ :e |
+			e freeze.
+			[ e debug ] fork
+		]
+	]
+]
+
 { #category : #private }
 WDCResourceCache >> resolveResourceFileReference: aFileName [
 	^ self resolveResourceFileReference: aFileName ifFailed: [
@@ -454,6 +569,23 @@ WDCResourceCache >> resolveResourceFileReference: aFileName ifFailed: aBlock [
 	].
 
 	aBlock value.
+]
+
+{ #category : #private }
+WDCResourceCache >> resolveResourceFileReferenceWithQuery: aFileName [
+	| questionMarkIndex  pathPart query |
+	aFileName isString ifFalse: [
+		aFileName isArray ifTrue: [ ^ aFileName ].
+		^ { self resolveResourceFileReference: aFileName . nil }
+	].
+	
+	questionMarkIndex := aFileName indexOf: $? ifAbsent: [
+		^ { self resolveResourceFileReference: aFileName . nil }
+	].
+
+	pathPart := aFileName copyFrom: 1 to: questionMarkIndex - 1.
+	query := self parseQuery: (aFileName copyFrom: questionMarkIndex + 1 to: aFileName size).
+	^ { self resolveResourceFileReference: pathPart . query }
 ]
 
 { #category : #'resource loading' }

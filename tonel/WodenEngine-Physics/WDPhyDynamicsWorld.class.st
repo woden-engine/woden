@@ -1,25 +1,25 @@
 Class {
-	#name : #WTDynamicsWorld,
+	#name : #WDPhyDynamicsWorld,
 	#superclass : #Object,
-	#category : 'WodenEngine-Physics-Interface'
+	#category : #'WodenEngine-Physics-Interface'
 }
 
 { #category : #adding }
-WTDynamicsWorld >> addRigidBodies: rigidBodies [
+WDPhyDynamicsWorld >> addRigidBodies: rigidBodies [
 	rigidBodies do: [ :body | self addRigidBody: body ]
 ]
 
 { #category : #adding }
-WTDynamicsWorld >> addRigidBody: rigidBody [
+WDPhyDynamicsWorld >> addRigidBody: rigidBody [
 	self subclassResponsibility
 ]
 
 { #category : #accessing }
-WTDynamicsWorld >> gravity: aWMVector3 [
+WDPhyDynamicsWorld >> gravity: aWMVector3 [
 	self subclassResponsibility
 ]
 
 { #category : #rendering }
-WTDynamicsWorld >> simulateTime: delta [
+WDPhyDynamicsWorld >> simulateTime: delta [
 	self subclassResponsibility
 ]

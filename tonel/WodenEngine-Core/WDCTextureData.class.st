@@ -1,6 +1,6 @@
 Class {
 	#name : #WDCTextureData,
-	#superclass : #Object,
+	#superclass : #WDCResourceWithDependants,
 	#instVars : [
 		'pixelFormat',
 		'srgbPixelFormat',
@@ -18,7 +18,7 @@ Class {
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Core-Texture'
+	#category : #'WodenEngine-Core-Texture'
 }
 
 { #category : #'as yet unclassified' }
@@ -106,6 +106,23 @@ WDCTextureData class >> extent: anExtent srgbColorRenderWith: aBlock [
 	^ (self extent: anExtent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM srgbFormat: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB)
 		srgbColorRenderWith: aBlock;
 		yourself
+]
+
+{ #category : #'cpu rendering' }
+WDCTextureData class >> extent: extent terrainMap: mapName renderWith: aBlock [
+	mapName ifNil: [ ^ self extent: extent terrainMapsRenderWith: aBlock].
+	mapName = #splatter ifTrue: [ 
+		^ 	self extent: extent colorRenderWith: [ :s :t |
+			Color forSplattingElements: (aBlock value: s value: t) second
+		].
+	].
+
+	mapName = #height ifTrue: [ 
+		^ self extent: extent signedHeightRenderWith: [ :s :t |
+			(aBlock value: s value: t) first
+		].
+	].
+	self error: 'Unsupported terrain submap.'
 ]
 
 { #category : #'cpu rendering' }
