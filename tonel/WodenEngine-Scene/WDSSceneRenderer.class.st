@@ -268,7 +268,7 @@ WDSSceneRenderer >> sortObjects: objectList perViewports: viewports [
 
 { #category : #accessing }
 WDSSceneRenderer >> stateTracker [
-	^ stateTracker ifNil: [ stateTracker := WDCStateTracker for: engine ].
+	^ stateTracker ifNil: [ stateTracker := WDCObjectStateTracker for: engine ].
 ]
 
 { #category : #'rendering preparations' }

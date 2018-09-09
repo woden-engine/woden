@@ -1,3 +1,6 @@
+"
+I am a generic mesh builder that also has supports for transformations.
+"
 Class {
 	#name : #WDCComplexGenericMeshBuilder,
 	#superclass : #WDCGenericMeshBuilder,
@@ -32,6 +35,36 @@ WDCComplexGenericMeshBuilder class >> initialize [
 ]
 
 { #category : #adding }
+WDCComplexGenericMeshBuilder >> addP: position [
+	vertices add: (WTGenericVertexF new
+		position: (transform transformPosition3: position);
+		color: currentColor;
+		yourself)
+
+]
+
+{ #category : #adding }
+WDCComplexGenericMeshBuilder >> addP: position N: normal [
+	vertices add: (WTGenericVertexF new
+		position: (transform transformPosition3: position);
+		normal: (transform transformNormal: normal);
+		color: currentColor;
+		yourself)
+
+]
+
+{ #category : #adding }
+WDCComplexGenericMeshBuilder >> addP: position N: normal T4: tangent4 TC: texcoord [
+	vertices add: (WTGenericVertexF new
+		position: (transform transformPosition3: position);
+		normal: (transform transformNormal: normal);
+		tangent4: (WMVector4F xyz: (transform transformNormal: tangent4 xyz) w: tangent4 w);
+		texcoord: texcoord;
+		color: currentColor;
+		yourself)
+]
+
+{ #category : #adding }
 WDCComplexGenericMeshBuilder >> addP: position N: normal TC: texcoord [
 	vertices add: (WTGenericVertexF new
 		position: (transform transformPosition3: position);
@@ -48,6 +81,22 @@ WDCComplexGenericMeshBuilder >> addP: position TC: texcoord [
 		texcoord: texcoord;
 		color: currentColor;
 		yourself)
+]
+
+{ #category : #accessing }
+WDCComplexGenericMeshBuilder >> addSolidBox: box [
+	self restoreTransformAfter: [
+		transform translateBy: box center asWMVector3F.
+		self addCubeWithWidth: box width height: box height depth: box depth
+	]
+]
+
+{ #category : #accessing }
+WDCComplexGenericMeshBuilder >> addWireBox: box [
+	self restoreTransformAfter: [
+		transform translateBy: box center asWMVector3F.
+		self addWireCubeWithWidth: box width height: box height depth: box depth
+	]
 ]
 
 { #category : #'as yet unclassified' }
@@ -104,6 +153,15 @@ WDCComplexGenericMeshBuilder >> planeTextureTransform: textureMatrix [
 		vertices at: vi put: vertex.
 	]
 
+]
+
+{ #category : #accessing }
+WDCComplexGenericMeshBuilder >> restoreTransformAfter: aBlock [
+	| transformCopy |
+	transformCopy := transform copy.
+	[ 
+		aBlock value
+	] ensure: [ transform := transformCopy ]
 ]
 
 { #category : #accessing }

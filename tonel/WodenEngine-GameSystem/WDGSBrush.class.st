@@ -1,14 +1,9 @@
 Class {
 	#name : #WDGSBrush,
-	#superclass : #WDGSComponent,
+	#superclass : #WDGSModelingComponent,
 	#instVars : [
 		'faces',
-		'positions',
-		'boundingBox',
-		'color'
-	],
-	#classVars : [
-		'BrushColors'
+		'positions'
 	],
 	#category : #'WodenEngine-GameSystem-Level'
 }
@@ -44,22 +39,6 @@ WDGSBrush class >> faces: anArrayOfFaces [
 	^ self new faces: anArrayOfFaces
 ]
 
-{ #category : #'class initialization' }
-WDGSBrush class >> initialize [
-	"
-	self initialize
-	"
-	super initialize.
-	
-	BrushColors := {
-		Color green muchDarker.
-		Color blue .
-		Color cyan .
-		Color yellow .
-		Color magenta .
-	}.
-]
-
 { #category : #serialization }
 WDGSBrush class >> jsonTypeName [
 	^ 'brush'
@@ -78,19 +57,6 @@ WDGSBrush >> addPosition: aPosition [
 	^ index
 ]
 
-{ #category : #adding }
-WDGSBrush >> addedToEntity: anEntity [
-	entity ifNotNil: [ entity invalidateModels ].
-	super addedToEntity: anEntity.
-	entity ifNotNil: [
-		entity
-			ensureSpatialObject;
-			ensureRenderingModels;
-			ensurePhysicsComponent;
-			invalidateModels
-	].
-]
-
 { #category : #transformations }
 WDGSBrush >> applyTransformation: transformation [
 	self modifyPositionsApplying: [ :v | transformation transformPosition3: v ]
@@ -103,16 +69,6 @@ WDGSBrush >> asJsonData [
 		'color' . color asWodenJsonData .
 		'faces' . faces collect: #asJsonData
 	}
-]
-
-{ #category : #accessing }
-WDGSBrush >> boundingBox [
-	^ boundingBox
-]
-
-{ #category : #accessing }
-WDGSBrush >> bucket [
-	^ #modeling
 ]
 
 { #category : #rendering }
@@ -130,11 +86,6 @@ WDGSBrush >> buildWireModelInto: aMeshBuilder [
 	].
 
 	faces do: [ :face | face buildWireModelInto: aMeshBuilder ].
-]
-
-{ #category : #changing }
-WDGSBrush >> changedSelectionState [
-	self invalidateModels
 ]
 
 { #category : #clipping }
@@ -175,11 +126,6 @@ WDGSBrush >> clipWithPlane: aPlane material: aMaterial [
 	
 ]
 
-{ #category : #accessing }
-WDGSBrush >> color [
-	^ color
-]
-
 { #category : #private }
 WDGSBrush >> computeBoundingBox [
 	boundingBox
@@ -218,24 +164,6 @@ WDGSBrush >> createCollisionShapeComponent [
 		translation: center asWMVector3F;
 		shape: (WDPhyConvexHullCollisionShape new points: centeredPositions);
 		yourself
-]
-
-{ #category : #accessing }
-WDGSBrush >> currentColor [
-	^ selected ifTrue: [
-		lastSelected
-			ifTrue: [ LastSelectionColor ]
-			ifFalse: [ SelectionColor ]
-	] ifFalse: [ color]
-]
-
-{ #category : #accessing }
-WDGSBrush >> currentTexturedColor [
-	^ selected ifTrue: [
-		lastSelected
-			ifTrue: [ LastSelectionColor ]
-			ifFalse: [ SelectionColor ]
-	] ifFalse: [ Color white]
 ]
 
 { #category : #selection }
@@ -279,17 +207,10 @@ WDGSBrush >> faces: anArrayOfFaces [
 ]
 
 { #category : #initialization }
-WDGSBrush >> generateColor [
-	^ BrushColors atRandom
-]
-
-{ #category : #initialization }
 WDGSBrush >> initialize [
 	super initialize.
 	faces := #().
 	positions := SLVMNativeOrderedCollection for: WMVector3D.
-	color := self generateColor.
-	boundingBox := WMBox3DD empty.
 ]
 
 { #category : #private }
@@ -379,16 +300,6 @@ WDGSBrush >> intersectsWithPlane: aPlane [
 	^ front and: back
 ]
 
-{ #category : #rendering }
-WDGSBrush >> invalidateModels [
-	entity ifNotNil: [ entity invalidateModels ]
-]
-
-{ #category : #rendering }
-WDGSBrush >> invalidateTexturedModel [
-	entity ifNotNil: [ entity invalidateTexturedModel ]
-]
-
 { #category : #testing }
 WDGSBrush >> isBrush [
 	^ true
@@ -425,11 +336,6 @@ WDGSBrush >> loadFromJson: jsonData [
 	].
 
 	self triangulate.
-]
-
-{ #category : #accessing }
-WDGSBrush >> map [
-	^ entity map
 ]
 
 { #category : #accessing }
@@ -473,17 +379,10 @@ WDGSBrush >> rebuildPlanes [
 	faces do: #rebuildPlane
 ]
 
-{ #category : #adding }
-WDGSBrush >> removedFromEntity: anEntity [
-	entity ifNotNil: [ entity invalidateModels ].
-	super removedFromEntity: anEntity.
-
-]
-
 { #category : #memento }
 WDGSBrush >> restoreTransformMemento: aValue [
-	positions := aValue copy.
-	self invalidateModels.
+	super restoreTransformMemento: aValue first.
+	positions := aValue second copy
 ]
 
 { #category : #private }
@@ -527,7 +426,7 @@ WDGSBrush >> textureTransformsDo: aBlock [
 
 { #category : #memento }
 WDGSBrush >> transformMemento [
-	^ positions copy
+	^ {super transformMemento . positions copy}
 ]
 
 { #category : #transformations }

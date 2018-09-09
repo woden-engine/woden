@@ -35,6 +35,7 @@ WDGSEntity >> addComponent: aComponent [
 	componentsCollection add: aComponent.
 	aComponent addedToEntity: self.
 	numberOfComponents := numberOfComponents + 1.
+	self scene ifNotNil: [ :scene | aComponent addedToScene: scene ].
 	self isSpawning ifTrue: [ aComponent spawn ]
 ]
 

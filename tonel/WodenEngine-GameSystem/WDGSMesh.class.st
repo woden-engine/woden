@@ -1,3 +1,6 @@
+"
+I am a mesh that is used during play mode
+"
 Class {
 	#name : #WDGSMesh,
 	#superclass : #WDGSComponent,

@@ -136,3 +136,10 @@ WDCTexture >> uploadWodenTextureData [
 		]
 	]
 ]
+
+{ #category : #accessing }
+WDCTexture >> valueRange [
+	data ifNil: [ ^ nil ].
+	data isForm ifTrue: [ ^ { 0.0 . 1.0 } ].
+	^ data valueRange
+]

@@ -1,3 +1,6 @@
+"
+I am a generic mesh builder. I am used for building meshes.
+"
 Class {
 	#name : #WDCGenericMeshBuilder,
 	#superclass : #Object,
@@ -760,10 +763,10 @@ WDCGenericMeshBuilder >> material: aMaterial [
 	self currentMaterial: aMaterial
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 WDCGenericMeshBuilder >> mesh [
-	vertices ifEmpty: [ ^ nil ].
-	indices ifEmpty: [ ^ nil ].
+	vertices ifEmpty: [ ^ WDCNullRenderable new ].
+	indices ifEmpty: [ ^ WDCNullRenderable new ].
 	self finishSubmesh.
 	
 	^ self createMeshWithSubmeshes: submeshes asArray.

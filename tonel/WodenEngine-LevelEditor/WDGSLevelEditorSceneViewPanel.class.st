@@ -345,7 +345,7 @@ WDGSLevelEditorSceneViewPanel >> handleKeyDown: event [
 			keyValue = OSK_KP_3 ifTrue: [ self sideView ].
 			keyValue = OSK_KP_5 ifTrue: [ isPerspective := isPerspective not ].
 				
-			keyValue = OSK_RETURN ifTrue: [ self editor addCubeBrushAtSelectionCube ].	
+			keyValue = OSK_RETURN ifTrue: [ self editor addObjectAtSelectionCube ].	
 			keyValue = OSK_DELETE ifTrue: [ self editor removeSelectedComponents ].
 	
 			keyValue = OSK_w ifTrue: [ self wireframe ].

@@ -7,9 +7,10 @@ Class {
 		'depth',
 		'pitch',
 		'slicePitch',
-		'data'
+		'data',
+		'valueRange'
 	],
-	#category : 'WodenEngine-Core-Texture'
+	#category : #'WodenEngine-Core-Texture'
 }
 
 { #category : #'cpu rendering' }
@@ -39,7 +40,8 @@ WDCTextureLevelData >> data [
 
 { #category : #accessing }
 WDCTextureLevelData >> data: anObject [
-	data := anObject
+	data := anObject.
+	valueRange := nil
 ]
 
 { #category : #accessing }
@@ -180,6 +182,23 @@ WDCTextureLevelData >> rgRenderWith: aBlock [
 	
 		destRow := destRow + pitch
 	]
+]
+
+{ #category : #'as yet unclassified' }
+WDCTextureLevelData >> shortValueRange [
+	| max min sourceIndex value |
+	valueRange ifNotNil: [ ^ valueRange ].
+
+	max := Float negativeInfinity.
+	min := Float infinity.
+	sourceIndex := 1.
+	1 to: data size // 2 do: [ :i |
+		value := data signedShortAt: sourceIndex. sourceIndex := sourceIndex + 2.
+		max := max max: value.
+		min := min min: value.
+	].
+
+	^ valueRange := { min . max }
 ]
 
 { #category : #'cpu rendering' }

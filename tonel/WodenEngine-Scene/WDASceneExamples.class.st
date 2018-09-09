@@ -31,12 +31,8 @@ WDASceneExamples class >> createIslandTerrainObjectFor: engine [
 	| material mesh terrain |
 	material := engine resourceCache loadMaterial: 'materials/demos/island.json'.
 	
-	mesh := (WDCTerrainMeshBuilder for: engine)
-		material: material;
-		createClipMapWithLevels: 3 size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
-		mesh.
-		
 	terrain := WDSGSpatialObject new.
+	mesh := material createTerrainMeshForSceneNode: terrain.		
 	terrain renderable: mesh.
 	
 	^ terrain

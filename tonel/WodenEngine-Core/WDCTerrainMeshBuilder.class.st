@@ -10,7 +10,8 @@ Class {
 		'material',
 		'engine',
 		'vertexLayout',
-		'boundingBox'
+		'boundingBox',
+		'usedClipMapPeriod'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -26,7 +27,8 @@ WDCTerrainMeshBuilder class >> for: anEngine [
 { #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> clipMapPeriodForGridSize: size subdivisions: subdivisions [
 	material ifNil: [ ^ self ].
-	material clipMapPeriod: size / (subdivisions + 1)
+	usedClipMapPeriod := size / (subdivisions + 1).
+	material clipMapPeriod: usedClipMapPeriod
 ]
 
 { #category : #'terrain mesh building' }
@@ -37,9 +39,12 @@ WDCTerrainMeshBuilder >> createClipMapWithLevels: levelCount size: size subdivis
 				vertices := cachedGeometry first.
 				indices := cachedGeometry second.
 				boundingBox := cachedGeometry third.
+				cachedGeometry fourth ifNotNil: [ :period |
+					material ifNotNil: [ material clipMapPeriod: period ]
+				]
 		] ifAbsentPut: [
 			self doCreateClipMapWithLevels: levelCount size: size subdivisions: subdivisions.
-			{ vertices . indices . boundingBox }
+			{ vertices . indices . boundingBox . usedClipMapPeriod }
 		]
 	].
 	self doCreateClipMapWithLevels: levelCount size: size subdivisions: subdivisions
@@ -48,7 +53,7 @@ WDCTerrainMeshBuilder >> createClipMapWithLevels: levelCount size: size subdivis
 
 { #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> createGridWithSize: size offset: offset subdivisions: subdivisions lodLevel: lodLevel [
-	| baseVertex y x vertex verticesPerRow currentRow nextRow currentRowElement nextRowElement dx dy sx sy gridEdges |
+	| baseVertex y x vertex verticesPerRow currentRow nextRow currentRowElement nextRowElement dx dy sx sy |
 	baseVertex := vertices size.
 
 	dx := (size x / subdivisions).

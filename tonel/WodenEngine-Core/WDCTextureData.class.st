@@ -764,6 +764,26 @@ WDCTextureData >> type: anObject [
 ]
 
 { #category : #accessing }
+WDCTextureData >> valueRange [
+	| mainLevel |
+	mainLevel := layers first levels first.
+	pixelFormat == AGPU_TEXTURE_FORMAT_R8_UNORM ifTrue: [
+		^ mainLevel byteValueRange collect: #asFloatFromNormalizedUByte
+	].
+
+	pixelFormat == AGPU_TEXTURE_FORMAT_R8_SNORM ifTrue: [
+		^ mainLevel sbyteValueRange collect: #asFloatFromNormalizedSByte
+	].
+	pixelFormat == AGPU_TEXTURE_FORMAT_R16_UNORM ifTrue: [
+		^ mainLevel ushortValueRange collect: #asFloatFromNormalizedUShort
+	].
+	pixelFormat == AGPU_TEXTURE_FORMAT_R16_SNORM ifTrue: [
+		^ mainLevel shortValueRange collect: #asFloatFromNormalizedSShort
+	].
+	^ {0.0 . 1.0}
+]
+
+{ #category : #accessing }
 WDCTextureData >> width [
 	^ width
 ]

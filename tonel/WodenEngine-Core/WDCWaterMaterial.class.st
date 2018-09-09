@@ -9,24 +9,36 @@ Class {
 		'resourceBinding',
 		'stateUniformBuffer',
 		'materialState',
-		'normalTexture'
+		'normalTexture',
+		'useClipMap'
 	],
-	#category : 'WodenEngine-Core-Material'
+	#category : #'WodenEngine-Core-Material'
 }
 
 { #category : #rendering }
 WDCWaterMaterial >> activateForwardOn: stateTracker [
 	self validateCache.
-	resourceBinding ifNotNil: [ 
-		stateTracker useShaderResources: resourceBinding.
-	].
-	
+	resourceBinding ifNotNil: [ stateTracker useShaderResources: resourceBinding ].
 	stateTracker
-		vertexShader: vertexShader;
-		fragmentShader: fragmentShader;
+		vertexShader: self vertexShader;
+		fragmentShader: self fragmentShader;
 		materialBlendingMode: WDCBlendingMode alphaOver;
 		materialCullMode: AGPU_CULL_MODE_NONE.
+	stateTracker submode == #solid ifTrue: [
+		stateTracker fragmentShader: self solidFragmentShader
+	].
+	stateTracker submode == #wire ifTrue: [
+		stateTracker
+			materialPolygonMode: AGPU_POLYGON_MODE_LINE;
+			materialCullMode: AGPU_CULL_MODE_NONE;
+			fragmentShader: self wireFragmentShader
+	].
 	^ true
+]
+
+{ #category : #accessing }
+WDCWaterMaterial >> albedoColor [
+	^ materialState albedo
 ]
 
 { #category : #'state binding' }
@@ -53,19 +65,26 @@ WDCWaterMaterial >> clipMapPeriod: aVector2 [
 	materialState clipMapPeriod: aVector2
 ]
 
-{ #category : #'state binding' }
-WDCWaterMaterial >> fetchShaders [
-	vertexShader ifNil: [
-		vertexShader := engine loadVertexShader: 'shaders/surface/waterVertex.dastrel'.
-	].
+{ #category : #'terrain mesh building' }
+WDCWaterMaterial >> createTerrainMeshForSceneNode: sceneNode boundingBox: boundingBox [
+	self flag: 'TODO: Support parameterizing this.'.
+	^ (WDCTerrainMeshBuilder for: self engine)
+		material: self;
+		createGridWithSize: (WMVector2F x: boundingBox width y: boundingBox depth)
+			subdivisions: 64;
+		mesh
+]
 
-	fragmentShader ifNil: [ 
-		skyTexture ifNotNil: [
-			fragmentShader := engine loadFragmentShader: 'shaders/surface/waterSkyForward.dastrel'.
-		] ifNil: [ 
-			fragmentShader := engine loadFragmentShader: 'shaders/surface/waterColorForward.dastrel'.
-		].
-	].
+{ #category : #shaders }
+WDCWaterMaterial >> fragmentShader [
+	^ fragmentShader ifNil: [
+		fragmentShader := skyTexture ifNotNil: [
+			engine loadFragmentShader: 'shaders/surface/waterSkyForward.dastrel'
+		]
+		ifNil: [
+			 engine loadFragmentShader: 'shaders/surface/waterColorForward.dastrel' 
+		]
+	]
 ]
 
 { #category : #accessing }
@@ -143,6 +162,16 @@ WDCWaterMaterial >> skyTexture: anObject [
 	skyTexture := anObject
 ]
 
+{ #category : #shaders }
+WDCWaterMaterial >> solidFragmentShader [
+	^ self fragmentShader
+]
+
+{ #category : #preview }
+WDCWaterMaterial >> thumbnail [
+	^ WDCResourceThumbnail type: #water value: self albedoColor asColor
+]
+
 { #category : #'state binding' }
 WDCWaterMaterial >> uploadMaterialStateData [
 	stateUniformBuffer ifNotNil: [ 
@@ -153,7 +182,16 @@ WDCWaterMaterial >> uploadMaterialStateData [
 
 { #category : #'state binding' }
 WDCWaterMaterial >> validateCache [
-	(vertexShader isNil or: [ fragmentShader isNil ]) ifTrue: [ self fetchShaders ].
 	resourceBindingsAreUpdated ifFalse: [ self bindResources ].
 	resourceBindingsAreUpdated := true.
+]
+
+{ #category : #shaders }
+WDCWaterMaterial >> vertexShader [
+	^  vertexShader ifNil: [ vertexShader := engine loadVertexShader: 'shaders/surface/waterVertex.dastrel' ]
+]
+
+{ #category : #shaders }
+WDCWaterMaterial >> wireFragmentShader [
+	^ self fragmentShader
 ]

@@ -55,6 +55,16 @@ WDCMaterial >> engine: anObject [
 	engine := anObject
 ]
 
+{ #category : #shaders }
+WDCMaterial >> fetchFragmentShader: shaderName [
+	^ engine loadFragmentShader: shaderName
+]
+
+{ #category : #shaders }
+WDCMaterial >> fetchVertexShader: shaderName [
+	^ engine loadVertexShader: shaderName
+]
+
 { #category : #testing }
 WDCMaterial >> isMaterial [
 	^ true

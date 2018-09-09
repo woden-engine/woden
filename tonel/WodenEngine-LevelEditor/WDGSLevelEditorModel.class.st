@@ -29,16 +29,17 @@ WDGSLevelEditorModel class >> initialize [
 	MaterialThumbDBFileName := 'WDGSLevelEditorModel_MaterialThumb.db'.
 ]
 
-{ #category : #actions }
-WDGSLevelEditorModel >> addCubeBrushAtSelectionCube [
+{ #category : #'modeling objects' }
+WDGSLevelEditorModel >> addActiveBrushTypeAtSelectionCube [
 	| brush |
 	(selectionBox isEmpty or: [ selectionBox isSpaceSelection not ]) ifTrue: [ ^ self ].
-	
+
 	brush := WDGSBrush box: selectionBox box.
 	brush material: currentMaterialName.
 	map entities first addComponent: brush.
 	
 	selectionBox addElement: brush.
+	^ brush
 ]
 
 { #category : #actions }
@@ -83,6 +84,15 @@ WDGSLevelEditorModel >> addModel: modelName position: aPosition [
 ]
 
 { #category : #actions }
+WDGSLevelEditorModel >> addObjectAtSelectionCube [
+	| material |
+	(selectionBox isEmpty or: [ selectionBox isSpaceSelection not ]) ifTrue: [ ^ self ].
+	
+	material := self validCurrentMaterial.
+	^ material inEditor: self addObjectAtSelectionCube: selectionBox
+]
+
+{ #category : #actions }
 WDGSLevelEditorModel >> addPlayerSpawnPoint: aPosition [
 	| entity |
 	entity := WDGSEntity new.
@@ -104,6 +114,36 @@ WDGSLevelEditorModel >> addPointEntity: aPosition [
 	entity spatialDescription translation: aPosition.
 	map addEntity: entity.
 	^ entity
+]
+
+{ #category : #'modeling objects' }
+WDGSLevelEditorModel >> addTerrainPlaneAtSelectionCubeWithMaterial: aTerrainMaterial [
+	| terrainComponent |
+	(selectionBox isEmpty or: [ selectionBox isSpaceSelection not ]) ifTrue: [ ^ self ].
+
+	terrainComponent := WDGSTerrainComponent new
+		materialName: currentMaterialName;
+		boundingBox: selectionBox box asWMBox3DD copy;
+		yourself.
+	
+	map entities first addComponent: terrainComponent.
+	selectionBox addElement: terrainComponent.
+	^ terrainComponent
+]
+
+{ #category : #'modeling objects' }
+WDGSLevelEditorModel >> addVolumeWithGridAtSelectionCube [
+	| volumeComponent |
+	(selectionBox isEmpty or: [ selectionBox isSpaceSelection not ]) ifTrue: [ ^ self ].
+
+	volumeComponent := WDGSProceduralMeshVolumeWithTopGrid new
+		materialName: currentMaterialName;
+		boundingBox: selectionBox box asWMBox3DD copy;
+		yourself.
+	
+	map entities first addComponent: volumeComponent.
+	selectionBox addElement: volumeComponent.
+	^ volumeComponent
 ]
 
 { #category : #actions }
@@ -513,4 +553,9 @@ WDGSLevelEditorModel >> useNewSelectionBox: aBox [
 
 	selectionBox ifNotNil: [ selectionBox editor: self; setSelectedState ].
 	self selectionBoxViewsDo: #updateNodes.
+]
+
+{ #category : #accessing }
+WDGSLevelEditorModel >> validCurrentMaterial [
+	^ engine resourceCache loadMaterial: currentMaterialName fallback: [ engine resourceCache defaultMaterial ]
 ]

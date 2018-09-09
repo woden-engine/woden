@@ -11,7 +11,10 @@ Class {
 		'resourceBinding',
 		'stateUniformBuffer',
 		'vertexShader',
-		'fragmentShader'
+		'fragmentShader',
+		'heightMapSize',
+		'solidFragmentShader',
+		'wireFragmentShader'
 	],
 	#category : #'WodenEngine-Core-Material'
 }
@@ -21,9 +24,17 @@ WDCTerrainMaterial >> activateForwardOn: stateTracker [
 	self validateCache.
 	
 	stateTracker
-		vertexShader: vertexShader;
-		fragmentShader: fragmentShader.
-	self flag: 'TODO: Use alpha testing here.'.
+		vertexShader: self vertexShader;
+		fragmentShader: self fragmentShader.
+	stateTracker submode == #solid ifTrue: [ 
+		stateTracker fragmentShader: self solidFragmentShader.
+	].
+	stateTracker submode == #wire ifTrue: [ 
+		stateTracker
+			materialPolygonMode: AGPU_POLYGON_MODE_LINE;
+			materialCullMode: AGPU_CULL_MODE_NONE;
+			fragmentShader: self wireFragmentShader.
+	].
 	
 	resourceBinding ifNotNil: [ 
 		stateTracker useShaderResources: resourceBinding.
@@ -36,9 +47,8 @@ WDCTerrainMaterial >> activateForwardOn: stateTracker [
 WDCTerrainMaterial >> activateShadowOn: stateTracker [
 	self validateCache.
 	stateTracker
-		vertexShader: vertexShader;
+		vertexShader: self vertexShader;
 		fragmentShader: nil.
-	self flag: 'TODO: Use alpha testing here.'.
 
 	"For the height map"		
 	resourceBinding ifNotNil: [ 
@@ -93,16 +103,18 @@ WDCTerrainMaterial >> clipMapPeriod: aVector2 [
 	materialState clipMapPeriod: aVector2
 ]
 
-{ #category : #'state binding' }
-WDCTerrainMaterial >> fetchShaders [
+{ #category : #'terrain mesh building' }
+WDCTerrainMaterial >> createTerrainMeshForSceneNode: sceneNode [
+	self flag: 'TODO: Support parameterizing this.'.
+	^ (WDCTerrainMeshBuilder for: engine)
+		material: self;
+		createClipMapWithLevels: 3 size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
+		mesh
+]
 
-	vertexShader ifNil: [ 
-		vertexShader := engine loadVertexShader: 'shaders/surface/terrainVertex.dastrel'.
-	].
-
-	fragmentShader ifNil: [ 
-		fragmentShader := engine loadFragmentShader: 'shaders/surface/terrainForward.dastrel'.
-	]
+{ #category : #accessing }
+WDCTerrainMaterial >> fragmentShader [
+	^ fragmentShader ifNil: [ fragmentShader := self fetchFragmentShader: 'shaders/surface/terrainForward.dastrel' ].
 
 ]
 
@@ -114,6 +126,17 @@ WDCTerrainMaterial >> heightMapOffset: aVector2 [
 { #category : #accessing }
 WDCTerrainMaterial >> heightMapScale: aVector2 [
 	materialState heightMapScale: aVector2
+]
+
+{ #category : #'as yet unclassified' }
+WDCTerrainMaterial >> heightMapSize [
+	^ heightMapSize
+]
+
+{ #category : #accessing }
+WDCTerrainMaterial >> heightMapSize: aVector2 [
+	heightMapSize := aVector2.
+	materialState heightMapScale: (WMVector2F x: 2.0 / aVector2 x y: 2.0 / aVector2 y)
 ]
 
 { #category : #accessing }
@@ -132,12 +155,30 @@ WDCTerrainMaterial >> heightOffset: aFloat [
 ]
 
 { #category : #accessing }
+WDCTerrainMaterial >> heightRange [
+	| heightScale minHeightValue maxHeightValue |
+	heightScale := materialState heightScale.
+	minHeightValue := -1.0.
+	maxHeightValue := 1.0.
+	
+	heightMapTexture ifNotNil: [ 
+		heightMapTexture valueRange ifNotNil: [ :range |
+			minHeightValue := range first.
+			maxHeightValue := range second.
+		].
+	].
+	
+	^ { minHeightValue * heightScale . maxHeightValue * heightScale}
+]
+
+{ #category : #accessing }
 WDCTerrainMaterial >> heightScale: aFloat [
 	materialState heightScale: aFloat
 ]
 
 { #category : #initialization }
 WDCTerrainMaterial >> initialize [
+	heightMapSize := WMVector2F x: 2.0 y: 2.0.
 	materialState := WDCTerrainMaterialState new
 		heightMapScale: (WMVector2F x: 1.0 y: 1.0);
 		heightMapOffset: WMVector2F zero;
@@ -157,6 +198,17 @@ WDCTerrainMaterial >> initialize [
 { #category : #initialization }
 WDCTerrainMaterial >> invalidateCache [
 	resourceBindingsAreUpdated := false.
+]
+
+{ #category : #accessing }
+WDCTerrainMaterial >> localBoundingBox [
+	| halfSize heightRange |
+	halfSize := heightMapSize*0.5.
+	heightRange := self heightRange.
+	
+	^ WMBox3DF
+		nx: halfSize x negated ny: heightRange first nz: halfSize y negated 
+		px: halfSize x py: heightRange second pz: halfSize y
 ]
 
 { #category : #accessing }
@@ -182,8 +234,12 @@ WDCTerrainMaterial >> normalTextures: anArray [
 
 { #category : #parsing }
 WDCTerrainMaterial >> parse: materialFileReference data: data [
+
+	self
+		heightMapSize: (self parse: data at: materialFileReference vector2: 'height-map-size' ifAbsent: [ (WMVector2F x: 2.0 y: 2.0) ]);
+		yourself.
+
 	materialState
-		heightMapScale: (self parse: data at: materialFileReference vector2: 'height-map-scale' ifAbsent: [ (WMVector2F x: 1.0 y: 1.0) ]);
 		heightMapOffset: (self parse: data at: materialFileReference vector2: 'height-map-offset' ifAbsent: [ WMVector2F zero ]);
 		heightScale: (self parse: data at: materialFileReference scalar: 'height-scale' ifAbsent: [ 1.0 ]);
 		
@@ -199,6 +255,12 @@ WDCTerrainMaterial >> parse: materialFileReference data: data [
 	albedoTextures := self parse: data at: materialFileReference srgbTexture: 'albedo-textures' arrayOfSize: 5.
 	normalTextures := self parse: data at: materialFileReference texture: 'normal-textures' arrayOfSize: 5.
 	self invalidateCache.
+]
+
+{ #category : #accessing }
+WDCTerrainMaterial >> solidFragmentShader [
+	^ solidFragmentShader ifNil: [ solidFragmentShader := self fetchFragmentShader: 'shaders/surface/terrainForwardSolid.dastrel' ].
+
 ]
 
 { #category : #accessing }
@@ -239,7 +301,19 @@ WDCTerrainMaterial >> validNormalTexture: textureIndex [
 
 { #category : #'state binding' }
 WDCTerrainMaterial >> validateCache [
-	(vertexShader isNil or: [fragmentShader isNil]) ifTrue: [ self fetchShaders ].
 	resourceBindingsAreUpdated ifFalse: [ self bindResources ].
 	resourceBindingsAreUpdated := true.
+]
+
+{ #category : #accessing }
+WDCTerrainMaterial >> vertexShader [
+	^ vertexShader ifNil: [ vertexShader := self fetchVertexShader: 'shaders/surface/terrainVertex.dastrel'.
+	].
+
+]
+
+{ #category : #accessing }
+WDCTerrainMaterial >> wireFragmentShader [
+	^ wireFragmentShader ifNil: [ wireFragmentShader := self fetchFragmentShader: 'shaders/surface/terrainForwardWire.dastrel' ].
+
 ]

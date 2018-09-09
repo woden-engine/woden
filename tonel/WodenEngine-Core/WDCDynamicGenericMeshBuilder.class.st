@@ -1,6 +1,6 @@
 Class {
 	#name : #WDCDynamicGenericMeshBuilder,
-	#superclass : #WDCGenericMeshBuilder,
+	#superclass : #WDCComplexGenericMeshBuilder,
 	#instVars : [
 		'vertexBuffer',
 		'vertexBufferCapacity',
@@ -62,8 +62,10 @@ WDCDynamicGenericMeshBuilder >> instantiateMesh [
 	^ instantiatedMesh
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 WDCDynamicGenericMeshBuilder >> mesh [
+	vertices ifEmpty: [ ^ WDCNullRenderable new ].
+	indices ifEmpty: [ ^ WDCNullRenderable new ].
 	self finishSubmesh.
 	
 	^ self createMeshWithSubmeshes: submeshes asArray.

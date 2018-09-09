@@ -16,12 +16,15 @@ Class {
 		'renderTargetFormats',
 		'depthStencilFormat',
 		'blendingStates',
-		'sampleCount'
+		'sampleCount',
+		'depthBiasConstant',
+		'depthBiasSlope',
+		'polygonMode'
 	],
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Core-Rendering'
+	#category : #'WodenEngine-Core-Rendering'
 }
 
 { #category : #comparing }
@@ -45,6 +48,10 @@ WDCPipelineStateDescription >> = other [
 	depthStencilFormat = other depthStencilFormat ifFalse: [ ^ false ].
 	blendingStates = other blendingStates ifFalse: [ ^ false ].
 	sampleCount = other sampleCount ifFalse: [ ^ false ].
+	
+	depthBiasConstant = other depthBiasConstant ifFalse: [ ^ false ].
+	depthBiasSlope = other depthBiasSlope ifFalse: [ ^ false ].
+	polygonMode = other polygonMode ifFalse: [ ^ false ].
 	^ true
 
 ]
@@ -99,6 +106,15 @@ WDCPipelineStateDescription >> buildForDevice: device [
 
 	"Depth buffer"
 	builder setDepthState: depthEnabled writeMask: depthWriteMask function: depthFunction.
+	
+	"Depth bias"
+	depthBiasConstant ifNotNil: [ 
+		builder setDepthBias: depthBiasConstant clamp: 0.0 slope_factor: depthBiasSlope
+	].
+
+	"Polygon mode"
+	builder setPolygonMode: polygonMode.
+	
 	result := builder build.
 	result ifNil: [
 		logErrorLength := builder getBuildingLogLength.
@@ -124,6 +140,30 @@ WDCPipelineStateDescription >> cullMode [
 WDCPipelineStateDescription >> cullMode: newCullMode [
 	cullMode ~= newCullMode ifTrue: [ self changed ].
 	cullMode := newCullMode
+]
+
+{ #category : #accessing }
+WDCPipelineStateDescription >> depthBiasConstant [
+	^ depthBiasConstant
+]
+
+{ #category : #accessing }
+WDCPipelineStateDescription >> depthBiasConstant: constant [
+	depthBiasConstant ~= constant ifTrue: [ self changed ].
+	depthBiasConstant := constant.
+	self changed.
+]
+
+{ #category : #accessing }
+WDCPipelineStateDescription >> depthBiasSlope [
+	^ depthBiasSlope
+]
+
+{ #category : #accessing }
+WDCPipelineStateDescription >> depthBiasSlope: slope [
+	depthBiasSlope ~= slope ifTrue: [ self changed ].
+	depthBiasSlope := slope.
+	self changed.
 ]
 
 { #category : #accessing }
@@ -213,7 +253,11 @@ WDCPipelineStateDescription >> hash [
 	result := result bitXor: depthStencilFormat hash.
 	result := result bitXor: blendingStates hash.
 	result := result bitXor: sampleCount hash.
-
+	
+	result := result bitXor: depthBiasConstant hash.
+	result := result bitXor: depthBiasSlope hash.
+	result := result bitXor: polygonMode hash.
+	
 	^ result
 ]
 
@@ -232,6 +276,17 @@ WDCPipelineStateDescription >> isChanged [
 { #category : #accessing }
 WDCPipelineStateDescription >> isChanged: aBoolean [
 	isChanged := aBoolean
+]
+
+{ #category : #accessing }
+WDCPipelineStateDescription >> polygonMode [
+	^ polygonMode
+]
+
+{ #category : #accessing }
+WDCPipelineStateDescription >> polygonMode: newPolygonMode [
+	polygonMode ~= newPolygonMode ifTrue: [ self changed ].
+	polygonMode := newPolygonMode
 ]
 
 { #category : #accessing }
@@ -271,6 +326,11 @@ WDCPipelineStateDescription >> reset [
 	depthEnabled := false.
 	depthWriteMask := false.
 	depthFunction := AGPU_ALWAYS.
+	
+	depthBiasConstant := nil.
+	depthBiasSlope := nil.
+	
+	polygonMode := AGPU_POLYGON_MODE_FILL.
 	
 	renderTargetFormats := #().
 	depthStencilFormat := AGPU_TEXTURE_FORMAT_UNKNOWN.

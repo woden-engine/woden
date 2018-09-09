@@ -8,11 +8,6 @@ Class {
 		'commandListBuilder',
 		'mode',
 		'submode',
-		'activeMaterial',
-		'objectBlendingMode',
-		'materialBlendingMode',
-		'materialCullMode',
-		'objectCullMode',
 		'currentViewport'
 	],
 	#pools : [
@@ -24,44 +19,6 @@ Class {
 { #category : #'instance creation' }
 WDCStateTracker class >> for: aWDCEngine [
 	^ self new engine: aWDCEngine
-]
-
-{ #category : #commands }
-WDCStateTracker >> activateMaterial: material [
-	activeMaterial == material ifTrue: [ ^ true ].
-	
-	self materialBlendingMode: nil.
-	(material activateOn: self) ifTrue: [ 
-		activeMaterial := material.
-		^ true
-	] ifFalse: [
-		^ false
-	]
-	
-]
-
-{ #category : #private }
-WDCStateTracker >> applyBlendingModel [
-	materialBlendingMode ifNotNil: [
-		^ self blendingAllMode: materialBlendingMode.
-	].
-
-	objectBlendingMode ifNotNil: [
-		^ self blendingAllMode: objectBlendingMode.
-	]
-
-]
-
-{ #category : #private }
-WDCStateTracker >> applyCullMode [
-	materialCullMode ifNotNil: [
-		^ self cullMode: materialCullMode.
-	].
-
-	objectCullMode ifNotNil: [
-		^ self cullMode: objectCullMode.
-	]
-
 ]
 
 { #category : #commands }
@@ -161,6 +118,13 @@ WDCStateTracker >> currentViewportRectangle [
 ]
 
 { #category : #'pipeline state' }
+WDCStateTracker >> depthBiasConstant: constant slope: slope [
+	pipelineStateDescription
+		depthBiasConstant: constant;
+		depthBiasSlope: slope
+]
+
+{ #category : #'pipeline state' }
 WDCStateTracker >> depthEnabled: aBoolean [
 	pipelineStateDescription depthEnabled: aBoolean
 ]
@@ -218,23 +182,6 @@ WDCStateTracker >> initialize [
 	pipelineStateDescription := WDCPipelineStateDescription new.
 ]
 
-{ #category : #'per object per material states' }
-WDCStateTracker >> materialBlendingMode [
-	^ materialBlendingMode
-]
-
-{ #category : #'per object per material states' }
-WDCStateTracker >> materialBlendingMode: anObject [
-	materialBlendingMode := anObject.
-	self applyBlendingModel
-]
-
-{ #category : #'per object per material states' }
-WDCStateTracker >> materialCullMode: anObject [
-	materialCullMode := anObject.
-	self applyCullMode
-]
-
 { #category : #accessing }
 WDCStateTracker >> mode [
 	^ mode
@@ -245,26 +192,14 @@ WDCStateTracker >> mode: anObject [
 	mode := anObject
 ]
 
-{ #category : #'per object per material states' }
-WDCStateTracker >> objectBlendingMode [
-	^ objectBlendingMode
-]
-
-{ #category : #'per object per material states' }
-WDCStateTracker >> objectBlendingMode: anObject [
-	objectBlendingMode := anObject.
-	self applyBlendingModel
-]
-
-{ #category : #'per object per material states' }
-WDCStateTracker >> objectCullMode: anObject [
-	objectCullMode := anObject.
-	self applyCullMode
-]
-
 { #category : #accessing }
 WDCStateTracker >> pipelineStateDescription [
 	^ pipelineStateDescription
+]
+
+{ #category : #'pipeline state' }
+WDCStateTracker >> polygonMode: polygonMode [
+	pipelineStateDescription polygonMode: polygonMode
 ]
 
 { #category : #'pipeline state' }
@@ -280,12 +215,7 @@ WDCStateTracker >> pushConstants: offset size: size values: values [
 { #category : #accessing }
 WDCStateTracker >> reset [
 	pipelineStateDescription reset.
-	activeMaterial := nil.
 
-	objectBlendingMode := nil.
-	objectCullMode := nil.
-	materialBlendingMode := nil.
-	materialCullMode := nil.
 ]
 
 { #category : #commands }
