@@ -7,6 +7,9 @@ Structure <<< #WTWaterMaterialState
 		#fresnel => WMCompactVector3F.
 		#smoothness => Float32.
 
+        #textureScale => WMVector2F.
+        #textureOffset => WMVector2F.
+
 		(#padding => WMCompactVector3F) private.
 		#propagationSpeed => Float32.
 

@@ -15,7 +15,8 @@ Class {
 		'cameraTransformFunction',
 		'cameraTransform',
 		'overlayRenderer',
-		'pompeiiCanvasSafeZoneTransform'
+		'pompeiiCanvasSafeZoneTransform',
+		'editorViewType'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -72,6 +73,16 @@ WDSGViewport >> cameraTransformFunction [
 { #category : #accessing }
 WDSGViewport >> cameraTransformFunction: anObject [
 	cameraTransformFunction := anObject
+]
+
+{ #category : #accessing }
+WDSGViewport >> editorViewType [
+	^ editorViewType
+]
+
+{ #category : #accessing }
+WDSGViewport >> editorViewType: anObject [
+	editorViewType := anObject
 ]
 
 { #category : #accessing }

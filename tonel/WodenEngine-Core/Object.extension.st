@@ -15,6 +15,11 @@ Object >> isSessionPersistentExternalBuffer [
 ]
 
 { #category : #'*WodenEngine-Core' }
+Object >> linearRampMultiply: factor [
+	^ self * factor
+]
+
+{ #category : #'*WodenEngine-Core' }
 Object >> removeWodenResourceDependant: dependant [
 ]
 

@@ -88,12 +88,22 @@ WDGSMapNode >> selected: anObject [
 ]
 
 { #category : #'map events' }
+WDGSMapNode >> simulatePrePhysicsTime: delta [
+	"This called only when a map element has subscribed to pre-physicstime events"
+]
+
+{ #category : #'map events' }
 WDGSMapNode >> simulateTime: delta [
 	"This called only when a map element has subscribed to time events"
 ]
 
 { #category : #'map events' }
 WDGSMapNode >> spawn [
+]
+
+{ #category : #'map events' }
+WDGSMapNode >> subscribeToPrePhysicsTimeEvents [
+	self map registerPrePhysicsTimeListener: self
 ]
 
 { #category : #'map events' }
@@ -108,6 +118,11 @@ WDGSMapNode >> textureTransformsDo: aBlock [
 { #category : #memento }
 WDGSMapNode >> transformMemento [
 	^ nil
+]
+
+{ #category : #'map events' }
+WDGSMapNode >> unsubscribeToPrePhysicsTimeEvents [
+	self map unregisterPrePhysicsTimeListener: self
 ]
 
 { #category : #'map events' }

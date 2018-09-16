@@ -14,21 +14,37 @@ Class {
 
 { #category : #rendering }
 WDCFlatColorMaterial >> activateForwardOn: stateTracker [
-	self validateCache.
 	stateTracker
-		vertexShader: vertexShader;
-		fragmentShader: fragmentShader;
+		vertexShader: self vertexShader;
+		fragmentShader: self fragmentShader;
 		materialBlendingMode: WDCBlendingMode alphaOver.
+		
+	useDepth ifFalse: [ 
+		stateTracker
+			materialDepthFunction: AGPU_ALWAYS;
+			materialDepthWriteMask: false
+	].
+
 	^ true
 ]
 
 { #category : #rendering }
 WDCFlatColorMaterial >> activateShadowOn: stateTracker [
-	self validateCache.
 	stateTracker
-		vertexShader: vertexShader;
+		vertexShader: self vertexShader;
 		fragmentShader: nil.
 	^ true
+]
+
+{ #category : #'state binding' }
+WDCFlatColorMaterial >> fragmentShader [
+	^ fragmentShader ifNil: [
+		stipple ifFalse: [
+			fragmentShader := engine loadFragmentShader: 'shaders/surface/flatColorForward.dastrel'.
+		] ifTrue: [ 
+			fragmentShader := engine loadFragmentShader: 'shaders/surface/flatColorStippleForward.dastrel'.
+		].
+	]
 ]
 
 { #category : #parsing }
@@ -75,8 +91,8 @@ WDCFlatColorMaterial >> useDepth: anObject [
 ]
 
 { #category : #'state binding' }
-WDCFlatColorMaterial >> validateCache [
-	vertexShader ifNil: [
+WDCFlatColorMaterial >> vertexShader [
+	^ vertexShader ifNil: [
 		stipple ifFalse: [
 			vertexShader := engine loadVertexShader: 'shaders/surface/genericVertex.dastrel'.
 		] ifTrue: [ 
@@ -84,13 +100,6 @@ WDCFlatColorMaterial >> validateCache [
 		]
 	].
 
-	fragmentShader ifNil: [
-		stipple ifFalse: [
-			fragmentShader := engine loadFragmentShader: 'shaders/surface/flatColorForward.dastrel'.
-		] ifTrue: [ 
-			fragmentShader := engine loadFragmentShader: 'shaders/surface/flatColorStippleForward.dastrel'.
-		].
-	]
 ]
 
 { #category : #accessing }

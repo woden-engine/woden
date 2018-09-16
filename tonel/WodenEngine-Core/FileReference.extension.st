@@ -14,7 +14,8 @@ FileReference >> concretizeWodenTextureWithResourceCache: resourceCache [
 FileReference >> gtInspectorStTextScriptIn: composite [
 	<gtInspectorPresentationOrder: 0>
 	composite pharoScript
-			title: 'Script';
+			title: 'Procedural Texture';
+			doItReceiver: [ WDCPharoProceduralScriptContext forInspector ];
 			display: [ self readStreamDo: [ :s | s contents ] ];
 			act: [ :text |
 					text selectionInterval: (1 to: text text size).

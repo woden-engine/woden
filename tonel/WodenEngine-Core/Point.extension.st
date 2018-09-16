@@ -107,8 +107,8 @@ Point >> signedGradientNoiseTiledWith: tilingPeriod [
 	minY := y floor floorModule: tilingPeriod y.
 	maxX := minX + 1.0 floorModule: tilingPeriod x.
 	maxY := minY + 1.0 floorModule: tilingPeriod y.
-	fx := x - minX.
-	fy := y - minY.
+	fx := x - x floor.
+	fy := y - y floor.
 	ix := fx cubicHemiteCurve.
 	iy := fy cubicHemiteCurve.
 
@@ -216,8 +216,8 @@ Point >> valueNoiseTiledWith: tilingPeriod [
 	minY := y floor floorModule: tilingPeriod y.
 	maxX := minX + 1.0 floorModule: tilingPeriod x.
 	maxY := minY + 1.0 floorModule: tilingPeriod y.
-	fx := (x - minX) cubicHemiteCurve.
-	fy := (y - minY) cubicHemiteCurve.
+	fx := (x - x floor) cubicHemiteCurve.
+	fy := (y - y floor) cubicHemiteCurve.
 
 	l := (minX@minY) randomNoise interpolateTo: (maxX@minY) randomNoise at: fx.
 	t := (minX@maxY) randomNoise interpolateTo: (maxX@maxY) randomNoise at: fx.

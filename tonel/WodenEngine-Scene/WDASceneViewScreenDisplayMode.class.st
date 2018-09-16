@@ -85,9 +85,7 @@ WDASceneViewScreenDisplayMode >> viewportForCamera: camera renderTarget: renderT
 WDASceneViewScreenDisplayMode >> viewportForCamera: camera renderTarget: renderTarget resolveRenderTarget: resolveRenderTarget submode: submode [
 	| cameraState |
 	cameraState := WTCameraState new.
-	cameraState
-		projectionMatrix: (self computeProjectionMatrixFor: camera).
-	
+	cameraState projectionMatrix: (self computeProjectionMatrixFor: camera).
 	^ WDSGViewport new
 		camera: camera;
 		cameraState: cameraState;
@@ -96,6 +94,7 @@ WDASceneViewScreenDisplayMode >> viewportForCamera: camera renderTarget: renderT
 		bounds: renderTarget bounds;
 		submode: submode;
 		overlayRenderer: view;
+		editorViewType: (view ifNotNil: #editorViewType);
 		filter: (view filterForCameraViewport: camera)
 ]
 

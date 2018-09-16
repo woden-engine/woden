@@ -8,7 +8,8 @@ Class {
 		'stateChangeListener',
 		'mass',
 		'explicitCollisionShape',
-		'renderObjectTransform'
+		'renderObjectTransform',
+		'physicsObject'
 	],
 	#category : #'WodenEngine-GameSystem-Level'
 }
@@ -66,7 +67,6 @@ WDGSPhysicsComponent >> convertTransformIntoRendering: transform [
 
 { #category : #physics }
 WDGSPhysicsComponent >> createRigidBodyPhysicsObject [
-	| physicsObject |
 	physicsObject := WDPhyRigidBody new
 					sceneNode: self;
 					mass: mass;
@@ -77,7 +77,6 @@ WDGSPhysicsComponent >> createRigidBodyPhysicsObject [
 
 { #category : #physics }
 WDGSPhysicsComponent >> createStaticPhysicsObject [
-	| physicsObject |
 	physicsObject := WDPhyRigidBody new
 					sceneNode: self;
 					mass: 0.0;
@@ -169,6 +168,12 @@ WDGSPhysicsComponent >> physicsType [
 { #category : #'physics component type' }
 WDGSPhysicsComponent >> physicsType: aPhysicsType [
 	physicsType := aPhysicsType
+]
+
+{ #category : #adding }
+WDGSPhysicsComponent >> removedFromMap: aMap [
+	physicsObject ifNotNil: [ physicsObject removeFromWorld: self validDynamicsWorld ]
+
 ]
 
 { #category : #'map events' }

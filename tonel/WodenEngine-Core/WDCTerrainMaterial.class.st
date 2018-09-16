@@ -14,26 +14,36 @@ Class {
 		'fragmentShader',
 		'heightMapSize',
 		'solidFragmentShader',
-		'wireFragmentShader'
+		'wireFragmentShader',
+		'isolinesFragmentShader'
 	],
 	#category : #'WodenEngine-Core-Material'
 }
 
 { #category : #rendering }
 WDCTerrainMaterial >> activateForwardOn: stateTracker [
+	"Do not draw the terrain in editor top views."
+
 	self validateCache.
 	
 	stateTracker
 		vertexShader: self vertexShader;
 		fragmentShader: self fragmentShader.
-	stateTracker submode == #solid ifTrue: [ 
-		stateTracker fragmentShader: self solidFragmentShader.
-	].
-	stateTracker submode == #wire ifTrue: [ 
+
+	(#(top front side) includes: stateTracker editorViewType) ifTrue: [
 		stateTracker
-			materialPolygonMode: AGPU_POLYGON_MODE_LINE;
-			materialCullMode: AGPU_CULL_MODE_NONE;
-			fragmentShader: self wireFragmentShader.
+			fragmentShader: self isolinesFragmentShader;
+			materialBlendingMode: WDCBlendingMode alphaOver 
+	] ifFalse: [
+		stateTracker submode == #solid ifTrue: [ 
+			stateTracker fragmentShader: self solidFragmentShader.
+		].
+		stateTracker submode == #wire ifTrue: [
+			stateTracker
+				materialPolygonMode: AGPU_POLYGON_MODE_LINE;
+				materialCullMode: AGPU_CULL_MODE_NONE;
+				fragmentShader: self wireFragmentShader.
+		].
 	].
 	
 	resourceBinding ifNotNil: [ 
@@ -198,6 +208,12 @@ WDCTerrainMaterial >> initialize [
 { #category : #initialization }
 WDCTerrainMaterial >> invalidateCache [
 	resourceBindingsAreUpdated := false.
+]
+
+{ #category : #accessing }
+WDCTerrainMaterial >> isolinesFragmentShader [
+	^ isolinesFragmentShader ifNil: [ isolinesFragmentShader := self fetchFragmentShader: 'shaders/surface/terrainForwardIsolines.dastrel' ].
+
 ]
 
 { #category : #accessing }

@@ -283,6 +283,11 @@ WDSGNode >> stateChanged [
 ]
 
 { #category : #accessing }
+WDSGNode >> toggleVisible [
+	self visible: self visible not
+]
+
+{ #category : #accessing }
 WDSGNode >> transform [
 	^ transform
 ]

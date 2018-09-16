@@ -12,6 +12,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 WDCModelSubmesh >> actualMaterialFor: anEngine [
+	material ifNil: [ ^ anEngine resourceCache defaultMaterial ].
 	material isString ifTrue: [ ^ anEngine resourceCache loadMaterial: material ].
 	material isMaterialDescription ifTrue: [ ^ material concreteMaterialFor: anEngine ].
 	^ material

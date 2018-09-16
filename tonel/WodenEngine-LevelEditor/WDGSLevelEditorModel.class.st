@@ -15,7 +15,8 @@ Class {
 		'centerAxisMesh',
 		'secondaryGridMesh',
 		'mapFileName',
-		'materialThumbDB'
+		'materialThumbDB',
+		'activeSceneView'
 	],
 	#classVars : [
 		'MaterialThumbDBFileName'
@@ -27,6 +28,16 @@ Class {
 WDGSLevelEditorModel class >> initialize [
 	super initialize.
 	MaterialThumbDBFileName := 'WDGSLevelEditorModel_MaterialThumb.db'.
+]
+
+{ #category : #accessing }
+WDGSLevelEditorModel >> activeSceneView [
+	^ activeSceneView
+]
+
+{ #category : #accessing }
+WDGSLevelEditorModel >> activeSceneView: aSceneView [
+	activeSceneView := aSceneView
 ]
 
 { #category : #'modeling objects' }

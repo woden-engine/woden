@@ -152,8 +152,22 @@ WDGSBrush >> containsPointInside: aPoint [
 ]
 
 { #category : #physics }
+WDGSBrush >> createAxisAlignedCollisionShapeComponent [
+	| bbox |
+	bbox := self boundingBox.
+	^ WDPhyCompoundCollisionShapeComponent new
+		translation: bbox center asWMVector3F;
+		shape: (WDPhyBoxCollisionShape new halfExtent: bbox halfExtent asWMVector3F);
+		yourself
+]
+
+{ #category : #physics }
 WDGSBrush >> createCollisionShapeComponent [
 	| center centeredPositions |
+	self isAxisAlignedBoxBrush ifTrue: [ 
+		^ self createAxisAlignedCollisionShapeComponent
+	].
+		
 	center := self boundingBox center.
 	centeredPositions := SLVMNativeArray for: WMVector3F new: positions size.
 	positions doWithIndex: [ :p :i |
@@ -298,6 +312,12 @@ WDGSBrush >> intersectsWithPlane: aPlane [
 		(front and: back) ifTrue: [ ^ true ].
 	].
 	^ front and: back
+]
+
+{ #category : #physics }
+WDGSBrush >> isAxisAlignedBoxBrush [
+	self flag: 'Implement myself properly.'.
+	^ true
 ]
 
 { #category : #testing }

@@ -13,6 +13,15 @@ Color class >> forSplattingElements: elements [
 ]
 
 { #category : #'*WodenEngine-Core' }
+Color >> linearRampMultiply: factor [
+	^ Color
+		r: self red * factor
+		g: self green * factor
+		b: self blue * factor
+		alpha: self alpha * factor
+]
+
+{ #category : #'*WodenEngine-Core' }
 Color >> resultForLinearInterpolation [
 	^ Color r: self red encodeSRGBComponent g: self green encodeSRGBComponent b: self blue encodeSRGBComponent alpha: self alpha
 ]

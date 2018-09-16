@@ -380,6 +380,15 @@ WDCGenericMeshBuilder >> addInteriorCubeWithWidth: width height: height depth: d
 ]
 
 { #category : #adding }
+WDCGenericMeshBuilder >> addLineFrom: start to: end [
+	self
+		beginLines;
+		addP: start;
+		addP: end.
+	self addI1: 1 i2: 2
+]
+
+{ #category : #adding }
 WDCGenericMeshBuilder >> addLineGridWithWidth: width height: height subdivisions: subdivisions [
 	| dx dy x y px py nx ny tc  |
 	

@@ -46,7 +46,7 @@ WDCLinearRamp >> gtInspectorFormIn: composite [
 
 { #category : #accessing }
 WDCLinearRamp >> interpolate: v1 with: v2 at: alpha [
-	^ (v1*(1.0 - alpha)) + (v2*alpha)
+	^ (v1 linearRampMultiply: (1.0 - alpha)) + (v2 linearRampMultiply: alpha)
 ]
 
 { #category : #'as yet unclassified' }

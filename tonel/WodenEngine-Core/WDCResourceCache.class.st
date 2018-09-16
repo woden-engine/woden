@@ -359,7 +359,7 @@ WDCResourceCache >> loadMesh: aFileNameOrReference [
 { #category : #'resource loading' }
 WDCResourceCache >> loadSRGBTexture: aFileNameOrReference [
 	| textureFile |
-	textureFile := self resolveResourceFileReference: aFileNameOrReference.
+	textureFile := self resolveResourceFileReferenceWithQuery: aFileNameOrReference.
 	^ self resourceAt: textureFile -> #srgbTexture ifAbsentPut: [ (self loadTextureData: textureFile) asSRGBTextureFor: engine ].
 ]
 

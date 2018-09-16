@@ -8,8 +8,21 @@ Class {
 		'onSimulation',
 		'kinematicObjects'
 	],
+	#pools : [
+		'APHYConstants'
+	],
 	#category : #'WodenEngine-Physics-AbstractPhysics'
 }
+
+{ #category : #adding }
+WDAPhyDynamicsWorld >> addCharacterController: characterController [
+	handle addCharacterController: (physicsEngine validateCharacterControllerHandle: characterController)
+]
+
+{ #category : #adding }
+WDAPhyDynamicsWorld >> addGhostObject: ghostObject [
+	handle addCollisionObject: (physicsEngine validateGhostObjectHandle: ghostObject) collision_filter_group: 1 collision_filter_mask: -1
+]
 
 { #category : #adding }
 WDAPhyDynamicsWorld >> addRigidBody: rigidBody [
@@ -30,6 +43,20 @@ WDAPhyDynamicsWorld >> addRigidBody: rigidBody [
 		self updateRigidBodyFromSceneNode: rigidBody
 	].
 
+]
+
+{ #category : #'as yet unclassified' }
+WDAPhyDynamicsWorld >> debugDrawOnDynamicMesh: meshBuilder [
+	| bufferSize buffer |
+	bufferSize := handle encodeDebugDrawing.
+	bufferSize = 0 ifTrue: [ ^ self ].
+	
+	buffer := ByteArray new: bufferSize.
+	handle getDebugDrawingData: bufferSize buffer: buffer.
+	
+	WDPhyDebugDrawingParser new
+		meshBuilder: meshBuilder;
+		parse: buffer
 ]
 
 { #category : #accessing }
@@ -63,6 +90,12 @@ WDAPhyDynamicsWorld >> physicsEngine [
 { #category : #accessing }
 WDAPhyDynamicsWorld >> physicsEngine: anObject [
 	physicsEngine := anObject
+]
+
+{ #category : #adding }
+WDAPhyDynamicsWorld >> removeRigidBody: rigidBody [
+	rigidBody handle ifNotNil: [ handle removeRigidBody: rigidBody handle first ]
+
 ]
 
 { #category : #rendering }

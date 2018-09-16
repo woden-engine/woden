@@ -42,11 +42,11 @@ WDASceneExamples class >> createIslandTerrainObjectFor: engine [
 WDASceneExamples class >> createIslandWaterObjectFor: engine skyTexture: skyTexture [
 	"Setup the water material"
 	| material mesh waterObject |
-	material := (engine resourceCache loadMaterial: 'materials/demos/water.json') copy.
+	material := (engine resourceCache loadMaterial: 'materials/demos/ocean.json').
 	material
 		skyTexture: skyTexture;
-		harmonicAt: 1 amplitude: 0.02 frequency: 2.23 direction: (WMVector2F y: 1.0);
-		harmonicAt: 2 amplitude: 0.015 frequency: 1.80 direction: (WMVector2F x: 1.0).
+		harmonicAt: 1 amplitude: 0.015 frequency: 2.23 center: (WMVector2F zero);
+		harmonicAt: 2 amplitude: 0.03 frequency: 0.50 center: (WMVector2F zero).
 
 	"Add the water"
 	mesh := (WDCTerrainMeshBuilder for: engine)
@@ -513,14 +513,14 @@ WDASceneExamples class >> example08MediumTerrain [
 ]
 
 { #category : #examples }
-WDASceneExamples class >> example09Island [
-	| model terrain light scene camera water view skyMaterial skyBox |
+WDASceneExamples class >> example09DragonIsland [
+	| model terrain light scene camera water view skyMaterial skyBox dragonMesh dragon dragonAction dragonActionRepeated dragonActionFrame |
 	
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
 	camera farDistance: 250.0.
-	camera transform translateByZ: 70.0; translateByY: 1.0.
+	camera transform translateByZ: 85.0; translateByY: 1.5.
 	
 	skyMaterial := scene engine resourceCache loadMaterial: 'materials/demos/skybox.json'.
 	skyBox := self createSkybox: (WMVector3F x: 200.0 y: 200.0 z: 200.0) for: scene engine material: skyMaterial.
@@ -532,8 +532,30 @@ WDASceneExamples class >> example09Island [
 	water := self createIslandWaterObjectFor: scene engine skyTexture: skyMaterial skyTexture.
 	scene add: water.
 	
+	
+	dragonMesh := scene engine resourceCache loadMesh: 'models/demos/baby_dragon.fmdl'.
+	dragon := WDSGSpatialObject new.
+	dragon renderable: dragonMesh.
+	dragon transform
+		rotateDegreesOnY: -45.0; 
+		translateByZ: 70.0;
+		translateByY: 1.5.
+
+	scene add: dragon.
+	
+	dragonAction := dragon renderableSceneData actionNamed: 'Idle'.
+	dragonActionRepeated := true.
+	dragonActionFrame := 0.0.
+	model onDeltaTimeDo: [ :delta |
+		dragonActionFrame := dragonActionFrame + (delta *30.0).
+		dragon renderableSceneData
+			setRestPose;
+			addAction: dragonAction repeated: dragonActionRepeated frame: dragonActionFrame;
+			computePoseMatrices.
+	].
+
 	light := WDSGLightSource new.
-	light directional; castShadows: false.
+	light directional; castShadows: true.
 	light state
 		intensity: (Color fromHexString: 'f1efd7') asWMVector4F.
 	light transform
@@ -542,6 +564,11 @@ WDASceneExamples class >> example09Island [
 	scene add: light.
 
 	view := model openWith: WDAFPSSceneView
+]
+
+{ #category : #'example models' }
+WDASceneExamples class >> exampleModelBabyDragon [
+	(WDCEngine default resourceCache load3DModel: 'models/demos/baby_dragon.fmdl') openViewer
 ]
 
 { #category : #'example models' }

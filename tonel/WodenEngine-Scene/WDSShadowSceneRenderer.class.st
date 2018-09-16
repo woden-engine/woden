@@ -48,9 +48,9 @@ WDSShadowSceneRenderer >> setupStateTracker [
 		
 		frontFaceWinding: AGPU_COUNTER_CLOCKWISE;
 		objectCullMode: AGPU_CULL_MODE_BACK;
-		depthEnabled: true;
-		depthWriteMask: true;
-		depthFunction: AGPU_GREATER_EQUAL
+		objectDepthEnabled: true;
+		objectDepthWriteMask: true;
+		objectDepthFunction: AGPU_GREATER_EQUAL
 ]
 
 { #category : #accessing }

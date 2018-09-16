@@ -10,7 +10,9 @@ Class {
 		'levelPlayer',
 		'backgroundColor',
 		'touchListeners',
-		'dynamicsWorld'
+		'dynamicsWorld',
+		'prePhysicstimeListeners',
+		'physicsWorldDebugDrawingSceneNode'
 	],
 	#category : #'WodenEngine-GameSystem-Level'
 }
@@ -54,11 +56,20 @@ WDGSMap >> backgroundColor: anObject [
 	
 ]
 
-{ #category : #physics }
+{ #category : #factory }
 WDGSMap >> createDynamicsWorld [
 	| world |
 	world := WDPhyPhysicsEngine current createDynamicsWorld.
 	world gravity: (WMVector3F x: 0.0 y: -9.8 z: 0.0).
+	physicsWorldDebugDrawingSceneNode := WDSGSpatialObject new.
+	physicsWorldDebugDrawingSceneNode
+		translucentRenderPriority;
+		visible: false;
+		renderable: (WDPhyDebugDrawingRenderable new
+			engine: self engine;
+			physicsWorld: world).
+	scene add: physicsWorldDebugDrawingSceneNode.
+	
 	^ world
 ]
 
@@ -150,6 +161,7 @@ WDGSMap >> initialize [
 	super initialize.
 	entities := OrderedCollection new.
 	editorMode := false.
+	prePhysicstimeListeners := Set new.
 	timeListeners := Set new.
 	touchListeners := Set new.
 	backgroundColor := Color black
@@ -214,6 +226,11 @@ WDGSMap >> playModeCopy [
 { #category : #accessing }
 WDGSMap >> pointEntityInstanceGroup [
 	^ pointEntityInstanceGroup
+]
+
+{ #category : #'as yet unclassified' }
+WDGSMap >> registerPrePhysicsTimeListener: aTimeListener [
+	prePhysicstimeListeners add: aTimeListener
 ]
 
 { #category : #'as yet unclassified' }
@@ -296,10 +313,12 @@ WDGSMap >> sendTouchEvents [
 WDGSMap >> simulatePhysicsTime: deltaTime [
 	dynamicsWorld ifNil: [ ^ self ].
 	dynamicsWorld simulateTime: deltaTime.
+	physicsWorldDebugDrawingSceneNode renderable ifNotNil: #invalidate
 ]
 
 { #category : #'map events' }
 WDGSMap >> simulateTime: delta [
+	prePhysicstimeListeners do: [ :listener | listener simulatePrePhysicsTime: delta ].
 	self simulatePhysicsTime: delta.
 	timeListeners do: [ :listener | listener simulateTime: delta ].
 	self sendTouchEvents.
@@ -315,6 +334,16 @@ WDGSMap >> spawnEntityWithBehavior: behavior position: aPosition [
 	^ (self createEntityWithBehavior: behavior position: aPosition)
 		spawn;
 		yourself
+]
+
+{ #category : #'as yet unclassified' }
+WDGSMap >> togglePhysicsDebugging [
+	physicsWorldDebugDrawingSceneNode ifNotNil: [ physicsWorldDebugDrawingSceneNode toggleVisible ]
+]
+
+{ #category : #'as yet unclassified' }
+WDGSMap >> unregisterPrePhysicsTimeListener: aTimeListener [
+	prePhysicstimeListeners remove: aTimeListener
 ]
 
 { #category : #'as yet unclassified' }

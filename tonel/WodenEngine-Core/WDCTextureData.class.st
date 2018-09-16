@@ -69,6 +69,29 @@ WDCTextureData class >> extent: anExtent heightRenderWith: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+WDCTextureData class >> extent: anExtent normalMapWithHeightFunction: heightFunction [
+	^ self extent: anExtent normalMapWithHeightFunction: heightFunction heightScaleFactor: 1.0
+]
+
+{ #category : #'as yet unclassified' }
+WDCTextureData class >> extent: anExtent normalMapWithHeightFunction: heightFunction heightScaleFactor: scaleFactor [
+	| hx hy dx dy tangent bitangent normal |
+	hx := 1.0 / anExtent x.
+	hy := 1.0 / anExtent y.
+	 
+	^ self extent: anExtent colorRenderWith: [ :s :t |
+		dx := (heightFunction value: s + (hx * 0.5) value: t) - (heightFunction value: s - (hx * 0.5) value: t).
+		dy := (heightFunction value: s value: t + (hy * 0.5)) - (heightFunction value: s value: t - (hy * 0.5)).
+		
+		tangent := WMVector3F x: 1.0 y: 0.0 z: dx*scaleFactor.
+		bitangent := WMVector3F x: 0.0 y: 1.0 z: dy*scaleFactor.
+		normal :=(tangent cross: bitangent) normalized.
+		
+		Color r: normal x*0.5 + 0.5 g: normal y*0.5 + 0.5 b: normal z*0.5 + 0.5 alpha: 1.0
+	]
+]
+
+{ #category : #'as yet unclassified' }
 WDCTextureData class >> extent: anExtent r16RenderWith: aBlock [
 	^ (self extent: anExtent bpp: 16 format: AGPU_TEXTURE_FORMAT_R16_UNORM)
 		r16RenderWith: aBlock;

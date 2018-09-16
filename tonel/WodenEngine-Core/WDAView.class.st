@@ -55,6 +55,11 @@ WDAView >> defaultExtent [
 ]
 
 { #category : #accessing }
+WDAView >> editorViewType [
+	^ nil
+]
+
+{ #category : #accessing }
 WDAView >> engine [
 	^ engine
 ]

@@ -8,7 +8,13 @@ Class {
 		'materialCullMode',
 		'objectCullMode',
 		'objectPolygonMode',
-		'materialPolygonMode'
+		'materialPolygonMode',
+		'objectDepthEnabled',
+		'objectDepthWriteMask',
+		'objectDepthFunction',
+		'materialDepthEnabled',
+		'materialDepthWriteMask',
+		'materialDepthFunction'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -23,7 +29,10 @@ WDCObjectStateTracker >> activateMaterial: material [
 	self
 		materialBlendingMode: nil;
 		materialCullMode: nil;
-		materialPolygonMode: nil.
+		materialPolygonMode: nil;
+		materialDepthEnabled: nil;
+		materialDepthWriteMask: nil;
+		materialDepthFunction: nil.
 	(material activateOn: self) ifTrue: [ 
 		activeMaterial := material.
 		^ true
@@ -58,6 +67,42 @@ WDCObjectStateTracker >> applyCullMode [
 ]
 
 { #category : #private }
+WDCObjectStateTracker >> applyDepthEnabled [
+	materialDepthEnabled ifNotNil: [
+		^ self depthEnabled: materialDepthEnabled.
+	].
+
+	objectDepthEnabled ifNotNil: [
+		^ self depthEnabled: objectDepthEnabled.
+	]
+
+]
+
+{ #category : #private }
+WDCObjectStateTracker >> applyDepthFunction [
+	materialDepthFunction ifNotNil: [
+		^ self depthFunction: materialDepthFunction.
+	].
+
+	objectDepthFunction ifNotNil: [
+		^ self depthFunction: objectDepthFunction.
+	]
+
+]
+
+{ #category : #private }
+WDCObjectStateTracker >> applyDepthWriteMask [
+	materialDepthWriteMask ifNotNil: [
+		^ self depthWriteMask: materialDepthWriteMask.
+	].
+
+	objectDepthWriteMask ifNotNil: [
+		^ self depthWriteMask: objectDepthWriteMask.
+	]
+
+]
+
+{ #category : #private }
 WDCObjectStateTracker >> applyPolygonMode [
 	materialPolygonMode ifNotNil: [
 		^ self polygonMode: materialPolygonMode.
@@ -87,6 +132,39 @@ WDCObjectStateTracker >> materialCullMode: anObject [
 ]
 
 { #category : #'per object per material states' }
+WDCObjectStateTracker >> materialDepthEnabled [
+	^ materialDepthEnabled
+]
+
+{ #category : #'per object per material states' }
+WDCObjectStateTracker >> materialDepthEnabled: anObject [
+	materialDepthEnabled := anObject.
+	self applyDepthEnabled
+]
+
+{ #category : #'per object per material states' }
+WDCObjectStateTracker >> materialDepthFunction [
+	^ materialDepthFunction
+]
+
+{ #category : #'per object per material states' }
+WDCObjectStateTracker >> materialDepthFunction: anObject [
+	materialDepthFunction := anObject.
+	self applyDepthFunction
+]
+
+{ #category : #'per object per material states' }
+WDCObjectStateTracker >> materialDepthWriteMask [
+	^ materialDepthWriteMask
+]
+
+{ #category : #'per object per material states' }
+WDCObjectStateTracker >> materialDepthWriteMask: anObject [
+	materialDepthWriteMask := anObject.
+	self applyDepthWriteMask
+]
+
+{ #category : #'per object per material states' }
 WDCObjectStateTracker >> materialPolygonMode: anObject [
 	materialPolygonMode := anObject.
 	self applyPolygonMode
@@ -110,6 +188,39 @@ WDCObjectStateTracker >> objectCullMode: anObject [
 ]
 
 { #category : #'per object per material states' }
+WDCObjectStateTracker >> objectDepthEnabled [
+	^ objectDepthEnabled
+]
+
+{ #category : #'per object per material states' }
+WDCObjectStateTracker >> objectDepthEnabled: anObject [
+	objectDepthEnabled := anObject.
+	self applyDepthEnabled
+]
+
+{ #category : #'per object per material states' }
+WDCObjectStateTracker >> objectDepthFunction [
+	^ objectDepthFunction
+]
+
+{ #category : #'per object per material states' }
+WDCObjectStateTracker >> objectDepthFunction: anObject [
+	objectDepthFunction := anObject.
+	self applyDepthFunction
+]
+
+{ #category : #'per object per material states' }
+WDCObjectStateTracker >> objectDepthWriteMask [
+	^ objectDepthWriteMask
+]
+
+{ #category : #'per object per material states' }
+WDCObjectStateTracker >> objectDepthWriteMask: anObject [
+	objectDepthWriteMask := anObject.
+	self applyDepthWriteMask
+]
+
+{ #category : #'per object per material states' }
 WDCObjectStateTracker >> objectPolygonMode: anObject [
 	objectPolygonMode := anObject.
 	self applyPolygonMode
@@ -126,4 +237,10 @@ WDCObjectStateTracker >> reset [
 	materialBlendingMode := nil.
 	materialCullMode := nil.
 	materialPolygonMode := nil.
+	objectDepthEnabled := nil.
+	objectDepthWriteMask := nil.
+	objectDepthFunction := nil.
+	materialDepthEnabled := nil.
+	materialDepthWriteMask := nil.
+	materialDepthFunction := nil.
 ]

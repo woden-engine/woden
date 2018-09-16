@@ -5,6 +5,16 @@ Class {
 }
 
 { #category : #adding }
+WDPhyDynamicsWorld >> addCharacterController: ghostObject [
+	self subclassResponsibility
+]
+
+{ #category : #adding }
+WDPhyDynamicsWorld >> addGhostObject: ghostObject [
+	self subclassResponsibility
+]
+
+{ #category : #adding }
 WDPhyDynamicsWorld >> addRigidBodies: rigidBodies [
 	rigidBodies do: [ :body | self addRigidBody: body ]
 ]
@@ -14,8 +24,17 @@ WDPhyDynamicsWorld >> addRigidBody: rigidBody [
 	self subclassResponsibility
 ]
 
+{ #category : #'as yet unclassified' }
+WDPhyDynamicsWorld >> debugDrawOnDynamicMesh: meshBuilder [
+]
+
 { #category : #accessing }
 WDPhyDynamicsWorld >> gravity: aWMVector3 [
+	self subclassResponsibility
+]
+
+{ #category : #adding }
+WDPhyDynamicsWorld >> removeRigidBody: rigidBody [
 	self subclassResponsibility
 ]
 

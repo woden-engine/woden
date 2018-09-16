@@ -1,29 +1,12 @@
 Class {
 	#name : #WDPhyRigidBody,
-	#superclass : #Object,
+	#superclass : #WDPhyCollisionObject,
 	#instVars : [
 		'sceneNode',
-		'mass',
-		'shape',
-		'handle'
+		'mass'
 	],
 	#category : #'WodenEngine-Physics-Interface'
 }
-
-{ #category : #accessing }
-WDPhyRigidBody >> handle [
-	^ handle
-]
-
-{ #category : #accessing }
-WDPhyRigidBody >> handle: anObject [
-	handle := anObject
-]
-
-{ #category : #accessing }
-WDPhyRigidBody >> hasValidHandle [
-	^ handle ~~ nil and: [ handle isValid ]
-]
 
 { #category : #accessing }
 WDPhyRigidBody >> initialize [
@@ -47,6 +30,11 @@ WDPhyRigidBody >> mass: anObject [
 	mass := anObject
 ]
 
+{ #category : #removing }
+WDPhyRigidBody >> removeFromWorld: world [
+	^ world removeRigidBody: self
+]
+
 { #category : #accessing }
 WDPhyRigidBody >> sceneNode [
 	^ sceneNode
@@ -55,18 +43,6 @@ WDPhyRigidBody >> sceneNode [
 { #category : #accessing }
 WDPhyRigidBody >> sceneNode: anObject [
 	sceneNode := anObject
-]
-
-{ #category : #accessing }
-WDPhyRigidBody >> shape [
-	
-	^ shape
-]
-
-{ #category : #accessing }
-WDPhyRigidBody >> shape: anObject [
-	
-	shape := anObject
 ]
 
 { #category : #accessing }

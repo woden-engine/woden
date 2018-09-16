@@ -218,9 +218,9 @@ WDSSceneRenderer >> setupStateTracker [
 		
 		frontFaceWinding: AGPU_COUNTER_CLOCKWISE;
 		objectCullMode: AGPU_CULL_MODE_BACK;
-		depthEnabled: true;
-		depthWriteMask: true;
-		depthFunction: AGPU_GREATER_EQUAL;
+		objectDepthEnabled: true;
+		objectDepthWriteMask: true;
+		objectDepthFunction: AGPU_GREATER_EQUAL;
 
 		blendingAllMode: WDCBlendingMode replace.
 
@@ -230,7 +230,8 @@ WDSSceneRenderer >> setupStateTracker [
 WDSSceneRenderer >> setupViewportRendering: viewport index: viewportIndex [
 	stateTracker 
 		mode: self renderMode;
-		submode: viewport submode.
+		submode: viewport submode;
+		editorViewType: viewport editorViewType.
 	stateTracker
 		useShaderResources: (currentCameraStates at: viewportIndex)
 ]

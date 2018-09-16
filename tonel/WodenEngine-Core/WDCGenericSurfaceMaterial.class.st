@@ -46,7 +46,7 @@ WDCGenericSurfaceMaterial >> activateForwardOn: stateTracker [
 WDCGenericSurfaceMaterial >> activateShadowOn: stateTracker [
 	self validateCache.
 	stateTracker
-		vertexShader: vertexShader;
+		vertexShader: self vertexShader;
 		fragmentShader: nil.
 	^ true
 ]

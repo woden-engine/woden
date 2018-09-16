@@ -15,7 +15,7 @@ WDCSmalltalkProceduralTextureReader class >> loadFromFileReference: aFileReferen
 	script := aFileReference contents.
 	^ WDCResourceCache cachedValueFor: { #sttextEval . textureFileAndQuery . '|' . script } ifAbsentPut: [
 		Smalltalk compiler
-			receiver: (WDCSmalltalkProceduralScriptContext new parameters: textureFileAndQuery);
+			receiver: (WDCPharoProceduralScriptContext new parameters: textureFileAndQuery);
 			evaluate: script
 	]
 ]

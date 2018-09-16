@@ -10,7 +10,8 @@ Class {
 		'stateUniformBuffer',
 		'materialState',
 		'normalTexture',
-		'useClipMap'
+		'useClipMap',
+		'albedoTexture'
 	],
 	#category : #'WodenEngine-Core-Material'
 }
@@ -43,7 +44,7 @@ WDCWaterMaterial >> albedoColor [
 
 { #category : #'state binding' }
 WDCWaterMaterial >> bindResources [
-	| signature |
+	| signature resourceCache |
 	resourceBinding ifNil: [
 		signature := WDCForwardRenderingShaderSignature for: engine.
 		resourceBinding := signature newMaterialState.
@@ -54,9 +55,12 @@ WDCWaterMaterial >> bindResources [
 		self uploadMaterialStateData.
 	].
 
-	resourceBinding bind: 0 uniformBuffer: stateUniformBuffer.
-	normalTexture ifNotNil: [ resourceBinding bind: 2 texture: normalTexture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0 ].
-	skyTexture ifNotNil: [ resourceBinding bind: 3 texture: skyTexture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0 ].
+	resourceCache := engine resourceCache.
+	resourceBinding
+		bind: 0 uniformBuffer: stateUniformBuffer;
+		bind: 2 texture: (albedoTexture ifNil: [resourceCache whiteTexture]) startMiplevel: 0 miplevels: -1 lodclamp: 100000.0;
+		bind: 3 texture: (normalTexture ifNil: [resourceCache defaultNormalTexture]) startMiplevel: 0 miplevels: -1 lodclamp: 100000.0.
+	skyTexture ifNotNil: [ resourceBinding bind: 4 texture: skyTexture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0 ].
 		
 ]
 
@@ -116,6 +120,7 @@ WDCWaterMaterial >> initialize [
 		fresnel: (WMVector3F x: 0.03 y: 0.03 z: 0.03);
 		smoothness: 0.45;
 		propagationSpeed: 2.0;
+		textureScale: (WMVector2F x: 1.0 y: 1.0);
 		yourself.
 		
 	self invalidateCache.
@@ -146,8 +151,12 @@ WDCWaterMaterial >> materialState [
 { #category : #parsing }
 WDCWaterMaterial >> parse: materialFileReference data: data [
 	materialState
-		albedo: (self parse: data at: materialFileReference srgbColor: 'color' ifAbsent: [ Color black ]);
+		textureOffset: (self parse: data at: materialFileReference vector2: 'texture-offset' ifAbsent: [ WMVector2F zero ]);
+		textureScale: (self parse: data at: materialFileReference vector2: 'texture-scale' ifAbsent: [ WMVector2F x: 1.0 y: 1.0 ]);
+
+		albedo: (self parse: data at: materialFileReference srgbColor: 'albedo' ifAbsent: [ Color white ]);
 		fresnel: (self parse: data at: materialFileReference vector3: 'fresnel-constant' ifAbsent: [ WMVector3F x: 0.03 y: 0.03 z: 0.03 ]).
+	albedoTexture := self parse: data at: materialFileReference optionalSRGBTexture: 'albedo-texture'.
 	normalTexture := self parse: data at: materialFileReference optionalTexture: 'normal-texture'.
 	self invalidateCache.
 ]

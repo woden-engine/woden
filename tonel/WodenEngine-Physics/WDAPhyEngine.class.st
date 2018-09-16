@@ -4,6 +4,9 @@ Class {
 	#instVars : [
 		'handle'
 	],
+	#pools : [
+		'APHYConstants'
+	],
 	#category : #'WodenEngine-Physics-AbstractPhysics'
 }
 
@@ -12,9 +15,46 @@ WDAPhyEngine class >> isSupported [
 	^ true
 ]
 
+{ #category : #'as yet unclassified' }
+WDAPhyEngine >> buildCharacterController: characterController [
+	| controllerHandle |
+	controllerHandle := handle
+			createKinematicCharacterController: (self validateGhostObjectHandle: characterController ghostObject)
+			convex_shape: (self validateCollisionShapeHandle: characterController shape)
+			step_height: characterController stepHeight
+			up_axis: APHY_AXIS_Y.
+
+	controllerHandle
+		setJumpSpeed: characterController jumpSpeed;
+		setGravity: characterController gravity negated;
+		setWalkDirectionFrom: (self convertWMVector3: characterController linearVelocity / 120.0).
+	characterController
+		handle: controllerHandle;
+		physicsEngine: self
+
+]
+
 { #category : #rendering }
 WDAPhyEngine >> buildCollisionShape: collisionShape [
-	collisionShape handle: (collisionShape accept: self)
+	collisionShape
+		handle: (collisionShape accept: self);
+		physicsEngine: self
+]
+
+{ #category : #'as yet unclassified' }
+WDAPhyEngine >> buildGhostObject: ghostObject [
+	ghostObject isGhostObjectWithPairCache ifTrue: [
+		ghostObject handle: handle createPairCachingGhostObject
+	] ifFalse: [
+		ghostObject handle: handle createGhostObject
+	].
+	ghostObject physicsEngine: self.
+	ghostObject shape ifNotNil: [
+		ghostObject handle setCollisionShape: (self validateCollisionShapeHandle: ghostObject shape)
+	].
+	ghostObject applyTransformInHandle.
+	
+
 ]
 
 { #category : #rendering }
@@ -27,7 +67,33 @@ WDAPhyEngine >> buildRigidBody: rigidBody [
 	motionState := handle createDefaultMotionState.
 	rigidBodyHandle := handle createSimpleRigidBodyFrom: rigidBody mass motion_state: motionState collision_shape: collisionShape local_inertia: localInertia.
 	
-	rigidBody handle: { rigidBodyHandle . motionState }.
+	rigidBody
+		handle: { rigidBodyHandle . motionState };
+		physicsEngine: self
+]
+
+{ #category : #'character controller' }
+WDAPhyEngine >> canCharacterJump: characterController [
+	^ (self validateCharacterControllerHandle: characterController) canJump
+]
+
+{ #category : #'character controller' }
+WDAPhyEngine >> characterController: characterController setGravity: gravity jumpSpeed: jumpSpeed [
+	(self validateCharacterControllerHandle: characterController)
+		setGravity: gravity negated;
+		setJumpSpeed: jumpSpeed
+]
+
+{ #category : #'character controller' }
+WDAPhyEngine >> characterController: characterController setLinearVelocity: velocity [
+	| walkDirection |
+	walkDirection := self convertWMVector3: velocity / 120.0.
+	(self validateCharacterControllerHandle: characterController) setWalkDirectionFrom: walkDirection
+]
+
+{ #category : #'character controller' }
+WDAPhyEngine >> characterJump: characterController [
+	^ (self validateCharacterControllerHandle: characterController) jump
 ]
 
 { #category : #rendering }
@@ -95,6 +161,14 @@ WDAPhyEngine >> createDynamicsWorld [
 	^ WDAPhyDynamicsWorld new physicsEngine: self; handle: world; yourself
 ]
 
+{ #category : #'collision object' }
+WDAPhyEngine >> getCollisionObjectPosition: collisionObject [
+	| result |
+	result := APHYVector3 new.
+	collisionObject handle getTranslationInto: result.
+	^ self convertVector3: result
+]
+
 { #category : #accessing }
 WDAPhyEngine >> handle [
 	^ handle
@@ -107,12 +181,34 @@ WDAPhyEngine >> initialize [
 	
 ]
 
+{ #category : #initialization }
+WDAPhyEngine >> setCollisionObject: collisionObject position: position [
+	collisionObject handle setTranslationFrom: (self convertWMVector3: position).
+
+]
+
+{ #category : #rendering }
+WDAPhyEngine >> validateCharacterControllerHandle: characterController [
+	(characterController handle isNil or: [ characterController handle isNull ]) ifTrue: [
+		self buildCharacterController: characterController
+	].
+	^ characterController handle
+]
+
 { #category : #rendering }
 WDAPhyEngine >> validateCollisionShapeHandle: collisionShape [
 	(collisionShape handle isNil or: [ collisionShape handle isNull ]) ifTrue: [
 		self buildCollisionShape: collisionShape
 	].
 	^ collisionShape handle
+]
+
+{ #category : #rendering }
+WDAPhyEngine >> validateGhostObjectHandle: ghostObject [
+	(ghostObject handle isNil or: [ ghostObject handle isNull ]) ifTrue: [
+		self buildGhostObject: ghostObject
+	].
+	^ ghostObject handle
 ]
 
 { #category : #rendering }
@@ -126,6 +222,21 @@ WDAPhyEngine >> validateRigidBodyHandle: rigidBody [
 { #category : #'collision shape convertion' }
 WDAPhyEngine >> visitBoxShape: boxShape [
 	^ handle createBoxShape: boxShape halfExtent x half_height: boxShape halfExtent y half_depth: boxShape halfExtent z
+]
+
+{ #category : #'collision shape convertion' }
+WDAPhyEngine >> visitCapsuleXShape: capsuleShape [
+	^ handle createCapsuleShapeX: capsuleShape radius height: capsuleShape height
+]
+
+{ #category : #'collision shape convertion' }
+WDAPhyEngine >> visitCapsuleYShape: capsuleShape [
+	^ handle createCapsuleShapeY: capsuleShape radius height: capsuleShape height
+]
+
+{ #category : #'collision shape convertion' }
+WDAPhyEngine >> visitCapsuleZShape: capsuleShape [
+	^ handle createCapsuleShapeX: capsuleShape radius height: capsuleShape height
 ]
 
 { #category : #'collision shape convertion' }

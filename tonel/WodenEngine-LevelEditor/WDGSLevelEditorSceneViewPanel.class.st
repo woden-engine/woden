@@ -23,7 +23,8 @@ Class {
 		'toolController',
 		'lastDragEndPosition',
 		'lastClickElements',
-		'nextClickElementIndex'
+		'nextClickElementIndex',
+		'editorViewType'
 	],
 	#classVars : [
 		'OrthographicFarDistance',
@@ -163,6 +164,11 @@ WDGSLevelEditorSceneViewPanel >> depthAtCameraDistance: distance [
 		ifFalse: [ (distance - OrthographicNearDistance) / (OrthographicFarDistance - OrthographicNearDistance) ]
 ]
 
+{ #category : #accessing }
+WDGSLevelEditorSceneViewPanel >> editorViewType [
+	^ isPerspective ifTrue: [ #perspective ] ifFalse: [editorViewType]
+]
+
 { #category : #selection }
 WDGSLevelEditorSceneViewPanel >> elementsAlongRay: ray do: aBlock [
 	selectionBoxView elementsAlongRay: ray do: aBlock.
@@ -212,6 +218,7 @@ WDGSLevelEditorSceneViewPanel >> findElementsAtWindowCoord: coord [
 WDGSLevelEditorSceneViewPanel >> frontView [
 	cameraAngle := WMVector3D new.
 	gridOrientation := WMMatrix3F lookAtFront.
+	editorViewType := #front.
 ]
 
 { #category : #'event handling' }
@@ -375,6 +382,12 @@ WDGSLevelEditorSceneViewPanel >> handleKeyUp: event [
 ]
 
 { #category : #'event handling' }
+WDGSLevelEditorSceneViewPanel >> handleMouseEnter: anEvent [
+	self grabKeyboardFocus.
+	self editor activeSceneView: self
+]
+
+{ #category : #'event handling' }
 WDGSLevelEditorSceneViewPanel >> handleMouseMove: anEvent [
 	| element |
 	super handleMouseMove: anEvent.
@@ -508,12 +521,15 @@ WDGSLevelEditorSceneViewPanel >> selectionBoxView [
 WDGSLevelEditorSceneViewPanel >> sideView [
 	cameraAngle := WMVector3D y: Float halfPi.
 	gridOrientation := WMMatrix3F lookAtLeft.
+	editorViewType := #side.
 ]
 
 { #category : #camera }
 WDGSLevelEditorSceneViewPanel >> simulateCameraMovement: delta [
-	| orientation |
+	| orientation oldAngle |
+	oldAngle := cameraAngle.
 	cameraAngle := cameraAngle + (cameraAngularVelocity * (cameraAngularSpeed * delta)).
+	(oldAngle closeTo: cameraAngle) ifFalse: [ 	editorViewType := #rotated. ].
 	orientation := (WMMatrix3D yrot: cameraAngle y) * (WMMatrix3D xrot: cameraAngle x).
 
 	cameraTransform
@@ -575,6 +591,7 @@ WDGSLevelEditorSceneViewPanel >> toolControllerFinished [
 WDGSLevelEditorSceneViewPanel >> topView [
 	cameraAngle := WMVector3D x: Float halfPi negated.
 	gridOrientation := WMMatrix3F lookAtBottom.
+	editorViewType := #top.
 ]
 
 { #category : #camera }

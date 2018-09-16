@@ -1,6 +1,6 @@
 Class {
 	#name : #WDGSPlayerBehavior,
-	#superclass : #WDGSForwardKinematicMovementBehavior,
+	#superclass : #WDGSPhysicsCharacterControllerBehavior,
 	#instVars : [
 		'speed',
 		'weapons',
@@ -67,6 +67,11 @@ WDGSPlayerBehavior >> axisMapping: value [
 	deadZone := self class analogDeadZone.
 	((value > deadZone negated) and: [ value < deadZone ]) ifTrue: [ ^ 0.0 ].
 	^ value / 32768.0
+]
+
+{ #category : #'map events' }
+WDGSPlayerBehavior >> createCollisionShape [
+	collisionShape := WDPhyCapsuleYCollisionShape new halfExtent: self class halfExtent
 ]
 
 { #category : #'as yet unclassified' }
@@ -154,8 +159,8 @@ WDGSPlayerBehavior >> onKeyDown: anEvent [
 	symbol = OSK_d ifTrue: [ velocityDirection x: 1.0 ].
 	symbol = OSK_w ifTrue: [ velocityDirection z: -1.0 ].
 	symbol = OSK_s ifTrue: [ velocityDirection z: 1.0 ].
-	symbol = OSK_LCTRL ifTrue: [ velocityDirection y: -1.0 ].
-	symbol = OSK_SPACE ifTrue: [ velocityDirection y: 1.0 ].
+	symbol = OSK_LCTRL ifTrue: [ self crouch ].
+	symbol = OSK_SPACE ifTrue: [ self jump ].
 
 	symbol = OSK_UP ifTrue: [ angularVelocity x: 1.0 ].
 	symbol = OSK_DOWN ifTrue: [ angularVelocity x: -1.0 ].

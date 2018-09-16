@@ -386,13 +386,13 @@ WDGSEntity >> removeFromMap [
 
 { #category : #adding }
 WDGSEntity >> removedFromMap: aMap [
+	self componentsDo: [ :comp | comp removedFromMap: aMap ].
 	map := nil
 ]
 
 { #category : #adding }
 WDGSEntity >> removedFromScene: anScene [
-	(components at: #sceneNode ifAbsent: [ #() ]) do: [ :comp | comp removedFromScene: anScene ].
-	(components at: #renderingModels ifAbsent: [ #() ]) do: [ :comp | comp removedFromScene: anScene ].
+	self componentsDo: [ :comp | comp removedFromScene: anScene ].
 	pointEntity ifTrue: [ self deletePointEntityNode ].
 ]
 

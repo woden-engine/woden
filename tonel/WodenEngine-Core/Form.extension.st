@@ -9,3 +9,8 @@ Form >> asSRGBTextureFor: anEngine [
 Form >> asTextureFor: anEngine [
 	^ anEngine createLinearTextureFromForm: self
 ]
+
+{ #category : #'*WodenEngine-Core' }
+Form >> thumbnail [
+	^ self
+]

@@ -8,7 +8,8 @@ Class {
 		'commandListBuilder',
 		'mode',
 		'submode',
-		'currentViewport'
+		'currentViewport',
+		'editorViewType'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -149,6 +150,16 @@ WDCStateTracker >> drawArrays: vertex_count instance_count: instance_count first
 WDCStateTracker >> drawElements: indexCount instance_count: instanceCount first_index: firstIndex base_vertex: baseVertex base_instance: baseInstance [
 	self commitPipelineState.
 	commandListBuilder drawElements: indexCount instance_count: instanceCount first_index: firstIndex base_vertex: baseVertex base_instance: baseInstance
+]
+
+{ #category : #accessing }
+WDCStateTracker >> editorViewType [
+	^ editorViewType
+]
+
+{ #category : #accessing }
+WDCStateTracker >> editorViewType: aSymbolOrNil [
+	editorViewType := aSymbolOrNil
 ]
 
 { #category : #commands }

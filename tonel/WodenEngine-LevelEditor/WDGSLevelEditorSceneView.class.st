@@ -7,6 +7,11 @@ Class {
 	#category : #'WodenEngine-LevelEditor-View'
 }
 
+{ #category : #accessing }
+WDGSLevelEditorSceneView >> editorViewType [
+	^ panel editorViewType
+]
+
 { #category : #'as yet unclassified' }
 WDGSLevelEditorSceneView >> filterForCameraViewport: aCamera [
 	^ [ :object | object model isNil or: [ object model visibleForView: panel ] ]

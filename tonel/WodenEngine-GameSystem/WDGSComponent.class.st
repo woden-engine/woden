@@ -116,6 +116,14 @@ WDGSComponent >> removedFromEntity: anEntity [
 	entity := nil
 ]
 
+{ #category : #adding }
+WDGSComponent >> removedFromMap: aMap [
+]
+
+{ #category : #adding }
+WDGSComponent >> removedFromScene: anScene [
+]
+
 { #category : #accessing }
 WDGSComponent >> scene [
 	^ entity scene
