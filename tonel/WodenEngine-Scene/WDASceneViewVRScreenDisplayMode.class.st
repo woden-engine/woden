@@ -24,6 +24,14 @@ WDASceneViewVRScreenDisplayMode >> applyVRTransformToCamera: cameraTransform eye
 		orthonormal: orientation translation: (cameraTransform translation + extraTranslation)
 ]
 
+{ #category : #'multi eye rendering' }
+WDASceneViewVRScreenDisplayMode >> babylonSafeZoneTransform: aCanvasTransform [
+	aCanvasTransform
+		scaleX: 2.0 Y: 2.0;
+		translateX: 10.0 Y: 10.0
+
+]
+
 { #category : #'viewport composition' }
 WDASceneViewVRScreenDisplayMode >> composeEyesIn: stateTracker [
 	| resolveTarget renderPass |
@@ -154,15 +162,7 @@ WDASceneViewVRScreenDisplayMode >> leftViewportForCamera: camera [
 		cameraTransformFunction: [ :ct | self applyVRTransformToCamera: ct eye: (WMVector3F x: ipd * -0.5) ];
 		submode: #full;
 		overlayRenderer: view;
-		babylonCanvasSafeZoneTransform: [ :canvasTransform | self pompeiiSafeZoneTransform: canvasTransform ]
-]
-
-{ #category : #'multi eye rendering' }
-WDASceneViewVRScreenDisplayMode >> pompeiiSafeZoneTransform: aCanvasTransform [
-	aCanvasTransform
-		scaleX: 2.0 Y: 2.0;
-		translateX: 10.0 Y: 10.0
-
+		babylonCanvasSafeZoneTransform: [ :canvasTransform | self babylonSafeZoneTransform: canvasTransform ]
 ]
 
 { #category : #'rendering process stages' }
@@ -187,7 +187,7 @@ WDASceneViewVRScreenDisplayMode >> rightViewportForCamera: camera [
 		cameraTransformFunction: [ :ct | self applyVRTransformToCamera: ct eye: (WMVector3F x: ipd * 0.5) ];
 		submode: #full;
 		overlayRenderer: view;
-		babylonCanvasSafeZoneTransform: [ :canvasTransform | self pompeiiSafeZoneTransform: canvasTransform ]
+		babylonCanvasSafeZoneTransform: [ :canvasTransform | self babylonSafeZoneTransform: canvasTransform ]
 ]
 
 { #category : #'rendering process stages' }

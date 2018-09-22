@@ -13,7 +13,7 @@ Class {
 		'resourceCache',
 		'soundDevice',
 		'vrSensorReader',
-		'pompeiiDriver'
+		'babylonDriver'
 	],
 	#classVars : [
 		'DefaultEngine',
@@ -78,6 +78,11 @@ WDCEngine >> assetSearchPaths [
 { #category : #accessing }
 WDCEngine >> autoReloadChanges [
 	^ true
+]
+
+{ #category : #accessing }
+WDCEngine >> babylonDriver: aPompeiiDriver [
+	babylonDriver := aPompeiiDriver
 ]
 
 { #category : #accessing }
@@ -411,11 +416,6 @@ WDCEngine >> loadFragmentShader: aFileName [
 { #category : #'resource loading' }
 WDCEngine >> loadVertexShader: aFileName [
 	^ resourceCache loadVertexShader: aFileName
-]
-
-{ #category : #accessing }
-WDCEngine >> pompeiiDriver: aPompeiiDriver [
-	pompeiiDriver := aPompeiiDriver
 ]
 
 { #category : #accessing }
