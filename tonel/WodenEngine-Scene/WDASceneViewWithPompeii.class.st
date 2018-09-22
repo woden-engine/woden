@@ -9,21 +9,21 @@ Class {
 }
 
 { #category : #rendering }
-WDASceneViewWithPompeii >> drawOnPompeiiCanvas: canvas [
-
+WDASceneViewWithPompeii >> babylonDefaultFont [
+	^ pompeiiDefaultFont ifNil: [ pompeiiDefaultFont := engine babylonDriver font: (LogicalFont familyName: 'Arial' pointSize: 20) ]
 ]
 
 { #category : #rendering }
-WDASceneViewWithPompeii >> pompeiiDefaultFont [
-	^ pompeiiDefaultFont ifNil: [ pompeiiDefaultFont := engine pompeiiDriver font: (LogicalFont familyName: 'Arial' pointSize: 20) ]
+WDASceneViewWithPompeii >> drawOnBabylonCanvas: canvas [
+
 ]
 
 { #category : #rendering }
 WDASceneViewWithPompeii >> renderViewport: viewport overlayWith: stateTracker [
 	pompeiiSurface := viewport resolveRenderTarget validPompeiiSurface.
 	pompeiiSurface withStateTracker: stateTracker drawDuring: [ :canvas |
-		viewport applyPompeiiCanvasSafeZoneTransform: canvas transform.
-		self drawOnPompeiiCanvas: canvas.
+		viewport applyBabylonCanvasSafeZoneTransform: canvas transform.
+		self drawOnBabylonCanvas: canvas.
 		sceneRenderer ifNotNil: [ sceneRenderer debugDrawOnPompeiiCanvas: canvas ]
 	]
 ]

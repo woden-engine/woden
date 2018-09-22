@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #rendering }
-RWSceneView >> drawOnPompeiiCanvas: canvas [
+RWSceneView >> drawOnBabylonCanvas: canvas [
 	"| font builder mesh |
 	font := self pompeiiDefaultFont.
 		

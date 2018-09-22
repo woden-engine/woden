@@ -154,7 +154,7 @@ WDASceneViewVRScreenDisplayMode >> leftViewportForCamera: camera [
 		cameraTransformFunction: [ :ct | self applyVRTransformToCamera: ct eye: (WMVector3F x: ipd * -0.5) ];
 		submode: #full;
 		overlayRenderer: view;
-		pompeiiCanvasSafeZoneTransform: [ :canvasTransform | self pompeiiSafeZoneTransform: canvasTransform ]
+		babylonCanvasSafeZoneTransform: [ :canvasTransform | self pompeiiSafeZoneTransform: canvasTransform ]
 ]
 
 { #category : #'multi eye rendering' }
@@ -187,7 +187,7 @@ WDASceneViewVRScreenDisplayMode >> rightViewportForCamera: camera [
 		cameraTransformFunction: [ :ct | self applyVRTransformToCamera: ct eye: (WMVector3F x: ipd * 0.5) ];
 		submode: #full;
 		overlayRenderer: view;
-		pompeiiCanvasSafeZoneTransform: [ :canvasTransform | self pompeiiSafeZoneTransform: canvasTransform ]
+		babylonCanvasSafeZoneTransform: [ :canvasTransform | self pompeiiSafeZoneTransform: canvasTransform ]
 ]
 
 { #category : #'rendering process stages' }

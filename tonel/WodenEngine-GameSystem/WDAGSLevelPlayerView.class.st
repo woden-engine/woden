@@ -16,8 +16,8 @@ WDAGSLevelPlayerView >> drawFrameRateOn: canvas [
 	builder := canvas driver mesh2DBuilder.
 	builder text
 		color: Color green;
-		font: self pompeiiDefaultFont;
-			position: (0 @ self pompeiiDefaultFont getPreciseAscent);
+		font: self babylonDefaultFont;
+			position: (0 @ self babylonDefaultFont getPreciseAscent);
 			draw: ('CPU Frame Rate {1} ms / {2} FPS' format: {
 				(deltaTime*1000.0) printShowingDecimalPlaces: 3 .
 				1.0 / (deltaTime max: 0.01) printShowingDecimalPlaces: 3.
@@ -32,7 +32,7 @@ WDAGSLevelPlayerView >> drawFrameRateOn: canvas [
 ]
 
 { #category : #'drawing 2d' }
-WDAGSLevelPlayerView >> drawOnPompeiiCanvas: canvas [
+WDAGSLevelPlayerView >> drawOnBabylonCanvas: canvas [
 	self drawFrameRateOn: canvas
 ]
 

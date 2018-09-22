@@ -1,6 +1,6 @@
 Class {
 	#name : #WDGSLevelEditorMainFrame,
-	#superclass : #WDAViewWithVesuvius,
+	#superclass : #WDAViewWithCyrusToolkit,
 	#instVars : [
 		'levelViews'
 	],
@@ -33,7 +33,7 @@ WDGSLevelEditorMainFrame class >> initialize [
 
 { #category : #'window layout' }
 WDGSLevelEditorMainFrame >> createCenterViews [
-	^ VsTkHorizontalBoxSizer new
+	^ CyTkHorizontalBoxSizer new
 		element: self createLevelViews do: [ :el | el proportion: 3; expand];
 		element: self createMaterialListView do: [ :el | el proportion: 1; expand]
 ]
@@ -49,12 +49,12 @@ WDGSLevelEditorMainFrame >> createLevelViews [
 	levelViews := { topLeft . topRight . bottomLeft . bottomRight }.
 	vsWindow addAll: levelViews.
 	
-	^ VsTkVerticalBoxSizer new
-		element: (VsTkHorizontalBoxSizer new
+	^ CyTkVerticalBoxSizer new
+		element: (CyTkHorizontalBoxSizer new
 			element: topLeft do: [ :el | el proportion: 1; expand; allBorders; borderSize: 2];
 			element: topRight do: [ :el | el proportion: 1; expand; allBorders; borderSize: 2]
 		) do: [ :el | el proportion: 1; expand];
-		element: (VsTkHorizontalBoxSizer new
+		element: (CyTkHorizontalBoxSizer new
 			element: bottomLeft do: [ :el | el proportion: 1; expand; allBorders; borderSize: 2];
 			element: bottomRight do: [ :el | el proportion: 1; expand; allBorders; borderSize: 2]
 		) do: [ :el | el proportion: 1; expand];
@@ -73,7 +73,7 @@ WDGSLevelEditorMainFrame >> createMaterialListView [
 { #category : #'window layout' }
 WDGSLevelEditorMainFrame >> createMenuBar [
 	| menuBar |
-	menuBar := VsTkMenuBar new.
+	menuBar := CyTkMenuBar new.
 	vsWindow add: menuBar.
 	
 	menuBar
@@ -99,7 +99,7 @@ WDGSLevelEditorMainFrame >> createMenuBar [
 { #category : #'window layout' }
 WDGSLevelEditorMainFrame >> createStatusBar [
 	| statusBar |
-	statusBar := VsTkStatusBar new.
+	statusBar := CyTkStatusBar new.
 	vsWindow add: statusBar.
 	
 	^ statusBar
@@ -108,7 +108,7 @@ WDGSLevelEditorMainFrame >> createStatusBar [
 { #category : #'window layout' }
 WDGSLevelEditorMainFrame >> createToolBar [
 	| toolBar |
-	toolBar := VsTkToolBar new.
+	toolBar := CyTkToolBar new.
 	vsWindow add: toolBar.
 	
 	^ toolBar
@@ -118,7 +118,7 @@ WDGSLevelEditorMainFrame >> createToolBar [
 WDGSLevelEditorMainFrame >> createWindowLayout [
 	| layout |
 		
-	layout := VsTkVerticalBoxSizer new
+	layout := CyTkVerticalBoxSizer new
 		element: self createMenuBar do: [ :el | el expand ];
 		element: self createToolBar do: [ :el | el expand ];
 		element: self createCenterViews do: [ :el | el proportion: 1; expand];

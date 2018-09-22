@@ -15,8 +15,8 @@ Class {
 		'cameraTransformFunction',
 		'cameraTransform',
 		'overlayRenderer',
-		'pompeiiCanvasSafeZoneTransform',
-		'editorViewType'
+		'editorViewType',
+		'babylonCanvasSafeZoneTransform'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -25,9 +25,19 @@ Class {
 }
 
 { #category : #accessing }
-WDSGViewport >> applyPompeiiCanvasSafeZoneTransform: aPompeiiCanvasTransform [
-	aPompeiiCanvasTransform loadIdentity.
-	pompeiiCanvasSafeZoneTransform ifNotNil: [ pompeiiCanvasSafeZoneTransform value: aPompeiiCanvasTransform ]
+WDSGViewport >> applyBabylonCanvasSafeZoneTransform: aBabylonCanvasTransform [
+	aBabylonCanvasTransform loadIdentity.
+	babylonCanvasSafeZoneTransform ifNotNil: [ babylonCanvasSafeZoneTransform value: aBabylonCanvasTransform ]
+]
+
+{ #category : #accessing }
+WDSGViewport >> babylonCanvasSafeZoneTransform [
+	^ babylonCanvasSafeZoneTransform
+]
+
+{ #category : #accessing }
+WDSGViewport >> babylonCanvasSafeZoneTransform: anObject [
+	babylonCanvasSafeZoneTransform := anObject
 ]
 
 { #category : #accessing }
@@ -110,16 +120,6 @@ WDSGViewport >> overlayRenderer [
 { #category : #accessing }
 WDSGViewport >> overlayRenderer: anObject [
 	overlayRenderer := anObject
-]
-
-{ #category : #accessing }
-WDSGViewport >> pompeiiCanvasSafeZoneTransform [
-	^ pompeiiCanvasSafeZoneTransform
-]
-
-{ #category : #accessing }
-WDSGViewport >> pompeiiCanvasSafeZoneTransform: anObject [
-	pompeiiCanvasSafeZoneTransform := anObject
 ]
 
 { #category : #accessing }
