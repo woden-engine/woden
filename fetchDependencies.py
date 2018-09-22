@@ -178,7 +178,7 @@ AbstractGpu = BintrayDependency('abstract-gpu', user='ronsaldo', repository='abs
 AbstractPhysics = BintrayDependency('abstract-physics', user='ronsaldo', repository='abstract-physics')
 Phanide = GitDependency('phanide', 'https://github.com/ronsaldo/phanide.git', subfolder='source-deps')
 Lowtalk = GitDependency('lowtalk', 'https://github.com/ronsaldo/lowtalk.git', subfolder='source-deps')
-PompeiiGraphics = GitDependency('pompeii-graphics', 'https://github.com/ronsaldo/pompeii-graphics.git', subfolder='source-deps')
+BabylonGraphics = GitDependency('babylon-graphics', 'https://github.com/ronsaldo/babylon-graphics.git', subfolder='source-deps')
 CoreAssets = GitDependency('core-assets', 'https://github.com/ronsaldo/wloden-core-assets.git')
 
 if '-pharo7' in sys.argv:
@@ -194,7 +194,7 @@ dependencies = [
     CoreAssets,
     Phanide,
     Lowtalk,
-    PompeiiGraphics,
+    BabylonGraphics,
     PharoVM,
     PharoImage
 ]

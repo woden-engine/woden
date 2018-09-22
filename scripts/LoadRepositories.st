@@ -11,16 +11,16 @@ Metacello new
     repository: 'tonel://source-deps/lowtalk/tonel';
     load.
 
-"Load PompeiiGraphics API"
+"Load BabylonGraphics API"
 Metacello new
-    baseline: 'Pompeii';
-    repository: 'tonel://source-deps/pompeii-graphics/tonel';
+    baseline: 'Babylon';
+    repository: 'tonel://source-deps/babylon-graphics/tonel';
     load: #(API).
 Metacello new
-    baseline: 'VesuviusToolkit';
-    repository: 'tonel://source-deps/pompeii-graphics/tonel';
+    baseline: 'CyrusToolkit';
+    repository: 'tonel://source-deps/babylon-graphics/tonel';
     load.
-    
+
 "Build the Lowtalk source code"
 SourceFiles deferFlushDuring: [
     | compilationTarget compilerClass compiler |
