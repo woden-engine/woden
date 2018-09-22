@@ -13,7 +13,7 @@ Metacello new
 
 "Load BabylonGraphics API"
 Metacello new
-    baseline: 'Babylon';
+    baseline: 'BabylonGraphics';
     repository: 'tonel://source-deps/babylon-graphics/tonel';
     load: #(API).
 Metacello new
