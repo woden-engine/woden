@@ -181,12 +181,12 @@ Lowtalk = GitDependency('lowtalk', 'https://github.com/ronsaldo/lowtalk.git', su
 BabylonGraphics = GitDependency('babylon-graphics', 'https://github.com/ronsaldo/babylon-graphics.git', subfolder='source-deps')
 CoreAssets = GitDependency('core-assets', 'https://github.com/ronsaldo/wloden-core-assets.git')
 
-if '-pharo7' in sys.argv:
-    PharoVM = PharoVMDependency('pharo-vm', 'https://files.pharo.org/get-files/70/', '70')
-    PharoImage = PharoImageDependency('pharo-image', 'https://files.pharo.org/get-files/70/')
-else:
+if '-pharo61' in sys.argv:
     PharoVM = PharoVMDependency('pharo-vm', 'https://files.pharo.org/get-files/61/', '61')
     PharoImage = PharoImageDependency('pharo-image', 'https://files.pharo.org/get-files/61/')
+else:
+    PharoVM = PharoVMDependency('pharo-vm', 'https://files.pharo.org/get-files/70/', '70')
+    PharoImage = PharoImageDependency('pharo-image', 'https://files.pharo.org/get-files/70/')
 
 dependencies = [
     AbstractGpu,

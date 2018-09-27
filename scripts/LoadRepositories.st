@@ -43,6 +43,11 @@ Metacello new
   repository: 'tonel://tonel';
   load.
 
+"Rebuild the field accessors"
+FFIExternalStructure allSubclassesDo: #rebuildFieldAccessors.
+
+"Patch the idle process, to reduce latency"
+'scripts/idleProcess.st' asFileReference fileIn.
 
 "Save the image"
 (Smalltalk saveAs: 'woden')
