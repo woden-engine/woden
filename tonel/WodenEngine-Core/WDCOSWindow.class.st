@@ -31,11 +31,14 @@ WDCOSWindow >> checkRenderTargets [
 
 { #category : #'instance creation' }
 WDCOSWindow >> close [
-	window destroy.
+	"Destroy the swap chain before destroying the window. Otherwise, we can get a deadlock."
 	resolveRenderTarget ifNotNil: [
 		resolveRenderTarget release.
 		renderTarget ~~ resolveRenderTarget ifTrue: [ renderTarget release ].
 	].
+
+	"Destroy the window."
+	window destroy.
 
 	resolveRenderTarget := nil.
 	renderTarget := nil

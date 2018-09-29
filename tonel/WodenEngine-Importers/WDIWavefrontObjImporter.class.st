@@ -128,7 +128,7 @@ WDIWavefrontObjImporter >> concretizeVertex: vertexTopology faceNormal: faceNorm
 ]
 
 { #category : #'submesh building' }
-WDIWavefrontObjImporter >> finishCurrentSubmesh. [
+WDIWavefrontObjImporter >> finishCurrentSubmesh [
 	submeshes ifEmpty: [ ^ self ].
 	submeshes last indexCount: indices size - submeshes last firstIndex
 ]
