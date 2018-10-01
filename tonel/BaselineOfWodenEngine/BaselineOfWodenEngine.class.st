@@ -28,11 +28,19 @@ BaselineOfWodenEngine >> baseline: spec [
 					versionString: #'development';
 					repository: 'http://smalltalkhub.com/mc/ronsaldo/AbstractPhysics/main' ].
 			spec 
-				project: 'Dastrel' with: [
+				baseline: 'Dastrel' with: [
 				spec
-					className: #ConfigurationOfDastrel;
-					versionString: #'development';
-					repository: 'http://smalltalkhub.com/mc/ronsaldo/Dastrel/main' ].
+					repository: 'github://ronsaldo/dastrel/tonel' ].
+			spec 
+				baseline: 'BabylonGraphics' with: [
+				spec
+					repository: 'github://ronsaldo/babylon-graphics/tonel';
+                    loads: #(API) ].
+			spec 
+				baseline: 'CyrusToolkit' with: [
+				spec
+					repository: 'github://ronsaldo/babylon-graphics/tonel' ].
+
 			spec 
 				project: 'OpenAL' with: [
 				spec
@@ -42,7 +50,7 @@ BaselineOfWodenEngine >> baseline: spec [
 		spec package: #'WodenEngine-Core' with: [
 				spec requires: #('NeoJSON' 'AbstractGPU' 'Dastrel')].
 		spec package: #'WodenEngine-Babylon' with: [
-				spec requires: #('WodenEngine-Core')].
+				spec requires: #('WodenEngine-Core' 'BabylonGraphics' 'CyrusToolkit')].
 		spec package: #'WodenEngine-Scene' with: [
 				spec requires: #('WodenEngine-Core')].
 		spec package: #'WodenEngine-Importers' with: [

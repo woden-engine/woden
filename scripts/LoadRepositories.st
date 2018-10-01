@@ -1,24 +1,7 @@
-
-"Load Phanide"
-Metacello new
-    baseline: 'Phanide';
-    repository: 'tonel://source-deps/phanide/tonel';
-    load.
-
 "Load Lowtalk"
 Metacello new
     baseline: 'Lowtalk';
-    repository: 'tonel://source-deps/lowtalk/tonel';
-    load.
-
-"Load BabylonGraphics API"
-Metacello new
-    baseline: 'BabylonGraphics';
-    repository: 'tonel://source-deps/babylon-graphics/tonel';
-    load: #(API).
-Metacello new
-    baseline: 'CyrusToolkit';
-    repository: 'tonel://source-deps/babylon-graphics/tonel';
+    repository: 'github://ronsaldo/lowtalk/tonel';
     load.
 
 "Build the Lowtalk source code"

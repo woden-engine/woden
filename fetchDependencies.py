@@ -176,9 +176,6 @@ class PharoImageDependency(Dependency):
 # All of the external dependencies required by Woden
 AbstractGpu = BintrayDependency('abstract-gpu', user='ronsaldo', repository='abstract-gpu')
 AbstractPhysics = BintrayDependency('abstract-physics', user='ronsaldo', repository='abstract-physics')
-Phanide = GitDependency('phanide', 'https://github.com/ronsaldo/phanide.git', subfolder='source-deps')
-Lowtalk = GitDependency('lowtalk', 'https://github.com/ronsaldo/lowtalk.git', subfolder='source-deps')
-BabylonGraphics = GitDependency('babylon-graphics', 'https://github.com/ronsaldo/babylon-graphics.git', subfolder='source-deps')
 CoreAssets = GitDependency('core-assets', 'https://github.com/ronsaldo/wloden-core-assets.git')
 
 if '-pharo61' in sys.argv:
@@ -192,9 +189,6 @@ dependencies = [
     AbstractGpu,
     AbstractPhysics,
     CoreAssets,
-    Phanide,
-    Lowtalk,
-    BabylonGraphics,
     PharoVM,
     PharoImage
 ]
