@@ -41,7 +41,7 @@ WDSGShadowLightRenderingStateLayer >> roundCameraTransform: cameraTransform [
 
 { #category : #'as yet unclassified' }
 WDSGShadowLightRenderingStateLayer >> shadowMapMatrixForCameraTransform: cameraTransform [
-	^ shadowProjectionMatrix * (renderTransform inverseMatrix4 * cameraTransform matrix4)
+	^ engine projectiveTextureBiasMatrix * (shadowProjectionMatrix * (renderTransform inverseMatrix4 * cameraTransform matrix4))
 ]
 
 { #category : #'as yet unclassified' }

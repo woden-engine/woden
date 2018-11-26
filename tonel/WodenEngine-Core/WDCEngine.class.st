@@ -13,7 +13,10 @@ Class {
 		'resourceCache',
 		'soundDevice',
 		'vrSensorReader',
-		'babylonDriver'
+		'babylonDriver',
+		'hasTopLeftNDCOrigin',
+		'hasBottomLeftTextureCoordinates',
+		'projectiveTextureBiasMatrix'
 	],
 	#classVars : [
 		'DefaultEngine',
@@ -156,7 +159,7 @@ WDCEngine >> createDevice [
 	device ifNil: [ self error: 'Failed to open the AGPU device' ].
 
 	graphicsQueue := device getDefaultCommandQueue.
-	projectionInvertedY := device hasTopLeftNdcOrigin ~= 0.
+
 ]
 
 { #category : #'resource building' }
@@ -386,6 +389,21 @@ WDCEngine >> graphicsQueue [
 	^ graphicsQueue
 ]
 
+{ #category : #accessing }
+WDCEngine >> hasBottomLeftTextureCoordinates [
+	^ hasBottomLeftTextureCoordinates
+]
+
+{ #category : #accessing }
+WDCEngine >> hasTopLeftNDCOrigin [
+	^ hasTopLeftNDCOrigin
+]
+
+{ #category : #accessing }
+WDCEngine >> hasTopLeftTextureCoordinates [
+	^ hasBottomLeftTextureCoordinates not
+]
+
 { #category : #initialization }
 WDCEngine >> initialize [
 	super initialize.
@@ -433,10 +451,36 @@ WDCEngine >> projectionInvertedY [
 	^ projectionInvertedY
 ]
 
+{ #category : #accessing }
+WDCEngine >> projectiveTextureBiasMatrix [
+	^ projectiveTextureBiasMatrix
+]
+
 { #category : #initialization }
 WDCEngine >> queryDeviceCapabilities [
 	preferredDepthFormat := AGPU_TEXTURE_FORMAT_D32_FLOAT.
 	preferredDepthStencilFormat := AGPU_TEXTURE_FORMAT_D32_FLOAT_S8X24_UINT.
+	
+	hasTopLeftNDCOrigin := device hasTopLeftNdcOrigin ~= 0.
+	hasBottomLeftTextureCoordinates := device hasBottomLeftTextureCoordinates ~= 0.
+	projectionInvertedY := hasTopLeftNDCOrigin.
+	
+	"Do we need to flip the texture coordinates when doing projective texturing?"
+	self hasTopLeftNDCOrigin ~= self hasTopLeftTextureCoordinates ifTrue: [
+		projectiveTextureBiasMatrix := WMMatrix4F newFrom: #(
+			0.5  0.0 0.0 0.5
+			0.0 -0.5 0.0 0.5
+			0.0  0.0 1.0 0.0
+			0.0  0.0 0.0 1.0
+		)
+	] ifFalse: [ 
+		projectiveTextureBiasMatrix := WMMatrix4F newFrom: #(
+			0.5 0.0 0.0 0.5
+			0.0 0.5 0.0 0.5
+			0.0 0.0 1.0 0.0
+			0.0 0.0 0.0 1.0
+		)
+	]
 ]
 
 { #category : #'as yet unclassified' }

@@ -45,6 +45,7 @@ WDCStateTracker >> beginRenderPass: renderPass renderTarget: renderTarget x: x y
 
 	currentViewport := { x . y . width . height }.
 	pipelineStateDescription
+		changed;
 		renderTargetFormats: renderTarget colorAttachmentFormats;
 		depthStencilFormat: renderTarget depthStencilFormat;
 		sampleCount: renderTarget sampleCount

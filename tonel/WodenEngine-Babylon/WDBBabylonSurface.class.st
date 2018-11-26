@@ -201,7 +201,7 @@ WDBBabylonSurface >> asForm [
 	resolveRenderTarget currentFramebuffer colorAttachments first validHandle
 		readTextureData: 0 arrayIndex: 0 pitch: pitch slicePitch: slicePitch buffer: cpuForm bits.
 
-	driver engine device hasBottomLeftTextureCoordinates ~= 0 ifTrue: [ 
+	driver engine hasBottomLeftTextureCoordinates ifTrue: [ 
 		cpuForm flipHorizontally
 	].
 

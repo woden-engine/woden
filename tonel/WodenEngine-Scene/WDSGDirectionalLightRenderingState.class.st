@@ -47,3 +47,13 @@ WDSGDirectionalLightRenderingState >> setupShadowMappingTransforms [
 		invertedY: engine projectionInvertedY
 
 ]
+
+{ #category : #'shadow mapping' }
+WDSGDirectionalLightRenderingState >> viewStateForCameraTransform: cameraTransform [
+	| state |
+	state := super viewStateForCameraTransform: cameraTransform.
+	state
+		cascadeSplitOffsets: (WMVector4F x: 0.0 y: 1.0 z: 0.0 w: 0.0);
+		cascadeFrustumPlane: (WMVector4F x: 0.0 y: 0.0 z: 0.0 w: 0.0).
+	^ state
+]

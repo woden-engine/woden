@@ -22,3 +22,13 @@ SLVMInternalStructure class >> asWodenVertexStructureDescription [
 	]).
 	^ desc
 ]
+
+{ #category : #'*WodenEngine-Core' }
+SLVMInternalStructure >> structureSize [
+	^ layout structureSize
+]
+
+{ #category : #'*WodenEngine-Core' }
+SLVMInternalStructure class >> wodenPoolBufferHeapSize [
+	^ (1<<16) // self structureSize 
+]

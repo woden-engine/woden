@@ -66,6 +66,7 @@ WDCCompositionShaderSignature >> defaultSamplers [
 		address_v: AGPU_TEXTURE_ADDRESS_MODE_CLAMP;
 		address_w: AGPU_TEXTURE_ADDRESS_MODE_CLAMP;
 		max_lod: 10000.0;
+		maxanisotropy: 1;
 		yourself.
 		
 	bindings := self newSamplers.

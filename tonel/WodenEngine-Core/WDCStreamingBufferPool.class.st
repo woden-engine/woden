@@ -64,6 +64,7 @@ WDCStreamingBufferPool >> elementType [
 WDCStreamingBufferPool >> elementType: anObject [
 	elementType := anObject.
 	elementSize := elementType structureSize alignedTo: self minimalAlignment.
+	heapSize := elementType wodenPoolBufferHeapSize.
 ]
 
 { #category : #accessing }
@@ -99,7 +100,6 @@ WDCStreamingBufferPool >> heapSize: anObject [
 { #category : #initialization }
 WDCStreamingBufferPool >> initialize [
 	super initialize.
-	heapSize := self class defaultHeapSize.
 	heaps := OrderedCollection new.
 ]
 

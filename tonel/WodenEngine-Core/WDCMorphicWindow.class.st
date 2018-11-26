@@ -58,7 +58,7 @@ WDCMorphicWindow >> commitSurface [
 	resolveRenderTarget currentFramebuffer colorAttachments first validHandle
 		readTextureData: 0 arrayIndex: 0 pitch: pitch slicePitch: slicePitch buffer: displayForm bits.
 		
-	engine device hasBottomLeftTextureCoordinates ~= 0 ifTrue: [ 
+	engine hasBottomLeftTextureCoordinates ifTrue: [ 
 		displayForm flipHorizontally
 	].
 
