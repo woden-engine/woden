@@ -151,6 +151,22 @@ WMMatrix3 class category: 'special matrices' methods: {
 	^ WMMatrix3 xrot: (Float halfPi castTo: Scalar)
 ].
 
+:[lookAtDirection: <WMVector3> direction up: <WMVector3> upVector -> WMMatrix3.
+    <inline>
+	"This is the same as gluLookAt"
+	let up := upVector normalized.
+
+	let f := direction normalized.
+	let s := (direction cross: up) normalized.
+	let u := s cross: f.
+
+	^ WMMatrix3 newValue
+		m11: s x; m12: s y; m13: s z;
+		m21: u x; m22: u y; m23: u z;
+		m31: f x negated; m32: f y negated; m33: f z negated;
+		yourself
+].
+
 }.
 
 WMMatrix3 category: 'accessing' methods: {

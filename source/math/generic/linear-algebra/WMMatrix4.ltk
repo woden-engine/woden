@@ -93,7 +93,7 @@ WMMatrix4 class category: 'projection matrices' methods: {
 		m22: twoNear / (top - bottom); m23: ((top + bottom) / (top - bottom));
 		m33: far negated / (far - near); m34: ((near * far) negated / (far - near));
 		m43: -1.0.
-	invertedY ifTrue: [ 
+	invertedY ifTrue: [
 		result m22: result m22 negated; m23: result m23 negated.
 	].
 
@@ -110,7 +110,7 @@ WMMatrix4 class category: 'projection matrices' methods: {
 		m22: 2.0 / (top - bottom); m24: ((top + bottom) / (top - bottom)) negated;
 		m33: -1.0 / (far - near); m34: ((near) / (far - near)) negated;
 		m44: 1.0.
-	invertedY ifTrue: [ 
+	invertedY ifTrue: [
 		result m22: result m22 negated; m24: result m24 negated.
 	].
 
@@ -135,7 +135,7 @@ WMMatrix4 class category: 'projection matrices' methods: {
 		m22: twoNear / (top - bottom); m23: ((top + bottom) / (top - bottom));
 		m33: near / (far - near); m34: ((near * far) / (far - near));
 		m43: -1.0.
-	invertedY ifTrue: [ 
+	invertedY ifTrue: [
 		result m22: result m22 negated; m23: result m23 negated.
 	].
 
@@ -152,7 +152,7 @@ WMMatrix4 class category: 'projection matrices' methods: {
 		m22: 2.0 / (top - bottom); m24: ((top + bottom) / (top - bottom)) negated;
 		m33: 1.0 / (far - near); m34: ((far) / (far - near));
 		m44: 1.0.
-	invertedY ifTrue: [ 
+	invertedY ifTrue: [
 		result m22: result m22 negated; m24: result m24 negated.
 	].
 
@@ -193,17 +193,17 @@ WMMatrix4 category: 'arithmetic' methods: {
 		m12: (m11 * other m12) + (m12 * other m22) + (m13 * other m32) + (m14 * other m42);
 		m13: (m11 * other m13) + (m12 * other m23) + (m13 * other m33) + (m14 * other m43);
 		m14: (m11 * other m14) + (m12 * other m24) + (m13 * other m34) + (m14 * other m44);
-		
+
 		m21: (m21 * other m11) + (m22 * other m21) + (m23 * other m31) + (m24 * other m41);
 		m22: (m21 * other m12) + (m22 * other m22) + (m23 * other m32) + (m24 * other m42);
 		m23: (m21 * other m13) + (m22 * other m23) + (m23 * other m33) + (m24 * other m43);
 		m24: (m21 * other m14) + (m22 * other m24) + (m23 * other m34) + (m24 * other m44);
-		
+
 		m31: (m31 * other m11) + (m32 * other m21) + (m33 * other m31) + (m34 * other m41);
 		m32: (m31 * other m12) + (m32 * other m22) + (m33 * other m32) + (m34 * other m42);
 		m33: (m31 * other m13) + (m32 * other m23) + (m33 * other m33) + (m34 * other m43);
 		m34: (m31 * other m14) + (m32 * other m24) + (m33 * other m34) + (m34 * other m44);
-		
+
 		m41: (m41 * other m11) + (m42 * other m21) + (m43 * other m31) + (m44 * other m41);
 		m42: (m41 * other m12) + (m42 * other m22) + (m43 * other m32) + (m44 * other m42);
 		m43: (m41 * other m13) + (m42 * other m23) + (m43 * other m33) + (m44 * other m43);
@@ -224,27 +224,27 @@ WMMatrix4 category: 'arithmetic' methods: {
 WMMatrix4 category: 'comparing' methods: {
 :[= other -> BooleanBit.
 	WMMatrix4 == other class ifFalse: [ ^ false ].
-	
-	m11 = other m11 ifFalse: [ ^ false ].  
-	m12 = other m12 ifFalse: [ ^ false ].  
-	m13 = other m13 ifFalse: [ ^ false ].  
-	m14 = other m14 ifFalse: [ ^ false ].  
 
-	m21 = other m21 ifFalse: [ ^ false ].  
-	m22 = other m22 ifFalse: [ ^ false ].  
-	m23 = other m23 ifFalse: [ ^ false ].  
-	m24 = other m24 ifFalse: [ ^ false ].  
+	m11 = other m11 ifFalse: [ ^ false ].
+	m12 = other m12 ifFalse: [ ^ false ].
+	m13 = other m13 ifFalse: [ ^ false ].
+	m14 = other m14 ifFalse: [ ^ false ].
 
-	m31 = other m31 ifFalse: [ ^ false ].  
-	m32 = other m32 ifFalse: [ ^ false ].  
-	m33 = other m33 ifFalse: [ ^ false ].  
-	m34 = other m34 ifFalse: [ ^ false ].  
+	m21 = other m21 ifFalse: [ ^ false ].
+	m22 = other m22 ifFalse: [ ^ false ].
+	m23 = other m23 ifFalse: [ ^ false ].
+	m24 = other m24 ifFalse: [ ^ false ].
 
-	m41 = other m41 ifFalse: [ ^ false ].  
-	m42 = other m42 ifFalse: [ ^ false ].  
-	m43 = other m43 ifFalse: [ ^ false ].  
-	m44 = other m44 ifFalse: [ ^ false ].  
-	
+	m31 = other m31 ifFalse: [ ^ false ].
+	m32 = other m32 ifFalse: [ ^ false ].
+	m33 = other m33 ifFalse: [ ^ false ].
+	m34 = other m34 ifFalse: [ ^ false ].
+
+	m41 = other m41 ifFalse: [ ^ false ].
+	m42 = other m42 ifFalse: [ ^ false ].
+	m43 = other m43 ifFalse: [ ^ false ].
+	m44 = other m44 ifFalse: [ ^ false ].
+
 	^ true
 ].
 
@@ -263,7 +263,7 @@ WMMatrix4 category: 'comparing' methods: {
 	(m32 closeTo: other m32) ifFalse: [ ^ false ].
 	(m33 closeTo: other m33) ifFalse: [ ^ false ].
 	(m34 closeTo: other m34) ifFalse: [ ^ false ].
-	
+
 	(m41 closeTo: other m41) ifFalse: [ ^ false ].
 	(m42 closeTo: other m42) ifFalse: [ ^ false ].
 	(m43 closeTo: other m43) ifFalse: [ ^ false ].
@@ -278,17 +278,17 @@ WMMatrix4 category: 'comparing' methods: {
 		( m12 hash bitXor:
 		( m13 hash bitXor:
 		( m14 hash bitXor:
-		
+
 		( m21 hash bitXor:
 		( m22 hash bitXor:
 		( m23 hash bitXor:
 		( m24 hash bitXor:
-		
+
 		( m31 hash bitXor:
 		( m32 hash bitXor:
 		( m33 hash bitXor:
 		( m34 hash bitXor:
-		
+
 		( m41 hash bitXor:
 		( m42 hash bitXor:
 		( m43 hash bitXor:
@@ -313,17 +313,17 @@ WMMatrix4 category: 'converting' methods: {
 		at: 2 put: m21;
 		at: 3 put: m31;
 		at: 4 put: m41;
-		
+
 		at: 5 put: m12;
 		at: 6 put: m22;
 		at: 7 put: m32;
 		at: 8 put: m42;
-		
+
 		at: 9 put: m13;
 		at: 10 put: m23;
 		at: 11 put: m33;
 		at: 12 put: m43;
-		
+
 		at: 13 put: m14;
 		at: 14 put: m24;
 		at: 15 put: m34;
@@ -339,17 +339,17 @@ WMMatrix4 category: 'converting' methods: {
 		at: 2 put: m12;
 		at: 3 put: m13;
 		at: 4 put: m14;
-		
+
 		at: 5 put: m21;
 		at: 6 put: m22;
 		at: 7 put: m23;
 		at: 8 put: m24;
-		
+
 		at: 9 put: m31;
 		at: 10 put: m32;
 		at: 11 put: m33;
 		at: 12 put: m34;
-		
+
 		at: 13 put: m41;
 		at: 14 put: m42;
 		at: 15 put: m43;
@@ -378,6 +378,10 @@ WMMatrix4 category: 'transformations' methods: {
 		z: (m31 * vector x) + (m32 * vector y) + (m33 * vector z) + m34
 ].
 
+:[perspectiveTransformPosition3: <WMVector3>position -> WMVector3.
+	^ (self transformPosition3: position) / ((m41 * position x) + (m42 * position y) + (m43 * position z) + m44)
+].
+
 :[transformVector3: <WMVector3>vector -> WMVector3.
 	^ WMVector3
 		x: (m11 * vector x) + (m12 * vector y) + (m13 * vector z)
@@ -395,8 +399,8 @@ WMMatrix4 category: 'transformations' methods: {
 
 :[transposedTransformVector3: <WMVector3>vector3 -> WMVector3.
 	^ WMVector3
-		x: (m11 * vector3 x) + (m21 * vector3 y) + (m31 * vector3 z) 
-		y: (m12 * vector3 x) + (m22 * vector3 y) + (m32 * vector3 z) 
+		x: (m11 * vector3 x) + (m21 * vector3 y) + (m31 * vector3 z)
+		y: (m12 * vector3 x) + (m22 * vector3 y) + (m32 * vector3 z)
 		z: (m13 * vector3 x) + (m23 * vector3 y) + (m33 * vector3 z)
 ]
 }.

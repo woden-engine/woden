@@ -455,4 +455,21 @@ WMBox3D category: 'volume insertion' methods: {
 	]
 ].
 
+:[mappingToNDCCoordinates -> WMMatrix4.
+	"Projection matrix to map into ([-1, 1], [-1, 1], [0, 1])"
+
+    ^ WMMatrix4 orthoLeft: min x right: max x
+    	bottom: min y top: max y
+    	near: min z far: max z
+        invertedY: false
+].
+
+:[mappingToNDCCoordinatesReverseDepth -> WMMatrix4.
+	"Projection matrix to map into ([-1, 1], [-1, 1], [0, 1])"
+
+    ^ WMMatrix4 reverseDepthOrthoLeft: min x right: max x
+    	bottom: min y top: max y
+    	near: min z far: max z
+        invertedY: false
+].
 }.
