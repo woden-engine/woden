@@ -161,9 +161,9 @@ WMMatrix3 class category: 'special matrices' methods: {
 	let u := s cross: f.
 
 	^ WMMatrix3 newValue
-		m11: s x; m12: s y; m13: s z;
-		m21: u x; m22: u y; m23: u z;
-		m31: f x negated; m32: f y negated; m33: f z negated;
+		m11: s x; m12: u x; m13: f x negated;
+		m21: s y; m22: u y; m23: f y negated;
+		m31: s z; m32: u z; m33: f z negated;
 		yourself
 ].
 

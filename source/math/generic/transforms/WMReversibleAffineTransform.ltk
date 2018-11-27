@@ -7,6 +7,7 @@ WMReversibleAffineTransform class category: 'instance creation' methods: {
 :[from: <WMVector3>eye lookAt: <WMVector3>reference up: <WMVector3>upVector -> WMReversibleAffineTransform.
     <inline>
 	^ WMReversibleAffineTransform newValue
+        initialize;
         orthonormal: (WMMatrix3 lookAtDirection: (reference - eye) normalized up: upVector) translation: eye;
         yourself
 ].
@@ -14,6 +15,7 @@ WMReversibleAffineTransform class category: 'instance creation' methods: {
 :[from: <WMVector3>eye lookAtDirection: <WMVector3>direction up: <WMVector3>upVector -> WMReversibleAffineTransform.
     <inline>
 	^ WMReversibleAffineTransform newValue
+        initialize
         orthonormal: (WMMatrix3 lookAtDirection: direction normalized up: upVector) translation: eye;
         yourself
 ].
