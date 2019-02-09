@@ -166,21 +166,14 @@ class PharoImageDependency(Dependency):
         print "Extract Pharo image"
         self.extractDependencyFromArchive(fileName)
 
-        print "Download Pharo sources"
-        sourcesFileName = 'sources.zip'
-        downloadURLInto(self.baseURL + sourcesFileName, sourcesFileName)
-
-        print "Extract Pharo sources"
-        self.extractDependencyFromArchive(sourcesFileName)
-
 # All of the external dependencies required by Woden
 AbstractGpu = BintrayDependency('abstract-gpu', user='ronsaldo', repository='abstract-gpu')
 AbstractPhysics = BintrayDependency('abstract-physics', user='ronsaldo', repository='abstract-physics')
 CoreAssets = GitDependency('core-assets', 'https://github.com/ronsaldo/wloden-core-assets.git')
 
-if '-pharo61' in sys.argv:
-    PharoVM = PharoVMDependency('pharo-vm', 'https://files.pharo.org/get-files/61/', '61')
-    PharoImage = PharoImageDependency('pharo-image', 'https://files.pharo.org/get-files/61/')
+if '-pharo80' in sys.argv:
+    PharoVM = PharoVMDependency('pharo-vm', 'https://files.pharo.org/get-files/80/', '80')
+    PharoImage = PharoImageDependency('pharo-image', 'https://files.pharo.org/get-files/80/')
 else:
     PharoVM = PharoVMDependency('pharo-vm', 'https://files.pharo.org/get-files/70/', '70')
     PharoImage = PharoImageDependency('pharo-image', 'https://files.pharo.org/get-files/70/')
