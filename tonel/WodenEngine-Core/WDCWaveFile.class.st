@@ -85,9 +85,12 @@ WDCWaveFile >> loadFrom: in [
 
 { #category : #loading }
 WDCWaveFile >> loadFromFileNamed: fileName [
-	fileName asFileReference readStreamDo: [ :in |
-		in binary.
-		self loadFrom: in
+	| in |
+	in := fileName asFileReference binaryReadStream.
+	[ 
+		self loadFrom: in.
+	] ensure: [
+		in close
 	]
 	
 ]
