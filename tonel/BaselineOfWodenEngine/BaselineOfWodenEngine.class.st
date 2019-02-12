@@ -16,11 +16,9 @@ BaselineOfWodenEngine >> baseline: spec [
 					versionString: #'stable';
 					repository: 'http://mc.stfx.eu/Neo' ].
 			spec 
-				project: 'AbstractGPU' with: [
+				baseline: 'AbstractGPU' with: [
 				spec
-					className: #ConfigurationOfAbstractGPU;
-					versionString: #'stable';
-					repository: 'http://smalltalkhub.com/mc/ronsaldo/AbstractGPU/main' ].
+					repository: 'github://ronsaldo/abstract-gpu/tonel' ].
 			spec 
 				project: 'AbstractPhysics' with: [
 				spec
