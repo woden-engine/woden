@@ -38,7 +38,7 @@ BaselineOfWodenEngine >> baseline: spec [
 					repository: 'github://ronsaldo/babylon-graphics/tonel' ].
 
 			spec 
-				baseline: 'OpenAl' with: [
+				baseline: 'OpenAL' with: [
 				spec
 					repository: 'github://ronsaldo/pharo-openal/tonel' ].
 		spec package: #'WodenEngine-Core' with: [
