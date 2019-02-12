@@ -1,7 +1,7 @@
 Class {
 	#name : #BaselineOfWodenEngine,
 	#superclass : #BaselineOf,
-	#category : 'BaselineOfWodenEngine'
+	#category : #BaselineOfWodenEngine
 }
 
 { #category : #baselines }
@@ -10,11 +10,9 @@ BaselineOfWodenEngine >> baseline: spec [
     spec for: #'common' do: [
 			spec blessing: #baseline.
 			spec 
-				project: 'NeoJSON' with: [
-				spec
-					className: #ConfigurationOfNeoJSON;
-					versionString: #'stable';
-					repository: 'http://mc.stfx.eu/Neo' ].
+				baseline: 'NeoJSON' with: [
+					spec
+					repository: 'github://svenvc/NeoJSON/repository' ].
 			spec 
 				baseline: 'AbstractGPU' with: [
 				spec
