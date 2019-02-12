@@ -20,11 +20,9 @@ BaselineOfWodenEngine >> baseline: spec [
 				spec
 					repository: 'github://ronsaldo/abstract-gpu/tonel' ].
 			spec 
-				project: 'AbstractPhysics' with: [
+				baseline: 'AbstractPhysics' with: [
 				spec
-					className: #ConfigurationOfAbstractPhysics;
-					versionString: #'development';
-					repository: 'http://smalltalkhub.com/mc/ronsaldo/AbstractPhysics/main' ].
+					repository: 'github://ronsaldo/abstract-physics/tonel' ].
 			spec 
 				baseline: 'Dastrel' with: [
 				spec
