@@ -167,8 +167,6 @@ class PharoImageDependency(Dependency):
         self.extractDependencyFromArchive(fileName)
 
 # All of the external dependencies required by Woden
-AbstractGpu = BintrayDependency('abstract-gpu', user='ronsaldo', repository='abstract-gpu')
-AbstractPhysics = BintrayDependency('abstract-physics', user='ronsaldo', repository='abstract-physics')
 CoreAssets = GitDependency('core-assets', 'https://github.com/ronsaldo/wloden-core-assets.git')
 
 if '-pharo80' in sys.argv:
@@ -179,8 +177,6 @@ else:
     PharoImage = PharoImageDependency('pharo-image', 'https://files.pharo.org/get-files/70/')
 
 dependencies = [
-    AbstractGpu,
-    AbstractPhysics,
     CoreAssets,
     PharoVM,
     PharoImage
