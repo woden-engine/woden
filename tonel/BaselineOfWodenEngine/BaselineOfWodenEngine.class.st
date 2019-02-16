@@ -76,18 +76,10 @@ BaselineOfWodenEngine >> baseline: spec [
 ]
 
 { #category : #baselines }
-BaselineOfWodenEngine >> idleProcessSource [
-	"A default background process which is invisible."
-
-	[true] whileTrue:
-		[self relinquishProcessorForMicroseconds: 250]
-]
-
-{ #category : #baselines }
 BaselineOfWodenEngine >> postLoadActions [
 	"Reduce the idle time of the image."
 	self flag: 'FIXME: This hack should not be required when the idle item is computed according to the next pending delay.'.
-	(ProcessorScheduler class respondsTo: #idleTime:) ifTrue: [
+	(ProcessorScheduler respondsTo: #idleTime:) ifTrue: [
 		ProcessorScheduler idleTime: 250.
 	].
 	
