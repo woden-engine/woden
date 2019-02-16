@@ -17,40 +17,16 @@ of the following two graphics APIs:
 
 Woden on OS X requires a Mac with support for the Metal API.
 
-### Native libraries
-
-The native has a dependency on some native libraries. These native libraries are
-being built on CI (Travis, Appveyor), and deployed into bintray. The
-fetchAndLoadWoden.py Python script takes care of downloading the latest version
-of these native libraries.
-
-### Dependencies for loading Woden manually
-
-For loading a Woden image manually by using the Python script, the following
-dependencies are required:
-* Python 2.7
-* Git
-
 ## Loading Woden
 
-The easy way to load Woden 2 consists in executing the fetchAndLoadWoden.py python scripty. On Linux and OS X, this script can be executed by running the following in bash:
+Woden can be loaded in a Pharo 7 image by running the following script in a
+playground:
 
-```bash
-./fetchAndLoadWoden.py
-```
-
-On Windows the Python script can be executed by double clicking on
-fetchAndLoadWoden.py, after having Python 2.7 and Git installed. For the script
-succeed, git must be available in the local user PATH environment variable (i.e:
-you must be able to call git by just writing git in the command line).
-
-The fetchAndLoadWoden.py script will take care of downloading all of the
-dependencies that are used by Woden, the Pharo VM, the Pharo image, the Pharo
-source. After downloading the required dependencies, this script will take of
-loading a clean Pharo image with Woden, which will be saved as woden.image
-
-```bash
-./woden.sh woden.image
+```smalltalk
+Metacello new
+   baseline: 'WodenEngine';
+   repository: 'github://ronsaldo/woden/tonel';
+   load
 ```
 
 ## Woden samples
