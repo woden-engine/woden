@@ -6,5 +6,5 @@ Class {
 
 { #category : #'as yet unclassified' }
 WDGSMapExamples class >> exampleESUG2016 [
-	(WDGSMap loadJsonFromFileNamed: 'core-assets/maps/demos/esug-2016.json') play
+	(WDGSMap loadJsonFromFileNamed: (WodenCoreAssets location resolve: 'maps/demos/esug-2016.json' asFileReference)) play
 ]

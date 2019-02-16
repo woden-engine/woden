@@ -43,9 +43,13 @@ BaselineOfWodenEngine >> baseline: spec [
 				baseline: #'WodenMath' with: [
 				spec
 					repository: 'github://ronsaldo/woden/tonel' ].
+			spec 
+				baseline: #'WodenCoreAssets' with: [
+				spec
+					repository: 'github://ronsaldo/wloden-core-assets/tonel' ].
 
 		spec package: #'WodenEngine-Core' with: [
-				spec requires: #(#'NeoJSON' #'AbstractGPU' #'Dastrel' #'WodenMath')].
+				spec requires: #(#'NeoJSON' #'AbstractGPU' #'Dastrel' #'WodenMath' #'WodenCoreAssets')].
 		spec package: #'WodenEngine-Babylon' with: [
 				spec requires: #('WodenEngine-Core' 'BabylonGraphics' 'CyrusToolkit')].
 		spec package: #'WodenEngine-Scene' with: [

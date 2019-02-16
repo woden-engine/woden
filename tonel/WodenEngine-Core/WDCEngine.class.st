@@ -410,7 +410,7 @@ WDCEngine >> initialize [
 	projectionInvertedY := false.
 	assetSearchPaths ifNil: [ 
 		assetSearchPaths := OrderedCollection new.
-		assetSearchPaths add: FileSystem workingDirectory / 'core-assets'.
+		assetSearchPaths add: WodenCoreAssets location.
 	].
 	self initializeForNewSession.
 ]
