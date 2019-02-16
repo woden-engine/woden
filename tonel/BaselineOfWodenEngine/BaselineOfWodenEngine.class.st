@@ -9,6 +9,7 @@ BaselineOfWodenEngine >> baseline: spec [
     <baseline>
     spec for: #'common' do: [
 			spec blessing: #baseline.
+			spec postLoadDoIt: #postLoadActions.
 			spec 
 				baseline: #'NeoJSON' with: [
 					spec
