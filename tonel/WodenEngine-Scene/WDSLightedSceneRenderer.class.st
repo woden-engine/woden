@@ -8,7 +8,8 @@ Class {
 		'shadowMapRenderTargets',
 		'shadowSceneRenderer',
 		'usedLights',
-		'shadowMapDebuggingMesh'
+		'shadowMapDebuggingMesh',
+		'debuggingShadowMaps'
 	],
 	#category : #'WodenEngine-Scene-Rendering'
 }
@@ -28,20 +29,42 @@ WDSLightedSceneRenderer >> debugDrawOnPompeiiCanvas: canvas [
 	self drawDebugShadowMapsOnPompeiiCanvas: canvas
 ]
 
+{ #category : #accessing }
+WDSLightedSceneRenderer >> debuggingShadowMaps [
+	^ debuggingShadowMaps
+]
+
+{ #category : #accessing }
+WDSLightedSceneRenderer >> debuggingShadowMaps: anObject [
+	debuggingShadowMaps := anObject
+]
+
 { #category : #'debug rendering' }
 WDSLightedSceneRenderer >> drawDebugShadowMapsOnPompeiiCanvas: canvas [
-	| builder |
-	true ifTrue: [ ^ self ].
-	shadowCastingLightCount = 0 ifTrue: [ 0 ].
+	| builder column row |
+	debuggingShadowMaps ifFalse: [ ^ self ].
+	shadowCastingLightCount = 0 ifTrue: [ ^ self ].
 	
 	shadowMapDebuggingMesh ifNil: [ 
 		builder := canvas driver mesh2DBuilder.
-		builder fill
-			textureArray: shadowMapBuffer element: 0 rectangle: (0@0 extent: 256@256).
+		0 to: shadowCastingLightCount - 1 do: [ :i |
+			column := i % 2.
+			row := i // 2.
+			
+			builder fill
+				grayTextureArray: shadowMapBuffer element: i rectangle: ((column*256)@(row*256) extent: 256@256).
+		].
+	
 		shadowMapDebuggingMesh := builder mesh.
 	].
 
 	canvas draw: shadowMapDebuggingMesh
+]
+
+{ #category : #initialization }
+WDSLightedSceneRenderer >> initialize [
+	super initialize.
+	debuggingShadowMaps := false.
 ]
 
 { #category : #'shadow mapping' }

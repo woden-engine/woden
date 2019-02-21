@@ -10,7 +10,9 @@ Class {
 		'textureArrayColorShader',
 		'formTextureCache',
 		'textureMaterialCache',
-		'textureArrayMaterialCache'
+		'textureArrayMaterialCache',
+		'grayscaleTextureArrayColorShader',
+		'grayTextureColorShader'
 	],
 	#classVars : [
 		'PrimitiveTypeMap'
@@ -43,12 +45,12 @@ WDBBabylonDriver class >> isSupported [
 
 { #category : #shaders }
 WDBBabylonDriver >> colorFontShader [
-	^ colorFontShader ifNil: [ colorFontShader := engine loadFragmentShader: 'shaders/pompeii/textColorFragment.dastrel' ]
+	^ colorFontShader ifNil: [ colorFontShader := engine loadFragmentShader: 'shaders/babylon/textColorFragment.dastrel' ]
 ]
 
 { #category : #shaders }
 WDBBabylonDriver >> colorShader [
-	^ colorShader ifNil: [ colorShader := engine loadFragmentShader: 'shaders/pompeii/colorFragment.dastrel' ]
+	^ colorShader ifNil: [ colorShader := engine loadFragmentShader: 'shaders/babylon/colorFragment.dastrel' ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -129,6 +131,16 @@ WDBBabylonDriver >> engine [
 	^ engine
 ]
 
+{ #category : #shaders }
+WDBBabylonDriver >> grayTextureColorShader [
+	^ grayTextureColorShader ifNil: [ grayTextureColorShader := engine loadFragmentShader: 'shaders/babylon/grayTexturedFragment.dastrel' ]
+]
+
+{ #category : #shaders }
+WDBBabylonDriver >> grayscaleTextureArrayColorShader [
+	^ grayscaleTextureArrayColorShader ifNil: [ grayscaleTextureArrayColorShader := engine loadFragmentShader: 'shaders/babylon/grayTexturedArrayFragment.dastrel' ]
+]
+
 { #category : #initialization }
 WDBBabylonDriver >> initialize [
 	super initialize.
@@ -162,15 +174,15 @@ WDBBabylonDriver >> surfaceWithExtent: anExtent sampleCount: aSampleCount [
 
 { #category : #shaders }
 WDBBabylonDriver >> textureArrayColorShader [
-	^ textureArrayColorShader ifNil: [ textureArrayColorShader := engine loadFragmentShader: 'shaders/pompeii/texturedArrayFragment.dastrel' ]
+	^ textureArrayColorShader ifNil: [ textureArrayColorShader := engine loadFragmentShader: 'shaders/babylon/texturedArrayFragment.dastrel' ]
 ]
 
 { #category : #shaders }
 WDBBabylonDriver >> textureColorShader [
-	^ textureColorShader ifNil: [ textureColorShader := engine loadFragmentShader: 'shaders/pompeii/texturedFragment.dastrel' ]
+	^ textureColorShader ifNil: [ textureColorShader := engine loadFragmentShader: 'shaders/babylon/texturedFragment.dastrel' ]
 ]
 
 { #category : #shaders }
 WDBBabylonDriver >> vertexShader [
-	^ vertexShader ifNil: [ vertexShader := engine loadVertexShader: 'shaders/pompeii/genericVertex.dastrel' ]
+	^ vertexShader ifNil: [ vertexShader := engine loadVertexShader: 'shaders/babylon/genericVertex.dastrel' ]
 ]

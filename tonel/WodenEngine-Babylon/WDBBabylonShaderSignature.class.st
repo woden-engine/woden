@@ -40,6 +40,7 @@ WDBBabylonShaderSignature class >> signatureSpec: spec [
 		pushConstant: #ProjectionMatrixIndex;
 		pushConstant: #ColorRampIndex;
 		pushConstant: #ColorRampSize;
+		pushConstant: #TextureArrayIndex;
 		yourself
 ]
 
@@ -84,6 +85,16 @@ WDBBabylonShaderSignature >> constantProjectionMatrixIndexSize [
 ]
 
 { #category : #'generated shader signature methods' }
+WDBBabylonShaderSignature >> constantTextureArrayIndexOffset [
+	^ 16
+]
+
+{ #category : #'generated shader signature methods' }
+WDBBabylonShaderSignature >> constantTextureArrayIndexSize [
+	^ 4
+]
+
+{ #category : #'generated shader signature methods' }
 WDBBabylonShaderSignature >> createHandleForDevice: device [
 	^ device createShaderSignatureBuilder
 
@@ -108,6 +119,7 @@ WDBBabylonShaderSignature >> createHandleForDevice: device [
 		addBindingConstant; "ProjectionMatrixIndex"
 		addBindingConstant; "ColorRampIndex"
 		addBindingConstant; "ColorRampSize"
+		addBindingConstant; "TextureArrayIndex"
 		build
 
 ]

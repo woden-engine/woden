@@ -99,8 +99,13 @@ WDBBabylonSurface >> activateTextureArrayElementMaterial: textureArrayMaterial [
 	textureArrayMaterial validTexture.
 	stateTracker
 		vertexShader: driver vertexShader;
-		fragmentShader: driver textureArrayColorShader;
-		useShaderResources: textureArrayMaterial validShaderBinding
+		fragmentShader: (textureArrayMaterial grayscaleTexture
+			ifFalse: [driver textureArrayColorShader]
+			ifTrue: [driver grayscaleTextureArrayColorShader]);
+		useShaderResources: textureArrayMaterial validShaderBinding;
+		pushConstants: 16 size: 4 values: ((ByteArray new: 4)
+			unsignedLongAt: 1 put: textureArrayMaterial elementIndex;
+			yourself)
 ]
 
 { #category : #'material activation' }
