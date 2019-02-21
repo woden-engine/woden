@@ -36,13 +36,19 @@ WDASceneViewScreenDisplayMode >> prepareRendering [
 	| renderTarget resolveTarget |
 	renderTarget := view window validRenderTarget.
 	resolveTarget := view window validResolveRenderTarget.
+
 	self updateCameraFrustum.
-	^ view sceneRenderer
+	view sceneRenderer
 		useLateLatching: self useLateLatching;
 		currentTime: view model currentTime;
-		renderScene: view model scene viewports: {
+		prepareRenderingForViewports: {
 			self viewportForCamera: view cameraSceneNode renderTarget: renderTarget resolveRenderTarget: resolveTarget
 		}
+]
+
+{ #category : #'rendering process stages' }
+WDASceneViewScreenDisplayMode >> renderSceneViewports [
+	^ view sceneRenderer renderSceneViewports
 ]
 
 { #category : #'as yet unclassified' }

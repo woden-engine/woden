@@ -43,6 +43,11 @@ WDSGAbstractLightRenderingState >> mainCamera: anObject [
 	mainCamera := anObject
 ]
 
+{ #category : #accessing }
+WDSGAbstractLightRenderingState >> scene [
+	^ light scene
+]
+
 { #category : #'shadow mapping' }
 WDSGAbstractLightRenderingState >> setupShadowMapWithIndex: newShadowMapIndex [
 	shadowMapIndex := newShadowMapIndex.

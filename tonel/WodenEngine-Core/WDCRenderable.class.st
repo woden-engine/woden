@@ -30,6 +30,10 @@ WDCRenderable >> initialize [
 ]
 
 { #category : #'extra per object rendering data' }
+WDCRenderable >> performCommonGpuStateUpdateFor: engine frameIndex: frameIndex into: renderableSceneData [
+]
+
+{ #category : #'extra per object rendering data' }
 WDCRenderable >> performGpuStateUpdateFor: engine frameIndex: frameIndex into: renderableSceneData [
 ]
 

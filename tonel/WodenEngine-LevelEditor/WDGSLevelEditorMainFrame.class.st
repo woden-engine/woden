@@ -47,7 +47,7 @@ WDGSLevelEditorMainFrame >> createLevelViews [
 	bottomRight := WDGSLevelEditorSceneViewPanel for: self.
 	
 	levelViews := { topLeft . topRight . bottomLeft . bottomRight }.
-	vsWindow addAll: levelViews.
+	cyrusWindow addAll: levelViews.
 	
 	^ CyTkVerticalBoxSizer new
 		element: (CyTkHorizontalBoxSizer new
@@ -65,7 +65,7 @@ WDGSLevelEditorMainFrame >> createLevelViews [
 WDGSLevelEditorMainFrame >> createMaterialListView [
 	| view |
 	view := WDGSLevelEditorMaterialListView for: self.
-	vsWindow add: view.
+	cyrusWindow add: view.
 	
 	^ view
 ]
@@ -74,7 +74,7 @@ WDGSLevelEditorMainFrame >> createMaterialListView [
 WDGSLevelEditorMainFrame >> createMenuBar [
 	| menuBar |
 	menuBar := CyTkMenuBar new.
-	vsWindow add: menuBar.
+	cyrusWindow add: menuBar.
 	
 	menuBar
 		addMenuItem: 'File' menuWith: [ :menu |
@@ -100,7 +100,7 @@ WDGSLevelEditorMainFrame >> createMenuBar [
 WDGSLevelEditorMainFrame >> createStatusBar [
 	| statusBar |
 	statusBar := CyTkStatusBar new.
-	vsWindow add: statusBar.
+	cyrusWindow add: statusBar.
 	
 	^ statusBar
 ]
@@ -109,7 +109,7 @@ WDGSLevelEditorMainFrame >> createStatusBar [
 WDGSLevelEditorMainFrame >> createToolBar [
 	| toolBar |
 	toolBar := CyTkToolBar new.
-	vsWindow add: toolBar.
+	cyrusWindow add: toolBar.
 	
 	^ toolBar
 ]
@@ -124,7 +124,7 @@ WDGSLevelEditorMainFrame >> createWindowLayout [
 		element: self createCenterViews do: [ :el | el proportion: 1; expand];
 		element: self createStatusBar do: [ :el | el expand ];
 		yourself.
-	vsWindow sizer: layout
+	cyrusWindow sizer: layout
 ]
 
 { #category : #accessing }

@@ -4,15 +4,13 @@ I am a rendering process. I am used to handle the explicit double and triple buf
 Class {
 	#name : #WDCRenderingProcess,
 	#superclass : #Object,
+	#traits : 'TWDCRenderingDependencyGraphNode',
+	#classTraits : 'TWDCRenderingDependencyGraphNode classTrait',
 	#instVars : [
 		'suspended'
 	],
-	#category : 'WodenEngine-Core-Engine'
+	#category : #'WodenEngine-Core-Rendering'
 }
-
-{ #category : #'rendering process stages' }
-WDCRenderingProcess >> commitSurfaces [
-]
 
 { #category : #accessing }
 WDCRenderingProcess >> continousUpdating [
@@ -36,15 +34,7 @@ WDCRenderingProcess >> needsToRender [
 ]
 
 { #category : #'rendering process stages' }
-WDCRenderingProcess >> prepareRendering [
-]
-
-{ #category : #'rendering process stages' }
 WDCRenderingProcess >> processEvents [
-]
-
-{ #category : #'rendering process stages' }
-WDCRenderingProcess >> sendRenderingCommands [
 ]
 
 { #category : #accessing }

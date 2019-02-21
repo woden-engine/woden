@@ -4,6 +4,8 @@ I am a Woden application view.
 Class {
 	#name : #WDAView,
 	#superclass : #OSWindowEventVisitor,
+	#traits : 'TWDCRenderingDependencyGraphNode',
+	#classTraits : 'TWDCRenderingDependencyGraphNode classTrait',
 	#instVars : [
 		'engine',
 		'model',
@@ -21,6 +23,11 @@ Class {
 { #category : #'as yet unclassified' }
 WDAView class >> engine: engine model: aModel [
 	^ self new engine: engine model: aModel
+]
+
+{ #category : #adding }
+WDAView >> addRenderingElementsToGraph: aRenderingGraph [
+	aRenderingGraph addNodes: subViews
 ]
 
 { #category : #adding }
@@ -45,7 +52,6 @@ WDAView >> closed [
 
 { #category : #'rendering process stages' }
 WDAView >> commitSurfaces [
-	subViews do: #commitSurfaces.
 	window commitSurface
 ]
 
@@ -144,11 +150,6 @@ WDAView >> openInVirtualWindow [
 WDAView >> openedWithWindow: aWindow [
 ]
 
-{ #category : #'rendering process stages' }
-WDAView >> prepareRendering [
-	subViews do: #prepareRendering.
-]
-
 { #category : #'event processing' }
 WDAView >> processEvents [
 	window ifNotNil: #processEvents
@@ -164,14 +165,14 @@ WDAView >> removeSubView: aSubView [
 	subViews := subViews copyWithout: aSubView
 ]
 
+{ #category : #'rendering graph' }
+WDAView >> renderingGraphDependencies [
+	^ { model } , subViews
+]
+
 { #category : #'framebuffer description' }
 WDAView >> sampleCount [
 	^ 1
-]
-
-{ #category : #'rendering process stages' }
-WDAView >> sendRenderingCommands [
-	subViews do: #sendRenderingCommands.
 ]
 
 { #category : #'window handling' }

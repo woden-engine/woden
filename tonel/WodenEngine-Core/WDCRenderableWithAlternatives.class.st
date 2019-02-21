@@ -42,6 +42,11 @@ WDCRenderableWithAlternatives >> initialize [
 ]
 
 { #category : #'extra per object rendering data' }
+WDCRenderableWithAlternatives >> performCommonGpuStateUpdateFor: engine frameIndex: frameIndex into: renderableSceneData [
+	^ self defaultAlternative performCommonGpuStateUpdateFor: engine frameIndex: frameIndex into: renderableSceneData
+]
+
+{ #category : #'extra per object rendering data' }
 WDCRenderableWithAlternatives >> performGpuStateUpdateFor: engine frameIndex: frameIndex into: renderableSceneData [
 	^ self defaultAlternative performGpuStateUpdateFor: engine frameIndex: frameIndex into: renderableSceneData
 ]

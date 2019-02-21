@@ -2,19 +2,17 @@ Class {
 	#name : #WDSSceneRenderer,
 	#superclass : #Object,
 	#instVars : [
-		'currentScene',
 		'stateTracker',
 		'engine',
 		'shaderSignature',
 		'cameraStates',
-		'visibleObjects',
 		'mainCamera',
 		'currentTime',
-		'objectsPerViewport',
 		'currentCameraStates',
 		'useLateLatching',
 		'currentCameraViewports',
-		'directCommandLists'
+		'directCommandLists',
+		'renderingViewports'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -32,34 +30,6 @@ WDSSceneRenderer >> cameraStateFramebufferingCount [
 	^ useLateLatching ifTrue: [ 1 ] ifFalse: [ engine frameBufferingCount ]
 ]
 
-{ #category : #'rendering preparations' }
-WDSSceneRenderer >> collectVisibleObject: node [
-	visibleObjects add: node
-]
-
-{ #category : #'rendering preparations' }
-WDSSceneRenderer >> collectVisibleObjectsFor: camera [
-	visibleObjects removeAll.
-	currentScene roots do: [ :r |
-		self collectVisibleObjectsFor: camera from: r
-	]
-	
-]
-
-{ #category : #'rendering preparations' }
-WDSSceneRenderer >> collectVisibleObjectsFor: camera from: node [
-	node visible ifFalse: [ ^ self ].
-	
-	self collectVisibleObject: node.
-	node isLightSource ifTrue: [ self tryToCollectLightSource: node for: camera ].
-	
-	node isInstanceGroup ifFalse: [
-		node children do: [:child |
-			self collectVisibleObjectsFor: camera from: child
-		]
-	]
-]
-
 { #category : #accessing }
 WDSSceneRenderer >> currentTime [
 	^ currentTime
@@ -70,7 +40,7 @@ WDSSceneRenderer >> currentTime: anObject [
 	currentTime := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #debugging }
 WDSSceneRenderer >> debugDrawOnPompeiiCanvas: canvas [
 ]
 
@@ -100,34 +70,31 @@ WDSSceneRenderer >> initializeWithEngine: aWDCEngine [
 	engine := aWDCEngine.
 	currentTime := 0.0.
 	
-	visibleObjects := OrderedCollection new.
 	useLateLatching := false.
 	directCommandLists := WDCPerFrameSimpleCommandList for: engine
 
 ]
 
 { #category : #'rendering preparations' }
-WDSSceneRenderer >> prepareScene: scene renderingForViewports: viewports [
-	| fullFrameIndex |
-	currentScene := scene.
-	viewports ifEmpty: [ ^ self ].
-	mainCamera := viewports first camera.
-
-	self collectVisibleObjectsFor: mainCamera.
-	fullFrameIndex := engine frameBufferingDriver frameIndex.
-	visibleObjects select: [:obj | obj useViewportCamera not ] thenDo: [ :obj | obj updateGpuStateForFrame: fullFrameIndex camera: mainCamera].
-	objectsPerViewport := viewports collect: [ :viewport |
-		visibleObjects select: viewport filter thenCollect: [ :element |
-			element useViewportCamera ifTrue: [
-				element updateGpuStateForFrame: fullFrameIndex camera: viewport camera
-			].
-			element
-		]
+WDSSceneRenderer >> prepareRenderingForViewports: viewports [
+	renderingViewports := viewports collect: [ :viewport |
+		self prepareSceneRenderingViewportFor: viewport
 	].
-	self sortObjects: objectsPerViewport perViewports: viewports.
-	
-	self
-		updateRenderingStatesFor: viewports
+
+	self updateGPUStatesForRenderingViewports.
+]
+
+{ #category : #'rendering preparations' }
+WDSSceneRenderer >> prepareSceneRenderingViewportFor: viewport [
+	| sceneRenderingViewport |
+	sceneRenderingViewport := self sceneRendererViewportClass new
+		viewport: viewport;
+		yourself.
+
+	sceneRenderingViewport scene collectVisibleObjectsAndLightIntoViewport: sceneRenderingViewport.
+	sceneRenderingViewport sortVisibleObjects.
+
+	^ sceneRenderingViewport
 ]
 
 { #category : #accessing }
@@ -136,46 +103,45 @@ WDSSceneRenderer >> renderMode [
 ]
 
 { #category : #rendering }
-WDSSceneRenderer >> renderScene: scene viewports: viewports [
-	^ self renderScene: scene viewports: viewports composeWith: nil
+WDSSceneRenderer >> renderSceneViewports [
+	^ self renderSceneViewportsComposeWith: nil
 ]
 
 { #category : #rendering }
-WDSSceneRenderer >> renderScene: scene viewports: viewports composeWith: aBlock [
+WDSSceneRenderer >> renderSceneViewportsComposeWith: aBlock [
 	| currentSimpleList |
-	(viewports isEmpty and: [aBlock isNil]) ifTrue: [ ^ nil ].
-
-	self prepareScene: scene renderingForViewports: viewports.	
+	(renderingViewports isEmpty and: [aBlock isNil]) ifTrue: [ ^ nil ].
 
 	currentSimpleList := directCommandLists currentList.
 	currentSimpleList validCommandAllocator reset.
 
 	^ self stateTracker commandList: currentSimpleList validCommandList rebuildWith: [
-		self renderViewports: viewports composeWith: aBlock.
+		self renderViewports: renderingViewports composeWith: aBlock.
 	].
 
 ]
 
 { #category : #rendering }
-WDSSceneRenderer >> renderScene: scene viewports: viewports intoStateTracker: aStateTracker [
-	viewports isEmpty ifTrue: [ ^ nil ].
+WDSSceneRenderer >> renderSceneViewportsIntoStateTracker: aStateTracker. [
+	renderingViewports ifEmpty: [ ^ nil ].
 
 	stateTracker := aStateTracker.
-	self prepareScene: scene renderingForViewports: viewports.	
 
 	self setupStateTracker.
-	viewports doWithIndex: [ :viewport :index | self renderViewport: viewport index: index ].
+	renderingViewports doWithIndex: [ :viewport :index | self renderViewport: viewport index: index ].
 ]
 
 { #category : #rendering }
-WDSSceneRenderer >> renderViewport: viewport index: viewportIndex [
-	| renderTarget resolveTarget renderPass |
+WDSSceneRenderer >> renderViewport: renderingViewport index: viewportIndex [
+	| renderTarget resolveTarget renderPass viewport |
 	self setupStateTracker.
+	
+	viewport := renderingViewport viewport.
 	renderTarget := viewport renderTarget.
 	resolveTarget := viewport resolveRenderTarget.
 
 	renderPass := renderTarget validMainRenderPass.
-	renderPass setColorClearValue: 0 value: currentScene backgroundColor asAGPUColor4f.
+	renderPass setColorClearValue: 0 value: renderingViewport scene backgroundColor asAGPUColor4f.
 	
 	"Begin rendering into the viewport"
 	stateTracker
@@ -183,7 +149,7 @@ WDSSceneRenderer >> renderViewport: viewport index: viewportIndex [
 	self setupViewportRendering: viewport index: viewportIndex.
 	
 	"Render the viewport objects"
-	(objectsPerViewport at: viewportIndex) do: [ :object |
+	renderingViewport visibleObjects do: [ :object |
 		object renderOn: stateTracker
 	].
 
@@ -206,6 +172,11 @@ WDSSceneRenderer >> renderViewport: viewport index: viewportIndex [
 WDSSceneRenderer >> renderViewports: viewports composeWith: aBlock [	
 	viewports doWithIndex: [ :viewport :index | self renderViewport: viewport index: index ].
 	aBlock ifNotNil: [ aBlock cull: stateTracker ]
+]
+
+{ #category : #abstract }
+WDSSceneRenderer >> sceneRendererViewportClass [
+	self subclassResponsibility
 ]
 
 { #category : #rendering }
@@ -274,8 +245,9 @@ WDSSceneRenderer >> stateTracker [
 
 { #category : #'rendering preparations' }
 WDSSceneRenderer >> submitCurrentCameraStates [
-	| cameraState gpuCameraState |
-	currentCameraViewports doWithIndex: [ :viewport :index |
+	| cameraState gpuCameraState viewport |
+	renderingViewports doWithIndex: [ :renderingViewport :index |
+		viewport := renderingViewport viewport.
 		cameraState := viewport cameraState.
 		cameraState
 			transform: viewport cameraTransform;
@@ -288,24 +260,17 @@ WDSSceneRenderer >> submitCurrentCameraStates [
 ]
 
 { #category : #'rendering preparations' }
-WDSSceneRenderer >> tryToCollectLightSource: lightSource for: camera [
-	"Nothing required here."
-]
-
-{ #category : #'rendering preparations' }
-WDSSceneRenderer >> updateFrameCameraStates: viewports [
-	self ensureCameraStatesFor: viewports size.
+WDSSceneRenderer >> updateFrameCameraStates [
+	self ensureCameraStatesFor: renderingViewports size.
 	currentCameraStates := useLateLatching
 		ifTrue: [ cameraStates first ]
 		ifFalse: [ cameraStates at: engine bufferingFrameIndex ].
-	currentCameraViewports := viewports.
 	self submitCurrentCameraStates
 ]
 
 { #category : #'rendering preparations' }
-WDSSceneRenderer >> updateRenderingStatesFor: viewports [
-	self
-		updateFrameCameraStates: viewports
+WDSSceneRenderer >> updateGPUStatesForRenderingViewports [
+	self updateFrameCameraStates
 ]
 
 { #category : #accessing }

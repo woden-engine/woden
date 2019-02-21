@@ -11,7 +11,8 @@ Class {
 		'shaderSignature',
 		'genericObjectStatePool',
 		'neutralObjectInstanceStatePool',
-		'neutralObjectInstanceState'
+		'neutralObjectInstanceState',
+		'commonGPUStateRenderingComponent'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
@@ -27,6 +28,21 @@ WDSGScene >> add: aNode [
 	aNode addedToScene: self
 ]
 
+{ #category : #'rendering graph' }
+WDSGScene >> addRenderingElementsToGraph: renderingDependencyGraph [
+	self renderingGraphDependencies.
+]
+
+{ #category : #enumerating }
+WDSGScene >> allChildrenDo: aBlock [
+	roots do: [ :root | root withAllChildrenDo: aBlock ]
+]
+
+{ #category : #enumerating }
+WDSGScene >> allVisibleRenderingChildrenDo: aBlock [
+	roots do: [ :root | root withAllVisibleRenderingChildrenDo: aBlock ]
+]
+
 { #category : #accessing }
 WDSGScene >> backgroundColor [
 	^ backgroundColor
@@ -35,6 +51,24 @@ WDSGScene >> backgroundColor [
 { #category : #accessing }
 WDSGScene >> backgroundColor: anObject [
 	backgroundColor := anObject
+]
+
+{ #category : #enumerating }
+WDSGScene >> collectVisibleObjectsAndLightIntoViewport: renderingViewport [
+	self allVisibleRenderingChildrenDo: [ :child |
+		(renderingViewport shouldRenderObject: child) ifTrue: [ 
+			renderingViewport addVisibleObject: child.
+		
+			child isLightSource ifTrue: [ 
+				renderingViewport addLight: child
+			]
+		]
+	]
+]
+
+{ #category : #'rendering graph' }
+WDSGScene >> commonGPUStateRenderingComponent [
+	^ commonGPUStateRenderingComponent ifNil: [commonGPUStateRenderingComponent := WDSGSceneCommonGPUStateRenderingComponent for: self]
 ]
 
 { #category : #accessing }
@@ -70,6 +104,11 @@ WDSGScene >> initializeWithEngine: anEngine shaderSignatureClass: shaderSignatur
 	shaderSignature := shaderSignatureClass for: anEngine
 ]
 
+{ #category : #'rendering graph' }
+WDSGScene >> modelRenderingGraphDependencies [
+	^ { self commonGPUStateRenderingComponent }
+]
+
 { #category : #accessing }
 WDSGScene >> neutralGenericObjectInstanceState [
 	neutralObjectInstanceStatePool ifNil: [
@@ -96,6 +135,11 @@ WDSGScene >> remove: aNode [
 	aNode removedFromScene: self
 ]
 
+{ #category : #'rendering graph' }
+WDSGScene >> renderingGraphDependencies [
+	^ self modelRenderingGraphDependencies
+]
+
 { #category : #accessing }
 WDSGScene >> roots [
 	^ roots
@@ -104,4 +148,16 @@ WDSGScene >> roots [
 { #category : #accessing }
 WDSGScene >> shaderSignature [
 	^ shaderSignature
+]
+
+{ #category : #'rendering phases' }
+WDSGScene >> updateCommonGPUState [
+	| fullFrameIndex |
+	fullFrameIndex := engine frameBufferingDriver frameIndex.
+
+	self allChildrenDo: [ :object |
+		object
+			updateRenderTransform;
+			updateCommonGpuStateForFrame: fullFrameIndex
+	]
 ]

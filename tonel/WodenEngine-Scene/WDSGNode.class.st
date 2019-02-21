@@ -9,7 +9,6 @@ Class {
 		'transform',
 		'children',
 		'visible',
-		'lastUpdatedGpuFrame',
 		'parent',
 		'renderTransform',
 		'model',
@@ -220,6 +219,10 @@ WDSGNode >> parent [
 ]
 
 { #category : #rendering }
+WDSGNode >> performCommonGpuStateUpdate [
+]
+
+{ #category : #rendering }
 WDSGNode >> performGpuStateUpdateWithCamera: aCamera [
 ]
 
@@ -299,13 +302,17 @@ WDSGNode >> transform: aTransform [
 ]
 
 { #category : #'as yet unclassified' }
-WDSGNode >> updateGpuStateForFrame: frameIndex camera: currentCamera [
-	frameIndex = lastUpdatedGpuFrame ifTrue: [ ^ self ].
-	lastUpdatedGpuFrame := frameIndex.
-	parent ifNotNil: [ parent updateGpuStateForFrame: frameIndex camera: currentCamera ].
+WDSGNode >> updateCommonGpuStateForFrame: frameIndex [
 	self
 		updateRenderTransform;
-		performGpuStateUpdateWithCamera: currentCamera.
+		performCommonGpuStateUpdate
+
+]
+
+{ #category : #'as yet unclassified' }
+WDSGNode >> updateGpuStateForFrame: frameIndex camera: currentCamera [
+	self flag: 'TODO: Cleanup the camera specific rendering data.'.
+	self performGpuStateUpdateWithCamera: currentCamera
 
 ]
 
@@ -347,4 +354,18 @@ WDSGNode >> visible [
 { #category : #accessing }
 WDSGNode >> visible: anObject [
 	visible := anObject
+]
+
+{ #category : #enumerating }
+WDSGNode >> withAllChildrenDo: aBlock [
+	aBlock value: self.
+	children do: [ :child | child withAllChildrenDo: aBlock ]
+]
+
+{ #category : #enumerating }
+WDSGNode >> withAllVisibleRenderingChildrenDo: aBlock [
+	visible ifFalse: [ ^ self ].
+	aBlock value: self.
+	
+	children do: [ :child | child withAllVisibleRenderingChildrenDo: aBlock ]
 ]

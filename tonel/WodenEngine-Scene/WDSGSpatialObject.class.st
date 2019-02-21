@@ -68,6 +68,16 @@ WDSGSpatialObject >> initialize [
 ]
 
 { #category : #rendering }
+WDSGSpatialObject >> performCommonGpuStateUpdate [
+	objectState transform: renderTransform.
+	self currentGpuObjectState value: objectState.
+	
+	renderable ifNotNil: [
+		renderable performCommonGpuStateUpdateFor: scene engine frameIndex: scene engine bufferingFrameIndex into: renderableSceneData
+	]
+]
+
+{ #category : #rendering }
 WDSGSpatialObject >> performGpuStateUpdateWithCamera: aCamera [
 	objectState transform: renderTransform.
 	self currentGpuObjectState value: objectState.

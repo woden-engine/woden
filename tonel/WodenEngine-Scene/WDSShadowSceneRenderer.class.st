@@ -16,9 +16,11 @@ WDSShadowSceneRenderer >> renderMode [
 ]
 
 { #category : #rendering }
-WDSShadowSceneRenderer >> renderViewport: viewport index: viewportIndex [
-	| renderTarget resolveTarget renderPass |
+WDSShadowSceneRenderer >> renderViewport: renderingViewport index: viewportIndex [
+	| renderTarget resolveTarget renderPass viewport |
 	self setupStateTracker.
+	
+	viewport := renderingViewport viewport.
 	renderTarget := viewport renderTarget.
 	resolveTarget := viewport resolveRenderTarget.
 
@@ -30,12 +32,17 @@ WDSShadowSceneRenderer >> renderViewport: viewport index: viewportIndex [
 	self setupViewportRendering: viewport index: viewportIndex.
 	
 	"Render the viewport objects"
-	(objectsPerViewport at: viewportIndex) do: [ :object |
+	renderingViewport visibleObjects do: [ :object |
 		object renderOn: stateTracker
 	].
 	
 	"End rendering into the viewport"
 	stateTracker endRenderPass.
+]
+
+{ #category : #abstract }
+WDSShadowSceneRenderer >> sceneRendererViewportClass [
+	^ WDSShadowSceneRendererViewport
 ]
 
 { #category : #rendering }

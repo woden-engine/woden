@@ -133,32 +133,23 @@ WDSGSpatialObjectInstanceGroup >> offsetOfInstanceChild: child [
 ]
 
 { #category : #rendering }
-WDSGSpatialObjectInstanceGroup >> performGpuStateUpdateWithCamera: aCamera [
-	| currentGpuState instanceStateBuffer instanceStateSize instanceStateOffset instanceStatePointer |
+WDSGSpatialObjectInstanceGroup >> performCommonGpuStateUpdate [
 	objectState transform: renderTransform.
-	depthSorted ifTrue: [ self depthSortFor: aCamera ].
+	depthSorted ifFalse: [ self updateInstancesGPUStates. ].
 	
-	currentGpuState := self currentGpuObjectState.
-	currentGpuState first value: objectState.
-	
-	instanceStateBuffer := currentGpuState second.
-	instanceStateBuffer ensureCapacityForAtLeast: children size keepOldData: true.
-	
-	instanceStateSize := instanceStateBuffer elementSize.
-	instanceStatePointer := instanceStateBuffer validPointer getHandle.
-	updatedPerFrame ifTrue: [ 
-		children doWithIndex: [ :child :index |
-			instanceStateOffset := (index-1) * instanceStateSize.
-			child writeGPUStateInto: instanceStatePointer at: instanceStateOffset
-		].
-	] ifFalse: [
-		pendingUpdates do: [ :child |
-			instanceStateOffset := childOffsetDictionary at: child.
-			child writeGPUStateInto: instanceStatePointer at: instanceStateOffset			
-		].
-		pendingUpdates removeAll
+	renderable ifNotNil: [
+		renderable performCommonGpuStateUpdateFor: scene engine frameIndex: scene engine bufferingFrameIndex into: renderableSceneData
+	]
+]
+
+{ #category : #rendering }
+WDSGSpatialObjectInstanceGroup >> performGpuStateUpdateWithCamera: aCamera [
+	objectState transform: renderTransform.
+	depthSorted ifTrue: [
+		self depthSortFor: aCamera.
+		self updateInstancesGPUStates
 	].
-	
+
 	renderable ifNotNil: [
 		renderable performGpuStateUpdateFor: scene engine frameIndex: scene engine bufferingFrameIndex into: renderableSceneData
 	]
@@ -194,4 +185,36 @@ WDSGSpatialObjectInstanceGroup >> renderOn: commandList mode: renderMode submode
 		useShaderResources: self currentObjectStateBinding validHandle.
 		
 	renderable renderOn: commandList mode: renderMode submode: submode instanceCount: children size baseInstance: 0 baseVertex: 0
+]
+
+{ #category : #rendering }
+WDSGSpatialObjectInstanceGroup >> updateInstancesGPUStates [
+	| currentGpuState instanceStateBuffer instanceStateSize instanceStatePointer instanceStateOffset |
+	currentGpuState := self currentGpuObjectState.
+	currentGpuState first value: objectState.
+	
+	instanceStateBuffer := currentGpuState second.
+	instanceStateBuffer ensureCapacityForAtLeast: children size keepOldData: true.
+	
+	instanceStateSize := instanceStateBuffer elementSize.
+	instanceStatePointer := instanceStateBuffer validPointer getHandle.
+	updatedPerFrame ifTrue: [ 
+		children doWithIndex: [ :child :index |
+			instanceStateOffset := (index-1) * instanceStateSize.
+			child writeGPUStateInto: instanceStatePointer at: instanceStateOffset
+		].
+	] ifFalse: [
+		pendingUpdates do: [ :child |
+			instanceStateOffset := childOffsetDictionary at: child.
+			child writeGPUStateInto: instanceStatePointer at: instanceStateOffset			
+		].
+		pendingUpdates removeAll
+	].
+
+]
+
+{ #category : #enumerating }
+WDSGSpatialObjectInstanceGroup >> withAllVisibleRenderingChildrenDo: aBlock [
+	visible ifFalse: [ ^ self ].
+	aBlock value: self.
 ]

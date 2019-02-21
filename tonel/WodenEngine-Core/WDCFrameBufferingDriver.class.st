@@ -18,7 +18,7 @@ Class {
 		'currentFrameStartTime',
 		'lastFrameEndTime'
 	],
-	#category : #'WodenEngine-Core-Engine'
+	#category : #'WodenEngine-Core-Rendering'
 }
 
 { #category : #accessing }
@@ -206,6 +206,7 @@ WDCFrameBufferingDriver >> mainRenderingProcessIteration [
 { #category : #'rendering process' }
 WDCFrameBufferingDriver >> renderForDeltaMicroseconds: delta [
 	"Always update the simulations"
+	| renderingGraph |
 	frontRenderingProcesses reject: #suspended thenDo: #processEvents.
 
 	self renderingProcessesDo: [ :process |
@@ -215,12 +216,23 @@ WDCFrameBufferingDriver >> renderForDeltaMicroseconds: delta [
 
 	"Only perform rendering if there is at least one process that needs to perform rendering."
 	frontRenderingProcesses detect: #needsToRender ifNone: [^ self].
+
+	self
+		beginFrame.
+
+	"Build the graph with rendering elements."
+	renderingGraph := WDCRenderingDependencyGraph new.
+	self renderingProcessesRenderDo: [:process |
+		renderingGraph addNode: process
+	].
+
+	renderingGraph
+		sortedNodesDo: #prepareRendering;
+		sortedNodesDo: #constructRenderingCommandLists;
+		sortedNodesDo: #sendRenderingCommands;
+		sortedNodesDo: #commitSurfaces.
 	
 	self
-		beginFrame;
-		renderingProcessesRenderDo: #prepareRendering;
-		renderingProcessesRenderDo: #sendRenderingCommands;
-		renderingProcessesRenderDo: #commitSurfaces;
 		endFrame
 ]
 

@@ -50,7 +50,7 @@ WDCSkinnedGenericMesh >> createSceneDependentDataFor: engine into: bindings [
 ]
 
 { #category : #'extra per object rendering data' }
-WDCSkinnedGenericMesh >> performGpuStateUpdateFor: engine frameIndex: frameIndex into: animationState [
+WDCSkinnedGenericMesh >> performCommonGpuStateUpdateFor: engine frameIndex: frameIndex into: animationState [
 	| poseStateSize |
 	poseStateSize := self poseStateSize.
 	LibC memCopy: animationState poseMatrices rawData to: animationState poseBuffer validPointer getHandle + (poseStateSize * (frameIndex - 1)) size: poseStateSize

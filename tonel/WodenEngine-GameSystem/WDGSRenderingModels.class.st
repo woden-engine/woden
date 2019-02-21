@@ -171,6 +171,11 @@ WDGSRenderingModels >> modelForSubMode: submode [
 ]
 
 { #category : #'extra per object rendering data' }
+WDGSRenderingModels >> performCommonGpuStateUpdateFor: engine frameIndex: frameIndex into: renderableSceneData [
+	
+]
+
+{ #category : #'extra per object rendering data' }
 WDGSRenderingModels >> performGpuStateUpdateFor: engine frameIndex: frameIndex into: renderableSceneData [
 	
 ]

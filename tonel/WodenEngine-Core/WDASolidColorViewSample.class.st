@@ -27,16 +27,10 @@ WDASolidColorViewSample >> color: anObject [
 	color := anObject
 ]
 
-{ #category : #initialization }
-WDASolidColorViewSample >> initialize [
-	super initialize.
-	color := Color blue
-]
-
 { #category : #'rendering process stages' }
-WDASolidColorViewSample >> prepareRendering [
+WDASolidColorViewSample >> constructRenderingCommandLists [
 	| resolveFramebuffer renderTarget resolveTarget renderFramebuffer currentCommandLists |
-	super prepareRendering.
+	super constructRenderingCommandLists.
 	perFrameCommandLists ifNil: [ perFrameCommandLists := WDCPerFrameSimpleCommandList for: engine ].
 	currentCommandLists := perFrameCommandLists currentList.
 	
@@ -60,6 +54,12 @@ WDASolidColorViewSample >> prepareRendering [
 			builder resolveFramebuffer: resolveFramebuffer validHandle sourceFramebuffer: renderFramebuffer validHandle
 		]
 	].
+]
+
+{ #category : #initialization }
+WDASolidColorViewSample >> initialize [
+	super initialize.
+	color := Color blue
 ]
 
 { #category : #'rendering process stages' }

@@ -2,92 +2,93 @@ Class {
 	#name : #WDAViewWithCyrusToolkit,
 	#superclass : #WDAViewWithBabylon,
 	#instVars : [
-		'vsWindow'
+		'cyrusWindow'
 	],
 	#category : #'WodenEngine-Babylon-Vesuvius'
 }
 
+{ #category : #'rendering process stages' }
+WDAViewWithCyrusToolkit >> addRenderingElementsToGraph: aRenderingGraph [
+	self flag: 'FIXME: Remove this hack for the sub views'.
+	cyrusWindow extent: window drawingSurfaceExtent.
+	super addRenderingElementsToGraph: aRenderingGraph
+]
+
+{ #category : #accessing }
+WDAViewWithCyrusToolkit >> cyrusWindow [
+	^ cyrusWindow
+]
+
 { #category : #rendering }
 WDAViewWithCyrusToolkit >> drawOnBabylonCanvas: canvas [
 	canvas clear: Color transparent.
-	vsWindow fullDrawOn: canvas
+	cyrusWindow fullDrawOn: canvas
 ]
 
 { #category : #initialization }
 WDAViewWithCyrusToolkit >> initialize [
 	super initialize.
-	vsWindow := WDCyTkVirtualHostWindow new.
-]
-
-{ #category : #'rendering process stages' }
-WDAViewWithCyrusToolkit >> prepareRendering [
-	vsWindow extent: window drawingSurfaceExtent.
-	super prepareRendering
+	cyrusWindow := WDCyTkVirtualHostWindow new.
 ]
 
 { #category : #visiting }
 WDAViewWithCyrusToolkit >> visitKeyDownEvent: anEvent [
-	vsWindow ifNotNil: [ vsWindow dispatchKeyDownEvent: anEvent ]
+	cyrusWindow ifNotNil: [ cyrusWindow dispatchKeyDownEvent: anEvent ]
 ]
 
 { #category : #visiting }
 WDAViewWithCyrusToolkit >> visitKeyUpEvent: anEvent [
-	vsWindow ifNotNil: [ vsWindow dispatchKeyUpEvent: anEvent ]
+	cyrusWindow ifNotNil: [ cyrusWindow dispatchKeyUpEvent: anEvent ]
 ]
 
 { #category : #visiting }
 WDAViewWithCyrusToolkit >> visitMouseButtonPressEvent: anEvent [
-	vsWindow ifNotNil: [ vsWindow dispatchMouseButtonPressEvent: anEvent ]
+	cyrusWindow ifNotNil: [ cyrusWindow dispatchMouseButtonPressEvent: anEvent ]
 ]
 
 { #category : #visiting }
 WDAViewWithCyrusToolkit >> visitMouseButtonReleaseEvent: anEvent [
-	vsWindow ifNotNil: [ vsWindow dispatchMouseButtonReleaseEvent: anEvent ]
+	cyrusWindow ifNotNil: [ cyrusWindow dispatchMouseButtonReleaseEvent: anEvent ]
 ]
 
 { #category : #visiting }
 WDAViewWithCyrusToolkit >> visitMouseMoveEvent: anEvent [
-	vsWindow ifNotNil: [ vsWindow dispatchMouseMoveEvent: anEvent ]
+	cyrusWindow ifNotNil: [ cyrusWindow dispatchMouseMoveEvent: anEvent ]
 ]
 
 { #category : #visiting }
 WDAViewWithCyrusToolkit >> visitMouseWheelEvent: anEvent [
-	vsWindow ifNotNil: [ vsWindow dispatchMouseWheelEvent: anEvent ]
+	cyrusWindow ifNotNil: [ cyrusWindow dispatchMouseWheelEvent: anEvent ]
 ]
 
 { #category : #visiting }
 WDAViewWithCyrusToolkit >> visitTextInputEvent: anEvent [
-	vsWindow ifNotNil: [ vsWindow dispatchTextInputEvent: anEvent ]
+	cyrusWindow ifNotNil: [ cyrusWindow dispatchTextInputEvent: anEvent ]
 ]
 
 { #category : #visiting }
 WDAViewWithCyrusToolkit >> visitWindowCloseEvent: anEvent [
-	vsWindow ifNotNil: [ vsWindow close ]
+	cyrusWindow ifNotNil: [ cyrusWindow close ]
 ]
 
 { #category : #visiting }
 WDAViewWithCyrusToolkit >> visitWindowHiddenEvent: anEvent [
-	vsWindow ifNotNil: [ vsWindow dispatchHidden: anEvent ]
+	cyrusWindow ifNotNil: [ cyrusWindow dispatchHidden: anEvent ]
 ]
 
 { #category : #visiting }
 WDAViewWithCyrusToolkit >> visitWindowMoveEvent: anEvent [
-	vsWindow ifNotNil: [ vsWindow dispatchMove: anEvent ]
+	cyrusWindow ifNotNil: [ cyrusWindow dispatchMove: anEvent ]
 ]
 
 { #category : #visiting }
 WDAViewWithCyrusToolkit >> visitWindowResizeEvent: anEvent [
 	anEvent suppressDefaultAction.
-	vsWindow ifNotNil: [ vsWindow dispatchResize: anEvent ]
+	cyrusWindow ifNotNil: [ cyrusWindow dispatchResize: anEvent ]
 ]
 
 { #category : #visiting }
 WDAViewWithCyrusToolkit >> visitWindowShownEvent: anEvent [
 	anEvent suppressDefaultAction.
-	vsWindow ifNotNil: [ vsWindow dispatchShown: anEvent ]
-]
-
-{ #category : #accessing }
-WDAViewWithCyrusToolkit >> vsWindow [
-	^ vsWindow
+	cyrusWindow ifNotNil: [ cyrusWindow dispatchShown: anEvent ]
 ]

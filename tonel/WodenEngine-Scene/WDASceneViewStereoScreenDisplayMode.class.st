@@ -109,6 +109,29 @@ WDASceneViewStereoScreenDisplayMode >> computeProjectionMatrices [
 ]
 
 { #category : #'rendering process stages' }
+WDASceneViewStereoScreenDisplayMode >> constructRenderingCommandLists [
+	| resolveTarget |
+	self
+		checkRenderTargets;
+		updateCompositionState;
+		uploadCompositionState;
+		computeProjectionMatrices;
+		updateCameraFrustum.
+		
+	resolveTarget := view window validResolveRenderTarget.
+	^ view sceneRenderer
+		useLateLatching: self useLateLatching;
+		currentTime: view model currentTime;
+		renderScene: view model scene viewports: {
+			self leftViewportForCamera: view cameraSceneNode.
+			self rightViewportForCamera: view cameraSceneNode.
+		}
+		composeWith: [ :stateTracker |
+			self composeEyesIn: stateTracker
+		]
+]
+
+{ #category : #'rendering process stages' }
 WDASceneViewStereoScreenDisplayMode >> createCompositionStateBinding [
 	compositionState := WTCompositionState new.
 	compositionStateBinding := self shaderSignature newParameters.
@@ -207,25 +230,12 @@ WDASceneViewStereoScreenDisplayMode >> leftViewportForCamera: camera [
 
 { #category : #'rendering process stages' }
 WDASceneViewStereoScreenDisplayMode >> prepareRendering [
-	| resolveTarget |
 	self
 		checkRenderTargets;
 		updateCompositionState;
 		uploadCompositionState;
 		computeProjectionMatrices;
 		updateCameraFrustum.
-		
-	resolveTarget := view window validResolveRenderTarget.
-	^ view sceneRenderer
-		useLateLatching: self useLateLatching;
-		currentTime: view model currentTime;
-		renderScene: view model scene viewports: {
-			self leftViewportForCamera: view cameraSceneNode.
-			self rightViewportForCamera: view cameraSceneNode.
-		}
-		composeWith: [ :stateTracker |
-			self composeEyesIn: stateTracker
-		]
 ]
 
 { #category : #'multi eye rendering' }

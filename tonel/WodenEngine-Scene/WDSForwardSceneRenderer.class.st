@@ -54,18 +54,19 @@ WDSForwardSceneRenderer >> shaderSignatureClass [
 ]
 
 { #category : #rendering }
-WDSForwardSceneRenderer >> updateFrameLightingStates: viewports [
-	| transform numberOfLights lightingState gpuLightingStates lightSources |
-	self ensureLightingStatesFor: viewports size.
+WDSForwardSceneRenderer >> updateFrameLightingStates [
+	| transform lightingState gpuLightingStates lightSources viewport viewportLights |
+	self ensureLightingStatesFor: renderingViewports size.
 	currentGlobalLigthingStates := globalLightingStates at: engine bufferingFrameIndex.
 
-	numberOfLights := usedLights size.
-	
-	viewports doWithIndex: [ :viewport :viewportIndex |
+	renderingViewports doWithIndex: [ :renderingViewport :viewportIndex |
+		viewport := renderingViewport viewport.
 		transform := viewport cameraTransform.
 
 		lightSources := SLVMNativeArray for: WTLightSourceData new: 16.
-		usedLights doWithIndex: [ :lightSource :lightIndex |
+
+		viewportLights := renderingViewport lightRenderingStates.
+		viewportLights doWithIndex: [ :lightSource :lightIndex |
 			lightSources at: lightIndex put: (lightSource viewStateForCameraTransform: transform).
 		].
 		
@@ -74,12 +75,18 @@ WDSForwardSceneRenderer >> updateFrameLightingStates: viewports [
 			skyLighting: Color darkGray asWMVector4F;
 			groundLighting: Color veryDarkGray asWMVector4F;
 			sunDirection: (transform inverseTransformVector3: (WMVector3F y: 1.0));
-			numberOfLights: numberOfLights;
+			numberOfLights: viewportLights size;
 			lightSources: lightSources.
 			
 		gpuLightingStates := (currentGlobalLigthingStates at: viewportIndex) slotValueAt: 0.
 		gpuLightingStates value: lightingState.
 	].
+]
+
+{ #category : #rendering }
+WDSForwardSceneRenderer >> updateGPUStatesForRenderingViewports [
+	super updateGPUStatesForRenderingViewports.
+	self updateFrameLightingStates
 ]
 
 { #category : #rendering }

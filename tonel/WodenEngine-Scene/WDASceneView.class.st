@@ -60,6 +60,13 @@ WDASceneView >> cameraSceneNode [
 	^ self camera ifNotNil: [:c | c asSceneNode]
 ]
 
+{ #category : #'rendering process stages' }
+WDASceneView >> constructRenderingCommandLists [
+	super constructRenderingCommandLists.
+	commandList := screenDisplayMode renderSceneViewports.
+
+]
+
 { #category : #accessing }
 WDASceneView >> engineChanged [
 	super engineChanged.
@@ -90,7 +97,7 @@ WDASceneView >> initialize [
 { #category : #'rendering process stages' }
 WDASceneView >> prepareRendering [
 	super prepareRendering.
-	commandList := screenDisplayMode prepareRendering.
+	screenDisplayMode prepareRendering.
 
 ]
 

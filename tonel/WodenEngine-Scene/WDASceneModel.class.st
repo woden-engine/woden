@@ -9,6 +9,12 @@ Class {
 	#category : 'WodenEngine-Scene-Application'
 }
 
+{ #category : #'rendering graph' }
+WDASceneModel >> addRenderingElementsToGraph: renderingDependencyGraph [
+	super addRenderingElementsToGraph: renderingDependencyGraph.
+	scene ifNotNil: [ scene addRenderingElementsToGraph: renderingDependencyGraph ]
+]
+
 { #category : #'as yet unclassified' }
 WDASceneModel >> buildScene: aBlock [
 	self newScene.
@@ -48,6 +54,11 @@ WDASceneModel >> newScene [
 	camera := WDSGCamera new.
 	scene add: camera.
 	^ scene
+]
+
+{ #category : #'rendering graph' }
+WDASceneModel >> renderingGraphDependencies [
+	^ super renderingGraphDependencies , (scene ifNil: [#()] ifNotNil: #modelRenderingGraphDependencies)
 ]
 
 { #category : #accessing }

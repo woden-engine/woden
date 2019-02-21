@@ -2,7 +2,6 @@ Class {
 	#name : #WDSLightedSceneRenderer,
 	#superclass : #WDSSceneRenderer,
 	#instVars : [
-		'visibleLightSources',
 		'shadowCastingLights',
 		'shadowCastingLightCount',
 		'shadowMapBuffer',
@@ -22,13 +21,6 @@ WDSLightedSceneRenderer class >> maxShadowCastingLightCount [
 { #category : #'shadow mapping' }
 WDSLightedSceneRenderer class >> shadowMapExtent [
 	^ 512 @ 512
-]
-
-{ #category : #'rendering preparations' }
-WDSLightedSceneRenderer >> collectVisibleObjectsFor: camera [
-	visibleLightSources removeAll.
-	^ super collectVisibleObjectsFor: camera
-
 ]
 
 { #category : #'debug rendering' }
@@ -52,26 +44,39 @@ WDSLightedSceneRenderer >> drawDebugShadowMapsOnPompeiiCanvas: canvas [
 	canvas draw: shadowMapDebuggingMesh
 ]
 
-{ #category : #initialization }
-WDSLightedSceneRenderer >> initializeWithEngine: aWDCEngine [
-	super initializeWithEngine: aWDCEngine.
-	visibleLightSources := OrderedCollection new
-]
-
 { #category : #'shadow mapping' }
 WDSLightedSceneRenderer >> maxShadowCastingLightCount [
 	^ self class maxShadowCastingLightCount
 ]
 
+{ #category : #'rendering preparations' }
+WDSLightedSceneRenderer >> prepareRenderingForViewports: viewports [
+	super prepareRenderingForViewports: viewports.
+	self prepareShadowMapRendering
+]
+
 { #category : #'shadow mapping' }
-WDSLightedSceneRenderer >> renderShadowMaps [
+WDSLightedSceneRenderer >> prepareShadowMapRendering [
 	
-	| viewports |
-	viewports := (1 to: shadowCastingLightCount) collect: [ :i | (shadowCastingLights at: i) viewportForShadowMap: (shadowMapRenderTargets at: i) camera: mainCamera ].
+	| viewports shadowCastingLightAndViewer |
+	shadowCastingLightCount = 0 ifTrue: [ ^ self ].
+	
+	viewports := (1 to: shadowCastingLightCount) collect: [ :i |
+		shadowCastingLightAndViewer := shadowCastingLights at: i.
+		shadowCastingLightAndViewer first viewportForShadowMap: (shadowMapRenderTargets at: i) camera: shadowCastingLightAndViewer second
+	].
 	
 	self shadowSceneRenderer
 		currentTime: currentTime;
-		renderScene: currentScene viewports: viewports intoStateTracker: stateTracker
+		prepareRenderingForViewports: viewports.
+]
+
+{ #category : #'shadow mapping' }
+WDSLightedSceneRenderer >> renderShadowMaps [
+	shadowCastingLightCount = 0 ifTrue: [ ^ self ].
+
+	self shadowSceneRenderer
+		renderSceneViewportsIntoStateTracker: stateTracker
 ]
 
 { #category : #rendering }
@@ -81,31 +86,9 @@ WDSLightedSceneRenderer >> renderViewports: viewports composeWith: aBlock [
 	^ super renderViewports: viewports composeWith: aBlock
 ]
 
-{ #category : #'rendering preparations' }
-WDSLightedSceneRenderer >> selectLights [
-	| numberOfLights lightSource shadowMapIndex lightRenderingState |
-	numberOfLights := visibleLightSources size min: 16.
-	shadowCastingLights := Array new: self maxShadowCastingLightCount.
-	shadowCastingLightCount := 0.
-
-	usedLights := (1 to: numberOfLights) collect: [ :lightIndex |
-		lightSource := (visibleLightSources at: lightIndex) first.
-		shadowMapIndex := -1.
-		(lightSource isShadowCasting and: [ shadowCastingLightCount + lightSource shadowLayerCount <= shadowCastingLights size ]) ifTrue: [
-			shadowMapIndex := shadowCastingLightCount
-		].
-	
-		lightRenderingState := lightSource setupRenderingWithShadowMap: shadowMapIndex mainCamera: mainCamera engine: engine.
-		shadowMapIndex >= 0 ifTrue: [
-			lightRenderingState cascades do: [ :cascade |
-				shadowCastingLightCount := shadowCastingLightCount + 1.
-				shadowCastingLights at: shadowCastingLightCount put: cascade.
-			].
-		].
-
-		lightRenderingState
-	].
-
+{ #category : #abstract }
+WDSLightedSceneRenderer >> sceneRendererViewportClass [
+	^ WDSLightedSceneRendererViewport
 ]
 
 { #category : #'shadow mapping' }
@@ -168,30 +151,41 @@ WDSLightedSceneRenderer >> shadowSceneRenderer [
 ]
 
 { #category : #'rendering preparations' }
-WDSLightedSceneRenderer >> sortAndPrepareLightsFor: viewports [
-	self
-		sortVisibleLights;
-		selectLights.
-]
+WDSLightedSceneRenderer >> sortAndPrepareLights [
+	| lightRenderingStates shadowMapIndex viewportCamera lightRenderingState lightSource |
+	renderingViewports do: #sortAndSelectLights.
 
-{ #category : #'rendering preparations' }
-WDSLightedSceneRenderer >> sortVisibleLights [
-	visibleLightSources sort: [ :a :b |
-		a second < b second
+	shadowCastingLights := Array new: self maxShadowCastingLightCount.
+	shadowCastingLightCount := 0.
+
+	renderingViewports do: [ :renderingViewport |
+		viewportCamera := renderingViewport camera.
+		
+		lightRenderingStates := renderingViewport selectedLights collect: [ :lightSourceAndDistance |
+			lightSource := lightSourceAndDistance first.
+			shadowMapIndex := -1.
+			(lightSource isShadowCasting and: [ shadowCastingLightCount + lightSource shadowLayerCount <= shadowCastingLights size ]) ifTrue: [
+				shadowMapIndex := shadowCastingLightCount
+			].
+	
+			lightRenderingState := lightSource setupRenderingWithShadowMap: shadowMapIndex mainCamera: viewportCamera engine: engine.
+			shadowMapIndex >= 0 ifTrue: [
+				lightRenderingState cascades do: [ :cascade |
+					shadowCastingLightCount := shadowCastingLightCount + 1.
+					shadowCastingLights at: shadowCastingLightCount put: {cascade . viewportCamera }.
+				].
+			].
+
+			lightRenderingState
+		].
+	
+		renderingViewport lightRenderingStates: lightRenderingStates.
 	].
 
 ]
 
 { #category : #'rendering preparations' }
-WDSLightedSceneRenderer >> tryToCollectLightSource: lightSource for: camera [
-	self flag: 'Check for the light source influence radius and distance to the camera'.
-
-	visibleLightSources add: {lightSource . 0.0}
-]
-
-{ #category : #'rendering preparations' }
-WDSLightedSceneRenderer >> updateRenderingStatesFor: viewports [
-	super updateRenderingStatesFor: viewports.
-	self
-		sortAndPrepareLightsFor: viewports
+WDSLightedSceneRenderer >> updateGPUStatesForRenderingViewports [
+	super updateGPUStatesForRenderingViewports.
+	self sortAndPrepareLights
 ]

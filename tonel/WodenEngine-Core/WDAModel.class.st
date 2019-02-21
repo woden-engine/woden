@@ -6,18 +6,25 @@ I am the core a Woden based application. I take care of handling animation and c
 Class {
 	#name : #WDAModel,
 	#superclass : #WDCRenderingProcess,
+	#traits : 'TWDCRenderingDependencyGraphNode',
+	#classTraits : 'TWDCRenderingDependencyGraphNode classTrait',
 	#instVars : [
 		'views',
 		'engine',
 		'started',
 		'session'
 	],
-	#category : 'WodenEngine-Core-Application'
+	#category : #'WodenEngine-Core-Application'
 }
 
 { #category : #'instance creation' }
 WDAModel class >> for: aWDCEngine [
 	^ self basicNew initializeWithEngine: aWDCEngine
+]
+
+{ #category : #adding }
+WDAModel >> addRenderingElementsToGraph: renderingDependencyGraph [
+	renderingDependencyGraph addNodes: views
 ]
 
 { #category : #adding }
@@ -31,14 +38,6 @@ WDAModel >> addView: aView [
 WDAModel >> allViewsAreClosed [
 	"Stop the process by default"
 	self stop
-]
-
-{ #category : #'rendering process stages' }
-WDAModel >> commitSurfaces [
-	engine renderingProcessCritical: [ 
-		views do: #commitSurfaces
-	]
-
 ]
 
 { #category : #accessing }
@@ -134,14 +133,6 @@ WDAModel >> openWith: aView [
 ]
 
 { #category : #'rendering process stages' }
-WDAModel >> prepareRendering [
-	engine renderingProcessCritical: [ 
-		views do: #prepareRendering
-	]
-
-]
-
-{ #category : #'rendering process stages' }
 WDAModel >> processEvents [
 	engine renderingProcessCritical: [ 
 		views do: #processEvents
@@ -155,14 +146,6 @@ WDAModel >> removeView: aView [
 		views remove: aView.
 		views ifEmpty: [ self allViewsAreClosed ]
 	]
-]
-
-{ #category : #'rendering process stages' }
-WDAModel >> sendRenderingCommands [
-	engine renderingProcessCritical: [ 
-		views do: #sendRenderingCommands
-	]
-
 ]
 
 { #category : #initialization }
