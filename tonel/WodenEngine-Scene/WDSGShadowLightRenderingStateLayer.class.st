@@ -44,6 +44,11 @@ WDSGShadowLightRenderingStateLayer >> shadowMapMatrixForCameraTransform: cameraT
 	^ engine projectiveTextureBiasMatrix * (shadowProjectionMatrix * (renderTransform inverseMatrix4 * cameraTransform matrix4))
 ]
 
+{ #category : #accessing }
+WDSGShadowLightRenderingStateLayer >> shadowProjectionMatrix [
+	^ shadowProjectionMatrix
+]
+
 { #category : #'as yet unclassified' }
 WDSGShadowLightRenderingStateLayer >> viewStateForCameraTransform: cameraTransform [
 	| state |

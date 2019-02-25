@@ -113,7 +113,9 @@ WDBBabylonSurface >> activateTextureMaterial: textureMaterial [
 	textureMaterial validTexture.
 	stateTracker
 		vertexShader: driver vertexShader;
-		fragmentShader: driver textureColorShader;
+		fragmentShader: (textureMaterial grayscaleTexture
+			ifFalse: [driver textureColorShader]
+			ifTrue: [driver grayTextureColorShader]);
 		useShaderResources: textureMaterial validShaderBinding
 ]
 

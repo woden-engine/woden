@@ -9,22 +9,41 @@ Class {
 		'mainCameraTransform',
 		'lightVector',
 		'extraShadowDistanceFactor',
-		'shadowCastingBody'
+		'shadowCastingBody',
+		'cameraNearDistance',
+		'cameraFarDistance'
 	],
 	#category : #'WodenEngine-Scene-Rendering'
 }
+
+{ #category : #accessing }
+WDSGDirectionalLightRenderingState >> cameraFarDistance [
+	^ cameraFarDistance ifNil: [ mainCamera farDistance ]
+]
 
 { #category : #accessing }
 WDSGDirectionalLightRenderingState >> cameraFrustum [
 	^ cameraFrustum ifNil: [cameraFrustum := mainCamera frustum ]
 ]
 
+{ #category : #accessing }
+WDSGDirectionalLightRenderingState >> cameraNearDistance [
+	^ cameraNearDistance ifNil: [ mainCamera nearDistance ]
+]
+
 { #category : #'shadow mapping' }
-WDSGDirectionalLightRenderingState >> computeUpVectorWithShadowCastingBody: shadowCastingBody [
+WDSGDirectionalLightRenderingState >> computeUpVectorWithViewVector: v lightVector: l [
+	| ln |
+	ln := l normalized.
+	^ ((ln cross: v) normalized cross: ln) normalized
+]
+
+{ #category : #'shadow mapping' }
+WDSGDirectionalLightRenderingState >> computeViewVectorWithShadowCastingBody: body [
 	| vector viewPosition |
 	vector := WMVector3F zero.
 	viewPosition := mainCameraTransform translation.
-	shadowCastingBody do: [ :point |
+	body do: [ :point |
 		vector := vector + (point - viewPosition)
 	].
 	^ vector normalized
@@ -34,6 +53,7 @@ WDSGDirectionalLightRenderingState >> computeUpVectorWithShadowCastingBody: shad
 WDSGDirectionalLightRenderingState >> extractShadowCastingBodyPoints [
 	| points worldCorner |
 	points := OrderedCollection new.
+	"Transcript show: light scene boundingBox; cr."
 	self cameraFrustum corners do: [ :corner |
 		worldCorner := mainCameraTransform transformPosition3: corner.
 		
@@ -48,7 +68,9 @@ WDSGDirectionalLightRenderingState >> extractShadowCastingBodyPoints [
 
 { #category : #'as yet unclassified' }
 WDSGDirectionalLightRenderingState >> nearDistance: nearDistance farDistance: farDistance [
-	cameraFrustum := mainCamera frustumForNearDistance: nearDistance farDistance: farDistance
+	cameraFrustum := mainCamera frustumForNearDistance: nearDistance farDistance: farDistance.
+	cameraNearDistance := nearDistance.
+	cameraFarDistance := farDistance
 ]
 
 { #category : #'shadow mapping' }
@@ -79,7 +101,7 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 
     Date: October 14, 2004
 	"
-	| frustumBox viewVector viewPosition cosGamma sinGamma lightDepth z_n z_f nearDistance farDistance upVector perspectivePoint perspectiveTransform falloff |
+	| frustumBox viewVector viewPosition cosGamma sinGamma lightDepth z_n z_f nearDistance farDistance upVector perspectivePoint perspectiveTransform falloff bodyNearDistance alpha paperNearDistance shortRangeNearDistance |
 	mainCameraTransform := "self roundCameraTransform:" mainCamera renderTransform.
 	extraShadowDistanceFactor := light extraShadowDistanceFactor.
 	
@@ -89,10 +111,11 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 	shadowCastingBody := self extractShadowCastingBodyPoints.
 
 	"Compute an initial render transform."	
-	upVector := self computeUpVectorWithShadowCastingBody: shadowCastingBody.
+	upVector := self computeUpVectorWithViewVector: viewVector lightVector: lightVector.
+	"self computeUpVectorWithShadowCastingBody: shadowCastingBody."
 	
 	"When the up vector and the lightvector are close to parallel, fallback to uniform shadow mapping."
-	(upVector dot: lightVector) abs > 0.73 ifTrue: [
+	(viewVector dot: lightVector) abs > 0.999 ifTrue: [
 		^ self setupUniformShadowMappingTransforms
 	].
 	
@@ -103,24 +126,30 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 		frustumBox insertPoint: (renderTransform inverseTransformPosition3: point).
 	].
 
-	"Compute the perspective transformation near and far planes"
+	"Compute the perspective transformation near and far planes. This is based on the sample code of the paper."
 	cosGamma := lightVector dot: viewVector.
 	sinGamma := (1.0 - (cosGamma*cosGamma)) sqrt.
 	falloff := 1.0 / sinGamma.
-	
-	lightDepth := frustumBox height. "Perspective transform depth"
-	z_n := mainCamera nearDistance*falloff.
+
+	bodyNearDistance := frustumBox min y.
+	lightDepth := frustumBox height.
+
+	z_n := bodyNearDistance abs *falloff.
 	z_f := z_n + (lightDepth/falloff).
-	nearDistance := (z_n + (z_n*z_f) sqrt)*falloff.
-	farDistance := nearDistance + lightDepth.
+	paperNearDistance := (z_n + (z_n*z_f) sqrt)*falloff.
 	
-	"Transcript show: nearDistance; space; show: farDistance; cr."
+	"For short ranges, the warping effect is so strong, that we spend all of the
+	resolution on objects very very far to the camera. This is specially notable
+	with cascaded shadow mapping."
+	shortRangeNearDistance := lightDepth * falloff.
+
+	"Mix the near distance distributions"
+	nearDistance := shortRangeNearDistance max: paperNearDistance.
+	farDistance := nearDistance + lightDepth.
 
 	"Compute the perspective point and the new render transform"
-	perspectivePoint := viewPosition - (upVector*(nearDistance - mainCamera nearDistance)).
+	perspectivePoint := viewPosition - (upVector*(nearDistance - bodyNearDistance)).
 	renderTransform := WMReversibleAffineTransformF from: perspectivePoint lookAtDirection: lightVector up: upVector.
-	
-	Transcript show: perspectivePoint; space; show: farDistance; cr.
 
 	perspectiveTransform := WMMatrix4F newFrom: { 
 		1.0 . 0.0 . 0.0 . 0.0 .
@@ -128,13 +157,15 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 		0.0 . 0.0 . 1.0 . 0.0 .
 		0.0 . 1.0 . 0.0 . 0.0 .
 	}.
+	"perspectiveTransform := WMMatrix4F identity."
 
 	frustumBox := WMBox3DF empty.
 	shadowCastingBody do: [ :point |
 		frustumBox insertPoint: (perspectiveTransform perspectiveTransformPosition3: (renderTransform inverseTransformPosition3: point)).
 	].
 
-	shadowProjectionMatrix := frustumBox mappingToNDCCoordinatesReverseDepth * perspectiveTransform
+	"Transcript show: frustumBox; cr."
+	shadowProjectionMatrix := (frustumBox mappingToNDCCoordinatesReverseDepth: engine engine projectionInvertedY) * perspectiveTransform
 ]
 
 { #category : #'shadow mapping' }
@@ -146,14 +177,15 @@ WDSGDirectionalLightRenderingState >> setupUniformShadowMappingTransforms [
 	viewPosition := mainCameraTransform translation.
 	viewVector := mainCameraTransform transformVector3: (WMVector3F z: -1.0).
 	
-	renderTransform := WMReversibleAffineTransformF from: viewPosition lookAtDirection: lightVector up: viewVector.
+	"renderTransform := WMReversibleAffineTransformF from: viewPosition lookAtDirection: lightVector up: viewVector."
+	renderTransform := light renderTransform.
 	
 	frustumBox := WMBox3DF empty.
 	shadowCastingBody do: [ :point |
 		frustumBox insertPoint: (renderTransform inverseTransformPosition3: point).
 	].
 
-	shadowProjectionMatrix := frustumBox mappingToNDCCoordinatesReverseDepth
+	shadowProjectionMatrix := frustumBox mappingToNDCCoordinatesReverseDepth: engine projectionInvertedY
 ]
 
 { #category : #'shadow mapping' }

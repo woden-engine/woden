@@ -55,9 +55,12 @@ WDSForwardSceneRenderer >> shaderSignatureClass [
 
 { #category : #rendering }
 WDSForwardSceneRenderer >> updateFrameLightingStates [
-	| transform lightingState gpuLightingStates lightSources viewport viewportLights |
+	| transform lightingState gpuLightingStates lightSources viewport viewportLights shadowMapExtent shadowMapInverseExtent |
 	self ensureLightingStatesFor: renderingViewports size.
 	currentGlobalLigthingStates := globalLightingStates at: engine bufferingFrameIndex.
+
+	shadowMapExtent := self shadowMapExtent asWMVector2F.
+	shadowMapInverseExtent := (WMVector2F x: 1.0 y: 1.0) / shadowMapExtent.
 
 	renderingViewports doWithIndex: [ :renderingViewport :viewportIndex |
 		viewport := renderingViewport viewport.
@@ -75,6 +78,8 @@ WDSForwardSceneRenderer >> updateFrameLightingStates [
 			skyLighting: Color darkGray asWMVector4F;
 			groundLighting: Color veryDarkGray asWMVector4F;
 			sunDirection: (transform inverseTransformVector3: (WMVector3F y: 1.0));
+			shadowMapExtent: shadowMapExtent;
+			shadowMapInverseExtent: shadowMapInverseExtent;
 			numberOfLights: viewportLights size;
 			lightSources: lightSources.
 			

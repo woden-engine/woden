@@ -8,13 +8,16 @@ Class {
 		'state',
 		'type',
 		'castShadows',
-		'shadowProjectionMatrix',
 		'outerSpotCutoff',
 		'innerSpotCutoff',
-		'extraShadowDistanceFactor'
+		'extraShadowDistanceFactor',
+		'shadowMapDepthBiasConstant',
+		'shadowMapDepthBiasSlope'
 	],
 	#classVars : [
 		'DefaultExtraShadowDistanceFactor',
+		'DefaultShadowMapDepthBiasConstant',
+		'DefaultShadowMapDepthBiasSlope',
 		'DefaultSpotInnerCutoff',
 		'DefaultSpotOuterCutoff'
 	],
@@ -22,12 +25,12 @@ Class {
 }
 
 { #category : #initialization }
-WDSGLightSource class >> initialize [
-	super initialize.
-	
+WDSGLightSource class >> initialize [	
 	DefaultSpotOuterCutoff := 45.
 	DefaultSpotInnerCutoff := 40.
 	DefaultExtraShadowDistanceFactor := 50.0.
+	DefaultShadowMapDepthBiasConstant := 4.0.
+	DefaultShadowMapDepthBiasSlope := 1.5.
 ]
 
 { #category : #accessing }
@@ -65,7 +68,8 @@ WDSGLightSource >> initialize [
 	outerSpotCutoff := DefaultSpotOuterCutoff.
 	innerSpotCutoff := DefaultSpotInnerCutoff.
 	extraShadowDistanceFactor := DefaultExtraShadowDistanceFactor.
-	shadowProjectionMatrix := WMMatrix4F identity.
+	shadowMapDepthBiasConstant := DefaultShadowMapDepthBiasConstant.
+	shadowMapDepthBiasSlope := DefaultShadowMapDepthBiasSlope.
 	state := WTLightSourceData new.
 	state
 		intensity: Color white asWMVector4F;
@@ -159,6 +163,26 @@ WDSGLightSource >> shadowLayerCount [
 	self isSpotLight ifTrue: [ ^ 1 ].
 	self isDirectionalLight ifTrue: [ ^ 3 ].
 	^ 0
+]
+
+{ #category : #accessing }
+WDSGLightSource >> shadowMapDepthBiasConstant [
+	^ shadowMapDepthBiasConstant
+]
+
+{ #category : #accessing }
+WDSGLightSource >> shadowMapDepthBiasConstant: anObject [
+	shadowMapDepthBiasConstant := anObject
+]
+
+{ #category : #accessing }
+WDSGLightSource >> shadowMapDepthBiasSlope [
+	^ shadowMapDepthBiasSlope
+]
+
+{ #category : #accessing }
+WDSGLightSource >> shadowMapDepthBiasSlope: anObject [
+	shadowMapDepthBiasSlope := anObject
 ]
 
 { #category : #accessing }

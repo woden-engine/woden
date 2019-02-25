@@ -9,7 +9,8 @@ Class {
 		'shadowSceneRenderer',
 		'usedLights',
 		'shadowMapDebuggingMesh',
-		'debuggingShadowMaps'
+		'debuggingShadowMaps',
+		'debugRenderShadowMapViewport'
 	],
 	#category : #'WodenEngine-Scene-Rendering'
 }
@@ -25,8 +26,32 @@ WDSLightedSceneRenderer class >> shadowMapExtent [
 ]
 
 { #category : #'debug rendering' }
+WDSLightedSceneRenderer >> applyDebugRenderShadowMapViewport [
+	| shadowLight cameraState gpuCameraState |
+	(debugRenderShadowMapViewport between: 1 and: shadowCastingLightCount) ifFalse: [ ^ self ].
+
+	shadowLight := (shadowCastingLights at: debugRenderShadowMapViewport) first.
+
+	cameraState := renderingViewports first viewport cameraState copy.
+	cameraState
+		transform: shadowLight renderTransform;
+		projectionMatrix: shadowLight shadowProjectionMatrix.
+			
+	gpuCameraState := currentCameraStates first slotValueAt: 0.
+	gpuCameraState atomicSetValue: cameraState.
+]
+
+{ #category : #'debug rendering' }
 WDSLightedSceneRenderer >> debugDrawOnPompeiiCanvas: canvas [
 	self drawDebugShadowMapsOnPompeiiCanvas: canvas
+]
+
+{ #category : #'debug rendering' }
+WDSLightedSceneRenderer >> debugRenderNextShadowMapViewport [
+	shadowCastingLightCount ifNotNil: [ 
+		debugRenderShadowMapViewport := (debugRenderShadowMapViewport + 1) % (shadowCastingLightCount + 1)
+	]
+
 ]
 
 { #category : #accessing }
@@ -65,6 +90,8 @@ WDSLightedSceneRenderer >> drawDebugShadowMapsOnPompeiiCanvas: canvas [
 WDSLightedSceneRenderer >> initialize [
 	super initialize.
 	debuggingShadowMaps := false.
+	debugRenderShadowMapViewport := 0.
+	
 ]
 
 { #category : #'shadow mapping' }
@@ -204,6 +231,13 @@ WDSLightedSceneRenderer >> sortAndPrepareLights [
 	
 		renderingViewport lightRenderingStates: lightRenderingStates.
 	].
+
+]
+
+{ #category : #rendering }
+WDSLightedSceneRenderer >> submitCurrentCameraStates [
+	super submitCurrentCameraStates.
+	self applyDebugRenderShadowMapViewport
 
 ]
 

@@ -10,9 +10,11 @@ Class {
 		'rigidBody',
 		'connectedEdges',
 		'view',
-		'behaviors'
+		'behaviors',
+		'localBoundingBox',
+		'boundingBox'
 	],
-	#category : 'WodenEngine-Roassal-Core'
+	#category : #'WodenEngine-Roassal-Core'
 }
 
 { #category : #'instance creation' }
@@ -75,10 +77,9 @@ RWElement >> asSceneNode [
 	^ sceneNode
 ]
 
-{ #category : #computing }
+{ #category : #accessing }
 RWElement >> boundingBox [
-	self flag: 'TODO: Transform properly the bounding box.'.
-	^ self localBoundingBox translatedBy: sceneNode transform translation
+	^ boundingBox ifNil: [boundingBox := self localBoundingBox transformedWith: sceneNode transform ]
 ]
 
 { #category : #physics }
@@ -101,7 +102,8 @@ RWElement >> changed [
 	].
 
 	shape changedElement: self sceneNode: sceneNode renderable: renderable.
-	sceneNode stateChanged
+	sceneNode stateChanged.
+	self invalidateBoundingBoxCache
 ]
 
 { #category : #'trachel compatibility' }
@@ -150,6 +152,12 @@ RWElement >> initialize [
 
 ]
 
+{ #category : #updating }
+RWElement >> invalidateBoundingBoxCache [
+	localBoundingBox := nil.
+	boundingBox := nil
+]
+
 { #category : #testing }
 RWElement >> isConnectedTo: anElement [
 	connectedEdges ifNil: [ ^ false ].
@@ -172,15 +180,16 @@ RWElement >> isElement [
 	^ true
 ]
 
-{ #category : #computing }
+{ #category : #accessing }
 RWElement >> localBoundingBox [
-	^ shape boundingBoxFor: self
+	^ localBoundingBox ifNil: [ localBoundingBox := shape boundingBoxFor: self ]
 ]
 
 { #category : #orientation }
 RWElement >> lookDown [
 	sceneNode transform orthonormal: (WMMatrix3F xrot: Float halfPi negated ).
-	sceneNode stateChanged
+	sceneNode stateChanged.
+	self invalidateBoundingBoxCache.
 ]
 
 { #category : #physics }
@@ -210,6 +219,7 @@ RWElement >> orientation [
 
 { #category : #accessing }
 RWElement >> orientation: anOrientation [
+	self invalidateBoundingBoxCache.
 	sceneNode transform orthonormal: anOrientation asWMMatrix3F
 ]
 
@@ -225,6 +235,7 @@ RWElement >> position [
 
 { #category : #accessing }
 RWElement >> position: aPosition [
+	self invalidateBoundingBoxCache.
 	^ sceneNode transform translation: aPosition
 ]
 
@@ -266,37 +277,43 @@ RWElement >> rigidBody [
 { #category : #orientation }
 RWElement >> rotateByX: angle [
 	sceneNode transform rotateRadiansOnX: angle.
-	sceneNode stateChanged
+	sceneNode stateChanged.
+	self invalidateBoundingBoxCache.
 ]
 
 { #category : #orientation }
 RWElement >> rotateByXDegrees: angle [
 	sceneNode transform rotateDegreesOnX: angle.
-	sceneNode stateChanged
+	sceneNode stateChanged.
+	self invalidateBoundingBoxCache.
 ]
 
 { #category : #orientation }
 RWElement >> rotateByY: angle [
 	sceneNode transform rotateRadiansOnY: angle.
-	sceneNode stateChanged
+	sceneNode stateChanged.
+	self invalidateBoundingBoxCache.
 ]
 
 { #category : #orientation }
 RWElement >> rotateByYDegrees: angle [
 	sceneNode transform rotateDegreesOnY: angle.
-	sceneNode stateChanged
+	sceneNode stateChanged.
+	self invalidateBoundingBoxCache.
 ]
 
 { #category : #orientation }
 RWElement >> rotateByZ: angle [
 	sceneNode transform rotateRadiansOnZ: angle.
-	sceneNode stateChanged
+	sceneNode stateChanged.
+	self invalidateBoundingBoxCache.
 ]
 
 { #category : #orientation }
 RWElement >> rotateByZDegrees: angle [
 	sceneNode transform rotateDegreesOnZ: angle.
-	sceneNode stateChanged
+	sceneNode stateChanged.
+	self invalidateBoundingBoxCache.
 ]
 
 { #category : #accessing }
@@ -344,7 +361,8 @@ RWElement >> transform [
 { #category : #translation }
 RWElement >> translateBy: translation [
 	sceneNode transform translateBy: translation.
-	sceneNode stateChanged
+	sceneNode stateChanged.
+	self invalidateBoundingBoxCache.
 ]
 
 { #category : #translation }
@@ -370,7 +388,8 @@ RWElement >> translateByZ: translation [
 { #category : #translation }
 RWElement >> translateTo: aWMVector3 [
 	sceneNode transform translation: aWMVector3.
-	sceneNode stateChanged
+	sceneNode stateChanged.
+	self invalidateBoundingBoxCache.
 ]
 
 { #category : #translation }
@@ -381,7 +400,8 @@ RWElement >> translateToX: newX [
 { #category : #translation }
 RWElement >> translateToX: newX y: newY z: newZ [ 
 	sceneNode transform translation: (WMVector3F x: newX asFloat y: newY asFloat z: newZ asFloat).
-	sceneNode stateChanged
+	sceneNode stateChanged.
+	self invalidateBoundingBoxCache.
 ]
 
 { #category : #translation }

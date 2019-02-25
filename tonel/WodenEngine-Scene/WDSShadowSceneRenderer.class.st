@@ -17,7 +17,7 @@ WDSShadowSceneRenderer >> renderMode [
 
 { #category : #rendering }
 WDSShadowSceneRenderer >> renderViewport: renderingViewport index: viewportIndex [
-	| renderTarget resolveTarget renderPass viewport |
+	| renderTarget resolveTarget renderPass viewport light |
 	self setupStateTracker.
 	
 	viewport := renderingViewport viewport.
@@ -25,6 +25,9 @@ WDSShadowSceneRenderer >> renderViewport: renderingViewport index: viewportIndex
 	resolveTarget := viewport resolveRenderTarget.
 
 	renderPass := renderTarget validMainRenderPass.
+	light := viewport camera light.
+	stateTracker depthBiasConstant: light shadowMapDepthBiasConstant negated slope: light shadowMapDepthBiasSlope negated.
+	
 	
 	"Begin rendering into the viewport"
 	stateTracker

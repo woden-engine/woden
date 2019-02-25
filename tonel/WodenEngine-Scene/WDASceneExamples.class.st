@@ -555,7 +555,10 @@ WDASceneExamples class >> example09DragonIsland [
 	].
 
 	light := WDSGLightSource new.
-	light directional; castShadows: true.
+	light directional; castShadows: true;
+		extraShadowDistanceFactor: 100;
+		shadowMapDepthBiasConstant: 20.0;
+		shadowMapDepthBiasSlope: 5.0.
 	light state
 		intensity: (Color fromHexString: 'f1efd7') asWMVector4F.
 	light transform

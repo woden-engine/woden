@@ -20,7 +20,8 @@ WDCSkyMaterial >> activateForwardOn: stateTracker [
 	
 	stateTracker
 		vertexShader: vertexShader;
-		fragmentShader: fragmentShader.
+		fragmentShader: fragmentShader;
+		materialDepthWriteMask: false.
 	^ true
 ]
 
