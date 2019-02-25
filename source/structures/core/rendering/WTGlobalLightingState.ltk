@@ -2,7 +2,9 @@ Structure <<< #WTGlobalLightingState
 	slots: {
 		#groundLighting => WMVector4F.
 		#skyLighting => WMVector4F.
-		
+        #shadowMapExtent => WMVector2F.
+        #shadowMapInverseExtent => WMVector2F.
+
 		#sunDirection => WMCompactVector3F.
 		#numberOfLights => Int32. 
 		
