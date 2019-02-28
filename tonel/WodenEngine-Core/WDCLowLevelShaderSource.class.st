@@ -30,6 +30,7 @@ WDCLowLevelShaderSource >> compile [
 	compiler := 	DASLCompiler new.
 	newSource := (compiler 
 		target: target;
+		addIncludeDirectory: WodenCoreAssets location / #shaders;
 		sourceFromFileNamed: entryFile;
 		compile;
 		generatedCode) asShaderCode.

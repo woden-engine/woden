@@ -101,6 +101,11 @@ WDCShaderSignatureSpecBank >> storage: elementName count: count [
 ]
 
 { #category : #building }
+WDCShaderSignatureSpecBank >> storageImage: elementName count: count [
+	^ self addElement: elementName type: #'storage-image' count: count
+]
+
+{ #category : #building }
 WDCShaderSignatureSpecBank >> texture: elementName [
 	^ self texture: elementName count: 1
 ]

@@ -8,6 +8,11 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+WDCPharoProceduralScriptContext class >> evaluateScriptFromFile: aFileReference [
+	^ self new evaluateScriptFromFile: aFileReference
+]
+
+{ #category : #'as yet unclassified' }
 WDCPharoProceduralScriptContext class >> forInspector [
 	^ self new parameters: (Dictionary newFromPairs: #(texture inspector))
 ]
@@ -21,6 +26,14 @@ WDCPharoProceduralScriptContext >> at: aParamName [
 WDCPharoProceduralScriptContext >> at: aParamName ifAbsent: isAbsentBlock [
 	parameters ifNil: [ ^ isAbsentBlock value ].
 	^ self parameters at: aParamName ifAbsent: isAbsentBlock
+]
+
+{ #category : #'as yet unclassified' }
+WDCPharoProceduralScriptContext >> evaluateScriptFromFile: scriptFileReference [
+	^ Smalltalk compiler
+			receiver: self;
+			evaluate: scriptFileReference asFileReference contents
+
 ]
 
 { #category : #testing }
@@ -62,6 +75,11 @@ WDCPharoProceduralScriptContext >> printOn: aStream [
 { #category : #accessing }
 WDCPharoProceduralScriptContext >> requestedTexture [
 	^ (self at: #texture) ifNil: [ #default ]
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralScriptContext >> textureExtent: anExtent heightFunction: heightFunction [
+	^ self textureExtent: anExtent heightFunction: heightFunction colorWith: WDCGrayscaleColorMap new
 ]
 
 { #category : #'rendering helpers' }

@@ -106,6 +106,11 @@ WDCEngine >> checkSession [
 ]
 
 { #category : #'resource building' }
+WDCEngine >> createBGRAStorageImageWithExtent: anExtent [
+	^ self createStorageImageWithExtent: anExtent format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM
+]
+
+{ #category : #'resource building' }
 WDCEngine >> createBasicRenderPassWithColor: aColor [
 	| colorAttachments depthStencilAttachment |
 	colorAttachments := {
@@ -239,6 +244,33 @@ WDCEngine >> createSoundSample [
 { #category : #'resource building' }
 WDCEngine >> createSoundSource [
 	^ WDCSoundSource for: self
+]
+
+{ #category : #'resource building' }
+WDCEngine >> createStorageImageWithExtent: anExtent [
+	^ self createStorageImageWithExtent: anExtent format: AGPU_TEXTURE_FORMAT_R8G8B8A8_UNORM
+]
+
+{ #category : #'resource building' }
+WDCEngine >> createStorageImageWithExtent: anExtent format: aTextureFormat [
+	| width height description |
+	width := anExtent x.
+	height := anExtent y.
+	description := AGPUTextureDescription new
+		type: AGPU_TEXTURE_2D;
+		format: aTextureFormat;
+		width: width;
+		height: height;
+		depthOrArraySize: 1;
+		miplevels: 1;
+		sample_count: 1;
+		sample_quality: 0;
+		flags: AGPU_TEXTURE_FLAG_STORAGE | AGPU_TEXTURE_FLAG_READED_BACK;
+		yourself.
+	^ (WDCTexture for: self)
+		description: description;
+		checkSession;
+		yourself.
 ]
 
 { #category : #'resource building' }
@@ -424,6 +456,11 @@ WDCEngine >> initializeForNewSession [
 		createResourceCache.
 	frameBufferingDriver := WDCFrameBufferingDriver for: self.
 
+]
+
+{ #category : #'resource loading' }
+WDCEngine >> loadComputeShader: aFileName [
+	^ resourceCache loadComputeShader: aFileName
 ]
 
 { #category : #'resource loading' }

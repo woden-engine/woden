@@ -1,5 +1,5 @@
 Class {
-	#name : #WDCPipelineStateDescription,
+	#name : #WDCGraphicsPipelineStateDescription,
 	#superclass : #Object,
 	#instVars : [
 		'vertexShader',
@@ -28,7 +28,7 @@ Class {
 }
 
 { #category : #comparing }
-WDCPipelineStateDescription >> = other [
+WDCGraphicsPipelineStateDescription >> = other [
 	self class == other class ifFalse: [ ^ false ].
 	
 	vertexShader == other vertexShader ifFalse: [ ^ false ].
@@ -56,19 +56,25 @@ WDCPipelineStateDescription >> = other [
 
 ]
 
+{ #category : #adding }
+WDCGraphicsPipelineStateDescription >> addDependantPipelineStateToShaders: pipelineState [
+	vertexShader ifNotNil: [ :shader | shader addDependantPipelineState: pipelineState ].
+	fragmentShader ifNotNil: [ :shader | shader addDependantPipelineState: pipelineState ].
+]
+
 { #category : #accessing }
-WDCPipelineStateDescription >> blendingStates [
+WDCGraphicsPipelineStateDescription >> blendingStates [
 	^ blendingStates
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> blendingStates: newBlendingStates [
+WDCGraphicsPipelineStateDescription >> blendingStates: newBlendingStates [
 	blendingStates ~= newBlendingStates ifTrue: [ self changed ].
 	blendingStates := newBlendingStates
 ]
 
 { #category : #building }
-WDCPipelineStateDescription >> buildError: errorMessage [
+WDCGraphicsPipelineStateDescription >> buildError: errorMessage [
 	^ WDCPipelineBuildError new
 			pipelineDescription: self;
 			signal: errorMessage
@@ -76,7 +82,7 @@ WDCPipelineStateDescription >> buildError: errorMessage [
 ]
 
 { #category : #building }
-WDCPipelineStateDescription >> buildForDevice: device [
+WDCGraphicsPipelineStateDescription >> buildForDevice: device [
 	| builder result logErrorLength logErrorBuffer |
 	builder := device createPipelineBuilder.
 
@@ -127,113 +133,113 @@ WDCPipelineStateDescription >> buildForDevice: device [
 ]
 
 { #category : #updating }
-WDCPipelineStateDescription >> changed [
+WDCGraphicsPipelineStateDescription >> changed [
 	isChanged := true
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> cullMode [
+WDCGraphicsPipelineStateDescription >> cullMode [
 	^ cullMode
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> cullMode: newCullMode [
+WDCGraphicsPipelineStateDescription >> cullMode: newCullMode [
 	cullMode ~= newCullMode ifTrue: [ self changed ].
 	cullMode := newCullMode
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> depthBiasConstant [
+WDCGraphicsPipelineStateDescription >> depthBiasConstant [
 	^ depthBiasConstant
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> depthBiasConstant: constant [
+WDCGraphicsPipelineStateDescription >> depthBiasConstant: constant [
 	depthBiasConstant ~= constant ifTrue: [ self changed ].
 	depthBiasConstant := constant.
 	self changed.
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> depthBiasSlope [
+WDCGraphicsPipelineStateDescription >> depthBiasSlope [
 	^ depthBiasSlope
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> depthBiasSlope: slope [
+WDCGraphicsPipelineStateDescription >> depthBiasSlope: slope [
 	depthBiasSlope ~= slope ifTrue: [ self changed ].
 	depthBiasSlope := slope.
 	self changed.
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> depthEnabled [
+WDCGraphicsPipelineStateDescription >> depthEnabled [
 	^ depthEnabled
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> depthEnabled: aBoolean [
+WDCGraphicsPipelineStateDescription >> depthEnabled: aBoolean [
 	depthEnabled ~= aBoolean ifTrue: [ self changed ].
 	depthEnabled := aBoolean
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> depthFunction [
+WDCGraphicsPipelineStateDescription >> depthFunction [
 	^ depthFunction
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> depthFunction: newDepthFunction [
+WDCGraphicsPipelineStateDescription >> depthFunction: newDepthFunction [
 	depthFunction ~= newDepthFunction ifTrue: [ self changed ].
 	depthFunction := newDepthFunction
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> depthStencilFormat [
+WDCGraphicsPipelineStateDescription >> depthStencilFormat [
 	^ depthStencilFormat
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> depthStencilFormat: newDepthStencilFormat [
+WDCGraphicsPipelineStateDescription >> depthStencilFormat: newDepthStencilFormat [
 	depthStencilFormat ~= newDepthStencilFormat ifTrue: [ self changed ].
 	depthStencilFormat := newDepthStencilFormat
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> depthWriteMask [
+WDCGraphicsPipelineStateDescription >> depthWriteMask [
 	^ depthWriteMask
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> depthWriteMask: newDepthWriteMask [
+WDCGraphicsPipelineStateDescription >> depthWriteMask: newDepthWriteMask [
 	depthWriteMask ~= newDepthWriteMask ifTrue: [ self changed ].
 	depthWriteMask := newDepthWriteMask
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> fragmentShader [
+WDCGraphicsPipelineStateDescription >> fragmentShader [
 	^ fragmentShader
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> fragmentShader: newFragmentShader [
+WDCGraphicsPipelineStateDescription >> fragmentShader: newFragmentShader [
 	fragmentShader ~~ newFragmentShader ifTrue: [ self changed ].
 	fragmentShader := newFragmentShader.
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> frontFaceWinding [
+WDCGraphicsPipelineStateDescription >> frontFaceWinding [
 	^ frontFaceWinding
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> frontFaceWinding: newFrontFaceWinding [
+WDCGraphicsPipelineStateDescription >> frontFaceWinding: newFrontFaceWinding [
 	frontFaceWinding ~= newFrontFaceWinding ifTrue: [ self changed ].
 	frontFaceWinding := newFrontFaceWinding
 ]
 
 { #category : #comparing }
-WDCPipelineStateDescription >> hash [
+WDCGraphicsPipelineStateDescription >> hash [
 	| result |
 	result := self class identityHash.
 	result := result bitXor: vertexShader identityHash.
@@ -262,57 +268,57 @@ WDCPipelineStateDescription >> hash [
 ]
 
 { #category : #initialization }
-WDCPipelineStateDescription >> initialize [
+WDCGraphicsPipelineStateDescription >> initialize [
 	super initialize.
 	
 	self reset
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> isChanged [
+WDCGraphicsPipelineStateDescription >> isChanged [
 	^ isChanged
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> isChanged: aBoolean [
+WDCGraphicsPipelineStateDescription >> isChanged: aBoolean [
 	isChanged := aBoolean
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> polygonMode [
+WDCGraphicsPipelineStateDescription >> polygonMode [
 	^ polygonMode
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> polygonMode: newPolygonMode [
+WDCGraphicsPipelineStateDescription >> polygonMode: newPolygonMode [
 	polygonMode ~= newPolygonMode ifTrue: [ self changed ].
 	polygonMode := newPolygonMode
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> primitiveType [
+WDCGraphicsPipelineStateDescription >> primitiveType [
 	^ primitiveType
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> primitiveType: newPrimitiveType [
+WDCGraphicsPipelineStateDescription >> primitiveType: newPrimitiveType [
 	primitiveType ~= newPrimitiveType ifTrue: [ self changed ].
 	primitiveType := newPrimitiveType
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> renderTargetFormats [
+WDCGraphicsPipelineStateDescription >> renderTargetFormats [
 	^ renderTargetFormats
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> renderTargetFormats: newRenderTargetFormats [
+WDCGraphicsPipelineStateDescription >> renderTargetFormats: newRenderTargetFormats [
 	renderTargetFormats ~= newRenderTargetFormats ifTrue: [ self changed ].
 	renderTargetFormats := newRenderTargetFormats
 ]
 
 { #category : #initialization }
-WDCPipelineStateDescription >> reset [
+WDCGraphicsPipelineStateDescription >> reset [
 	isChanged := true.
 	shaderSignature := nil.
 	vertexShader := nil.
@@ -340,45 +346,50 @@ WDCPipelineStateDescription >> reset [
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> sampleCount [
+WDCGraphicsPipelineStateDescription >> sampleCount [
 	^ sampleCount
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> sampleCount: newSampleCount [
+WDCGraphicsPipelineStateDescription >> sampleCount: newSampleCount [
 	newSampleCount ~= sampleCount ifTrue: [ self changed ].
 	sampleCount := newSampleCount
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> shaderSignature [
+WDCGraphicsPipelineStateDescription >> shaderSignature [
 	^ shaderSignature
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> shaderSignature: newShaderSignature [
+WDCGraphicsPipelineStateDescription >> shaderSignature: newShaderSignature [
 	fragmentShader ~~ newShaderSignature ifTrue: [ self changed ].
 	shaderSignature := newShaderSignature
 ]
 
+{ #category : #'as yet unclassified' }
+WDCGraphicsPipelineStateDescription >> traceBuildWith: engine [
+	engine trace: 'Build PSO vertex: {1} fragment {2}.' format: {vertexShader asString . fragmentShader asString}.
+]
+
 { #category : #accessing }
-WDCPipelineStateDescription >> vertexLayout [
+WDCGraphicsPipelineStateDescription >> vertexLayout [
 	^ vertexLayout
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> vertexLayout: newVertexLayout [
+WDCGraphicsPipelineStateDescription >> vertexLayout: newVertexLayout [
 	vertexLayout ~~ newVertexLayout ifTrue: [ self changed ].
 	vertexLayout := newVertexLayout
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> vertexShader [
+WDCGraphicsPipelineStateDescription >> vertexShader [
 	^ vertexShader
 ]
 
 { #category : #accessing }
-WDCPipelineStateDescription >> vertexShader: newVertexShader [
+WDCGraphicsPipelineStateDescription >> vertexShader: newVertexShader [
 	vertexShader ~~ newVertexShader ifTrue: [ self changed ].
 	vertexShader := newVertexShader
 ]

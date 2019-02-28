@@ -1,6 +1,18 @@
 Extension { #name : #Point }
 
 { #category : #'*WodenEngine-Core' }
+Point >> fbmSignedGradientNoiseOctaves: octaves lacunarity: lacunarity gain: gain initialAmplitude: initialAmplitude tiledWith: tilingPeriod [
+	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain initialAmplitude: initialAmplitude tiledWith: tilingPeriod with: #signedGradientNoise
+
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> fbmWorleyNoiseOctaves: octaves lacunarity: lacunarity gain: gain initialAmplitude: initialAmplitude tiledWith: tilingPeriod [
+	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain initialAmplitude: initialAmplitude tiledWith: tilingPeriod with: #worleyNoise
+
+]
+
+{ #category : #'*WodenEngine-Core' }
 Point >> fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain initialAmplitude: initialAmplitude tiledWith: tilingPeriod with: aBlock [
 	| result currentCoord amplitude currentTilingPeriod |
 	result := 0.0.
@@ -76,7 +88,7 @@ Point >> randomNoise2 [
 
 { #category : #'*WodenEngine-Core' }
 Point >> randomNoise_second [
-	^ (self dotProduct: 718.2194021149629 @  53.063644586626275) randomNoise
+	^ (self dotProduct: 718.2194213867188 @ 53.06364440917969) randomNoise
 ]
 
 { #category : #'*WodenEngine-Core' }

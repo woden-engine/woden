@@ -42,9 +42,14 @@ WDCShaderSignatureSpec >> name: anObject [
 
 { #category : #building }
 WDCShaderSignatureSpec >> pushConstant: constantName [
+	^ self pushConstant: constantName size: 4
+]
+
+{ #category : #building }
+WDCShaderSignatureSpec >> pushConstant: constantName size: constantSize [
 	| bank |
-	bank := WDCShaderSignatureSpecPushConstant new name: constantName; offset: pushConstantsSize; size: 4.
-	pushConstantsSize := pushConstantsSize + 4.
+	bank := WDCShaderSignatureSpecPushConstant new name: constantName; offset: pushConstantsSize; size: constantSize.
+	pushConstantsSize := pushConstantsSize + constantSize.
 	elements add: bank.
 	^ bank
 ]

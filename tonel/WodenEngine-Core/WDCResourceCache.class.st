@@ -105,8 +105,8 @@ WDCResourceCache >> blackTexture [
 
 { #category : #'pipeline states' }
 WDCResourceCache >> buildPipelineStateWithDescription: description [
-	| handle result |
-	engine trace: 'Build PSO vertex: {1} fragment {2}.' format: {description vertexShader asString . description fragmentShader asString}.
+	| result |
+	description traceBuildWith: engine.
 	result := WDCPipelineState new
 		description: description copy;
 		device: engine device;
@@ -314,6 +314,13 @@ WDCResourceCache >> load3DModel: aFileNameOrReference [
 	modelFile := self resolveResourceFileReference: aFileNameOrReference.
 	^ self resourceAt: modelFile -> #model ifAbsentPut: [ WDCModelLoader loadFromFile: modelFile ].
 
+]
+
+{ #category : #shaders }
+WDCResourceCache >> loadComputeShader: aFileNameOrReference [
+	| shaderFile |
+	shaderFile := self resolveResourceFileReference: aFileNameOrReference.
+	^ self resourceAt: shaderFile -> #computeShader ifAbsentPut: [ self performShaderLoading: shaderFile stage: AGPU_COMPUTE_SHADER ].
 ]
 
 { #category : #shaders }

@@ -1,6 +1,6 @@
 Class {
 	#name : #WDCLinearRamp,
-	#superclass : #Object,
+	#superclass : #WDCAbstractProceduralMap,
 	#instVars : [
 		'edges'
 	],

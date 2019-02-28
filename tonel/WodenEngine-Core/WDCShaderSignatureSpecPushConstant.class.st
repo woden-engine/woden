@@ -68,5 +68,9 @@ WDCShaderSignatureSpecPushConstant >> size: anObject [
 
 { #category : #writing }
 WDCShaderSignatureSpecPushConstant >> writeCreateHandleCodeOn: out [
-	out tab tab << 'addBindingConstant; "' << name << '"' ; cr.
+
+	self flag: 'TODO: Cleanup this API call.'.
+	1 to: size // 4 do: [ :i |
+		out tab tab << 'addBindingConstant; "' << name << '"' ; cr.
+	]
 ]

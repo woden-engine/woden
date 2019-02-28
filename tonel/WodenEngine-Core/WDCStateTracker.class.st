@@ -9,7 +9,9 @@ Class {
 		'mode',
 		'submode',
 		'currentViewport',
-		'editorViewType'
+		'editorViewType',
+		'computePipelineStateDescription',
+		'activePipelineStateDescription'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -95,13 +97,29 @@ WDCStateTracker >> commandList: aCommandList rebuildWith: aBlock [
 ]
 
 { #category : #'pipeline state' }
+WDCStateTracker >> commitComputePipelineState [
+	| pipelineState |
+	(activePipelineStateDescription == computePipelineStateDescription and: [computePipelineStateDescription isChanged not]) ifTrue: [ ^ self ].
+
+	pipelineState := engine resourceCache pipelineStateForDescription: computePipelineStateDescription.
+	pipelineStateDescription isChanged: false.
+	commandListBuilder
+		usePipelineState: pipelineState handle
+]
+
+{ #category : #'pipeline state' }
 WDCStateTracker >> commitPipelineState [
 	| pipelineState |
-	pipelineStateDescription isChanged ifFalse: [ ^ self ].
+	(activePipelineStateDescription == pipelineStateDescription and: [pipelineStateDescription isChanged not]) ifTrue: [ ^ self ].
 
 	pipelineState := engine resourceCache pipelineStateForDescription: pipelineStateDescription.
 	pipelineStateDescription isChanged: false.
 	commandListBuilder usePipelineState: pipelineState handle
+]
+
+{ #category : #'pipeline state' }
+WDCStateTracker >> computeShader: aVertexShader [
+	computePipelineStateDescription computeShader: aVertexShader
 ]
 
 { #category : #'pipeline state' }
@@ -139,6 +157,23 @@ WDCStateTracker >> depthFunction: aBoolean [
 { #category : #'pipeline state' }
 WDCStateTracker >> depthWriteMask: aBoolean [
 	pipelineStateDescription depthWriteMask: aBoolean
+]
+
+{ #category : #commands }
+WDCStateTracker >> dispatchComputeGroupCount: x [
+	^ self dispatchComputeGroupCountX: x y: 1 z: 1
+]
+
+{ #category : #commands }
+WDCStateTracker >> dispatchComputeGroupCountX: x y: y [
+	^ self dispatchComputeGroupCountX: x y: y z: 1
+]
+
+{ #category : #commands }
+WDCStateTracker >> dispatchComputeGroupCountX: x y: y z: z [
+	self commitComputePipelineState.
+	commandListBuilder
+		dispatchCompute: x group_count_y: y group_count_z: y
 ]
 
 { #category : #commands }
@@ -191,7 +226,8 @@ WDCStateTracker >> frontFaceWinding: winding [
 { #category : #initialization }
 WDCStateTracker >> initialize [
 	super initialize.
-	pipelineStateDescription := WDCPipelineStateDescription new.
+	pipelineStateDescription := WDCGraphicsPipelineStateDescription new.
+	computePipelineStateDescription := WDCComputePipelineStateDescription new.
 ]
 
 { #category : #accessing }
@@ -248,6 +284,7 @@ WDCStateTracker >> shaderSignature: shaderSignatureClassOrInstance [
 	| shaderSignature |
 	shaderSignature := shaderSignatureClassOrInstance shaderSignatureFor: engine.
 	pipelineStateDescription shaderSignature: shaderSignature.
+	computePipelineStateDescription shaderSignature: shaderSignature.
 	commandListBuilder setShaderSignature: shaderSignature handle
 ]
 
@@ -259,6 +296,11 @@ WDCStateTracker >> submode [
 { #category : #accessing }
 WDCStateTracker >> submode: anObject [
 	submode := anObject
+]
+
+{ #category : #commands }
+WDCStateTracker >> useComputeShaderResources: shaderResource [
+	commandListBuilder useComputeShaderResources: shaderResource validHandle
 ]
 
 { #category : #commands }
