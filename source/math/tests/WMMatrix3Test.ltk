@@ -4,7 +4,7 @@ Class <<< #WMMatrix3Test
 	slots: {
 		#matrix3Class.
 	};
-	yourself. 
+	yourself.
 
 WMMatrix3Test class category: #testing methods: {
 :[isAbstract
@@ -38,7 +38,7 @@ WMMatrix3Test category: #tests methods: {
 	| a b |
 	a := matrix3Class ones.
 	b := matrix3Class ones.
-	
+
 	self assert: (a + b) asRowMajorFloatArray equals: #(
 		2.0 2.0 2.0
 		2.0 2.0 2.0
@@ -48,7 +48,7 @@ WMMatrix3Test category: #tests methods: {
 
 :[testAsColumnMajorFloatArray
 	| m |
-	m := matrix3Class 
+	m := matrix3Class
 		m11: 1.0 m12: 2.0 m13: 3.0
 		m21: 4.0 m22: 5.0 m23: 6.0
 		m31: 7.0 m32: 8.0 m33: 9.0.
@@ -86,11 +86,37 @@ WMMatrix3Test category: #tests methods: {
 	) asFloatArray
 ].
 
+:[testLUDecomposition
+	| m luDecomposition |
+	m := matrix3Class newFrom: #(
+		1.0 2.0 3.0
+		5.0 6.0 7.0
+		9.0 -10.0 11.0
+	).
+
+	luDecomposition := m luDecomposition.
+	self assert: (luDecomposition first * luDecomposition second closeTo: m)
+].
+
+:[testInverse
+	| m im |
+	m := matrix3Class newFrom: #(
+		1.0 2.0 3.0
+		5.0 6.0 7.0
+		9.0 -10.0 11.0
+	).
+
+	im := m inverted.
+
+	self assert: (m * im closeTo: matrix3Class identity).
+	self assert: (im * m closeTo: matrix3Class identity).
+].
+
 :[testMultiplyIdentity
 	| a b |
 	a := matrix3Class ones.
 	b := matrix3Class identity.
-	
+
 	self assert: (a * b) asRowMajorFloatArray equals: #(
 		1.0 1.0 1.0
 		1.0 1.0 1.0
@@ -116,7 +142,7 @@ WMMatrix3Test category: #tests methods: {
 :[testOnes
 	| m |
 	m := matrix3Class ones.
-	
+
 	self assert: m asRowMajorFloatArray equals: #(
 		1.0 1.0 1.0
 		1.0 1.0 1.0
@@ -128,7 +154,7 @@ WMMatrix3Test category: #tests methods: {
 	| a b |
 	a := matrix3Class ones.
 	b := matrix3Class ones.
-	
+
 	self assert: (a - b) asRowMajorFloatArray equals: #(
 		0.0 0.0 0.0
 		0.0 0.0 0.0
@@ -138,7 +164,7 @@ WMMatrix3Test category: #tests methods: {
 
 :[testTransposed
 	| m |
-	m := matrix3Class 
+	m := matrix3Class
 		m11: 1.0 m12: 2.0 m13: 3.0
 		m21: 4.0 m22: 5.0 m23: 6.0
 		m31: 7.0 m32: 8.0 m33: 9.0.
@@ -159,4 +185,3 @@ WMMatrix3Test category: #tests methods: {
 	) asFloatArray
 ].
 }.
-

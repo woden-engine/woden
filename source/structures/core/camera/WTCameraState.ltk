@@ -1,7 +1,10 @@
 Structure <<< #WTCameraState
 	slots: {
-		#transform => WMReversibleAffineTransformF. 
-		#projectionMatrix => WMMatrix4F. 
+		#transform => WMReversibleAffineTransformF.
+		#projectionMatrix => WMMatrix4F.
+		#inverseProjectionMatrix => WMMatrix4F.
+		#screenSize => WMVector2F.
+		#inverseScreenSize => WMVector2F.
 		#currentTime => Float32
 	};
 	package: 'WodenEngine-Structures-Core-Camera';

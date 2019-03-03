@@ -11,8 +11,7 @@ Structure <<< #WDCTerrainMaterialState
 		#fresnel => WMCompactVector3F.
 		#smoothness => Float32.
 
-        #textureScales => (WMVector2F array: 5).
-        #textureOffsets => (WMVector2F array: 5).
+        #textureScaleAndOffset => (WMVector4F array: 5).
 	};
 	package: 'WodenEngine-Structures-Core-Material';
 	yourself.

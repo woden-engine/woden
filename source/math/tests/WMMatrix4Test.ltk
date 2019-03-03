@@ -7,7 +7,7 @@ Class <<< #WMMatrix4Test
 		#vector4Class.
 		#matrix3Class.
 	};
-	yourself. 
+	yourself.
 
 WMMatrix4Test class category: #'as yet unclassified' methods: {
 :[isAbstract
@@ -50,7 +50,7 @@ WMMatrix4Test category: #tests methods: {
 	| a b |
 	a := matrix4Class ones.
 	b := matrix4Class ones.
-	
+
 	self assert: (a + b) asRowMajorFloatArray equals: #(
 		2.0 2.0 2.0 2.0
 		2.0 2.0 2.0 2.0
@@ -87,11 +87,41 @@ WMMatrix4Test category: #tests methods: {
 	) asFloatArray
 ].
 
+:[testLUDecomposition
+	| m luDecomposition |
+	m := matrix4Class newFrom: #(
+	    1.0 2.0 3.0 4.0
+	    5.0 6.0 7.0 8.0
+
+	    9.0 -10.0 11.0 12.0
+	    13.0 14.0 -15.0 16.0
+	).
+
+	luDecomposition := m luDecomposition.
+	self assert: (luDecomposition first * luDecomposition second closeTo: m)
+].
+
+:[testInverse
+	| m im |
+	m := matrix4Class newFrom: #(
+	    1.0 2.0 3.0 4.0
+	    5.0 6.0 7.0 8.0
+
+	    9.0 -10.0 11.0 12.0
+	    13.0 14.0 -15.0 16.0
+	).
+
+	im := m inverted.
+
+	self assert: (m * im closeTo: matrix4Class identity).
+	self assert: (im * m closeTo: matrix4Class identity).
+].
+
 :[testMultiplyIdentity
 	| a b |
 	a := matrix4Class ones.
 	b := matrix4Class identity.
-	
+
 	self assert: (a * b) asRowMajorFloatArray equals: #(
 		1.0 1.0 1.0 1.0
 		1.0 1.0 1.0 1.0
@@ -120,7 +150,7 @@ WMMatrix4Test category: #tests methods: {
 :[testOnes
 	| m |
 	m := matrix4Class ones.
-	
+
 	self assert: m asRowMajorFloatArray equals: #(
 		1.0 1.0 1.0 1.0
 		1.0 1.0 1.0 1.0
@@ -133,7 +163,7 @@ WMMatrix4Test category: #tests methods: {
 	| a b |
 	a := matrix4Class ones.
 	b := matrix4Class ones.
-	
+
 	self assert: (a - b) asRowMajorFloatArray equals: #(
 		0.0 0.0 0.0 0.0
 		0.0 0.0 0.0 0.0
@@ -145,7 +175,7 @@ WMMatrix4Test category: #tests methods: {
 :[testZeros
 	| m |
 	m := matrix4Class zeros.
-	
+
 	self assert: m asRowMajorFloatArray equals: #(
 		0.0 0.0 0.0 0.0
 		0.0 0.0 0.0 0.0
@@ -154,4 +184,3 @@ WMMatrix4Test category: #tests methods: {
 	) asFloatArray
 ].
 }.
-

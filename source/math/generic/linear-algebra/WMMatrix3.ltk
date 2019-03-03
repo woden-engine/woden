@@ -58,6 +58,24 @@ WMMatrix3 class category: 'special matrices' methods: {
 		m31: 0.0 m32: 0.0 m33: 1.0
 ].
 
+:[c1: <WMVector3> c1 c2: <WMVector3> c2 c3: <WMVector3> c3 -> WMMatrix3.
+     <inline>
+	^ WMMatrix3 newValue
+		m11: c1 x; m12: c2 x; m13: c3 x;
+		m21: c1 y; m22: c2 y; m23: c3 y;
+		m31: c1 z; m32: c2 z; m33: c3 z;
+		yourself
+].
+
+:[r1: <WMVector3> r1 r2: <WMVector3> r2 r3: <WMVector3> r3 -> WMMatrix3.
+     <inline>
+	^ WMMatrix3 newValue
+		m11: r1 x; m12: r1 y; m13: r1 x;
+		m21: r2 x; m22: r2 y; m23: r2 y;
+		m31: r3 x; m32: r3 y; m33: r3 z;
+		yourself
+].
+
 :[m11: <Scalar> m11 m12: <Scalar> m12 m13: <Scalar> m13
   m21: <Scalar> m21 m22: <Scalar> m22 m23: <Scalar> m23
   m31: <Scalar> m31 m32: <Scalar> m32 m33: <Scalar> m33 -> WMMatrix3.
@@ -401,6 +419,80 @@ WMMatrix3 category: 'printing' methods: {
 }.
 
 WMMatrix3 category: 'linear algebra' methods: {
+:[decomposeIntoL: <WMMatrix3 ref> l U: <WMMatrix3 ref> u
+    <inline>
+	let c1 := self firstColumn.
+	let c2 := self secondColumn.
+	let c3 := self thirdColumn.
+
+	u := WMMatrix3 identity.
+
+	"Second column"
+	u
+	    m12: c2 x / c1 x;
+	    m13: c3 x / c1 x.
+
+	c2 := c2 - (c1  * u m12).
+	c3 := c3 - (c1  * u m13).
+
+	"Third column"
+	u
+	    m23: c3 y / c2 y.
+	c3 := c3 - (c2  * u m23).
+
+	l := WMMatrix3 c1: c1 c2: c2 c3: c3
+].
+
+:[luDecomposition -> _DynamicObject.
+	let l := WMMatrix3 newValue.
+	let u := WMMatrix3 newValue.
+
+	self decomposeIntoL: l U: u.
+	^ {l . u}
+].
+
+:[lowerTriangularInverted -> WMMatrix3.
+    <inline>
+	let i := WMMatrix3 newValue.
+
+	i
+		m11: 1.0 / m11;
+
+		m21: (m21 * i m11) negated / m22;
+		m22: 1.0 / m22;
+
+		m31: ((m31 * i m11) + (m32 * i m21)) negated / m33;
+		m32: (m32 * i m22) negated / m33;
+		m33: 1.0 / m33.
+
+	^ i
+].
+
+:[upperTriangularInverted -> WMMatrix3.
+    <inline>
+	let i := WMMatrix3 newValue.
+
+	i
+		m33: 1.0 / m33;
+
+		m22: 1.0 / m22;
+		m23: (m23 * i m33) negated / m22;
+
+		m11: 1.0 / m11;
+		m12: (m12 * i m22) negated / m11;
+		m13: ((m12 * i m23) + (m13 * i m33)) negated / m11.
+
+	^ i
+].
+
+:[inverted -> WMMatrix3.
+	let l := WMMatrix3 newValue.
+	let u := WMMatrix3 newValue.
+	self decomposeIntoL: l U: u.
+
+	^ u upperTriangularInverted * l lowerTriangularInverted
+].
+
 :[qrDecomposition -> _DynamicObject.
 	let u1 := self firstColumn normalized.
 

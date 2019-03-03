@@ -12,8 +12,29 @@ WMMatrix4 class category: 'construction' methods: {
 
 WMMatrix4 class category: 'special matrices' methods: {
 :[identity -> WMMatrix4.
+    <inline>
 	^ WMMatrix4 newValue
 		m11: 1.0; m22: 1.0; m33: 1.0; m44: 1.0;
+		yourself
+].
+
+:[r1: <WMVector4> r1 r2: <WMVector4> r2 r3: <WMVector4> r3 r4: <WMVector4> r4 -> WMMatrix4.
+    <inline>
+	^ WMMatrix4 newValue
+		m11: r1 x; m12: r1 y; m13: r1 z; m14: r1 w;
+		m21: r2 x; m12: r2 y; m23: r2 z; m24: r2 w;
+		m31: r3 x; m12: r3 y; m33: r3 z; m34: r3 w;
+		m41: r4 x; m12: r4 y; m43: r4 z; m44: r4 w;
+		yourself
+].
+
+:[c1: <WMVector4> c1 c2: <WMVector4> c2 c3: <WMVector4> c3 c4: <WMVector4> c4 -> WMMatrix4.
+    <inline>
+	^ WMMatrix4 newValue
+		m11: c1 x; m12: c2 x; m13: c3 x; m14: c4 x;
+		m21: c1 y; m22: c2 y; m23: c3 y; m24: c4 y;
+		m31: c1 z; m32: c2 z; m33: c3 z; m34: c4 z;
+		m41: c1 w; m42: c2 w; m43: c3 w; m44: c4 w;
 		yourself
 ].
 
@@ -45,6 +66,7 @@ WMMatrix4 class category: 'special matrices' methods: {
 ].
 
 :[ones -> WMMatrix4.
+    <inline>
 	^ WMMatrix4 newValue
 		m11: 1.0; m12: 1.0; m13: 1.0; m14: 1.0;
 		m21: 1.0; m22: 1.0; m23: 1.0; m24: 1.0;
@@ -66,6 +88,7 @@ WMMatrix4 class category: 'special matrices' methods: {
 ].
 
 :[zeros -> WMMatrix4.
+    <inline>
 	^ WMMatrix4 newValue
 
 ].
@@ -168,6 +191,57 @@ WMMatrix4 class category: 'projection matrices' methods: {
 
 }.
 
+WMMatrix4 category: 'accessing' methods: {
+:[firstColumn -> WMVector4.
+    <inline>
+	^ WMVector4 x: m11 y: m21 z: m31 w: m41
+].
+
+:[firstRow -> WMVector4.
+    <inline>
+	^ WMVector4 x: m11 y: m12 z: m13 w: m14
+].
+
+:[secondColumn -> WMVector4.
+    <inline>
+	^ WMVector4 x: m12 y: m22 z: m32 w: m42
+].
+
+:[secondRow -> WMVector4.
+    <inline>
+	^ WMVector4 x: m21 y: m22 z: m23 w: m24
+].
+
+:[thirdColumn -> WMVector4.
+    <inline>
+	^ WMVector4 x: m13 y: m23 z: m33 w: m43
+].
+
+:[thirdRow -> WMVector4.
+    <inline>
+	^ WMVector4 x: m31 y: m32 z: m33 w: m34
+].
+
+:[fourthColumn -> WMVector4.
+    <inline>
+	^ WMVector4 x: m14 y: m24 z: m34 w: m44
+].
+
+:[fourthRow -> WMVector4.
+    <inline>
+	^ WMVector4 x: m41 y: m42 z: m43 w: m44
+].
+
+:[topLeft3x3 -> WMMatrix3.
+    <inline>
+	^ WMMatrix3
+		m11: m11 m12: m12 m13: m13
+		m21: m21 m22: m22 m23: m23
+		m31: m31 m32: m32 m33: m33
+].
+
+}.
+
 WMMatrix4 category: 'arithmetic' methods: {
 :[+ <WMMatrix4> other -> WMMatrix4.
 	^ WMMatrix4 newValue
@@ -218,6 +292,100 @@ WMMatrix4 category: 'arithmetic' methods: {
 		m31: m13; m32: m23; m33: m33; m34: m43;
 		m41: m14; m42: m24; m43: m34; m44: m44;
 		yourself
+].
+
+:[decomposeIntoL: <WMMatrix4 ref> l U: <WMMatrix4 ref> u
+    <inline>
+	let c1 := self firstColumn.
+	let c2 := self secondColumn.
+	let c3 := self thirdColumn.
+	let c4 := self fourthColumn.
+
+	u := WMMatrix4 identity.
+
+	"Second column"
+	u
+		m12: c2 x / c1 x;
+		m13: c3 x / c1 x;
+		m14: c4 x / c1 x.
+
+	c2 := c2 - (c1 scale: u m12).
+	c3 := c3 - (c1 scale: u m13).
+	c4 := c4 - (c1 scale: u m14).
+
+	"Third column"
+	u
+		m23: c3 y / c2 y;
+		m24: c4 y / c2 y.
+	c3 := c3 - (c2  * u m23).
+	c4 := c4 - (c2  * u m24).
+
+	"Fourth column"
+	u
+		m34: c4 z / c3 z.
+	c4 := c4 - (c3 scale: u m34).
+
+	l := WMMatrix4 c1: c1 c2: c2 c3: c3 c4: c4
+].
+
+:[luDecomposition -> _DynamicObject.
+	let l := WMMatrix4 newValue.
+	let u := WMMatrix4 newValue.
+
+	self decomposeIntoL: l U: u.
+	^ {l . u}
+].
+
+:[lowerTriangularInverted -> WMMatrix4.
+    <inline>
+	let i := WMMatrix4 newValue.
+
+	i
+		m11: 1.0 / m11;
+
+		m21: (m21 * i m11) negated / m22;
+		m22: 1.0 / m22;
+
+		m31: ((m31 * i m11) + (m32 * i m21)) negated / m33;
+		m32: (m32 * i m22) negated / m33;
+		m33: 1.0 / m33;
+
+		m41: ((m41 * i m11) + (m42 * i m21) + (m43 * i m31)) negated / m44;
+		m42: ((m42 * i m22) + (m43 * i m32)) negated / m44;
+		m43: ((m43 * i m33)) negated / m44;
+		m44: 1.0 / m44.
+
+	^ i
+].
+
+:[upperTriangularInverted -> WMMatrix4.
+    <inline>
+	let i := WMMatrix4 newValue.
+
+	i
+		m44: 1.0 / m44;
+
+		m33: 1.0 / m33;
+		m34: (m34 * i m44) negated / m33;
+
+		m22: 1.0 / m22;
+		m23: (m23 * i m33) negated / m22;
+		m24: ((m23 * i m34) + (m24 * i m44)) negated / m22;
+
+		m11: 1.0 / m11;
+		m12: (m12 * i m22) negated / m11;
+		m13: ((m12 * i m23) + (m13 * i m33)) negated / m11;
+		m14: ((m12 * i m24) + (m13 * i m34) + (m14 * i m44)) negated / m11.
+
+	^ i
+].
+
+:[inverted -> WMMatrix4.
+	let l := WMMatrix4 newValue.
+	let u := WMMatrix4 newValue.
+	self decomposeIntoL: l U: u.
+
+	^ u upperTriangularInverted * l lowerTriangularInverted
 ].
 }.
 
