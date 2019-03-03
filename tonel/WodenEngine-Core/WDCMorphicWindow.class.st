@@ -27,6 +27,21 @@ WDCMorphicWindow >> checkRenderTarget [
 	].
 
 	innerExtent := self drawingSurfaceExtent.
+	renderTarget ifNotNil: [renderTarget extent: innerExtent].
+	resolveRenderTarget extent: innerExtent.
+	(displayForm isNil or: [ displayForm extent ~= innerExtent ]) ifTrue: [
+		displayForm := Form extent: innerExtent depth: 32
+	]
+]
+
+{ #category : #initialization }
+WDCMorphicWindow >> checkRenderTargets [
+	| innerExtent |
+	resolveRenderTarget ifNil: [
+		self createRenderTarget
+	].
+
+	innerExtent := self drawingSurfaceExtent.
 	renderTarget extent: innerExtent.
 	resolveRenderTarget extent: innerExtent.
 	(displayForm isNil or: [ displayForm extent ~= innerExtent ]) ifTrue: [
@@ -160,6 +175,11 @@ WDCMorphicWindow >> initializeForNewSession [
 
 	session := Smalltalk session.
 	
+]
+
+{ #category : #'framebuffer description' }
+WDCMorphicWindow >> needsDirectRenderTarget [
+	^ true
 ]
 
 { #category : #'events-processing' }

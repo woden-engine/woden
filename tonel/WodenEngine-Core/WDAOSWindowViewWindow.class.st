@@ -39,6 +39,11 @@ WDAOSWindowViewWindow >> hasStencil [
 	^ view hasStencil
 ]
 
+{ #category : #'framebuffer description' }
+WDAOSWindowViewWindow >> needsDirectRenderTarget [
+	^ view needsDirectRenderTarget
+]
+
 { #category : #'event processing' }
 WDAOSWindowViewWindow >> processEvent: anEvent [
 	super processEvent: anEvent.

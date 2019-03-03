@@ -5,7 +5,11 @@ Class {
 		'lights',
 		'sortedLights',
 		'selectedLights',
-		'lightRenderingStates'
+		'lightRenderingStates',
+		'renderTarget',
+		'ambientOcclusionTexture',
+		'globalLightingStateShaderBindings',
+		'ambientOcclusionComputeShaderBindings'
 	],
 	#category : #'WodenEngine-Scene-Rendering'
 }
@@ -13,6 +17,36 @@ Class {
 { #category : #adding }
 WDSLightedSceneRendererViewport >> addLight: aLight [
 	lights add: aLight
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> ambientOcclusionComputeShaderBindings [
+	^ ambientOcclusionComputeShaderBindings
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> ambientOcclusionComputeShaderBindings: anObject [
+	ambientOcclusionComputeShaderBindings := anObject
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> ambientOcclusionTexture [
+	^ ambientOcclusionTexture
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> ambientOcclusionTexture: anObject [
+	ambientOcclusionTexture := anObject
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> globalLightingStateShaderBindings [
+	^ globalLightingStateShaderBindings
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> globalLightingStateShaderBindings: anObject [
+	globalLightingStateShaderBindings := anObject
 ]
 
 { #category : #initialization }
@@ -39,6 +73,16 @@ WDSLightedSceneRendererViewport >> lights [
 { #category : #accessing }
 WDSLightedSceneRendererViewport >> lights: anObject [
 	lights := anObject
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> renderTarget [
+	^ renderTarget
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> renderTarget: anObject [
+	renderTarget := anObject
 ]
 
 { #category : #accessing }

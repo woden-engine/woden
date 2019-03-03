@@ -16,7 +16,8 @@ Class {
 		'cameraTransform',
 		'overlayRenderer',
 		'editorViewType',
-		'babylonCanvasSafeZoneTransform'
+		'babylonCanvasSafeZoneTransform',
+		'sampleCount'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -96,6 +97,11 @@ WDSGViewport >> editorViewType: anObject [
 ]
 
 { #category : #accessing }
+WDSGViewport >> extent [
+	^ bounds extent
+]
+
+{ #category : #accessing }
 WDSGViewport >> filter [
 	^ filter
 ]
@@ -140,6 +146,16 @@ WDSGViewport >> resolveRenderTarget [
 { #category : #accessing }
 WDSGViewport >> resolveRenderTarget: anObject [
 	resolveRenderTarget := anObject
+]
+
+{ #category : #accessing }
+WDSGViewport >> sampleCount [
+	^ sampleCount ifNil: [sampleCount := renderTarget ifNil: [1] ifNotNil: #sampleCount]
+]
+
+{ #category : #accessing }
+WDSGViewport >> sampleCount: aSampleCount [
+	^ sampleCount := aSampleCount
 ]
 
 { #category : #accessing }

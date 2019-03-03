@@ -25,10 +25,10 @@ WDCGenericComputationShaderSignature class >> signatureSpec: spec [
 				maxBindings: 1000;
 				uniform: #Buffers count: 4
 		];
-		bank: #Textures with: [ :bank |
+		bank: #SampledTextures with: [ :bank |
 			bank
 				maxBindings: 1000;
-				texture: #ObjectState count: 4
+				texture: #Textures count: 4
 		];
 		bank: #StorageBuffers with: [ :bank |
 			bank
@@ -66,9 +66,9 @@ WDCGenericComputationShaderSignature >> createHandleForDevice: device [
 		beginBindingBank: 1000;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 4; "Buffers"
 
-		"Textures"
+		"SampledTextures"
 		beginBindingBank: 1000;
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 4; "ObjectState"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 4; "Textures"
 
 		"StorageBuffers"
 		beginBindingBank: 10000;
@@ -156,6 +156,11 @@ WDCGenericComputationShaderSignature >> defaultSamplers [
 ]
 
 { #category : #'generated shader signature methods' }
+WDCGenericComputationShaderSignature >> newSampledTextures [
+	^ engine createShaderSignature: self resourceBinding: 2 elements: 4
+]
+
+{ #category : #'generated shader signature methods' }
 WDCGenericComputationShaderSignature >> newSamplers [
 	^ engine createShaderSignature: self resourceBinding: 0 elements: 4
 ]
@@ -168,11 +173,6 @@ WDCGenericComputationShaderSignature >> newStorageBuffers [
 { #category : #'generated shader signature methods' }
 WDCGenericComputationShaderSignature >> newStorageImages [
 	^ engine createShaderSignature: self resourceBinding: 4 elements: 4
-]
-
-{ #category : #'generated shader signature methods' }
-WDCGenericComputationShaderSignature >> newTextures [
-	^ engine createShaderSignature: self resourceBinding: 2 elements: 4
 ]
 
 { #category : #'generated shader signature methods' }

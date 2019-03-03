@@ -21,6 +21,11 @@ WDCMaterial class >> isMaterialClass [
 ]
 
 { #category : #rendering }
+WDCMaterial >> activateDepthOnlyOn: stateTracker [
+	^ false
+]
+
+{ #category : #rendering }
 WDCMaterial >> activateForwardOn: stateTracker [
 	^ false
 ]
@@ -28,11 +33,6 @@ WDCMaterial >> activateForwardOn: stateTracker [
 { #category : #rendering }
 WDCMaterial >> activateOn: stateTracker [
 	^ stateTracker mode activateMaterial: self on: stateTracker
-]
-
-{ #category : #rendering }
-WDCMaterial >> activateShadowOn: stateTracker [
-	^ false
 ]
 
 { #category : #'as yet unclassified' }

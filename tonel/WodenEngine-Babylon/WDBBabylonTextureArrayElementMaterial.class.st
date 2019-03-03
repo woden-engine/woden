@@ -42,7 +42,7 @@ WDBBabylonTextureArrayElementMaterial >> updateShaderBinding [
 	textureArray ifNil: [ ^ self ].
 	shaderBinding ifNil: [ ^ self ].
 	"shaderBinding bind: 0 textureArray: textureArray startMiplevel: 0 miplevels: -1 firstElement: elementIndex numberOfElements: 1 lodclamp: 100000.0"
-	shaderBinding bind: 0 texture: textureArray startMiplevel: 0 miplevels: -1 lodclamp: 100000.0
+	shaderBinding bind: 0 texture: textureArray
 ]
 
 { #category : #initialization }

@@ -11,9 +11,10 @@ Class {
 		'shaderLanguageTarget',
 		'stage',
 		'dependantPipelines',
-		'dependantPipelinesMutex'
+		'dependantPipelinesMutex',
+		'properties'
 	],
-	#category : 'WodenEngine-Core-Shaders'
+	#category : #'WodenEngine-Core-Shaders'
 }
 
 { #category : #adding }
@@ -65,6 +66,21 @@ WDCShaderStage >> initialize [
 ]
 
 { #category : #accessing }
+WDCShaderStage >> localSizeX [
+	^ self propertyAt: #localSizeX ifAbsent: 1
+]
+
+{ #category : #accessing }
+WDCShaderStage >> localSizeY [
+	^ self propertyAt: #localSizeY ifAbsent: 1
+]
+
+{ #category : #accessing }
+WDCShaderStage >> localSizeZ [
+	^ self propertyAt: #localSizeZ ifAbsent: 1
+]
+
+{ #category : #accessing }
 WDCShaderStage >> name [
 	^ source name
 ]
@@ -72,6 +88,22 @@ WDCShaderStage >> name [
 { #category : #printing }
 WDCShaderStage >> printOn: aStream [
 	aStream print: self name
+]
+
+{ #category : #accessing }
+WDCShaderStage >> properties [
+	^ properties
+]
+
+{ #category : #accessing }
+WDCShaderStage >> properties: anObject [
+	properties := anObject
+]
+
+{ #category : #accessing }
+WDCShaderStage >> propertyAt: key ifAbsent: aBlock [
+	^ properties ifNil: [ aBlock value ]
+		ifNotNil: [ properties at: key ifAbsent: aBlock ]
 ]
 
 { #category : #compiling }

@@ -20,16 +20,18 @@ WDCForwardRenderingShaderSignature class >> signatureSpec: spec [
 				maxBindings: 10;
 				sampler: #Samplers count: 5
 		];
-		bank: #LightingState with: [ :bank |
-			bank
-				maxBindings: 1000;
-				uniform: #GlobalLightingState;
-				texture: #ShadowMaps count: 2
-		];
 		bank: #CameraState with: [ :bank |
 			bank
 				maxBindings: 1000;
 				uniform: #ObjectState
+		];
+		bank: #LightingState with: [ :bank |
+			bank
+				maxBindings: 1000;
+				uniform: #GlobalLightingState;
+				texture: #SpotShadowMaps count: 1;
+				texture: #PointShadowMaps count: 1;
+				texture: #AmbientOcclusion count: 1
 		];
 		bank: #ObjectState with: [ :bank |
 			bank
@@ -56,14 +58,16 @@ WDCForwardRenderingShaderSignature >> createHandleForDevice: device [
 		beginBindingBank: 10;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLER bindingPointCount: 5; "Samplers"
 
-		"LightingState"
-		beginBindingBank: 1000;
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "GlobalLightingState"
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 2; "ShadowMaps"
-
 		"CameraState"
 		beginBindingBank: 1000;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "ObjectState"
+
+		"LightingState"
+		beginBindingBank: 1000;
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "GlobalLightingState"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "SpotShadowMaps"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "PointShadowMaps"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "AmbientOcclusion"
 
 		"ObjectState"
 		beginBindingBank: 100000;
@@ -130,12 +134,12 @@ WDCForwardRenderingShaderSignature >> defaultSamplers [
 
 { #category : #'generated shader signature methods' }
 WDCForwardRenderingShaderSignature >> newCameraState [
-	^ engine createShaderSignature: self resourceBinding: 2 elements: 1
+	^ engine createShaderSignature: self resourceBinding: 1 elements: 1
 ]
 
 { #category : #'generated shader signature methods' }
 WDCForwardRenderingShaderSignature >> newLightingState [
-	^ engine createShaderSignature: self resourceBinding: 1 elements: 3
+	^ engine createShaderSignature: self resourceBinding: 2 elements: 4
 ]
 
 { #category : #'generated shader signature methods' }

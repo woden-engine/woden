@@ -83,7 +83,7 @@ WDASceneView >> flatScreen [
 	self screenDisplayMode: WDASceneViewFlatScreenDisplayMode new
 ]
 
-{ #category : #testing }
+{ #category : #'framebuffer description' }
 WDASceneView >> hasDepth [
 	^ true
 ]
@@ -92,6 +92,11 @@ WDASceneView >> hasDepth [
 WDASceneView >> initialize [
 	super initialize.
 	self screenDisplayMode: WDASceneViewFlatScreenDisplayMode new.
+]
+
+{ #category : #'framebuffer description' }
+WDASceneView >> needsDirectRenderTarget [
+	^ false
 ]
 
 { #category : #'rendering process stages' }

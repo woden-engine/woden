@@ -47,6 +47,7 @@ WDCRenderTarget >> createFramebuffer [
 	(hasDepth or: [ hasStencil ]) ifTrue: [
 		depthStencilFlags := AGPU_TEXTURE_FLAG_DEPTH | AGPU_TEXTURE_FLAG_RENDERBUFFER_ONLY.
 		hasStencil ifTrue: [ depthStencilFlags := depthStencilFlags | AGPU_TEXTURE_FLAG_STENCIL ].
+		isDepthReaded ifTrue: [ depthStencilFlags := depthStencilFlags | AGPU_TEXTURE_FLAG_RENDER_TARGET  ].
 		
 		depthStencilDesc := AGPUTextureDescription new
 			type: AGPU_TEXTURE_2D;

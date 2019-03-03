@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'viewport',
-		'visibleObjects'
+		'visibleObjects',
+		'cameraStateShaderBindings'
 	],
 	#category : #'WodenEngine-Scene-Rendering'
 }
@@ -28,14 +29,44 @@ WDSAbstractSceneRendererViewport >> camera [
 ]
 
 { #category : #accessing }
+WDSAbstractSceneRendererViewport >> cameraStateShaderBindings [
+	^ cameraStateShaderBindings
+]
+
+{ #category : #accessing }
+WDSAbstractSceneRendererViewport >> cameraStateShaderBindings: anObject [
+	cameraStateShaderBindings := anObject
+]
+
+{ #category : #accessing }
+WDSAbstractSceneRendererViewport >> editorViewType [
+	^ viewport editorViewType
+]
+
+{ #category : #accessing }
 WDSAbstractSceneRendererViewport >> engine [
 	^ self scene engine
+]
+
+{ #category : #accessing }
+WDSAbstractSceneRendererViewport >> extent [
+	^ viewport extent
 ]
 
 { #category : #initialization }
 WDSAbstractSceneRendererViewport >> initialize [
 	super initialize.
 	visibleObjects := OrderedCollection new.
+]
+
+{ #category : #accessing }
+WDSAbstractSceneRendererViewport >> renderTarget [
+	^ viewport renderTarget
+]
+
+{ #category : #accessing }
+WDSAbstractSceneRendererViewport >> sampleCount [
+	^ viewport sampleCount
 ]
 
 { #category : #accessing }
@@ -63,6 +94,11 @@ WDSAbstractSceneRendererViewport >> sortVisibleObjects [
 			] ifFalse: [ false ]
 		]
 	]
+]
+
+{ #category : #accessing }
+WDSAbstractSceneRendererViewport >> submode [
+	^ viewport submode
 ]
 
 { #category : #accessing }

@@ -20,12 +20,12 @@ WDCOSWindow >> captureMouse [
 { #category : #'instance creation' }
 WDCOSWindow >> checkRenderTargets [
 	| innerExtent |
-	renderTarget ifNil: [
+	resolveRenderTarget ifNil: [
 		self createRenderTarget
 	].
 
 	innerExtent := self drawingSurfaceExtent.
-	renderTarget extent: innerExtent.
+	renderTarget ifNotNil: [renderTarget extent: innerExtent].
 	resolveRenderTarget extent: innerExtent.
 ]
 
@@ -52,7 +52,7 @@ WDCOSWindow >> commitSurface [
 
 { #category : #'instance creation' }
 WDCOSWindow >> createRenderTarget [
-	self sampleCount > 1 ifTrue: [
+	(self sampleCount > 1 and: [self needsDirectRenderTarget]) ifTrue: [
 		renderTarget := WDCRenderTarget for: engine extent: self drawingSurfaceExtent.
 		renderTarget
 			hasDepth: self hasDepth;
@@ -74,7 +74,7 @@ WDCOSWindow >> createRenderTarget [
 			sampleCount: 1;
 			createFramebuffers.
 
-		renderTarget := resolveRenderTarget
+		renderTarget := self needsDirectRenderTarget ifTrue: [ resolveRenderTarget ] ifFalse: [ nil ] 
 	].
 ]
 
@@ -129,6 +129,11 @@ WDCOSWindow >> hasStencil [
 WDCOSWindow >> initialize [
 	super initialize.
 	eventQueue := WaitfreeQueue new.
+]
+
+{ #category : #'framebuffer description' }
+WDCOSWindow >> needsDirectRenderTarget [
+	^ true
 ]
 
 { #category : #'instance creation' }

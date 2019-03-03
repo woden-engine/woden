@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'hasDepth',
 		'hasStencil',
+		'isDepthReaded',
 		'engine',
 		'width',
 		'height',
@@ -11,12 +12,13 @@ Class {
 		'colorAttachmentFormats',
 		'depthStencilFormat',
 		'sampleCount',
-		'mainRenderPass'
+		'mainRenderPass',
+		'mainContinueRenderPass'
 	],
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Core-Window'
+	#category : #'WodenEngine-Core-Window'
 }
 
 { #category : #accessing }
@@ -32,6 +34,35 @@ WDCAbstractRenderTarget >> colorAttachmentFormats [
 { #category : #accessing }
 WDCAbstractRenderTarget >> colorAttachmentFormats: anArrayOfFormats [
 	colorAttachmentFormats := anArrayOfFormats
+]
+
+{ #category : #'render pass creation' }
+WDCAbstractRenderTarget >> createContinueRenderPass [
+	| passColorAttachments passDepthStencilAttachment |
+	passColorAttachments := self colorAttachmentFormats collectWithIndex: [ :format :index |
+		AGPURenderpassColorAttachmentDescription new
+			format: format;
+			sample_count: sampleCount;
+			begin_action: AGPU_ATTACHMENT_KEEP;
+			end_action: AGPU_ATTACHMENT_KEEP;
+			yourself
+	].
+
+	passDepthStencilAttachment := nil.
+	(hasDepth or: [ hasStencil ]) ifTrue: [
+		passDepthStencilAttachment := AGPURenderpassDepthStencilDescription new
+			format: self depthStencilFormat;
+			sample_count: sampleCount;
+			begin_action: AGPU_ATTACHMENT_KEEP;
+			end_action: AGPU_ATTACHMENT_KEEP;
+			yourself.
+	].
+
+	^ (WDCRenderPass for: engine)
+		colorAttachments: passColorAttachments;
+		depthStencilAttachment: passDepthStencilAttachment;
+		checkSession;
+		yourself
 ]
 
 { #category : #accessing }
@@ -194,6 +225,16 @@ WDCAbstractRenderTarget >> initialize [
 ]
 
 { #category : #accessing }
+WDCAbstractRenderTarget >> isDepthReaded [
+	^ isDepthReaded
+]
+
+{ #category : #accessing }
+WDCAbstractRenderTarget >> isDepthReaded: anObject [
+	isDepthReaded := anObject
+]
+
+{ #category : #accessing }
 WDCAbstractRenderTarget >> mainRenderPass [
 	^ mainRenderPass
 ]
@@ -220,6 +261,11 @@ WDCAbstractRenderTarget >> sampleCount [
 { #category : #accessing }
 WDCAbstractRenderTarget >> sampleCount: aSampleCount [
 	sampleCount := aSampleCount
+]
+
+{ #category : #accessing }
+WDCAbstractRenderTarget >> validMainContinueRenderPass [
+	^ mainContinueRenderPass ifNil: [ mainContinueRenderPass := self createContinueRenderPass ].
 ]
 
 { #category : #accessing }

@@ -130,7 +130,7 @@ WDAFPSSceneView >> updateForFrameDelta: delta [
 { #category : #visiting }
 WDAFPSSceneView >> visitKeyDownEvent: anEvent [
 	anEvent repeat > 0 ifTrue: [ ^ 0 ].
-	anEvent symbol = OSK_F1 ifTrue: [ sceneRenderer debuggingShadowMaps: sceneRenderer debuggingShadowMaps not ].
+	anEvent symbol = OSK_F1 ifTrue: [ sceneRenderer debugNextRenderTarget ].
 	anEvent symbol = OSK_F2 ifTrue: [ sceneRenderer debugRenderNextShadowMapViewport ].
 	anEvent symbol = OSK_F11 ifTrue: [ self toggleFullscreen ].
 

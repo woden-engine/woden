@@ -12,7 +12,7 @@ WDSShadowSceneRenderer >> collectVisibleObject: node [
 
 { #category : #rendering }
 WDSShadowSceneRenderer >> renderMode [
-	^ WDCStateTrackerShadowRenderMode uniqueInstance
+	^ WDCStateTrackerDepthOnlyRenderMode uniqueInstance
 ]
 
 { #category : #rendering }
@@ -21,7 +21,7 @@ WDSShadowSceneRenderer >> renderViewport: renderingViewport index: viewportIndex
 	self setupStateTracker.
 	
 	viewport := renderingViewport viewport.
-	renderTarget := viewport renderTarget.
+	renderTarget := renderingViewport renderTarget.
 	resolveTarget := viewport resolveRenderTarget.
 
 	renderPass := renderTarget validMainRenderPass.
@@ -32,12 +32,10 @@ WDSShadowSceneRenderer >> renderViewport: renderingViewport index: viewportIndex
 	"Begin rendering into the viewport"
 	stateTracker
 		beginRenderPass: renderPass renderTarget: renderTarget bounds: viewport bounds.
-	self setupViewportRendering: viewport index: viewportIndex.
+	self setupRenderingViewportStates: renderingViewport.
 	
 	"Render the viewport objects"
-	renderingViewport visibleObjects do: [ :object |
-		object renderOn: stateTracker
-	].
+	self renderViewportVisibleObjects: renderingViewport.
 	
 	"End rendering into the viewport"
 	stateTracker endRenderPass.
@@ -46,21 +44,6 @@ WDSShadowSceneRenderer >> renderViewport: renderingViewport index: viewportIndex
 { #category : #abstract }
 WDSShadowSceneRenderer >> sceneRendererViewportClass [
 	^ WDSShadowSceneRendererViewport
-]
-
-{ #category : #rendering }
-WDSShadowSceneRenderer >> setupStateTracker [
-	stateTracker
-		reset;
-		mode: self renderMode;
-		shaderSignature: self shaderSignature;
-		useShaderResources: self shaderSignature defaultSamplers;
-		
-		frontFaceWinding: AGPU_COUNTER_CLOCKWISE;
-		objectCullMode: AGPU_CULL_MODE_BACK;
-		objectDepthEnabled: true;
-		objectDepthWriteMask: true;
-		objectDepthFunction: AGPU_GREATER_EQUAL
 ]
 
 { #category : #accessing }

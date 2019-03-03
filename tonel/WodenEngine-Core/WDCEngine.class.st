@@ -473,6 +473,16 @@ WDCEngine >> loadVertexShader: aFileName [
 	^ resourceCache loadVertexShader: aFileName
 ]
 
+{ #category : #'resource building' }
+WDCEngine >> newGenericComputeShaderArguments [
+	^ WDCGenericComputeShaderArguments for: self
+]
+
+{ #category : #accessing }
+WDCEngine >> optimalComputeWorkGroupSize [
+	^ 32
+]
+
 { #category : #accessing }
 WDCEngine >> preferredDepthFormat [
 	^ preferredDepthFormat

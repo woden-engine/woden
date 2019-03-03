@@ -24,7 +24,7 @@ WDSForwardSceneRenderer >> ensureLightingStatesFor: requiredNumberOfCameras [
 		oldLightingStates , ((pool allocate: missingNumberOfCameras) collect: [ :bufferElement |
 			self shaderSignature newLightingState
 				bind: 0 uniformBufferElement: bufferElement;
-				bind: 1 texture: self shadowMapBuffer startMiplevel: 0 miplevels: -1 lodclamp: 100000;
+				bind: 1 texture: self shadowMapBuffer;
 				yourself
 		])
 	].
@@ -36,16 +36,21 @@ WDSForwardSceneRenderer >> initializeWithEngine: aWDCEngine [
 
 ]
 
+{ #category : #'rendering preparations' }
+WDSForwardSceneRenderer >> intermediateRenderTargetsClass [
+	^ WDSForwardSceneRendererIntermediateTextures
+]
+
 { #category : #accessing }
 WDSForwardSceneRenderer >> renderMode [
 	^ WDCStateTrackerForwardRenderMode uniqueInstance
 ]
 
 { #category : #rendering }
-WDSForwardSceneRenderer >> setupViewportRendering: viewport index: viewportIndex [
-	super setupViewportRendering: viewport index: viewportIndex.
+WDSForwardSceneRenderer >> setupRenderingViewportStates: renderingViewport [
+	super setupRenderingViewportStates: renderingViewport.
 	stateTracker
-		useShaderResources: (currentGlobalLigthingStates at: viewportIndex)
+		useShaderResources: renderingViewport globalLightingStateShaderBindings
 ]
 
 { #category : #accessing }
@@ -55,7 +60,7 @@ WDSForwardSceneRenderer >> shaderSignatureClass [
 
 { #category : #rendering }
 WDSForwardSceneRenderer >> updateFrameLightingStates [
-	| transform lightingState gpuLightingStates lightSources viewport viewportLights shadowMapExtent shadowMapInverseExtent |
+	| transform lightingState lightingStateBinding lightSources viewport viewportLights shadowMapExtent shadowMapInverseExtent |
 	self ensureLightingStatesFor: renderingViewports size.
 	currentGlobalLigthingStates := globalLightingStates at: engine bufferingFrameIndex.
 
@@ -83,8 +88,14 @@ WDSForwardSceneRenderer >> updateFrameLightingStates [
 			numberOfLights: viewportLights size;
 			lightSources: lightSources.
 			
-		gpuLightingStates := (currentGlobalLigthingStates at: viewportIndex) slotValueAt: 0.
-		gpuLightingStates value: lightingState.
+		"Submit the lighting state to the GPU memory."
+		lightingStateBinding := currentGlobalLigthingStates at: viewportIndex.
+		renderingViewport globalLightingStateShaderBindings: lightingStateBinding.
+		
+		(lightingStateBinding slotValueAt: 0) value: lightingState.
+		
+		"Bind the ambient occlusion texture."
+		lightingStateBinding bind: 3 texture: renderingViewport ambientOcclusionTexture
 	].
 ]
 

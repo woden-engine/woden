@@ -13,6 +13,14 @@ Class {
 }
 
 { #category : #rendering }
+WDCFlatColorMaterial >> activateDepthOnlyOn: stateTracker [
+	stateTracker
+		vertexShader: self vertexShader;
+		fragmentShader: nil.
+	^ true
+]
+
+{ #category : #rendering }
 WDCFlatColorMaterial >> activateForwardOn: stateTracker [
 	stateTracker
 		vertexShader: self vertexShader;
@@ -25,14 +33,6 @@ WDCFlatColorMaterial >> activateForwardOn: stateTracker [
 			materialDepthWriteMask: false
 	].
 
-	^ true
-]
-
-{ #category : #rendering }
-WDCFlatColorMaterial >> activateShadowOn: stateTracker [
-	stateTracker
-		vertexShader: self vertexShader;
-		fragmentShader: nil.
 	^ true
 ]
 

@@ -32,7 +32,7 @@ WDCSkyMaterial >> bindResources [
 		signature := WDCForwardRenderingShaderSignature for: engine.
 		resourceBinding := signature newMaterialState.
 	].
-	skyTexture ifNotNil: [ resourceBinding bind: 2 texture: skyTexture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0 ].
+	skyTexture ifNotNil: [ resourceBinding bind: 2 texture: skyTexture ].
 ]
 
 { #category : #'state binding' }

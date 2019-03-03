@@ -42,7 +42,7 @@ WDBBabylonTextureMaterial >> modified [
 WDBBabylonTextureMaterial >> updateShaderBinding [
 	texture ifNil: [ ^ self ].
 	shaderBinding ifNil: [ ^ self ].
-	shaderBinding bind: 0 texture: texture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0
+	shaderBinding bind: 0 texture: texture
 ]
 
 { #category : #initialization }

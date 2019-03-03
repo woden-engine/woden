@@ -12,7 +12,8 @@ Class {
 		'useLateLatching',
 		'currentCameraViewports',
 		'directCommandLists',
-		'renderingViewports'
+		'renderingViewports',
+		'intermediateRenderTargets'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -41,7 +42,7 @@ WDSSceneRenderer >> currentTime: anObject [
 ]
 
 { #category : #debugging }
-WDSSceneRenderer >> debugDrawOnPompeiiCanvas: canvas [
+WDSSceneRenderer >> debugDrawOnBabylonCanvas: canvas [
 ]
 
 { #category : #initialization }
@@ -76,10 +77,16 @@ WDSSceneRenderer >> initializeWithEngine: aWDCEngine [
 ]
 
 { #category : #'rendering preparations' }
+WDSSceneRenderer >> intermediateRenderTargetsClass [
+	^ nil
+]
+
+{ #category : #'rendering preparations' }
 WDSSceneRenderer >> prepareRenderingForViewports: viewports [
 	renderingViewports := viewports collect: [ :viewport |
 		self prepareSceneRenderingViewportFor: viewport
 	].
+	self setupRenderingViewportsIntermediateRenderTargets.
 
 	self updateGPUStatesForRenderingViewports.
 ]
@@ -137,7 +144,7 @@ WDSSceneRenderer >> renderViewport: renderingViewport index: viewportIndex [
 	self setupStateTracker.
 	
 	viewport := renderingViewport viewport.
-	renderTarget := viewport renderTarget.
+	renderTarget := renderingViewport renderTarget.
 	resolveTarget := viewport resolveRenderTarget.
 
 	renderPass := renderTarget validMainRenderPass.
@@ -146,7 +153,7 @@ WDSSceneRenderer >> renderViewport: renderingViewport index: viewportIndex [
 	"Begin rendering into the viewport"
 	stateTracker
 		beginRenderPass: renderPass renderTarget: renderTarget bounds: viewport bounds.
-	self setupViewportRendering: viewport index: viewportIndex.
+	self setupRenderingViewportStates: renderingViewport.
 	
 	"Render the viewport objects"
 	renderingViewport visibleObjects do: [ :object |
@@ -169,6 +176,14 @@ WDSSceneRenderer >> renderViewport: renderingViewport index: viewportIndex [
 ]
 
 { #category : #rendering }
+WDSSceneRenderer >> renderViewportVisibleObjects: renderingViewport [
+	renderingViewport visibleObjects do: [ :object |
+		object renderOn: stateTracker
+	].
+
+]
+
+{ #category : #rendering }
 WDSSceneRenderer >> renderViewports: viewports composeWith: aBlock [	
 	viewports doWithIndex: [ :viewport :index | self renderViewport: viewport index: index ].
 	aBlock ifNotNil: [ aBlock cull: stateTracker ]
@@ -180,10 +195,55 @@ WDSSceneRenderer >> sceneRendererViewportClass [
 ]
 
 { #category : #rendering }
+WDSSceneRenderer >> setupRenderingViewportStates: renderingViewport [
+	stateTracker
+		submode: renderingViewport submode;
+		editorViewType: renderingViewport editorViewType.
+	stateTracker
+		useShaderResources: renderingViewport cameraStateShaderBindings
+]
+
+{ #category : #'rendering preparations' }
+WDSSceneRenderer >> setupRenderingViewportsIntermediateRenderTargets [
+	| targetsClass requiredExtent requiredSampleCount signature |
+	targetsClass := self intermediateRenderTargetsClass.
+	targetsClass ifNil: [ ^ self ].
+	
+	intermediateRenderTargets ifNil: [ intermediateRenderTargets := Dictionary new. ].
+	
+	intermediateRenderTargets valuesDo: [ :value | value usedInThisFrame: false ].
+
+	renderingViewports do: [ :renderingViewport |
+		requiredExtent := renderingViewport extent.
+		requiredSampleCount := renderingViewport sampleCount.
+		signature := {requiredExtent . requiredSampleCount}.
+		
+		(intermediateRenderTargets at: signature ifAbsentPut: [
+			targetsClass new
+				signature: signature;
+				engine: engine;
+				sceneRenderer: self;
+				createRenderTargets;
+				yourself
+		]) applyToRenderingViewport: renderingViewport
+	].
+
+	intermediateRenderTargets value reject: #usedInThisFrame thenDo: [ :obsolete |
+		intermediateRenderTargets removeKey: obsolete signature.
+	].
+
+]
+
+{ #category : #rendering }
 WDSSceneRenderer >> setupStateTracker [
+	^ self setupStateTrackerForRenderMode: self renderMode
+]
+
+{ #category : #rendering }
+WDSSceneRenderer >> setupStateTrackerForRenderMode: renderMode [
 	stateTracker
 		reset;
-		mode: self renderMode;
+		mode: renderMode;
 		shaderSignature: self shaderSignature;
 		useShaderResources: self shaderSignature defaultSamplers;
 		
@@ -195,16 +255,6 @@ WDSSceneRenderer >> setupStateTracker [
 
 		blendingAllMode: WDCBlendingMode replace.
 
-]
-
-{ #category : #rendering }
-WDSSceneRenderer >> setupViewportRendering: viewport index: viewportIndex [
-	stateTracker 
-		mode: self renderMode;
-		submode: viewport submode;
-		editorViewType: viewport editorViewType.
-	stateTracker
-		useShaderResources: (currentCameraStates at: viewportIndex)
 ]
 
 { #category : #accessing }
@@ -245,15 +295,23 @@ WDSSceneRenderer >> stateTracker [
 
 { #category : #'rendering preparations' }
 WDSSceneRenderer >> submitCurrentCameraStates [
-	| cameraState gpuCameraState viewport |
+	| cameraState gpuCameraState viewport screenSize inverseScreenSize cameraStateBindings |
 	renderingViewports doWithIndex: [ :renderingViewport :index |
 		viewport := renderingViewport viewport.
 		cameraState := viewport cameraState.
+		screenSize := renderingViewport extent asWMVector2F.
+		inverseScreenSize := WMVector2F x: screenSize x reciprocalFloatQuiet y: screenSize y reciprocalFloatQuiet.
+		
 		cameraState
 			transform: viewport cameraTransform;
+			screenSize: screenSize;
+			inverseScreenSize: inverseScreenSize;
 			currentTime: currentTime.
 				
-		gpuCameraState := (currentCameraStates at: index) slotValueAt: 0.
+		cameraStateBindings := currentCameraStates at: index.
+		renderingViewport cameraStateShaderBindings: cameraStateBindings.
+		
+		gpuCameraState := cameraStateBindings slotValueAt: 0.
 		gpuCameraState atomicSetValue: cameraState.
 	].
 

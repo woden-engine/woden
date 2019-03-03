@@ -11,9 +11,10 @@ Class {
 		'stages',
 		'entryFile',
 		'dependencies',
-		'stagesMutex'
+		'stagesMutex',
+		'entryPoints'
 	],
-	#category : 'WodenEngine-Core-Shaders'
+	#category : #'WodenEngine-Core-Shaders'
 }
 
 { #category : #initialization }
@@ -26,14 +27,16 @@ WDCLowLevelShaderSource >> addStage: aWDCShaderStage [
 
 { #category : #compiling }
 WDCLowLevelShaderSource >> compile [
-	| compiler newSource newDependencies oldDependencies |
+	| compiler newSource newDependencies oldDependencies newModule |
 	compiler := 	DASLCompiler new.
-	newSource := (compiler 
+	newModule := compiler 
 		target: target;
 		addIncludeDirectory: WodenCoreAssets location / #shaders;
 		sourceFromFileNamed: entryFile;
 		compile;
-		generatedCode) asShaderCode.
+		generatedCode.
+	newSource := newModule asShaderCode.
+	entryPoints := newModule entryPoints.
 		
 	oldDependencies := dependencies ifNil: [ #() ].
 	newDependencies := compiler processedDependencies collect: #asFileReference.
@@ -81,6 +84,16 @@ WDCLowLevelShaderSource >> entryFile [
 { #category : #accessing }
 WDCLowLevelShaderSource >> entryFile: anObject [
 	entryFile := anObject
+]
+
+{ #category : #accessing }
+WDCLowLevelShaderSource >> entryPoints [
+	^ entryPoints
+]
+
+{ #category : #accessing }
+WDCLowLevelShaderSource >> entryPoints: anObject [
+	entryPoints := anObject
 ]
 
 { #category : #initialization }

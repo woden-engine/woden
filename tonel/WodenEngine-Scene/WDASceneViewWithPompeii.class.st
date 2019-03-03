@@ -24,6 +24,6 @@ WDASceneViewWithPompeii >> renderViewport: viewport overlayWith: stateTracker [
 	pompeiiSurface withStateTracker: stateTracker drawDuring: [ :canvas |
 		viewport applyBabylonCanvasSafeZoneTransform: canvas transform.
 		self drawOnBabylonCanvas: canvas.
-		sceneRenderer ifNotNil: [ sceneRenderer debugDrawOnPompeiiCanvas: canvas ]
+		sceneRenderer ifNotNil: [ sceneRenderer debugDrawOnBabylonCanvas: canvas ]
 	]
 ]

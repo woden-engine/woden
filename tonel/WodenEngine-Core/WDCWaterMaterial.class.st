@@ -58,9 +58,9 @@ WDCWaterMaterial >> bindResources [
 	resourceCache := engine resourceCache.
 	resourceBinding
 		bind: 0 uniformBuffer: stateUniformBuffer;
-		bind: 2 texture: (albedoTexture ifNil: [resourceCache whiteTexture]) startMiplevel: 0 miplevels: -1 lodclamp: 100000.0;
-		bind: 3 texture: (normalTexture ifNil: [resourceCache defaultNormalTexture]) startMiplevel: 0 miplevels: -1 lodclamp: 100000.0.
-	skyTexture ifNotNil: [ resourceBinding bind: 4 texture: skyTexture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0 ].
+		bind: 2 texture: (albedoTexture ifNil: [resourceCache whiteTexture]);
+		bind: 3 texture: (normalTexture ifNil: [resourceCache defaultNormalTexture]).
+	skyTexture ifNotNil: [ resourceBinding bind: 4 texture: skyTexture ].
 		
 ]
 

@@ -133,7 +133,7 @@ RWSceneView >> visitJoyButtonUpEvent: event [
 { #category : #visiting }
 RWSceneView >> visitKeyDownEvent: event [
 	| r3Event |
-	event symbol = OSK_F1 ifTrue: [ sceneRenderer debuggingShadowMaps: sceneRenderer debuggingShadowMaps not ].
+	event symbol = OSK_F1 ifTrue: [ sceneRenderer debugNextRenderTarget ].
 	event symbol = OSK_F2 ifTrue: [ sceneRenderer debugRenderNextShadowMapViewport ].
 	
 	r3Event := RWKeyDown new symbol: event symbol.

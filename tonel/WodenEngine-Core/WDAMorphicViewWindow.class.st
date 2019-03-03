@@ -244,6 +244,11 @@ WDAMorphicViewWindow >> mouseWheel: evt [
 	evt inspect
 ]
 
+{ #category : #'framebuffer description' }
+WDAMorphicViewWindow >> needsDirectRenderTarget [
+	^ view needsDirectRenderTarget
+]
+
 { #category : #'events-processing' }
 WDAMorphicViewWindow >> processOSWindowEvent: anEvent [
 	super processOSWindowEvent: anEvent.

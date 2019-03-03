@@ -122,6 +122,11 @@ WDAView >> model: anObject [
 	model := anObject
 ]
 
+{ #category : #'framebuffer description' }
+WDAView >> needsDirectRenderTarget [
+	^ true
+]
+
 { #category : #opening }
 WDAView >> openInMorphic [
 	window := (WDAMorphicViewWindow for: self) engine: engine; yourself.

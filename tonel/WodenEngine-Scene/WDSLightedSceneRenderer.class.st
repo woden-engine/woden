@@ -8,12 +8,39 @@ Class {
 		'shadowMapRenderTargets',
 		'shadowSceneRenderer',
 		'usedLights',
-		'shadowMapDebuggingMesh',
-		'debuggingShadowMaps',
-		'debugRenderShadowMapViewport'
+		'debugRenderMesh',
+		'debugRenderShadowMapViewport',
+		'intermediateRenderTarget',
+		'ambientOcclusionComputeShader',
+		'debugRenderTargetIndex',
+		'activeDebugRenderingViewport',
+		'ambientOcclusionMSComputeShader'
+	],
+	#classVars : [
+		'RenderTargetDebugDrawingMethod',
+		'RenderTargetIndex_AmbientOcclusion',
+		'RenderTargetIndex_Count',
+		'RenderTargetIndex_DepthBuffer',
+		'RenderTargetIndex_None',
+		'RenderTargetIndex_ShadowMap'
 	],
 	#category : #'WodenEngine-Scene-Rendering'
 }
+
+{ #category : #'class initialization' }
+WDSLightedSceneRenderer class >> initialize [
+	RenderTargetIndex_None := 0.
+	RenderTargetIndex_ShadowMap := 1.
+	RenderTargetIndex_AmbientOcclusion := 2.
+	RenderTargetIndex_DepthBuffer := 3.
+	RenderTargetIndex_Count := 3.
+	
+	RenderTargetDebugDrawingMethod := Dictionary newFromPairs: {
+		RenderTargetIndex_ShadowMap . #debugDrawShadowMapsOnBabylonCanvas:.
+		RenderTargetIndex_DepthBuffer . #debugDrawDepthBufferOnBabylonCanvas:.
+		RenderTargetIndex_AmbientOcclusion . #debugDrawAmbientOcclusionOnBabylonCanvas:.
+	}
+]
 
 { #category : #accessing }
 WDSLightedSceneRenderer class >> maxShadowCastingLightCount [
@@ -23,6 +50,16 @@ WDSLightedSceneRenderer class >> maxShadowCastingLightCount [
 { #category : #'shadow mapping' }
 WDSLightedSceneRenderer class >> shadowMapExtent [
 	^ 512 @ 512
+]
+
+{ #category : #'ambient occlusion' }
+WDSLightedSceneRenderer >> ambientOcclusionComputeShader [
+	^ ambientOcclusionComputeShader ifNil: [ambientOcclusionComputeShader := engine loadComputeShader: 'shaders/lighting/ambientOcclusionCompute.dastrel']
+]
+
+{ #category : #'ambient occlusion' }
+WDSLightedSceneRenderer >> ambientOcclusionMSComputeShader [
+	^ ambientOcclusionMSComputeShader ifNil: [ambientOcclusionMSComputeShader := engine loadComputeShader: 'shaders/lighting/ambientOcclusionMSCompute.dastrel']
 ]
 
 { #category : #'debug rendering' }
@@ -41,9 +78,78 @@ WDSLightedSceneRenderer >> applyDebugRenderShadowMapViewport [
 	gpuCameraState atomicSetValue: cameraState.
 ]
 
+{ #category : #'ambient occlusion' }
+WDSLightedSceneRenderer >> computeScreenSpaceAmbientOcclusionFor: renderingViewport [
+	| description width height aoShaderShaderSignature |
+	description := renderingViewport ambientOcclusionTexture description.
+	width := description width.
+	height := description height.
+	aoShaderShaderSignature := WDCAmbientOcclusionShaderSignature for: engine.
+	
+	stateTracker
+		shaderSignature: aoShaderShaderSignature;
+		computeShader: (renderingViewport sampleCount <= 1
+			ifTrue: [self ambientOcclusionComputeShader]
+			ifFalse: [self ambientOcclusionMSComputeShader]);
+		useComputeShaderResources: aoShaderShaderSignature defaultSamplers;
+		useComputeShaderResources: renderingViewport cameraStateShaderBindings;
+		useComputeShaderResources: renderingViewport ambientOcclusionComputeShaderBindings;
+		dispatchComputeGlobalGridX: width y: height.
+	"stateTracker
+		computeShader: (renderingViewport sampleCount <= 1
+			ifTrue: [self ambientOcclusionComputeShader]
+			ifFalse: [self ambientOcclusionMSComputeShader])
+			arguments: renderingViewport ambientOcclusionComputeShaderArguments;
+		dispatchComputeGlobalGridX: width y: height."
+]
+
 { #category : #'debug rendering' }
-WDSLightedSceneRenderer >> debugDrawOnPompeiiCanvas: canvas [
-	self drawDebugShadowMapsOnPompeiiCanvas: canvas
+WDSLightedSceneRenderer >> debugDrawAmbientOcclusionOnBabylonCanvas: canvas [
+	| builder description |
+	
+	builder := canvas driver mesh2DBuilder.
+	description := activeDebugRenderingViewport ambientOcclusionTexture description.
+	builder fill
+		grayTexture: activeDebugRenderingViewport ambientOcclusionTexture rectangle: (0@0 extent: 
+	description width @ description height).
+	
+	^ builder mesh
+
+]
+
+{ #category : #'debug rendering' }
+WDSLightedSceneRenderer >> debugDrawDepthBufferOnBabylonCanvas: canvas [
+	^ nil
+]
+
+{ #category : #'debug rendering' }
+WDSLightedSceneRenderer >> debugDrawOnBabylonCanvas: canvas [
+	self
+		drawDebugRenderTargetOnBabylonCanvas: canvas
+]
+
+{ #category : #'debug rendering' }
+WDSLightedSceneRenderer >> debugDrawShadowMapsOnBabylonCanvas: canvas [
+	| builder column row |
+	shadowCastingLightCount = 0 ifTrue: [ ^  nil ].
+	
+	builder := canvas driver mesh2DBuilder.
+	0 to: shadowCastingLightCount - 1 do: [ :i |
+		column := i % 2.
+		row := i // 2.
+			
+		builder fill
+			grayTextureArray: shadowMapBuffer element: i rectangle: ((column*256)@(row*256) extent: 256@256).
+	].
+
+	^ builder mesh
+
+]
+
+{ #category : #'debug rendering' }
+WDSLightedSceneRenderer >> debugNextRenderTarget [
+	debugRenderTargetIndex := (debugRenderTargetIndex + 1) % RenderTargetIndex_Count.
+	debugRenderMesh := nil.
 ]
 
 { #category : #'debug rendering' }
@@ -54,44 +160,29 @@ WDSLightedSceneRenderer >> debugRenderNextShadowMapViewport [
 
 ]
 
-{ #category : #accessing }
-WDSLightedSceneRenderer >> debuggingShadowMaps [
-	^ debuggingShadowMaps
-]
-
-{ #category : #accessing }
-WDSLightedSceneRenderer >> debuggingShadowMaps: anObject [
-	debuggingShadowMaps := anObject
+{ #category : #rendering }
+WDSLightedSceneRenderer >> depthOnlyRenderMode [
+	^ WDCStateTrackerDepthOnlyRenderMode uniqueInstance
 ]
 
 { #category : #'debug rendering' }
-WDSLightedSceneRenderer >> drawDebugShadowMapsOnPompeiiCanvas: canvas [
-	| builder column row |
-	debuggingShadowMaps ifFalse: [ ^ self ].
-	shadowCastingLightCount = 0 ifTrue: [ ^ self ].
-	
-	shadowMapDebuggingMesh ifNil: [ 
-		builder := canvas driver mesh2DBuilder.
-		0 to: shadowCastingLightCount - 1 do: [ :i |
-			column := i % 2.
-			row := i // 2.
-			
-			builder fill
-				grayTextureArray: shadowMapBuffer element: i rectangle: ((column*256)@(row*256) extent: 256@256).
-		].
-	
-		shadowMapDebuggingMesh := builder mesh.
-	].
-
-	canvas draw: shadowMapDebuggingMesh
+WDSLightedSceneRenderer >> drawDebugRenderTargetOnBabylonCanvas: canvas [
+	| selector |
+	selector := RenderTargetDebugDrawingMethod at: debugRenderTargetIndex ifAbsent: [ ^ nil ].
+	debugRenderMesh := self perform: selector with: canvas.
+	debugRenderMesh ifNotNil: [ canvas draw: debugRenderMesh ]
 ]
 
 { #category : #initialization }
 WDSLightedSceneRenderer >> initialize [
 	super initialize.
-	debuggingShadowMaps := false.
+	debugRenderTargetIndex := RenderTargetIndex_None.
 	debugRenderShadowMapViewport := 0.
-	
+]
+
+{ #category : #testing }
+WDSLightedSceneRenderer >> isStencilRequired [
+	^ false
 ]
 
 { #category : #'shadow mapping' }
@@ -127,6 +218,51 @@ WDSLightedSceneRenderer >> renderShadowMaps [
 
 	self shadowSceneRenderer
 		renderSceneViewportsIntoStateTracker: stateTracker
+]
+
+{ #category : #rendering }
+WDSLightedSceneRenderer >> renderViewport: renderingViewport index: viewportIndex [
+	| renderTarget resolveTarget renderPass viewport continueRenderPass |
+	activeDebugRenderingViewport := renderingViewport.
+	viewport := renderingViewport viewport.
+	renderTarget := renderingViewport renderTarget.
+	resolveTarget := viewport resolveRenderTarget.
+
+	renderPass := renderTarget validMainRenderPass.
+	continueRenderPass := renderTarget validMainContinueRenderPass.
+	renderPass setColorClearValue: 0 value: renderingViewport scene backgroundColor asAGPUColor4f.
+	
+	"First pass: depth only rendering."
+	self setupStateTrackerForRenderMode: self depthOnlyRenderMode.
+	stateTracker
+		beginRenderPass: renderPass renderTarget: renderTarget bounds: viewport bounds.
+	self
+		setupRenderingViewportStates: renderingViewport;
+		renderViewportVisibleObjects: renderingViewport.
+	stateTracker endRenderPass.
+	self computeScreenSpaceAmbientOcclusionFor: renderingViewport.
+
+	"Second pass: rendering of the remaining objects."	
+	self setupStateTracker.
+	stateTracker
+		beginRenderPass: renderPass renderTarget: renderTarget bounds: viewport bounds.
+	self
+		setupRenderingViewportStates: renderingViewport;
+		renderViewportVisibleObjects: renderingViewport.
+	
+	"Render the overlays"
+	viewport overlayRenderer ifNotNil: [ 
+		viewport overlayRenderer renderViewport: viewport overlayWith: stateTracker 
+	].
+	
+	"End rendering into the viewport"
+	stateTracker endRenderPass.
+		
+	"Resolve the target"
+	renderTarget ~~ resolveTarget ifTrue: [
+		stateTracker resolveRenderTarget: renderTarget into: resolveTarget
+	]
+
 ]
 
 { #category : #rendering }

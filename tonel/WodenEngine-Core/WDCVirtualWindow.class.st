@@ -18,11 +18,11 @@ WDCVirtualWindow >> captureMouse [
 
 { #category : #initialization }
 WDCVirtualWindow >> checkRenderTarget [
-	renderTarget ifNil: [
+	resolveRenderTarget ifNil: [
 		self createRenderTarget
 	].
 
-	renderTarget extent: extent.
+	renderTarget ifNotNil: [renderTarget extent: extent].
 	resolveRenderTarget extent: extent
 ]
 

@@ -36,6 +36,7 @@ WDCPharoProceduralGPUScriptContext >> getMainComputeStageFrom: spirvShader engin
 		stage: AGPU_COMPUTE_SHADER;
 		shaderLanguageTarget: AGPU_SHADER_LANGUAGE_SPIR_V;
 		source: lowLevelShader;
+		properties: ((spirvShader entryPoints at: #main -> #compute) ifNotNil: #properties);
 		compile;
 		yourself.
 ]
@@ -53,17 +54,16 @@ WDCPharoProceduralGPUScriptContext >> heightFieldShaderFor: heightFunction [
 
 { #category : #'as yet unclassified' }
 WDCPharoProceduralGPUScriptContext >> shaderToFormImage: spirvShader [
-	| engine signature extent texture textureBinding commandAllocator commandList stateTracker form pitch slicePitch shader |
+	| engine extent texture commandAllocator commandList stateTracker form pitch slicePitch shader shaderArguments |
 	engine := WDCEngine default.
-	signature := WDCGenericComputationShaderSignature for: engine.
 	
 	shader := self getMainComputeStageFrom: spirvShader engine: engine.
 
 	extent := 512@512.
 	texture := engine createBGRAStorageImageWithExtent: extent.
 
-	textureBinding := signature newStorageImages
-		bind: 0 storageImage: texture level: 0 layer: 0;
+	shaderArguments := engine newGenericComputeShaderArguments
+		storageImage: texture slot: 0;
 		yourself.
 
 	commandAllocator := engine createGraphicsDirectCommandListAllocator.
@@ -72,10 +72,8 @@ WDCPharoProceduralGPUScriptContext >> shaderToFormImage: spirvShader [
 	stateTracker := WDCStateTracker for: engine.
 	stateTracker commandList: commandList rebuildWith: [
 		stateTracker
-			shaderSignature: signature;
-			computeShader: shader;
-			useComputeShaderResources: textureBinding;
-			dispatchComputeGroupCountX: extent x //8y: extent y//8
+			computeShader: shader arguments: shaderArguments;
+			dispatchComputeGlobalGridX: extent x y: extent y
 	].
 
 	engine graphicsQueue

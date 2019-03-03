@@ -21,6 +21,21 @@ Class {
 }
 
 { #category : #rendering }
+WDCTerrainMaterial >> activateDepthOnlyOn: stateTracker [
+	self validateCache.
+	stateTracker
+		vertexShader: self vertexShader;
+		fragmentShader: nil.
+
+	"For the height map"		
+	resourceBinding ifNotNil: [ 
+		stateTracker useShaderResources: resourceBinding.
+	].
+
+	^ true
+]
+
+{ #category : #rendering }
 WDCTerrainMaterial >> activateForwardOn: stateTracker [
 	"Do not draw the terrain in editor top views."
 
@@ -53,21 +68,6 @@ WDCTerrainMaterial >> activateForwardOn: stateTracker [
 	^ true
 ]
 
-{ #category : #rendering }
-WDCTerrainMaterial >> activateShadowOn: stateTracker [
-	self validateCache.
-	stateTracker
-		vertexShader: self vertexShader;
-		fragmentShader: nil.
-
-	"For the height map"		
-	resourceBinding ifNotNil: [ 
-		stateTracker useShaderResources: resourceBinding.
-	].
-
-	^ true
-]
-
 { #category : #accessing }
 WDCTerrainMaterial >> albedoTextures [
 	^ albedoTextures
@@ -95,15 +95,15 @@ WDCTerrainMaterial >> bindResources [
 
 	resourceCache := engine resourceCache.
 	resourceBinding bind: 0 uniformBuffer: stateUniformBuffer.
-	resourceBinding bind: 2 texture: (heightMapTexture ifNil: [resourceCache blackTexture] ) startMiplevel: 0 miplevels: -1 lodclamp: 100000.0.
-	resourceBinding bind: 3 texture: (splattingTexture ifNil: [resourceCache blackTexture]) startMiplevel: 0 miplevels: -1 lodclamp: 100000.0.
+	resourceBinding bind: 2 texture: (heightMapTexture ifNil: [resourceCache blackTexture]).
+	resourceBinding bind: 3 texture: (splattingTexture ifNil: [resourceCache blackTexture]).
 	
 	0 to: 4 do: [ :i |
-		resourceBinding bind: 4 + i texture: (self validAlbedoTexture: i + 1) startMiplevel: 0 miplevels: -1 lodclamp: 100000.0.
+		resourceBinding bind: 4 + i texture: (self validAlbedoTexture: i + 1).
 	].
 
 	0 to: 4 do: [ :i |
-		resourceBinding bind: 9 + i texture: (self validNormalTexture: i + 1) startMiplevel: 0 miplevels: -1 lodclamp: 100000.0.
+		resourceBinding bind: 9 + i texture: (self validNormalTexture: i + 1).
 	].
 	
 ]
@@ -198,7 +198,7 @@ WDCTerrainMaterial >> initialize [
 		fresnel: (WMVector3F x: 0.03 y: 0.03 z: 0.03);
 		smoothness: 0.45;
 		
-		textureScales: ((SLVMNativeArray for: WMVector2F new: 5) atAllPut: (WMVector2F x: 1.0 y: 1.0));
+		textureScaleAndOffset: ((SLVMNativeArray for: WMVector4F new: 5) atAllPut: (WMVector4F x: 1.0 y: 1.0));
 		yourself.
 	albedoTextures := { nil . nil . nil . nil . nil }.
 	normalTextures := { nil . nil . nil . nil . nil }.
@@ -263,8 +263,7 @@ WDCTerrainMaterial >> parse: materialFileReference data: data [
 		fresnel: (self parse: data at: materialFileReference vector3: 'fresnel-constant' ifAbsent: [ WMVector3F x: 0.03 y: 0.03 z: 0.03 ]);
 		smoothness: (data at: 'smoothness' ifAbsent: [ materialState smoothness ]);
 		
-		textureScales: (self parse: data at: materialFileReference array: 'texture-scales' size: 5 nativeType: WMVector2F ifAbsent: [ WMVector2F x: 1.0 y: 1.0]);
-		textureOffsets: (self parse: data at: materialFileReference array: 'texture-offsets' size: 5 nativeType: WMVector2F ifAbsent: [ WMVector2F x: 0.0 y: 0.0]).
+		textureScaleAndOffset: (self parse: data at: materialFileReference array: 'texture-scales-offsets' size: 5 nativeType: WMVector4F ifAbsent: [ WMVector4F x: 1.0 y: 1.0 z: 0.0 w: 0.0]).
 
 	heightMapTexture := self parse: data at: materialFileReference optionalTexture: 'height-map'.
 	splattingTexture := self parse: data at: materialFileReference optionalTexture: 'splatter'.

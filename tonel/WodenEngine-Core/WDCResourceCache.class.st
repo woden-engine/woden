@@ -16,7 +16,8 @@ Class {
 		'pendingResourceReloadActions'
 	],
 	#classVars : [
-		'ShaderLanguageTargetMap'
+		'ShaderLanguageTargetMap',
+		'ShaderStageToName'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -60,6 +61,12 @@ WDCResourceCache class >> initialize [
 		AGPU_SHADER_LANGUAGE_SPIR_V . #'spir-v'.
     	AGPU_SHADER_LANGUAGE_METAL . #metal.
 	}.
+	
+	ShaderStageToName := Dictionary newFromPairs: { 
+		AGPU_VERTEX_SHADER  . #vertex.
+		AGPU_FRAGMENT_SHADER  . #fragment.
+		AGPU_COMPUTE_SHADER  . #compute.
+	}
 	
 ]
 
@@ -520,6 +527,7 @@ WDCResourceCache >> performShaderLoading: shaderFile stage: stageIdentifier [
 		stage: stageIdentifier;
 		shaderLanguageTarget: shaderLanguageTarget;
 		source: source;
+		properties: ((source entryPoints at: #main -> (ShaderStageToName at: stageIdentifier)) ifNotNil: #properties);
 		yourself.
 	stage compile.
 	

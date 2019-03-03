@@ -18,6 +18,15 @@ Class {
 }
 
 { #category : #rendering }
+WDCGenericSurfaceMaterial >> activateDepthOnlyOn: stateTracker [
+	self validateCache.
+	stateTracker
+		vertexShader: self vertexShader;
+		fragmentShader: nil.
+	^ true
+]
+
+{ #category : #rendering }
 WDCGenericSurfaceMaterial >> activateForwardOn: stateTracker [
 	self validateCache.
 	
@@ -39,15 +48,6 @@ WDCGenericSurfaceMaterial >> activateForwardOn: stateTracker [
 		stateTracker useShaderResources: resourceBinding.
 	].
 	
-	^ true
-]
-
-{ #category : #rendering }
-WDCGenericSurfaceMaterial >> activateShadowOn: stateTracker [
-	self validateCache.
-	stateTracker
-		vertexShader: self vertexShader;
-		fragmentShader: nil.
 	^ true
 ]
 
@@ -88,9 +88,9 @@ WDCGenericSurfaceMaterial >> bindResources [
 	].
 
 	resourceBinding bind: 0 uniformBuffer: stateUniformBuffer.
-	albedoTexture ifNotNil: [ resourceBinding bind: 2 texture: albedoTexture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0 ].
-	normalTexture ifNotNil: [ resourceBinding bind: 3 texture: normalTexture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0 ].
-	fresnelTexture ifNotNil: [ resourceBinding bind: 4 texture: fresnelTexture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0 ].
+	albedoTexture ifNotNil: [ resourceBinding bind: 2 texture: albedoTexture].
+	normalTexture ifNotNil: [ resourceBinding bind: 3 texture: normalTexture].
+	fresnelTexture ifNotNil: [ resourceBinding bind: 4 texture: fresnelTexture].
 ]
 
 { #category : #'as yet unclassified' }

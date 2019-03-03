@@ -42,6 +42,11 @@ WDCShaderResourceBinding >> bind: slot storageBufferElement: bufferElement [
 ]
 
 { #category : #binding }
+WDCShaderResourceBinding >> bind: slot storageImage: texture [
+	^ self bind: slot storageImage: texture level: 0 layer: 0
+]
+
+{ #category : #binding }
 WDCShaderResourceBinding >> bind: slot storageImage: texture level: level layer: layer [
 	self bind: slot storageImage: texture validHandle level: level layer: layer access: AGPU_READ_WRITE format: texture description format
 ]
@@ -51,6 +56,11 @@ WDCShaderResourceBinding >> bind: slot storageImage: texture level: level layer:
 	self slotAt: slot + 1 put: texture action: [
 		self validHandle bindImage: slot texture: texture level: level layer: layer access: access format: format
 	].
+]
+
+{ #category : #binding }
+WDCShaderResourceBinding >> bind: slot texture: texture [
+	^ self bind: slot texture: texture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0
 ]
 
 { #category : #binding }

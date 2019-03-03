@@ -123,6 +123,14 @@ WDCStateTracker >> computeShader: aVertexShader [
 ]
 
 { #category : #'pipeline state' }
+WDCStateTracker >> computeShader: shader arguments: shaderArguments [
+	self
+		shaderSignature: shaderArguments signature;
+		computeShader: shader.
+	shaderArguments applyBindingsOnStateTracker: self
+]
+
+{ #category : #'pipeline state' }
 WDCStateTracker >> cullMode: cullMode [
 	pipelineStateDescription cullMode: cullMode
 ]
@@ -157,6 +165,24 @@ WDCStateTracker >> depthFunction: aBoolean [
 { #category : #'pipeline state' }
 WDCStateTracker >> depthWriteMask: aBoolean [
 	pipelineStateDescription depthWriteMask: aBoolean
+]
+
+{ #category : #commands }
+WDCStateTracker >> dispatchComputeGlobalGrid: x [
+	| localSizeX |
+	localSizeX := computePipelineStateDescription computeShader localSizeX.
+	^ self dispatchComputeGroupCount: (x + localSizeX - 1) // localSizeX
+]
+
+{ #category : #commands }
+WDCStateTracker >> dispatchComputeGlobalGridX: x y: y [
+	| localSizeX localSizeY groupsX groupsY |
+	localSizeX := computePipelineStateDescription computeShader localSizeX.
+	localSizeY := computePipelineStateDescription computeShader localSizeY.
+	groupsX := (x + localSizeX - 1) // localSizeX.
+	groupsY := (y + localSizeY - 1) // localSizeY.
+	^ self dispatchComputeGroupCountX: groupsX y: groupsY
+
 ]
 
 { #category : #commands }
@@ -271,6 +297,12 @@ WDCStateTracker >> resolveRenderTarget: sourceRenderTarget into: targetRenderTar
 	commandListBuilder
 		resolveFramebuffer: targetRenderTarget currentFramebuffer validHandle
 		sourceFramebuffer: sourceRenderTarget currentFramebuffer validHandle
+]
+
+{ #category : #commands }
+WDCStateTracker >> resolveTexture: sourceTexture into: destTexture aspect: aspect [
+	commandListBuilder
+		resolveTexture: sourceTexture validHandle sourceLevel: 0 sourceLayer: 0 destTexture: destTexture validHandle destLevel: 0 destLayer: 0 levelCount: 1 layerCount: 1 aspect: aspect
 ]
 
 { #category : #commands }
