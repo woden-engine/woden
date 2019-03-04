@@ -199,7 +199,7 @@ WDCStateTracker >> dispatchComputeGroupCountX: x y: y [
 WDCStateTracker >> dispatchComputeGroupCountX: x y: y z: z [
 	self commitComputePipelineState.
 	commandListBuilder
-		dispatchCompute: x group_count_y: y group_count_z: y
+		dispatchCompute: x group_count_y: y group_count_z: z
 ]
 
 { #category : #commands }

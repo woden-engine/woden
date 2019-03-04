@@ -3,7 +3,8 @@ Class {
 	#superclass : #WDSSceneRendererIntermediateTextures,
 	#instVars : [
 		'ambientOcclusionTexture',
-		'ambientOcclusionComputeShaderBindings'
+		'ambientOcclusionComputeShaderBindings',
+		'ambientOcclusionBlurIntermediateTexture'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -42,13 +43,15 @@ WDSLightedSceneRendererIntermediateTextures >> applyToRenderingViewport: renderi
 { #category : #'multi eye rendering' }
 WDSLightedSceneRendererIntermediateTextures >> createRenderTargets [
 	| ssaoWidth ssaoHeight |
-	ssaoWidth := extent x //2 alignedTo: 4.
-	ssaoHeight := extent y //2 alignedTo: 4.
-	Transcript show: 'createRenderTargets '; show: ssaoWidth; space; show: ssaoHeight; cr.
+	ssaoWidth := extent x.
+	ssaoHeight := extent y.
 	ambientOcclusionTexture := engine createStorageImageWithExtent: ssaoWidth@ssaoHeight format: AGPU_TEXTURE_FORMAT_R8_UNORM.
+	ambientOcclusionBlurIntermediateTexture := engine createStorageImageWithExtent: ssaoWidth@ssaoHeight format: AGPU_TEXTURE_FORMAT_R8_UNORM.
 	
 	ambientOcclusionComputeShaderBindings := (WDCAmbientOcclusionShaderSignature for: engine)
 		newComputeBuffers
 			bind: 1 storageImage: ambientOcclusionTexture;
-			yourself
+			yourself.
+			
+	
 ]

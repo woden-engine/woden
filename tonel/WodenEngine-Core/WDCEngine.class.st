@@ -28,6 +28,11 @@ Class {
 	#category : #'WodenEngine-Core-Engine'
 }
 
+{ #category : #'as yet unclassified' }
+WDCEngine class >> allowVR [
+	^ true
+]
+
 { #category : #accessing }
 WDCEngine class >> debugLayerEnabled [
 	^ true
@@ -538,6 +543,11 @@ WDCEngine >> renderingProcessCritical: aBlock [
 { #category : #accessing }
 WDCEngine >> resourceCache [
 	^ resourceCache
+]
+
+{ #category : #accessing }
+WDCEngine >> screenQuadVertexShader [
+	^ resourceCache screenQuadVertexShader
 ]
 
 { #category : #accessing }

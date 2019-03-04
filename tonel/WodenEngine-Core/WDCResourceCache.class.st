@@ -13,7 +13,8 @@ Class {
 		'streamingUniformBufferPools',
 		'streamingStorageBufferPools',
 		'poolsMutex',
-		'pendingResourceReloadActions'
+		'pendingResourceReloadActions',
+		'screenQuadVertexShader'
 	],
 	#classVars : [
 		'ShaderLanguageTargetMap',
@@ -613,6 +614,11 @@ WDCResourceCache >> resourceAt: name ifAbsentPut: aBlock [
 	result := aBlock value.
 	resources at: name put: result.
 	^ result
+]
+
+{ #category : #accessing }
+WDCResourceCache >> screenQuadVertexShader [
+	^ screenQuadVertexShader ifNil: [ screenQuadVertexShader := self loadVertexShader: 'shaders/vertex/screenQuad.dastrel' ]
 ]
 
 { #category : #'session management' }

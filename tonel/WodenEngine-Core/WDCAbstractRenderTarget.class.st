@@ -221,6 +221,7 @@ WDCAbstractRenderTarget >> initialize [
 	super initialize.
 	hasDepth := false.
 	hasStencil := false.
+	isDepthReaded := false.
 	sampleCount := 1
 ]
 

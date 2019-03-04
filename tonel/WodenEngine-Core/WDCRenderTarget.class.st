@@ -96,12 +96,20 @@ WDCRenderTarget >> createFramebuffer [
 { #category : #initialization }
 WDCRenderTarget >> createFramebufferWithColorAttachments: colorAttachments views: colorViews depthStencilAttachment: depthStencilAttachment view: depthStencilView [
 
-	| handle |
-	colorAttachments ifNotEmpty: [ 
-		self halt
-	] ifEmpty: [ 
-		handle := engine device createFrameBuffer: width height: height colorCount: 0 colorViews: nil depthStencilView: depthStencilView
+	| handle colorCount colorViewBuffer |
+	colorCount := 0.
+	colorViewBuffer := nil.
+	
+	colorAttachments ifNotEmpty: [
+		colorAttachments size = 1 ifTrue: [ 
+			colorCount := 1.
+			colorViewBuffer := colorViews first.
+		] ifFalse: [ 
+			self halt
+		]
 	].
+
+	handle := engine device createFrameBuffer: width height: height colorCount: colorCount colorViews: colorViewBuffer depthStencilView: depthStencilView.
 
 	^ WDCRenderTargetFramebuffer new
 		engine: engine;

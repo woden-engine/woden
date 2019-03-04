@@ -81,6 +81,15 @@ WDCTexture >> description: anObject [
 	description := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDCTexture >> getFullViewDescription [
+	| view |
+	view := AGPUTextureViewDescription new.
+	self validHandle getFullViewDescription: view.
+	^ view
+
+]
+
 { #category : #preview }
 WDCTexture >> thumbnail [
 	data ifNotNil: [ ^ data thumbnail ].
