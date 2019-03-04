@@ -12,6 +12,11 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+WDASceneViewScreenDisplayMode >> compositionShaderSignature [
+	^ WDCCompositionShaderSignature for: engine
+]
+
+{ #category : #'as yet unclassified' }
 WDASceneViewScreenDisplayMode >> computeProjectionMatrixFor: camera [
 	^ camera frustum matrix
 ]
@@ -32,18 +37,31 @@ WDASceneViewScreenDisplayMode >> isVR [
 ]
 
 { #category : #'rendering process stages' }
+WDASceneViewScreenDisplayMode >> prepareDisplayMode [
+	self updateCameraFrustum.
+
+]
+
+{ #category : #'rendering process stages' }
 WDASceneViewScreenDisplayMode >> prepareRendering [
+	self
+		prepareDisplayMode;
+		prepareSceneRenderer
+]
+
+{ #category : #'rendering process stages' }
+WDASceneViewScreenDisplayMode >> prepareSceneRenderer [
 	| renderTarget resolveTarget |
 	renderTarget := view window validRenderTarget.
 	resolveTarget := view window validResolveRenderTarget.
-
-	self updateCameraFrustum.
 	view sceneRenderer
 		useLateLatching: self useLateLatching;
 		currentTime: view model currentTime;
-		prepareRenderingForViewports: {
+		beginPreparingRendering;
+		prepareRenderingForCamera: view cameraSceneNode withViewports: {
 			self viewportForCamera: view cameraSceneNode renderTarget: renderTarget resolveRenderTarget: resolveTarget
-		}
+		};
+		endPreparingRendering
 ]
 
 { #category : #'rendering process stages' }

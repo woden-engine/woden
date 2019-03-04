@@ -18,6 +18,13 @@ WDCShaderResourceBinding >> bind: slot renderTarget: renderTarget startMiplevel:
 ]
 
 { #category : #binding }
+WDCShaderResourceBinding >> bind: slot renderTargetTexture: renderTarget [
+	self assert: renderTarget gpuOnly.
+	self assert: renderTarget colorAttachmentFormats size = 1.
+	^ self bind: slot texture: renderTarget currentFramebuffer colorAttachments first
+]
+
+{ #category : #binding }
 WDCShaderResourceBinding >> bind: slot storageBuffer: storageBuffer [
 	self slotAt: slot + 1 put: storageBuffer action: [
 		self validHandle bindStorageBuffer: slot storage_buffer: storageBuffer validHandle

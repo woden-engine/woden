@@ -13,7 +13,8 @@ Class {
 		'currentCameraViewports',
 		'directCommandLists',
 		'renderingViewports',
-		'intermediateRenderTargets'
+		'intermediateRenderTargets',
+		'perCameraRenderingViewports'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -24,6 +25,12 @@ Class {
 { #category : #'instance creation' }
 WDSSceneRenderer class >> for: aWDCEngine [
 	^ self new initializeWithEngine: aWDCEngine
+]
+
+{ #category : #'rendering preparations' }
+WDSSceneRenderer >> beginPreparingRendering [
+	renderingViewports removeAll.
+	perCameraRenderingViewports removeAll.
 ]
 
 { #category : #initialization }
@@ -43,6 +50,12 @@ WDSSceneRenderer >> currentTime: anObject [
 
 { #category : #debugging }
 WDSSceneRenderer >> debugDrawOnBabylonCanvas: canvas [
+]
+
+{ #category : #'rendering preparations' }
+WDSSceneRenderer >> endPreparingRendering [
+	self setupRenderingViewportsIntermediateRenderTargets.
+	self updateGPUStatesForRenderingViewports.
 ]
 
 { #category : #initialization }
@@ -72,8 +85,9 @@ WDSSceneRenderer >> initializeWithEngine: aWDCEngine [
 	currentTime := 0.0.
 	
 	useLateLatching := false.
-	directCommandLists := WDCPerFrameSimpleCommandList for: engine
-
+	directCommandLists := WDCPerFrameSimpleCommandList for: engine.
+	perCameraRenderingViewports := OrderedCollection new.
+	renderingViewports := OrderedCollection new.
 ]
 
 { #category : #'rendering preparations' }
@@ -82,13 +96,23 @@ WDSSceneRenderer >> intermediateRenderTargetsClass [
 ]
 
 { #category : #'rendering preparations' }
-WDSSceneRenderer >> prepareRenderingForViewports: viewports [
-	renderingViewports := viewports collect: [ :viewport |
+WDSSceneRenderer >> prepareRenderingForCamera: camera withViewports: viewports [
+	| perCameraViewports |
+	perCameraViewports := WDSSceneRendererPerCameraRenderingViewports new
+		camera: camera;
+		renderingViewports: (viewports collect: [ :viewport |
 		self prepareSceneRenderingViewportFor: viewport
-	].
-	self setupRenderingViewportsIntermediateRenderTargets.
+	]).
 
-	self updateGPUStatesForRenderingViewports.
+	perCameraRenderingViewports add: perCameraViewports.
+	renderingViewports addAll: perCameraViewports renderingViewports.
+
+]
+
+{ #category : #'rendering preparations' }
+WDSSceneRenderer >> prepareRenderingForViewports: viewports [
+	viewports do: [ :viewport | self prepareRenderingForCamera: viewport camera withViewports: {viewport} ]
+
 ]
 
 { #category : #'rendering preparations' }
@@ -111,21 +135,7 @@ WDSSceneRenderer >> renderMode [
 
 { #category : #rendering }
 WDSSceneRenderer >> renderSceneViewports [
-	^ self renderSceneViewportsComposeWith: nil
-]
-
-{ #category : #rendering }
-WDSSceneRenderer >> renderSceneViewportsComposeWith: aBlock [
-	| currentSimpleList |
-	(renderingViewports isEmpty and: [aBlock isNil]) ifTrue: [ ^ nil ].
-
-	currentSimpleList := directCommandLists currentList.
-	currentSimpleList validCommandAllocator reset.
-
-	^ self stateTracker commandList: currentSimpleList validCommandList rebuildWith: [
-		self renderViewports: renderingViewports composeWith: aBlock.
-	].
-
+	^ self renderSceneViewportsThenDo: nil
 ]
 
 { #category : #rendering }
@@ -136,6 +146,20 @@ WDSSceneRenderer >> renderSceneViewportsIntoStateTracker: aStateTracker. [
 
 	self setupStateTracker.
 	renderingViewports doWithIndex: [ :viewport :index | self renderViewport: viewport index: index ].
+]
+
+{ #category : #rendering }
+WDSSceneRenderer >> renderSceneViewportsThenDo: aBlock [
+	| currentSimpleList |
+	(renderingViewports isEmpty and: [aBlock isNil]) ifTrue: [ ^ nil ].
+
+	currentSimpleList := directCommandLists currentList.
+	currentSimpleList validCommandAllocator reset.
+
+	^ self stateTracker commandList: currentSimpleList validCommandList rebuildWith: [
+		self renderViewports: renderingViewports composeWith: aBlock.
+	].
+
 ]
 
 { #category : #rendering }

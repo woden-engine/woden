@@ -16,7 +16,8 @@ Class {
 		'babylonDriver',
 		'hasTopLeftNDCOrigin',
 		'hasBottomLeftTextureCoordinates',
-		'projectiveTextureBiasMatrix'
+		'projectiveTextureBiasMatrix',
+		'vrSystem'
 	],
 	#classVars : [
 		'DefaultEngine',
@@ -30,7 +31,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 WDCEngine class >> allowVR [
-	^ true
+	^ false
 ]
 
 { #category : #accessing }
@@ -165,8 +166,16 @@ WDCEngine >> createDevice [
 	platform ifNil: [ self error: 'Failed to open the AGPU platform' ].
 
 	deviceOpenInfo := AGPUDeviceOpenInfo new debug_layer: self class debugLayerEnabled asBit.
+	self class allowVR ifTrue: [ 
+		deviceOpenInfo open_flags: AGPU_DEVICE_OPEN_FLAG_ALLOW_VR.
+	].
+	
 	device := platform openDevice: deviceOpenInfo.
 	device ifNil: [ self error: 'Failed to open the AGPU device' ].
+	
+	vrSystem := (device isFeatureSupported: AGPU_FEATURE_VRDISPLAY) ~= 0
+		ifTrue: [ WDCAGPUVRSystem for: self ]
+		ifFalse: [ WDCDummyVRSystem for: self ].
 
 	graphicsQueue := device getDefaultCommandQueue.
 
@@ -431,6 +440,11 @@ WDCEngine >> hasBottomLeftTextureCoordinates [
 	^ hasBottomLeftTextureCoordinates
 ]
 
+{ #category : #testing }
+WDCEngine >> hasSupportForVR [
+	^ vrSystem hasSupportForVR
+]
+
 { #category : #accessing }
 WDCEngine >> hasTopLeftNDCOrigin [
 	^ hasTopLeftNDCOrigin
@@ -596,4 +610,9 @@ WDCEngine >> vertexLayoutForVertexChannelDescriptions: channelDescriptions [
 WDCEngine >> vrSensorReader [
 	self flag: 'TODO: Do this properly'.
 	^ vrSensorReader ifNil: [ vrSensorReader := WDCVRSensorReader current activate; yourself. ]
+]
+
+{ #category : #accessing }
+WDCEngine >> vrSystem [
+	^ vrSystem
 ]

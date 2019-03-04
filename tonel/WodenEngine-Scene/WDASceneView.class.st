@@ -5,10 +5,16 @@ Class {
 		'sceneRenderer',
 		'camera',
 		'screenDisplayMode',
-		'commandList'
+		'commandList',
+		'allowingVR'
 	],
-	#category : 'WodenEngine-Scene-Application'
+	#category : #'WodenEngine-Scene-Application'
 }
+
+{ #category : #'as yet unclassified' }
+WDASceneView class >> allowingVR [
+	^ self new allowingVR
+]
 
 { #category : #'as yet unclassified' }
 WDASceneView class >> anaglyph [
@@ -35,9 +41,13 @@ WDASceneView class >> stereoTopDown [
 	^ self new stereoTopDown
 ]
 
-{ #category : #'as yet unclassified' }
-WDASceneView class >> vr [
-	^ self new vr
+{ #category : #accessing }
+WDASceneView >> allowingVR [
+	allowingVR := true.
+	(engine isNotNil and: [engine hasSupportForVR]) ifTrue: [
+		self vr
+	].
+
 ]
 
 { #category : #'screen display modes' }
@@ -70,7 +80,12 @@ WDASceneView >> constructRenderingCommandLists [
 { #category : #accessing }
 WDASceneView >> engineChanged [
 	super engineChanged.
-	screenDisplayMode engine: engine
+	(allowingVR and: [engine hasSupportForVR]) ifTrue: [
+		self vr
+	] ifFalse: [
+		screenDisplayMode engine: engine
+	]
+	
 ]
 
 { #category : #'as yet unclassified' }
@@ -91,6 +106,7 @@ WDASceneView >> hasDepth [
 { #category : #initialization }
 WDASceneView >> initialize [
 	super initialize.
+	allowingVR := false.
 	self screenDisplayMode: WDASceneViewFlatScreenDisplayMode new.
 ]
 
@@ -163,5 +179,5 @@ WDASceneView >> stereoTopDown [
 
 { #category : #'screen display modes' }
 WDASceneView >> vr [
-	self screenDisplayMode: WDASceneViewVRScreenDisplayMode new
+	self screenDisplayMode: WDASceneViewVRDisplayMode new
 ]
