@@ -31,7 +31,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 WDCEngine class >> allowVR [
-	^ false
+	^ true
 ]
 
 { #category : #accessing }

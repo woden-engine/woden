@@ -6,12 +6,7 @@ Class {
 
 { #category : #testing }
 WDCDummyVRSystem >> hasSupportForVR [
-	^ true
-]
-
-{ #category : #testing }
-WDCDummyVRSystem >> isDummyDevice [
-	^ true
+	^ false
 ]
 
 { #category : #'multi eye rendering' }

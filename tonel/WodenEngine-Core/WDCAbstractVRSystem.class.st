@@ -27,11 +27,6 @@ WDCAbstractVRSystem >> initializeWithEngine: anEngine [
 	engine := anEngine
 ]
 
-{ #category : #testing }
-WDCAbstractVRSystem >> isDummyDevice [
-	^ false
-]
-
 { #category : #'multi eye rendering' }
 WDCAbstractVRSystem >> leftEyeProjectionMatrixNear: near far: far invertedY: invertedY [
 	self subclassResponsibility
