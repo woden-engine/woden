@@ -16,7 +16,9 @@ Class {
 		'currentFrameTargetTime',
 		'nextFrameTargetTime',
 		'currentFrameStartTime',
-		'lastFrameEndTime'
+		'lastFrameEndTime',
+		'currentVRLeftEyeTexture',
+		'currentVRRightEyeTexture'
 	],
 	#category : #'WodenEngine-Core-Rendering'
 }
@@ -29,6 +31,11 @@ WDCFrameBufferingDriver class >> defaultFrameBufferingCount [
 { #category : #accessing }
 WDCFrameBufferingDriver class >> defaultTargetFrameRate [
 	^ 60
+]
+
+{ #category : #accessing }
+WDCFrameBufferingDriver class >> defaultVRTargetFrameRate [
+	^ 90
 ]
 
 { #category : #'instance creation' }
@@ -208,6 +215,10 @@ WDCFrameBufferingDriver >> renderForDeltaMicroseconds: delta [
 	"Always update the simulations"
 	| renderingGraph |
 	frontRenderingProcesses reject: #suspended thenDo: #processEvents.
+	currentVRLeftEyeTexture := nil.
+	currentVRRightEyeTexture := nil.
+	
+	engine vrSystem pollVREvents.
 
 	self renderingProcessesDo: [ :process |
 		process
@@ -229,11 +240,18 @@ WDCFrameBufferingDriver >> renderForDeltaMicroseconds: delta [
 	renderingGraph
 		sortedNodesDo: #prepareRendering;
 		sortedNodesDo: #constructRenderingCommandLists;
-		sortedNodesDo: #sendRenderingCommands;
-		sortedNodesDo: #commitSurfaces.
+		sortedNodesDo: #sendRenderingCommands.
+	
+	(currentVRLeftEyeTexture isNotNil and: [ currentVRRightEyeTexture isNotNil ]) ifTrue: [ 
+		engine vrSystem submitLeftEye: currentVRLeftEyeTexture rightEye: currentVRRightEyeTexture
+	].
+
+	renderingGraph sortedNodesDo: #commitSurfaces.
 	
 	self
-		endFrame
+		endFrame.
+		
+	engine vrSystem waitAndFetchPoses
 ]
 
 { #category : #'rendering process' }
@@ -267,6 +285,12 @@ WDCFrameBufferingDriver >> renderingProcessesRenderDo: aBlock [
 ]
 
 { #category : #'rendering process' }
+WDCFrameBufferingDriver >> setCurrentVRLeftEyeTexture: leftEyeTexture rightEyeTexture: rightEyeTexture [
+	currentVRLeftEyeTexture := leftEyeTexture.
+	currentVRRightEyeTexture := rightEyeTexture.
+]
+
+{ #category : #'rendering process' }
 WDCFrameBufferingDriver >> swapRenderingProcesses [
 	| temp |
 	renderingProcessesLock critical: [
@@ -283,7 +307,9 @@ WDCFrameBufferingDriver >> swapRenderingProcesses [
 
 { #category : #accessing }
 WDCFrameBufferingDriver >> targetFrameRate [
-	^ self class defaultTargetFrameRate
+	^ engine hasSupportForVR
+		ifTrue: [ self class defaultVRTargetFrameRate ]
+		ifFalse: [ self class defaultTargetFrameRate ]
 ]
 
 { #category : #accessing }

@@ -9,7 +9,9 @@ Class {
 		'cameraSpeed',
 		'cameraAngle',
 		'cameraAngularVelocity',
-		'cameraAngularSpeed'
+		'cameraAngularSpeed',
+		'cameraPosition',
+		'trackedDevicesDisplay'
 	],
 	#category : #'WodenEngine-Scene-Application'
 }
@@ -92,6 +94,37 @@ WDAFPSSceneView >> drawOnBabylonCanvas: canvas [
 	self drawFrameRateOn: canvas
 ]
 
+{ #category : #vr }
+WDAFPSSceneView >> ensureVRTrackedDeviceDisplay: cameraTransform [
+
+	| meshBuilder mesh cube interestingDevices |
+	interestingDevices := engine vrSystem trackedDevices reject: #isHeadMountedDisplay.
+	
+	(trackedDevicesDisplay isNil or: [trackedDevicesDisplay size ~= interestingDevices size]) ifTrue: [
+		trackedDevicesDisplay ifNotNil: [ 
+			trackedDevicesDisplay do: [ :oldDevice | oldDevice second removeFromScene ]
+		].
+	
+		meshBuilder := WDCGenericMeshBuilder for: engine.
+		meshBuilder addCubeWithWidth: 0.1 height: 0.1 depth: 0.1.
+		mesh := meshBuilder mesh.
+
+		trackedDevicesDisplay :=  interestingDevices collect: [:device |
+			cube := WDSGSpatialObject new.
+			cube renderable: mesh.
+			model scene add: cube.
+			
+			{ device . cube }
+		]
+	].
+
+	trackedDevicesDisplay do: [ :deviceAndNode |
+		deviceAndNode second transform: (cameraTransform transformTransform: deviceAndNode first currentPose deviceToAbsoluteTransform)
+	 ]
+	
+
+]
+
 { #category : #initialization }
 WDAFPSSceneView >> initialize [
 	super initialize.
@@ -106,25 +139,29 @@ WDAFPSSceneView >> initialize [
 
 { #category : #'rendering process stages' }
 WDAFPSSceneView >> updateForFrameDelta: delta [
-	| orientation |
+	| orientation cameraTransform |
 	super updateForFrameDelta: delta.
 	cameraAngle := cameraAngle + (cameraAngularVelocity * (cameraAngularSpeed * delta)).
-	screenDisplayMode isVR ifTrue: [ 
-		orientation := WMMatrix3F yrot: cameraAngle y.
+	cameraPosition ifNil: [ cameraPosition := self camera transform translation ].
+	
+	
+	orientation := screenDisplayMode isVR ifTrue: [ 
+		WMMatrix3F yrot: cameraAngle y.
 	] ifFalse: [ 
-		orientation := (WMMatrix3F yrot: cameraAngle y) * (WMMatrix3F xrot: cameraAngle x).
+		(WMMatrix3F yrot: cameraAngle y) * (WMMatrix3F xrot: cameraAngle x).
 	].
 
-	"vrSensorReader ifNotNil: [ 
-		sensorState := vrSensorReader sensorState.
-		orientation := sensorState orientation asWMMatrix3F * orientation.
-		camera vrTransform translation: sensorState translation
-	]."
+	cameraPosition := cameraPosition + (orientation transformVector3: (cameraVelocity * (cameraSpeed * delta))).
 
-	self camera transform
-		orthonormal: orientation;
-		translateBy: (orientation transformVector3: (cameraVelocity * (cameraSpeed * delta))).
+	cameraTransform := WMReversibleAffineTransformF identity orthonormal: orientation translation: cameraPosition.
+	screenDisplayMode isVR ifTrue: [ 
+		self ensureVRTrackedDeviceDisplay: cameraTransform.
 
+		cameraTransform := cameraTransform transformTransform: engine vrSystem hmdTrackedDevice currentPose deviceToAbsoluteTransform.
+	].
+	
+	self camera transform: cameraTransform
+	
 ]
 
 { #category : #visiting }
@@ -147,11 +184,6 @@ WDAFPSSceneView >> visitKeyDownEvent: anEvent [
 	anEvent symbol = OSK_RIGHT ifTrue: [ cameraAngularVelocity y: -1.0 ].
 	
 	anEvent symbol = OSK_LSHIFT ifTrue: [ cameraSpeed := 3.0 ].
-	
-	screenDisplayMode vrSensorReader ifNotNil: [ :sensor |
-		anEvent symbol = OSK_1 ifTrue: [ sensor recenter ]. 
-		anEvent symbol = OSK_2 ifTrue: [ sensor calibrate ].
-	].
 	
 	(anEvent modifiers leftAlt and: [ anEvent symbol = OSK_i ]) ifTrue: [ self inspect ].
 ]

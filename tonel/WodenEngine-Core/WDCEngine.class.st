@@ -12,7 +12,6 @@ Class {
 		'preferredDepthStencilFormat',
 		'resourceCache',
 		'soundDevice',
-		'vrSensorReader',
 		'babylonDriver',
 		'hasTopLeftNDCOrigin',
 		'hasBottomLeftTextureCoordinates',
@@ -604,12 +603,6 @@ WDCEngine >> vertexLayoutFor: aVertexClass [
 { #category : #'resource loading' }
 WDCEngine >> vertexLayoutForVertexChannelDescriptions: channelDescriptions [
 	^ resourceCache vertexLayoutForVertexChannelDescriptions: channelDescriptions
-]
-
-{ #category : #accessing }
-WDCEngine >> vrSensorReader [
-	self flag: 'TODO: Do this properly'.
-	^ vrSensorReader ifNil: [ vrSensorReader := WDCVRSensorReader current activate; yourself. ]
 ]
 
 { #category : #accessing }

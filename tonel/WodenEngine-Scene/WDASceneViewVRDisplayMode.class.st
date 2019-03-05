@@ -27,6 +27,11 @@ WDASceneViewVRDisplayMode >> computeProjectionMatrices [
 
 ]
 
+{ #category : #testing }
+WDASceneViewVRDisplayMode >> isVR [
+	^ true
+]
+
 { #category : #'multi eye rendering' }
 WDASceneViewVRDisplayMode >> leftEyeTransform [
 	^ leftEyeTransform
@@ -44,6 +49,7 @@ WDASceneViewVRDisplayMode >> renderSceneViewports [
 	
 	^ view sceneRenderer renderSceneViewportsThenDo: [ :stateTracker |
 
+		"Render into the main window."
 		stateTracker
 			reset;
 			beginRenderPass: windowTarget validMainRenderPass renderTarget: windowTarget;
@@ -54,7 +60,12 @@ WDASceneViewVRDisplayMode >> renderSceneViewports [
 			useShaderResources: windowDisplayBinding;
 			primitiveType: AGPU_TRIANGLE_STRIP;
 			drawArrays: 4 instance_count: 1 first_vertex: 0 base_instance: 0;
-			endRenderPass 
+			endRenderPass.
+			
+		"Submit the eyes."
+		engine frameBufferingDriver setCurrentVRLeftEyeTexture:
+			leftRenderTarget currentFramebuffer colorAttachments first
+			rightEyeTexture: rightRenderTarget currentFramebuffer colorAttachments first
 	]
 ]
 

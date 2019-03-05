@@ -22,6 +22,11 @@ WDCAbstractVRSystem >> hasSupportForVR [
 	^ true
 ]
 
+{ #category : #accessing }
+WDCAbstractVRSystem >> hmdTrackedDevice [
+	self subclassResponsibility
+]
+
 { #category : #initialization }
 WDCAbstractVRSystem >> initializeWithEngine: anEngine [
 	engine := anEngine
@@ -42,6 +47,10 @@ WDCAbstractVRSystem >> leftEyeTransform [
 	^ WMReversibleAffineTransformF identity
 ]
 
+{ #category : #'as yet unclassified' }
+WDCAbstractVRSystem >> pollVREvents [
+]
+
 { #category : #'multi eye rendering' }
 WDCAbstractVRSystem >> rightEyeProjectionMatrixNear: near far: far invertedY: invertedY [
 	self subclassResponsibility
@@ -55,4 +64,17 @@ WDCAbstractVRSystem >> rightEyeRenderTargetExtent [
 { #category : #'multi eye rendering' }
 WDCAbstractVRSystem >> rightEyeTransform [
 	^ WMReversibleAffineTransformF identity
+]
+
+{ #category : #'as yet unclassified' }
+WDCAbstractVRSystem >> submitLeftEye: leftEyeTexture rightEye: rightEyeTexture [
+]
+
+{ #category : #accessing }
+WDCAbstractVRSystem >> trackedDevices [
+	^ self subclassResponsibility
+]
+
+{ #category : #wrappers }
+WDCAbstractVRSystem >> waitAndFetchPoses [
 ]

@@ -83,6 +83,11 @@ WDASceneViewStereoDisplayMode >> createRenderTargets [
 ]
 
 { #category : #'multi eye rendering' }
+WDASceneViewStereoDisplayMode >> leftEyeCameraTransformFunction [
+	^ [ :ct | ct transformTransform: self leftEyeTransform ]
+]
+
+{ #category : #'multi eye rendering' }
 WDASceneViewStereoDisplayMode >> leftEyeTransform [
 	^ WMReversibleAffineTransformF identity
 ]
@@ -108,7 +113,7 @@ WDASceneViewStereoDisplayMode >> leftViewportForCamera: camera [
 		sampleCount: view sampleCount;
 		bounds: leftRenderTarget bounds;
 		overlayRenderer: view;
-		cameraTransformFunction: [ :ct | ct transformTransform: self leftEyeTransform ];
+		cameraTransformFunction: self leftEyeCameraTransformFunction;
 		submode: #full
 ]
 
@@ -139,6 +144,11 @@ WDASceneViewStereoDisplayMode >> renderTargetExtentChanged [
 ]
 
 { #category : #'multi eye rendering' }
+WDASceneViewStereoDisplayMode >> rightEyeCameraTransformFunction [
+	^ [ :ct | ct transformTransform: self rightEyeTransform ]
+]
+
+{ #category : #'multi eye rendering' }
 WDASceneViewStereoDisplayMode >> rightEyeTransform [
 	^ WMReversibleAffineTransformF identity
 ]
@@ -164,6 +174,6 @@ WDASceneViewStereoDisplayMode >> rightViewportForCamera: camera [
 		sampleCount: view sampleCount;
 		bounds: rightRenderTarget bounds;
 		overlayRenderer: view;
-		cameraTransformFunction: [ :ct | ct transformTransform: self rightEyeTransform ];
+		cameraTransformFunction: self rightEyeCameraTransformFunction;
 		submode: #full
 ]
