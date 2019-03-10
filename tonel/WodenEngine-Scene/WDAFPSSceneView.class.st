@@ -11,7 +11,8 @@ Class {
 		'cameraAngularVelocity',
 		'cameraAngularSpeed',
 		'cameraPosition',
-		'trackedDevicesDisplay'
+		'trackedDevicesDisplay',
+		'dragging'
 	],
 	#category : #'WodenEngine-Scene-Application'
 }
@@ -135,6 +136,7 @@ WDAFPSSceneView >> initialize [
 	cameraAngle := WMVector3F new.
 	cameraAngularVelocity := WMVector3F new.
 	cameraAngularSpeed := 1.0.
+	dragging := false.
 ]
 
 { #category : #'rendering process stages' }
@@ -154,6 +156,9 @@ WDAFPSSceneView >> updateForFrameDelta: delta [
 	cameraPosition := cameraPosition + (orientation transformVector3: (cameraVelocity * (cameraSpeed * delta))).
 
 	cameraTransform := WMReversibleAffineTransformF identity orthonormal: orientation translation: cameraPosition.
+
+	cameraTransform := (WMReversibleAffineTransformF identity orthonormal: orientation transposed translation: (orientation transposed transformVector3: cameraPosition) negated) inverted.
+
 	screenDisplayMode isVR ifTrue: [ 
 		self ensureVRTrackedDeviceDisplay: cameraTransform.
 
@@ -203,4 +208,22 @@ WDAFPSSceneView >> visitKeyUpEvent: anEvent [
 	anEvent symbol = OSK_LCTRL ifTrue: [ cameraVelocity y < 0 ifTrue: [ cameraVelocity y: 0.0 ] ].
 	anEvent symbol = OSK_SPACE ifTrue: [ cameraVelocity y > 0 ifTrue: [ cameraVelocity y: 0.0 ] ].
 	anEvent symbol = OSK_LSHIFT ifTrue: [ cameraSpeed := 1.0 ].
+]
+
+{ #category : #visiting }
+WDAFPSSceneView >> visitMouseButtonPressEvent: anEvent [
+	dragging := true
+]
+
+{ #category : #visiting }
+WDAFPSSceneView >> visitMouseButtonReleaseEvent: anEvent [
+	dragging := false
+]
+
+{ #category : #visiting }
+WDAFPSSceneView >> visitMouseMoveEvent: anEvent [
+	dragging ifTrue: [ 
+		cameraAngle := cameraAngle + ((WMVector3F x: anEvent delta y negated asFloat y: anEvent delta negated x asFloat z: 0.0) * 0.01)
+	].
+
 ]

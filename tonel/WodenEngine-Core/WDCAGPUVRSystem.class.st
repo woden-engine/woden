@@ -9,7 +9,8 @@ Class {
 		'leftEyeTransform',
 		'rightEyeTransform',
 		'trackedDevices',
-		'hmdTrackedDevice'
+		'hmdTrackedDevice',
+		'hasSubmittedEyesInThisFrame'
 	],
 	#classVars : [
 		'DeviceClassIDToClassMap'
@@ -30,6 +31,14 @@ WDCAGPUVRSystem class >> initialize [
 		AGPU_VR_TRACKED_DEVICE_CLASS_TRACKING_REFERENCE . WDCVRTrackedDeviceTrackingReference .
 		AGPU_VR_TRACKED_DEVICE_CLASS_DISPLAY_REDIRECT . WDCVRTrackedDeviceDisplayRedirect .
 	}
+]
+
+{ #category : #'as yet unclassified' }
+WDCAGPUVRSystem >> applyMainLoopDelay: delayTime [
+	"Do not yield to lower threads here."
+	hasSubmittedEyesInThisFrame ifFalse: [ 
+		super applyMainLoopDelay: delayTime
+	].
 ]
 
 { #category : #wrappers }
@@ -69,6 +78,11 @@ WDCAGPUVRSystem >> convertTrackedDevicePose: originalPose [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+WDCAGPUVRSystem >> frameStarted [
+	hasSubmittedEyesInThisFrame := false.
+]
+
 { #category : #accessing }
 WDCAGPUVRSystem >> handle [
 	^ handle
@@ -89,6 +103,7 @@ WDCAGPUVRSystem >> initialize [
 	super initialize.
 	trackedDevices := #().
 	hmdTrackedDevice := WDCVRTrackedDeviceHMD new.
+	hasSubmittedEyesInThisFrame := false.
 ]
 
 { #category : #initialization }
@@ -144,6 +159,21 @@ WDCAGPUVRSystem >> newTrackedDeviceFor: trackedDevicePose [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+WDCAGPUVRSystem >> pollVREvents [
+	| rawEvent |
+	rawEvent := AGPUVrEvent new.
+	
+	[(handle pollEvent: rawEvent) ~= 0] whileTrue: [ 
+		self processVREvent: rawEvent
+	]
+]
+
+{ #category : #'as yet unclassified' }
+WDCAGPUVRSystem >> processVREvent: agpuVREvent [
+	Stdio stdout nextPutAll: 'VR Event '; print: agpuVREvent type; nextPutAll: ' device '; print: agpuVREvent tracked_device_index; lf
+]
+
 { #category : #'multi eye rendering' }
 WDCAGPUVRSystem >> rightEyeProjectionMatrixNear: near far: far invertedY: invertedY [
 	^ rightEyeFrustumTangents projectionMatrixNear: near far: far invertedY: invertedY
@@ -161,7 +191,8 @@ WDCAGPUVRSystem >> rightEyeTransform [
 
 { #category : #'as yet unclassified' }
 WDCAGPUVRSystem >> submitLeftEye: leftEyeTexture rightEye: rightEyeTexture [
-	handle submitEyeRenderTargets: leftEyeTexture validHandle right_eye: rightEyeTexture validHandle
+	handle submitEyeRenderTargets: leftEyeTexture validHandle right_eye: rightEyeTexture validHandle.
+	hasSubmittedEyesInThisFrame := true
 ]
 
 { #category : #accessing }

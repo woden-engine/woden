@@ -8,7 +8,6 @@ Class {
 		'cameraStates',
 		'mainCamera',
 		'currentTime',
-		'currentCameraStates',
 		'useLateLatching',
 		'currentCameraViewports',
 		'directCommandLists',
@@ -319,7 +318,11 @@ WDSSceneRenderer >> stateTracker [
 
 { #category : #'rendering preparations' }
 WDSSceneRenderer >> submitCurrentCameraStates [
-	| cameraState gpuCameraState viewport screenSize inverseScreenSize cameraStateBindings |
+	| cameraState gpuCameraState viewport screenSize inverseScreenSize cameraStateBindings currentCameraStates |
+	currentCameraStates := useLateLatching
+		ifTrue: [ cameraStates first ]
+		ifFalse: [ cameraStates at: engine bufferingFrameIndex ].
+
 	renderingViewports doWithIndex: [ :renderingViewport :index |
 		viewport := renderingViewport viewport.
 		cameraState := viewport cameraState.
@@ -344,9 +347,6 @@ WDSSceneRenderer >> submitCurrentCameraStates [
 { #category : #'rendering preparations' }
 WDSSceneRenderer >> updateFrameCameraStates [
 	self ensureCameraStatesFor: renderingViewports size.
-	currentCameraStates := useLateLatching
-		ifTrue: [ cameraStates first ]
-		ifFalse: [ cameraStates at: engine bufferingFrameIndex ].
 	self submitCurrentCameraStates
 ]
 

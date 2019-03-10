@@ -74,7 +74,7 @@ WDSLightedSceneRenderer >> applyDebugRenderShadowMapViewport [
 		transform: shadowLight renderTransform;
 		projectionMatrix: shadowLight shadowProjectionMatrix.
 			
-	gpuCameraState := currentCameraStates first slotValueAt: 0.
+	gpuCameraState := renderingViewports first cameraStateShaderBindings slotValueAt: 0.
 	gpuCameraState atomicSetValue: cameraState.
 ]
 
@@ -200,8 +200,9 @@ WDSLightedSceneRenderer >> maxShadowCastingLightCount [
 WDSLightedSceneRenderer >> prepareLightSource: lightSource forViewportCamera: viewportCamera [
 	| shadowMapIndex lightRenderingState |
 	shadowMapIndex := -1.
-	(lightSource isShadowCasting and:
-	 [ shadowCastingLightCount + lightSource shadowLayerCount <= shadowCastingLights size ]) ifTrue: [
+	(engine shadowMappingEnabled and:
+	 [lightSource isShadowCasting and:
+	 [ shadowCastingLightCount + lightSource shadowLayerCount <= shadowCastingLights size ]]) ifTrue: [
 		shadowMapIndex := shadowCastingLightCount
 	].
 
@@ -262,7 +263,10 @@ WDSLightedSceneRenderer >> renderViewport: renderingViewport index: viewportInde
 		setupRenderingViewportStates: renderingViewport;
 		renderViewportVisibleObjects: renderingViewport.
 	stateTracker endRenderPass.
-	self computeScreenSpaceAmbientOcclusionFor: renderingViewport.
+	
+	engine ssaoEnabled ifTrue: [ 
+		self computeScreenSpaceAmbientOcclusionFor: renderingViewport.
+	].
 
 	"Second pass: rendering of the remaining objects."	
 	self setupStateTracker.

@@ -2,7 +2,8 @@ Class {
 	#name : #WDCAbstractVRSystem,
 	#superclass : #Object,
 	#instVars : [
-		'engine'
+		'engine',
+		'yieldSemaphore'
 	],
 	#category : #'WodenEngine-Core-VR'
 }
@@ -12,9 +13,28 @@ WDCAbstractVRSystem class >> for: anEngine [
 	^ self new initializeWithEngine: anEngine
 ]
 
+{ #category : #'as yet unclassified' }
+WDCAbstractVRSystem >> applyMainLoopDelay: delayTime [
+	delayTime > 0 ifTrue: [ 
+		(Delay forMilliseconds: delayTime) wait
+	] ifFalse: [
+		"Allow processing time to the processes with the lower priority"
+		self yield
+	]
+
+]
+
 { #category : #accessing }
 WDCAbstractVRSystem >> engine [
 	^ engine
+]
+
+{ #category : #'as yet unclassified' }
+WDCAbstractVRSystem >> frameEnded [
+]
+
+{ #category : #'as yet unclassified' }
+WDCAbstractVRSystem >> frameStarted [
 ]
 
 { #category : #testing }
@@ -29,7 +49,8 @@ WDCAbstractVRSystem >> hmdTrackedDevice [
 
 { #category : #initialization }
 WDCAbstractVRSystem >> initializeWithEngine: anEngine [
-	engine := anEngine
+	engine := anEngine.
+	yieldSemaphore := Semaphore new.
 ]
 
 { #category : #'multi eye rendering' }
@@ -77,4 +98,10 @@ WDCAbstractVRSystem >> trackedDevices [
 
 { #category : #wrappers }
 WDCAbstractVRSystem >> waitAndFetchPoses [
+]
+
+{ #category : #'rendering process' }
+WDCAbstractVRSystem >> yield [
+	[ yieldSemaphore signal ] forkAt: Processor lowestPriority.
+	yieldSemaphore wait; consumeAllSignals
 ]

@@ -6,7 +6,6 @@ Class {
 		'frameIndex',
 		'bufferingFrameIndex',
 		'frameFences',
-		'yieldSemaphore',
 		'mainRenderingProcess',
 		'renderingProcessesLock',
 		'frontRenderingProcesses',
@@ -163,7 +162,6 @@ WDCFrameBufferingDriver >> lastFrameStartTime [
 WDCFrameBufferingDriver >> mainRenderingProcess [
 	| session |
 	session := Smalltalk session.
-	yieldSemaphore := Semaphore new.
 	
 	[ session == Smalltalk session ] whileTrue: [
 		self mainRenderingProcessIteration
@@ -191,22 +189,25 @@ WDCFrameBufferingDriver >> mainRenderingProcessIteration [
 	
 	engine resourceCache reloadPendingResources.
 	self swapRenderingProcesses.
+	engine vrSystem frameStarted.
 	self renderForDeltaMicroseconds: frameDeltaTime.
+	engine vrSystem frameEnded.
 	frontRenderingProcesses removeAll.
 	
 	
 	nextFrameTargetTime := currentFrameTargetTime + (1000000 // self targetFrameRate).
 	self flag: 'TODO: Support delays in microseconds.'.
 	lastFrameEndTime := Time microsecondClockValue.
+	
 	delayTime := (nextFrameTargetTime - lastFrameEndTime) // 1000.
 	
-	delayTime > 0 ifTrue: [ 
-		(Delay forMilliseconds: delayTime) wait
-	] ifFalse: [
-		"Allow processing time to the processes with the lower priority"
+	"Ask the VR engine VR system to apply the delay. They VR system may want
+	 to use a low latency method."
+	engine vrSystem applyMainLoopDelay: delayTime.
+	
+	delayTime <= 0 ifTrue: [
 		nextFrameTargetTime := Time microsecondClockValue.
-		self yield
-	]
+	].
 
 ]
 
@@ -318,10 +319,4 @@ WDCFrameBufferingDriver >> unsuspendAll [
 		frontRenderingProcesses do: #unsuspend.
 		backRenderingProcesses do: #unsuspend.
 	]
-]
-
-{ #category : #'rendering process' }
-WDCFrameBufferingDriver >> yield [
-	[ yieldSemaphore signal ] forkAt: Processor lowestPriority.
-	yieldSemaphore wait; consumeAllSignals
 ]
