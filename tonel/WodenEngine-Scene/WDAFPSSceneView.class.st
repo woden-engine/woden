@@ -146,7 +146,6 @@ WDAFPSSceneView >> updateForFrameDelta: delta [
 	cameraAngle := cameraAngle + (cameraAngularVelocity * (cameraAngularSpeed * delta)).
 	cameraPosition ifNil: [ cameraPosition := self camera transform translation ].
 	
-	
 	orientation := screenDisplayMode isVR ifTrue: [ 
 		WMMatrix3F yrot: cameraAngle y.
 	] ifFalse: [ 
@@ -156,8 +155,6 @@ WDAFPSSceneView >> updateForFrameDelta: delta [
 	cameraPosition := cameraPosition + (orientation transformVector3: (cameraVelocity * (cameraSpeed * delta))).
 
 	cameraTransform := WMReversibleAffineTransformF identity orthonormal: orientation translation: cameraPosition.
-
-	cameraTransform := (WMReversibleAffineTransformF identity orthonormal: orientation transposed translation: (orientation transposed transformVector3: cameraPosition) negated) inverted.
 
 	screenDisplayMode isVR ifTrue: [ 
 		self ensureVRTrackedDeviceDisplay: cameraTransform.
