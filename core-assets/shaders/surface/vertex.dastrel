@@ -1,0 +1,18 @@
+import environment;
+
+semantic GenericVertexLayout {
+    in(0) position: float3;
+    in(1) texcoord: float2;
+    in(2) color: float4;
+    in(3) normal: float3;
+    in(4) tangent4: float4;
+}
+
+semantic VertexOutput {
+    out(0) position: float3;
+    out(1) texcoord: float2;
+    out(2) color: float4;
+    out(3) normal: float3;
+    out(4) tangent: float3;
+    out(5) bitangent: float3;
+}

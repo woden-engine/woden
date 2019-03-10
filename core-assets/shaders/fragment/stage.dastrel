@@ -1,0 +1,5 @@
+semantic FragmentStage
+{
+    in(-16) fragCoord: float4; // Window space (x, y, z, 1/w)
+    in(-17) pointCoord: float2; // Coordinate inside a point.
+}

@@ -1,0 +1,7 @@
+{
+    "type" : "GenericSurface",
+    "albedo-texture" : "textures/demos/magnum-albedo.dds",
+    "fresnel-texture" : "textures/demos/magnum-fresnel.dds",
+
+    "smoothness" : 0.55
+}

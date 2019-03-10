@@ -1,0 +1,4 @@
+{
+    "type" : "GenericSurface",
+    "albedo-texture" : "textures/basic/checkboard.dds"
+}

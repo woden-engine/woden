@@ -1,0 +1,61 @@
+import environment;
+import vertex;
+import vr;
+
+function barrelDistort(input: float2) -> float2
+{
+    let r2 = dot(input, input);
+    let r4 = r2*r2;
+
+    return input * (1.0f + VRState.distortionCoefficients.x*r2 + VRState.distortionCoefficients.x*r4);
+}
+
+function distort(inputTexcoord: float2, projectionTransform: float4, unprojectionTransform: float4) -> float2
+{
+    let inputPoint = inputTexcoord*unprojectionTransform.xy + unprojectionTransform.zw;
+
+    let outputPoint = barrelDistort(inputPoint);
+    return outputPoint*projectionTransform.xy + projectionTransform.zw;
+}
+
+code_block(vertex) main
+{
+	let pos = VertexInput.position;
+	let instance = VertexStage.instanceID;
+	let isRightSide = VertexStage.instanceID >= 3u;
+
+	let chromaticAberrationFactors = float2(1.0f, 1.0f);
+	if(instance == 0u || instance == 3u)
+	{
+		VertexOutput.tint = float4(1.0f, 0.0f, 0.0f, 1.0f);
+	}
+	else if(instance == 1u || instance == 4u)
+	{
+		VertexOutput.tint = float4(0.0f, 1.0f, 0.0f, 1.0f);
+		chromaticAberrationFactors = float2(1.0091f, 1.0078f);
+	}
+	else if(instance == 2u || instance == 5u)
+	{
+		VertexOutput.tint = float4(0.0f, 0.0f, 1.0f, 1.0f);
+		chromaticAberrationFactors = float2(1.0224f, 1.0192f);
+	}
+
+	let texcoord = pos*chromaticAberrationFactors*0.5f + 0.5f;
+	//let texcoord = pos*0.5f + 0.5f;
+    if(isRightSide)
+    {
+        texcoord = distort(texcoord, VRState.rightProjectionTransform, VRState.rightUnprojectionTransform);
+    }
+    else
+    {
+        texcoord = distort(texcoord, VRState.leftProjectionTransform, VRState.leftUnprojectionTransform);
+    }
+ 
+	VertexOutput.texcoord = texcoord;
+	//VertexOutput.texcoord = (texcoord*2.0f - 1.0f)*chromaticAberrationFactors*0.5f + 0.5f;
+	//VertexOutput.texcoord = ((texcoord*2.0f - 1.0f)*chromaticAberrationFactors + 1.0f)*0.5f;
+	VertexOutput.isRightSide = isRightSide ? 1.0f : 0.0f;
+	
+	let outputX = pos.x*0.5f + (isRightSide ? 0.5f : -0.5f);
+    VertexStage.screenPosition = float4(outputX, pos.y, 0.0f, 1.0f);
+}

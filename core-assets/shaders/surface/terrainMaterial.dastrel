@@ -1,0 +1,74 @@
+import shaderSignature;
+import environment;
+
+uniform(binding=MaterialState.Attributes) MaterialState
+{
+    clipMapPeriod: float2;
+
+    heightMapScale: float2;
+    heightMapOffset: float2;
+
+    heightScale: float;
+    heightOffset: float;
+
+    albedo: float4;
+    fresnel: float3;
+    smoothness: float;
+
+    textureScaleAndOffset: float4[5];
+}
+
+semantic TerrainVertexOutput {
+    out(0) position: float3;
+    out(1) surfaceTexcoord: float2;
+    out(2) objectPosition: float3;
+    out(3) color: float4;
+}
+
+semantic TerrainFragmentInput {
+    in(0) position: float3;
+    in(1) surfaceTexcoord: float2;
+    in(2) objectPosition: float3;
+    in(3) color: float4;
+}
+
+uniform(binding = MaterialState.Textures) heightMapTexture : texture2D;
+uniform(binding = MaterialState.Textures + 1) splattingTexture : texture2D;
+
+uniform(binding = MaterialState.Textures + 2) albedoTexture0 : texture2D;
+uniform(binding = MaterialState.Textures + 3) albedoTexture1 : texture2D;
+uniform(binding = MaterialState.Textures + 4) albedoTexture2 : texture2D;
+uniform(binding = MaterialState.Textures + 5) albedoTexture3 : texture2D;
+uniform(binding = MaterialState.Textures + 6) albedoTexture4 : texture2D;
+
+uniform(binding = MaterialState.Textures + 7) normalTexture0 : texture2D;
+uniform(binding = MaterialState.Textures + 8) normalTexture1 : texture2D;
+uniform(binding = MaterialState.Textures + 9) normalTexture2 : texture2D;
+uniform(binding = MaterialState.Textures + 10) normalTexture3 : texture2D;
+uniform(binding = MaterialState.Textures + 11) normalTexture4 : texture2D;
+
+function surfacePositionIntoTexcoord(position: float3) -> float2
+{
+    return float2(position.x, -position.z)*0.5f*MaterialState.heightMapScale + 0.5f + MaterialState.heightMapOffset;
+}
+
+function surfaceTexcoordIntoPosition(texcoord: float2) -> float3
+{
+    let result = (texcoord - MaterialState.heightMapOffset - 0.5f)*2.0f/MaterialState.heightMapScale;
+    return float3(result.x, 0.0f, -result.y);
+}
+
+function mixSplatting(v0: float4, v1: float4, v2: float4, v3: float4, v4: float4, alpha: float4) -> float4
+{
+    let a0 = 1.0f - dot(alpha, float4(1.0f, 1.0f, 1.0f, 1.0f));
+    return v0*a0 + v1*alpha.x + v2*alpha.y + v3*alpha.z + v4*alpha.w;
+}
+
+function transformNormalToView(normal: float3) -> float3
+{
+    using CameraState;
+    using ObjectState;
+    using InstanceObjectState;
+
+    return ((float4(normal, 0.0f) * objectState.inverseMatrix) * inverseViewMatrix).xyz;
+}

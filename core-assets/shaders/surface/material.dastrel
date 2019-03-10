@@ -1,0 +1,12 @@
+import shaderSignature;
+
+uniform(binding = MaterialState.Attributes) MaterialState
+{
+    albedo: float4;
+    fresnel: float3;
+    smoothness: float;
+}
+
+uniform(binding = MaterialState.Textures) albedoTexture : texture2D;
+uniform(binding = MaterialState.Textures + 1) normalTexture : texture2D;
+uniform(binding = MaterialState.Textures + 2) fresnelTexture : texture2D;

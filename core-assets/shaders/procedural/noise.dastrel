@@ -1,0 +1,305 @@
+// Flooring module, for periodict tiling.
+function floorModule(x: float, period: float) -> float
+{
+	return x - floor(x/period)*period;
+}
+
+function floorModule(x: float2, period: float2) -> float2
+{
+	return x - floor(x/period)*period;
+}
+
+function cubicHermiteCurve(x: float) -> float
+{
+	return x*x*(3.0f - 2.0f*x);
+}
+
+function cubicHermiteCurve(x: float2) -> float2
+{
+	return x*x*(3.0f - 2.0f*x);
+}
+
+// Random noise implementation
+function randomNoise(position: float) -> float
+{
+	return fract(sin(position)*543414.1875f);
+}
+
+function randomNoise(position: float2) -> float
+{
+	return randomNoise(dot(position, float2(37.465999603271484f, 974.4146118164063f)));
+}
+
+function randomNoise_second(position: float2) -> float
+{
+	return randomNoise(dot(position, float2(718.2194213867188f, 53.06364440917969f)));
+}
+
+function randomNoise2(position: float2) -> float2
+{
+	return float2(randomNoise(position), randomNoise_second(position));
+}
+
+// Signed random noise
+function signedRandomNoise(position: float) -> float
+{
+	return randomNoise(position)*2.0f - 1.0f;
+}
+
+function signedRandomNoise(position: float2) -> float
+{
+	return randomNoise(position)*2.0f - 1.0f;
+}
+
+function signedRandomNoise_second(position: float2) -> float
+{
+	return randomNoise_second(position)*2.0f - 1.0f;
+}
+
+function signedRandomNoise2(position: float2) -> float2
+{
+	return randomNoise2(position)*2.0f - 1.0f;
+}
+
+// Value noise
+function valueNoise(position: float) -> float
+{
+	let minValue = floor(position);
+	let maxValue = minValue + 1.0f;
+	return mix(randomNoise(minValue), randomNoise(maxValue), smoothstep(minValue, maxValue, position));
+}
+
+function valueNoise(position: float2) -> float
+{
+	let minValue = floor(position);
+	let maxValue = minValue + 1.0f;
+
+	let f = smoothstep(minValue, maxValue, position);
+
+	let l = mix(randomNoise(float2(minValue.x, minValue.y)), randomNoise(float2(maxValue.x, minValue.y)), f.x);
+	let t = mix(randomNoise(float2(minValue.x, maxValue.y)), randomNoise(float2(maxValue.x, maxValue.y)), f.x);
+	return mix(l, t, f.y);
+}
+
+function tiledValueNoise(position: float2, period: float2) -> float
+{
+	let minValue = floor(position);
+	let maxValue = minValue + 1.0f;
+
+	let f = smoothstep(minValue, maxValue, position);
+
+	minValue = floorModule(minValue, period);
+	maxValue = floorModule(maxValue, period);
+
+	let l = mix(randomNoise(float2(minValue.x, minValue.y)), randomNoise(float2(maxValue.x, minValue.y)), f.x);
+	let t = mix(randomNoise(float2(minValue.x, maxValue.y)), randomNoise(float2(maxValue.x, maxValue.y)), f.x);
+	return mix(l, t, f.y);
+}
+
+function signedValueNoise(position: float) -> float
+{
+	return valueNoise(position)*2.0f - 1.0f;
+}
+
+function signedValueNoise(position: float) -> float
+{
+	return valueNoise(position)*2.0f - 1.0f;
+}
+
+// Gradient noise
+function randomGradientVector(position: float2) -> float2
+{
+	return float2(signedRandomNoise(position), signedRandomNoise_second(position));
+}
+
+function signedGradientNoise(position: float) -> float
+{
+	let l = floor(position);
+	let f = position - l;
+	return mix(signedRandomNoise(l) * f, signedRandomNoise(l + 1.0f) * (f - 1.0f),
+		cubicHermiteCurve(f));
+}
+
+function signedGradientNoise(position: float2) -> float
+{
+	let minValue = floor(position);
+	let maxValue = minValue + 1.0f;
+
+	let f = position - minValue;
+	let i = cubicHermiteCurve(f);
+
+	let l = mix(dot(randomGradientVector(float2(minValue.x, minValue.y)), float2(f.x		 , f.y		 )),
+				dot(randomGradientVector(float2(maxValue.x, minValue.y)), float2(f.x - 1.0f, f.y		 )), i.x);
+	let t = mix(dot(randomGradientVector(float2(minValue.x, maxValue.y)), float2(f.x		 , f.y - 1.0f)),
+				dot(randomGradientVector(float2(maxValue.x, maxValue.y)), float2(f.x - 1.0f, f.y - 1.0f)), i.x);
+
+	return mix(l, t, i.y);
+}
+
+function tiledSignedGradientNoise(position: float2, period: float2) -> float
+{
+	let minValue = floor(position);
+	let maxValue = minValue + 1.0f;
+
+	let f = position - minValue;
+	let i = cubicHermiteCurve(f);
+
+	minValue = floorModule(minValue, period);
+	maxValue = floorModule(maxValue, period);
+
+	let l = mix(dot(randomGradientVector(float2(minValue.x, minValue.y)), float2(f.x		 , f.y		 )),
+				dot(randomGradientVector(float2(maxValue.x, minValue.y)), float2(f.x - 1.0f, f.y		 )), i.x);
+	let t = mix(dot(randomGradientVector(float2(minValue.x, maxValue.y)), float2(f.x		 , f.y - 1.0f)),
+				dot(randomGradientVector(float2(maxValue.x, maxValue.y)), float2(f.x - 1.0f, f.y - 1.0f)), i.x);
+
+	return mix(l, t, i.y);
+}
+
+function gradientNoise(position: float) -> float
+{
+	return signedGradientNoise(position)*0.5f + 0.5f;
+}
+
+function gradientNoise(position: float2) -> float
+{
+	return signedGradientNoise(position)*0.5f + 0.5f;
+}
+
+function tiledGradientNoise(position: float2, period: float2) -> float
+{
+	return tiledSignedGradientNoise(position, period)*0.5f + 0.5f;
+}
+
+// Voronoi noise
+function voronoiNoiseComponents(position: float2) -> float2
+{
+	let startCell = floor(position);
+	let f = position - startCell;
+
+	let Fx = 1000.0f;
+	let Fy = 1000.0f;
+	for(let cdy = -1.0f; cdy <= 1.0f; cdy +=1.0f)
+	{
+		for(let cdx = -1.0f; cdx <= 1.0f; cdx +=1.0f)
+		{
+			let cellDelta = float2(cdx, cdy);
+			let cell = startCell + cellDelta;
+			let point = randomNoise2(cell);
+
+			let delta = f - (point + cellDelta);
+			let dist2 = dot(delta, delta);
+			if(dist2 < Fx)
+			{
+				Fy = Fx;
+				Fx = dist2;
+			}
+			else if(dist2 < Fy)
+			{
+				Fy = dist2;
+			}
+		}
+	}
+
+	return sqrt(float2(Fx, Fy));
+}
+
+function voronoiNoise(position: float2) -> float
+{
+	return voronoiNoiseComponents(position).x;
+}
+
+function worleyNoise(position: float2) -> float
+{
+	let F = voronoiNoiseComponents(position);
+	return F.y - F.x;
+}
+
+function tiledVoronoiNoiseComponents(position: float2, period: float2) -> float2
+{
+	let startCell = floor(position);
+	let f = position - startCell;
+
+	let Fx = 1000.0f;
+	let Fy = 1000.0f;
+	for(let cdy = -1.0f; cdy <= 1.0f; cdy +=1.0f)
+	{
+		for(let cdx = -1.0f; cdx <= 1.0f; cdx +=1.0f)
+		{
+			let cellDelta = float2(cdx, cdy);
+			let cell = floorModule(startCell + cellDelta, period);
+			let point = randomNoise2(cell);
+
+			let delta = f - (point + cellDelta);
+			let dist2 = dot(delta, delta);
+			if(dist2 < Fx)
+			{
+				Fy = Fx;
+				Fx = dist2;
+			}
+			else if(dist2 < Fy)
+			{
+				Fy = dist2;
+			}
+		}
+	}
+
+	return sqrt(float2(Fx, Fy));
+}
+
+function tiledVoronoiNoise(position: float2, period: float2) -> float
+{
+	return tiledVoronoiNoiseComponents(position, period).x;
+}
+
+function tiledWorleyNoise(position: float2, period: float2) -> float
+{
+	let F = tiledVoronoiNoiseComponents(position, period);
+	return F.y - F.x;
+}
+
+// Fractional brownian motion.
+function fbmTiledWorleyNoiseOctaves(position: float2, octaves: int, lacunarity: float, gain: float, initialAmplitude: float, tilingPeriod: float2) -> float
+{
+	let result = 0.0f;
+	let currentCoord = position;
+	let currentTilingPeriod = tilingPeriod;
+	let amplitude = initialAmplitude;
+
+	for(let i = 0; i < octaves; i += 1)
+	{
+		result += amplitude*tiledWorleyNoise(currentCoord, currentTilingPeriod);
+		currentCoord *= lacunarity;
+		currentTilingPeriod *= lacunarity;
+		amplitude *= gain;
+	}
+
+	return result;
+}
+
+function fbmTiledWorleyNoiseOctaves(position: float2, octaves: int, lacunarity: float, initialAmplitude: float, tilingPeriod: float2) -> float
+{
+	return fbmTiledWorleyNoiseOctaves(position, octaves, lacunarity, 1.0f/lacunarity, initialAmplitude, tilingPeriod);
+}
+
+function fbmTiledSignedGradientNoiseOctaves(position: float2, octaves: int, lacunarity: float, gain: float, initialAmplitude: float, tilingPeriod: float2) -> float
+{
+	let result = 0.0f;
+	let currentCoord = position;
+	let currentTilingPeriod = tilingPeriod;
+	let amplitude = initialAmplitude;
+
+	for(let i = 0; i < octaves; i += 1)
+	{
+		result += amplitude*tiledSignedGradientNoise(currentCoord, currentTilingPeriod);
+		currentCoord *= lacunarity;
+		currentTilingPeriod *= lacunarity;
+		amplitude *= gain;
+	}
+
+	return result;
+}
+
+function fbmTiledSignedGradientNoiseOctaves(position: float2, octaves: int, lacunarity: float, initialAmplitude: float, tilingPeriod: float2) -> float
+{
+	return fbmTiledSignedGradientNoiseOctaves(position, octaves, lacunarity, 1.0f/lacunarity, initialAmplitude, tilingPeriod);
+}

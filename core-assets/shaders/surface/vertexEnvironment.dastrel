@@ -1,0 +1,75 @@
+import environment;
+
+semantic VertexStage
+{
+    out(-1) screenPosition: float4;
+
+    in(-43) vertexID: int;
+    in(-44) instanceID: uint;
+}
+
+function transformNormalToView(normal: float3) -> float3
+{
+    using CameraState;
+    using ObjectState;
+    using InstanceObjectState;
+    using VertexStage;
+
+    return (((float4(normal, 0.0f) * instanceStates[instanceID].inverseMatrix) * objectState.inverseMatrix) * inverseViewMatrix).xyz;
+}
+
+function transformPositionToView(position: float3) -> float4
+{
+    return transformVector4ToView(float4(position, 1.0f));
+}
+
+function transformVector4ToView(position: float4) -> float4
+{
+    using CameraState;
+    using ObjectState;
+    using InstanceObjectState;
+    using VertexStage;
+
+    return viewMatrix * (objectState.matrix * (instanceStates[instanceID].matrix * position));
+}
+
+function transformPositionToWorld(position: float3) -> float4
+{
+    using ObjectState;
+    using InstanceObjectState;
+    using VertexStage;
+
+    return objectState.matrix * (instanceStates[instanceID].matrix * float4(position, 1.0f));
+}
+
+function transformVectorToWorld(position: float3) -> float3
+{
+    using ObjectState;
+    using InstanceObjectState;
+    using VertexStage;
+
+    return (objectState.matrix * (instanceStates[instanceID].matrix * float4(position, 0.0f))).xyz;
+}
+
+function currentObjectColor() -> float4
+{
+    using ObjectState;
+    using InstanceObjectState;
+    using VertexStage;
+
+    return objectState.color * instanceStates[instanceID].color;
+}
+
+function isCurrentObjectInvisible() -> bool
+{
+    using ObjectState;
+    using InstanceObjectState;
+    using VertexStage;
+
+    if(objectState.visible == 0)
+        return true;
+
+    if(instanceStates[instanceID].visible == 0)
+        return true;
+    return false;
+}

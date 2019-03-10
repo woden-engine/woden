@@ -1,0 +1,13 @@
+import environment;
+import vertex;
+
+code_block(vertex) main
+{
+    using CanvasMatrices;
+    using QuickState;
+
+    VertexOutput.color = VertexInput.color;
+    VertexOutput.texcoord = VertexInput.texcoord;
+    VertexOutput.position = matrices[modelViewMatrixIndex] * float4(VertexInput.position, 0.0f, 1.0f);
+    VertexOutput.screenPosition = matrices[projectionMatrixIndex] * VertexOutput.position;
+}

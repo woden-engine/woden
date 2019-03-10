@@ -1,0 +1,12 @@
+import compute.environment;
+import compute.stage;
+import procedural.noise;
+
+uniform(binding = StorageImages.Images, format = rgba8) destinationImage : image2D;
+
+code_block(compute, localSizeX=8, localSizeY=8) main
+{
+	let color = colorFunction(FragmentInput.texcoord.x, FragmentInput.texcoord.y);
+
+    FragmentOutput.color = float4(height, height, height, 1.0f);
+}

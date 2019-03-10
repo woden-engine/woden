@@ -1,0 +1,129 @@
+import shaderSignature;
+import environment;
+import fragment;
+import terrainMaterial;
+import lighting;
+
+function fetchAlbedoPlane(texcoord: float2, splatting: float4) -> float4
+{
+    using MaterialState;
+
+    let a0 = albedoSampler.sample(albedoTexture0, texcoord*textureScaleAndOffset[0].xy + textureScaleAndOffset[0].zw);
+    let a1 = albedoSampler.sample(albedoTexture1, texcoord*textureScaleAndOffset[1].xy + textureScaleAndOffset[1].zw);
+    let a2 = albedoSampler.sample(albedoTexture2, texcoord*textureScaleAndOffset[2].xy + textureScaleAndOffset[2].zw);
+    let a3 = albedoSampler.sample(albedoTexture3, texcoord*textureScaleAndOffset[3].xy + textureScaleAndOffset[3].zw);
+    let a4 = albedoSampler.sample(albedoTexture4, texcoord*textureScaleAndOffset[4].xy + textureScaleAndOffset[4].zw);
+
+    return mixSplatting(a0, a1, a2, a3, a4, splatting);
+}
+
+function mixTriplanar(normal: float3, vx: float4, vy: float4, vz: float4) -> float4
+{
+    let blending = fabs(normal);
+    blending = blending / (blending.x + blending.y + blending.z);
+
+    return vx*blending.x + vy*blending.y + vz*blending.z;
+}
+
+function mixTriplanarNormal(normal: float3, vx: float4, vy: float4, vz: float4) -> float4
+{
+    let blending = normalize(fabs(normal));
+
+    return vx*blending.x + vy*blending.y + vz*blending.z;
+}
+
+function fetchAlbedo(objectPosition: float3, normal: float3, splatting: float4) -> float4
+{
+    let vx = fetchAlbedoPlane(objectPosition.yz, splatting);
+    let vy = fetchAlbedoPlane(objectPosition.zx, splatting);
+    let vz = fetchAlbedoPlane(objectPosition.xy, splatting);
+
+    return mixTriplanar(normal, vx, vy, vz);
+}
+
+function fetchNormalPlane(texcoord: float2, splatting: float4) -> float4
+{
+    using MaterialState;
+
+    let n0 = normalSampler.sample(normalTexture0, texcoord*textureScaleAndOffset[0].xy + textureScaleAndOffset[0].zw);
+    let n1 = normalSampler.sample(normalTexture1, texcoord*textureScaleAndOffset[1].xy + textureScaleAndOffset[1].zw);
+    let n2 = normalSampler.sample(normalTexture2, texcoord*textureScaleAndOffset[2].xy + textureScaleAndOffset[2].zw);
+    let n3 = normalSampler.sample(normalTexture3, texcoord*textureScaleAndOffset[3].xy + textureScaleAndOffset[3].zw);
+    let n4 = normalSampler.sample(normalTexture4, texcoord*textureScaleAndOffset[4].xy + textureScaleAndOffset[4].zw);
+
+    return mixSplatting(n0, n1, n2, n3, n4, splatting)*float4(2.0f, 2.0f, 2.0f, 1.0f) - float4(1.0f, 1.0f, 1.0f, 0.0f);
+}
+
+function fetchNormalPlaneYZ(texcoord: float2, splatting: float4, objectNormalSigns: float3) -> float4
+{
+    let normal = fetchNormalPlane(texcoord, splatting);
+    return float4(normal.zxy*objectNormalSigns, normal.a);
+}
+
+function fetchNormalPlaneZX(texcoord: float2, splatting: float4, objectNormalSigns: float3) -> float4
+{
+    let normal = fetchNormalPlane(texcoord, splatting);
+    return float4(normal.yzx*objectNormalSigns, normal.a);
+}
+
+function fetchNormalPlaneXY(texcoord: float2, splatting: float4, objectNormalSigns: float3) -> float4
+{
+    let normal = fetchNormalPlane(texcoord, splatting);
+    return float4(normal.xyz*objectNormalSigns, normal.a);
+}
+
+function fetchNormal(objectPosition: float3, normal: float3, splatting: float4) -> float4
+{
+    let normalSigns = sign(normal);
+    let vx = fetchNormalPlaneYZ(objectPosition.yz, splatting, normalSigns);
+    let vy = fetchNormalPlaneZX(objectPosition.zx, splatting, normalSigns);
+    let vz = fetchNormalPlaneXY(objectPosition.xy, splatting, normalSigns);
+
+    return mixTriplanarNormal(normal, vx, vy, vz);
+}
+
+code_block(fragment) main
+{
+    let dh = 0.5f*MaterialState.heightMapScale;
+
+    let surfaceTexcoord = TerrainFragmentInput.surfaceTexcoord;
+    let objectPosition = TerrainFragmentInput.objectPosition;
+
+    if(surfaceTexcoord.s < 0.0f || surfaceTexcoord.t < 0.0f || surfaceTexcoord.s > 1.0f || surfaceTexcoord.t > 1.0f)
+        discard;
+
+    // Fetch the splatting
+    let splatting = albedoSampler.sample(splattingTexture, surfaceTexcoord);
+
+    // Compute the height map derivatives
+    let dx = displacementSampler.sample(heightMapTexture, surfaceTexcoord + float2(dh.x, 0.0f)).r - displacementSampler.sample(heightMapTexture, surfaceTexcoord - float2(dh.x, 0.0f)).r;
+    let dy = displacementSampler.sample(heightMapTexture, surfaceTexcoord + float2(0.0f, dh.y)).r - displacementSampler.sample(heightMapTexture, surfaceTexcoord - float2(0.0f, dh.y)).r;
+
+    // Compute the object space normal.
+    let on = normalize(float3(-dx*MaterialState.heightScale, 1.0f, dy*MaterialState.heightScale));
+
+    // Fetch the albedo.
+    let rawAlbedo = fetchAlbedo(objectPosition, on, splatting);
+    let albedo = TerrainFragmentInput.color*MaterialState.albedo*float4(rawAlbedo.rgb, 1.0f);
+
+    // Fetch the actual normal
+    let rawNormal = fetchNormal(objectPosition, on, splatting);
+    let N = normalize(transformNormalToView(rawNormal.xyz));
+    N = transformNormalToView(on);
+
+    let SN = transformNormalToView(on);
+
+    // Compute the smoothness and the fresnel factor.
+    let fresnel = MaterialState.fresnel*rawAlbedo.a;
+    let smoothness = MaterialState.smoothness*rawNormal.a;
+
+    let V = normalize(-TerrainFragmentInput.position);
+
+    color: FragmentOutput.color <== forwardLightingModel
+        albedo: albedo
+        fresnel: fresnel smoothness: smoothness
+        normal: N surfaceNormal: SN viewVector: V position: TerrainFragmentInput.position;
+    //FragmentOutput.color = float4(on*0.5f + 0.5f, 1.0f);
+    //FragmentOutput.color = float4(on, 1.0f);
+    //FragmentOutput.color = rawNormal;
+}

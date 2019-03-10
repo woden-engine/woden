@@ -1,0 +1,139 @@
+import shaderSignature;
+import environment;
+import fragment;
+import fragment.stage;
+
+uniform(binding = LightingState.SpotShadowMaps) spotShadowMaps : depthTexture2DArray;
+uniform(binding = LightingState.PointShadowMaps) pointShadowMaps : depthTextureCubeArray;
+uniform(binding = LightingState.ScreenSpaceAmbientOcclusion) screenSpaceAmbientOcclusion : texture2D;
+
+function projectShadowPosition(shadowPoint: float4, shadowMapLayer: float) -> float4
+{
+    let projectedShadowPoint = float3(shadowPoint.xyz / shadowPoint.w);
+    let shadowCoord = float3(projectedShadowPoint.xy, shadowMapLayer);
+
+    return float4(shadowCoord, projectedShadowPoint.z);
+}
+
+function sampleShadowMapWithDisplacement(shadowPoint: float3, depthReference: float, displacement: float2) -> float
+{
+    return shadowSampler.sampleWithDepthReference(spotShadowMaps,
+        shadowPoint + float3(displacement*GlobalLightingState.shadowMapInverseExtent, 0.0f),
+        depthReference);
+}
+
+function sampleScreenSpaceAmbientOcclusion() -> float
+{
+    let uv = FragmentStage.fragCoord.xy * CameraState.inverseScreenSize;
+    return albedoSampler.sample(screenSpaceAmbientOcclusion, uv).x;
+}
+
+function computeShadowFactorFor(shadowPoint: float3, depthReference: float) -> float
+{
+    return
+        //sampleShadowMapWithDisplacement(shadowPoint, depthReference, float2(0.0f, 0.0f));
+
+        (sampleShadowMapWithDisplacement(shadowPoint, depthReference, float2(-0.5f, -0.5f)) +
+        sampleShadowMapWithDisplacement(shadowPoint, depthReference, float2(-0.5f, 0.5f)) +
+        sampleShadowMapWithDisplacement(shadowPoint, depthReference, float2(0.5f, -0.5f)) +
+        sampleShadowMapWithDisplacement(shadowPoint, depthReference, float2(0.5f, 0.5f))
+        ) * 0.25f;
+}
+
+code_block forwardLightingModel
+{
+    in normal: float3;
+    in surfaceNormal: float3;
+    in viewVector: float3;
+    in position: float3;
+    in albedo: float4;
+    in smoothness: float;
+    in fresnel: float3;
+    out color: float4;
+
+    using GlobalLightingState;
+
+    let albedoColor = albedo.rgb;
+
+    let specularPower = exp2(10.0f*smoothness);
+    let specularNormalization = (specularPower + 2.0f) * 0.125f;
+
+    let accumulatedColor = float3(0.0f, 0.0f, 0.0f);
+
+    // Add the ambient hemispherical light.
+    let hemiFactor = dot(normal, sunDirection)*0.5f + 0.5f;
+    accumulatedColor += albedoColor * mix(groundLighting.rgb, skyLighting.rgb, hemiFactor)*sampleScreenSpaceAmbientOcclusion();
+
+    // Accumulate each one of the lights
+    for(let i = 0; i < numberOfLights; i += 1)
+    {
+        using lightSource = lightSources[i];
+        let L = lightSource.position.xyz - position*lightSource.position.w;
+        let dist = length(L);
+        L = L / dist;
+
+        let NdotL = max(dot(normal, L), 0.0f);
+        if(NdotL == 0.0f)
+            continue;
+
+        // Are we inside the spot light cone?
+        let spotCos = 1.0f;
+        if(lightSource.outerCosCutoff > -1.0f) // For no spot lights.
+            spotCos = dot(L, lightSource.spotDirection);
+
+        if(spotCos < lightSource.outerCosCutoff)
+           continue;
+
+		let shadowFactor = 1.0f;
+		if(lightSource.shadowMapLayer >= 0.0f)
+		{
+            let cameraShadowPosition = float4(position + surfaceNormal*0.1f, 1.0f);
+            let cascadeSplitOffsets = lightSource.cascadeSplitOffsets;
+            let cascadeDistance = dot(lightSource.cascadeFrustumPlane.xyz, cameraShadowPosition.xyz) + lightSource.cascadeFrustumPlane.w;
+
+            if(lightSource.position.w != 0.0f || cascadeDistance < cascadeSplitOffsets.y)
+            {
+                let shadowPosition = lightSource.shadowMapTransform * cameraShadowPosition;
+                let projectedShadowPoint = projectShadowPosition(shadowPosition, lightSource.shadowMapLayer);
+			    shadowFactor = computeShadowFactorFor(projectedShadowPoint.xyz, projectedShadowPoint.w);
+            }
+            else if(cascadeDistance < cascadeSplitOffsets.z)
+            {
+                let shadowPosition = lightSource.shadowMapTransform2 * cameraShadowPosition;
+                let projectedShadowPoint = projectShadowPosition(shadowPosition, lightSource.shadowMapLayer + 1.0f);
+                shadowFactor = computeShadowFactorFor(projectedShadowPoint.xyz, projectedShadowPoint.w);
+            }
+            else
+            {
+                let shadowPosition = lightSource.shadowMapTransform3 * cameraShadowPosition;
+                let projectedShadowPoint = projectShadowPosition(shadowPosition, lightSource.shadowMapLayer + 2.0f);
+                shadowFactor = computeShadowFactorFor(projectedShadowPoint.xyz, projectedShadowPoint.w);
+            }
+		}
+
+		if(shadowFactor <= 0.0f)
+			continue;
+
+		let spotAttenuation = smoothstep(lightSource.outerCosCutoff, lightSource.innerCosCutoff, spotCos)*pow(spotCos, lightSource.spotExponent);
+
+        // Compute the attenuation factor.
+        // I am using (partly) the technique that I found here: https://imdoingitwrong.wordpress.com/2011/01/31/light-attenuation/
+        let attenuationDistance = max(0.0f, dist - lightSource.radius);
+        let attDen = 1.0f + attenuationDistance/lightSource.radius;
+        let attenuation = shadowFactor*spotAttenuation/(attDen*attDen);
+
+        // Compute the fresnel factor
+        let H = normalize(L + viewVector);
+        let F = fresnelSchlick(fresnel, dot(H, L));
+
+        // Compute the distribution factor.
+        let NdotH = max(0.0f, dot(normal, H));
+        let D = pow(NdotH, specularPower)*specularNormalization;
+
+        // Add the light contribution.
+        accumulatedColor += lightSource.intensity.rgb*attenuation*(albedoColor + F*D)*NdotL;
+    }
+
+    // Return the final lighted color.
+    color = float4(accumulatedColor, albedo.a);
+}

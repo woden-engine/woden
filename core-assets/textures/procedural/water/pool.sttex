@@ -1,0 +1,14 @@
+| textureSize heightFunction colorRamp |
+textureSize := 5.0@5.0.
+colorRamp := WDCLinearRamp with: {
+	0.25 -> ('0089E7' asColor alpha: 0.2).
+	1.0 -> ('0089E7' asColor alpha: 1.0).
+}.
+
+heightFunction := [ :s :t |
+	| st |
+	st := s@t.
+	st*textureSize fractionalBrownianMotionOctaves: 3 lacunarity: 2.0 initialAmplitude: 0.4 tiledWith: textureSize with: #voronoiNoiseTiledWith:.
+].
+
+^ self textureExtent: 256@256 inspectorExtent: 128@128 heightFunction: heightFunction colorWith: colorRamp normalHeightScaleFactor: 3.0

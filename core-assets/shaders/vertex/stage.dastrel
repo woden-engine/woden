@@ -1,0 +1,7 @@
+semantic VertexStage
+{
+    out(-1) screenPosition: float4;
+
+    in(-43) vertexID: int;
+    in(-44) instanceID: uint;
+}

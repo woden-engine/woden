@@ -1,0 +1,10 @@
+import environment;
+import fragment;
+
+code_block(fragment) main
+{
+    let left = mainSampler.sample(leftTexture, FragmentInput.texcoord);
+    let right = mainSampler.sample(rightTexture, FragmentInput.texcoord);
+
+    FragmentOutput.color = float4(left.r, right.gb, 1.0f);
+}

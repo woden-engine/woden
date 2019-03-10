@@ -1,0 +1,18 @@
+shader_signature Composition
+{
+    descriptor_set(max_bindings=1000) Parameters
+    {
+        Parameters: uniform;
+    }
+
+    descriptor_set(max_bindings=1000) Source
+    {
+        LeftTexture: texture;
+        RightTexture: texture;
+    }
+
+    descriptor_set(max_bindings=100) Sampler
+    {
+        Sampler: sampler;
+    }
+}

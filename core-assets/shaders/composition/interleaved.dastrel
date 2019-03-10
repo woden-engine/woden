@@ -1,0 +1,16 @@
+import environment;
+import fragment;
+
+uniform(binding=Parameters.Parameters) CompositionStates
+{
+    screenExtents: float4;
+}
+
+code_block(fragment) main
+{
+	let y = FragmentInput.texcoord.y*CompositionStates.screenExtents.y;
+	if((y % 2.0f) < 1.0f)
+	    FragmentOutput.color = mainSampler.sample(leftTexture, FragmentInput.texcoord);
+	else	
+	    FragmentOutput.color = mainSampler.sample(rightTexture, FragmentInput.texcoord);
+}

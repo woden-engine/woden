@@ -1,0 +1,18 @@
+import compute.environment;
+import compute.stage;
+import procedural.noise;
+
+//uniform(binding = Textures.Textures) depthTexture : texture2D;
+uniform(binding = StorageImages.Images, format = rgba8) ssaoImage : image2D;
+
+code_block(compute, localSizeX=8, localSizeY=8) main
+{
+	let st = int2(ComputeStage.globalInvocationID.xy);
+	let size = getImageSize(ssaoImage);
+	if(st.x < size.x && st.y < size.y)
+	{
+		let value = 1.0f;
+		imageWrite(ssaoImage, st, float4(value, value, value, 1.0f));
+	}
+}
+

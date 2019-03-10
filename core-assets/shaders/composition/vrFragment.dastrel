@@ -1,0 +1,19 @@
+import environment;
+import fragment;
+import vr;
+
+code_block(fragment) main
+{
+	let texcoord = FragmentInput.texcoord;
+	let color = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	if(0.0f <= texcoord.x && texcoord.x <= 1.0f &&
+	   0.0f <= texcoord.y && texcoord.y <= 1.0f)
+	{
+		if(FragmentInput.isRightSide == 1.0f)
+			color = mainSampler.sample(rightTexture, FragmentInput.texcoord);
+		else
+			color = mainSampler.sample(leftTexture, FragmentInput.texcoord);
+	}
+	
+	FragmentOutput.color = color*FragmentInput.tint;
+}

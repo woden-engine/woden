@@ -1,0 +1,19 @@
+import environment;
+
+semantic VertexInput {
+    in(0) position: float2;
+}
+
+semantic VertexOutput {
+    out(0) texcoord: float2;
+	out(1) tint: float4;
+	out(2) isRightSide: float;
+}
+
+semantic VertexStage
+{
+    out(-1) screenPosition: float4;
+
+    in(-43) vertexID: int;
+    in(-44) instanceID: uint;
+}

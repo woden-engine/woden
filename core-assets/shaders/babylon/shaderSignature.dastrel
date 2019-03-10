@@ -1,0 +1,25 @@
+shader_signature GUI
+{
+    descriptor_set(max_bindings=1000) CanvasViewport
+    {
+        Matrices: buffer;
+        ColorRamps: buffer;
+    }
+
+    descriptor_set(max_bindings=1000) Texture
+    {
+        Texture: texture;
+    }
+
+    descriptor_set(max_bindings=100) Font
+    {
+        Texture: texture;
+    }
+
+    descriptor_set(max_bindings=100) Sampler
+    {
+        Sampler: sampler;
+    }
+
+    push_constant QuickState;
+}

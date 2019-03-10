@@ -1,0 +1,10 @@
+import environment;
+import fragment;
+
+code_block(fragment) main
+{
+	if(FragmentInput.texcoord.y < 0.5f)
+	    FragmentOutput.color = mainSampler.sample(leftTexture, float2(FragmentInput.texcoord.x, FragmentInput.texcoord.y*2.0f));
+	else	
+	    FragmentOutput.color = mainSampler.sample(rightTexture, float2(FragmentInput.texcoord.x, FragmentInput.texcoord.y*2.0f - 1.0f));
+}

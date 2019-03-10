@@ -1,0 +1,17 @@
+import compute.environment;
+import compute.stage;
+import procedural.noise;
+
+uniform(binding = StorageImages.Images, format = rgba8) destinationImage : image2D;
+
+code_block(compute, localSizeX=8, localSizeY=8) main
+{
+	let st = int2(ComputeStage.globalInvocationID.xy);
+	let size = getImageSize(destinationImage);
+	if(st.x < size.x && st.y < size.y)
+	{
+		let uv = float2(st) / float2(size);
+		let height = heightFieldFunction(uv.x, uv.y);
+		imageWrite(destinationImage, st, float4(height, height, height, 1.0f));
+	}
+}

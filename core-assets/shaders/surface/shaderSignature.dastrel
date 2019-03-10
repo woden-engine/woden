@@ -1,0 +1,40 @@
+shader_signature ForwardRenderer
+{
+    descriptor_set(max_bindings = 10) Samplers
+    {
+        Samplers: sampler * 5;
+    }
+
+    descriptor_set(max_bindings = 1000000) CameraState
+    {
+        ObjectState : uniform;
+    }
+
+    descriptor_set(max_bindings = 100) LightingState
+    {
+        GlobalLightingState: uniform;
+        SpotShadowMaps: texture;
+        PointShadowMaps: texture;
+        ScreenSpaceAmbientOcclusion: texture;
+    }
+
+    descriptor_set(max_bindings = 1000000) ObjectState
+    {
+        ObjectState : uniform;
+        InstanceObjectState: buffer;
+        ExtraObjectState: buffer;
+    }
+
+    descriptor_set(max_bindings = 10000) MaterialState
+    {
+        Attributes: uniform;
+        BigAttributes: buffer;
+        Textures: texture * 15;
+    }
+}
+
+uniform(binding = Samplers.Samplers) albedoSampler : sampler;
+uniform(binding = Samplers.Samplers+1) normalSampler : sampler;
+uniform(binding = Samplers.Samplers+2) displacementSampler : sampler;
+uniform(binding = Samplers.Samplers+2) cubeMapSampler : sampler;
+uniform(binding = Samplers.Samplers+3) shadowSampler : sampler;

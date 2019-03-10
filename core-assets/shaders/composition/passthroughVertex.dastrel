@@ -1,0 +1,18 @@
+import environment;
+import vertex;
+
+code_block(vertex) main
+{
+    let position = float2(0.0f, 0.0f);
+    if(VertexStage.vertexID == 0)
+        position = float2(-1.0f, 1.0f);
+    else if(VertexStage.vertexID == 1)
+        position = float2(1.0f, 1.0f);
+    else if(VertexStage.vertexID == 2)
+        position = float2(-1.0f, -1.0f);
+    else if(VertexStage.vertexID == 3)
+        position = float2(1.0f, -1.0f);
+
+    VertexOutput.texcoord = position*0.5f + 0.5f;
+    VertexStage.screenPosition = float4(position, 0.0f, 1.0f);
+}

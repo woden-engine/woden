@@ -1,0 +1,67 @@
+import shaderSignature;
+
+buffer(binding=CanvasViewport.Matrices) CanvasMatrices
+{
+    matrices: float4x4[];
+}
+
+struct ColorRampEntry
+{
+    edge: float;
+    color: float4;
+}
+
+buffer(binding=CanvasViewport.ColorRamps) ColorRamps
+{
+    entries: ColorRampEntry[];
+}
+
+uniform(push_constant=QuickState) QuickState
+{
+    modelViewMatrixIndex: int;
+    projectionMatrixIndex: int;
+
+    colorRampIndex: int;
+    colorRampSize: int;
+
+    textureArrayElementIndex: int;
+}
+
+function evaluateColorRamp(coord: float) -> float4
+{
+    using ColorRamps;
+    using QuickState;
+
+    if(colorRampSize == 0)
+        return float4(1.0f, 1.0f, 1.0f, 1.0f);
+
+    // Binary search over the color ramp entries.
+    let a = 0;
+    let b = colorRampSize;
+    let lastResult = a;
+    while(a < b)
+    {
+        let m = (a + b) / 2;
+        if(entries[colorRampIndex + m].edge <= coord)
+        {
+            lastResult = m;
+            a = m + 1;
+        }
+        else
+        {
+            b = m;
+        }
+    }
+
+    // Are we outside of the color ramp?
+    let entryIndex = colorRampIndex + lastResult;
+    let prevEdge = entries[entryIndex].edge;
+    if((lastResult == 0 && coord <= prevEdge) ||
+        (lastResult == colorRampSize - 1))
+        return entries[entryIndex].color;
+
+    // Perform linear interpolation between the colors.
+    let nextEdge = entries[entryIndex + 1].edge;
+    let mixFactor = (coord - prevEdge) / (nextEdge - prevEdge);
+    return mix(entries[entryIndex].color, entries[entryIndex + 1].color, mixFactor);
+}

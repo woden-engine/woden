@@ -1,0 +1,15 @@
+import environment;
+
+semantic FragmentInput {
+    in(0) texcoord: float2;
+	in(1) tint: float4;
+	in(2) isRightSide: float;
+}
+
+semantic FragmentOutput {
+    out(0) color: float4;
+}
+
+uniform(binding = Source.LeftTexture) leftTexture : texture2D;
+uniform(binding = Source.RightTexture) rightTexture : texture2D;
+uniform(binding = Sampler.Sampler) mainSampler : sampler;

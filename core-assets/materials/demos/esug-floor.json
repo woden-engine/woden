@@ -1,0 +1,6 @@
+{
+    "type" : "GenericSurface",
+    "albedo-texture" : "textures/demos/esug-floor.dds",
+
+    "smoothness" : 0.30
+}

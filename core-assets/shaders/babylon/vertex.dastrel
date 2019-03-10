@@ -1,0 +1,14 @@
+import environment;
+
+semantic VertexInput {
+    in(0) position: float2;
+    in(1) texcoord: float2;
+    in(2) color: float4;
+}
+
+semantic VertexOutput {
+    out(-1) screenPosition: float4;
+    out(0) position: float4;
+    out(1) texcoord: float2;
+    out(2) color: float4;
+}

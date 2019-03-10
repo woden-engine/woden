@@ -1,0 +1,14 @@
+import shaderSignature;
+import environment;
+import fragment;
+import terrainMaterial;
+import lighting;
+
+code_block(fragment) main
+{
+    let surfaceTexcoord = TerrainFragmentInput.surfaceTexcoord;
+    if(surfaceTexcoord.s < 0.0f || surfaceTexcoord.t < 0.0f || surfaceTexcoord.s > 1.0f || surfaceTexcoord.t > 1.0f)
+        discard;
+
+    FragmentOutput.color = TerrainFragmentInput.color*MaterialState.albedo;
+}

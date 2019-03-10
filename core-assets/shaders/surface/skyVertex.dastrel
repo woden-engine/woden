@@ -1,0 +1,11 @@
+import environment;
+import vertexEnvironment;
+import vertex;
+
+code_block(vertex) main
+{
+    using CameraState;
+
+    VertexOutput.position = transformPositionToWorld(GenericVertexLayout.position).xyz - cameraWorldPosition();
+    VertexStage.screenPosition = projectionMatrix * transformPositionToView(GenericVertexLayout.position);
+}

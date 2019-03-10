@@ -1,0 +1,24 @@
+{
+    "shaders" : {
+        "PolygonStencil" : {
+            "fragment" : "stencilFragment.dastrel",
+            "vertex" : "genericVertex.dastrel"
+        },
+        "Color" : {
+            "fragment" : "colorFragment.dastrel",
+            "vertex" : "genericVertex.dastrel"
+        },
+        "Gradient" : {
+            "fragment" : "gradientFragment.dastrel",
+            "vertex" : "genericVertex.dastrel"
+        },
+        "Textured" : {
+            "fragment" : "texturedFragment.dastrel",
+            "vertex" : "genericVertex.dastrel"
+        },
+        "TextColor" : {
+            "fragment" : "textColorFragment.dastrel",
+            "vertex" : "genericVertex.dastrel"
+        }
+    }
+}

@@ -1,0 +1,9 @@
+semantic ComputeStage
+{
+    in(-25) numberOfWorkGroups: uint3;
+    in(-26) workgroupSize: uint3;
+    in(-27) workgroupID: uint3;
+    in(-28) localInvocationID: uint3;
+    in(-29) globalInvocationID: uint3;
+    in(-30) localInvocationIndex: uint;
+}

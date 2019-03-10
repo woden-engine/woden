@@ -1,0 +1,20 @@
+shader_signature AmbientOcclusion
+{
+    descriptor_set(max_bindings=10) Samplers
+    {
+        Samplers: sampler*1;
+    }
+
+    descriptor_set(max_bindings = 1000) CameraState
+    {
+        ObjectState : uniform;
+    }
+
+    descriptor_set(max_bindings = 1000) ComputeBuffers
+    {
+        DepthBuffer: texture;
+        Destination: image;
+    }
+}
+
+uniform(binding = Samplers.Samplers) aoDepthSampler : sampler;

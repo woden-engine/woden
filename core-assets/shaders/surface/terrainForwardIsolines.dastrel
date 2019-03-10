@@ -1,0 +1,19 @@
+import shaderSignature;
+import environment;
+import fragment;
+import terrainMaterial;
+import lighting;
+
+code_block(fragment) main
+{
+    let surfaceTexcoord = TerrainFragmentInput.surfaceTexcoord;
+    if(surfaceTexcoord.s < 0.0f || surfaceTexcoord.t < 0.0f || surfaceTexcoord.s > 1.0f || surfaceTexcoord.t > 1.0f)
+        discard;
+
+    // Fetch the height
+    let height = displacementSampler.sample(heightMapTexture, surfaceTexcoord).r*MaterialState.heightScale;
+    // TODO: Use derivatives here.
+    let isolinePeriod = 1.0f - smoothstep(0.0f, 0.06f, fract(height *0.25f));
+
+    FragmentOutput.color = TerrainFragmentInput.color*isolinePeriod;
+}

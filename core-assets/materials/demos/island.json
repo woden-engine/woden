@@ -1,0 +1,32 @@
+{
+    "type" : "Terrain",
+
+    "smoothness" : 0.2,
+
+    "height-map-size" : [200.0, 200.0],
+    "height-scale" : 110.0,
+
+    "height-map" : "textures/procedural/terrain/island.sttex?texture=height",
+    "splatter" : "textures/procedural/terrain/island.sttex?texture=splatter",
+
+    "albedo-textures" : [
+        "textures/procedural/terrain/sand.sttex",
+        "textures/procedural/terrain/grass.sttex",
+        "textures/procedural/terrain/rock.sttex",
+        "textures/procedural/terrain/snow.sttex"
+    ],
+
+    "normal-textures" : [
+        "textures/procedural/terrain/sand.sttex?texture=normal",
+        "textures/procedural/terrain/grass.sttex?texture=normal",
+        "textures/procedural/terrain/rock.sttex?texture=normal",
+        "textures/procedural/terrain/snow.sttex?texture=normal"
+    ],
+
+    "texture-scales-offsets" : [
+        [1.0, 1.0, 0.0, 0.0],
+        [0.3, 0.3, 0.0, 0.0],
+        [0.1, 0.1, 0.0, 0.0],
+        [1.0, 1.0, 0.0, 0.0]
+    ]
+}

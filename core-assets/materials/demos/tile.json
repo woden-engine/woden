@@ -1,0 +1,7 @@
+{
+    "type" : "GenericSurface",
+    "albedo-texture" : "textures/demos/tile-albedo.dds",
+    "normal-texture" : "textures/demos/tile-normal.dds",
+
+    "smoothness" : 0.80
+}

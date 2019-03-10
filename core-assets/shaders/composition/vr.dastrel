@@ -1,0 +1,12 @@
+import environment;
+
+uniform(binding=Parameters.Parameters) VRState
+{
+    screenExtents: float4;
+    leftProjectionTransform: float4;
+    leftUnprojectionTransform: float4;
+    rightProjectionTransform: float4;
+    rightUnprojectionTransform: float4;
+    distortionCoefficients: float2;
+    ipd: float;
+}

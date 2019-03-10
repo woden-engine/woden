@@ -1,0 +1,49 @@
+import environment;
+import fragment;
+import vr;
+
+function barrelDistort(input: float2) -> float2
+{
+    let r2 = dot(input, input);
+    let r4 = r2*r2;
+
+    return input * (1.0f + VRState.distortionCoefficients.x*r2 + VRState.distortionCoefficients.x*r4);
+}
+
+function distort(inputTexcoord: float2, projectionTransform: float4, unprojectionTransform: float4) -> float2
+{
+    let inputPoint = inputTexcoord*unprojectionTransform.xy + unprojectionTransform.zw;
+
+    let outputPoint = barrelDistort(inputPoint);
+    return outputPoint*projectionTransform.xy + projectionTransform.zw;
+}
+
+code_block(fragment) main
+{
+    let leftSide = FragmentInput.texcoord.x < 0.5f;
+    let coordinateTranslation = leftSide ? float2(0.0f, 0.0f) : float2(1.0f, 0.0f);
+
+    // Move the per-eye x coordinates into the [0.0, 1.0) range.
+    let normalizedTexcoord = FragmentInput.texcoord*float2(2.0f, 1.0f) - coordinateTranslation;
+
+    if(leftSide)
+    {
+        normalizedTexcoord = distort(normalizedTexcoord, VRState.leftProjectionTransform, VRState.leftUnprojectionTransform);
+    }
+    else
+    {
+        normalizedTexcoord = distort(normalizedTexcoord, VRState.rightProjectionTransform, VRState.rightUnprojectionTransform);
+    }
+
+    // Move the x coordinates back into the [0.0, 0.5) and [0.5, 1.0) ranges.
+    let color = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    if (0.0f <= normalizedTexcoord.x && normalizedTexcoord.x <= 1.0f &&
+        0.0f <= normalizedTexcoord.y && normalizedTexcoord.y <= 1.0f)
+	{
+		if(leftSide)
+			color = mainSampler.sample(leftTexture, normalizedTexcoord);
+		else
+			color = mainSampler.sample(rightTexture, normalizedTexcoord);
+    }
+    FragmentOutput.color = color;
+}

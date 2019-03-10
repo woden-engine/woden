@@ -1,0 +1,38 @@
+import environment;
+import vertex;
+
+code_block(vertex) main
+{
+    let cellIndex = VertexStage.vertexID / 6;
+    let cellExtraOffset = VertexStage.vertexID % 6;
+    let column = cellIndex % 64;
+    let row = cellIndex / 64;
+
+    let dx = (cellExtraOffset == 1 || cellExtraOffset == 2 || cellExtraOffset == 5) ? 1 : 0;
+    let dy = (cellExtraOffset == 2 || cellExtraOffset == 3 || cellExtraOffset == 5) ? 1 : 0;
+
+    let x = float(column + dx) / 64.0f;
+    let y = float(row + dy) / 64.0f;
+
+    // Compute a normalized position and texcoord for the grid.
+    let pos = float2(x, y) * 2.0f - 1.0f;
+    let texcoord = pos*0.5f + 0.5f;
+
+    //let screenSize = float2(0.5f, 1.0f);
+    let screenSize = float2(0.1261999756f, 0.22435551217777774f)*3.0f;
+    pos *= screenSize;
+
+    // Barrel distortion. Here we have normalized coordinates.
+    let r = length(pos);
+    let r2 = r*r;
+    pos = pos/(1.0f + 0.22f*r2 + 0.24f*r2*r2);
+
+    pos /= screenSize;
+
+    // Move to the final position
+    texcoord = float2(texcoord.x*0.5f + float(VertexStage.instanceID)*0.5f, texcoord.y);
+    pos = float2(pos.x*0.5f - 0.5f + float(VertexStage.instanceID)*1.0f, pos.y);
+
+    VertexOutput.texcoord = texcoord;
+    VertexStage.screenPosition = float4(pos, 0.0f, 1.0f);
+}

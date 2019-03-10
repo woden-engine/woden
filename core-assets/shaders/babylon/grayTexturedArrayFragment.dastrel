@@ -1,0 +1,9 @@
+import environment;
+import fragment;
+
+code_block(fragment) main
+{
+    let gray = mainSampler.sample(mainTextureArray, float3(FragmentInput.texcoord, float(QuickState.textureArrayElementIndex))).r;
+    let color = float4(gray, gray, gray, 1.0f);
+    FragmentOutput.color = FragmentInput.color*color;
+}

@@ -1,0 +1,7 @@
+{
+    "type" : "GenericSurface",
+    "albedo-texture" : "textures/demos/baby-dragon-albedo.png",
+
+    "smoothness" : 0.02,
+    "skinned" : true
+}

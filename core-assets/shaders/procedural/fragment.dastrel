@@ -1,0 +1,10 @@
+import environment;
+
+semantic FragmentInput {
+    in(0) texcoord: float2;
+}
+
+semantic FragmentOutput {
+    out(0) color: float4;
+}
+

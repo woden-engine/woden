@@ -1,0 +1,16 @@
+{
+    "shaders" : {
+        "Passthrough" : {
+            "fragment" : "passthroughFragment.dastrel",
+            "vertex" : "passthroughVertex.dastrel"
+        },
+        "Anaglyph" : {
+            "fragment" : "anaglyph.dastrel",
+            "vertex" : "passthroughVertex.dastrel"
+        },
+        "VR" : {
+            "fragment" : "vrDistortion.dastrel",
+            "vertex" : "passthroughVertex.dastrel"
+        }
+    }
+}

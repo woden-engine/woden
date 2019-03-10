@@ -1,0 +1,33 @@
+import environment;
+import vertexEnvironment;
+import vertex;
+import waterMaterial;
+
+code_block(vertex) main
+{
+    using CameraState;
+    using MaterialState;
+
+    // Fetch the position and texcoord.
+    let position = float3(GenericVertexLayout.position.x, 0.0f,  GenericVertexLayout.position.y) + clipMapOffsetWithPeriod(clipMapPeriod);
+    let surfacePosition = float2(position.x, -position.z);
+
+    let lod = GenericVertexLayout.position.z;
+    let texcoord = surfacePosition;
+
+    // Eval the water waves.
+    let waterWaveEffect = evalWaterWaves(surfacePosition);
+    let height = waterWaveEffect.x;
+    let tangentialContributions = waterWaveEffect.yz;
+
+    // Apply the water height.
+    position += float3(0.0f, height, 0.0f);
+
+    WaterVertexOutput.color = currentObjectColor();
+    WaterVertexOutput.surfaceCoordinate = surfacePosition;
+    WaterVertexOutput.texcoord = surfacePosition*textureScale + textureOffset;
+    let position4 = transformPositionToView(position);
+
+    WaterVertexOutput.position =  position4.xyz;
+    VertexStage.screenPosition = projectionMatrix * position4;
+}
