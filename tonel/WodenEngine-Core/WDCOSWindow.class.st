@@ -31,17 +31,13 @@ WDCOSWindow >> checkRenderTargets [
 
 { #category : #'instance creation' }
 WDCOSWindow >> close [
-	"Destroy the swap chain before destroying the window. Otherwise, we can get a deadlock."
-	resolveRenderTarget ifNotNil: [
-		resolveRenderTarget release.
-		renderTarget ~~ resolveRenderTarget ifTrue: [ renderTarget release ].
+	engine renderingProcessCritical: [ 
+		"Destroy the swap chain before destroying the window. Otherwise, we can get a deadlock."
+		self destroySwapChainSafely.
+
+		"Destroy the window."
+		window destroy.
 	].
-
-	"Destroy the window."
-	window destroy.
-
-	resolveRenderTarget := nil.
-	renderTarget := nil
 
 ]
 
@@ -83,6 +79,18 @@ WDCOSWindow >> defaultExtent [
 	^ 640@480
 ]
 
+{ #category : #accessing }
+WDCOSWindow >> destroySwapChainSafely [
+	resolveRenderTarget ifNotNil: [
+		engine graphicsQueue finishExecution.
+		resolveRenderTarget release.
+		renderTarget ~~ resolveRenderTarget ifTrue: [ renderTarget release ].
+				
+		resolveRenderTarget := nil.
+		renderTarget := nil.
+	].
+]
+
 { #category : #'instance creation' }
 WDCOSWindow >> drawingSurfaceExtent [
 	^ window extent
@@ -105,7 +113,15 @@ WDCOSWindow >> enqueueEvent: anEvent [
 
 { #category : #accessing }
 WDCOSWindow >> fullscreen: aBoolean [
-	window fullscreen: aBoolean
+	engine ifNotNil: [ 
+		engine renderingProcessCritical: [ 
+			self destroySwapChainSafely.
+			
+			window fullscreen: aBoolean.
+		]
+	] ifNil: [ 
+		window fullscreen: aBoolean
+	]
 ]
 
 { #category : #'event processing' }

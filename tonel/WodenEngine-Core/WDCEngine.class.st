@@ -12,14 +12,18 @@ Class {
 		'preferredDepthStencilFormat',
 		'resourceCache',
 		'soundDevice',
-		'vrSensorReader',
 		'babylonDriver',
 		'hasTopLeftNDCOrigin',
 		'hasBottomLeftTextureCoordinates',
-		'projectiveTextureBiasMatrix'
+		'projectiveTextureBiasMatrix',
+		'vrSystem'
 	],
 	#classVars : [
+		'AllowVR',
+		'DebugLayerEnabled',
 		'DefaultEngine',
+		'SSAOEnabled',
+		'ShadowMappingEnabled',
 		'TracingEnabled'
 	],
 	#pools : [
@@ -28,14 +32,24 @@ Class {
 	#category : #'WodenEngine-Core-Engine'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #preferences }
 WDCEngine class >> allowVR [
-	^ true
+	^ AllowVR ifNil: [ AllowVR := false ]
 ]
 
-{ #category : #accessing }
+{ #category : #preferences }
+WDCEngine class >> allowVR: aBoolean [
+	AllowVR := aBoolean
+]
+
+{ #category : #preferences }
 WDCEngine class >> debugLayerEnabled [
-	^ true
+	^ DebugLayerEnabled ifNil: [ DebugLayerEnabled := false ]
+]
+
+{ #category : #preferences }
+WDCEngine class >> debugLayerEnabled: aBoolean [
+	^ DebugLayerEnabled := aBoolean
 ]
 
 { #category : #accessing }
@@ -50,12 +64,32 @@ WDCEngine class >> reset [
 	DefaultEngine := nil
 ]
 
-{ #category : #accessing }
+{ #category : #preferences }
+WDCEngine class >> shadowMappingEnabled [
+	^ ShadowMappingEnabled ifNil: [ ShadowMappingEnabled := true]
+]
+
+{ #category : #preferences }
+WDCEngine class >> shadowMappingEnabled: aBoolean [
+	ShadowMappingEnabled := aBoolean
+]
+
+{ #category : #preferences }
+WDCEngine class >> ssaoEnabled [
+	^ SSAOEnabled ifNil: [ SSAOEnabled := true ]
+]
+
+{ #category : #preferences }
+WDCEngine class >> ssaoEnabled: aBoolean [
+	SSAOEnabled := aBoolean
+]
+
+{ #category : #preferences }
 WDCEngine class >> tracingEnabled [
 	^ TracingEnabled ifNil: [ TracingEnabled := false ]
 ]
 
-{ #category : #accessing }
+{ #category : #preferences }
 WDCEngine class >> tracingEnabled: aBoolean [
 	TracingEnabled := aBoolean
 ]
@@ -63,6 +97,31 @@ WDCEngine class >> tracingEnabled: aBoolean [
 { #category : #accessing }
 WDCEngine class >> unsuspendAll [
 	^ self allInstancesDo: #unsuspendAll
+]
+
+{ #category : #settings }
+WDCEngine class >> wodenSettingsOn: aBuilder [
+	<systemsettings>
+	(aBuilder group: #woden)
+		label: 'Woden';
+		description: 'Woden Engine Settings';
+		with: [
+			(aBuilder setting: #debugLayerEnabled)
+				label: 'Debug Layer enabled';
+				description: 'This enables the graphics API debug layer (Vulkan Only).'.
+			(aBuilder setting: #allowVR)
+				label: 'Allow VR';
+				description: 'This enables the support for VR (OpenVR headers such as the HTC Vive).'.
+			(aBuilder setting: #tracingEnabled)
+				label: 'Tracing enabled';
+				description: 'This enables the support for tracing engine logs.'.
+			(aBuilder setting: #ssaoEnabled)
+				label: 'SSAO enabled';
+				description: 'This enables the support for screen space ambient occlusion.'.
+			(aBuilder setting: #shadowMappingEnabled)
+				label: 'Shadow Mapping enabled';
+				description: 'This enables the support shadow maps.'
+		]
 ]
 
 { #category : #assets }
@@ -165,8 +224,16 @@ WDCEngine >> createDevice [
 	platform ifNil: [ self error: 'Failed to open the AGPU platform' ].
 
 	deviceOpenInfo := AGPUDeviceOpenInfo new debug_layer: self class debugLayerEnabled asBit.
+	self class allowVR ifTrue: [ 
+		deviceOpenInfo open_flags: AGPU_DEVICE_OPEN_FLAG_ALLOW_VR.
+	].
+	
 	device := platform openDevice: deviceOpenInfo.
 	device ifNil: [ self error: 'Failed to open the AGPU device' ].
+	
+	vrSystem := (device isFeatureSupported: AGPU_FEATURE_VRDISPLAY) ~= 0
+		ifTrue: [ WDCAGPUVRSystem for: self ]
+		ifFalse: [ WDCDummyVRSystem for: self ].
 
 	graphicsQueue := device getDefaultCommandQueue.
 
@@ -431,6 +498,11 @@ WDCEngine >> hasBottomLeftTextureCoordinates [
 	^ hasBottomLeftTextureCoordinates
 ]
 
+{ #category : #testing }
+WDCEngine >> hasSupportForVR [
+	^ vrSystem hasSupportForVR
+]
+
 { #category : #accessing }
 WDCEngine >> hasTopLeftNDCOrigin [
 	^ hasTopLeftNDCOrigin
@@ -551,9 +623,19 @@ WDCEngine >> screenQuadVertexShader [
 ]
 
 { #category : #accessing }
+WDCEngine >> shadowMappingEnabled [
+	^ self class shadowMappingEnabled
+]
+
+{ #category : #accessing }
 WDCEngine >> soundDevice [
 	soundDevice ifNil: [ soundDevice := WDCSoundEngine current createSoundDevice].
 	^ soundDevice
+]
+
+{ #category : #accessing }
+WDCEngine >> ssaoEnabled [
+	^ self class ssaoEnabled
 ]
 
 { #category : #'resource building' }
@@ -593,7 +675,6 @@ WDCEngine >> vertexLayoutForVertexChannelDescriptions: channelDescriptions [
 ]
 
 { #category : #accessing }
-WDCEngine >> vrSensorReader [
-	self flag: 'TODO: Do this properly'.
-	^ vrSensorReader ifNil: [ vrSensorReader := WDCVRSensorReader current activate; yourself. ]
+WDCEngine >> vrSystem [
+	^ vrSystem
 ]

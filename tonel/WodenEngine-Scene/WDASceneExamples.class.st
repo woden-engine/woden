@@ -99,7 +99,7 @@ WDASceneExamples class >> example01Cube [
 		translateByX: -1.5 y: 1.5 z: 1.6.
 	scene add: light.
 
-	model openWith: WDAFPSSceneView.
+	model openWith: WDAFPSSceneView allowingVR.
 ]
 
 { #category : #examples }
@@ -260,7 +260,7 @@ WDASceneExamples class >> example04Pool [
 	waterSurface transform translateToX: 0.0 y: -0.3 z: 0.0.
 	scene add: waterSurface.
 	
-	view := WDAFPSSceneView new.
+	view := WDAFPSSceneView allowingVR.
 	view cameraAngle: (WMVector3F y: Float pi).
 	model openWith: view.
 ]
@@ -372,7 +372,7 @@ WDASceneExamples class >> example05DangerousPool [
 		]
 	].
 	
-	view := WDAFPSSceneView new.
+	view := WDAFPSSceneView allowingVR.
 	view cameraAngle: (WMVector3F y: Float pi).
 	model openWith: view.
 ]
@@ -509,7 +509,7 @@ WDASceneExamples class >> example08MediumTerrain [
 		translateToX: 0.0 y: 1.5 z: 2.5.
 	scene add: light.
 
-	model openWith: WDAFPSSceneView.
+	model openWith: WDAFPSSceneView allowingVR.
 ]
 
 { #category : #examples }
@@ -566,7 +566,7 @@ WDASceneExamples class >> example09DragonIsland [
 		translateToX: 0.0 y: 1.5 z: 2.5.
 	scene add: light.
 
-	view := model openWith: WDAFPSSceneView
+	view := model openWith: WDAFPSSceneView allowingVR
 ]
 
 { #category : #'example models' }

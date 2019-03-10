@@ -35,9 +35,15 @@ WDSLightedSceneRendererIntermediateTextures >> ambientOcclusionTexture: anObject
 { #category : #'multi eye rendering' }
 WDSLightedSceneRendererIntermediateTextures >> applyToRenderingViewport: renderingViewport [
 	super applyToRenderingViewport: renderingViewport.
-	renderingViewport
-		ambientOcclusionTexture: ambientOcclusionTexture;
-		ambientOcclusionComputeShaderBindings: ambientOcclusionComputeShaderBindings
+	engine ssaoEnabled ifTrue: [ 
+		renderingViewport
+			ambientOcclusionTexture: ambientOcclusionTexture;
+			ambientOcclusionComputeShaderBindings: ambientOcclusionComputeShaderBindings
+	] ifFalse: [ 
+		renderingViewport
+			ambientOcclusionTexture: engine resourceCache whiteTexture
+	].
+
 ]
 
 { #category : #'multi eye rendering' }

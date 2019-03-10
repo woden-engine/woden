@@ -6,7 +6,6 @@ Class {
 		'frameIndex',
 		'bufferingFrameIndex',
 		'frameFences',
-		'yieldSemaphore',
 		'mainRenderingProcess',
 		'renderingProcessesLock',
 		'frontRenderingProcesses',
@@ -16,7 +15,9 @@ Class {
 		'currentFrameTargetTime',
 		'nextFrameTargetTime',
 		'currentFrameStartTime',
-		'lastFrameEndTime'
+		'lastFrameEndTime',
+		'currentVRLeftEyeTexture',
+		'currentVRRightEyeTexture'
 	],
 	#category : #'WodenEngine-Core-Rendering'
 }
@@ -29,6 +30,11 @@ WDCFrameBufferingDriver class >> defaultFrameBufferingCount [
 { #category : #accessing }
 WDCFrameBufferingDriver class >> defaultTargetFrameRate [
 	^ 60
+]
+
+{ #category : #accessing }
+WDCFrameBufferingDriver class >> defaultVRTargetFrameRate [
+	^ 90
 ]
 
 { #category : #'instance creation' }
@@ -156,7 +162,6 @@ WDCFrameBufferingDriver >> lastFrameStartTime [
 WDCFrameBufferingDriver >> mainRenderingProcess [
 	| session |
 	session := Smalltalk session.
-	yieldSemaphore := Semaphore new.
 	
 	[ session == Smalltalk session ] whileTrue: [
 		self mainRenderingProcessIteration
@@ -184,22 +189,25 @@ WDCFrameBufferingDriver >> mainRenderingProcessIteration [
 	
 	engine resourceCache reloadPendingResources.
 	self swapRenderingProcesses.
+	engine vrSystem frameStarted.
 	self renderForDeltaMicroseconds: frameDeltaTime.
+	engine vrSystem frameEnded.
 	frontRenderingProcesses removeAll.
 	
 	
 	nextFrameTargetTime := currentFrameTargetTime + (1000000 // self targetFrameRate).
 	self flag: 'TODO: Support delays in microseconds.'.
 	lastFrameEndTime := Time microsecondClockValue.
+	
 	delayTime := (nextFrameTargetTime - lastFrameEndTime) // 1000.
 	
-	delayTime > 0 ifTrue: [ 
-		(Delay forMilliseconds: delayTime) wait
-	] ifFalse: [
-		"Allow processing time to the processes with the lower priority"
+	"Ask the VR engine VR system to apply the delay. They VR system may want
+	 to use a low latency method."
+	engine vrSystem applyMainLoopDelay: delayTime.
+	
+	delayTime <= 0 ifTrue: [
 		nextFrameTargetTime := Time microsecondClockValue.
-		self yield
-	]
+	].
 
 ]
 
@@ -208,6 +216,10 @@ WDCFrameBufferingDriver >> renderForDeltaMicroseconds: delta [
 	"Always update the simulations"
 	| renderingGraph |
 	frontRenderingProcesses reject: #suspended thenDo: #processEvents.
+	currentVRLeftEyeTexture := nil.
+	currentVRRightEyeTexture := nil.
+	
+	engine vrSystem pollVREvents.
 
 	self renderingProcessesDo: [ :process |
 		process
@@ -229,11 +241,18 @@ WDCFrameBufferingDriver >> renderForDeltaMicroseconds: delta [
 	renderingGraph
 		sortedNodesDo: #prepareRendering;
 		sortedNodesDo: #constructRenderingCommandLists;
-		sortedNodesDo: #sendRenderingCommands;
-		sortedNodesDo: #commitSurfaces.
+		sortedNodesDo: #sendRenderingCommands.
+	
+	(currentVRLeftEyeTexture isNotNil and: [ currentVRRightEyeTexture isNotNil ]) ifTrue: [ 
+		engine vrSystem submitLeftEye: currentVRLeftEyeTexture rightEye: currentVRRightEyeTexture
+	].
+
+	renderingGraph sortedNodesDo: #commitSurfaces.
 	
 	self
-		endFrame
+		endFrame.
+		
+	engine vrSystem waitAndFetchPoses
 ]
 
 { #category : #'rendering process' }
@@ -267,6 +286,12 @@ WDCFrameBufferingDriver >> renderingProcessesRenderDo: aBlock [
 ]
 
 { #category : #'rendering process' }
+WDCFrameBufferingDriver >> setCurrentVRLeftEyeTexture: leftEyeTexture rightEyeTexture: rightEyeTexture [
+	currentVRLeftEyeTexture := leftEyeTexture.
+	currentVRRightEyeTexture := rightEyeTexture.
+]
+
+{ #category : #'rendering process' }
 WDCFrameBufferingDriver >> swapRenderingProcesses [
 	| temp |
 	renderingProcessesLock critical: [
@@ -283,7 +308,9 @@ WDCFrameBufferingDriver >> swapRenderingProcesses [
 
 { #category : #accessing }
 WDCFrameBufferingDriver >> targetFrameRate [
-	^ self class defaultTargetFrameRate
+	^ engine hasSupportForVR
+		ifTrue: [ self class defaultVRTargetFrameRate ]
+		ifFalse: [ self class defaultTargetFrameRate ]
 ]
 
 { #category : #accessing }
@@ -292,10 +319,4 @@ WDCFrameBufferingDriver >> unsuspendAll [
 		frontRenderingProcesses do: #unsuspend.
 		backRenderingProcesses do: #unsuspend.
 	]
-]
-
-{ #category : #'rendering process' }
-WDCFrameBufferingDriver >> yield [
-	[ yieldSemaphore signal ] forkAt: Processor lowestPriority.
-	yieldSemaphore wait; consumeAllSignals
 ]

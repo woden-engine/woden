@@ -1,22 +1,16 @@
 Class {
 	#name : #WDASceneViewStereoScreenDisplayMode,
-	#superclass : #WDASceneViewScreenDisplayMode,
+	#superclass : #WDASceneViewStereoDisplayMode,
 	#instVars : [
 		'ipd',
 		'focalDistance',
-		'leftRenderTarget',
-		'leftResolveRenderTarget',
-		'rightResolveRenderTarget',
-		'rightRenderTarget',
 		'shaderSignature',
 		'vertexShader',
 		'fragmentShader',
 		'sourceRenderTargetsBinding',
 		'compositionStateBinding',
 		'compositionStateBuffer',
-		'compositionState',
-		'leftProjectionMatrix',
-		'rightProjectionMatrix'
+		'compositionState'
 	],
 	#category : #'WodenEngine-Scene-Rendering'
 }
@@ -109,29 +103,6 @@ WDASceneViewStereoScreenDisplayMode >> computeProjectionMatrices [
 ]
 
 { #category : #'rendering process stages' }
-WDASceneViewStereoScreenDisplayMode >> constructRenderingCommandLists [
-	| resolveTarget |
-	self
-		checkRenderTargets;
-		updateCompositionState;
-		uploadCompositionState;
-		computeProjectionMatrices;
-		updateCameraFrustum.
-		
-	resolveTarget := view window validResolveRenderTarget.
-	^ view sceneRenderer
-		useLateLatching: self useLateLatching;
-		currentTime: view model currentTime;
-		renderScene: view model scene viewports: {
-			self leftViewportForCamera: view cameraSceneNode.
-			self rightViewportForCamera: view cameraSceneNode.
-		}
-		composeWith: [ :stateTracker |
-			self composeEyesIn: stateTracker
-		]
-]
-
-{ #category : #'rendering process stages' }
 WDASceneViewStereoScreenDisplayMode >> createCompositionStateBinding [
 	compositionState := WTCompositionState new.
 	compositionStateBinding := self shaderSignature newParameters.
@@ -144,57 +115,9 @@ WDASceneViewStereoScreenDisplayMode >> createCompositionStateBuffer [
 	compositionStateBinding bind: 0 uniformBuffer: compositionStateBuffer.
 ]
 
-{ #category : #'multi eye rendering' }
-WDASceneViewStereoScreenDisplayMode >> createRenderTargets [
-	| extent sampleCount hasDepth hasStencil |
-	extent := view window drawingSurfaceExtent.
-	sampleCount := view sampleCount.
-	hasDepth := view hasDepth.
-	hasStencil := view hasStencil.
-	
-	leftRenderTarget := WDCRenderTarget for: engine extent: extent.
-	leftRenderTarget
-		hasDepth: hasDepth;
-		hasStencil: hasStencil;
-		sampleCount: sampleCount;
-		createFramebuffers.
-
-	rightRenderTarget := WDCRenderTarget for: engine extent: extent.
-	rightRenderTarget
-		hasDepth: hasDepth;
-		hasStencil: hasStencil;
-		sampleCount: sampleCount;
-		createFramebuffers.
-		
-	sampleCount > 1 ifTrue: [ 
-		leftResolveRenderTarget := WDCRenderTarget for: engine extent: extent.
-		leftResolveRenderTarget
-			hasDepth: hasDepth;
-			hasStencil: hasStencil;
-			sampleCount: 1;
-			createFramebuffers.
-
-		rightResolveRenderTarget := WDCRenderTarget for: engine extent: extent.
-		rightResolveRenderTarget
-			hasDepth: hasDepth;
-			hasStencil: hasStencil;
-			sampleCount: 1;
-			createFramebuffers.
-	] ifFalse: [
-		leftResolveRenderTarget := leftRenderTarget.
-		rightResolveRenderTarget := rightRenderTarget.
-	].
-
-]
-
 { #category : #'viewport composition' }
 WDASceneViewStereoScreenDisplayMode >> fragmentShader [
 	^ fragmentShader ifNil: [ fragmentShader := engine loadFragmentShader: self fragmentShaderFileName ]
-]
-
-{ #category : #'viewport composition' }
-WDASceneViewStereoScreenDisplayMode >> fragmentShaderFileName [
-	^ 'shaders/composition/vrDistortion.dastrel'
 ]
 
 { #category : #initialization }
@@ -206,59 +129,40 @@ WDASceneViewStereoScreenDisplayMode >> initialize [
 ]
 
 { #category : #'multi eye rendering' }
-WDASceneViewStereoScreenDisplayMode >> leftCameraTransform [
+WDASceneViewStereoScreenDisplayMode >> leftEyeTransform [
 	^ WMReversibleAffineTransformF identity
 			translateByX: ipd * -0.5
 ]
 
-{ #category : #'multi eye rendering' }
-WDASceneViewStereoScreenDisplayMode >> leftViewportForCamera: camera [
-	| cameraState |
-	cameraState := WTCameraState new.
-	cameraState
-		projectionMatrix: leftProjectionMatrix.
-	
-	^ WDSGViewport new
-		camera: camera;
-		cameraState: cameraState;
-		renderTarget: leftRenderTarget;
-		resolveRenderTarget: leftResolveRenderTarget;
-		bounds: leftRenderTarget bounds;
-		cameraTransformFunction: [ :ct | ct transformTransform: self leftCameraTransform ];
-		submode: #full
+{ #category : #'render targets' }
+WDASceneViewStereoScreenDisplayMode >> leftRenderTargetRequiredExtent [
+	^ view window drawingSurfaceExtent
 ]
 
 { #category : #'rendering process stages' }
-WDASceneViewStereoScreenDisplayMode >> prepareRendering [
+WDASceneViewStereoScreenDisplayMode >> prepareDisplayMode [
+	super prepareDisplayMode.
 	self
-		checkRenderTargets;
 		updateCompositionState;
-		uploadCompositionState;
-		computeProjectionMatrices;
-		updateCameraFrustum.
+		uploadCompositionState.
+]
+
+{ #category : #'rendering process stages' }
+WDASceneViewStereoScreenDisplayMode >> renderSceneViewports [
+	^ view sceneRenderer renderSceneViewportsThenDo: [ :stateTracker |
+		self composeEyesIn: stateTracker
+	]
 ]
 
 { #category : #'multi eye rendering' }
-WDASceneViewStereoScreenDisplayMode >> rightCameraTransform [
+WDASceneViewStereoScreenDisplayMode >> rightEyeTransform [
 	^ WMReversibleAffineTransformF identity
 			translateByX: ipd * 0.5
 ]
 
-{ #category : #'multi eye rendering' }
-WDASceneViewStereoScreenDisplayMode >> rightViewportForCamera: camera [
-	| cameraState |
-	cameraState := WTCameraState new.
-	cameraState
-		projectionMatrix: rightProjectionMatrix.
-	
-	^ WDSGViewport new
-		camera: camera;
-		cameraState: cameraState;
-		renderTarget: rightRenderTarget;
-		resolveRenderTarget: rightResolveRenderTarget;
-		bounds: rightRenderTarget bounds;
-		cameraTransformFunction: [ :ct | ct transformTransform: self rightCameraTransform ];
-		submode: #full
+{ #category : #'render targets' }
+WDASceneViewStereoScreenDisplayMode >> rightRenderTargetRequiredExtent [
+	^ view window drawingSurfaceExtent
 ]
 
 { #category : #'viewport composition' }
