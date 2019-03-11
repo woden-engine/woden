@@ -1,0 +1,38 @@
+import compute.environment;
+import compute.stage;
+
+uniform(binding = StorageImages.Images, format = rgba8, readonly) sourceImage : image2D;
+uniform(binding = StorageImages.Images + 1, format = rgba8, writeonly) destImage : image2D;
+
+shared localGroupSamples : float4[64][8];
+
+code_block(compute, localSizeX=4, localSizeY=64) main
+{
+    let blockPosition = int2(ComputeStage.workgroupID.xy)*int2(4, 64);
+
+    // Fetch the samples for the local workgroup.
+    {
+        let fetchGridIndex = int2(ComputeStage.localInvocationID.x*2u, ComputeStage.localInvocationID.y);
+        let fetchOffset = fetchGridIndex - int2(2, 0);
+        let fetchPosition = blockPosition + fetchOffset;
+        localGroupSamples[fetchGridIndex.x][fetchGridIndex.y] = imageRead(sourceImage, fetchPosition);
+        localGroupSamples[fetchGridIndex.x + 1][fetchGridIndex.y] = imageRead(sourceImage, fetchPosition + int2(1, 0));
+    }
+
+    // Synchronization point.
+    barrier();
+
+    // Compute the blurred sample.
+    let destPosition = blockPosition + int2(ComputeStage.localInvocationID.xy);
+    let samplePosition = int2(ComputeStage.localInvocationID.xy) + int2(2, 0);
+
+    let blurredSample = (
+        localGroupSamples[samplePosition.x - 2][samplePosition.y]      +
+        localGroupSamples[samplePosition.x - 1][samplePosition.y]*4.0f +
+        localGroupSamples[samplePosition.x    ][samplePosition.y]*6.0f +
+        localGroupSamples[samplePosition.x + 1][samplePosition.y]*4.0f +
+        localGroupSamples[samplePosition.x + 2][samplePosition.y]
+    )*0.0625f;
+
+    imageWrite(destImage, destPosition, blurredSample);
+}
