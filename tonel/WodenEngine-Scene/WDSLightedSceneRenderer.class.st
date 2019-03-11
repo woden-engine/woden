@@ -97,11 +97,11 @@ WDSLightedSceneRenderer >> computeScreenSpaceAmbientOcclusionFor: renderingViewp
 		dispatchComputeGlobalGridX: width y: height;
 		
 		"Horizontal blur pass"
-		computeShader: engine resourceCache imageBlurHorizontal5 arguments: renderingViewport ambientOcclusionHorizontalBlurArguments;
+		computeShader: engine resourceCache imageBlurGrayHorizontal5 arguments: renderingViewport ambientOcclusionHorizontalBlurArguments;
 		dispatchComputeGlobalGridX: width y: height;
 		
 		"Vertical blur pass"
-		computeShader: engine resourceCache imageBlurVertical5 arguments: renderingViewport ambientOcclusionVerticalBlurArguments;
+		computeShader: engine resourceCache imageBlurGrayVertical5 arguments: renderingViewport ambientOcclusionVerticalBlurArguments;
 		dispatchComputeGlobalGridX: width y: height.
 		
 	"stateTracker

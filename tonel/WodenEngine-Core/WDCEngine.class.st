@@ -76,7 +76,7 @@ WDCEngine class >> shadowMappingEnabled: aBoolean [
 
 { #category : #preferences }
 WDCEngine class >> ssaoEnabled [
-	^ SSAOEnabled ifNil: [ SSAOEnabled := true ]
+	^ SSAOEnabled ifNil: [ SSAOEnabled := false ]
 ]
 
 { #category : #preferences }

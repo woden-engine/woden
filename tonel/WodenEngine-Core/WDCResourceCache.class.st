@@ -19,7 +19,9 @@ Class {
 		'imageBlurVertical9',
 		'imageBlurHorizontal9',
 		'imageBlurHorizontal5',
-		'imageBlurVertical5'
+		'imageBlurVertical5',
+		'imageBlurGrayHorizontal5',
+		'imageBlurGrayVertical5'
 	],
 	#classVars : [
 		'ShaderLanguageTargetMap',
@@ -300,6 +302,16 @@ WDCResourceCache >> grayTextureExtent: extent renderWith: aBlock [
 	| data |
 	data := WDCTextureData extent: extent grayRenderWith: aBlock.
 	^ data asTextureFor: engine
+]
+
+{ #category : #'special shaders' }
+WDCResourceCache >> imageBlurGrayHorizontal5 [
+	^ imageBlurGrayHorizontal5 ifNil: [ imageBlurGrayHorizontal5 := self loadComputeShader: 'shaders/image/imageBlurGrayHorizontal5.dastrel' ]
+]
+
+{ #category : #'special shaders' }
+WDCResourceCache >> imageBlurGrayVertical5 [
+	^ imageBlurGrayVertical5 ifNil: [ imageBlurGrayVertical5 := self loadComputeShader: 'shaders/image/imageBlurGrayVertical5.dastrel' ]
 ]
 
 { #category : #'special shaders' }
