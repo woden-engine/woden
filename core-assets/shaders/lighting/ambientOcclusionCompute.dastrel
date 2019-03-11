@@ -18,7 +18,7 @@ uniform(binding=CameraState.ObjectState) CameraState
 
 uniform(binding = ComputeBuffers.DepthBuffer) depthTexture : texture2D;
 uniform(binding = ComputeBuffers.NormalBuffer) normalTexture : texture2D;
-uniform(binding = ComputeBuffers.Destination, format = r8, writeonly) ssaoImage : image2D;
+uniform(binding = ComputeBuffers.Destination, format = r8, restrict, writeonly) ssaoImage : image2D;
 
 constant SamplingDistributionSize : int = 8;
 constant SamplingDistribution : float3[8] = {

@@ -1,22 +1,22 @@
 import compute.environment;
 import compute.stage;
 
-uniform(binding = StorageImages.Images, format = rgba8, restrict, readonly) sourceImage : image2D;
-uniform(binding = StorageImages.Images + 1, format = rgba8, restrict, writeonly) destImage : image2D;
+uniform(binding = StorageImages.Images, format = r8, restrict, readonly) sourceImage : image2D;
+uniform(binding = StorageImages.Images + 1, format = r8, restrict, writeonly) destImage : image2D;
 
-shared localGroupSamples : float4[8][64];
+shared localGroupSamples : float[8][16];
 
-code_block(compute, localSizeX=64, localSizeY=4) main
+code_block(compute, localSizeX=16, localSizeY=4) main
 {
-    let blockPosition = int2(ComputeStage.workgroupID.xy)*int2(64, 4);
+    let blockPosition = int2(ComputeStage.workgroupID.xy)*int2(16, 4);
 
     // Fetch the samples for the local workgroup.
     {
         let fetchGridIndex = int2(ComputeStage.localInvocationID.x, ComputeStage.localInvocationID.y*2u);
         let fetchOffset = fetchGridIndex - int2(0, 2);
         let fetchPosition = blockPosition + fetchOffset;
-        localGroupSamples[fetchGridIndex.x][fetchGridIndex.y] = imageRead(sourceImage, fetchPosition);
-        localGroupSamples[fetchGridIndex.x][fetchGridIndex.y + 1] = imageRead(sourceImage, fetchPosition + int2(0, 1));
+        localGroupSamples[fetchGridIndex.x][fetchGridIndex.y] = imageRead(sourceImage, fetchPosition).r;
+        localGroupSamples[fetchGridIndex.x][fetchGridIndex.y + 1] = imageRead(sourceImage, fetchPosition + int2(0, 1)).r;
     }
 
     // Synchronization point.
@@ -34,5 +34,5 @@ code_block(compute, localSizeX=64, localSizeY=4) main
         localGroupSamples[samplePosition.x][samplePosition.y + 2]
     )*0.0625f;
 
-    imageWrite(destImage, destPosition, blurredSample);
+    imageWrite(destImage, destPosition, float4(blurredSample, 0.0f, 0.0f, 0.0f));
 }
