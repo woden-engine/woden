@@ -1,0 +1,6 @@
+import lighting.depthNormalFragmentOutput;
+
+code_block(fragment) main
+{
+    encodeViewNormalOutput(float3(0.0f, 0.0f, 1.0f));
+}

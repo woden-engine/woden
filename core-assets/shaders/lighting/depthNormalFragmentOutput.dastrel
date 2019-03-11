@@ -1,0 +1,9 @@
+semantic Output
+{
+    out(0) viewNormal: float4;
+}
+
+function encodeViewNormalOutput(N: float3) -> void
+{
+    Output.viewNormal = float4(N*0.5f + 0.5f, 1.0f);
+}

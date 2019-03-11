@@ -36,6 +36,7 @@ WDSForwardSceneRendererIntermediateTextures >> createMainRenderTargets [
 		sampleCount: sampleCount;
 		createFramebuffersWithColorAttachments: {normalTexture} depthStencilAttachment: depthStencilTexture.
 	gbufferRenderPass := gbufferRenderTarget validMainRenderPass.
+	gbufferRenderPass setColorClearValue: 0 value: (Color r: 0.5 g: 0.5 b: 1.0) asAGPUColor4f.
 	
 	sceneRenderTarget := (WDCRenderTarget for: engine extent: extent)
 		colorAttachmentFormats: {AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB};

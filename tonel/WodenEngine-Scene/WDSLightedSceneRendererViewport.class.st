@@ -12,7 +12,9 @@ Class {
 		'globalLightingStateShaderBindings',
 		'ambientOcclusionComputeShaderBindings',
 		'gbufferRenderPass',
-		'sceneRenderPass'
+		'sceneRenderPass',
+		'ambientOcclusionHorizontalBlurArguments',
+		'ambientOcclusionVerticalBlurArguments'
 	],
 	#category : #'WodenEngine-Scene-Rendering'
 }
@@ -33,6 +35,16 @@ WDSLightedSceneRendererViewport >> ambientOcclusionComputeShaderBindings: anObje
 ]
 
 { #category : #accessing }
+WDSLightedSceneRendererViewport >> ambientOcclusionHorizontalBlurArguments [
+	^ ambientOcclusionHorizontalBlurArguments
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> ambientOcclusionHorizontalBlurArguments: anObject [
+	ambientOcclusionHorizontalBlurArguments := anObject
+]
+
+{ #category : #accessing }
 WDSLightedSceneRendererViewport >> ambientOcclusionTexture [
 	^ ambientOcclusionTexture
 ]
@@ -40,6 +52,16 @@ WDSLightedSceneRendererViewport >> ambientOcclusionTexture [
 { #category : #accessing }
 WDSLightedSceneRendererViewport >> ambientOcclusionTexture: anObject [
 	ambientOcclusionTexture := anObject
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> ambientOcclusionVerticalBlurArguments [
+	^ ambientOcclusionVerticalBlurArguments
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> ambientOcclusionVerticalBlurArguments: anObject [
+	ambientOcclusionVerticalBlurArguments := anObject
 ]
 
 { #category : #accessing }

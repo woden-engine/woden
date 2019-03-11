@@ -88,8 +88,8 @@ WDCGraphicsPipelineStateDescription >> buildForDevice: device [
 
 	"Shaders"
 	shaderSignature ifNotNil: [ builder setShaderSignature: shaderSignature handle ].
-	vertexShader ifNotNil: [ builder attachShader: vertexShader validHandle ].
-	fragmentShader ifNotNil: [ builder attachShader: fragmentShader validHandle ].
+	vertexShader ifNotNil: [ vertexShader attachToPipelineBuilder: builder].
+	fragmentShader ifNotNil: [ fragmentShader attachToPipelineBuilder: builder ].
 	vertexLayout ifNotNil: [ builder setVertexLayout: vertexLayout validHandle ].
 
 	"Primitives"

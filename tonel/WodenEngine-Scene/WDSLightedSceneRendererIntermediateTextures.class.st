@@ -7,7 +7,9 @@ Class {
 		'ambientOcclusionBlurIntermediateTexture',
 		'depthStencilTexture',
 		'sceneColorTexture',
-		'normalTexture'
+		'normalTexture',
+		'ambientOcclusionHorizontalBlurArguments',
+		'ambientOcclusionVerticalBlurArguments'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -41,7 +43,9 @@ WDSLightedSceneRendererIntermediateTextures >> applyToRenderingViewport: renderi
 	engine ssaoEnabled ifTrue: [ 
 		renderingViewport
 			ambientOcclusionTexture: ambientOcclusionTexture;
-			ambientOcclusionComputeShaderBindings: ambientOcclusionComputeShaderBindings
+			ambientOcclusionComputeShaderBindings: ambientOcclusionComputeShaderBindings;
+			ambientOcclusionHorizontalBlurArguments: ambientOcclusionHorizontalBlurArguments;
+			ambientOcclusionVerticalBlurArguments: ambientOcclusionVerticalBlurArguments
 	] ifFalse: [ 
 		renderingViewport
 			ambientOcclusionTexture: engine resourceCache whiteTexture
@@ -105,4 +109,12 @@ WDSLightedSceneRendererIntermediateTextures >> createSSAORenderTargets [
 			bind: 1 texture: normalTexture;
 			bind: 2 storageImage: ambientOcclusionTexture;
 			yourself.
+			
+	ambientOcclusionHorizontalBlurArguments := engine newGenericComputeShaderArguments
+		storageImages: { ambientOcclusionTexture . ambientOcclusionBlurIntermediateTexture };
+		yourself.
+	ambientOcclusionVerticalBlurArguments := engine newGenericComputeShaderArguments
+		storageImages: { ambientOcclusionBlurIntermediateTexture . ambientOcclusionTexture };
+		yourself.
+
 ]

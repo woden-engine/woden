@@ -42,7 +42,7 @@ WDCComputePipelineStateDescription >> buildForDevice: device [
 
 	"Shaders"
 	shaderSignature ifNotNil: [ builder setShaderSignature: shaderSignature handle ].
-	computeShader ifNotNil: [ builder attachShader: computeShader validHandle ].
+	computeShader ifNotNil: [ computeShader attachToPipelineBuilder: builder ].
 	
 	result := builder build.
 	result ifNil: [

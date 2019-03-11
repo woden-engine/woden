@@ -94,7 +94,16 @@ WDSLightedSceneRenderer >> computeScreenSpaceAmbientOcclusionFor: renderingViewp
 		useComputeShaderResources: aoShaderShaderSignature defaultSamplers;
 		useComputeShaderResources: renderingViewport cameraStateShaderBindings;
 		useComputeShaderResources: renderingViewport ambientOcclusionComputeShaderBindings;
+		dispatchComputeGlobalGridX: width y: height;
+		
+		"Horizontal blur pass"
+		computeShader: engine resourceCache imageBlurHorizontal5 arguments: renderingViewport ambientOcclusionHorizontalBlurArguments;
+		dispatchComputeGlobalGridX: width y: height;
+		
+		"Vertical blur pass"
+		computeShader: engine resourceCache imageBlurVertical5 arguments: renderingViewport ambientOcclusionVerticalBlurArguments;
 		dispatchComputeGlobalGridX: width y: height.
+		
 	"stateTracker
 		computeShader: (renderingViewport sampleCount <= 1
 			ifTrue: [self ambientOcclusionComputeShader]

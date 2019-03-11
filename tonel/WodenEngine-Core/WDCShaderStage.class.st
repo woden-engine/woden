@@ -24,6 +24,11 @@ WDCShaderStage >> addDependantPipelineState: state [
 	]
 ]
 
+{ #category : #'as yet unclassified' }
+WDCShaderStage >> attachToPipelineBuilder: builder [
+	builder attachShader: self validHandle
+]
+
 { #category : #compiling }
 WDCShaderStage >> compile [
 	| newHandle oldHandle |

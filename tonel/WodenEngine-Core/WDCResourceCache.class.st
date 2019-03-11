@@ -15,7 +15,11 @@ Class {
 		'poolsMutex',
 		'pendingResourceReloadActions',
 		'screenQuadVertexShader',
-		'alwaysFrontDepthNormalFragmentShader'
+		'alwaysFrontDepthNormalFragmentShader',
+		'imageBlurVertical9',
+		'imageBlurHorizontal9',
+		'imageBlurHorizontal5',
+		'imageBlurVertical5'
 	],
 	#classVars : [
 		'ShaderLanguageTargetMap',
@@ -100,7 +104,7 @@ WDCResourceCache >> allMaterialNames [
 	^ result
 ]
 
-{ #category : #accessing }
+{ #category : #'special shaders' }
 WDCResourceCache >> alwaysFrontDepthNormalFragmentShader [
 	^ alwaysFrontDepthNormalFragmentShader ifNil: [ alwaysFrontDepthNormalFragmentShader := self loadFragmentShader: 'shaders/lighting/alwaysFrontDepthNormalFragment.dastrel' ]
 ]
@@ -296,6 +300,26 @@ WDCResourceCache >> grayTextureExtent: extent renderWith: aBlock [
 	| data |
 	data := WDCTextureData extent: extent grayRenderWith: aBlock.
 	^ data asTextureFor: engine
+]
+
+{ #category : #'special shaders' }
+WDCResourceCache >> imageBlurHorizontal5 [
+	^ imageBlurHorizontal5 ifNil: [ imageBlurHorizontal5 := self loadComputeShader: 'shaders/image/imageBlurHorizontal5.dastrel' ]
+]
+
+{ #category : #'special shaders' }
+WDCResourceCache >> imageBlurHorizontal9 [
+	^ imageBlurHorizontal9 ifNil: [ imageBlurHorizontal9 := self loadComputeShader: 'shaders/image/imageBlurHorizontal9.dastrel' ]
+]
+
+{ #category : #'special shaders' }
+WDCResourceCache >> imageBlurVertical5 [
+	^ imageBlurVertical5 ifNil: [ imageBlurVertical5 := self loadComputeShader: 'shaders/image/imageBlurVertical5.dastrel' ]
+]
+
+{ #category : #'special shaders' }
+WDCResourceCache >> imageBlurVertical9 [
+	^ imageBlurVertical9 ifNil: [ imageBlurVertical9 := self loadComputeShader: 'shaders/image/imageBlurVertical9.dastrel' ]
 ]
 
 { #category : #initialization }
@@ -622,7 +646,7 @@ WDCResourceCache >> resourceAt: name ifAbsentPut: aBlock [
 	^ result
 ]
 
-{ #category : #accessing }
+{ #category : #'special shaders' }
 WDCResourceCache >> screenQuadVertexShader [
 	^ screenQuadVertexShader ifNil: [ screenQuadVertexShader := self loadVertexShader: 'shaders/vertex/screenQuad.dastrel' ]
 ]

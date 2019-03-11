@@ -1,0 +1,11 @@
+import shaderSignature;
+import environment;
+import fragment;
+import material;
+import lighting;
+import lighting.depthNormalFragmentOutput;
+
+code_block(fragment) main
+{
+    encodeViewNormalOutput(normalize(FragmentInput.normal));
+}
