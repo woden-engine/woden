@@ -13,6 +13,14 @@ Class {
 }
 
 { #category : #rendering }
+WDCFlatColorMaterial >> activateDepthNormalOn: stateTracker [
+	stateTracker
+		vertexShader: self vertexShader;
+		fragmentShader: engine resourceCache alwaysFrontDepthNormalFragmentShader.
+	^ true
+]
+
+{ #category : #rendering }
 WDCFlatColorMaterial >> activateDepthOnlyOn: stateTracker [
 	stateTracker
 		vertexShader: self vertexShader;

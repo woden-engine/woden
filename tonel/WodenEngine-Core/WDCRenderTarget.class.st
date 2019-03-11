@@ -18,7 +18,7 @@ WDCRenderTarget class >> for: anEngine extent: anExtent [
 
 { #category : #initialization }
 WDCRenderTarget >> createFramebuffer [
-	| colorBufferFags description colorAttachments depthStencilView depthStencilAttachment depthStencilFlags depthStencilDesc colorViews destPointer handle |
+	| colorBufferFags description colorAttachments depthStencilView depthStencilAttachment depthStencilFlags depthStencilDesc colorViews |
 	colorBufferFags := AGPU_TEXTURE_FLAG_RENDER_TARGET.
 	self gpuOnly ifTrue: [
 		colorBufferFags := colorBufferFags | AGPU_TEXTURE_FLAG_RENDERBUFFER_ONLY
@@ -37,10 +37,10 @@ WDCRenderTarget >> createFramebuffer [
 		flags: colorBufferFags;
 		sample_count: sampleCount.
 		
-		(WDCTexture for: engine handle: (engine device createTexture: description))
-			description: description;
-			yourself
+		engine createTexture: description
 	].
+
+	colorViews := colorAttachments collect: #fullTextureView.
 
 	depthStencilView := nil.
 	depthStencilAttachment := nil.
@@ -59,52 +59,39 @@ WDCRenderTarget >> createFramebuffer [
 			flags: depthStencilFlags;
 			sample_count: sampleCount.
 			
-		depthStencilAttachment := (WDCTexture for: engine handle: (engine device createTexture: depthStencilDesc))
-			description: depthStencilDesc;
+		depthStencilAttachment := (engine createTexture: depthStencilDesc)
+			checkSession;
 			yourself.
 
-		depthStencilView := AGPUTextureViewDescription new.
-		depthStencilAttachment handle getFullViewDescription: depthStencilView.
+		depthStencilView := depthStencilAttachment fullTextureView.
 	].
 
-	colorAttachments ifNotEmpty: [ 
-		colorViews := ExternalAddress allocate: colorAttachments size * AGPUTextureViewDescription structureSize.
-		[ 
-			destPointer := colorViews.
-			colorAttachments do: [ :att |
-				att handle getFullViewDescription: (AGPUTextureViewDescription fromHandle: destPointer).
-				destPointer := destPointer + AGPUTextureViewDescription structureSize
-			].
-		
-			handle := engine device createFrameBuffer: width height: height colorCount: colorAttachments size colorViews: (AGPUTextureViewDescription fromHandle: colorViews) depthStencilView: depthStencilView.
-		] ensure: [ colorViews free ]
-	] ifEmpty: [ 
-		handle := engine device createFrameBuffer: width height: height colorCount: 0 colorViews: nil depthStencilView: depthStencilView.
-	].
-
-	^ WDCRenderTargetFramebuffer new
-		engine: engine;
-		colorAttachments: colorAttachments;
-		depthStencilAttachment: depthStencilAttachment;
-		width: width;
-		height: height;
-		sampleCount: sampleCount;
-		handle: handle;
-		yourself
+	^ self createFramebufferWithColorAttachments: colorAttachments views: colorViews depthStencilAttachment: depthStencilAttachment view: depthStencilView
 ]
 
 { #category : #initialization }
 WDCRenderTarget >> createFramebufferWithColorAttachments: colorAttachments views: colorViews depthStencilAttachment: depthStencilAttachment view: depthStencilView [
 
-	| handle colorCount colorViewBuffer |
+	| handle colorCount colorViewBuffer structureSize destIndex |
 	colorCount := 0.
 	colorViewBuffer := nil.
+	
+	self assert: colorAttachments size = colorViews size.
 	
 	colorAttachments ifNotEmpty: [
 		colorAttachments size = 1 ifTrue: [ 
 			colorCount := 1.
 			colorViewBuffer := colorViews first.
-		] ifFalse: [ 
+		] ifFalse: [
+			structureSize := AGPUTextureViewDescription structureSize.
+			colorViewBuffer := ByteArray new: colorAttachments size * structureSize.
+			destIndex := 1.
+			colorViews doWithIndex: [ :view :index |
+				view getHandle.
+				self halt.
+				"TODO: Memcpy colorViewBuffer + destIndex, view, structureSize"
+				destIndex := destIndex + structureSize
+			].
 			self halt
 		]
 	].
@@ -136,6 +123,12 @@ WDCRenderTarget >> createFramebuffers: aCount [
 			initializeExtraStateFrom: (oldFramebuffers ifNotNil: [oldFramebuffers at: i]);
 		yourself
 	].
+
+]
+
+{ #category : #accessing }
+WDCRenderTarget >> createFramebuffersWithColorAttachments: colorAttachments depthStencilAttachment: depthStencilAttachment [
+	^ self createFramebuffersWithColorAttachments: colorAttachments views: (colorAttachments collect: #fullTextureView) depthStencilAttachment: depthStencilAttachment view: (depthStencilAttachment ifNotNil: #fullTextureView)
 
 ]
 

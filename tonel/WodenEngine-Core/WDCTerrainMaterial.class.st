@@ -15,10 +15,26 @@ Class {
 		'heightMapSize',
 		'solidFragmentShader',
 		'wireFragmentShader',
-		'isolinesFragmentShader'
+		'isolinesFragmentShader',
+		'depthNormalFragmentShader'
 	],
 	#category : #'WodenEngine-Core-Material'
 }
+
+{ #category : #rendering }
+WDCTerrainMaterial >> activateDepthNormalOn: stateTracker [
+	self validateCache.
+	stateTracker
+		vertexShader: self vertexShader;
+		fragmentShader: self depthNormalFragmentShader.
+
+	"For the height map"		
+	resourceBinding ifNotNil: [ 
+		stateTracker useShaderResources: resourceBinding.
+	].
+
+	^ true
+]
 
 { #category : #rendering }
 WDCTerrainMaterial >> activateDepthOnlyOn: stateTracker [
@@ -120,6 +136,12 @@ WDCTerrainMaterial >> createTerrainMeshForSceneNode: sceneNode [
 		material: self;
 		createClipMapWithLevels: 3 size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
 		mesh
+]
+
+{ #category : #accessing }
+WDCTerrainMaterial >> depthNormalFragmentShader [
+	^ depthNormalFragmentShader ifNil: [ depthNormalFragmentShader := self fetchFragmentShader: 'shaders/surface/terrainDepthNormal.dastrel' ].
+
 ]
 
 { #category : #accessing }

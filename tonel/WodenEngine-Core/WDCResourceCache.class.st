@@ -14,7 +14,8 @@ Class {
 		'streamingStorageBufferPools',
 		'poolsMutex',
 		'pendingResourceReloadActions',
-		'screenQuadVertexShader'
+		'screenQuadVertexShader',
+		'alwaysFrontDepthNormalFragmentShader'
 	],
 	#classVars : [
 		'ShaderLanguageTargetMap',
@@ -97,6 +98,11 @@ WDCResourceCache >> allMaterialNames [
 	].
 
 	^ result
+]
+
+{ #category : #accessing }
+WDCResourceCache >> alwaysFrontDepthNormalFragmentShader [
+	^ alwaysFrontDepthNormalFragmentShader ifNil: [ alwaysFrontDepthNormalFragmentShader := self loadFragmentShader: 'shaders/lighting/alwaysFrontDepthNormalFragment.dastrel' ]
 ]
 
 { #category : #'resource loading' }

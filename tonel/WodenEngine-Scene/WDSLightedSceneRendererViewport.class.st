@@ -6,10 +6,13 @@ Class {
 		'sortedLights',
 		'selectedLights',
 		'lightRenderingStates',
-		'renderTarget',
+		'gbufferRenderTarget',
+		'sceneRenderTarget',
 		'ambientOcclusionTexture',
 		'globalLightingStateShaderBindings',
-		'ambientOcclusionComputeShaderBindings'
+		'ambientOcclusionComputeShaderBindings',
+		'gbufferRenderPass',
+		'sceneRenderPass'
 	],
 	#category : #'WodenEngine-Scene-Rendering'
 }
@@ -37,6 +40,26 @@ WDSLightedSceneRendererViewport >> ambientOcclusionTexture [
 { #category : #accessing }
 WDSLightedSceneRendererViewport >> ambientOcclusionTexture: anObject [
 	ambientOcclusionTexture := anObject
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> gbufferRenderPass [
+	^ gbufferRenderPass
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> gbufferRenderPass: anObject [
+	gbufferRenderPass := anObject
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> gbufferRenderTarget [
+	^ gbufferRenderTarget
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> gbufferRenderTarget: anObject [
+	gbufferRenderTarget := anObject
 ]
 
 { #category : #accessing }
@@ -76,13 +99,23 @@ WDSLightedSceneRendererViewport >> lights: anObject [
 ]
 
 { #category : #accessing }
-WDSLightedSceneRendererViewport >> renderTarget [
-	^ renderTarget
+WDSLightedSceneRendererViewport >> sceneRenderPass [
+	^ sceneRenderPass
 ]
 
 { #category : #accessing }
-WDSLightedSceneRendererViewport >> renderTarget: anObject [
-	renderTarget := anObject
+WDSLightedSceneRendererViewport >> sceneRenderPass: anObject [
+	sceneRenderPass := anObject
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> sceneRenderTarget [
+	^ sceneRenderTarget
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> sceneRenderTarget: anObject [
+	sceneRenderTarget := anObject
 ]
 
 { #category : #accessing }
@@ -119,4 +152,16 @@ WDSLightedSceneRendererViewport >> sortedLights [
 { #category : #accessing }
 WDSLightedSceneRendererViewport >> sortedLights: anObject [
 	sortedLights := anObject
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> validGBufferRenderPass [
+	^ gbufferRenderPass
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> validSceneRenderPass [
+	self flag: 'TODO: Check this MT correctness.'.
+	sceneRenderPass setColorClearValue: 0 value: self scene backgroundColor asAGPUColor4f.
+	^ sceneRenderPass
 ]

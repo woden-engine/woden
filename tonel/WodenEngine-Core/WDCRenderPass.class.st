@@ -72,7 +72,37 @@ WDCRenderPass >> initialize [
 	colorAttachments := #().
 ]
 
+{ #category : #initialization }
+WDCRenderPass >> setColor: colorAttachmentIndex attachmentBeginAction: beginAction endAction: endAction [
+	(colorAttachments at: colorAttachmentIndex)
+			begin_action: beginAction;
+			end_action: endAction.
+
+	self invalidateHandle
+]
+
+{ #category : #initialization }
+WDCRenderPass >> setColorAttachmentBeginAction: beginAction endAction: endAction [
+	colorAttachments do: [ :attachment |
+		attachment
+			begin_action: beginAction;
+			end_action: endAction
+	].
+
+	self invalidateHandle
+]
+
 { #category : #'as yet unclassified' }
 WDCRenderPass >> setColorClearValue: attachment_index value: value [
 	self hasValidHandle ifTrue: [ self validHandle setColorClearValueFrom: attachment_index value: value ].
+]
+
+{ #category : #initialization }
+WDCRenderPass >> setDepthStencilBeginAction: beginAction endAction: endAction [
+	depthStencilAttachment ifNotNil: [ 
+		depthStencilAttachment
+			begin_action: beginAction;
+			end_action: endAction
+	].
+	self invalidateHandle
 ]

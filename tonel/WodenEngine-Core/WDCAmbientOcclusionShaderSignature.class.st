@@ -18,7 +18,7 @@ WDCAmbientOcclusionShaderSignature class >> signatureSpec: spec [
 		bank: #Samplers with: [ :bank |
 			bank
 				maxBindings: 10;
-				sampler: #Samplers count: 1
+				sampler: #Samplers count: 2
 		];
 		bank: #CameraState with: [ :bank |
 			bank
@@ -29,6 +29,7 @@ WDCAmbientOcclusionShaderSignature class >> signatureSpec: spec [
 			bank
 				maxBindings: 1000;
 				texture: #DepthBuffer count: 1;
+				texture: #NormalBuffer count: 1;
 				storageImage: #Destination count: 1
 		];
 		yourself
@@ -40,7 +41,7 @@ WDCAmbientOcclusionShaderSignature >> createHandleForDevice: device [
 
 		"Samplers"
 		beginBindingBank: 10;
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLER bindingPointCount: 1; "Samplers"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLER bindingPointCount: 2; "Samplers"
 
 		"CameraState"
 		beginBindingBank: 1000;
@@ -49,6 +50,7 @@ WDCAmbientOcclusionShaderSignature >> createHandleForDevice: device [
 		"ComputeBuffers"
 		beginBindingBank: 1000;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "DepthBuffer"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "NormalBuffer"
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_STORAGE_IMAGE bindingPointCount: 1; "Destination"
 
 		build
@@ -72,6 +74,18 @@ WDCAmbientOcclusionShaderSignature >> defaultSamplers [
 	bindings := self newSamplers.
 	bindings
 		createSampler: 0 description: samplerDesc.
+
+	"Normal sample. Use nearest to preserve sharp corners."
+	samplerDesc := AGPUSamplerDescription new
+		filter: AGPU_FILTER_MIN_LINEAR_MAG_LINEAR_MIPMAP_NEAREST;
+		address_u: AGPU_TEXTURE_ADDRESS_MODE_CLAMP;
+		address_v: AGPU_TEXTURE_ADDRESS_MODE_CLAMP;
+		address_w: AGPU_TEXTURE_ADDRESS_MODE_CLAMP;
+		max_lod: 10000.0;
+		maxanisotropy: 1;
+		yourself.
+	bindings
+		createSampler: 1 description: samplerDesc.
 		
 	defaultSamplersSession := Smalltalk session.
 	^ defaultSamplers := bindings
@@ -84,10 +98,10 @@ WDCAmbientOcclusionShaderSignature >> newCameraState [
 
 { #category : #'generated shader signature methods' }
 WDCAmbientOcclusionShaderSignature >> newComputeBuffers [
-	^ engine createShaderSignature: self resourceBinding: 2 elements: 2
+	^ engine createShaderSignature: self resourceBinding: 2 elements: 3
 ]
 
 { #category : #'generated shader signature methods' }
 WDCAmbientOcclusionShaderSignature >> newSamplers [
-	^ engine createShaderSignature: self resourceBinding: 0 elements: 1
+	^ engine createShaderSignature: self resourceBinding: 0 elements: 2
 ]

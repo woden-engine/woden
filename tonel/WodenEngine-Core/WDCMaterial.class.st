@@ -21,6 +21,11 @@ WDCMaterial class >> isMaterialClass [
 ]
 
 { #category : #rendering }
+WDCMaterial >> activateDepthNormalOn: stateTracker [
+	^ false
+]
+
+{ #category : #rendering }
 WDCMaterial >> activateDepthOnlyOn: stateTracker [
 	^ false
 ]

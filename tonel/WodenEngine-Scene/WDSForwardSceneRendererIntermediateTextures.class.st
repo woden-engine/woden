@@ -2,7 +2,10 @@ Class {
 	#name : #WDSForwardSceneRendererIntermediateTextures,
 	#superclass : #WDSLightedSceneRendererIntermediateTextures,
 	#instVars : [
-		'sceneRenderTarget'
+		'sceneRenderTarget',
+		'gbufferRenderTarget',
+		'gbufferRenderPass',
+		'sceneRenderPass'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -13,21 +16,40 @@ Class {
 { #category : #'as yet unclassified' }
 WDSForwardSceneRendererIntermediateTextures >> applyToRenderingViewport: renderingViewport [
 	super applyToRenderingViewport: renderingViewport.
-	renderingViewport renderTarget: sceneRenderTarget
+	renderingViewport
+		gbufferRenderTarget: gbufferRenderTarget;
+		gbufferRenderPass: gbufferRenderPass;
+		sceneRenderTarget: sceneRenderTarget;
+		sceneRenderPass: sceneRenderPass
 ]
 
 { #category : #'multi eye rendering' }
-WDSForwardSceneRendererIntermediateTextures >> createRenderTargets [
-	super createRenderTargets.
+WDSForwardSceneRendererIntermediateTextures >> createMainRenderTargets [
+	super createMainRenderTargets.
 	
-	sceneRenderTarget := WDCRenderTarget for: engine extent: extent.
-	sceneRenderTarget
+	gbufferRenderTarget := (WDCRenderTarget for: engine extent: extent)
+		colorAttachmentFormats: {AGPU_TEXTURE_FORMAT_R10G10B10A2_UNORM};
+		depthStencilFormat: sceneRenderer depthStencilFormat;
 		hasDepth: true;
 		hasStencil: sceneRenderer isStencilRequired;
 		isDepthReaded: true;
 		sampleCount: sampleCount;
-		createFramebuffers.
+		createFramebuffersWithColorAttachments: {normalTexture} depthStencilAttachment: depthStencilTexture.
+	gbufferRenderPass := gbufferRenderTarget validMainRenderPass.
+	
+	sceneRenderTarget := (WDCRenderTarget for: engine extent: extent)
+		colorAttachmentFormats: {AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB};
+		depthStencilFormat: sceneRenderer depthStencilFormat;
+		hasDepth: true;
+		hasStencil: sceneRenderer isStencilRequired;
+		isDepthReaded: true;
+		sampleCount: sampleCount;
+		createFramebuffersWithColorAttachments: { sceneColorTexture } depthStencilAttachment: depthStencilTexture.
 		
-	ambientOcclusionComputeShaderBindings
-		bind: 0 texture: sceneRenderTarget currentFramebuffer depthStencilAttachment
+	sceneRenderPass := sceneRenderTarget createRenderPassDescription
+		setColorAttachmentBeginAction: AGPU_ATTACHMENT_CLEAR endAction: AGPU_ATTACHMENT_KEEP;
+		setDepthStencilBeginAction: AGPU_ATTACHMENT_KEEP endAction: AGPU_ATTACHMENT_KEEP;
+		checkSession;
+		yourself
+
 ]

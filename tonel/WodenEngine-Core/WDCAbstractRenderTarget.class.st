@@ -12,8 +12,7 @@ Class {
 		'colorAttachmentFormats',
 		'depthStencilFormat',
 		'sampleCount',
-		'mainRenderPass',
-		'mainContinueRenderPass'
+		'mainRenderPass'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -36,8 +35,13 @@ WDCAbstractRenderTarget >> colorAttachmentFormats: anArrayOfFormats [
 	colorAttachmentFormats := anArrayOfFormats
 ]
 
+{ #category : #accessing }
+WDCAbstractRenderTarget >> createFramebuffers [
+	self subclassResponsibility
+]
+
 { #category : #'render pass creation' }
-WDCAbstractRenderTarget >> createContinueRenderPass [
+WDCAbstractRenderTarget >> createRenderPassDescription [
 	| passColorAttachments passDepthStencilAttachment |
 	passColorAttachments := self colorAttachmentFormats collectWithIndex: [ :format :index |
 		AGPURenderpassColorAttachmentDescription new
@@ -61,13 +65,7 @@ WDCAbstractRenderTarget >> createContinueRenderPass [
 	^ (WDCRenderPass for: engine)
 		colorAttachments: passColorAttachments;
 		depthStencilAttachment: passDepthStencilAttachment;
-		checkSession;
 		yourself
-]
-
-{ #category : #accessing }
-WDCAbstractRenderTarget >> createFramebuffers [
-	self subclassResponsibility
 ]
 
 { #category : #'render pass creation' }
@@ -262,11 +260,6 @@ WDCAbstractRenderTarget >> sampleCount [
 { #category : #accessing }
 WDCAbstractRenderTarget >> sampleCount: aSampleCount [
 	sampleCount := aSampleCount
-]
-
-{ #category : #accessing }
-WDCAbstractRenderTarget >> validMainContinueRenderPass [
-	^ mainContinueRenderPass ifNil: [ mainContinueRenderPass := self createContinueRenderPass ].
 ]
 
 { #category : #accessing }

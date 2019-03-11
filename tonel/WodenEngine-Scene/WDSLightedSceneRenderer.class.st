@@ -160,9 +160,11 @@ WDSLightedSceneRenderer >> debugRenderNextShadowMapViewport [
 
 ]
 
-{ #category : #rendering }
-WDSLightedSceneRenderer >> depthOnlyRenderMode [
-	^ WDCStateTrackerDepthOnlyRenderMode uniqueInstance
+{ #category : #testing }
+WDSLightedSceneRenderer >> depthStencilFormat [
+	^ self isStencilRequired
+		ifTrue: [ engine preferredDepthStencilFormat ]
+		ifFalse: [ engine preferredDepthFormat ]
 ]
 
 { #category : #'debug rendering' }
@@ -177,6 +179,11 @@ WDSLightedSceneRenderer >> drawDebugRenderTargetOnBabylonCanvas: canvas [
 WDSLightedSceneRenderer >> endPreparingRendering [
 	super endPreparingRendering.
 	self prepareShadowMapRendering
+]
+
+{ #category : #rendering }
+WDSLightedSceneRenderer >> gbufferRenderMode [
+	^ WDCStateTrackerDepthNormalRenderMode uniqueInstance
 ]
 
 { #category : #initialization }
@@ -245,20 +252,15 @@ WDSLightedSceneRenderer >> renderShadowMaps [
 
 { #category : #rendering }
 WDSLightedSceneRenderer >> renderViewport: renderingViewport index: viewportIndex [
-	| renderTarget resolveTarget renderPass viewport continueRenderPass |
+	| resolveTarget viewport |
 	activeDebugRenderingViewport := renderingViewport.
 	viewport := renderingViewport viewport.
-	renderTarget := renderingViewport renderTarget.
 	resolveTarget := viewport resolveRenderTarget.
 
-	renderPass := renderTarget validMainRenderPass.
-	continueRenderPass := renderTarget validMainContinueRenderPass.
-	renderPass setColorClearValue: 0 value: renderingViewport scene backgroundColor asAGPUColor4f.
-	
-	"First pass: depth only rendering."
-	self setupStateTrackerForRenderMode: self depthOnlyRenderMode.
+	"First pass: g-buffer rendering. Normal and depth-only rendering."
+	self setupStateTrackerForRenderMode: self gbufferRenderMode.
 	stateTracker
-		beginRenderPass: renderPass renderTarget: renderTarget bounds: viewport bounds.
+		beginRenderPass: renderingViewport validGBufferRenderPass renderTarget: renderingViewport gbufferRenderTarget bounds: viewport bounds.
 	self
 		setupRenderingViewportStates: renderingViewport;
 		renderViewportVisibleObjects: renderingViewport.
@@ -268,10 +270,10 @@ WDSLightedSceneRenderer >> renderViewport: renderingViewport index: viewportInde
 		self computeScreenSpaceAmbientOcclusionFor: renderingViewport.
 	].
 
-	"Second pass: rendering of the remaining objects."	
+	"Second pass: main scene rendering"
 	self setupStateTracker.
 	stateTracker
-		beginRenderPass: renderPass renderTarget: renderTarget bounds: viewport bounds.
+		beginRenderPass: renderingViewport validSceneRenderPass renderTarget: renderingViewport sceneRenderTarget bounds: viewport bounds.
 	self
 		setupRenderingViewportStates: renderingViewport;
 		renderViewportVisibleObjects: renderingViewport.
@@ -285,8 +287,8 @@ WDSLightedSceneRenderer >> renderViewport: renderingViewport index: viewportInde
 	stateTracker endRenderPass.
 		
 	"Resolve the target"
-	renderTarget ~~ resolveTarget ifTrue: [
-		stateTracker resolveRenderTarget: renderTarget into: resolveTarget
+	renderingViewport sceneRenderTarget ~~ resolveTarget ifTrue: [
+		stateTracker resolveRenderTarget: renderingViewport sceneRenderTarget into: resolveTarget
 	]
 
 ]
@@ -327,8 +329,7 @@ WDSLightedSceneRenderer >> shadowMapBuffer [
 			checkSession;
 			yourself.
 
-	view := AGPUTextureViewDescription new.
-	shadowMapBuffer validHandle getFullViewDescription: view.
+	view := shadowMapBuffer fullTextureView.
 	
 	subresourceRange := view subresource_range.
 	subresourceRange layer_count: 1.

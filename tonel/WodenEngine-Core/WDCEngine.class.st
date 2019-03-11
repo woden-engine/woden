@@ -380,6 +380,20 @@ WDCEngine >> createStreamingUniformBuffer: size initialData: initialData [
 ]
 
 { #category : #'resource building' }
+WDCEngine >> createTexture: description [
+	^ self createTexture: description withData: nil
+]
+
+{ #category : #'resource building' }
+WDCEngine >> createTexture: description withData: textureData [
+	^ (WDCTexture for: self)
+			description: description;
+			data: textureData;
+			checkSession;
+			yourself
+]
+
+{ #category : #'resource building' }
 WDCEngine >> createTextureFromForm: aForm [
 	^ self createTextureFromForm: aForm format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB
 ]
@@ -615,11 +629,6 @@ WDCEngine >> renderingProcessCritical: aBlock [
 { #category : #accessing }
 WDCEngine >> resourceCache [
 	^ resourceCache
-]
-
-{ #category : #accessing }
-WDCEngine >> screenQuadVertexShader [
-	^ resourceCache screenQuadVertexShader
 ]
 
 { #category : #accessing }

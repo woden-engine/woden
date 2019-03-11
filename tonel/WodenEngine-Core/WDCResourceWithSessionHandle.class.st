@@ -72,6 +72,12 @@ WDCResourceWithSessionHandle >> hasValidHandle [
 	^ handle isNotNil and: [ session == Smalltalk session ]
 ]
 
+{ #category : #accessing }
+WDCResourceWithSessionHandle >> invalidateHandle [
+	handle := nil.
+	session := nil
+]
+
 { #category : #dependencies }
 WDCResourceWithSessionHandle >> removeResourceDependency: dependency [
 	dependency removeWodenResourceDependant: self

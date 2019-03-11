@@ -82,7 +82,7 @@ WDCTexture >> description: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-WDCTexture >> getFullViewDescription [
+WDCTexture >> fullTextureView [
 	| view |
 	view := AGPUTextureViewDescription new.
 	self validHandle getFullViewDescription: view.

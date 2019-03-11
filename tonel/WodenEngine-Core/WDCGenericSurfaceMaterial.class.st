@@ -12,10 +12,26 @@ Class {
 		'stateUniformBuffer',
 		'isSkinned',
 		'vertexShader',
-		'fragmentShader'
+		'fragmentShader',
+		'depthNormalFragmentShader'
 	],
-	#category : 'WodenEngine-Core-Material'
+	#category : #'WodenEngine-Core-Material'
 }
+
+{ #category : #rendering }
+WDCGenericSurfaceMaterial >> activateDepthNormalOn: stateTracker [
+	self validateCache.
+	stateTracker
+		vertexShader: self vertexShader;
+		fragmentShader: self depthNormalFragmentShader.
+		
+	normalTexture ifNotNil: [ 
+		resourceBinding ifNotNil: [ 
+			stateTracker useShaderResources: resourceBinding.
+		].
+	].
+	^ true
+]
 
 { #category : #rendering }
 WDCGenericSurfaceMaterial >> activateDepthOnlyOn: stateTracker [
@@ -102,6 +118,14 @@ WDCGenericSurfaceMaterial >> concretizeMaterial [
 	normalTexture := engine resourceCache concretizeTexture: normalTexture.
 	fresnelTexture := engine resourceCache concretizeTexture: fresnelTexture.
 	smoothnessTexture := engine resourceCache concretizeTexture: smoothnessTexture.
+]
+
+{ #category : #shaders }
+WDCGenericSurfaceMaterial >> depthNormalFragmentShader [
+	^ depthNormalFragmentShader ifNil: [
+		depthNormalFragmentShader := engine loadFragmentShader: 'shaders/surface/depthNormal.dastrel'.
+	]
+
 ]
 
 { #category : #shaders }

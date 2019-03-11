@@ -54,7 +54,7 @@ WDASceneViewVRDisplayMode >> renderSceneViewports [
 			reset;
 			beginRenderPass: windowTarget validMainRenderPass renderTarget: windowTarget;
 			shaderSignature: self compositionShaderSignature;
-			vertexShader: engine screenQuadVertexShader;
+			vertexShader: engine resourceCache screenQuadVertexShader;
 			fragmentShader: self windowDisplayShader;
 			useShaderResources: self compositionShaderSignature defaultSamplers;
 			useShaderResources: windowDisplayBinding;
