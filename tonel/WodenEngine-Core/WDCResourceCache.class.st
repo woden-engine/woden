@@ -368,16 +368,24 @@ WDCResourceCache >> load3DModel: aFileNameOrReference [
 
 { #category : #shaders }
 WDCResourceCache >> loadComputeShader: aFileNameOrReference [
-	| shaderFile |
-	shaderFile := self resolveResourceFileReference: aFileNameOrReference.
-	^ self resourceAt: shaderFile -> #computeShader ifAbsentPut: [ self performShaderLoading: shaderFile stage: AGPU_COMPUTE_SHADER ].
+	^ self loadComputeShader: aFileNameOrReference entryPoint: #main
+]
+
+{ #category : #shaders }
+WDCResourceCache >> loadComputeShader: aFileNameOrReference entryPoint: entryPointName [
+	^ (self loadShaderLibrary: aFileNameOrReference)
+		getComputeStage: entryPointName
 ]
 
 { #category : #shaders }
 WDCResourceCache >> loadFragmentShader: aFileNameOrReference [
-	| shaderFile |
-	shaderFile := self resolveResourceFileReference: aFileNameOrReference.
-	^ self resourceAt: shaderFile -> #fragmentShader ifAbsentPut: [ self performShaderLoading: shaderFile stage: AGPU_FRAGMENT_SHADER ].
+	^ self loadFragmentShader: aFileNameOrReference entryPoint: #main
+]
+
+{ #category : #shaders }
+WDCResourceCache >> loadFragmentShader: aFileNameOrReference entryPoint: entryPointName [
+	^ (self loadShaderLibrary: aFileNameOrReference)
+		getFragmentStage: entryPointName
 ]
 
 { #category : #shaders }
@@ -418,6 +426,13 @@ WDCResourceCache >> loadSRGBTexture: aFileNameOrReference [
 	| textureFile |
 	textureFile := self resolveResourceFileReferenceWithQuery: aFileNameOrReference.
 	^ self resourceAt: textureFile -> #srgbTexture ifAbsentPut: [ (self loadTextureData: textureFile) asSRGBTextureFor: engine ].
+]
+
+{ #category : #shaders }
+WDCResourceCache >> loadShaderLibrary: aFileNameOrReference [
+	| shaderFile |
+	shaderFile := self resolveResourceFileReference: aFileNameOrReference.
+	^ self resourceAt: shaderFile -> #shaderLibrary ifAbsentPut: [ self performShaderLibraryLoading: shaderFile ].
 ]
 
 { #category : #'resource loading' }
@@ -461,9 +476,13 @@ WDCResourceCache >> loadVertexLayoutFrom: aVertexClass [
 
 { #category : #shaders }
 WDCResourceCache >> loadVertexShader: aFileNameOrReference [
-	| shaderFile |
-	shaderFile := self resolveResourceFileReference: aFileNameOrReference.
-	^ self resourceAt: shaderFile -> #vertexShader ifAbsentPut: [ self performShaderLoading: shaderFile stage: AGPU_VERTEX_SHADER ].
+	^ self loadVertexShader: aFileNameOrReference entryPoint: #main
+]
+
+{ #category : #shaders }
+WDCResourceCache >> loadVertexShader: aFileNameOrReference entryPoint: entryPointName [
+	^ (self loadShaderLibrary: aFileNameOrReference)
+		getVertexStage: entryPointName
 ]
 
 { #category : #private }
@@ -561,21 +580,11 @@ WDCResourceCache >> performMaterialLoading: materialFileReference [
 ]
 
 { #category : #shaders }
-WDCResourceCache >> performShaderLoading: shaderFile stage: stageIdentifier [
-	| source stage |
+WDCResourceCache >> performShaderLibraryLoading: shaderFile [
+	| source |
 	source := self loadLowLevelShaderCode: shaderFile.
+	^ source asShaderLibrary
 
-	stage := WDCShaderStage new
-		engine: engine;
-		stage: stageIdentifier;
-		shaderLanguageTarget: shaderLanguageTarget;
-		source: source;
-		properties: ((source entryPoints at: #main -> (ShaderStageToName at: stageIdentifier)) ifNotNil: #properties);
-		yourself.
-	stage compile.
-	
-	source addStage: stage.
-	^ stage
 ]
 
 { #category : #'pipeline states' }

@@ -8,21 +8,36 @@ Class {
 		'engine',
 		'source',
 		'target',
-		'stages',
+		'libraries',
 		'entryFile',
 		'dependencies',
-		'stagesMutex',
+		'librariesMutex',
 		'entryPoints'
+	],
+	#pools : [
+		'AGPUConstants'
 	],
 	#category : #'WodenEngine-Core-Shaders'
 }
 
-{ #category : #initialization }
-WDCLowLevelShaderSource >> addStage: aWDCShaderStage [
-	stagesMutex critical: [ 
-		stages add: aWDCShaderStage
-	]
+{ #category : #compiling }
+WDCLowLevelShaderSource >> applySourceToShaderHandle: shaderHandle [
+	shaderHandle setShaderSource: AGPU_SHADER_LANGUAGE_SPIR_V sourceText: source sourceTextLength: source size
+]
 
+{ #category : #compiling }
+WDCLowLevelShaderSource >> asShaderLibrary [
+	| library |
+	library := (WDCShaderLibrary for: engine)
+		source: self;
+		checkSession;
+		yourself.
+		
+	librariesMutex critical: [ 
+		libraries add: library
+	].
+
+	^ library
 ]
 
 { #category : #compiling }
@@ -99,8 +114,8 @@ WDCLowLevelShaderSource >> entryPoints: anObject [
 { #category : #initialization }
 WDCLowLevelShaderSource >> initialize [
 	super initialize.
-	stagesMutex := Semaphore forMutualExclusion.
-	stages := IdentitySet new.
+	librariesMutex := Semaphore forMutualExclusion.
+	libraries := WeakSet new.
 ]
 
 { #category : #accessing }
@@ -112,7 +127,7 @@ WDCLowLevelShaderSource >> name [
 WDCLowLevelShaderSource >> reload [
 	engine trace: 'Recompiling shader {1}' format: { entryFile fullName }.
 	self compile.
-	stages do: #reload
+	libraries do: #reload
 ]
 
 { #category : #accessing }
@@ -123,11 +138,6 @@ WDCLowLevelShaderSource >> source [
 { #category : #accessing }
 WDCLowLevelShaderSource >> source: anObject [
 	source := anObject
-]
-
-{ #category : #accessing }
-WDCLowLevelShaderSource >> stages [
-	^ stages
 ]
 
 { #category : #accessing }

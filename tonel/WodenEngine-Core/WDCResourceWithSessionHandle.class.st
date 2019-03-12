@@ -38,6 +38,7 @@ WDCResourceWithSessionHandle >> checkSession [
 		engine checkSession.
 		self buildHandle.
 		session := Smalltalk session.
+		self reloadDependendants
 	]
 ]
 
@@ -76,6 +77,10 @@ WDCResourceWithSessionHandle >> hasValidHandle [
 WDCResourceWithSessionHandle >> invalidateHandle [
 	handle := nil.
 	session := nil
+]
+
+{ #category : #'session management' }
+WDCResourceWithSessionHandle >> reloadDependendants [
 ]
 
 { #category : #dependencies }

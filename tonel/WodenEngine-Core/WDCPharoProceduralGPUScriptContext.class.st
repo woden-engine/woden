@@ -24,21 +24,14 @@ WDCPharoProceduralGPUScriptContext >> compileShader: shaderFileName injectingNod
 { #category : #'as yet unclassified' }
 WDCPharoProceduralGPUScriptContext >> getMainComputeStageFrom: spirvShader engine: engine [
 	| lowLevelShader |
-	spirvShader saveTo: 'generated.spv'.
+	"For debugging: spirvShader saveTo: 'generated.spv'."
 	
 	lowLevelShader := WDCLowLevelShaderSource new
 		entryFile: 'generated shader' asFileReference;
 		source: spirvShader asShaderCode;
 		yourself.
 		
-	^ WDCShaderStage new
-		engine: engine;
-		stage: AGPU_COMPUTE_SHADER;
-		shaderLanguageTarget: AGPU_SHADER_LANGUAGE_SPIR_V;
-		source: lowLevelShader;
-		properties: ((spirvShader entryPoints at: #main -> #compute) ifNotNil: #properties);
-		compile;
-		yourself.
+	^ lowLevelShader asShaderLibrary getComputeStage: #main
 ]
 
 { #category : #'rendering helpers' }
