@@ -1,0 +1,141 @@
+import compute.environment;
+import compute.stage;
+
+uniform(binding = StorageImages.Images, format = r8, restrict, readonly) sourceImage : image2D;
+uniform(binding = StorageImages.Images + 1, format = r8, restrict, writeonly) destImage : image2D;
+
+//=============================================================================
+// Color blur filter
+
+shared horizontalSamples : float4[16][8];
+shared verticalSamples : float4[8][16];
+
+code_block(compute, localSizeX=4, localSizeY=16) horizontal
+{
+    let blockPosition = int2(ComputeStage.workgroupID.xy)*int2(4, 16);
+
+    // Fetch the samples for the local workgroup.
+    {
+        let fetchGridIndex = int2(ComputeStage.localInvocationID.x*2u, ComputeStage.localInvocationID.y);
+        let fetchOffset = fetchGridIndex - int2(2, 0);
+        let fetchPosition = blockPosition + fetchOffset;
+        horizontalSamples[fetchGridIndex.x][fetchGridIndex.y] = imageRead(sourceImage, fetchPosition);
+        horizontalSamples[fetchGridIndex.x + 1][fetchGridIndex.y] = imageRead(sourceImage, fetchPosition + int2(1, 0));
+    }
+
+    // Synchronization point.
+    barrier();
+
+    // Compute the blurred sample.
+    let destPosition = blockPosition + int2(ComputeStage.localInvocationID.xy);
+    let samplePosition = int2(ComputeStage.localInvocationID.xy) + int2(2, 0);
+
+    let blurredSample = (
+        horizontalSamples[samplePosition.x - 2][samplePosition.y]      +
+        horizontalSamples[samplePosition.x - 1][samplePosition.y]*4.0f +
+        horizontalSamples[samplePosition.x    ][samplePosition.y]*6.0f +
+        horizontalSamples[samplePosition.x + 1][samplePosition.y]*4.0f +
+        horizontalSamples[samplePosition.x + 2][samplePosition.y]
+    )*0.0625f;
+
+    imageWrite(destImage, destPosition, blurredSample);
+}
+
+code_block(compute, localSizeX=16, localSizeY=4) vertical
+{
+    let blockPosition = int2(ComputeStage.workgroupID.xy)*int2(16, 4);
+
+    // Fetch the samples for the local workgroup.
+    {
+        let fetchGridIndex = int2(ComputeStage.localInvocationID.x, ComputeStage.localInvocationID.y*2u);
+        let fetchOffset = fetchGridIndex - int2(0, 2);
+        let fetchPosition = blockPosition + fetchOffset;
+        verticalSamples[fetchGridIndex.x][fetchGridIndex.y] = imageRead(sourceImage, fetchPosition);
+        verticalSamples[fetchGridIndex.x][fetchGridIndex.y + 1] = imageRead(sourceImage, fetchPosition + int2(0, 1));
+    }
+
+    // Synchronization point.
+    barrier();
+
+    // Compute the blurred sample.
+    let destPosition = blockPosition + int2(ComputeStage.localInvocationID.xy);
+    let samplePosition = int2(ComputeStage.localInvocationID.xy) + int2(0, 2);
+
+    let blurredSample = (
+        verticalSamples[samplePosition.x][samplePosition.y - 2]      +
+        verticalSamples[samplePosition.x][samplePosition.y - 1]*4.0f +
+        verticalSamples[samplePosition.x][samplePosition.y    ]*6.0f +
+        verticalSamples[samplePosition.x][samplePosition.y + 1]*4.0f +
+        verticalSamples[samplePosition.x][samplePosition.y + 2]
+    )*0.0625f;
+
+    imageWrite(destImage, destPosition, blurredSample);
+}
+
+//=============================================================================
+// Grayscale blur filter
+
+shared grayHorizontalSamples : float[16][8];
+shared grayVerticalSamples : float[8][16];
+
+code_block(compute, localSizeX=4, localSizeY=16) grayHorizontal
+{
+    let blockPosition = int2(ComputeStage.workgroupID.xy)*int2(4, 16);
+
+    // Fetch the samples for the local workgroup.
+    {
+        let fetchGridIndex = int2(ComputeStage.localInvocationID.x*2u, ComputeStage.localInvocationID.y);
+        let fetchOffset = fetchGridIndex - int2(2, 0);
+        let fetchPosition = blockPosition + fetchOffset;
+        grayHorizontalSamples[fetchGridIndex.x][fetchGridIndex.y] = imageRead(sourceImage, fetchPosition).r;
+        grayHorizontalSamples[fetchGridIndex.x + 1][fetchGridIndex.y] = imageRead(sourceImage, fetchPosition + int2(1, 0)).r;
+    }
+
+    // Synchronization point.
+    barrier();
+
+    // Compute the blurred sample.
+    let destPosition = blockPosition + int2(ComputeStage.localInvocationID.xy);
+    let samplePosition = int2(ComputeStage.localInvocationID.xy) + int2(2, 0);
+
+    let blurredSample = (
+        grayHorizontalSamples[samplePosition.x - 2][samplePosition.y]      +
+        grayHorizontalSamples[samplePosition.x - 1][samplePosition.y]*4.0f +
+        grayHorizontalSamples[samplePosition.x    ][samplePosition.y]*6.0f +
+        grayHorizontalSamples[samplePosition.x + 1][samplePosition.y]*4.0f +
+        grayHorizontalSamples[samplePosition.x + 2][samplePosition.y]
+    )*0.0625f;
+
+    imageWrite(destImage, destPosition, float4(blurredSample, 0.0f, 0.0f, 0.0f));
+}
+
+code_block(compute, localSizeX=16, localSizeY=4) grayVertical
+{
+    let blockPosition = int2(ComputeStage.workgroupID.xy)*int2(16, 4);
+
+    // Fetch the samples for the local workgroup.
+    {
+        let fetchGridIndex = int2(ComputeStage.localInvocationID.x, ComputeStage.localInvocationID.y*2u);
+        let fetchOffset = fetchGridIndex - int2(0, 2);
+        let fetchPosition = blockPosition + fetchOffset;
+        grayVerticalSamples[fetchGridIndex.x][fetchGridIndex.y] = imageRead(sourceImage, fetchPosition).r;
+        grayVerticalSamples[fetchGridIndex.x][fetchGridIndex.y + 1] = imageRead(sourceImage, fetchPosition + int2(0, 1)).r;
+    }
+
+    // Synchronization point.
+    barrier();
+
+    // Compute the blurred sample.
+    let destPosition = blockPosition + int2(ComputeStage.localInvocationID.xy);
+    let samplePosition = int2(ComputeStage.localInvocationID.xy) + int2(0, 2);
+
+    let blurredSample = (
+        grayVerticalSamples[samplePosition.x][samplePosition.y - 2]      +
+        grayVerticalSamples[samplePosition.x][samplePosition.y - 1]*4.0f +
+        grayVerticalSamples[samplePosition.x][samplePosition.y    ]*6.0f +
+        grayVerticalSamples[samplePosition.x][samplePosition.y + 1]*4.0f +
+        grayVerticalSamples[samplePosition.x][samplePosition.y + 2]
+    )*0.0625f;
+
+    imageWrite(destImage, destPosition, float4(blurredSample, 0.0f, 0.0f, 0.0f));
+}

@@ -1,0 +1,25 @@
+import fragment.stage;
+import lighting.forwardModel;
+
+code_block forwardLightingOutput
+{
+    in normal: float3;
+    in surfaceNormal: float3;
+    in viewVector: float3;
+    in position: float3;
+    in albedo: float4;
+    in smoothness: float;
+    in fresnel: float3;
+
+    color: FragmentStage.colorOutput0 <== forwardLightingModel
+        albedo: albedo
+        fresnel: fresnel smoothness: smoothness
+        normal: normal surfaceNormal: surfaceNormal viewVector: viewVector position: position;
+}
+
+code_block forwardFlatOutput
+{
+    in color: float4;
+
+    FragmentStage.colorOutput0 = color;
+}

@@ -1,0 +1,66 @@
+import vertex.stage;
+import fragment.stage;
+import rendering.environment;
+import rendering.lightingOutputs;
+
+import vertex.genericLayout;
+
+semantic VertexOutput
+{
+    out(0) color: float4;
+    out(1) position: float3;
+}
+
+semantic FragmentInput
+{
+    in(0) color: float4;
+    in(1) position: float3;
+}
+
+//==============================================================================
+// Color vertex shader
+
+code_block(vertex) vertex
+{
+    using CameraState;
+
+    // Discard invisible objects by pushing away from the clipping cube.
+    if(isCurrentObjectInstanceInvisible())
+    {
+        VertexStage.screenPosition = float4(2.0f, 2.0f, -2.0f, 1.0f);
+        return;
+    }
+
+    // The color.
+    VertexOutput.color = GenericVertexLayout.color*currentObjectInstanceColor();
+
+    // The position.
+    let position4 = transformPositionToView(GenericVertexLayout.position);
+    VertexOutput.position =  position4.xyz;
+    VertexStage.screenPosition = projectionMatrix * position4;
+}
+
+//==============================================================================
+// Flat color
+
+code_block(fragment) flat
+{
+    forwardFlatOutput color: FragmentInput.color;
+}
+
+//==============================================================================
+// Stipple color
+
+function stippleFunction(values: float3) -> float3
+{
+    return sign(cos(values*62.83185307179586f))*0.5f + 0.5f;
+}
+
+code_block(fragment) stipple
+{
+    let stippleFactor = 10.0f;
+    let stipples = stippleFunction(FragmentInput.position * stippleFactor);
+    let alpha = FragmentInput.color.a*stipples.x*stipples.y*stipples.z;
+
+    forwardFlatOutput color: float4(FragmentInput.color.rgb, alpha);
+}

@@ -1,0 +1,232 @@
+import vertex.stage;
+import fragment.stage;
+
+import rendering.shaderSignature;
+import rendering.environment;
+import rendering.lightingOutputs;
+
+import lighting.forwardModel;
+import lighting.functions;
+
+import vertex.genericLayout;
+
+struct WaterHarmonic
+{
+    centerOrDirection: float2;
+    amplitude: float;
+    frequency: float;
+
+    padding: float3;
+    isRadial: int;
+}
+
+uniform(binding=MaterialState.Attributes) MaterialState
+{
+    clipMapPeriod: float2;
+    albedo: float4;
+
+    fresnel: float3;
+    smoothness: float;
+
+    textureScale: float2;
+    textureOffset: float2;
+
+    padding: float3;
+    propagationSpeed: float;
+
+    harmonics: WaterHarmonic[5];
+}
+
+uniform(binding = MaterialState.Textures) albedoTexture : texture2D;
+uniform(binding = MaterialState.Textures + 1) normalTexture : texture2D;
+uniform(binding = MaterialState.Textures + 2) skyTexture : textureCube;
+
+function transformNormalToView(normal: float3) -> float3
+{
+    using CameraState;
+    using ObjectState;
+    using InstanceObjectState;
+
+    return ((float4(normal, 0.0f) * objectState.inverseMatrix) * inverseViewMatrix).xyz;
+}
+
+function evalWaterWaves(position: float2) -> float3
+{
+    using CameraState;
+    using MaterialState;
+
+    // Add the harmonics.
+    let height = 0.0f;
+    let tangentialContributions = float2(0.0f, 0.0f);
+    for(let i = 0; i < 5; i += 1)
+    {
+        // Fetch the harmonic parameters
+        // Fetch the fields manually as a work-around for a metal bug.
+        let centerOrDirection = harmonics[i].centerOrDirection;
+        let amplitude = harmonics[i].amplitude;
+        let frequency = harmonics[i].frequency;
+        let isRadial = harmonics[i].isRadial;
+
+        // Compute the distance factor.
+        let distance : float;
+        let distanceDerivatives : float2;
+        if(isRadial == 1)
+        {
+            distance = length(position - centerOrDirection);
+            distanceDerivatives = (position - centerOrDirection) / max(0.001f, distance);
+        }
+        else
+        {
+            distance = dot(position, centerOrDirection);
+            distanceDerivatives = centerOrDirection;
+        }
+
+        // Compute the propagation speed factor.
+        let omega = 6.283185307179586f * frequency;
+        let kappa = omega / propagationSpeed;
+
+        // Compute the contribution by the harmonic.
+        let phase = kappa*distance + omega*currentTime;
+        height += amplitude * sin(phase);
+
+        // Add the tangential factor
+        tangentialContributions += amplitude*kappa*cos(phase)*distanceDerivatives;
+    }
+
+    return float3(height, tangentialContributions);
+}
+
+function evalWaterHeight(position: float2) -> float
+{
+    return evalWaterWaves(position).x;
+}
+
+function evalWaterDerivatives(position: float2) -> float2
+{
+    return evalWaterWaves(position).yz;
+}
+
+function evalWaterNormal(position: float2) -> float3
+{
+    let derivatives = evalWaterDerivatives(position);
+    let dx = derivatives.x;
+    let dy = derivatives.y;
+
+    let t = normalize(float3(1.0f, dx, 0.0f));
+    let b = normalize(float3(0.0f, dy, -1.0f));
+    return normalize(transformNormalToView(cross(t, b)));
+}
+
+function evalWaterNormalMapValue(position: float2, tangentNormal: float3) -> float3
+{
+    let derivatives = evalWaterDerivatives(position);
+    let dx = derivatives.x;
+    let dy = derivatives.y;
+
+    let t = normalize(float3(1.0f, dx, 0.0f));
+    let b = normalize(float3(0.0f, dy, -1.0f));
+    let n = normalize(transformNormalToView(cross(t, b)));
+
+    let TBN = float3x3(t, b, n);
+    return normalize(TBN*tangentNormal);
+}
+
+//==============================================================================
+// Vertex and fragment shader interface
+
+semantic WaterVertexOutput {
+    out(0) position: float3;
+    out(1) surfaceCoordinate: float2;
+    out(2) texcoord: float2;
+    out(3) color: float4;
+}
+
+semantic WaterFragmentInput {
+    in(0) position: float3;
+    in(1) surfaceCoordinate: float2;
+    in(2) texcoord: float2;
+    in(3) color: float4;
+}
+
+//==============================================================================
+// Vertex shader
+
+code_block(vertex) vertex
+{
+    using CameraState;
+    using MaterialState;
+
+    // Fetch the position and texcoord.
+    let position = float3(GenericVertexLayout.position.x, 0.0f,  GenericVertexLayout.position.y) + clipMapOffsetWithPeriod(clipMapPeriod);
+    let surfacePosition = float2(position.x, -position.z);
+
+    let lod = GenericVertexLayout.position.z;
+    let texcoord = surfacePosition;
+
+    // Eval the water waves.
+    let waterWaveEffect = evalWaterWaves(surfacePosition);
+    let height = waterWaveEffect.x;
+    let tangentialContributions = waterWaveEffect.yz;
+
+    // Apply the water height.
+    position += float3(0.0f, height, 0.0f);
+
+    WaterVertexOutput.color = currentObjectInstanceColor();
+    WaterVertexOutput.surfaceCoordinate = surfacePosition;
+    WaterVertexOutput.texcoord = surfacePosition*textureScale + textureOffset;
+    let position4 = transformPositionToView(position);
+
+    WaterVertexOutput.position =  position4.xyz;
+    VertexStage.screenPosition = projectionMatrix * position4;
+}
+
+
+//==============================================================================
+// Forward lighting model.
+
+code_block(fragment) forward_color
+{
+    let texcoord = WaterFragmentInput.texcoord;
+    let albedo = WaterFragmentInput.color*MaterialState.albedo*albedoSampler.sample(albedoTexture, texcoord);
+    let normalMapValue = normalSampler.sample(normalTexture, texcoord).xyz*2.0f - 1.0f;
+
+    let surfacePosition = WaterFragmentInput.surfaceCoordinate;
+    let N = evalWaterNormalMapValue(surfacePosition, normalMapValue);
+    let V = normalize(-WaterFragmentInput.position);
+
+    forwardLightingOutput
+        albedo: albedo
+        fresnel: MaterialState.fresnel smoothness: MaterialState.smoothness
+        normal: N surfaceNormal: N viewVector: V position: WaterFragmentInput.position;
+}
+
+code_block(fragment) forward_sky
+{
+    let texcoord = WaterFragmentInput.texcoord;
+    let albedo = WaterFragmentInput.color*MaterialState.albedo*albedoSampler.sample(albedoTexture, texcoord);
+    let normalMapValue = normalSampler.sample(normalTexture, texcoord).xyz*2.0f - 1.0f;
+
+    let surfacePosition = WaterFragmentInput.surfaceCoordinate;
+    let N = evalWaterNormalMapValue(surfacePosition, normalMapValue);
+    let V = normalize(-WaterFragmentInput.position);
+
+    let lightedColor : float4;
+    color: lightedColor <== forwardLightingModel
+        albedo: albedo
+        fresnel: MaterialState.fresnel smoothness: MaterialState.smoothness
+        normal: N surfaceNormal: N viewVector: V position: WaterFragmentInput.position;
+
+    let R = reflect(-V, N);
+    let skyPosition = (CameraState.inverseViewMatrix * float4(R, 0.0f)).xyz;
+    let skyColor = cubeMapSampler.sample(skyTexture, skyPosition);
+
+    let NdotV = fabs(dot(N, V));
+    let reflectionFresnel = fresnelSchlick(MaterialState.fresnel, NdotV);
+    let reflectionFactor = fresnelSchlick(lightedColor.a, NdotV);
+
+    FragmentStage.colorOutput0 = float4(skyColor.rgb*reflectionFresnel + lightedColor.rgb, reflectionFactor);
+
+    //FragmentOutput.color = float4(step(NdotV, 0.0f), 1.0f - step(NdotV, 0.0f), 0.0f, 1.0f);
+    //FragmentOutput.color = albedo;
+    //FragmentOutput.color = float4(normalMapValue, 1.0f);
+}

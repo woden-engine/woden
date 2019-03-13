@@ -1,9 +1,0 @@
-{
-    "groups" : {
-        "Canvas2D" : "canvas2d/shaders.json",
-        "Surface" : "surface/shaders.json",
-        "Composition" : "composition/shaders.json"
-    },
-    "destination" : "../pipeline-states/shaders",
-    "target-languages" : ["spir-v", "glsl", "metal"]
-}

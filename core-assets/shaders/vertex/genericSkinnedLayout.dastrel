@@ -1,0 +1,4 @@
+semantic SkinnedGenericVertexLayout {
+    in(5) boneWeights: float4;
+    in(6) boneIndices: int4;
+}

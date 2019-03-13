@@ -1,0 +1,212 @@
+import rendering.shaderSignature;
+import vertex.stage;
+
+struct ObjectStateData
+{
+    matrix: float4x4;
+    inverseMatrix: float4x4;
+    color: float4;
+    visible: int;
+}
+
+uniform(binding=ObjectState.ObjectState) ObjectState
+{
+    objectState: ObjectStateData;
+}
+
+buffer(binding=ObjectState.InstanceObjectState) InstanceObjectState
+{
+    instanceStates: ObjectStateData[];
+}
+
+uniform(binding=CameraState.ObjectState) CameraState
+{
+    inverseViewMatrix: float4x4;
+    viewMatrix: float4x4;
+
+    projectionMatrix: float4x4;
+    inverseProjectionMatrix: float4x4;
+
+    screenSize: float2;
+    inverseScreenSize: float2;
+
+    currentTime: float;
+}
+
+uniform(binding=LightingState.GlobalLightingState) GlobalLightingState
+{
+    // Hemisphere lighting
+    groundLighting: float4;
+    skyLighting: float4;
+
+    // Shadow mapping extents
+    shadowMapExtent: float2;
+    shadowMapInverseExtent: float2;
+
+    // Normal lights
+    sunDirection: float3;
+    numberOfLights: int;
+    lightSources: LightSource[16];
+}
+
+struct LightSource
+{
+    position: float4;
+    intensity: float4;
+
+    spotDirection: float3;
+    shadowMapLayer: float;
+
+    innerCosCutoff: float;
+    outerCosCutoff: float;
+    spotExponent: float;
+    radius: float;
+
+    cascadeSplitOffsets: float4;
+    cascadeFrustumPlane: float4;
+
+	shadowMapTransform: float4x4;
+    shadowMapTransform2: float4x4;
+    shadowMapTransform3: float4x4;
+}
+
+//==============================================================================
+// Global accessors.
+
+function cameraWorldPosition() -> float3
+{
+    using CameraState;
+
+    return inverseViewMatrix[3].xyz;
+}
+
+function cameraObjectPosition() -> float3
+{
+    using CameraState;
+
+    //return (inverseViewMatrix * viewMatrix[3]).xyz;
+    return inverseViewMatrix[3].xyz;
+}
+
+//==============================================================================
+// Periodic functions
+
+function offsetWithRoundingPeriod(offset: float, period: float) -> float
+{
+    return (period != 0.0f)
+        ? floor(offset/period)*period
+        : 0.0f;
+}
+
+function offsetWithRoundingPeriod(offset: float3, period: float3) -> float3
+{
+    return float3(
+        offsetWithRoundingPeriod(offset.x, period.x),
+        offsetWithRoundingPeriod(offset.y, period.y),
+        offsetWithRoundingPeriod(offset.z, period.z));
+}
+
+function clipMapOffsetWithPeriod(clipMapPeriod: float3) -> float3
+{
+    return offsetWithRoundingPeriod(cameraObjectPosition(), clipMapPeriod);
+}
+
+function clipMapOffsetWithPeriod(clipMapPeriod: float2) -> float3
+{
+    return clipMapOffsetWithPeriod(float3(clipMapPeriod.x, 0.0f, clipMapPeriod.y));
+}
+
+//==============================================================================
+// Skinning
+buffer(binding=ObjectState.ExtraObjectState) PoseState
+{
+    matrices: float4x4[];
+}
+
+function skinPositionWithBones(position: float3, boneIndices: int4, boneWeights: float4) -> float3
+{
+    using PoseState;
+
+    let position4 = float4(position, 1.0f);
+    let result = (matrices[boneIndices.x] * position4).xyz * boneWeights.x;
+    result += (matrices[boneIndices.y] * position4).xyz * boneWeights.y;
+    result += (matrices[boneIndices.z] * position4).xyz * boneWeights.z;
+    result += (matrices[boneIndices.w] * position4).xyz * boneWeights.w;
+    return result;
+}
+
+function skinVectorWithBones(vector: float3, boneIndices: int4, boneWeights: float4) -> float3
+{
+    using PoseState;
+
+    let vector4 = float4(vector, 0.0f);
+    let result = (matrices[boneIndices.x] * vector4).xyz * boneWeights.x;
+    result += (matrices[boneIndices.y] * vector4).xyz * boneWeights.y;
+    result += (matrices[boneIndices.z] * vector4).xyz * boneWeights.z;
+    result += (matrices[boneIndices.w] * vector4).xyz * boneWeights.w;
+    return result;
+}
+
+//==============================================================================
+// Vertex environment
+
+function transformNormalToView(normal: float3) -> float3
+{
+    using CameraState;
+    using ObjectState;
+    using InstanceObjectState;
+    using VertexStage;
+
+    return (((float4(normal, 0.0f) * instanceStates[instanceID].inverseMatrix) * objectState.inverseMatrix) * inverseViewMatrix).xyz;
+}
+
+function transformPositionToView(position: float3) -> float4
+{
+    return transformVector4ToView(float4(position, 1.0f));
+}
+
+function transformVector4ToView(position: float4) -> float4
+{
+    using CameraState;
+    using ObjectState;
+    using InstanceObjectState;
+    using VertexStage;
+
+    return viewMatrix * (objectState.matrix * (instanceStates[instanceID].matrix * position));
+}
+
+function transformPositionToWorld(position: float3) -> float4
+{
+    using ObjectState;
+    using InstanceObjectState;
+    using VertexStage;
+
+    return objectState.matrix * (instanceStates[instanceID].matrix * float4(position, 1.0f));
+}
+
+function transformVectorToWorld(position: float3) -> float3
+{
+    using ObjectState;
+    using InstanceObjectState;
+    using VertexStage;
+
+    return (objectState.matrix * (instanceStates[instanceID].matrix * float4(position, 0.0f))).xyz;
+}
+
+function currentObjectInstanceColor() -> float4
+{
+    using ObjectState;
+    using InstanceObjectState;
+    using VertexStage;
+
+    return objectState.color * instanceStates[instanceID].color;
+}
+
+function isCurrentObjectInstanceInvisible() -> bool
+{
+    using ObjectState;
+    using InstanceObjectState;
+    using VertexStage;
+
+    return objectState.visible == 0 || instanceStates[instanceID].visible == 0;
+}

@@ -1,0 +1,41 @@
+import vertex.stage;
+import fragment.stage;
+
+import rendering.shaderSignature;
+import rendering.environment;
+import rendering.lightingOutputs;
+
+import vertex.genericLayout;
+
+//==============================================================================
+// Vertex and fragment shader interface
+
+semantic VertexOutput {
+    out(0) position: float3;
+}
+
+semantic FragmentInput {
+    in(0) position: float3;
+}
+
+//==============================================================================
+// Vertex shader
+
+code_block(vertex) vertex
+{
+    using CameraState;
+
+    VertexOutput.position = transformPositionToWorld(GenericVertexLayout.position).xyz - cameraWorldPosition();
+    VertexStage.screenPosition = projectionMatrix * transformPositionToView(GenericVertexLayout.position);
+}
+
+//==============================================================================
+// Forward lighting model.
+
+uniform(binding = MaterialState.Textures) skyTexture : textureCube;
+
+code_block(fragment) forward_cubeMap
+{
+    let skyColor = cubeMapSampler.sample(skyTexture, FragmentInput.position);
+    forwardFlatOutput color: skyColor;
+}

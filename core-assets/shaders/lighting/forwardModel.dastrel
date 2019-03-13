@@ -1,7 +1,8 @@
-import shaderSignature;
-import environment;
-import fragment;
-import fragment.stage;
+import rendering.shaderSignature;
+import rendering.environment;
+import lighting.functions;
+
+import fragment.stage; // For SSAO
 
 uniform(binding = LightingState.SpotShadowMaps) spotShadowMaps : depthTexture2DArray;
 uniform(binding = LightingState.PointShadowMaps) pointShadowMaps : depthTextureCubeArray;
@@ -31,8 +32,6 @@ function sampleScreenSpaceAmbientOcclusion() -> float
 function computeShadowFactorFor(shadowPoint: float3, depthReference: float) -> float
 {
     return
-        //sampleShadowMapWithDisplacement(shadowPoint, depthReference, float2(0.0f, 0.0f));
-
         (sampleShadowMapWithDisplacement(shadowPoint, depthReference, float2(-0.5f, -0.5f)) +
         sampleShadowMapWithDisplacement(shadowPoint, depthReference, float2(-0.5f, 0.5f)) +
         sampleShadowMapWithDisplacement(shadowPoint, depthReference, float2(0.5f, -0.5f)) +

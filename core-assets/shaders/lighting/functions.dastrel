@@ -1,0 +1,19 @@
+function fresnelSchlick(F0: float3, cosTheta: float) -> float3
+{
+    let powFactor = 1.0f - cosTheta;
+    let powFactor2 = powFactor * powFactor;
+    let powFactor4 = powFactor2 * powFactor2;
+    let powValue = powFactor4 * powFactor;
+
+    return F0 + (float3(1.0f, 1.0f, 1.0f) - F0) * powValue;
+}
+
+function fresnelSchlick(F0: float, cosTheta: float) -> float
+{
+    let powFactor = 1.0f - cosTheta;
+    let powFactor2 = powFactor * powFactor;
+    let powFactor4 = powFactor2 * powFactor2;
+    let powValue = powFactor4 * powFactor;
+
+    return F0 + (1.0f - F0) * powValue;
+}
