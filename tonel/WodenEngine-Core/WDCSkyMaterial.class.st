@@ -5,10 +5,11 @@ Class {
 		'skyTexture',
 		'resourceBindingsAreUpdated',
 		'vertexShader',
-		'fragmentShader',
-		'resourceBinding'
+		'resourceBinding',
+		'shaderLibrary',
+		'forwardFragmentShader'
 	],
-	#category : 'WodenEngine-Core-Material'
+	#category : #'WodenEngine-Core-Material'
 }
 
 { #category : #'state binding' }
@@ -19,8 +20,8 @@ WDCSkyMaterial >> activateForwardOn: stateTracker [
 	].
 	
 	stateTracker
-		vertexShader: vertexShader;
-		fragmentShader: fragmentShader;
+		vertexShader: self vertexShader;
+		fragmentShader: self forwardFragmentShader;
 		materialDepthWriteMask: false.
 	^ true
 ]
@@ -35,15 +36,9 @@ WDCSkyMaterial >> bindResources [
 	skyTexture ifNotNil: [ resourceBinding bind: 2 texture: skyTexture ].
 ]
 
-{ #category : #'state binding' }
-WDCSkyMaterial >> fetchShaders [
-	vertexShader ifNil: [
-		vertexShader := engine loadVertexShader: 'shaders/surface/skyVertex.dastrel'.
-	].
-
-	fragmentShader ifNil: [
-		fragmentShader := engine loadFragmentShader: 'shaders/surface/skyFragment.dastrel'.
-	].
+{ #category : #shaders }
+WDCSkyMaterial >> forwardFragmentShader [
+	^ forwardFragmentShader ifNil: [ forwardFragmentShader := self shaderLibrary getFragmentStage: #forward_cubeMap ]
 ]
 
 { #category : #initialization }
@@ -60,6 +55,12 @@ WDCSkyMaterial >> invalidateCache [
 WDCSkyMaterial >> parse: materialFileReference data: data [
 	skyTexture := self parse: data at: materialFileReference optionalSRGBTexture: 'texture'.
 	self invalidateCache.
+]
+
+{ #category : #shaders }
+WDCSkyMaterial >> shaderLibrary [
+	^ shaderLibrary ifNil: [ shaderLibrary := engine loadShaderLibrary: 'shaders/material/sky.dastrel' ].
+
 ]
 
 { #category : #accessing }
@@ -80,7 +81,11 @@ WDCSkyMaterial >> thumbnail [
 
 { #category : #'state binding' }
 WDCSkyMaterial >> validateCache [
-	(vertexShader isNil or: [ fragmentShader isNil ]) ifTrue: [ self fetchShaders ].
 	resourceBindingsAreUpdated ifFalse: [ self bindResources ].
 	resourceBindingsAreUpdated := true.
+]
+
+{ #category : #shaders }
+WDCSkyMaterial >> vertexShader [
+	^ vertexShader ifNil: [ vertexShader := self shaderLibrary getVertexStage: #vertex ]
 ]

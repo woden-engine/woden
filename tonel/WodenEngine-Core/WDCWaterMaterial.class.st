@@ -11,7 +11,8 @@ Class {
 		'materialState',
 		'normalTexture',
 		'useClipMap',
-		'albedoTexture'
+		'albedoTexture',
+		'shaderLibrary'
 	],
 	#category : #'WodenEngine-Core-Material'
 }
@@ -82,12 +83,9 @@ WDCWaterMaterial >> createTerrainMeshForSceneNode: sceneNode boundingBox: boundi
 { #category : #shaders }
 WDCWaterMaterial >> fragmentShader [
 	^ fragmentShader ifNil: [
-		fragmentShader := skyTexture ifNotNil: [
-			engine loadFragmentShader: 'shaders/surface/waterSkyForward.dastrel'
-		]
-		ifNil: [
-			 engine loadFragmentShader: 'shaders/surface/waterColorForward.dastrel' 
-		]
+		fragmentShader := skyTexture
+			ifNotNil: [ self shaderLibrary getFragmentStage: #forward_sky ]
+			ifNil: [ self shaderLibrary getFragmentStage: #forward_color ]
 	]
 ]
 
@@ -161,6 +159,12 @@ WDCWaterMaterial >> parse: materialFileReference data: data [
 	self invalidateCache.
 ]
 
+{ #category : #shaders }
+WDCWaterMaterial >> shaderLibrary [
+	^ shaderLibrary ifNil: [ shaderLibrary := engine loadShaderLibrary: 'shaders/material/water.dastrel' ].
+
+]
+
 { #category : #accessing }
 WDCWaterMaterial >> skyTexture [
 	^ skyTexture
@@ -197,7 +201,7 @@ WDCWaterMaterial >> validateCache [
 
 { #category : #shaders }
 WDCWaterMaterial >> vertexShader [
-	^  vertexShader ifNil: [ vertexShader := engine loadVertexShader: 'shaders/surface/waterVertex.dastrel' ]
+	^  vertexShader ifNil: [ vertexShader := self shaderLibrary getVertexStage: #vertex  ]
 ]
 
 { #category : #shaders }

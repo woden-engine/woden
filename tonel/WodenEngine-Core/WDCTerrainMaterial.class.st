@@ -16,7 +16,8 @@ Class {
 		'solidFragmentShader',
 		'wireFragmentShader',
 		'isolinesFragmentShader',
-		'depthNormalFragmentShader'
+		'depthNormalFragmentShader',
+		'shaderLibrary'
 	],
 	#category : #'WodenEngine-Core-Material'
 }
@@ -138,10 +139,9 @@ WDCTerrainMaterial >> createTerrainMeshForSceneNode: sceneNode [
 		mesh
 ]
 
-{ #category : #accessing }
+{ #category : #shaders }
 WDCTerrainMaterial >> depthNormalFragmentShader [
-	^ depthNormalFragmentShader ifNil: [ depthNormalFragmentShader := self fetchFragmentShader: 'shaders/surface/terrainDepthNormal.dastrel' ].
-
+	^ isolinesFragmentShader ifNil: [ isolinesFragmentShader := self shaderLibrary getFragmentStage: #depthNormal_fragment ]
 ]
 
 { #category : #accessing }
@@ -232,10 +232,9 @@ WDCTerrainMaterial >> invalidateCache [
 	resourceBindingsAreUpdated := false.
 ]
 
-{ #category : #accessing }
+{ #category : #shaders }
 WDCTerrainMaterial >> isolinesFragmentShader [
-	^ isolinesFragmentShader ifNil: [ isolinesFragmentShader := self fetchFragmentShader: 'shaders/surface/terrainForwardIsolines.dastrel' ].
-
+	^ isolinesFragmentShader ifNil: [ isolinesFragmentShader := self shaderLibrary getFragmentStage: #forward_isolines ]
 ]
 
 { #category : #accessing }
@@ -294,9 +293,15 @@ WDCTerrainMaterial >> parse: materialFileReference data: data [
 	self invalidateCache.
 ]
 
-{ #category : #accessing }
+{ #category : #shaders }
+WDCTerrainMaterial >> shaderLibrary [
+	^ shaderLibrary ifNil: [ shaderLibrary := engine loadShaderLibrary: 'shaders/material/terrain.dastrel' ].
+
+]
+
+{ #category : #shaders }
 WDCTerrainMaterial >> solidFragmentShader [
-	^ solidFragmentShader ifNil: [ solidFragmentShader := self fetchFragmentShader: 'shaders/surface/terrainForwardSolid.dastrel' ].
+	^ solidFragmentShader ifNil: [ solidFragmentShader := self shaderLibrary getFragmentStage: #forward_solid ].
 
 ]
 
@@ -342,15 +347,13 @@ WDCTerrainMaterial >> validateCache [
 	resourceBindingsAreUpdated := true.
 ]
 
-{ #category : #accessing }
+{ #category : #shaders }
 WDCTerrainMaterial >> vertexShader [
-	^ vertexShader ifNil: [ vertexShader := self fetchVertexShader: 'shaders/surface/terrainVertex.dastrel'.
-	].
-
+	^ vertexShader ifNil: [ vertexShader := self shaderLibrary getVertexStage: #vertex ].
 ]
 
-{ #category : #accessing }
+{ #category : #shaders }
 WDCTerrainMaterial >> wireFragmentShader [
-	^ wireFragmentShader ifNil: [ wireFragmentShader := self fetchFragmentShader: 'shaders/surface/terrainForwardWire.dastrel' ].
+	^ wireFragmentShader ifNil: [ wireFragmentShader := self shaderLibrary getFragmentStage: #forward_wire ].
 
 ]

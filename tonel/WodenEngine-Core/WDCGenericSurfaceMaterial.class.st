@@ -13,7 +13,9 @@ Class {
 		'isSkinned',
 		'vertexShader',
 		'fragmentShader',
-		'depthNormalFragmentShader'
+		'depthNormalFragmentShader',
+		'shaderLibrary',
+		'forwardFragmentShader'
 	],
 	#category : #'WodenEngine-Core-Material'
 }
@@ -48,7 +50,7 @@ WDCGenericSurfaceMaterial >> activateForwardOn: stateTracker [
 	
 	stateTracker
 		vertexShader: self vertexShader;
-		fragmentShader: self fragmentShader.
+		fragmentShader: self forwardFragmentShader.
 	
 	stateTracker submode == #solid ifTrue: [
 		stateTracker fragmentShader: self solidFragmentShader
@@ -123,30 +125,31 @@ WDCGenericSurfaceMaterial >> concretizeMaterial [
 { #category : #shaders }
 WDCGenericSurfaceMaterial >> depthNormalFragmentShader [
 	^ depthNormalFragmentShader ifNil: [
-		depthNormalFragmentShader := engine loadFragmentShader: 'shaders/surface/depthNormal.dastrel'.
+		depthNormalFragmentShader := self shaderLibrary getFragmentStage: #depthNormal_fragment
 	]
 
 ]
 
 { #category : #shaders }
-WDCGenericSurfaceMaterial >> fragmentShader [
-	^ fragmentShader ifNil: [ 
+WDCGenericSurfaceMaterial >> forwardFragmentShader [
+	^ forwardFragmentShader ifNil: [ 
+		forwardFragmentShader := 
 		albedoTexture ifNotNil: [ 
 			normalTexture ifNotNil: [
 				fresnelTexture ifNotNil: [
-					^ fragmentShader := engine loadFragmentShader: 'shaders/surface/albedoNormalFresnelTexture.dastrel'.
+					self shaderLibrary getFragmentStage: #forward_albedoNormalFresnel
 				] ifNil: [
-					^ fragmentShader := engine loadFragmentShader: 'shaders/surface/albedoNormalTexture.dastrel'.
+					self shaderLibrary getFragmentStage: #forward_albedoNormal
 				]		
 			] ifNil: [
 				fresnelTexture ifNotNil: [ 
-					^ fragmentShader := engine loadFragmentShader: 'shaders/surface/albedoFresnelTexture.dastrel'.
+					self shaderLibrary getFragmentStage: #forward_albedoFresnel
 			] ifNil: [
-					^ fragmentShader := engine loadFragmentShader: 'shaders/surface/albedoTexture.dastrel'.
+					self shaderLibrary getFragmentStage: #forward_albedo
 				]
 			]	
 		] ifNil: [
-			^ fragmentShader := engine loadFragmentShader: 'shaders/surface/colorForward.dastrel'.
+			self shaderLibrary getFragmentStage: #forward_color
 		].
 	]
 
@@ -189,6 +192,9 @@ WDCGenericSurfaceMaterial >> initialize [
 { #category : #'state binding' }
 WDCGenericSurfaceMaterial >> invalidateCache [
 	resourceBindingsAreUpdated := false.
+	vertexShader := nil.
+	forwardFragmentShader := nil.
+	depthNormalFragmentShader := nil.
 ]
 
 { #category : #accessing }
@@ -237,6 +243,12 @@ WDCGenericSurfaceMaterial >> resourceBinding: anObject [
 	resourceBinding := anObject
 ]
 
+{ #category : #shaders }
+WDCGenericSurfaceMaterial >> shaderLibrary [
+	^ shaderLibrary ifNil: [ shaderLibrary := engine loadShaderLibrary: 'shaders/material/generic.dastrel' ].
+
+]
+
 { #category : #accessing }
 WDCGenericSurfaceMaterial >> smoothness [
 	^ materialState smoothness
@@ -261,7 +273,7 @@ WDCGenericSurfaceMaterial >> smoothnessTexture: anObject [
 
 { #category : #shaders }
 WDCGenericSurfaceMaterial >> solidFragmentShader [
-	^ self fragmentShader
+	^ self forwardFragmentShader
 ]
 
 { #category : #accessing }
@@ -303,16 +315,14 @@ WDCGenericSurfaceMaterial >> validateCache [
 { #category : #shaders }
 WDCGenericSurfaceMaterial >> vertexShader [
 	^ vertexShader ifNil: [ 
-		isSkinned ifTrue: [
-			vertexShader := engine loadVertexShader: 'shaders/surface/skinnedGenericVertex.dastrel'.
-		] ifFalse: [ 
-			vertexShader := engine loadVertexShader: 'shaders/surface/genericVertex.dastrel'.
-		]
+		vertexShader := isSkinned
+			ifTrue: [ self shaderLibrary getVertexStage: #skinned_vertex ]
+			ifFalse: [ self shaderLibrary getVertexStage: #normal_vertex ]
 	].
 
 ]
 
 { #category : #shaders }
 WDCGenericSurfaceMaterial >> wireFragmentShader [
-	^ self fragmentShader
+	^ self forwardFragmentShader
 ]

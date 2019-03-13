@@ -560,6 +560,11 @@ WDCEngine >> loadFragmentShader: aFileName [
 ]
 
 { #category : #'resource loading' }
+WDCEngine >> loadShaderLibrary: aFileName [
+	^ resourceCache loadShaderLibrary: aFileName
+]
+
+{ #category : #'resource loading' }
 WDCEngine >> loadVertexShader: aFileName [
 	^ resourceCache loadVertexShader: aFileName
 ]

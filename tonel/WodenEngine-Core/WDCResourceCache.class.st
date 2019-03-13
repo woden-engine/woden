@@ -16,12 +16,7 @@ Class {
 		'pendingResourceReloadActions',
 		'screenQuadVertexShader',
 		'alwaysFrontDepthNormalFragmentShader',
-		'imageBlurVertical9',
-		'imageBlurHorizontal9',
-		'imageBlurHorizontal5',
-		'imageBlurVertical5',
-		'imageBlurGrayHorizontal5',
-		'imageBlurGrayVertical5'
+		'imageBlur5'
 	],
 	#classVars : [
 		'ShaderLanguageTargetMap',
@@ -108,7 +103,7 @@ WDCResourceCache >> allMaterialNames [
 
 { #category : #'special shaders' }
 WDCResourceCache >> alwaysFrontDepthNormalFragmentShader [
-	^ alwaysFrontDepthNormalFragmentShader ifNil: [ alwaysFrontDepthNormalFragmentShader := self loadFragmentShader: 'shaders/lighting/alwaysFrontDepthNormalFragment.dastrel' ]
+	^ alwaysFrontDepthNormalFragmentShader ifNil: [ alwaysFrontDepthNormalFragmentShader := self loadFragmentShader: 'shaders/rendering/alwaysFrontDepthNormalFragment.dastrel' ]
 ]
 
 { #category : #'resource loading' }
@@ -305,33 +300,28 @@ WDCResourceCache >> grayTextureExtent: extent renderWith: aBlock [
 ]
 
 { #category : #'special shaders' }
+WDCResourceCache >> imageBlur5 [
+	^ imageBlur5 ifNil: [ imageBlur5 := self loadShaderLibrary: 'shaders/image/imageBlur5.dastrel' ]
+]
+
+{ #category : #'special shaders' }
 WDCResourceCache >> imageBlurGrayHorizontal5 [
-	^ imageBlurGrayHorizontal5 ifNil: [ imageBlurGrayHorizontal5 := self loadComputeShader: 'shaders/image/imageBlurGrayHorizontal5.dastrel' ]
+	^ self imageBlur5 getComputeStage: #grayHorizontal
 ]
 
 { #category : #'special shaders' }
 WDCResourceCache >> imageBlurGrayVertical5 [
-	^ imageBlurGrayVertical5 ifNil: [ imageBlurGrayVertical5 := self loadComputeShader: 'shaders/image/imageBlurGrayVertical5.dastrel' ]
+	^ self imageBlur5 getComputeStage: #grayVertical
 ]
 
 { #category : #'special shaders' }
 WDCResourceCache >> imageBlurHorizontal5 [
-	^ imageBlurHorizontal5 ifNil: [ imageBlurHorizontal5 := self loadComputeShader: 'shaders/image/imageBlurHorizontal5.dastrel' ]
-]
-
-{ #category : #'special shaders' }
-WDCResourceCache >> imageBlurHorizontal9 [
-	^ imageBlurHorizontal9 ifNil: [ imageBlurHorizontal9 := self loadComputeShader: 'shaders/image/imageBlurHorizontal9.dastrel' ]
+	^ self imageBlur5 getComputeStage: #horizontal
 ]
 
 { #category : #'special shaders' }
 WDCResourceCache >> imageBlurVertical5 [
-	^ imageBlurVertical5 ifNil: [ imageBlurVertical5 := self loadComputeShader: 'shaders/image/imageBlurVertical5.dastrel' ]
-]
-
-{ #category : #'special shaders' }
-WDCResourceCache >> imageBlurVertical9 [
-	^ imageBlurVertical9 ifNil: [ imageBlurVertical9 := self loadComputeShader: 'shaders/image/imageBlurVertical9.dastrel' ]
+	^ self imageBlur5 getComputeStage: #vertical
 ]
 
 { #category : #initialization }

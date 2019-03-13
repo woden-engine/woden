@@ -7,9 +7,10 @@ Class {
 		'stipple',
 		'thumbnailType',
 		'vertexShader',
-		'fragmentShader'
+		'fragmentShader',
+		'shaderLibrary'
 	],
-	#category : 'WodenEngine-Core-Material'
+	#category : #'WodenEngine-Core-Material'
 }
 
 { #category : #rendering }
@@ -44,14 +45,12 @@ WDCFlatColorMaterial >> activateForwardOn: stateTracker [
 	^ true
 ]
 
-{ #category : #'state binding' }
+{ #category : #accessing }
 WDCFlatColorMaterial >> fragmentShader [
 	^ fragmentShader ifNil: [
-		stipple ifFalse: [
-			fragmentShader := engine loadFragmentShader: 'shaders/surface/flatColorForward.dastrel'.
-		] ifTrue: [ 
-			fragmentShader := engine loadFragmentShader: 'shaders/surface/flatColorStippleForward.dastrel'.
-		].
+		fragmentShader := stipple
+			ifTrue: [ self shaderLibrary getFragmentStage: #stipple ]
+			ifFalse: [ self shaderLibrary getFragmentStage: #flat ]
 	]
 ]
 
@@ -61,6 +60,12 @@ WDCFlatColorMaterial >> parse: materialFileReference data: aDictionary [
 	writeDepth := aDictionary at: 'write-depth' ifAbsent: [ true ].
 	stipple := aDictionary at: 'stipple' ifAbsent: [ false ].
 	thumbnailType := (aDictionary at: 'thumbnail-type' ifAbsent: [ #color ]) asSymbol.
+]
+
+{ #category : #accessing }
+WDCFlatColorMaterial >> shaderLibrary [
+	^ shaderLibrary ifNil: [ shaderLibrary := engine loadShaderLibrary: 'shaders/material/flat.dastrel' ].
+
 ]
 
 { #category : #accessing }
@@ -98,16 +103,9 @@ WDCFlatColorMaterial >> useDepth: anObject [
 	useDepth := anObject
 ]
 
-{ #category : #'state binding' }
+{ #category : #accessing }
 WDCFlatColorMaterial >> vertexShader [
-	^ vertexShader ifNil: [
-		stipple ifFalse: [
-			vertexShader := engine loadVertexShader: 'shaders/surface/genericVertex.dastrel'.
-		] ifTrue: [ 
-			vertexShader := engine loadVertexShader: 'shaders/surface/stippleVertex.dastrel'.
-		]
-	].
-
+	^ vertexShader ifNil: [vertexShader := self shaderLibrary getVertexStage: #vertex ]
 ]
 
 { #category : #accessing }
