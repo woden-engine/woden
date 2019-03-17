@@ -1,0 +1,4 @@
+semantic FragmentInput
+{
+    in(0) texcoord: float2;
+}

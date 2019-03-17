@@ -1,0 +1,108 @@
+import shaderSignature;
+import environment;
+import fragment.stage;
+
+//==============================================================================
+// Vertex and fragment stage connection
+//==============================================================================
+
+semantic VertexInput {
+    in(0) position: float2;
+    in(1) texcoord: float2;
+    in(2) color: float4;
+}
+
+semantic VertexOutput {
+    out(-1) screenPosition: float4;
+    out(0) position: float4;
+    out(1) texcoord: float2;
+    out(2) color: float4;
+}
+
+semantic FragmentInput {
+    in(0) position: float4;
+    in(1) texcoord: float2;
+    in(2) color: float4;
+}
+
+//==============================================================================
+// Generic Vertex shader
+//==============================================================================
+
+code_block(vertex) vertex
+{
+    using CanvasMatrices;
+    using QuickState;
+
+    VertexOutput.color = VertexInput.color;
+    VertexOutput.texcoord = VertexInput.texcoord;
+    VertexOutput.position = matrices[modelViewMatrixIndex] * float4(VertexInput.position, 0.0f, 1.0f);
+    VertexOutput.screenPosition = matrices[projectionMatrixIndex] * VertexOutput.position;
+}
+
+//==============================================================================
+// Fragment shaders
+//==============================================================================
+
+code_block(fragment) color
+{
+    FragmentStage.colorOutput0 = FragmentInput.color;
+}
+
+code_block(fragment) colorFont
+{
+    let fontAlpha = fontSampler.sample(fontTexture, FragmentInput.texcoord/float2(getTextureSize(fontTexture, 0))).r;
+    FragmentStage.colorOutput0 = float4(FragmentInput.color.rgb, FragmentInput.color.a*fontAlpha);
+}
+
+code_block(fragment) gradient
+{
+    let coord : float;
+    let point = FragmentInput.position.xy;
+    if(FragmentInput.texcoord.x == 0.0f)
+    {
+        let start = FragmentInput.color.xy;
+        let end = FragmentInput.color.zw;
+        let delta = end - start;
+        coord = dot(delta, point - start) / dot(delta, delta);
+    }
+    else
+    {
+        let center = FragmentInput.color.xy;
+        let focalPoint = FragmentInput.color.zw;
+        let radius = FragmentInput.texcoord.y;
+
+        let delta = point - focalPoint;
+        let focalDelta = center - focalPoint;
+
+        let E = delta.x*focalDelta.y - delta.y*focalDelta.x;
+        let r2 = radius*radius;
+        coord = (dot(delta, focalDelta) + sqrt(r2*dot(delta, delta) - E*E)) / (r2 - dot(focalDelta, focalDelta));
+    }
+
+    FragmentStage.colorOutput0 = evaluateColorRamp(coord);
+}
+
+code_block(fragment) grayTextured
+{
+    let gray = mainSampler.sample(mainTexture, FragmentInput.texcoord).r;
+    let color = float4(gray, gray, gray, 1.0f);
+    FragmentStage.colorOutput0 = FragmentInput.color*color;
+}
+
+code_block(fragment) grayTexturedArray
+{
+    let gray = mainSampler.sample(mainTextureArray, float3(FragmentInput.texcoord, float(QuickState.textureArrayElementIndex))).r;
+    let color = float4(gray, gray, gray, 1.0f);
+    FragmentStage.colorOutput0 = FragmentInput.color*color;
+}
+
+code_block(fragment) textured
+{
+    FragmentStage.colorOutput0 = FragmentInput.color*mainSampler.sample(mainTexture, FragmentInput.texcoord);
+}
+
+code_block(fragment) texturedArray
+{
+    FragmentStage.colorOutput0 = FragmentInput.color*mainSampler.sample(mainTextureArray, float3(FragmentInput.texcoord, float(QuickState.textureArrayElementIndex)));
+}

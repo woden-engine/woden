@@ -34,10 +34,9 @@ code_block(vertex) vertex
     // The color.
     VertexOutput.color = GenericVertexLayout.color*currentObjectInstanceColor();
 
-    // The position.
-    let position4 = transformPositionToView(GenericVertexLayout.position);
-    VertexOutput.position =  position4.xyz;
-    VertexStage.screenPosition = projectionMatrix * position4;
+    // The position. Used by the stipple shader.
+    VertexOutput.position = transformPositionToWorld(GenericVertexLayout.position).xyz;
+    VertexStage.screenPosition = projectionMatrix * transformPositionToView(GenericVertexLayout.position);
 }
 
 //==============================================================================

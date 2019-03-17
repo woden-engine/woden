@@ -23,3 +23,6 @@ shader_signature GUI
 
     push_constant QuickState;
 }
+
+uniform(binding = Sampler.Sampler) mainSampler : sampler;
+uniform(binding = Sampler.Sampler + 1) fontSampler : sampler;

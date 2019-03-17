@@ -1,7 +1,0 @@
-import environment;
-import fragment;
-
-code_block(fragment) main
-{
-    FragmentOutput.color = mainSampler.sample(mainTexture, FragmentInput.texcoord);
-}

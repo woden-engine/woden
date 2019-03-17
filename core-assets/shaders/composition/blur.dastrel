@@ -1,0 +1,31 @@
+import composition.environment;
+import fragment.stage;
+import fragment.screenQuad;
+
+code_block(fragment) horizontal5
+{
+    let uv = FragmentInput.texcoord;
+    let texelSize = 1.0f / float2(getTextureSize(sourceTexture, 0));
+
+    FragmentStage.colorOutput0 = (
+        mainSampler.sample(sourceTexture, uv + float2(-2.0f, 0.0f)*texelSize)      +
+        mainSampler.sample(sourceTexture, uv + float2(-1.0f, 0.0f)*texelSize)*4.0f +
+        mainSampler.sample(sourceTexture, uv                                )*6.0f +
+        mainSampler.sample(sourceTexture, uv + float2( 1.0f, 0.0f)*texelSize)*4.0f +
+        mainSampler.sample(sourceTexture, uv + float2( 2.0f, 0.0f)*texelSize)
+    )*0.0625f;
+}
+
+code_block(fragment) vertical5
+{
+    let uv = FragmentInput.texcoord;
+    let texelSize = 1.0f / float2(getTextureSize(sourceTexture, 0));
+
+    FragmentStage.colorOutput0 = (
+        mainSampler.sample(sourceTexture, uv + float2(0.0f, -2.0f)*texelSize)      +
+        mainSampler.sample(sourceTexture, uv + float2(0.0f, -1.0f)*texelSize)*4.0f +
+        mainSampler.sample(sourceTexture, uv                                )*6.0f +
+        mainSampler.sample(sourceTexture, uv + float2(0.0f,  1.0f)*texelSize)*4.0f +
+        mainSampler.sample(sourceTexture, uv + float2(0.0f,  2.0f)*texelSize)
+    )*0.0625f;
+}

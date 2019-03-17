@@ -1,6 +1,26 @@
-import ambientOcclusionShaderSignature;
-import compute.stage;
+import fragment.stage;
+import fragment.screenQuad;
 import procedural.noise;
+
+shader_signature AmbientOcclusion
+{
+    descriptor_set(max_bindings=10) Samplers
+    {
+        Samplers: sampler*1;
+    }
+
+    descriptor_set(max_bindings = 1000) CameraState
+    {
+        ObjectState : uniform;
+    }
+
+    descriptor_set(max_bindings = 1000) ComputeBuffers
+    {
+        DepthBuffer: texture;
+        NormalBuffer: texture;
+        Destination: image;
+    }
+}
 
 uniform(binding=CameraState.ObjectState) CameraState
 {
@@ -16,9 +36,11 @@ uniform(binding=CameraState.ObjectState) CameraState
     currentTime: float;
 }
 
+uniform(binding = Samplers.Samplers) aoDepthSampler : sampler;
+uniform(binding = Samplers.Samplers) aoNormalSampler : sampler;
+
 uniform(binding = ComputeBuffers.DepthBuffer) depthTexture : texture2D;
 uniform(binding = ComputeBuffers.NormalBuffer) normalTexture : texture2D;
-uniform(binding = ComputeBuffers.Destination, format = r8, restrict, writeonly) ssaoImage : image2D;
 
 constant SamplingDistributionSize : int = 8;
 constant SamplingDistribution : float3[8] = {
@@ -31,6 +53,27 @@ constant SamplingDistribution : float3[8] = {
     { -0.8440455198287964f, 0.44032758474349976f, 0.3061026632785797f },
     { 0.1833304911851883f, -0.7002113461494446f, 0.6899957060813904f },
 };
+
+/*constant SamplingDistributionSize : int = 16;
+constant SamplingDistribution : float3[16] = {
+    { -0.6877715587615967f, -0.506843626499176f, 0.5196920037269592f },
+    { -0.34024709463119507f, 0.2696249485015869f, 0.9008519649505615f },
+    { -0.762890636920929f, 0.301253080368042f, 0.5720528960227966f },
+    { 0.8366008996963501f, -0.2242094725370407f, 0.4998289942741394f },
+    { 0.5788835287094116f, -0.8140687346458435f, 0.04675422981381416f },
+    { 0.1709364503622055f, 0.9850329756736755f, 0.022153066471219063f },
+    { -0.2356363832950592f, -0.8754839897155762f, 0.4219043552875519f },
+    { 0.3668358027935028f, 0.17475688457489014f, 0.9137240052223206f },
+    { 0.8136236667633057f, 0.519911527633667f, 0.2602085471153259f },
+    { -0.23676802217960358f, -0.44476839900016785f, 0.8637835383415222f },
+    { -0.31475013494491577f, 0.8464008569717407f, 0.4295788109302521f },
+    { 0.31952965259552f, 0.7079995274543762f, 0.6297916173934937f },
+    { -0.8757982850074768f, -0.48266661167144775f, 0.0032114710193127394f },
+    { 0.4089246392250061f, -0.4607699513435364f, 0.7877002358436584f },
+    { -0.8133195638656616f, 0.5813238620758057f, 0.023954791948199272f },
+    { -0.988899290561676f, 0.08517222851514816f, 0.1217532530426979f },
+};
+*/
 
 function rotationMatrixFor(s: float) -> float3x3
 {
@@ -98,12 +141,9 @@ function sampleAmbientOcclusionAt(eyeDepth: float, position: float3) -> float
     return (sampleDepth - 0.00001f < samplePoint.z ? 0.0f : 1.0f)*attenuation;
 }
 
-code_block(compute, localSizeX=32, localSizeY=16) main
+code_block(fragment) ssao
 {
-	let st = int2(ComputeStage.globalInvocationID.xy);
-	let size = getImageSize(ssaoImage);
-	let inverseSize = 1.0f / float2(size);
-    let uv = float2(st)*inverseSize;
+    let uv = FragmentInput.texcoord;
 
     // Compute the eye position, in view space.
     let eyeDepth = aoDepthSampler.sampleLod(depthTexture, uv, 0.0f).r;
@@ -134,5 +174,5 @@ code_block(compute, localSizeX=32, localSizeY=16) main
     }
 
 	let value = 1.0f - outSampleCount / float(SamplingDistributionSize);
-	imageWrite(ssaoImage, st, float4(value, 0.0f, 0.0f, 0.0f));
+    FragmentStage.colorOutput0 = float4(value, 0.0f, 0.0f, 0.0f);
 }

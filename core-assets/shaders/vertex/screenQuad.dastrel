@@ -4,11 +4,10 @@ semantic VertexOutput {
     out(0) texcoord: float2;
 }
 
-constant screenQuadVertices : float4[4] = {
-    {-1.0f, 1.0f, 0.0f, 1.0f},
-    {1.0f, 1.0f, 0.0f, 1.0f},
+constant screenQuadVertices : float4[3] = {
     {-1.0f, -1.0f, 0.0f, 1.0f},
-    {1.0f, -1.0f, 0.0f, 1.0f},
+    {-1.0f, 3.0f, 0.0f, 1.0f},
+    {3.0f, -1.0f, 0.0f, 1.0f},
 };
 
 code_block(vertex) main

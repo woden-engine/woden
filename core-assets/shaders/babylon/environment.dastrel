@@ -27,6 +27,11 @@ uniform(push_constant=QuickState) QuickState
     textureArrayElementIndex: int;
 }
 
+uniform(binding = Texture.Texture) mainTexture : texture2D;
+uniform(binding = Texture.Texture) mainTextureArray : texture2DArray;
+
+uniform(binding = Font.Texture) fontTexture : texture2D;
+
 function evaluateColorRamp(coord: float) -> float4
 {
     using ColorRamps;

@@ -1,4 +1,4 @@
-shader_signature ForwardRenderer
+shader_signature SceneRendering
 {
     descriptor_set(max_bindings = 10) Samplers
     {

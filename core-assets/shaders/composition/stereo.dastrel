@@ -1,0 +1,45 @@
+import composition.environment;
+import fragment.stage;
+import fragment.screenQuad;
+
+uniform(binding = Sources.Textures) leftTexture : texture2D;
+uniform(binding = Sources.Textures + 1) rightTexture : texture2D;
+
+code_block(fragment) leftEye
+{
+    FragmentStage.colorOutput0 = mainSampler.sample(leftTexture, FragmentInput.texcoord);
+}
+
+code_block(fragment) anaglyph
+{
+    let left = mainSampler.sample(leftTexture, FragmentInput.texcoord);
+    let right = mainSampler.sample(rightTexture, FragmentInput.texcoord);
+
+    FragmentStage.colorOutput0 = float4(left.r, right.gb, 1.0f);
+}
+
+code_block(fragment) sideBySide
+{
+	if(FragmentInput.texcoord.x < 0.5f)
+	    FragmentStage.colorOutput0 = mainSampler.sample(leftTexture, float2(FragmentInput.texcoord.x*2.0f, FragmentInput.texcoord.y));
+	else
+	    FragmentStage.colorOutput0 = mainSampler.sample(rightTexture, float2(FragmentInput.texcoord.x*2.0f - 1.0f, FragmentInput.texcoord.y));
+}
+
+code_block(fragment) topDown
+{
+	if(FragmentInput.texcoord.y < 0.5f)
+	    FragmentStage.colorOutput0 = mainSampler.sample(leftTexture, float2(FragmentInput.texcoord.x, FragmentInput.texcoord.y*2.0f));
+	else
+	    FragmentStage.colorOutput0 = mainSampler.sample(rightTexture, float2(FragmentInput.texcoord.x, FragmentInput.texcoord.y*2.0f - 1.0f));
+}
+
+/*code_block(fragment) interleaved
+{
+	let y = FragmentInput.texcoord.y*CompositionStates.screenExtents.y;
+	if((y % 2.0f) < 1.0f)
+	    FragmentOutput.color = mainSampler.sample(leftTexture, FragmentInput.texcoord);
+	else
+	    FragmentOutput.color = mainSampler.sample(rightTexture, FragmentInput.texcoord);
+}
+*/
