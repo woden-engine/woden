@@ -25,6 +25,11 @@ WDCStateTracker class >> for: aWDCEngine [
 ]
 
 { #category : #commands }
+WDCStateTracker >> applyFullScreenPass: fullScreenPass [
+	fullScreenPass applyWithStateTracker: self
+]
+
+{ #category : #commands }
 WDCStateTracker >> beginRenderPass: renderPass renderTarget: renderTarget [
 	self beginRenderPass: renderPass renderTarget: renderTarget x: 0 y: 0 width: renderTarget width height: renderTarget height
 ]
@@ -200,6 +205,13 @@ WDCStateTracker >> dispatchComputeGroupCountX: x y: y z: z [
 	self commitComputePipelineState.
 	commandListBuilder
 		dispatchCompute: x group_count_y: y group_count_z: z
+]
+
+{ #category : #commands }
+WDCStateTracker >> dispatchScreenQuadRender [
+	self 
+		primitiveType: AGPU_TRIANGLES;
+		drawArrays: 3 instance_count: 1 first_vertex: 0 base_instance: 0
 ]
 
 { #category : #commands }

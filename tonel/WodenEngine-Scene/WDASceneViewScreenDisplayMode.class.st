@@ -125,8 +125,3 @@ WDASceneViewScreenDisplayMode >> viewportForCamera: camera renderTarget: renderT
 		editorViewType: (view ifNotNil: #editorViewType);
 		filter: (view filterForCameraViewport: camera)
 ]
-
-{ #category : #accessing }
-WDASceneViewScreenDisplayMode >> vrSensorReader [
-	^ nil
-]

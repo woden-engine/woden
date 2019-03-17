@@ -55,11 +55,10 @@ WDASceneViewVRDisplayMode >> renderSceneViewports [
 			beginRenderPass: windowTarget validMainRenderPass renderTarget: windowTarget;
 			shaderSignature: self compositionShaderSignature;
 			vertexShader: engine resourceCache screenQuadVertexShader;
-			fragmentShader: self windowDisplayShader;
+			fragmentShader: self fragmentShader;
 			useShaderResources: self compositionShaderSignature defaultSamplers;
 			useShaderResources: windowDisplayBinding;
-			primitiveType: AGPU_TRIANGLE_STRIP;
-			drawArrays: 4 instance_count: 1 first_vertex: 0 base_instance: 0;
+			dispatchScreenQuadRender;
 			endRenderPass.
 			
 		"Submit the eyes."
@@ -74,7 +73,7 @@ WDASceneViewVRDisplayMode >> renderTargetExtentChanged [
 	super renderTargetExtentChanged.
 	
 	windowDisplayBinding ifNil: [
-		windowDisplayBinding := self compositionShaderSignature newSource
+		windowDisplayBinding := self compositionShaderSignature newSources
 	].
 
 	windowDisplayBinding
@@ -91,9 +90,4 @@ WDASceneViewVRDisplayMode >> rightEyeTransform [
 { #category : #'render targets' }
 WDASceneViewVRDisplayMode >> rightRenderTargetRequiredExtent [
 	^ engine vrSystem rightEyeRenderTargetExtent
-]
-
-{ #category : #accessing }
-WDASceneViewVRDisplayMode >> windowDisplayShader [
-	^ windowDisplayShader ifNil: [ windowDisplayShader := engine loadFragmentShader: 'shaders/composition/passthroughFragment.dastrel' ]
 ]

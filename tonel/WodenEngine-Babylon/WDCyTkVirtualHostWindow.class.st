@@ -3,7 +3,7 @@ Class {
 	#superclass : #CyTkVirtualHostWindow,
 	#traits : 'TCyTkOSWindowEventDispatcher',
 	#classTraits : 'TCyTkOSWindowEventDispatcher classTrait',
-	#category : #'WodenEngine-Babylon-Vesuvius'
+	#category : #'WodenEngine-Babylon-Cyrus'
 }
 
 { #category : #'oswindow event dispatching' }

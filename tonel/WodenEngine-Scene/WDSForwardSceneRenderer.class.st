@@ -53,11 +53,6 @@ WDSForwardSceneRenderer >> setupRenderingViewportStates: renderingViewport [
 		useShaderResources: renderingViewport globalLightingStateShaderBindings
 ]
 
-{ #category : #accessing }
-WDSForwardSceneRenderer >> shaderSignatureClass [
-	^ WDCForwardRenderingShaderSignature
-]
-
 { #category : #rendering }
 WDSForwardSceneRenderer >> updateFrameLightingStates [
 	| transform lightingState lightingStateBinding lightSources viewport viewportLights shadowMapExtent shadowMapInverseExtent |

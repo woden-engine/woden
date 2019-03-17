@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'cyrusWindow'
 	],
-	#category : #'WodenEngine-Babylon-Vesuvius'
+	#category : #'WodenEngine-Babylon-Cyrus'
 }
 
 { #category : #'rendering process stages' }

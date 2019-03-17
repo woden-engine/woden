@@ -1,5 +1,5 @@
 Class {
-	#name : #WDCForwardRenderingShaderSignature,
+	#name : #WDCSceneRenderingShaderSignature,
 	#superclass : #WDCShaderSignature,
 	#instVars : [
 		'defaultSamplers',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-WDCForwardRenderingShaderSignature class >> signatureSpec: spec [
+WDCSceneRenderingShaderSignature class >> signatureSpec: spec [
 	"
 	self rebuildShaderSignatureMethods
 	"
@@ -51,7 +51,7 @@ WDCForwardRenderingShaderSignature class >> signatureSpec: spec [
 ]
 
 { #category : #'generated shader signature methods' }
-WDCForwardRenderingShaderSignature >> createHandleForDevice: device [
+WDCSceneRenderingShaderSignature >> createHandleForDevice: device [
 	^ device createShaderSignatureBuilder
 
 		"Samplers"
@@ -86,7 +86,7 @@ WDCForwardRenderingShaderSignature >> createHandleForDevice: device [
 ]
 
 { #category : #accessing }
-WDCForwardRenderingShaderSignature >> defaultSamplers [
+WDCSceneRenderingShaderSignature >> defaultSamplers [
 	| samplerDesc bindings |
 	(defaultSamplersSession == Smalltalk session and: [ defaultSamplers isNotNil ]) ifTrue: [ ^ defaultSamplers ].
 	
@@ -133,26 +133,26 @@ WDCForwardRenderingShaderSignature >> defaultSamplers [
 ]
 
 { #category : #'generated shader signature methods' }
-WDCForwardRenderingShaderSignature >> newCameraState [
+WDCSceneRenderingShaderSignature >> newCameraState [
 	^ engine createShaderSignature: self resourceBinding: 1 elements: 1
 ]
 
 { #category : #'generated shader signature methods' }
-WDCForwardRenderingShaderSignature >> newLightingState [
+WDCSceneRenderingShaderSignature >> newLightingState [
 	^ engine createShaderSignature: self resourceBinding: 2 elements: 4
 ]
 
 { #category : #'generated shader signature methods' }
-WDCForwardRenderingShaderSignature >> newMaterialState [
+WDCSceneRenderingShaderSignature >> newMaterialState [
 	^ engine createShaderSignature: self resourceBinding: 4 elements: 17
 ]
 
 { #category : #'generated shader signature methods' }
-WDCForwardRenderingShaderSignature >> newObjectState [
+WDCSceneRenderingShaderSignature >> newObjectState [
 	^ engine createShaderSignature: self resourceBinding: 3 elements: 3
 ]
 
 { #category : #'generated shader signature methods' }
-WDCForwardRenderingShaderSignature >> newSamplers [
+WDCSceneRenderingShaderSignature >> newSamplers [
 	^ engine createShaderSignature: self resourceBinding: 0 elements: 5
 ]

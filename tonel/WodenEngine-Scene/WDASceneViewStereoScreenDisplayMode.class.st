@@ -5,8 +5,6 @@ Class {
 		'ipd',
 		'focalDistance',
 		'shaderSignature',
-		'vertexShader',
-		'fragmentShader',
 		'sourceRenderTargetsBinding',
 		'compositionStateBinding',
 		'compositionStateBuffer',
@@ -35,7 +33,7 @@ WDASceneViewStereoScreenDisplayMode >> checkRenderTargets [
 
 	(sourceRenderTargetsBinding isNil or: [ extentChanged ]) ifTrue: [ 
 		sourceRenderTargetsBinding ifNil: [
-			sourceRenderTargetsBinding := self shaderSignature newSource
+			sourceRenderTargetsBinding := self shaderSignature newSources
 		].
 		sourceRenderTargetsBinding
 			bind: 0 renderTarget: leftResolveRenderTarget startMiplevel: 0 miplevels: -1 lodclamp: 100000.0;
@@ -60,14 +58,12 @@ WDASceneViewStereoScreenDisplayMode >> composeEyesIn: stateTracker [
 		
 		beginRenderPass: renderPass renderTarget: resolveTarget bounds: resolveTarget bounds;
 	
-		vertexShader: self vertexShader;
+		vertexShader: engine resourceCache screenQuadVertexShader;
 		fragmentShader: self fragmentShader;
 		useShaderResources: compositionStateBinding;
 		useShaderResources: sourceRenderTargetsBinding;
 		useShaderResources: self shaderSignature defaultSamplers;
-		primitiveType: AGPU_TRIANGLE_STRIP;
-		drawArrays: 4 instance_count: 1 first_vertex: 0 base_instance: 0;
-		
+		dispatchScreenQuadRender;
 		endRenderPass
 ]
 
@@ -113,11 +109,6 @@ WDASceneViewStereoScreenDisplayMode >> createCompositionStateBinding [
 WDASceneViewStereoScreenDisplayMode >> createCompositionStateBuffer [
 	compositionStateBuffer := engine createStreamingUniformBuffer: WTCompositionState structureSize.
 	compositionStateBinding bind: 0 uniformBuffer: compositionStateBuffer.
-]
-
-{ #category : #'viewport composition' }
-WDASceneViewStereoScreenDisplayMode >> fragmentShader [
-	^ fragmentShader ifNil: [ fragmentShader := engine loadFragmentShader: self fragmentShaderFileName ]
 ]
 
 { #category : #initialization }
@@ -182,14 +173,4 @@ WDASceneViewStereoScreenDisplayMode >> updateCompositionState [
 { #category : #'rendering process stages' }
 WDASceneViewStereoScreenDisplayMode >> uploadCompositionState [
 	compositionState storeBytesIn: compositionStateBuffer validPointer getHandle position: 1.
-]
-
-{ #category : #'viewport composition' }
-WDASceneViewStereoScreenDisplayMode >> vertexShader [
-	^ vertexShader ifNil: [ vertexShader := engine loadVertexShader: self vertexShaderFileName ]
-]
-
-{ #category : #'viewport composition' }
-WDASceneViewStereoScreenDisplayMode >> vertexShaderFileName [
-	^ 'shaders/composition/passthroughVertex.dastrel'
 ]

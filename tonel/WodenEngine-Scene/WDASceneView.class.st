@@ -46,8 +46,7 @@ WDASceneView >> allowingVR [
 	allowingVR := true.
 	(engine isNotNil and: [engine hasSupportForVR]) ifTrue: [
 		self vr
-	].
-
+	]
 ]
 
 { #category : #'screen display modes' }

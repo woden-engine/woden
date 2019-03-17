@@ -48,7 +48,7 @@ WDSShadowSceneRenderer >> sceneRendererViewportClass [
 
 { #category : #accessing }
 WDSShadowSceneRenderer >> shaderSignatureClass [
-	^ WDCForwardRenderingShaderSignature
+	^ WDCSceneRenderingShaderSignature
 ]
 
 { #category : #accessing }

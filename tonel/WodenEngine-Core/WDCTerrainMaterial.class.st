@@ -100,7 +100,7 @@ WDCTerrainMaterial >> albedoTextures: anArray [
 WDCTerrainMaterial >> bindResources [
 	| signature resourceCache |
 	resourceBinding ifNil: [ 
-		signature := WDCForwardRenderingShaderSignature for: engine.
+		signature := WDCSceneRenderingShaderSignature for: engine.
 		resourceBinding := signature newMaterialState.
 	].
 
@@ -144,10 +144,9 @@ WDCTerrainMaterial >> depthNormalFragmentShader [
 	^ isolinesFragmentShader ifNil: [ isolinesFragmentShader := self shaderLibrary getFragmentStage: #depthNormal_fragment ]
 ]
 
-{ #category : #accessing }
+{ #category : #shaders }
 WDCTerrainMaterial >> fragmentShader [
-	^ fragmentShader ifNil: [ fragmentShader := self fetchFragmentShader: 'shaders/surface/terrainForward.dastrel' ].
-
+	^ fragmentShader ifNil: [ fragmentShader := self shaderLibrary getFragmentStage: #forward_splatting ]
 ]
 
 { #category : #accessing }

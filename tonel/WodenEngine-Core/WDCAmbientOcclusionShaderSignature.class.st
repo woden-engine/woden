@@ -25,12 +25,11 @@ WDCAmbientOcclusionShaderSignature class >> signatureSpec: spec [
 				maxBindings: 1000;
 				uniform: #ObjectState count: 1
 		];
-		bank: #ComputeBuffers with: [ :bank |
+		bank: #ComputeSources with: [ :bank |
 			bank
 				maxBindings: 1000;
 				texture: #DepthBuffer count: 1;
-				texture: #NormalBuffer count: 1;
-				storageImage: #Destination count: 1
+				texture: #NormalBuffer count: 1
 		];
 		yourself
 ]
@@ -47,11 +46,10 @@ WDCAmbientOcclusionShaderSignature >> createHandleForDevice: device [
 		beginBindingBank: 1000;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "ObjectState"
 
-		"ComputeBuffers"
+		"ComputeSources"
 		beginBindingBank: 1000;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "DepthBuffer"
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "NormalBuffer"
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_STORAGE_IMAGE bindingPointCount: 1; "Destination"
 
 		build
 
@@ -97,8 +95,8 @@ WDCAmbientOcclusionShaderSignature >> newCameraState [
 ]
 
 { #category : #'generated shader signature methods' }
-WDCAmbientOcclusionShaderSignature >> newComputeBuffers [
-	^ engine createShaderSignature: self resourceBinding: 2 elements: 3
+WDCAmbientOcclusionShaderSignature >> newComputeSources [
+	^ engine createShaderSignature: self resourceBinding: 2 elements: 2
 ]
 
 { #category : #'generated shader signature methods' }

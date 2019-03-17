@@ -6,7 +6,7 @@ Class {
 		'commandList',
 		'surface'
 	],
-	#category : #'WodenEngine-Babylon-Vesuvius'
+	#category : #'WodenEngine-Babylon-Cyrus'
 }
 
 { #category : #accessing }

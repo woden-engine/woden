@@ -12,6 +12,37 @@ Class {
 }
 
 { #category : #'instance creation' }
+WDCRenderTarget class >> for: engine colorAttachments: colorAttachments [
+	^ self for: engine colorAttachments: colorAttachments depthStencilAttachment: nil
+]
+
+{ #category : #'instance creation' }
+WDCRenderTarget class >> for: engine colorAttachments: colorAttachments depthStencilAttachment: depthStencilAttachment [
+	| sampleCount extent |
+	sampleCount := nil.
+	extent := nil.
+	depthStencilAttachment ifNotNil: [
+		extent := depthStencilAttachment extent.
+		sampleCount := depthStencilAttachment description sample_count
+	].
+	sampleCount ifNil: [
+		extent := colorAttachments first extent.
+		sampleCount := colorAttachments first description sample_count
+	].
+	
+	^ (self for: engine extent: extent)
+		colorAttachmentFormats: (colorAttachments collect: [ :attachment | attachment description format ]);
+		depthStencilFormat: (depthStencilAttachment
+			ifNil: [AGPU_TEXTURE_FORMAT_UNKNOWN]
+			ifNotNil: [depthStencilAttachment description format]);
+		hasDepth: (depthStencilAttachment ifNil: [false] ifNotNil: #hasDepthAspect);
+		hasStencil: (depthStencilAttachment ifNil: [false] ifNotNil: #hasStencilAspect);
+		isDepthReaded: (depthStencilAttachment ifNil: [false] ifNotNil: #isDepthReaded);
+		sampleCount: sampleCount;
+		createFramebuffersWithColorAttachments: colorAttachments depthStencilAttachment: depthStencilAttachment
+]
+
+{ #category : #'instance creation' }
 WDCRenderTarget class >> for: anEngine extent: anExtent [
 	^ self new engine: anEngine; extent: anExtent; yourself
 ]

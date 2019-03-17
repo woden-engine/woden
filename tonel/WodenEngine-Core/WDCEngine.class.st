@@ -283,6 +283,30 @@ WDCEngine >> createLinearTextureFromForm: aForm [
 	^ self createTextureFromForm: aForm format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM
 ]
 
+{ #category : #'resource building' }
+WDCEngine >> createRenderTargetColorTextureWithExtent: anExtent format: aTextureFormat [
+	^ self createRenderTargetColorTextureWithExtent: anExtent sampleCount: 1 format: aTextureFormat
+]
+
+{ #category : #'resource building' }
+WDCEngine >> createRenderTargetColorTextureWithExtent: anExtent sampleCount: sampleCount format: aTextureFormat [
+	| width height description |
+	width := anExtent x.
+	height := anExtent y.
+	description := AGPUTextureDescription new
+		type: AGPU_TEXTURE_2D;
+		format: aTextureFormat;
+		width: width;
+		height: height;
+		depthOrArraySize: 1;
+		miplevels: 1;
+		sample_count: sampleCount;
+		sample_quality: 0;
+		flags: AGPU_TEXTURE_FLAG_RENDERBUFFER_ONLY | AGPU_TEXTURE_FLAG_RENDER_TARGET;
+		yourself.
+	^ self createTexture: description
+]
+
 { #category : #initialization }
 WDCEngine >> createResourceCache [
 	resourceCache ifNil: [
@@ -567,6 +591,11 @@ WDCEngine >> loadShaderLibrary: aFileName [
 { #category : #'resource loading' }
 WDCEngine >> loadVertexShader: aFileName [
 	^ resourceCache loadVertexShader: aFileName
+]
+
+{ #category : #'resource building' }
+WDCEngine >> newCompositionFullScreenPass [
+	^ WDCCompositionFullScreenPass for: self
 ]
 
 { #category : #'resource building' }

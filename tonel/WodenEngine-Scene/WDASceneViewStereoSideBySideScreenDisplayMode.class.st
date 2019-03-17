@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #'viewport composition' }
-WDASceneViewStereoSideBySideScreenDisplayMode >> fragmentShaderFileName [
-	^ 'shaders/composition/sideBySide.dastrel'
+WDASceneViewStereoSideBySideScreenDisplayMode >> fragmentShaderName [
+	^ #sideBySide
 ]

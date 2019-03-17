@@ -11,10 +11,8 @@ Class {
 		'debugRenderMesh',
 		'debugRenderShadowMapViewport',
 		'intermediateRenderTarget',
-		'ambientOcclusionComputeShader',
 		'debugRenderTargetIndex',
-		'activeDebugRenderingViewport',
-		'ambientOcclusionMSComputeShader'
+		'activeDebugRenderingViewport'
 	],
 	#classVars : [
 		'RenderTargetDebugDrawingMethod',
@@ -52,16 +50,6 @@ WDSLightedSceneRenderer class >> shadowMapExtent [
 	^ 512 @ 512
 ]
 
-{ #category : #'ambient occlusion' }
-WDSLightedSceneRenderer >> ambientOcclusionComputeShader [
-	^ ambientOcclusionComputeShader ifNil: [ambientOcclusionComputeShader := engine loadComputeShader: 'shaders/lighting/ambientOcclusionCompute.dastrel']
-]
-
-{ #category : #'ambient occlusion' }
-WDSLightedSceneRenderer >> ambientOcclusionMSComputeShader [
-	^ ambientOcclusionMSComputeShader ifNil: [ambientOcclusionMSComputeShader := engine loadComputeShader: 'shaders/lighting/ambientOcclusionMSCompute.dastrel']
-]
-
 { #category : #'debug rendering' }
 WDSLightedSceneRenderer >> applyDebugRenderShadowMapViewport [
 	| shadowLight cameraState gpuCameraState |
@@ -80,36 +68,22 @@ WDSLightedSceneRenderer >> applyDebugRenderShadowMapViewport [
 
 { #category : #'ambient occlusion' }
 WDSLightedSceneRenderer >> computeScreenSpaceAmbientOcclusionFor: renderingViewport [
-	| description width height aoShaderShaderSignature |
-	description := renderingViewport ambientOcclusionTexture description.
-	width := description width.
-	height := description height.
+	| aoShaderShaderSignature |
 	aoShaderShaderSignature := WDCAmbientOcclusionShaderSignature for: engine.
 	
-	stateTracker
+	stateTracker 
+		"Ambient occlusion main compuation."
 		shaderSignature: aoShaderShaderSignature;
-		computeShader: (renderingViewport sampleCount <= 1
-			ifTrue: [self ambientOcclusionComputeShader]
-			ifFalse: [self ambientOcclusionMSComputeShader]);
-		useComputeShaderResources: aoShaderShaderSignature defaultSamplers;
-		useComputeShaderResources: renderingViewport cameraStateShaderBindings;
-		useComputeShaderResources: renderingViewport ambientOcclusionComputeShaderBindings;
-		dispatchComputeGlobalGridX: width y: height;
+		useShaderResources: aoShaderShaderSignature defaultSamplers;
+		useShaderResources: renderingViewport cameraStateShaderBindings;
+		applyFullScreenPass: renderingViewport ambientOcclusionComputationArguments;
 		
 		"Horizontal blur pass"
-		computeShader: engine resourceCache imageBlurGrayHorizontal5 arguments: renderingViewport ambientOcclusionHorizontalBlurArguments;
-		dispatchComputeGlobalGridX: width y: height;
+		applyFullScreenPass: renderingViewport ambientOcclusionHorizontalBlurArguments;
 		
 		"Vertical blur pass"
-		computeShader: engine resourceCache imageBlurGrayVertical5 arguments: renderingViewport ambientOcclusionVerticalBlurArguments;
-		dispatchComputeGlobalGridX: width y: height.
-		
-	"stateTracker
-		computeShader: (renderingViewport sampleCount <= 1
-			ifTrue: [self ambientOcclusionComputeShader]
-			ifFalse: [self ambientOcclusionMSComputeShader])
-			arguments: renderingViewport ambientOcclusionComputeShaderArguments;
-		dispatchComputeGlobalGridX: width y: height."
+		applyFullScreenPass: renderingViewport ambientOcclusionVerticalBlurArguments.
+
 ]
 
 { #category : #'debug rendering' }
@@ -312,6 +286,11 @@ WDSLightedSceneRenderer >> renderViewports: viewports composeWith: aBlock [
 { #category : #abstract }
 WDSLightedSceneRenderer >> sceneRendererViewportClass [
 	^ WDSLightedSceneRendererViewport
+]
+
+{ #category : #accessing }
+WDSLightedSceneRenderer >> shaderSignatureClass [
+	^ WDCSceneRenderingShaderSignature
 ]
 
 { #category : #'shadow mapping' }

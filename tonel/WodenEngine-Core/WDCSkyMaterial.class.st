@@ -30,7 +30,7 @@ WDCSkyMaterial >> activateForwardOn: stateTracker [
 WDCSkyMaterial >> bindResources [
 	| signature |
 	resourceBinding ifNil: [ 
-		signature := WDCForwardRenderingShaderSignature for: engine.
+		signature := WDCSceneRenderingShaderSignature for: engine.
 		resourceBinding := signature newMaterialState.
 	].
 	skyTexture ifNotNil: [ resourceBinding bind: 2 texture: skyTexture ].

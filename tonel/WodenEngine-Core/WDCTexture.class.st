@@ -5,8 +5,29 @@ Class {
 		'description',
 		'data'
 	],
-	#category : 'WodenEngine-Core-GPU-Resources'
+	#classVars : [
+		'FormatsWithDepthAspect',
+		'FormatsWithStencilAspect'
+	],
+	#category : #'WodenEngine-Core-GPU-Resources'
 }
+
+{ #category : #'class initialization' }
+WDCTexture class >> initialize [
+	super initialize.
+	
+	FormatsWithDepthAspect := Set newFrom: {
+		AGPU_TEXTURE_FORMAT_D16_UNORM.
+		AGPU_TEXTURE_FORMAT_D24_UNORM_S8_UINT .
+		AGPU_TEXTURE_FORMAT_D32_FLOAT .
+		AGPU_TEXTURE_FORMAT_D32_FLOAT_S8X24_UINT.
+	}.
+	
+	FormatsWithStencilAspect := Set newFrom: { 
+		AGPU_TEXTURE_FORMAT_D24_UNORM_S8_UINT .
+		AGPU_TEXTURE_FORMAT_D32_FLOAT_S8X24_UINT.
+	}.
+]
 
 { #category : #converting }
 WDCTexture >> asSRGBTextureFor: anEngine [
@@ -81,6 +102,11 @@ WDCTexture >> description: anObject [
 	description := anObject
 ]
 
+{ #category : #accessing }
+WDCTexture >> extent [
+	^ description width @ description height
+]
+
 { #category : #'as yet unclassified' }
 WDCTexture >> fullTextureView [
 	| view |
@@ -88,6 +114,23 @@ WDCTexture >> fullTextureView [
 	self validHandle getFullViewDescription: view.
 	^ view
 
+]
+
+{ #category : #testing }
+WDCTexture >> hasDepthAspect [
+	^ FormatsWithDepthAspect includes: description format
+	
+]
+
+{ #category : #testing }
+WDCTexture >> hasStencilAspect [
+	^ FormatsWithStencilAspect includes: description format
+	
+]
+
+{ #category : #testing }
+WDCTexture >> isDepthReaded [
+	^ self hasDepthAspect and: [ description flags anyMask: AGPU_TEXTURE_FLAG_RENDER_TARGET ]
 ]
 
 { #category : #preview }

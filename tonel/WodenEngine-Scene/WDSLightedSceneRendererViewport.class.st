@@ -10,7 +10,7 @@ Class {
 		'sceneRenderTarget',
 		'ambientOcclusionTexture',
 		'globalLightingStateShaderBindings',
-		'ambientOcclusionComputeShaderBindings',
+		'ambientOcclusionComputationArguments',
 		'gbufferRenderPass',
 		'sceneRenderPass',
 		'ambientOcclusionHorizontalBlurArguments',
@@ -25,13 +25,13 @@ WDSLightedSceneRendererViewport >> addLight: aLight [
 ]
 
 { #category : #accessing }
-WDSLightedSceneRendererViewport >> ambientOcclusionComputeShaderBindings [
-	^ ambientOcclusionComputeShaderBindings
+WDSLightedSceneRendererViewport >> ambientOcclusionComputationArguments [
+	^ ambientOcclusionComputationArguments
 ]
 
 { #category : #accessing }
-WDSLightedSceneRendererViewport >> ambientOcclusionComputeShaderBindings: anObject [
-	ambientOcclusionComputeShaderBindings := anObject
+WDSLightedSceneRendererViewport >> ambientOcclusionComputationArguments: anObject [
+	ambientOcclusionComputationArguments := anObject
 ]
 
 { #category : #accessing }

@@ -11,8 +11,9 @@ Class {
 		'formTextureCache',
 		'textureMaterialCache',
 		'textureArrayMaterialCache',
-		'grayscaleTextureArrayColorShader',
-		'grayTextureColorShader'
+		'grayTextureColorShader',
+		'basicShaderLibrary',
+		'grayTextureArrayColorShader'
 	],
 	#classVars : [
 		'PrimitiveTypeMap'
@@ -20,7 +21,7 @@ Class {
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : #'WodenEngine-Babylon'
+	#category : #'WodenEngine-Babylon-Driver'
 }
 
 { #category : #'as yet unclassified' }
@@ -44,13 +45,18 @@ WDBBabylonDriver class >> isSupported [
 ]
 
 { #category : #shaders }
+WDBBabylonDriver >> basicShaderLibrary [
+	^ basicShaderLibrary ifNil: [ basicShaderLibrary := engine loadShaderLibrary: 'shaders/babylon/basicShaders.dastrel' ]
+]
+
+{ #category : #shaders }
 WDBBabylonDriver >> colorFontShader [
-	^ colorFontShader ifNil: [ colorFontShader := engine loadFragmentShader: 'shaders/babylon/textColorFragment.dastrel' ]
+	^ colorFontShader ifNil: [ colorFontShader := self basicShaderLibrary getFragmentStage: #colorFont ]
 ]
 
 { #category : #shaders }
 WDBBabylonDriver >> colorShader [
-	^ colorShader ifNil: [ colorShader := engine loadFragmentShader: 'shaders/babylon/colorFragment.dastrel' ]
+	^ colorShader ifNil: [ colorShader := self basicShaderLibrary getFragmentStage: #color ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -132,13 +138,13 @@ WDBBabylonDriver >> engine [
 ]
 
 { #category : #shaders }
-WDBBabylonDriver >> grayTextureColorShader [
-	^ grayTextureColorShader ifNil: [ grayTextureColorShader := engine loadFragmentShader: 'shaders/babylon/grayTexturedFragment.dastrel' ]
+WDBBabylonDriver >> grayTextureArrayColorShader [
+	^ grayTextureArrayColorShader ifNil: [ grayTextureArrayColorShader := self basicShaderLibrary getFragmentStage: #grayTexturedArray ]
 ]
 
 { #category : #shaders }
-WDBBabylonDriver >> grayscaleTextureArrayColorShader [
-	^ grayscaleTextureArrayColorShader ifNil: [ grayscaleTextureArrayColorShader := engine loadFragmentShader: 'shaders/babylon/grayTexturedArrayFragment.dastrel' ]
+WDBBabylonDriver >> grayTextureColorShader [
+	^ grayTextureColorShader ifNil: [ grayTextureColorShader := self basicShaderLibrary getFragmentStage: #grayTextured ]
 ]
 
 { #category : #initialization }
@@ -174,15 +180,15 @@ WDBBabylonDriver >> surfaceWithExtent: anExtent sampleCount: aSampleCount [
 
 { #category : #shaders }
 WDBBabylonDriver >> textureArrayColorShader [
-	^ textureArrayColorShader ifNil: [ textureArrayColorShader := engine loadFragmentShader: 'shaders/babylon/texturedArrayFragment.dastrel' ]
+	^ textureArrayColorShader ifNil: [ textureArrayColorShader := self basicShaderLibrary getFragmentStage: #texturedArray ]
 ]
 
 { #category : #shaders }
 WDBBabylonDriver >> textureColorShader [
-	^ textureColorShader ifNil: [ textureColorShader := engine loadFragmentShader: 'shaders/babylon/texturedFragment.dastrel' ]
+	^ textureColorShader ifNil: [ textureColorShader := self basicShaderLibrary getFragmentStage: #textured ]
 ]
 
 { #category : #shaders }
 WDBBabylonDriver >> vertexShader [
-	^ vertexShader ifNil: [ vertexShader := engine loadVertexShader: 'shaders/babylon/genericVertex.dastrel' ]
+	^ vertexShader ifNil: [ vertexShader := self basicShaderLibrary getVertexStage: #vertex ]
 ]

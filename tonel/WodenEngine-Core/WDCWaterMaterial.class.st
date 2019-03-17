@@ -47,7 +47,7 @@ WDCWaterMaterial >> albedoColor [
 WDCWaterMaterial >> bindResources [
 	| signature resourceCache |
 	resourceBinding ifNil: [
-		signature := WDCForwardRenderingShaderSignature for: engine.
+		signature := WDCSceneRenderingShaderSignature for: engine.
 		resourceBinding := signature newMaterialState.
 	].
 

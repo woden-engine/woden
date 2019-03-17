@@ -95,7 +95,7 @@ WDSGScene >> initialize [
 
 { #category : #accessing }
 WDSGScene >> initializeWithEngine: anEngine [
-	self initializeWithEngine: anEngine shaderSignatureClass: WDCForwardRenderingShaderSignature
+	self initializeWithEngine: anEngine shaderSignatureClass: WDCSceneRenderingShaderSignature
 ]
 
 { #category : #accessing }

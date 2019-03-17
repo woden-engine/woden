@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #'viewport composition' }
-WDASceneViewStereoInterleavedScreenDisplayMode >> fragmentShaderFileName [
-	^ 'shaders/composition/interleaved.dastrel'
+WDASceneViewStereoInterleavedScreenDisplayMode >> fragmentShaderName [
+	^ #interleaved
 ]

@@ -15,8 +15,7 @@ Class {
 		'poolsMutex',
 		'pendingResourceReloadActions',
 		'screenQuadVertexShader',
-		'alwaysFrontDepthNormalFragmentShader',
-		'imageBlur5'
+		'alwaysFrontDepthNormalFragmentShader'
 	],
 	#classVars : [
 		'ShaderLanguageTargetMap',
@@ -297,31 +296,6 @@ WDCResourceCache >> grayTextureExtent: extent renderWith: aBlock [
 	| data |
 	data := WDCTextureData extent: extent grayRenderWith: aBlock.
 	^ data asTextureFor: engine
-]
-
-{ #category : #'special shaders' }
-WDCResourceCache >> imageBlur5 [
-	^ imageBlur5 ifNil: [ imageBlur5 := self loadShaderLibrary: 'shaders/image/imageBlur5.dastrel' ]
-]
-
-{ #category : #'special shaders' }
-WDCResourceCache >> imageBlurGrayHorizontal5 [
-	^ self imageBlur5 getComputeStage: #grayHorizontal
-]
-
-{ #category : #'special shaders' }
-WDCResourceCache >> imageBlurGrayVertical5 [
-	^ self imageBlur5 getComputeStage: #grayVertical
-]
-
-{ #category : #'special shaders' }
-WDCResourceCache >> imageBlurHorizontal5 [
-	^ self imageBlur5 getComputeStage: #horizontal
-]
-
-{ #category : #'special shaders' }
-WDCResourceCache >> imageBlurVertical5 [
-	^ self imageBlur5 getComputeStage: #vertical
 ]
 
 { #category : #initialization }

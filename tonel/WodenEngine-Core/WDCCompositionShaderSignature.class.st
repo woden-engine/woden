@@ -15,21 +15,20 @@ WDCCompositionShaderSignature class >> signatureSpec: spec [
 	"
 	spec
 		name: #Composition;
-		bank: #Parameters with: [ :bank |
-			bank
-				maxBindings: 1000;
-				uniform: #Parameters
-		];
-		bank: #Source with: [ :bank |
-			bank
-				maxBindings: 1000;
-				texture: #LeftTexture;
-				texture: #RightTexture
-		];
 		bank: #Samplers with: [ :bank |
 			bank
 				maxBindings: 10;
 				sampler: #Sampler
+		];
+		bank: #Sources with: [ :bank |
+			bank
+				maxBindings: 1000;
+				texture: #Textures count: 5
+		];
+		bank: #Parameters with: [ :bank |
+			bank
+				maxBindings: 1000;
+				uniform: #Parameters
 		];
 		yourself
 ]
@@ -38,18 +37,17 @@ WDCCompositionShaderSignature class >> signatureSpec: spec [
 WDCCompositionShaderSignature >> createHandleForDevice: device [
 	^ device createShaderSignatureBuilder
 
-		"Parameters"
-		beginBindingBank: 1000;
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "Parameters"
-
-		"Source"
-		beginBindingBank: 1000;
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "LeftTexture"
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "RightTexture"
-
 		"Samplers"
 		beginBindingBank: 10;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLER bindingPointCount: 1; "Sampler"
+
+		"Sources"
+		beginBindingBank: 1000;
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 5; "Textures"
+
+		"Parameters"
+		beginBindingBank: 1000;
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "Parameters"
 
 		build
 
@@ -79,15 +77,15 @@ WDCCompositionShaderSignature >> defaultSamplers [
 
 { #category : #'generated shader signature methods' }
 WDCCompositionShaderSignature >> newParameters [
-	^ engine createShaderSignature: self resourceBinding: 0 elements: 1
-]
-
-{ #category : #'generated shader signature methods' }
-WDCCompositionShaderSignature >> newSamplers [
 	^ engine createShaderSignature: self resourceBinding: 2 elements: 1
 ]
 
 { #category : #'generated shader signature methods' }
-WDCCompositionShaderSignature >> newSource [
-	^ engine createShaderSignature: self resourceBinding: 1 elements: 2
+WDCCompositionShaderSignature >> newSamplers [
+	^ engine createShaderSignature: self resourceBinding: 0 elements: 1
+]
+
+{ #category : #'generated shader signature methods' }
+WDCCompositionShaderSignature >> newSources [
+	^ engine createShaderSignature: self resourceBinding: 1 elements: 5
 ]

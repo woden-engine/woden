@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #'viewport composition' }
-WDASceneViewStereoAnaglyphScreenDisplayMode >> fragmentShaderFileName [
-	^ 'shaders/composition/anaglyph.dastrel'
+WDASceneViewStereoAnaglyphScreenDisplayMode >> fragmentShaderName [
+	^ #anaglyph
 ]

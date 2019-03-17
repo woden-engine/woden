@@ -95,7 +95,7 @@ WDCGenericSurfaceMaterial >> albedoTexture: anObject [
 WDCGenericSurfaceMaterial >> bindResources [
 	| signature |
 	resourceBinding ifNil: [ 
-		signature := WDCForwardRenderingShaderSignature for: engine.
+		signature := WDCSceneRenderingShaderSignature for: engine.
 		resourceBinding := signature newMaterialState.
 	].
 

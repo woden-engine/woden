@@ -7,7 +7,8 @@ Class {
 		'rightResolveRenderTarget',
 		'rightRenderTarget',
 		'leftProjectionMatrix',
-		'rightProjectionMatrix'
+		'rightProjectionMatrix',
+		'fragmentShader'
 	],
 	#category : #'WodenEngine-Scene-Rendering'
 }
@@ -80,6 +81,17 @@ WDASceneViewStereoDisplayMode >> createRenderTargets [
 		rightResolveRenderTarget := rightRenderTarget.
 	].
 
+]
+
+{ #category : #'viewport composition' }
+WDASceneViewStereoDisplayMode >> fragmentShader [
+	^ fragmentShader ifNil: [ fragmentShader := (engine loadShaderLibrary: 'shaders/composition/stereo.dastrel')
+			getFragmentStage: self fragmentShaderName ]
+]
+
+{ #category : #'viewport composition' }
+WDASceneViewStereoDisplayMode >> fragmentShaderName [
+	^ #leftEye
 ]
 
 { #category : #'multi eye rendering' }
