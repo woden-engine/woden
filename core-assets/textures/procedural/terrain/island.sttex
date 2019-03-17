@@ -28,7 +28,7 @@ textureData := WDCTextureData extent: 256@256 terrainMap: (self at: #texture) re
 	heightAttenuation := (r smoothStepFrom: 0.0 to: innerRadius) fuzzyNot.
 
 	"Generate the mountains"
-	mountainHeight := (st*10.0 fractionalBrownianMotionOctaves: 5 lacunarity: 2.167245 initialAmplitude: 1.0 with: [:c | c signedGradientNoise abs ])*0.5 + 0.5 * (maximumHeight * heightAttenuation).
+	mountainHeight := (st*10.0 fractionalBrownianMotionOctaves: 5 lacunarity: 2.167245 with: [:c | c signedGradientNoise abs ])*0.5 + 0.5 * (maximumHeight * heightAttenuation).
 	"Generate the stuff in the island interior"
 	islandInterior := islandBaseLevel + mountainHeight.
 

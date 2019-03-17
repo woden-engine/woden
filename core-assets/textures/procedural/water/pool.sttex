@@ -8,7 +8,7 @@ colorRamp := WDCLinearRamp with: {
 heightFunction := [ :s :t |
 	| st |
 	st := s@t.
-	st*textureSize fractionalBrownianMotionOctaves: 3 lacunarity: 2.0 initialAmplitude: 0.4 tiledWith: textureSize with: #voronoiNoiseTiledWith:.
+	st*textureSize fractionalBrownianMotionOctaves: 3 lacunarity: 2.0 tiledWith: textureSize with: #voronoiNoiseTiledWith:.
 ].
 
 ^ self textureExtent: 256@256 inspectorExtent: 128@128 heightFunction: heightFunction colorWith: colorRamp normalHeightScaleFactor: 3.0

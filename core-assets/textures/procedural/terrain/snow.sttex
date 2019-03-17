@@ -1,10 +1,10 @@
 | textureSize heightFunction colorRamp |
 textureSize := 20.0@20.0.
-colorRamp := WDCLinearRamp with: { 
+colorRamp := WDCLinearRamp with: {
 	0.05 -> '25525c' asColor.
 	0.4 -> Color white.
 }.
 heightFunction := [ :s :t |	| st snowFunction |
 	st := s@t.
-	snowFunction := st*textureSize fractionalBrownianMotionOctaves: 4 lacunarity: 2.0 initialAmplitude: 0.4 tiledWith: textureSize with: #gradientNoiseTiledWith:.].
+	snowFunction := st*textureSize fractionalBrownianMotionOctaves: 4 lacunarity: 2.0 tiledWith: textureSize with: #gradientNoiseTiledWith:.].
 ^ self textureExtent: 256@256 inspectorExtent: 128@128 heightFunction: heightFunction colorWith: colorRamp normalHeightScaleFactor: 3.0

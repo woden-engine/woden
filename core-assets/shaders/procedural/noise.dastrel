@@ -258,48 +258,52 @@ function tiledWorleyNoise(position: float2, period: float2) -> float
 }
 
 // Fractional brownian motion.
-function fbmTiledWorleyNoiseOctaves(position: float2, octaves: int, lacunarity: float, gain: float, initialAmplitude: float, tilingPeriod: float2) -> float
+function fbmTiledWorleyNoiseOctaves(position: float2, octaves: int, lacunarity: float, gain: float, tilingPeriod: float2) -> float
 {
 	let result = 0.0f;
 	let currentCoord = position;
 	let currentTilingPeriod = tilingPeriod;
-	let amplitude = initialAmplitude;
+	let amplitude = 0.5f;
+	let amplitudeSum = 0.0f;
 
 	for(let i = 0; i < octaves; i += 1)
 	{
 		result += amplitude*tiledWorleyNoise(currentCoord, currentTilingPeriod);
 		currentCoord *= lacunarity;
 		currentTilingPeriod *= lacunarity;
+		amplitudeSum += amplitude;
 		amplitude *= gain;
 	}
 
-	return result;
+	return result / amplitudeSum;
 }
 
-function fbmTiledWorleyNoiseOctaves(position: float2, octaves: int, lacunarity: float, initialAmplitude: float, tilingPeriod: float2) -> float
+function fbmTiledWorleyNoiseOctaves(position: float2, octaves: int, lacunarity: float, tilingPeriod: float2) -> float
 {
-	return fbmTiledWorleyNoiseOctaves(position, octaves, lacunarity, 1.0f/lacunarity, initialAmplitude, tilingPeriod);
+	return fbmTiledWorleyNoiseOctaves(position, octaves, lacunarity, 1.0f/lacunarity, tilingPeriod);
 }
 
-function fbmTiledSignedGradientNoiseOctaves(position: float2, octaves: int, lacunarity: float, gain: float, initialAmplitude: float, tilingPeriod: float2) -> float
+function fbmTiledSignedGradientNoiseOctaves(position: float2, octaves: int, lacunarity: float, gain: float, tilingPeriod: float2) -> float
 {
 	let result = 0.0f;
 	let currentCoord = position;
 	let currentTilingPeriod = tilingPeriod;
-	let amplitude = initialAmplitude;
+	let amplitude = 0.5f;
+	let amplitudeSum = 0.0f;
 
 	for(let i = 0; i < octaves; i += 1)
 	{
 		result += amplitude*tiledSignedGradientNoise(currentCoord, currentTilingPeriod);
 		currentCoord *= lacunarity;
 		currentTilingPeriod *= lacunarity;
+		amplitudeSum += amplitude;
 		amplitude *= gain;
 	}
 
-	return result;
+	return result / amplitudeSum;
 }
 
-function fbmTiledSignedGradientNoiseOctaves(position: float2, octaves: int, lacunarity: float, initialAmplitude: float, tilingPeriod: float2) -> float
+function fbmTiledSignedGradientNoiseOctaves(position: float2, octaves: int, lacunarity: float, tilingPeriod: float2) -> float
 {
-	return fbmTiledSignedGradientNoiseOctaves(position, octaves, lacunarity, 1.0f/lacunarity, initialAmplitude, tilingPeriod);
+	return fbmTiledSignedGradientNoiseOctaves(position, octaves, lacunarity, 1.0f/lacunarity, tilingPeriod);
 }

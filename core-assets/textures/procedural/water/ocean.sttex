@@ -6,14 +6,14 @@ colorRamp := WDCLinearRamp with: {
 "	0.15 -> (Color red alpha: 0.7).
 	1.0 -> (Color yellow alpha: 1.0).""	0.15 -> (Color red alpha: 0.7).
 	0.4 -> (Color magenta alpha: 0.8).
-	1.0 -> (Color yellow alpha: 1.0)."	"	0.15 -> (Color green alpha: 0.7).
+	1.0 -> (Color yellow alpha: 1.0).""	0.15 -> (Color green alpha: 0.7).
 	0.4 -> (Color magenta alpha: 0.8).
 	1.0 -> (Color green alpha: 1.0)."}.
 
 heightFunction := [ :s :t |
 	| st |
 	st := s@t.
-	st*textureSize fractionalBrownianMotionOctaves: 3 lacunarity: 2.0 initialAmplitude: 0.4 tiledWith: textureSize with: #voronoiNoiseTiledWith:.
+	st*textureSize fractionalBrownianMotionOctaves: 3 lacunarity: 2.0 tiledWith: textureSize with: #voronoiNoiseTiledWith:.
 ].
 
 ^ self textureExtent: 256@256 inspectorExtent: 128@128 heightFunction: heightFunction colorWith: colorRamp normalHeightScaleFactor: 3.0
