@@ -1,61 +1,65 @@
 Extension { #name : #Point }
 
 { #category : #'*WodenEngine-Core' }
-Point >> fbmSignedGradientNoiseOctaves: octaves lacunarity: lacunarity gain: gain initialAmplitude: initialAmplitude tiledWith: tilingPeriod [
-	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain initialAmplitude: initialAmplitude tiledWith: tilingPeriod with: #signedGradientNoise
+Point >> fbmSignedGradientNoiseOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod [
+	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod with: #signedGradientNoise
 
 ]
 
 { #category : #'*WodenEngine-Core' }
-Point >> fbmWorleyNoiseOctaves: octaves lacunarity: lacunarity gain: gain initialAmplitude: initialAmplitude tiledWith: tilingPeriod [
-	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain initialAmplitude: initialAmplitude tiledWith: tilingPeriod with: #worleyNoise
+Point >> fbmWorleyNoiseOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod [
+	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod with: #worleyNoise
 
 ]
 
 { #category : #'*WodenEngine-Core' }
-Point >> fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain initialAmplitude: initialAmplitude tiledWith: tilingPeriod with: aBlock [
-	| result currentCoord amplitude currentTilingPeriod |
+Point >> fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod with: aBlock [
+	| result currentCoord amplitude currentTilingPeriod amplitudeSum |
 	result := 0.0.
 	currentCoord := self.
 	currentTilingPeriod := tilingPeriod.
-	amplitude := initialAmplitude.
+	amplitude := 0.5.
+	amplitudeSum := 0.0.
 	
 	1 to: octaves do: [ :i |
 		result := result + (aBlock noiseValueAt: currentCoord withAmplitude: amplitude withTilingPeriod: currentTilingPeriod).
 		currentCoord := currentCoord * lacunarity.
 		currentTilingPeriod := currentTilingPeriod*lacunarity.
+		amplitudeSum := amplitudeSum + amplitude.
 		amplitude := amplitude * gain
 	].
 
-	^ result
+	^ result / amplitudeSum
 
 ]
 
 { #category : #'*WodenEngine-Core' }
-Point >> fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain initialAmplitude: initialAmplitude with: aBlock [
-	| result currentCoord amplitude |
+Point >> fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain with: aBlock [
+	| result currentCoord amplitude amplitudeSum |
 	result := 0.0.
 	currentCoord := self.
-	amplitude := initialAmplitude.
+	amplitude := 0.5.
+	amplitudeSum := 0.0.
 	
 	1 to: octaves do: [ :i |
 		result := result + (aBlock noiseValueAt: currentCoord withAmplitude: amplitude).
 		currentCoord := currentCoord * lacunarity.
+		amplitudeSum := amplitudeSum + amplitude.
 		amplitude := amplitude * gain
 	].
 
-	^ result
+	^ result / amplitudeSum
 
 ]
 
 { #category : #'*WodenEngine-Core' }
-Point >> fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity initialAmplitude: initialAmplitude tiledWith: tilingPeriod with: aBlock [
-	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: lacunarity reciprocal initialAmplitude: initialAmplitude tiledWith: tilingPeriod with: aBlock
+Point >> fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity tiledWith: tilingPeriod with: aBlock [
+	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: lacunarity reciprocal tiledWith: tilingPeriod with: aBlock
 ]
 
 { #category : #'*WodenEngine-Core' }
-Point >> fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity initialAmplitude: initialAmplitude with: aBlock [
-	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: lacunarity reciprocal initialAmplitude: initialAmplitude with: aBlock
+Point >> fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity with: aBlock [
+	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: lacunarity reciprocal with: aBlock
 ]
 
 { #category : #'*WodenEngine-Core' }
@@ -202,7 +206,7 @@ Point >> turbulence [
 
 { #category : #'*WodenEngine-Core' }
 Point >> turbulenceScales: scale [
-	^ self fractionalBrownianMotionOctaves: scale lacunarity: 2.0 gain: 0.5 initialAmplitude: 1.0 with: #signedGradientNoise
+	^ self fractionalBrownianMotionOctaves: scale lacunarity: 2.0 gain: 0.5 with: #signedGradientNoise
 
 ]
 

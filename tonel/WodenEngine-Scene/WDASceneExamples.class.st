@@ -416,7 +416,7 @@ WDASceneExamples class >> example07SmallTerrain [
 	heightMap := WDCTextureData extent: 128@128 signedHeightRenderWith: [ :s :t |
 		|st|
 		st := s@t.
-		st*3.0 fractionalBrownianMotionOctaves: 5 lacunarity: 1.45 initialAmplitude: 0.5 with: [ :c : a|
+		st*3.0 fractionalBrownianMotionOctaves: 5 lacunarity: 1.45 with: [ :c : a|
 			(c signedGradientNoise *a) abs
 		]
 	].
@@ -472,7 +472,7 @@ WDASceneExamples class >> example08MediumTerrain [
 	heightMap := [WDCTextureData extent: 256@256 signedHeightRenderWith: [ :s :t |
 		|st|
 		st := s@t.
-		st*10.0 fractionalBrownianMotionOctaves: 8 lacunarity: 1.45 initialAmplitude: 0.5 with: [ :c : a|
+		st*10.0 fractionalBrownianMotionOctaves: 8 lacunarity: 1.45 with: [ :c : a|
 			(c signedGradientNoise *a) abs
 		]
 	]] valueCachedInDisk.
