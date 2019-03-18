@@ -112,7 +112,7 @@ Number >> productFuzzyXor: other [
 
 { #category : #'*WodenEngine-Core' }
 Number >> randomNoise [
-	^ (self sin * 543414.1875) floorFract 
+	^ self floor randomNoiseHashNormalized
 	
 ]
 

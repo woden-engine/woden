@@ -27,8 +27,10 @@ WDCPharoProceduralGPUScriptContext >> getMainComputeStageFrom: spirvShader engin
 	"For debugging: spirvShader saveTo: 'generated.spv'."
 	
 	lowLevelShader := WDCLowLevelShaderSource new
+		engine: engine;
 		entryFile: 'generated shader' asFileReference;
 		source: spirvShader asShaderCode;
+		entryPoints: spirvShader entryPoints;
 		yourself.
 		
 	^ lowLevelShader asShaderLibrary getComputeStage: #main

@@ -2,14 +2,24 @@ Extension { #name : #Point }
 
 { #category : #'*WodenEngine-Core' }
 Point >> fbmSignedGradientNoiseOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod [
-	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod with: #signedGradientNoise
+	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod with: #signedGradientNoiseTiledWith:
 
 ]
 
 { #category : #'*WodenEngine-Core' }
-Point >> fbmWorleyNoiseOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod [
-	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod with: #worleyNoise
+Point >> fbmSignedGradientNoiseOctaves: octaves lacunarity: lacunarity tiledWith: tilingPeriod [
+	^ self fbmSignedGradientNoiseOctaves: octaves lacunarity: lacunarity gain: lacunarity reciprocal tiledWith: tilingPeriod
+]
 
+{ #category : #'*WodenEngine-Core' }
+Point >> fbmWorleyNoiseOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod [
+	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod with: #worleyNoiseTiledWith:
+
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> fbmWorleyNoiseOctaves: octaves lacunarity: lacunarity tiledWith: tilingPeriod [
+	^ self fbmWorleyNoiseOctaves: octaves lacunarity: lacunarity gain: lacunarity reciprocal tiledWith: tilingPeriod
 ]
 
 { #category : #'*WodenEngine-Core' }
@@ -82,7 +92,11 @@ Point >> randomGradientVector [
 
 { #category : #'*WodenEngine-Core' }
 Point >> randomNoise [
-	^ (self dotProduct: 37.466001434934327 @ 974.4145860776373) randomNoise
+	| fx fy |
+	fx := x floor.
+	fy := y floor.
+	
+	^ ((fx randomNoiseHash * 27972) + (fy randomNoiseHash * 8516)) randomNoiseHashNormalized
 ]
 
 { #category : #'*WodenEngine-Core' }
@@ -92,7 +106,11 @@ Point >> randomNoise2 [
 
 { #category : #'*WodenEngine-Core' }
 Point >> randomNoise_second [
-	^ (self dotProduct: 718.2194213867188 @ 53.06364440917969) randomNoise
+	| fx fy |
+	fx := x floor.
+	fy := y floor.
+	
+	^ ((fx randomNoiseHash * 6591) + (fy randomNoiseHash * 21935)) randomNoiseHashNormalized
 ]
 
 { #category : #'*WodenEngine-Core' }
@@ -275,7 +293,7 @@ Point >> voronoiNoiseComponents [
 		]
 	].
 
-	^ {f1 sqrt . f2 sqrt}
+	^ {f1 sqrt min: 1.0. f2 sqrt min: 1.0}
 ]
 
 { #category : #'*WodenEngine-Core' }
