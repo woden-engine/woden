@@ -160,7 +160,7 @@ code_block(fragment) ssao
     let TBN = computeTBNForNormal(eyeNormal);
 
     // Compute a noise rotation matrix
-    let noiseRotation = rotationMatrixFor(signedRandomNoise(uv));
+    let noiseRotation = rotationMatrixFor(signedRandomNoise(uv*123456.0f));
 
     // Compute the full sample tangent to view matrix.
     let sampleTangentToView = TBN*noiseRotation;

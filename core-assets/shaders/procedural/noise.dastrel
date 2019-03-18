@@ -20,19 +20,37 @@ function cubicHermiteCurve(x: float2) -> float2
 }
 
 // Random noise implementation
-function randomNoise(position: float) -> float
+function randomNoiseHash(x: uint) -> uint
 {
-	return fract(sin(position)*543414.1875f);
+	let r = x;
+	r ^= r >> 16u;
+	r *= 2146121005u; // 0x7feb352d
+	r ^= r >> 15u;
+	r *= 2221713035u; // 0x846ca68b
+	r ^= r >> 16u;
+	return r;
+}
+
+function randomNoiseHashNormalized(x: uint) -> float
+{
+	return float(randomNoiseHash(x)) / 4294967295.0f;
+}
+
+function randomNoise(x: float) -> float
+{
+	return randomNoiseHashNormalized(uint(int(floor(x))));
 }
 
 function randomNoise(position: float2) -> float
 {
-	return randomNoise(dot(position, float2(37.465999603271484f, 974.4146118164063f)));
+	let ip = uint2(int2(floor(position)));
+	return randomNoiseHashNormalized(randomNoiseHash(ip.x) * 27972u + randomNoiseHash(ip.y) * 8516u);
 }
 
 function randomNoise_second(position: float2) -> float
 {
-	return randomNoise(dot(position, float2(718.2194213867188f, 53.06364440917969f)));
+	let ip = uint2(int2(floor(position)));
+	return randomNoiseHashNormalized(randomNoiseHash(ip.x) * 6591u + randomNoiseHash(ip.y) * 21935u);
 }
 
 function randomNoise2(position: float2) -> float2
