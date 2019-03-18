@@ -218,7 +218,7 @@ function voronoiNoiseComponents(position: float2) -> float2
 		}
 	}
 
-	return sqrt(float2(Fx, Fy));
+	return min(sqrt(float2(Fx, Fy)), float2(1.0f, 1.0f));
 }
 
 function voronoiNoise(position: float2) -> float
@@ -261,7 +261,7 @@ function tiledVoronoiNoiseComponents(position: float2, period: float2) -> float2
 		}
 	}
 
-	return sqrt(float2(Fx, Fy));
+	return min(sqrt(float2(Fx, Fy)), float2(1.0f, 1.0f));
 }
 
 function tiledVoronoiNoise(position: float2, period: float2) -> float

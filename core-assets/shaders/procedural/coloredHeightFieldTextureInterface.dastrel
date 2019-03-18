@@ -1,0 +1,10 @@
+import fragment.stage;
+import fragment.screenQuad;
+import procedural.noise;
+
+code_block(fragment) main
+{
+	let uv = FragmentInput.texcoord;
+	let color = colorMapFunction(heightFieldFunction(uv.x, uv.y));
+	FragmentStage.colorOutput0 = color;
+}

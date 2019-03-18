@@ -9,10 +9,8 @@ heightFunction := [ :s :t |
 	| cracks st bumps height |
 	st := s@t.
 
-	cracks := (st*textureSize fbmWorleyNoiseOctaves: 4 lacunarity: 3.0 tiledWith: textureSize)*1.42 min: 3.141592653589793.
-	bumps := st*textureSize*4.0 fbmSignedGradientNoiseOctaves: 4 lacunarity: 2.0 tiledWith: textureSize*4.0.
-	height := (cracks*0.5) + (bumps*0.5).
+	cracks := (st*textureSize fbmWorleyNoiseOctaves: 4 lacunarity: 3.0 tiledWith: textureSize)*1.42.	bumps := st*textureSize*4.0 fbmSignedGradientNoiseOctaves: 4 lacunarity: 2.0 tiledWith: textureSize*4.0.	height := (cracks*0.5) + (bumps*0.5).
 
 ].
 
-^ self textureExtent: 256@256 inspectorExtent: 128@128 heightFunction: heightFunction colorWith: colorRamp normalHeightScaleFactor: 3.0
+^ self textureExtent: 256@256 heightFunction: heightFunction "colorWith: colorRamp normalHeightScaleFactor: 3.0"
