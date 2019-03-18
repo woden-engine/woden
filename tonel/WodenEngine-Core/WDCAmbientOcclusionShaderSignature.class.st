@@ -34,6 +34,12 @@ WDCAmbientOcclusionShaderSignature class >> signatureSpec: spec [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+WDCAmbientOcclusionShaderSignature >> activeOnStateTracker: stateTracker [
+	super activeOnStateTracker: stateTracker.
+	stateTracker useShaderResources: self defaultSamplers.
+]
+
 { #category : #'generated shader signature methods' }
 WDCAmbientOcclusionShaderSignature >> createHandleForDevice: device [
 	^ device createShaderSignatureBuilder

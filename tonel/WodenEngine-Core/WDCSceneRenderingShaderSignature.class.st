@@ -50,6 +50,12 @@ WDCSceneRenderingShaderSignature class >> signatureSpec: spec [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+WDCSceneRenderingShaderSignature >> activeOnStateTracker: stateTracker [
+	super activeOnStateTracker: stateTracker.
+	stateTracker useShaderResources: self defaultSamplers.
+]
+
 { #category : #'generated shader signature methods' }
 WDCSceneRenderingShaderSignature >> createHandleForDevice: device [
 	^ device createShaderSignatureBuilder

@@ -44,6 +44,12 @@ WDCGenericComputationShaderSignature class >> signatureSpec: spec [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+WDCGenericComputationShaderSignature >> activeOnStateTracker: stateTracker [
+	super activeOnStateTracker: stateTracker.
+	stateTracker useShaderResources: self defaultSamplers.
+]
+
 { #category : #'generated shader signature methods' }
 WDCGenericComputationShaderSignature >> constantArgumentsOffset [
 	^ 0

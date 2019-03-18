@@ -13,6 +13,16 @@ Color class >> forSplattingElements: elements [
 ]
 
 { #category : #'*WodenEngine-Core' }
+Color >> formatAsDastrelColor [
+	^ 'float4({1}f, {2}f, {3}f, {4}f)' format: {
+		self red asFloat.
+		self green asFloat.
+		self blue asFloat.
+		self alpha asFloat.
+	}
+]
+
+{ #category : #'*WodenEngine-Core' }
 Color >> linearRampMultiply: factor [
 	^ Color
 		r: self red * factor

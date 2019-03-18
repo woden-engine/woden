@@ -24,6 +24,11 @@ WDCStateTracker class >> for: aWDCEngine [
 	^ self new engine: aWDCEngine
 ]
 
+{ #category : #accessing }
+WDCStateTracker >> activateShaderSignature: aShaderSignature [
+	^ aShaderSignature activeOnStateTracker: self
+]
+
 { #category : #commands }
 WDCStateTracker >> applyFullScreenPass: fullScreenPass [
 	fullScreenPass applyWithStateTracker: self

@@ -33,6 +33,12 @@ WDCCompositionShaderSignature class >> signatureSpec: spec [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+WDCCompositionShaderSignature >> activeOnStateTracker: stateTracker [
+	super activeOnStateTracker: stateTracker.
+	stateTracker useShaderResources: self defaultSamplers.
+]
+
 { #category : #'generated shader signature methods' }
 WDCCompositionShaderSignature >> createHandleForDevice: device [
 	^ device createShaderSignatureBuilder

@@ -8,6 +8,18 @@ Class {
 }
 
 { #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptContext >> colorShaderForHeightFunction: heightFunction coloredWith: colorFunction [
+	| heightFunctionNode colorMapFunctionNode |
+	heightFunctionNode := DASLPharoBlockConverter new
+		functionName: #heightFieldFunction;
+		convertClosure: heightFunction argumentTypes: #(float float) returnType: #float.
+	colorMapFunctionNode := colorFunction asDastrelColorMapFunction.
+
+	^ self compileShader: 'procedural/coloredHeightFieldTextureInterface.dastrel' injectingNodes: { heightFunctionNode . colorMapFunctionNode }
+
+]
+
+{ #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptContext >> compileShader: shaderFileName injectingNodes: nodesToInject [
 	| compiler spirv |
 	compiler := 	DASLCompiler new.
@@ -22,7 +34,7 @@ WDCPharoProceduralGPUScriptContext >> compileShader: shaderFileName injectingNod
 ]
 
 { #category : #'as yet unclassified' }
-WDCPharoProceduralGPUScriptContext >> getMainComputeStageFrom: spirvShader engine: engine [
+WDCPharoProceduralGPUScriptContext >> getMainFragmentStageFrom: spirvShader engine: engine [
 	| lowLevelShader |
 	"For debugging: spirvShader saveTo: 'generated.spv'."
 	
@@ -33,7 +45,7 @@ WDCPharoProceduralGPUScriptContext >> getMainComputeStageFrom: spirvShader engin
 		entryPoints: spirvShader entryPoints;
 		yourself.
 		
-	^ lowLevelShader asShaderLibrary getComputeStage: #main
+	^ lowLevelShader asShaderLibrary getFragmentStage: #main
 ]
 
 { #category : #'rendering helpers' }
@@ -48,18 +60,26 @@ WDCPharoProceduralGPUScriptContext >> heightFieldShaderFor: heightFunction [
 ]
 
 { #category : #'as yet unclassified' }
-WDCPharoProceduralGPUScriptContext >> shaderToFormImage: spirvShader [
-	| engine extent texture commandAllocator commandList stateTracker form pitch slicePitch shader shaderArguments |
+WDCPharoProceduralGPUScriptContext >> shader: spirvShader toFormWithExtent: extent format: format [
+	| engine texture commandAllocator commandList stateTracker form pitch slicePitch shader shaderArguments renderTarget |
 	engine := WDCEngine default.
 	
-	shader := self getMainComputeStageFrom: spirvShader engine: engine.
+	shader := self getMainFragmentStageFrom: spirvShader engine: engine.
 
-	extent := 512@512.
-	texture := engine createBGRAStorageImageWithExtent: extent.
-
-	shaderArguments := engine newGenericComputeShaderArguments
-		storageImage: texture slot: 0;
-		yourself.
+	texture := engine createTexture: (AGPUTextureDescription new
+		type: AGPU_TEXTURE_2D;
+		format: format;
+		width: extent x;
+		height: extent y;
+		depthOrArraySize: 1;
+		miplevels: 1;
+		sample_count: 1;
+		sample_quality: 0;
+		flags: AGPU_TEXTURE_FLAG_READED_BACK | AGPU_TEXTURE_FLAG_RENDERBUFFER_ONLY | AGPU_TEXTURE_FLAG_RENDER_TARGET;
+		yourself
+	).
+	
+	renderTarget := WDCRenderTarget for: engine colorAttachments: {texture}.
 
 	commandAllocator := engine createGraphicsDirectCommandListAllocator.
 	commandList := commandAllocator createListNow.
@@ -67,8 +87,12 @@ WDCPharoProceduralGPUScriptContext >> shaderToFormImage: spirvShader [
 	stateTracker := WDCStateTracker for: engine.
 	stateTracker commandList: commandList rebuildWith: [
 		stateTracker
-			computeShader: shader arguments: shaderArguments;
-			dispatchComputeGlobalGridX: extent x y: extent y
+			beginRenderPass: renderTarget validMainRenderPass renderTarget: renderTarget;
+			activateShaderSignature: (WDCCompositionShaderSignature for: engine);
+			vertexShader: engine resourceCache screenQuadVertexShader;
+			fragmentShader: shader;
+			dispatchScreenQuadRender;
+			endRenderPass
 	].
 
 	engine graphicsQueue
@@ -89,7 +113,11 @@ WDCPharoProceduralGPUScriptContext >> shadersDirectory [
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptContext >> textureExtent: anExtent inspectorExtent: anExtentForInspector heightFunction: heightFunction colorWith: colorFunction normalHeightScaleFactor: normalHeightScaleFactor [
-	| heightFieldShader |
-	heightFieldShader := self heightFieldShaderFor: heightFunction.
-	^ self shaderToFormImage: heightFieldShader
+	| colorShader |
+	colorShader := self colorShaderForHeightFunction: heightFunction coloredWith: colorFunction.
+	^ self shader: colorShader toFormWithExtent: anExtent format: (
+	colorFunction isGrayscaleColorMap
+		ifTrue: [ AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM ]
+		ifFalse: [ AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB ]
+	)
 ]

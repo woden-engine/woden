@@ -326,7 +326,7 @@ Point >> voronoiNoiseComponentsTiledWith: tilingPeriod [
 		]
 	].
 
-	^ {f1 sqrt . f2 sqrt}
+	^ {f1 sqrt min: 1.0 . f2 sqrt min: 1.0}
 ]
 
 { #category : #'*WodenEngine-Core' }

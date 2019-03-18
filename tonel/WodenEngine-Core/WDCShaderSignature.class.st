@@ -91,6 +91,11 @@ WDCShaderSignature class >> signatureSpec: spec [
 	self subclassResponsibility
 ]
 
+{ #category : #'as yet unclassified' }
+WDCShaderSignature >> activeOnStateTracker: stateTracker [
+	stateTracker shaderSignature: self
+]
+
 { #category : #accessing }
 WDCShaderSignature >> engine [
 	^ engine
