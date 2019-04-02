@@ -170,7 +170,7 @@ WDGSEntity >> createPointEntityNode [
 	scene := self scene.
 	scene ifNil: [ ^ self ].
 	
-	pointEntityNode := WDSGLocalShapedSpatialObject new.
+	pointEntityNode := WDSGLocalShapedSpatialInstanceObject new.
 	pointEntityNode color: self currentColor.
 	pointEntityNode shapeTransform: self pointEntityShapeTransform.
 	self spatialDescription ifNotNil: [ :desc | pointEntityNode transform: desc transform ].

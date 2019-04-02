@@ -22,11 +22,21 @@ WDCRenderable >> boundingBox: anObject [
 	modificationCount := modificationCount + 1.
 ]
 
+{ #category : #'extra per object rendering data' }
+WDCRenderable >> createSceneDependentDataFor: engine into: bindings [
+	self subclassResponsibility
+]
+
 { #category : #initialization }
 WDCRenderable >> initialize [
 	super initialize.
 	modificationCount := 0.
 	boundingBox := WMBox3DF empty.
+]
+
+{ #category : #'as yet unclassified' }
+WDCRenderable >> invalidate [
+	"This is the place for invalidating dynamic renderables."
 ]
 
 { #category : #'extra per object rendering data' }
@@ -50,4 +60,9 @@ WDCRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstanc
 { #category : #'as yet unclassified' }
 WDCRenderable >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+WDCRenderable >> validateForNode: aNode [
+	"This is the place for validating dynamic renderables."
 ]

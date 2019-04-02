@@ -68,7 +68,7 @@ WDGSESelectionBoxView >> createSelectionBoxManipulators [
 	editor scene add: manipulatorNodesInstanceGroup.
 	
 	manipulatorNodes := corners collectWithIndex: [ :corner :index |				
-		manipulatorNode := WDSGLocalShapedSpatialObject new
+		manipulatorNode := WDSGLocalShapedSpatialInstanceObject new
 			visible: false;
 			renderPriority: WDSGNode renderPriorityEditorTranslucentAfter + 1;
 			yourself.

@@ -81,7 +81,7 @@ WDGSPlayerBehavior >> fireBulletSpeed: initialSpeed [
 	initialVelocity := headTransform transformVector3: (WMVector3F z: initialSpeed negated).
 	initialPosition := headTransform translation.
 
-	node := WDSGLocalSpatialObject new.
+	node := WDSGLocalSpatialInstanceObject new.
 	node transform: (headTransform copy
 		translation: initialPosition).
 	bulletsNode addChild: node.

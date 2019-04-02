@@ -20,3 +20,18 @@ RWLine >> createComponent: baseShape for: edge [
 		texcoord: (WDVector2 x: 1.0 y: 0.0).
 	^ renderable componentVertices: { v1 . v2 } indices: {  0 . 1 } primitiveType: WDMeshPrimitiveType lines material: renderable subMeshes last material."
 ]
+
+{ #category : #hooks }
+RWLine >> createComponentRenderableFor: edge [
+	| component |
+	component := WDCLineMeshComponent new.
+	self updateMeshComponent: component forElement: edge.
+	^ component
+]
+
+{ #category : #hooks }
+RWLine >> updateMeshComponent: meshComponent forElement: edge [
+	meshComponent
+		startPoint: edge from position;
+		endPoint: edge to position.
+]

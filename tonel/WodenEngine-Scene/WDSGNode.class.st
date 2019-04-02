@@ -161,7 +161,7 @@ WDSGNode >> isCamera [
 ]
 
 { #category : #testing }
-WDSGNode >> isInstance [
+WDSGNode >> isCompositeGroup [
 	^ false
 ]
 
@@ -172,6 +172,11 @@ WDSGNode >> isInstanceGroup [
 
 { #category : #testing }
 WDSGNode >> isLightSource [
+	^ false
+]
+
+{ #category : #testing }
+WDSGNode >> isLocalSpatialNode [
 	^ false
 ]
 

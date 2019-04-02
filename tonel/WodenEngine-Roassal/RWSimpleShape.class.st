@@ -18,7 +18,7 @@ RWSimpleShape >> baseShapeDescriptor [
 RWSimpleShape >> buildRenderableFor: anElement view: aView [
 	| baseShape instance |
 	baseShape := aView baseShapeNodeFor: self baseShapeDescriptor ifAbsentPut: [ self createBaseShapeNodeForView: aView ].
-	instance := WDSGLocalShapedSpatialObject new.
+	instance := WDSGLocalShapedSpatialInstanceObject new.
 	instance shapeTransform: (self shapeTransformFor: anElement);
 		color: (self colorFor: anElement).
 	baseShape addChild: instance.
@@ -28,7 +28,7 @@ RWSimpleShape >> buildRenderableFor: anElement view: aView [
 
 { #category : #'changing shape' }
 RWSimpleShape >> changedElement: element sceneNode: sceneNode renderable: renderable [
-	sceneNode isInstance ifFalse: [ ^ self ].
+	sceneNode isLocalSpatialNode ifFalse: [ ^ self ].
 	sceneNode shapeTransform: (self shapeTransformFor: element);
 		color: (self colorFor: element).
 ]

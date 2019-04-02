@@ -2,8 +2,8 @@
 I am local spatial object that contains a logical separate shape transform.
 "
 Class {
-	#name : #WDSGLocalShapedSpatialObject,
-	#superclass : #WDSGLocalSpatialObject,
+	#name : #WDSGLocalShapedSpatialInstanceObject,
+	#superclass : #WDSGLocalSpatialInstanceObject,
 	#instVars : [
 		'shapeTransform'
 	],
@@ -11,22 +11,22 @@ Class {
 }
 
 { #category : #initialization }
-WDSGLocalShapedSpatialObject >> initialize [
+WDSGLocalShapedSpatialInstanceObject >> initialize [
 	super initialize.
 	shapeTransform := WMReversibleAffineTransformF identity.
 ]
 
 { #category : #accessing }
-WDSGLocalShapedSpatialObject >> shapeTransform [
+WDSGLocalShapedSpatialInstanceObject >> shapeTransform [
 	^ shapeTransform
 ]
 
 { #category : #accessing }
-WDSGLocalShapedSpatialObject >> shapeTransform: anObject [
+WDSGLocalShapedSpatialInstanceObject >> shapeTransform: anObject [
 	shapeTransform := anObject
 ]
 
 { #category : #accessing }
-WDSGLocalShapedSpatialObject >> updateRenderTransform [
+WDSGLocalShapedSpatialInstanceObject >> updateRenderTransform [
 	renderTransform := transform transformTransform: shapeTransform.
 ]

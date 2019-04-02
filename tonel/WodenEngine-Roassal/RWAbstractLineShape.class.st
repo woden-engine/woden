@@ -25,34 +25,41 @@ RWAbstractLineShape >> baseShapeDescriptor [
 
 { #category : #hooks }
 RWAbstractLineShape >> buildRenderableFor: anElement view: aView [
-	| baseShape component |
-	baseShape := aView baseShapeNodeFor: self baseShapeDescriptor ifAbsentPut: [ self createBaseShapeNode ].
-	component := self createComponent: baseShape for: anElement.
-	^ component
-]
+	| baseShape componentNode meshComponent |
+	baseShape := aView baseShapeNodeFor: self baseShapeDescriptor ifAbsentPut: [ self createBaseShapeNodeForView: aView ].
 
-{ #category : #hooks }
-RWAbstractLineShape >> createBaseShapeNode [
-	| baseNode renderable vertexBuffer indexBuffer subMesh |
-	baseNode := WDSceneNode new.
-	renderable := WDCompositeMeshRenderable new.
-	vertexBuffer := WDVertexBuffer for: WDLineVertex withCapacity: 1024.
-	indexBuffer := WDIndexBuffer forUInt32: 1024.
-	renderable addVertexBuffer: vertexBuffer;
-		indexBuffer: indexBuffer.
-	subMesh := WDSubMesh new
-		startIndex: 0;
-		indexCount: 0;
-		primitiveType: WDMeshPrimitiveType lines;
-		material: WDPlainColorMaterial new.
-	renderable addSubMesh: subMesh.
+	componentNode := WDSGLocalSpatialComponentObject new.
+	componentNode 
+		color: (self colorFor: anElement).
+	baseShape addChild: componentNode.
+	anElement replaceSceneNode: componentNode.
 	
-	baseNode attach: renderable.
-	^ baseNode
+	meshComponent := self createComponentRenderableFor: anElement.
+	componentNode meshComponent: meshComponent.
+	^ nil
+]
+
+{ #category : #'changing shape' }
+RWAbstractLineShape >> changedElement: element sceneNode: sceneNode renderable: renderable [
+	self updateMeshComponent: sceneNode meshComponent forElement: element.
+	sceneNode parent ifNotNil: #invalidateRenderable
 ]
 
 { #category : #hooks }
-RWAbstractLineShape >> createComponent: baseShape for: anElement [
+RWAbstractLineShape >> createBaseShapeNodeForView: aView [
+	| node engine renderable |
+	node := WDSGSpatialObjectCompositeMeshGroup new.
+	engine := aView engine.
+	renderable := WDCDynamicCompositeMeshRenderable for: engine.
+	
+	self setupTransparency: node renderable: renderable.
+	node renderable: renderable.		
+	^ node
+
+]
+
+{ #category : #hooks }
+RWAbstractLineShape >> createComponentRenderableFor: anElement [
 	self subclassResponsibility
 ]
 
@@ -81,4 +88,9 @@ RWAbstractLineShape >> elementFrom: aRWElement to: aRWElement2 [
 RWAbstractLineShape >> initialize [
 	super initialize.
 	color := self defaultColor
+]
+
+{ #category : #'changing shape' }
+RWAbstractLineShape >> updateMeshComponent: meshComponent forElement: element [
+	self subclassResponsibility
 ]

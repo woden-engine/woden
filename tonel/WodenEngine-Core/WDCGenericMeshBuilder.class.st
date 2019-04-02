@@ -785,3 +785,8 @@ WDCGenericMeshBuilder >> mesh [
 WDCGenericMeshBuilder >> retrieveVertexLayout [
 	^ engine vertexLayoutFor: WTGenericVertexF
 ]
+
+{ #category : #accessing }
+WDCGenericMeshBuilder >> useFlatColorMaterial [
+	self currentMaterial: engine resourceCache flatColorMaterial
+]
