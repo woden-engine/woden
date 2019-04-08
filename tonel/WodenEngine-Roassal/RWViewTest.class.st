@@ -31,6 +31,16 @@ RWViewTest >> testAddingElements [
 ]
 
 { #category : #tests }
+RWViewTest >> testAddingOverlay [
+	| overlay |
+	overlay := RWOverlay new.
+	view addOverlay: overlay.
+	self assert: view overlays size equals: 1.
+	self assert: view numberOfOverlays equals: 1.
+	self assert: overlay view equals: view.
+]
+
+{ #category : #tests }
 RWViewTest >> testBackgroundColor [
 	self assert: (view backgroundColor closeTo: Color white).
 	view backgroundColor: Color red.
@@ -83,4 +93,15 @@ RWViewTest >> testEmpty [
 RWViewTest >> testOpening [
 
 	RWView new open close
+]
+
+{ #category : #tests }
+RWViewTest >> testRemovingOverlay [
+	| overlay |
+	overlay := RWOverlay new.
+	view addOverlay: overlay.
+	overlay remove.
+	self assert: view overlays size equals: 0.
+	self assert: view numberOfOverlays equals: 0.
+	self assert: overlay view equals: nil.
 ]

@@ -18,9 +18,6 @@ Class {
 		'text',
 		'color'
 	],
-	#classVars : [
-		'LastPopup'
-	],
 	#category : #'WodenEngine-Roassal-Interaction'
 }
 
@@ -48,23 +45,38 @@ RWPopup >> initialize [
 
 { #category : #hooks }
 RWPopup >> initializeElement: anElement [
+	| popupElement popupMesh builder font extent rectangle |
+	popupElement := nil.
+	popupMesh := nil.
 	anElement
 		when: RWMouseEnter
-		do: [ :evt | 
-			self removeLastPopupIfNecessary.
-			LastPopup := TextMorph new contentsAsIs: (self textFor: anElement).
-			LastPopup color: Color red.
-			LastPopup position: ActiveHand position.
-			LastPopup openInWorld ].
-	anElement when: RWMouseLeave do: [ :evt | self removeLastPopupIfNecessary ]
-]
-
-{ #category : #utility }
-RWPopup >> removeLastPopupIfNecessary [
-	^ LastPopup notNil
-		ifTrue: [ 
-			LastPopup delete.
-			LastPopup := nil ]
+		do: [ :evt |
+			popupMesh := nil.
+			popupElement := anElement view createPopupAtViewPosition: evt position drawingWith: [ :canvas |
+				popupMesh ifNil: [
+					text := self textFor: anElement.
+					font := anElement view babylonDefaultFont.
+					extent := ((font widthOfString: text) @ font getPreciseAscent) + (20@10).
+					rectangle := 0@0 extent: extent.
+					builder := canvas driver mesh2DBuilder.
+					builder fill
+						color: Color white;
+						rectangle: rectangle round: 4.
+					builder stroke
+						color: (Color black alpha: 0.5);
+						width: 2;
+						rectangle: rectangle round: 4.
+					builder text
+						color: color;
+						font: font;
+						draw: text onRectangleCenter: rectangle.
+					popupMesh := builder mesh
+				].
+				
+				canvas draw: popupMesh
+			].
+		].
+	anElement when: RWMouseLeave do: [ :evt | popupElement remove ]
 ]
 
 { #category : #accessing }

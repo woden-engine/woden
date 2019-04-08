@@ -214,7 +214,7 @@ RWExample >> eventHandling [
 		evt signalUpdate.
 	].
 
-	v addInteraction: OrbitController new.
+	v addInteraction: RWOrbitController new.
 	^ v
 ]
 

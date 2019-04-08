@@ -44,16 +44,14 @@ Class {
 		'baseShapes',
 		'dynamicsWorld',
 		'signalUpdateCallback',
-		'isStereo',
-		'fullscreen',
 		'sceneRenderer',
 		'rigidBodies',
 		'internalElements',
-		'view2D',
-		'trachelCanvas',
-		'eventHandler'
+		'eventHandler',
+		'overlays',
+		'babylonDefaultFont'
 	],
-	#category : 'WodenEngine-Roassal-Core'
+	#category : #'WodenEngine-Roassal-Core'
 }
 
 { #category : #initialization }
@@ -99,6 +97,12 @@ RWView >> addInternalElement: anElement [
 	anElement addedIn: self
 ]
 
+{ #category : #adding }
+RWView >> addOverlay: anOverlay [
+	overlays add: anOverlay.
+	anOverlay addedIn: self
+]
+
 { #category : #physics }
 RWView >> addRigidBody: rigidBody [
 	dynamicsWorld ifNotNil: [ dynamicsWorld addRigidBody: rigidBody ].
@@ -108,6 +112,11 @@ RWView >> addRigidBody: rigidBody [
 { #category : #interaction }
 RWView >> announce: eventOrClassEvent [
 	eventHandler announce: eventOrClassEvent
+]
+
+{ #category : #accessing }
+RWView >> babylonDefaultFont [
+	^ babylonDefaultFont ifNil: [ babylonDefaultFont := engine babylonDriver font: (LogicalFont familyName: 'Arial' pointSize: 20) ]
 ]
 
 { #category : #accessing }
@@ -171,9 +180,26 @@ RWView >> cameraLightIntensity: aColor [
 	cameraLight state intensity: aColor asWMVector4F
 ]
 
+{ #category : #overlays }
+RWView >> createPopupAtViewPosition: viewPosition drawingWith: aBlock [
+	| overlay |
+	overlay := RWPopupOverlay new
+		position: viewPosition;
+		drawingBlock: aBlock.
+	self addOverlay: overlay.
+	^ overlay
+]
+
 { #category : #accessing }
 RWView >> defaultViewClass [
 	^ RWSceneView
+]
+
+{ #category : #overlays }
+RWView >> drawOverlaysOnBabylonCanvas: canvas [
+	overlays do: [ :overlay |
+		overlay drawOnBabylonCanvas: canvas
+	]
 ]
 
 { #category : #accessing }
@@ -191,16 +217,6 @@ RWView >> eventHandler [
 	^ eventHandler
 ]
 
-{ #category : #accessing }
-RWView >> fullscreen [
-	^ fullscreen
-]
-
-{ #category : #accessing }
-RWView >> fullscreen: aBoolean [
-	fullscreen := aBoolean
-]
-
 { #category : #initialization }
 RWView >> initializeModel [
 	elements := OrderedCollection new.
@@ -208,8 +224,7 @@ RWView >> initializeModel [
 	eventHandler := Announcer new.
 	baseShapes := Dictionary new.
 	rigidBodies := OrderedCollection new.
-	isStereo := false.
-	fullscreen := false.
+	overlays := OrderedCollection new.
 	self initializeScene.
 ]
 
@@ -228,19 +243,24 @@ RWView >> initializeScene [
 ]
 
 { #category : #accessing }
-RWView >> isStereo [
-	^ isStereo
+RWView >> numberOfElements [
+	^ elements size
 ]
 
 { #category : #accessing }
-RWView >> numberOfElements [
-	^ elements size
+RWView >> numberOfOverlays [
+	^ overlays size
 ]
 
 { #category : #interaction }
 RWView >> on: anEvent do: aBlock [
 	self deprecated: 'Please use when:do: instead of on:do'.
 	eventHandler when: anEvent do: aBlock.
+]
+
+{ #category : #accessing }
+RWView >> overlays [
+	^ overlays
 ]
 
 { #category : #'ray casting' }
@@ -277,24 +297,9 @@ RWView >> removeElement: anElement [
 	elements remove: anElement
 ]
 
-{ #category : #rendering }
-RWView >> render2DOnSurface: athensSurface canvas: canvas [
-	trachelCanvas ifNil: [ ^ self ].
-	
-	"We display the elements that are subject to the camera"
-	canvas pathTransform
-		translateBy: (athensSurface extent / 2) asFloatPoint;
-		    scaleBy: trachelCanvas camera scale asFloat;
-		translateBy: trachelCanvas camera position negated asFloatPoint.
-	trachelCanvas shapes do: [ :trachelShape |
-		trachelShape drawOn: canvas.
-	].
-	
-	"We display the elements that are _NOT_ subject to the camera"
-	canvas pathTransform loadIdentity scaleBy: 1.001.
-		trachelCanvas fixedShapes do: [ :trachelShape |
-		trachelShape drawOn: canvas.
-	].
+{ #category : #adding }
+RWView >> removeOverlay: anOverlay [
+	overlays remove: anOverlay
 ]
 
 { #category : #rendering }
@@ -308,12 +313,6 @@ RWView >> render3DOnWindow: aWindow extraRenderTime: extraRenderTime [
 		currentTime: currentTime + extraRenderTime;
 		renderFrame: frameIndex camera: camera sceneNode on: aWindow.
 
-]
-
-{ #category : #accessing }
-RWView >> selectionRenderer [
-	"Return the selection rendered associated to the view. The WDSelectionSceneRenderer, subclass of WDSceneRenderer, is used to identify which object is below the mouse cursor."
-	^ selectionRenderer
 ]
 
 { #category : #interaction }
@@ -339,12 +338,6 @@ RWView >> simulatePhysics: delta [
 	dynamicsWorld simulateTime: delta
 ]
 
-{ #category : #accessing }
-RWView >> trachelCanvas [
-	^ trachelCanvas ifNil: [ trachelCanvas := RWTRCanvas new engine: engine ].
-	
-]
-
 { #category : #rendering }
 RWView >> updateForFrameDelta: delta [
 	super updateForFrameDelta: delta.
@@ -358,18 +351,6 @@ RWView >> updateForFrameDelta: delta [
 RWView >> validScene [
 	scene ifNil: [ self newScene ].
 	^ scene
-]
-
-{ #category : #accessing }
-RWView >> view2D [
-	view2D ifNil: [ self view2D: RTView new ].
-	^ view2D
-]
-
-{ #category : #accessing }
-RWView >> view2D: aRTView [
-	view2D := aRTView.
-	view2D setCanvas: self trachelCanvas
 ]
 
 { #category : #interaction }

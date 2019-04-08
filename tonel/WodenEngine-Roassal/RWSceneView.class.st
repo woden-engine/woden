@@ -10,8 +10,12 @@ Class {
 
 { #category : #rendering }
 RWSceneView >> drawOnBabylonCanvas: canvas [
+	model ifNotNil: [
+		model drawOverlaysOnBabylonCanvas: canvas
+	].
+
 	"| font builder mesh |
-	font := self pompeiiDefaultFont.
+	font := self babylonDefaultFont.
 		
 	builder := canvas driver mesh2DBuilder.
 	builder fill
