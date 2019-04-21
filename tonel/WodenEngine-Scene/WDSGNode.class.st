@@ -5,6 +5,7 @@ Class {
 	#name : #WDSGNode,
 	#superclass : #Object,
 	#instVars : [
+		'name',
 		'scene',
 		'transform',
 		'children',
@@ -134,9 +135,26 @@ WDSGNode >> createSceneDependentData [
 	"Here goes the creation of scene dependent data."
 ]
 
+{ #category : #rendering }
+WDSGNode >> destroySceneDependentData [
+	"Here goes the destruction of scene dependent data."
+]
+
 { #category : #accessing }
 WDSGNode >> engine [
 	^ scene engine
+]
+
+{ #category : #adding }
+WDSGNode >> engineChanged [
+	self engine ifNil: [ 
+		self destroySceneDependentData
+	] ifNotNil: [ 
+		self createSceneDependentData
+	].
+
+	children do: #engineChanged
+	
 ]
 
 { #category : #initialization }
@@ -203,6 +221,16 @@ WDSGNode >> model [
 { #category : #accessing }
 WDSGNode >> model: anObject [
 	model := anObject
+]
+
+{ #category : #accessing }
+WDSGNode >> name [
+	^ name
+]
+
+{ #category : #accessing }
+WDSGNode >> name: anObject [
+	name := anObject
 ]
 
 { #category : #accessing }

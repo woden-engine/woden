@@ -34,6 +34,7 @@ WDSGSpatialObject >> canBeRendered [
 WDSGSpatialObject >> createSceneDependentData [
 	| neutralInstanceState |
 	gpuObjectStates ifNotNil: [ ^ self ].
+	scene engine ifNil: [ ^ self ].
 	
 	gpuObjectStates := scene genericObjectStatePool allocate: scene engine frameBufferingCount.
 	neutralInstanceState := scene neutralGenericObjectInstanceState.
@@ -59,6 +60,23 @@ WDSGSpatialObject >> currentGpuObjectState [
 { #category : #rendering }
 WDSGSpatialObject >> currentObjectStateBinding [
 	^ objectStateBindings at: scene engine bufferingFrameIndex.
+]
+
+{ #category : #rendering }
+WDSGSpatialObject >> destroySceneDependentData [
+	| neutralInstanceState |
+	gpuObjectStates := nil.
+	neutralInstanceState := nil.
+	objectStateBindings := nil.
+	renderableSceneData := nil.
+
+]
+
+{ #category : #adding }
+WDSGSpatialObject >> engineChanged [
+	renderable ifNotNil: [
+		renderable engineChangedTo: scene engine
+	]
 ]
 
 { #category : #initialization }

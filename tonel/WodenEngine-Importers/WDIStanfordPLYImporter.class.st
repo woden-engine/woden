@@ -6,7 +6,7 @@ https://en.wikipedia.org/wiki/PLY_(file_format)
 "
 Class {
 	#name : #WDIStanfordPLYImporter,
-	#superclass : #WDCModelLoader,
+	#superclass : #WDCSimpleModelLoader,
 	#instVars : [
 		'elements',
 		'elementDictionary',
@@ -110,12 +110,12 @@ WDIStanfordPLYImporter >> finishLoading [
 		firstIndex: 0;
 		indexCount: indices size;
 		primitiveType: AGPU_TRIANGLES;
-		material: WDCGenericSurfaceMaterial new;
+		material: WDCMetallicRoughnessMaterial new;
 		yourself.
 	submeshes := {submesh}.
 		
 	triangles := WDCSubmeshTriangleIterator indices: indices submeshes: submeshes.
-	vertices := WDCSeparatedVertexData new.
+	vertices := WDCMeshImplicitSeparatedVertexData new.
 	vertices
 		vertexCount: positions size;
 		addChannelNativePositions: positions asNativeArray;
@@ -125,7 +125,7 @@ WDIStanfordPLYImporter >> finishLoading [
 		generateWhiteColorChannel;
 		sortChannels.
 	
-	^ WDCModel new
+	^ WDCSimpleModel new
 		vertices: vertices;
 		indices: indices asNativeArray;
 		submeshes: submeshes asArray;

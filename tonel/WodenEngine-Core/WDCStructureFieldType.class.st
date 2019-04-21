@@ -140,6 +140,21 @@ WDCStructureFieldType class >> initializeFieldTypes [
 	].
 
 	#(
+		byte 		(UNKNOWN byte 1 false 1 1 #uchar)
+		byte2 		(UNKNOWN byte 2 false 2 2 #uchar)
+		byte3 		(UNKNOWN byte 3 false 3 4 #uchar)
+		byte4 		(R8G8B8A8_UINT byte 4 false 4 4 #uchar)
+
+		ushort		(R16_UINT ushort 1 false 2 2 #ushort)
+		ushort2	(R16G16_UINT ushort 2 false 4 4 #ushort)
+		ushort3	(UNKNOWN ushort 3 false 6 8 #ushort)
+		ushort4	(R16G16B16A16_UINT ushort 4 false 8 8 #ushort)
+
+		uint	(R32_UINT uint 1 false 4 4 #uint)
+		uint2	(R32G32_UINT uint 2 false 8 8 #uint)
+		uint3	(R32G32B32_UINT uint 3 false 12 16 #uint)
+		uint4	(R32G32B32A32_UINT uint 4 false 16 16 #uint)
+
 		float 		(R32_FLOAT float 1 false 4 4 #float)
 		float2 	(R32G32_FLOAT float 2 false 8 8 WMVector2F)
 		float3 	(R32G32B32_FLOAT  float 3 false 16 16 WMVector3F)

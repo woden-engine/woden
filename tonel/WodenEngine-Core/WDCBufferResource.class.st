@@ -65,6 +65,15 @@ WDCBufferResource >> destroy [
 
 ]
 
+{ #category : #'as yet unclassified' }
+WDCBufferResource >> fullView [
+	^ WDCBufferView new
+		buffer: self;
+		offset: 0;
+		length: description size;
+		yourself
+]
+
 { #category : #'resource building' }
 WDCBufferResource >> initialData [
 	^ data isSessionPersistentExternalBuffer ifTrue: [ data data ] ifFalse: [ data ].

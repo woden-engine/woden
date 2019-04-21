@@ -3,7 +3,7 @@ I am custom JSON based woden model loader.
 "
 Class {
 	#name : #WDCJSONModelLoader,
-	#superclass : #WDCModelLoader,
+	#superclass : #WDCSimpleModelLoader,
 	#instVars : [
 		'interleaveVertexData',
 		'vertices',
@@ -15,7 +15,7 @@ Class {
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : #'WodenEngine-Core-Mesh'
+	#category : #'WodenEngine-Core-Asset'
 }
 
 { #category : #'as yet unclassified' }
@@ -47,7 +47,7 @@ WDCJSONModelLoader class >> extension [
 { #category : #'vertex data loading' }
 WDCJSONModelLoader >> createWhiteColorChannelOfSize: vertexCount [
 	| description channelData vectorClass white |
-	description := WDCSeparatedVertexData vertexChannelDescriptions at: #colors.
+	description := WDCMeshImplicitSeparatedVertexData vertexChannelDescriptions at: #colors.
 
 	vectorClass := description type slvmType.
 	
@@ -59,7 +59,7 @@ WDCJSONModelLoader >> createWhiteColorChannelOfSize: vertexCount [
 	white := vectorClass x: 1.0 y: 1.0 z: 1.0 w: 1.0.
 	1 to: vertexCount do: [ :i | channelData at: i put: white ].
 
-	^ WDCMeshVertexChannel new
+	^ WDCMeshImplicitVertexChannel new
 		description: description;
 		data: channelData;
 		yourself
@@ -130,7 +130,7 @@ WDCJSONModelLoader >> loadArmature: armatureData [
 			yourself)
 	].
 
-	^ WDCModelArmature new names: names; boneParents: boneParents; bones: bones; yourself
+	^ WDCSimpleModelArmature new names: names; boneParents: boneParents; bones: bones; yourself
 ]
 
 { #category : #'vertex data loading' }
@@ -180,7 +180,7 @@ WDCJSONModelLoader >> loadFrom: jsonData [
 	actions := nil.
 	jsonData at: 'armature' ifPresent: [ :armatureData | armature := self loadArmature: armatureData ].
 	jsonData at: 'actions' ifPresent: [ :actionsData | actions := self loadActions: actionsData ].
-	^ WDCModel new
+	^ WDCSimpleModel new
 		vertices: vertices;
 		indices: indices;
 		submeshes: submeshes;
@@ -247,7 +247,7 @@ WDCJSONModelLoader >> loadInterleavedVertices: verticesData [
 	
 		vertexBuffer at: i put: vertex.
 	].
-	vertices := WDCInterleavedVertexData new
+	vertices := WDCMeshInterleavedVertexData new
 		data: vertexBuffer;
 		vertexClass: vertexClass;
 		yourself
@@ -288,7 +288,7 @@ WDCJSONModelLoader >> loadSeparatedVertices: verticesData [
 
 	channels sort: [ :a :b | a binding <= b binding ].
 	
-	vertices := WDCSeparatedVertexData new
+	vertices := WDCMeshImplicitSeparatedVertexData new
 		channels: channels;
 		vertexCount: vertexCount;
 		yourself.
@@ -395,7 +395,7 @@ WDCJSONModelLoader >> loadVector4ChannelClass: vectorClass elements: channelElem
 { #category : #'vertex data loading' }
 WDCJSONModelLoader >> loadVertexChannel: channelName data: sourceData [
 	| description channelData vectorSize rows channelElements vectorClass |
-	description := WDCSeparatedVertexData vertexChannelDescriptions at: channelName ifAbsent: [
+	description := WDCMeshImplicitSeparatedVertexData vertexChannelDescriptions at: channelName ifAbsent: [
 		self error: 'Unsupported/unknown vertex channel ' , channelName printString
 	].
 
@@ -411,7 +411,7 @@ WDCJSONModelLoader >> loadVertexChannel: channelName data: sourceData [
 	
 	channelData := self loadChannelNamed: channelName vectorSize: vectorSize vectorClass: vectorClass elements: channelElements sourceData: sourceData.
 
-	^ WDCMeshVertexChannel new
+	^ WDCMeshImplicitVertexChannel new
 		description: description;
 		data: channelData;
 		yourself

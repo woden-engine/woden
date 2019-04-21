@@ -51,7 +51,7 @@ BaselineOfWodenEngine >> baseline: spec [
 		spec package: #'WodenEngine-Scene' with: [
 				spec requires: #('WodenEngine-Core')].
 		spec package: #'WodenEngine-Importers' with: [
-				spec requires: #('WodenEngine-Core')].
+				spec requires: #('WodenEngine-Core' #'WodenEngine-Scene')].
 		spec package: #'WodenEngine-Samples' with: [
 				spec requires: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Scene' 'WodenEngine-GameSystem' #'WodenEngine-Importers')].
 		spec package: #'WodenEngine-Physics' with: [

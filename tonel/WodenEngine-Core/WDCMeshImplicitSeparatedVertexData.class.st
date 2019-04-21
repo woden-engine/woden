@@ -1,14 +1,18 @@
 "
 I hold the vertex data of a mesh in separated data channel. I am a structure-of-arrays (SoA) style implementation for vertex buffers.
+
+I am an implicit version in terms of abstracting the task of packing the data accesses from the user.
 "
 Class {
-	#name : #WDCSeparatedVertexData,
+	#name : #WDCMeshImplicitSeparatedVertexData,
 	#superclass : #WDCAbstractMeshVertexData,
 	#instVars : [
 		'channels',
 		'vertexCount',
 		'packedBufferOffsets',
-		'packedDataInSingleBuffer'
+		'packedDataInSingleBuffer',
+		'hasVertexColors',
+		'hasVertexTangents'
 	],
 	#classVars : [
 		'VertexChannelDescriptions'
@@ -20,7 +24,7 @@ Class {
 }
 
 { #category : #initialization }
-WDCSeparatedVertexData class >> initialize [
+WDCMeshImplicitSeparatedVertexData class >> initialize [
 	super initialize.
 	VertexChannelDescriptions := Dictionary new.
 	
@@ -38,61 +42,61 @@ WDCSeparatedVertexData class >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-WDCSeparatedVertexData class >> vertexChannelDescriptions [
+WDCMeshImplicitSeparatedVertexData class >> vertexChannelDescriptions [
 	^ VertexChannelDescriptions
 
 ]
 
 { #category : #adding }
-WDCSeparatedVertexData >> addChannelNamed: channelName withNativeData: data [
+WDCMeshImplicitSeparatedVertexData >> addChannelNamed: channelName withNativeData: data [
 	| description channel |
 	description := VertexChannelDescriptions at: channelName.
-	channel := WDCMeshVertexChannel new description: description; data: data.
+	channel := WDCMeshImplicitVertexChannel new description: description; data: data.
 	channels := channels , { channel }
 ]
 
 { #category : #adding }
-WDCSeparatedVertexData >> addChannelNativeColors: data [
+WDCMeshImplicitSeparatedVertexData >> addChannelNativeColors: data [
 	^ self addChannelNamed: #colors withNativeData: data
 ]
 
 { #category : #adding }
-WDCSeparatedVertexData >> addChannelNativeNormals: data [
+WDCMeshImplicitSeparatedVertexData >> addChannelNativeNormals: data [
 	^ self addChannelNamed: #normals withNativeData: data
 ]
 
 { #category : #adding }
-WDCSeparatedVertexData >> addChannelNativePositions: data [
+WDCMeshImplicitSeparatedVertexData >> addChannelNativePositions: data [
 	^ self addChannelNamed: #positions withNativeData: data
 ]
 
 { #category : #adding }
-WDCSeparatedVertexData >> addChannelNativeTangents4: data [
+WDCMeshImplicitSeparatedVertexData >> addChannelNativeTangents4: data [
 	^ self addChannelNamed: #tangents4 withNativeData: data
 ]
 
 { #category : #adding }
-WDCSeparatedVertexData >> addChannelNativeTexcoords: data [
+WDCMeshImplicitSeparatedVertexData >> addChannelNativeTexcoords: data [
 	^ self addChannelNamed: #texcoords withNativeData: data
 ]
 
 { #category : #accessing }
-WDCSeparatedVertexData >> channels [
+WDCMeshImplicitSeparatedVertexData >> channels [
 	^ channels
 ]
 
 { #category : #accessing }
-WDCSeparatedVertexData >> channels: anObject [
+WDCMeshImplicitSeparatedVertexData >> channels: anObject [
 	channels := anObject
 ]
 
 { #category : #'channel accessing' }
-WDCSeparatedVertexData >> colors [
+WDCMeshImplicitSeparatedVertexData >> colors [
 	^ self findChannelDataNamed: #colors
 ]
 
 { #category : #rendering }
-WDCSeparatedVertexData >> createVertexBindingFor: anEngine [
+WDCMeshImplicitSeparatedVertexData >> createVertexBindingFor: anEngine [
 	| result vertexLayout vertexBuffers |
 	vertexLayout := anEngine vertexLayoutForVertexChannelDescriptions: (channels collect: #description).
 	result := anEngine createVertexBindingForLayout: vertexLayout.
@@ -103,7 +107,7 @@ WDCSeparatedVertexData >> createVertexBindingFor: anEngine [
 ]
 
 { #category : #rendering }
-WDCSeparatedVertexData >> createVertexsBufferFor: anEngine [
+WDCMeshImplicitSeparatedVertexData >> createVertexsBufferFor: anEngine [
 	| data packedBuffer |
 	data := self packedDataInSingleBuffer.
 	packedBuffer := anEngine createVertex: 1 elements: data size immutableBuffer: data.
@@ -111,12 +115,12 @@ WDCSeparatedVertexData >> createVertexsBufferFor: anEngine [
 ]
 
 { #category : #'channel accessing' }
-WDCSeparatedVertexData >> findChannelDataNamed: aChannelName [
+WDCMeshImplicitSeparatedVertexData >> findChannelDataNamed: aChannelName [
 	^ (self findChannelNamed: aChannelName) ifNotNil: [ :channel | channel data ]
 ]
 
 { #category : #'channel accessing' }
-WDCSeparatedVertexData >> findChannelNamed: aChannelName [
+WDCMeshImplicitSeparatedVertexData >> findChannelNamed: aChannelName [
 	channels do: [ :channel | 
 		channel name = aChannelName ifTrue: [ ^ channel ]
 	].
@@ -124,7 +128,7 @@ WDCSeparatedVertexData >> findChannelNamed: aChannelName [
 ]
 
 { #category : #adding }
-WDCSeparatedVertexData >> generateEmptyTexcoords [
+WDCMeshImplicitSeparatedVertexData >> generateEmptyTexcoords [
 	| description vectorClass channelData |
 	description := VertexChannelDescriptions at: #texcoords.
 
@@ -139,7 +143,7 @@ WDCSeparatedVertexData >> generateEmptyTexcoords [
 ]
 
 { #category : #adding }
-WDCSeparatedVertexData >> generateWhiteColorChannel [
+WDCMeshImplicitSeparatedVertexData >> generateWhiteColorChannel [
 	| description vectorClass channelData white |
 	description := VertexChannelDescriptions at: #colors.
 
@@ -156,7 +160,7 @@ WDCSeparatedVertexData >> generateWhiteColorChannel [
 ]
 
 { #category : #adding }
-WDCSeparatedVertexData >> generateZeroNormals [
+WDCMeshImplicitSeparatedVertexData >> generateZeroNormals [
 	| description vectorClass channelData |
 	description := VertexChannelDescriptions at: #normals.
 
@@ -170,20 +174,30 @@ WDCSeparatedVertexData >> generateZeroNormals [
 	self addChannelNativeNormals: channelData
 ]
 
+{ #category : #testing }
+WDCMeshImplicitSeparatedVertexData >> hasVertexColors [
+	^ hasVertexColors ifNil: [ hasVertexColors := self colors isNotNil ]
+]
+
+{ #category : #testing }
+WDCMeshImplicitSeparatedVertexData >> hasVertexTangents [
+	^ hasVertexTangents ifNil: [ hasVertexTangents := self tangents4 isNotNil ]
+]
+
 { #category : #initialization }
-WDCSeparatedVertexData >> initialize [
+WDCMeshImplicitSeparatedVertexData >> initialize [
 	super initialize.
 	channels := #().
 	
 ]
 
 { #category : #'channel accessing' }
-WDCSeparatedVertexData >> normals [
+WDCMeshImplicitSeparatedVertexData >> normals [
 	^ self findChannelDataNamed: #normals
 ]
 
 { #category : #accessing }
-WDCSeparatedVertexData >> packedDataInSingleBuffer [
+WDCMeshImplicitSeparatedVertexData >> packedDataInSingleBuffer [
 	| packedBufferSize channelOffset packedBufferAlignment |
 	packedDataInSingleBuffer ifNotNil: [ ^ packedDataInSingleBuffer ].
 	
@@ -209,36 +223,36 @@ WDCSeparatedVertexData >> packedDataInSingleBuffer [
 ]
 
 { #category : #'channel accessing' }
-WDCSeparatedVertexData >> positions [
+WDCMeshImplicitSeparatedVertexData >> positions [
 	^ self findChannelDataNamed: #positions
 ]
 
 { #category : #accessing }
-WDCSeparatedVertexData >> size [
+WDCMeshImplicitSeparatedVertexData >> size [
 	^ vertexCount
 ]
 
 { #category : #sorting }
-WDCSeparatedVertexData >> sortChannels [
+WDCMeshImplicitSeparatedVertexData >> sortChannels [
 	channels sort: [ :a :b | a binding <= b binding ]
 ]
 
 { #category : #'channel accessing' }
-WDCSeparatedVertexData >> tangents4 [
+WDCMeshImplicitSeparatedVertexData >> tangents4 [
 	^ self findChannelDataNamed: #tangents4
 ]
 
 { #category : #'channel accessing' }
-WDCSeparatedVertexData >> texcoords [
+WDCMeshImplicitSeparatedVertexData >> texcoords [
 	^ self findChannelDataNamed: #texcoords
 ]
 
 { #category : #accessing }
-WDCSeparatedVertexData >> vertexCount [
+WDCMeshImplicitSeparatedVertexData >> vertexCount [
 	^ vertexCount
 ]
 
 { #category : #accessing }
-WDCSeparatedVertexData >> vertexCount: anObject [
+WDCMeshImplicitSeparatedVertexData >> vertexCount: anObject [
 	vertexCount := anObject
 ]

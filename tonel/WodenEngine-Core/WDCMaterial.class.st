@@ -60,6 +60,13 @@ WDCMaterial >> engine: anObject [
 	engine := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDCMaterial >> engineChangedTo: newEngine [
+	engine == newEngine ifTrue: [ ^ self ].
+	engine := newEngine.
+	self invalidateCache
+]
+
 { #category : #shaders }
 WDCMaterial >> fetchFragmentShader: shaderName [
 	^ engine loadFragmentShader: shaderName
@@ -68,6 +75,10 @@ WDCMaterial >> fetchFragmentShader: shaderName [
 { #category : #shaders }
 WDCMaterial >> fetchVertexShader: shaderName [
 	^ engine loadVertexShader: shaderName
+]
+
+{ #category : #'state binding' }
+WDCMaterial >> invalidateCache [
 ]
 
 { #category : #testing }

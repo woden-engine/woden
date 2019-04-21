@@ -3,28 +3,23 @@ I am a generic mesh builder. I am used for building meshes.
 "
 Class {
 	#name : #WDCGenericMeshBuilder,
-	#superclass : #Object,
+	#superclass : #WDCAbstractMeshBuilder,
 	#instVars : [
-		'engine',
 		'vertices',
 		'indices',
 		'currentColor',
 		'currentMaterial',
 		'submeshes',
 		'baseVertex',
-		'vertexLayout',
-		'boundingBox'
+		'boundingBox',
+		'vertexData',
+		'vertexClass'
 	],
 	#pools : [
 		'AGPUConstants'
 	],
 	#category : #'WodenEngine-Core-Mesh'
 }
-
-{ #category : #'instance creation' }
-WDCGenericMeshBuilder class >> for: anEngine [
-	^ self new engine: anEngine
-]
 
 { #category : #adding }
 WDCGenericMeshBuilder >> addCircleCenter: center radius: radius slices: slices isTop: isTop [
@@ -687,6 +682,7 @@ WDCGenericMeshBuilder >> createMeshWithSubmeshes: newSubmeshes [
 	mesh := self instantiateMesh.
 	mesh
 		boundingBox: boundingBox;
+		vertexData: vertexData;
 		vertexBinding: self createVertexBinding;
 		indexBuffer: self createIndexBuffer;
 		submeshes: newSubmeshes.
@@ -700,15 +696,20 @@ WDCGenericMeshBuilder >> createSubmeshObject [
 
 { #category : #'as yet unclassified' }
 WDCGenericMeshBuilder >> createVertexBinding [
-	| result |
-	result := engine createVertexBindingForLayout: vertexLayout.
-	result vertexBuffers: { self createVertexBuffer }; offsets: { 0 }.
-	^ result
+	^ vertexData createVertexBindingFor: engine
 ]
 
 { #category : #'as yet unclassified' }
 WDCGenericMeshBuilder >> createVertexBuffer [
-	^ engine createVertex: WTGenericVertexF structureSize elements: vertices size immutableBuffer: vertices asByteArray 
+	^ vertexData createVertexBufferFor: engine
+]
+
+{ #category : #initialization }
+WDCGenericMeshBuilder >> createVertexData [
+	vertexData := WDCMeshInterleavedVertexData new
+		data: vertices;
+		vertexClass: self vertexClass;
+		yourself. 
 ]
 
 { #category : #accessing }
@@ -739,8 +740,7 @@ WDCGenericMeshBuilder >> engine [
 { #category : #accessing }
 WDCGenericMeshBuilder >> engine: anObject [
 	engine := anObject.
-	currentMaterial ifNil: [ currentMaterial := engine defaultMaterial ].
-	vertexLayout := self retrieveVertexLayout.
+	currentMaterial ifNil: [ currentMaterial := engine defaultMaterial ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -754,12 +754,14 @@ WDCGenericMeshBuilder >> finishSubmesh [
 { #category : #initialization }
 WDCGenericMeshBuilder >> initialize [
 	super initialize.
-	vertices := SLVMNativeOrderedCollection for: WTGenericVertexF.
+	vertices := SLVMNativeOrderedCollection for: self vertexClass.
 	indices := SLVMNativeOrderedCollection for: #int.
+	self createVertexData.
 	boundingBox := WMBox3DF empty.
 	submeshes := OrderedCollection new.
 	baseVertex := 0.
 	currentColor := Color white asWMVector4F.
+
 ]
 
 { #category : #'as yet unclassified' }
@@ -781,12 +783,12 @@ WDCGenericMeshBuilder >> mesh [
 	^ self createMeshWithSubmeshes: submeshes asArray.
 ]
 
-{ #category : #'as yet unclassified' }
-WDCGenericMeshBuilder >> retrieveVertexLayout [
-	^ engine vertexLayoutFor: WTGenericVertexF
-]
-
 { #category : #accessing }
 WDCGenericMeshBuilder >> useFlatColorMaterial [
 	self currentMaterial: engine resourceCache flatColorMaterial
+]
+
+{ #category : #initialization }
+WDCGenericMeshBuilder >> vertexClass [
+	^ vertexClass ifNil: [ vertexClass := WTGenericVertexF ]
 ]

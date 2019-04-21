@@ -3,26 +3,18 @@ I am a mesh builder for creating terrains grids.
 "
 Class {
 	#name : #WDCTerrainMeshBuilder,
-	#superclass : #Object,
+	#superclass : #WDCAbstractMeshBuilder,
 	#instVars : [
 		'vertices',
 		'indices',
 		'material',
-		'engine',
 		'vertexLayout',
 		'boundingBox',
-		'usedClipMapPeriod'
-	],
-	#pools : [
-		'AGPUConstants'
+		'usedClipMapPeriod',
+		'vertexData'
 	],
 	#category : #'WodenEngine-Core-Mesh'
 }
-
-{ #category : #'instance creation' }
-WDCTerrainMeshBuilder class >> for: anEngine [
-	^ self new engine: anEngine
-]
 
 { #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> clipMapPeriodForGridSize: size subdivisions: subdivisions [
@@ -39,12 +31,13 @@ WDCTerrainMeshBuilder >> createClipMapWithLevels: levelCount size: size subdivis
 				vertices := cachedGeometry first.
 				indices := cachedGeometry second.
 				boundingBox := cachedGeometry third.
+				vertexData := cachedGeometry fifth.
 				cachedGeometry fourth ifNotNil: [ :period |
 					material ifNotNil: [ material clipMapPeriod: period ]
 				]
 		] ifAbsentPut: [
 			self doCreateClipMapWithLevels: levelCount size: size subdivisions: subdivisions.
-			{ vertices . indices . boundingBox . usedClipMapPeriod }
+			{ vertices . indices . boundingBox . usedClipMapPeriod . vertexData }
 		]
 	].
 	self doCreateClipMapWithLevels: levelCount size: size subdivisions: subdivisions
@@ -160,15 +153,20 @@ WDCTerrainMeshBuilder >> createSubmesh [
 
 { #category : #'mesh building' }
 WDCTerrainMeshBuilder >> createVertexBinding [
-	| result |
-	result := engine createVertexBindingForLayout: vertexLayout.
-	result vertexBuffers: { self createVertexBuffer }; offsets: { 0 }.
-	^ result
+	^ vertexData createVertexBindingFor: engine
 ]
 
 { #category : #'mesh building' }
 WDCTerrainMeshBuilder >> createVertexBuffer [
-	^ engine createVertex: WDCTerrainMeshVertexF structureSize elements: vertices size immutableBuffer: vertices asByteArray
+	^ vertexData createVertexBufferFor: engine
+]
+
+{ #category : #initialization }
+WDCTerrainMeshBuilder >> createVertexData [
+	vertexData := WDCMeshInterleavedVertexData new
+		data: vertices;
+		vertexClass: self vertexClass;
+		yourself. 
 ]
 
 { #category : #'terrain mesh building' }
@@ -203,8 +201,9 @@ WDCTerrainMeshBuilder >> indices: anObject [
 { #category : #initialization }
 WDCTerrainMeshBuilder >> initialize [
 	super initialize.
-	vertices := SLVMNativeOrderedCollection for: WDCTerrainMeshVertexF.
+	vertices := SLVMNativeOrderedCollection for: self vertexClass.
 	indices := SLVMNativeOrderedCollection for: #uint.
+	self createVertexData.
 	boundingBox := WMBox3DF new
 	
 ]
@@ -225,6 +224,7 @@ WDCTerrainMeshBuilder >> mesh [
 	mesh := WDCGenericMesh new.
 	mesh
 		boundingBox: boundingBox;
+		vertexData: vertexData;
 		vertexBinding: self createVertexBinding;
 		indexBuffer: self createIndexBuffer;
 		submeshes: {self createSubmesh}.
@@ -264,6 +264,11 @@ WDCTerrainMeshBuilder >> stitchInnerEdge: innerEdge withOuterEdge: outerEdge fli
 		
 		ii := ii + 2.
 	]
+]
+
+{ #category : #initialization }
+WDCTerrainMeshBuilder >> vertexClass [
+	^ WDCTerrainMeshVertexF
 ]
 
 { #category : #accessing }

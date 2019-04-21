@@ -187,7 +187,7 @@ WDCResourceCache >> concretizeTexture: aTextureDescription [
 
 { #category : #private }
 WDCResourceCache >> createDefaultMaterial [
-	defaultMaterial := WDCGenericSurfaceMaterial for: engine.
+	defaultMaterial := WDCMetallicRoughnessMaterial for: engine.
 ]
 
 { #category : #textures }
@@ -326,7 +326,7 @@ WDCResourceCache >> initializeForEngine: anEngine [
 WDCResourceCache >> load3DModel: aFileNameOrReference [
 	| modelFile |
 	modelFile := self resolveResourceFileReference: aFileNameOrReference.
-	^ self resourceAt: modelFile -> #model ifAbsentPut: [ WDCModelLoader loadFromFile: modelFile ].
+	^ self resourceAt: modelFile -> #model ifAbsentPut: [ WDCAbstractModelLoader loadFromFile: modelFile ].
 
 ]
 

@@ -40,7 +40,7 @@ WDIWavefrontMTLImporter class >> loadFromFile: aFileName [
 
 { #category : #'as yet unclassified' }
 WDIWavefrontMTLImporter >> beginMaterial: materialName [
-	currentMaterial := WDCGenericSurfaceMaterial new.
+	currentMaterial := WDCSpecularityGlossinessMaterial new.
 	materialLibrary at: materialName put: currentMaterial
 ]
 

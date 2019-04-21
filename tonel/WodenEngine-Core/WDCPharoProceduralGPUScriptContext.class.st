@@ -25,10 +25,16 @@ WDCPharoProceduralGPUScriptContext >> compileShader: shaderFileName injectingNod
 	compiler := 	DASLCompiler new.
 	spirv := compiler 
 		target: #'spir-v';
+		withDebugInformation;
+		optimizationLevel: 2;
 		addIncludeDirectory: self shadersDirectory;
 		sourceFromFileNamed: (self shadersDirectory resolve: shaderFileName asFileReference) injectingNodes: nodesToInject;
 		compile;
 		generatedCode.
+		
+	compiler ssaModule globalNamed: #main.
+	spirv saveTo: 'test.spv'.
+	self halt.
 	^ spirv
 
 ]

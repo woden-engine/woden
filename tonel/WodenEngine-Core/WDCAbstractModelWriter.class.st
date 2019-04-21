@@ -1,24 +1,24 @@
 "
-I am an abstract  woden 3D model writer.
+I am a generic model writer. I can be a loader for simple models (renderables), or a scene graph based models.
 "
 Class {
-	#name : #WDCModelWriter,
+	#name : #WDCAbstractModelWriter,
 	#superclass : #Object,
-	#category : #'WodenEngine-Core-Mesh'
+	#category : #'WodenEngine-Core-Asset'
 }
 
 { #category : #accessing }
-WDCModelWriter class >> extension [
+WDCAbstractModelWriter class >> extension [
 	^ nil
 ]
 
 { #category : #accessing }
-WDCModelWriter class >> save: model intoFileReference: aFileReference [
+WDCAbstractModelWriter class >> save: model intoFileReference: aFileReference [
 	^ self new save: model intoFileReference: aFileReference
 ]
 
 { #category : #accessing }
-WDCModelWriter class >> save: model toFile: aFileName [
+WDCAbstractModelWriter class >> save: model toFile: aFileName [
 	| fileReference writer |
 	fileReference := aFileName asFileReference.
 	writer := self writerForExtension: fileReference extension.
@@ -27,7 +27,7 @@ WDCModelWriter class >> save: model toFile: aFileName [
 ]
 
 { #category : #accessing }
-WDCModelWriter class >> writerForExtension: anExtension [
+WDCAbstractModelWriter class >> writerForExtension: anExtension [
 	self allSubclassesDo: [ :sc |
 		sc extension = anExtension ifTrue: [ ^ sc ]
 	].
@@ -36,11 +36,11 @@ WDCModelWriter class >> writerForExtension: anExtension [
 ]
 
 { #category : #accessing }
-WDCModelWriter >> save: model intoFileNamed: aFileName [
+WDCAbstractModelWriter >> save: model intoFileNamed: aFileName [
 	^ self save: model intoFileReference: aFileName asFileReference
 ]
 
 { #category : #accessing }
-WDCModelWriter >> save: model intoFileReference: aFileReference [
+WDCAbstractModelWriter >> save: model intoFileReference: aFileReference [
 	self subclassResponsibility
 ]

@@ -2,8 +2,8 @@
 I represent a mesh vertx channel.
 "
 Class {
-	#name : #WDCMeshVertexChannel,
-	#superclass : #Object,
+	#name : #WDCMeshImplicitVertexChannel,
+	#superclass : #WDCAbstractMeshVertexChannel,
 	#instVars : [
 		'description',
 		'data'
@@ -15,66 +15,66 @@ Class {
 }
 
 { #category : #accessing }
-WDCMeshVertexChannel >> alignment [
+WDCMeshImplicitVertexChannel >> alignment [
 	^ description alignment
 ]
 
 { #category : #accessing }
-WDCMeshVertexChannel >> at: anIndex [
+WDCMeshImplicitVertexChannel >> at: anIndex [
 	^ data at: anIndex
 ]
 
 { #category : #accessing }
-WDCMeshVertexChannel >> at: anIndex put: aValue [
+WDCMeshImplicitVertexChannel >> at: anIndex put: aValue [
 	^ data at: anIndex put: aValue
 ]
 
 { #category : #accessing }
-WDCMeshVertexChannel >> binding [
+WDCMeshImplicitVertexChannel >> binding [
 	^ description binding
 ]
 
 { #category : #accessing }
-WDCMeshVertexChannel >> byteSize [
+WDCMeshImplicitVertexChannel >> byteSize [
 	^ data rawDataSize
 ]
 
 { #category : #accessing }
-WDCMeshVertexChannel >> bytes [
+WDCMeshImplicitVertexChannel >> bytes [
 	^ data rawData
 ]
 
 { #category : #accessing }
-WDCMeshVertexChannel >> data [
+WDCMeshImplicitVertexChannel >> data [
 	^ data
 ]
 
 { #category : #accessing }
-WDCMeshVertexChannel >> data: anObject [
+WDCMeshImplicitVertexChannel >> data: anObject [
 	data := anObject
 ]
 
 { #category : #accessing }
-WDCMeshVertexChannel >> description [
+WDCMeshImplicitVertexChannel >> description [
 	^ description
 ]
 
 { #category : #accessing }
-WDCMeshVertexChannel >> description: anObject [
+WDCMeshImplicitVertexChannel >> description: anObject [
 	description := anObject
 ]
 
 { #category : #accessing }
-WDCMeshVertexChannel >> name [
+WDCMeshImplicitVertexChannel >> name [
 	^ description name
 ]
 
 { #category : #printing }
-WDCMeshVertexChannel >> printOn: aStream [
+WDCMeshImplicitVertexChannel >> printOn: aStream [
 	aStream print: 'binding: '; print: self binding
 ]
 
 { #category : #accessing }
-WDCMeshVertexChannel >> size [
+WDCMeshImplicitVertexChannel >> size [
 	^ data size
 ]

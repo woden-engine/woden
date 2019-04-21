@@ -1,5 +1,5 @@
 Class {
-	#name : #WDCModelArmature,
+	#name : #WDCSimpleModelArmature,
 	#superclass : #Object,
 	#instVars : [
 		'names',
@@ -12,26 +12,26 @@ Class {
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : #'WodenEngine-Core-Mesh'
+	#category : #'WodenEngine-Core-Asset'
 }
 
 { #category : #accessing }
-WDCModelArmature >> boneParents [
+WDCSimpleModelArmature >> boneParents [
 	^ boneParents
 ]
 
 { #category : #accessing }
-WDCModelArmature >> boneParents: anObject [
+WDCSimpleModelArmature >> boneParents: anObject [
 	boneParents := anObject
 ]
 
 { #category : #accessing }
-WDCModelArmature >> bones [
+WDCSimpleModelArmature >> bones [
 	^ bones
 ]
 
 { #category : #accessing }
-WDCModelArmature >> bones: anObject [
+WDCSimpleModelArmature >> bones: anObject [
 	bones := anObject.
 	restPoseMatrices := nil.
 	restPoseForwardMatrices := nil.
@@ -39,7 +39,7 @@ WDCModelArmature >> bones: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-WDCModelArmature >> computeRestPose [
+WDCSimpleModelArmature >> computeRestPose [
 	| identity |
 	restPoseMatrices := SLVMNativeArray for: WMMatrix4F new: bones size.
 	identity := WMMatrix4F identity.
@@ -49,7 +49,7 @@ WDCModelArmature >> computeRestPose [
 ]
 
 { #category : #'as yet unclassified' }
-WDCModelArmature >> computeRestPoseForwardAndInverse [
+WDCSimpleModelArmature >> computeRestPoseForwardAndInverse [
 	| bone parentIndex parentInverseMatrix parentForwardMatrix forwardMatrix inverseMatrix |
 	restPoseForwardMatrices := SLVMNativeArray for: WMMatrix4F new: bones size.
 	restPoseInverseMatrices := SLVMNativeArray for: WMMatrix4F new: bones size.
@@ -73,29 +73,29 @@ WDCModelArmature >> computeRestPoseForwardAndInverse [
 ]
 
 { #category : #accessing }
-WDCModelArmature >> names [
+WDCSimpleModelArmature >> names [
 	^ names
 ]
 
 { #category : #accessing }
-WDCModelArmature >> names: anObject [
+WDCSimpleModelArmature >> names: anObject [
 	names := anObject
 ]
 
 { #category : #accessing }
-WDCModelArmature >> restPoseForwardMatrices [
+WDCSimpleModelArmature >> restPoseForwardMatrices [
 	restPoseForwardMatrices ifNil: [ self computeRestPoseForwardAndInverse ].
 	^ restPoseForwardMatrices
 ]
 
 { #category : #accessing }
-WDCModelArmature >> restPoseInverseMatrices [
+WDCSimpleModelArmature >> restPoseInverseMatrices [
 	restPoseInverseMatrices ifNil: [ self computeRestPoseForwardAndInverse ].
 	^ restPoseInverseMatrices
 ]
 
 { #category : #accessing }
-WDCModelArmature >> restPoseMatrices [
+WDCSimpleModelArmature >> restPoseMatrices [
 	restPoseMatrices ifNil: [ self computeRestPose ].
 	^ restPoseMatrices
 ]

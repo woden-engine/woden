@@ -1,9 +1,11 @@
 "
-I represent an offline 3D model. I am created by converting a 3D model from a 3D design application.
+I represent an offline simple 3D model. A simple 3D model is a model that does not involve a complex scene graph. I can be converted into a generic renderable.
+
+I am created by converting a 3D model from a 3D design application.
 "
 Class {
-	#name : #WDCModel,
-	#superclass : #Object,
+	#name : #WDCSimpleModel,
+	#superclass : #WDCAbstractModel,
 	#instVars : [
 		'vertices',
 		'indices',
@@ -18,11 +20,11 @@ Class {
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : #'WodenEngine-Core-Mesh'
+	#category : #'WodenEngine-Core-Asset'
 }
 
 { #category : #'model conversion' }
-WDCModel class >> convertModelFile: aFileName modifyingWith: aBlock [
+WDCSimpleModel class >> convertModelFile: aFileName modifyingWith: aBlock [
 	| fileRef loadedModel targetFileRef |
 	fileRef := aFileName asFileReference.
 	loadedModel := self loadFromFile: fileRef.
@@ -32,13 +34,8 @@ WDCModel class >> convertModelFile: aFileName modifyingWith: aBlock [
 	loadedModel saveTo: targetFileRef
 ]
 
-{ #category : #initialization }
-WDCModel class >> loadFromFile: aFileName [
-	^ WDCModelLoader loadFromFile: aFileName
-]
-
 { #category : #'model conversion' }
-WDCModel class >> modelConversionScript [
+WDCSimpleModel class >> modelConversionScript [
 	<script>
 	#(
 		('core-assets/models/demos/magnum.wmjson' 'materials/demos/magnum.json')
@@ -52,37 +49,37 @@ WDCModel class >> modelConversionScript [
 ]
 
 { #category : #accessing }
-WDCModel >> actions [
+WDCSimpleModel >> actions [
 	^ actions
 ]
 
 { #category : #accessing }
-WDCModel >> actions: anObject [
+WDCSimpleModel >> actions: anObject [
 	actions := anObject
 ]
 
 { #category : #accessing }
-WDCModel >> armature [
+WDCSimpleModel >> armature [
 	^ armature
 ]
 
 { #category : #accessing }
-WDCModel >> armature: anObject [
+WDCSimpleModel >> armature: anObject [
 	armature := anObject
 ]
 
 { #category : #accessing }
-WDCModel >> boundingBox [
+WDCSimpleModel >> boundingBox [
 	^ boundingBox
 ]
 
 { #category : #accessing }
-WDCModel >> boundingBox: anObject [
+WDCSimpleModel >> boundingBox: anObject [
 	boundingBox := anObject
 ]
 
 { #category : #modifiers }
-WDCModel >> combineSubmeshes [
+WDCSimpleModel >> combineSubmeshes [
 	submeshes := {WDCModelSubmesh new
 		firstIndex: 0;
 		indexCount: indices size;
@@ -93,38 +90,38 @@ WDCModel >> combineSubmeshes [
 ]
 
 { #category : #modifiers }
-WDCModel >> combineSubmeshesWithMaterial: aMaterial [
+WDCSimpleModel >> combineSubmeshesWithMaterial: aMaterial [
 	self combineSubmeshes.
 	submeshes first material: aMaterial.
 ]
 
 { #category : #'as yet unclassified' }
-WDCModel >> createIndexBufferFor: anEngine [
+WDCSimpleModel >> createIndexBufferFor: anEngine [
 	^ anEngine createIndex: indices elementSize elements: indices size immutableBuffer: indices rawData
 ]
 
 { #category : #'as yet unclassified' }
-WDCModel >> createVertexBindingFor: anEngine [
+WDCSimpleModel >> createVertexBindingFor: anEngine [
 	^ vertices createVertexBindingFor: anEngine
 ]
 
 { #category : #accessing }
-WDCModel >> indices [
+WDCSimpleModel >> indices [
 	^ indices
 ]
 
 { #category : #accessing }
-WDCModel >> indices: anObject [
+WDCSimpleModel >> indices: anObject [
 	indices := anObject
 ]
 
 { #category : #modifiers }
-WDCModel >> mapMaterials: aDictionary [
+WDCSimpleModel >> mapMaterials: aDictionary [
 	submeshes do: [ :submesh | submesh material: (aDictionary at: submesh material) ]
 ]
 
 { #category : #'as yet unclassified' }
-WDCModel >> meshFor: anEngine [
+WDCSimpleModel >> meshFor: anEngine [
 	| mesh |
 	armature ifNotNil: [
 		mesh := WDCSkinnedGenericMesh new.
@@ -143,26 +140,26 @@ WDCModel >> meshFor: anEngine [
 ]
 
 { #category : #fileout }
-WDCModel >> saveTo: aFileName [
-	WDCModelWriter save: self toFile: aFileName
+WDCSimpleModel >> saveTo: aFileName [
+	WDCAbstractModelWriter save: self toFile: aFileName
 ]
 
 { #category : #accessing }
-WDCModel >> submeshes [
+WDCSimpleModel >> submeshes [
 	^ submeshes
 ]
 
 { #category : #accessing }
-WDCModel >> submeshes: anObject [
+WDCSimpleModel >> submeshes: anObject [
 	submeshes := anObject
 ]
 
 { #category : #accessing }
-WDCModel >> vertices [
+WDCSimpleModel >> vertices [
 	^ vertices
 ]
 
 { #category : #accessing }
-WDCModel >> vertices: anObject [
+WDCSimpleModel >> vertices: anObject [
 	vertices := anObject
 ]

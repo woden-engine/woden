@@ -5,6 +5,7 @@ Class {
 	#name : #WDCGenericMesh,
 	#superclass : #WDCRenderable,
 	#instVars : [
+		'vertexData',
 		'vertexBinding',
 		'indexBuffer',
 		'submeshes'
@@ -15,6 +16,18 @@ Class {
 { #category : #'extra per object rendering data' }
 WDCGenericMesh >> createSceneDependentDataFor: engine into: bindings [
 	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+WDCGenericMesh >> engineChangedTo: newEngine [
+	indexBuffer ifNotNil: [ indexBuffer engineChangedTo: newEngine ].
+	vertexData ifNotNil: [ vertexData engineChangedTo: newEngine ].
+	vertexBinding ifNotNil: [ vertexBinding engineChangedTo: newEngine ].
+	(vertexBinding isNil and: [ vertexData isNotNil ]) ifTrue: [
+		vertexBinding := vertexData createVertexBindingFor: newEngine
+	].
+
+	submeshes do: [ :sm | sm engineChangedTo: newEngine ]
 ]
 
 { #category : #accessing }
@@ -30,14 +43,18 @@ WDCGenericMesh >> indexBuffer: anObject [
 
 { #category : #rendering }
 WDCGenericMesh >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
-	stateTracker
-		useVertexBinding: vertexBinding;
-		useIndexBuffer: indexBuffer.
-	submeshes do: [ :sm | sm renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex ]
+	stateTracker withVertexData: vertexData do: [
+		stateTracker
+			useVertexBinding: vertexBinding.
+		indexBuffer ifNotNil: [ stateTracker useIndexBuffer: indexBuffer ].
+		
+		submeshes do: [ :sm | sm renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex ]
+	]
+
 ]
 
 { #category : #rendering }
-WDCGenericMesh >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
+WDCGenericMesh >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [
 	listBuilder
 		useVertexBinding: vertexBinding validHandle;
 		useIndexBuffer: indexBuffer validHandle.
@@ -64,4 +81,14 @@ WDCGenericMesh >> vertexBinding [
 WDCGenericMesh >> vertexBinding: anObject [
 	vertexBinding := anObject.
 	modificationCount := modificationCount + 1.
+]
+
+{ #category : #accessing }
+WDCGenericMesh >> vertexData [
+	^ vertexData
+]
+
+{ #category : #accessing }
+WDCGenericMesh >> vertexData: anObject [
+	vertexData := anObject
 ]

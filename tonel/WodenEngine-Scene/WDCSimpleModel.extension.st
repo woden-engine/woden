@@ -1,7 +1,7 @@
-Extension { #name : #WDCModel }
+Extension { #name : #WDCSimpleModel }
 
 { #category : #'*WodenEngine-Scene' }
-WDCModel >> createViewer [
+WDCSimpleModel >> createViewer [
 	| sceneModel scene camera engine mesh node light |
 	sceneModel := WDASampleSceneModel new.
 	scene := sceneModel newScene.
@@ -28,6 +28,6 @@ WDCModel >> createViewer [
 ]
 
 { #category : #'*WodenEngine-Scene' }
-WDCModel >> openViewer [
+WDCSimpleModel >> openViewer [
 	^ self createViewer openWith: WDAFPSSceneView.
 ]

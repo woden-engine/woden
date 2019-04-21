@@ -5,6 +5,7 @@ Class {
 	#name : #WDCGenericSubmesh,
 	#superclass : #Object,
 	#instVars : [
+		'indexBuffer',
 		'firstIndex',
 		'indexCount',
 		'primitiveType',
@@ -20,6 +21,12 @@ WDCGenericSubmesh >> = other [
 		[ indexCount = other indexCount and:
 		[ material = other material and:
 		[ primitiveType = other primitiveType ]]]]
+]
+
+{ #category : #'as yet unclassified' }
+WDCGenericSubmesh >> engineChangedTo: newEngine [
+	indexBuffer ifNotNil: [ indexBuffer engineChangedTo: newEngine ].
+	material ifNotNil: [ material engineChangedTo: newEngine ]
 ]
 
 { #category : #accessing }
@@ -39,6 +46,16 @@ WDCGenericSubmesh >> hash [
 		(indexCount hash bitXor:
 		(material hash bitXor:
 		 primitiveType hash)))
+]
+
+{ #category : #accessing }
+WDCGenericSubmesh >> indexBuffer [
+	^ indexBuffer
+]
+
+{ #category : #accessing }
+WDCGenericSubmesh >> indexBuffer: anObject [
+	indexBuffer := anObject
 ]
 
 { #category : #accessing }
@@ -75,6 +92,8 @@ WDCGenericSubmesh >> primitiveType: anObject [
 WDCGenericSubmesh >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	material ifNil: [ ^ self ].
 	(stateTracker activateMaterial: material) ifFalse: [ ^ self].
+	indexBuffer ifNotNil: [ stateTracker useIndexBuffer: indexBuffer ].
+	
 	stateTracker
 		primitiveType: primitiveType;
 		drawElements: indexCount instance_count: instanceCount first_index: firstIndex base_vertex: baseVertex base_instance: baseInstance
@@ -84,5 +103,7 @@ WDCGenericSubmesh >> renderOn: stateTracker instanceCount: instanceCount baseIns
 WDCGenericSubmesh >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	material ifNil: [ ^ self ].
 	(material activateOn: listBuilder primitiveType: primitiveType mode: renderMode submode: submode) ifFalse: [ ^ self].
+	indexBuffer ifNotNil: [ indexBuffer useIndexBuffer: indexBuffer ].
+
 	listBuilder drawElements: indexCount instance_count: instanceCount first_index: firstIndex base_vertex: baseVertex base_instance: baseInstance
 ]

@@ -378,3 +378,8 @@ WDCStateTracker >> vertexLayout: aVertexLayout [
 WDCStateTracker >> vertexShader: aVertexShader [
 	pipelineStateDescription vertexShader: aVertexShader
 ]
+
+{ #category : #'as yet unclassified' }
+WDCStateTracker >> withVertexData: vertexData do: aBlock [
+	^ aBlock value
+]

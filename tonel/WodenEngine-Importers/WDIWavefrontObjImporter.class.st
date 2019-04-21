@@ -3,7 +3,7 @@ I am an importer for wavefront .obj 3d models.
 "
 Class {
 	#name : #WDIWavefrontObjImporter,
-	#superclass : #WDCModelLoader,
+	#superclass : #WDCSimpleModelLoader,
 	#instVars : [
 		'currentDirectory',
 		'materialLibrary',
@@ -46,11 +46,6 @@ WDIWavefrontObjImporter class >> initialize [
 		#f . [ :myself :arguments | myself parseFace: arguments ].
 		#l . [ :myself :arguments | myself parseLine: arguments ].
 	}
-]
-
-{ #category : #'as yet unclassified' }
-WDIWavefrontObjImporter class >> loadFromFile: aFileName [
-	^ self new loadFromFile: aFileName
 ]
 
 { #category : #'submesh building' }
@@ -137,7 +132,7 @@ WDIWavefrontObjImporter >> finishCurrentSubmesh [
 WDIWavefrontObjImporter >> finishLoading [
 	| vertices |
 	self finishCurrentSubmesh.
-	vertices := WDCSeparatedVertexData new.
+	vertices := WDCMeshImplicitSeparatedVertexData new.
 	vertices
 		vertexCount: positions size;
 		addChannelNativePositions: positions asNativeArray;
@@ -148,7 +143,7 @@ WDIWavefrontObjImporter >> finishLoading [
 		sortChannels;
 		yourself.
 	
-	^ WDCModel new
+	^ WDCSimpleModel new
 		vertices: vertices;
 		indices: indices asNativeArray;
 		submeshes: submeshes asArray;

@@ -5,6 +5,7 @@ Class {
 	#name : #WDCRenderable,
 	#superclass : #Object,
 	#instVars : [
+		'name',
 		'boundingBox',
 		'modificationCount'
 	],
@@ -27,6 +28,10 @@ WDCRenderable >> createSceneDependentDataFor: engine into: bindings [
 	self subclassResponsibility
 ]
 
+{ #category : #'as yet unclassified' }
+WDCRenderable >> engineChangedTo: newEngine [
+]
+
 { #category : #initialization }
 WDCRenderable >> initialize [
 	super initialize.
@@ -37,6 +42,16 @@ WDCRenderable >> initialize [
 { #category : #'as yet unclassified' }
 WDCRenderable >> invalidate [
 	"This is the place for invalidating dynamic renderables."
+]
+
+{ #category : #accessing }
+WDCRenderable >> name [
+	^ name
+]
+
+{ #category : #accessing }
+WDCRenderable >> name: anObject [
+	name := anObject
 ]
 
 { #category : #'extra per object rendering data' }

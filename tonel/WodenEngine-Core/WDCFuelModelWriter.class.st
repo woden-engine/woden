@@ -3,8 +3,8 @@ I am woden model writer that uses fuel for saving models.
 "
 Class {
 	#name : #WDCFuelModelWriter,
-	#superclass : #WDCModelWriter,
-	#category : #'WodenEngine-Core-Mesh'
+	#superclass : #WDCSimpleModelWriter,
+	#category : #'WodenEngine-Core-Asset'
 }
 
 { #category : #accessing }

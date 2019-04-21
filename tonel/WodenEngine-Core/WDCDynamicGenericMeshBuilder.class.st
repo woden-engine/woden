@@ -35,25 +35,12 @@ WDCDynamicGenericMeshBuilder >> createMeshWithSubmeshes: newSubmeshes [
 	^ super createMeshWithSubmeshes: newSubmeshes
 ]
 
-{ #category : #'as yet unclassified' }
-WDCDynamicGenericMeshBuilder >> createVertexBinding [
-	vertexBinding ifNil: [
-		vertexBinding := super createVertexBinding
-	] ifNotNil: [
-		vertexBinding vertexBuffers: { self createVertexBuffer }; offsets: { 0 }
-	].
-	^ vertexBinding
-]
-
-{ #category : #'as yet unclassified' }
-WDCDynamicGenericMeshBuilder >> createVertexBuffer [
-	(vertexBuffer isNil or: [ vertexBufferCapacity < vertices size ]) ifTrue: [
-		vertexBufferCapacity := vertices capacity.
-		vertexBuffer := engine createVertex: WTGenericVertexF structureSize streamingElements: vertexBufferCapacity.
-	].
-
-	LibC memCopy: vertices rawData to: vertexBuffer validPointer size: vertices rawDataSize.
-	^ vertexBuffer
+{ #category : #initialization }
+WDCDynamicGenericMeshBuilder >> createVertexData [
+	vertexData := WDCDynamicMeshInterleavedVertexData new
+		data: vertices;
+		vertexClass: self vertexClass;
+		yourself. 
 ]
 
 { #category : #'as yet unclassified' }

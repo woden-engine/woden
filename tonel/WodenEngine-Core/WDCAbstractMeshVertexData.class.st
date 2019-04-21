@@ -131,6 +131,30 @@ WDCAbstractMeshVertexData >> computeTangents4WithTriangles: triangles [
 	self addChannelNativeTangents4: tangents4
 ]
 
+{ #category : #'gpu binding resources' }
+WDCAbstractMeshVertexData >> createVertexBindingFor: engine [
+	self subclassResponsibility
+]
+
+{ #category : #'gpu binding resources' }
+WDCAbstractMeshVertexData >> createVertexBufferFor: engine [
+	self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+WDCAbstractMeshVertexData >> engineChangedTo: anEngine [
+]
+
+{ #category : #testing }
+WDCAbstractMeshVertexData >> hasVertexColors [
+	^ false
+]
+
+{ #category : #testing }
+WDCAbstractMeshVertexData >> hasVertexTangents [
+	^ false
+]
+
 { #category : #'vertex data channels' }
 WDCAbstractMeshVertexData >> normals [
 	self subclassResponsibility

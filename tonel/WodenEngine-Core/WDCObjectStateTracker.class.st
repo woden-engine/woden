@@ -2,6 +2,7 @@ Class {
 	#name : #WDCObjectStateTracker,
 	#superclass : #WDCStateTracker,
 	#instVars : [
+		'activeVertexData',
 		'activeMaterial',
 		'objectBlendingMode',
 		'materialBlendingMode',
@@ -112,6 +113,16 @@ WDCObjectStateTracker >> applyPolygonMode [
 		^ self polygonMode: objectPolygonMode.
 	]
 
+]
+
+{ #category : #testing }
+WDCObjectStateTracker >> hasVertexColors [
+	^ activeVertexData isNotNil and: [ activeVertexData hasVertexColors ]
+]
+
+{ #category : #testing }
+WDCObjectStateTracker >> hasVertexTangents [
+	^ activeVertexData isNotNil and: [ activeVertexData hasVertexTangents ]
 ]
 
 { #category : #'per object per material states' }
@@ -230,6 +241,7 @@ WDCObjectStateTracker >> objectPolygonMode: anObject [
 WDCObjectStateTracker >> reset [
 	super reset.
 	activeMaterial := nil.
+	activeVertexData := nil.
 
 	objectBlendingMode := nil.
 	objectCullMode := nil.
@@ -243,4 +255,14 @@ WDCObjectStateTracker >> reset [
 	materialDepthEnabled := nil.
 	materialDepthWriteMask := nil.
 	materialDepthFunction := nil.
+]
+
+{ #category : #'as yet unclassified' }
+WDCObjectStateTracker >> withVertexData: vertexData do: aBlock [
+	| oldActiveVertexData |
+	oldActiveVertexData := activeVertexData.
+	activeVertexData := vertexData.
+	^ aBlock ensure: [
+		activeVertexData := oldActiveVertexData.
+	]
 ]

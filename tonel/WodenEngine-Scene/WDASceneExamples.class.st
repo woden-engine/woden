@@ -539,7 +539,7 @@ WDASceneExamples class >> example09DragonIsland [
 	dragon transform
 		rotateDegreesOnY: -45.0; 
 		translateByZ: 70.0;
-		translateByY: 1.5.
+		translateByY: 3.0.
 
 	scene add: dragon.
 	

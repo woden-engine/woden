@@ -5,6 +5,7 @@ Class {
 	#name : #WDSGScene,
 	#superclass : #Object,
 	#instVars : [
+		'name',
 		'engine',
 		'backgroundColor',
 		'roots',
@@ -71,6 +72,17 @@ WDSGScene >> commonGPUStateRenderingComponent [
 	^ commonGPUStateRenderingComponent ifNil: [commonGPUStateRenderingComponent := WDSGSceneCommonGPUStateRenderingComponent for: self]
 ]
 
+{ #category : #'as yet unclassified' }
+WDSGScene >> detachFromEngine [
+	engine := nil.
+	shaderSignature := nil.
+	genericObjectStatePool := nil.
+	neutralObjectInstanceStatePool := nil.
+	neutralObjectInstanceState := nil.
+	commonGPUStateRenderingComponent := nil.
+	roots engineChanged.
+]
+
 { #category : #accessing }
 WDSGScene >> engine [
 	^ engine
@@ -101,12 +113,23 @@ WDSGScene >> initializeWithEngine: anEngine [
 { #category : #accessing }
 WDSGScene >> initializeWithEngine: anEngine shaderSignatureClass: shaderSignatureClass [
 	engine := anEngine.
-	shaderSignature := shaderSignatureClass for: anEngine
+	shaderSignature := shaderSignatureClass for: anEngine.
+	roots do: #engineChanged.
 ]
 
 { #category : #'rendering graph' }
 WDSGScene >> modelRenderingGraphDependencies [
 	^ { self commonGPUStateRenderingComponent }
+]
+
+{ #category : #accessing }
+WDSGScene >> name [
+	^ name
+]
+
+{ #category : #accessing }
+WDSGScene >> name: anObject [
+	name := anObject
 ]
 
 { #category : #accessing }
