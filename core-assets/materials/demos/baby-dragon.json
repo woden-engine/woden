@@ -1,7 +1,7 @@
 {
-    "type" : "GenericSurface",
+    "type" : "MetallicRoughness",
     "albedo-texture" : "textures/demos/baby-dragon-albedo.png",
 
-    "smoothness" : 0.02,
+    "roughness-factor" : 0.8,
     "skinned" : true
 }

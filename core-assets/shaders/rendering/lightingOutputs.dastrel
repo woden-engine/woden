@@ -12,8 +12,42 @@ code_block forwardLightingOutput
     in fresnel: float3;
 
     color: FragmentStage.colorOutput0 <== forwardLightingModel
+        albedo: albedo.rgb
+        Cdiff: albedo.rgb
+		translucencyFactor: albedo.a
+        F0: fresnel alpha: smoothness
+        normal: normal surfaceNormal: surfaceNormal viewVector: viewVector position: position;
+}
+
+code_block forwardMetallicRoughnessLightingOutput
+{
+    in normal: float3;
+    in surfaceNormal: float3;
+    in viewVector: float3;
+    in position: float3;
+    in albedo: float4;
+    in metallic: float;
+    in roughness: float;
+
+    color: FragmentStage.colorOutput0 <== forwardMetallicRoughnessLightingModel
         albedo: albedo
-        fresnel: fresnel smoothness: smoothness
+        metallic: metallic roughness: roughness
+        normal: normal surfaceNormal: surfaceNormal viewVector: viewVector position: position;
+}
+
+code_block forwardSpecularityGlossinessLightingOutput
+{
+    in normal: float3;
+    in surfaceNormal: float3;
+    in viewVector: float3;
+    in position: float3;
+    in albedo: float4;
+    in specular: float3;
+    in glossiness: float;
+
+    color: FragmentStage.colorOutput0 <== forwardSpecularityGlossinessLightingModel
+        albedo: albedo
+        specular: specular glossiness: glossiness
         normal: normal surfaceNormal: surfaceNormal viewVector: viewVector position: position;
 }
 

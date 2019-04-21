@@ -1,4 +1,4 @@
 {
-    "type" : "GenericSurface",
+    "type" : "MetallicRoughness",
     "albedo-texture" : "textures/basic/checkboard.dds"
 }

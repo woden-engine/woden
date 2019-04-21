@@ -1,7 +1,8 @@
 {
-    "type" : "GenericSurface",
+    "type" : "MetallicRoughness",
     "albedo-texture" : "textures/demos/tile-albedo.dds",
     "normal-texture" : "textures/demos/tile-normal.dds",
 
-    "smoothness" : 0.80
+	"metallic-factor" : 0.0,
+    "roughness-factor" : 0.50
 }

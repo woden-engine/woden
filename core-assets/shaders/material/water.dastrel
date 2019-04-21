@@ -212,8 +212,10 @@ code_block(fragment) forward_sky
 
     let lightedColor : float4;
     color: lightedColor <== forwardLightingModel
-        albedo: albedo
-        fresnel: MaterialState.fresnel smoothness: MaterialState.smoothness
+        albedo: albedo.rgb
+        Cdiff: albedo.rgb
+		translucencyFactor: albedo.a
+        F0: MaterialState.fresnel alpha: MaterialState.smoothness
         normal: N surfaceNormal: N viewVector: V position: WaterFragmentInput.position;
 
     let R = reflect(-V, N);

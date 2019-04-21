@@ -1,6 +1,7 @@
 Compiler
     evaluateFileNamed: 'WTGenericObjectState.ltk';
-    evaluateFileNamed: 'WTGenericSurfaceMaterialState.ltk';
+    evaluateFileNamed: 'WDCMetallicRoughnessMaterialState.ltk';
+    evaluateFileNamed: 'WDCSpecularityGlossinessMaterialState.ltk';
     evaluateFileNamed: 'WTWaterHarmonic.ltk';
     evaluateFileNamed: 'WTWaterMaterialState.ltk';
     evaluateFileNamed: 'WDCTerrainMaterialState.ltk';

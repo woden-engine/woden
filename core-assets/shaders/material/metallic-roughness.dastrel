@@ -1,0 +1,337 @@
+import vertex.stage;
+import fragment.stage;
+
+import rendering.shaderSignature;
+import rendering.environment;
+import rendering.depthNormalFragmentOutput;
+import rendering.lightingOutputs;
+
+import vertex.genericLayout;
+import vertex.genericSkinnedLayout;
+
+//==============================================================================
+// Material state
+
+uniform(binding = MaterialState.Attributes) MaterialState
+{
+    albedo: float4;
+    metallicFactor: float;
+    roughnessFactor: float;
+}
+
+uniform(binding = MaterialState.Textures) albedoTexture : texture2D;
+uniform(binding = MaterialState.Textures + 1) normalTexture : texture2D;
+uniform(binding = MaterialState.Textures + 2) metallicRoughnessTexture : texture2D;
+
+//==============================================================================
+// Vertex and fragment shader interface
+
+semantic VertexOutput {
+    out(0) position: float3;
+    out(1) texcoord: float2;
+    out(2) color: float4;
+    out(3) normal: float3;
+    out(4) tangent: float3;
+    out(5) bitangent: float3;
+}
+
+semantic FragmentInput {
+    in(0) position: float3;
+    in(1) texcoord: float2;
+    in(2) color: float4;
+    in(3) normal: float3;
+    in(4) tangent: float3;
+    in(5) bitangent: float3;
+}
+
+//==============================================================================
+// Vertex shaders
+
+code_block(vertex) depth_vertex
+{
+    using CameraState;
+
+    if(isCurrentObjectInstanceInvisible())
+    {
+        VertexStage.screenPosition = float4(2.0f, 2.0f, -2.0f, 1.0f);
+        return;
+    }
+
+    VertexOutput.normal = transformNormalToView(GenericVertexLayout.normal);
+
+    let position4 = transformPositionToView(GenericVertexLayout.position);
+    VertexStage.screenPosition = projectionMatrix * position4;
+}
+
+code_block(vertex) flat_vertex
+{
+    using CameraState;
+
+    if(isCurrentObjectInstanceInvisible())
+    {
+        VertexStage.screenPosition = float4(2.0f, 2.0f, -2.0f, 1.0f);
+        return;
+    }
+
+    VertexOutput.color = currentObjectInstanceColor();
+    VertexOutput.texcoord = GenericVertexLayout.texcoord;
+    VertexOutput.normal = transformNormalToView(GenericVertexLayout.normal);
+
+    let position4 = transformPositionToView(GenericVertexLayout.position);
+    VertexOutput.position =  position4.xyz;
+    VertexStage.screenPosition = projectionMatrix * position4;
+}
+
+code_block(vertex) normal_vertex
+{
+    using CameraState;
+
+    if(isCurrentObjectInstanceInvisible())
+    {
+        VertexStage.screenPosition = float4(2.0f, 2.0f, -2.0f, 1.0f);
+        return;
+    }
+
+    VertexOutput.color = currentObjectInstanceColor();
+    VertexOutput.texcoord = GenericVertexLayout.texcoord;
+    VertexOutput.tangent = transformNormalToView(GenericVertexLayout.tangent4.xyz);
+    VertexOutput.normal = transformNormalToView(GenericVertexLayout.normal);
+    VertexOutput.bitangent = cross(VertexOutput.normal, VertexOutput.tangent) * GenericVertexLayout.tangent4.w;
+
+    let position4 = transformPositionToView(GenericVertexLayout.position);
+    VertexOutput.position =  position4.xyz;
+    VertexStage.screenPosition = projectionMatrix * position4;
+}
+
+code_block(vertex) color_vertex
+{
+    using CameraState;
+
+    if(isCurrentObjectInstanceInvisible())
+    {
+        VertexStage.screenPosition = float4(2.0f, 2.0f, -2.0f, 1.0f);
+        return;
+    }
+
+    VertexOutput.color = GenericVertexLayout.color*currentObjectInstanceColor();
+    VertexOutput.texcoord = GenericVertexLayout.texcoord;
+    VertexOutput.normal = transformNormalToView(GenericVertexLayout.normal);
+
+    let position4 = transformPositionToView(GenericVertexLayout.position);
+    VertexOutput.position =  position4.xyz;
+    VertexStage.screenPosition = projectionMatrix * position4;
+}
+
+code_block(vertex) colorNormal_vertex
+{
+    using CameraState;
+
+    if(isCurrentObjectInstanceInvisible())
+    {
+        VertexStage.screenPosition = float4(2.0f, 2.0f, -2.0f, 1.0f);
+        return;
+    }
+
+    VertexOutput.color = GenericVertexLayout.color*currentObjectInstanceColor();
+    VertexOutput.texcoord = GenericVertexLayout.texcoord;
+    VertexOutput.tangent = transformNormalToView(GenericVertexLayout.tangent4.xyz);
+    VertexOutput.normal = transformNormalToView(GenericVertexLayout.normal);
+    VertexOutput.bitangent = cross(VertexOutput.normal, VertexOutput.tangent) * GenericVertexLayout.tangent4.w;
+
+    let position4 = transformPositionToView(GenericVertexLayout.position);
+    VertexOutput.position =  position4.xyz;
+    VertexStage.screenPosition = projectionMatrix * position4;
+}
+
+function skinPosition(position: float3) -> float3
+{
+    return skinPositionWithBones(position, SkinnedGenericVertexLayout.boneIndices, SkinnedGenericVertexLayout.boneWeights);
+}
+
+function skinVector(vector: float3) -> float3
+{
+    return skinVectorWithBones(vector, SkinnedGenericVertexLayout.boneIndices, SkinnedGenericVertexLayout.boneWeights);
+}
+
+code_block(vertex) depthSkinned_vertex
+{
+    using CameraState;
+
+    if(isCurrentObjectInstanceInvisible())
+    {
+        VertexStage.screenPosition = float4(2.0f, 2.0f, -2.0f, 1.0f);
+        return;
+    }
+
+    VertexOutput.normal = transformNormalToView(skinVector(GenericVertexLayout.normal));
+
+    let position4 = transformPositionToView(skinPosition(GenericVertexLayout.position));
+    VertexStage.screenPosition = projectionMatrix * position4;
+}
+
+code_block(vertex) skinnedColorNormal_vertex
+{
+    using CameraState;
+
+    if(isCurrentObjectInstanceInvisible())
+    {
+        VertexStage.screenPosition = float4(2.0f, 2.0f, -2.0f, 1.0f);
+        return;
+    }
+
+    VertexOutput.color = GenericVertexLayout.color*currentObjectInstanceColor();
+    VertexOutput.texcoord = GenericVertexLayout.texcoord;
+    VertexOutput.tangent = transformNormalToView(skinVector(GenericVertexLayout.tangent4.xyz));
+    VertexOutput.normal = transformNormalToView(skinVector(GenericVertexLayout.normal));
+    VertexOutput.bitangent = cross(VertexOutput.normal, VertexOutput.tangent) * GenericVertexLayout.tangent4.w;
+
+    let position4 = transformPositionToView(skinPosition(GenericVertexLayout.position));
+    VertexOutput.position =  position4.xyz;
+    VertexStage.screenPosition = projectionMatrix * position4;
+}
+
+code_block(vertex) skinnedColor_vertex
+{
+    using CameraState;
+
+    if(isCurrentObjectInstanceInvisible())
+    {
+        VertexStage.screenPosition = float4(2.0f, 2.0f, -2.0f, 1.0f);
+        return;
+    }
+
+    VertexOutput.color = GenericVertexLayout.color*currentObjectInstanceColor();
+    VertexOutput.texcoord = GenericVertexLayout.texcoord;
+    VertexOutput.normal = transformNormalToView(skinVector(GenericVertexLayout.normal));
+
+    let position4 = transformPositionToView(skinPosition(GenericVertexLayout.position));
+    VertexOutput.position =  position4.xyz;
+    VertexStage.screenPosition = projectionMatrix * position4;
+}
+
+code_block(vertex) skinnedNormal_vertex
+{
+    using CameraState;
+
+    if(isCurrentObjectInstanceInvisible())
+    {
+        VertexStage.screenPosition = float4(2.0f, 2.0f, -2.0f, 1.0f);
+        return;
+    }
+
+    VertexOutput.color = currentObjectInstanceColor();
+    VertexOutput.texcoord = GenericVertexLayout.texcoord;
+    VertexOutput.tangent = transformNormalToView(skinVector(GenericVertexLayout.tangent4.xyz));
+    VertexOutput.normal = transformNormalToView(skinVector(GenericVertexLayout.normal));
+    VertexOutput.bitangent = cross(VertexOutput.normal, VertexOutput.tangent) * GenericVertexLayout.tangent4.w;
+
+    let position4 = transformPositionToView(skinPosition(GenericVertexLayout.position));
+    VertexOutput.position =  position4.xyz;
+    VertexStage.screenPosition = projectionMatrix * position4;
+}
+
+code_block(vertex) skinned_vertex
+{
+    using CameraState;
+
+    if(isCurrentObjectInstanceInvisible())
+    {
+        VertexStage.screenPosition = float4(2.0f, 2.0f, -2.0f, 1.0f);
+        return;
+    }
+
+    VertexOutput.color = currentObjectInstanceColor();
+    VertexOutput.texcoord = GenericVertexLayout.texcoord;
+    VertexOutput.normal = transformNormalToView(skinVector(GenericVertexLayout.normal));
+
+    let position4 = transformPositionToView(skinPosition(GenericVertexLayout.position));
+    VertexOutput.position =  position4.xyz;
+    VertexStage.screenPosition = projectionMatrix * position4;
+}
+
+//==============================================================================
+// Depth normal
+
+code_block(fragment) depthNormal_fragment
+{
+    encodeViewNormalOutput(normalize(FragmentInput.normal));
+}
+
+//==============================================================================
+// Forward lighting model.
+
+code_block(fragment) forward_color
+{
+    let N = normalize(FragmentInput.normal);
+    let V = normalize(-FragmentInput.position);
+
+    forwardMetallicRoughnessLightingOutput
+        albedo: FragmentInput.color*MaterialState.albedo
+        metallic: MaterialState.metallicFactor roughness: MaterialState.roughnessFactor
+        normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
+}
+
+code_block(fragment) forward_albedo
+{
+    let N = normalize(FragmentInput.normal);
+    let V = normalize(-FragmentInput.position);
+
+    let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
+    forwardMetallicRoughnessLightingOutput
+        albedo: albedo*MaterialState.albedo
+        metallic: MaterialState.metallicFactor roughness: MaterialState.roughnessFactor
+        normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
+}
+
+
+code_block(fragment) forward_albedoNormal
+{
+    let t = normalize(FragmentInput.tangent);
+    let b = normalize(FragmentInput.bitangent);
+    let n = normalize(FragmentInput.normal);
+    let V = normalize(-FragmentInput.position);
+
+    let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
+    let tangentNormal = normalSampler.sample(normalTexture, FragmentInput.texcoord).agb*2.0f - 1.0f;
+    let TBN = float3x3(t, b, n);
+    let N = normalize(TBN*tangentNormal);
+
+    forwardMetallicRoughnessLightingOutput
+        albedo: albedo*MaterialState.albedo
+        metallic: MaterialState.metallicFactor roughness: MaterialState.roughnessFactor
+        normal: N surfaceNormal: n viewVector: V position: FragmentInput.position;
+}
+
+code_block(fragment) forward_albedoMetallicRoughness
+{
+    let N = normalize(FragmentInput.normal);
+    let V = normalize(-FragmentInput.position);
+
+    let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
+    let metallicRoughness = albedoSampler.sample(metallicRoughnessTexture, FragmentInput.texcoord).gb;
+    forwardMetallicRoughnessLightingOutput
+        albedo: albedo*MaterialState.albedo
+        metallic: metallicRoughness.x*MaterialState.metallicFactor
+		roughness: metallicRoughness.y*MaterialState.roughnessFactor
+        normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
+}
+
+code_block(fragment) forward_albedoNormalFresnel
+{
+    let t = normalize(FragmentInput.tangent);
+    let b = normalize(FragmentInput.bitangent);
+    let n = normalize(FragmentInput.normal);
+    let V = normalize(-FragmentInput.position);
+
+    let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
+    let metallicRoughness = albedoSampler.sample(metallicRoughnessTexture, FragmentInput.texcoord).gb;
+    let tangentNormal = normalSampler.sample(normalTexture, FragmentInput.texcoord).agb*2.0f - 1.0f;
+    let TBN = float3x3(t, b, n);
+    let N = normalize(TBN*tangentNormal);
+
+    forwardMetallicRoughnessLightingOutput
+        albedo: albedo*MaterialState.albedo
+        metallic: metallicRoughness.x*MaterialState.metallicFactor
+		roughness: metallicRoughness.y*MaterialState.roughnessFactor
+        normal: N surfaceNormal: n viewVector: V position: FragmentInput.position;
+}

@@ -1,0 +1,8 @@
+Structure <<< #WDCSpecularityGlossinessMaterialState
+	slots: {
+		#albedo => WMVector4F. 
+		#specularFactor => WMCompactVector3F. 
+		#glossinessFactor => Float32
+	};
+	package: 'WodenEngine-Structures-Core-Material';
+	yourself.

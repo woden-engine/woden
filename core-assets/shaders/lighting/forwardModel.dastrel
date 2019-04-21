@@ -45,23 +45,23 @@ code_block forwardLightingModel
     in surfaceNormal: float3;
     in viewVector: float3;
     in position: float3;
-    in albedo: float4;
-    in smoothness: float;
-    in fresnel: float3;
+    in albedo: float3;
+    in Cdiff: float3;
+	in translucencyFactor: float;
+    in alpha: float;
+    in F0: float3;
     out color: float4;
 
     using GlobalLightingState;
 
-    let albedoColor = albedo.rgb;
-
-    let specularPower = exp2(10.0f*smoothness);
+    let specularPower = exp2(10.0f*(1.0f - alpha));
     let specularNormalization = (specularPower + 2.0f) * 0.125f;
 
     let accumulatedColor = float3(0.0f, 0.0f, 0.0f);
 
     // Add the ambient hemispherical light.
     let hemiFactor = dot(normal, sunDirection)*0.5f + 0.5f;
-    accumulatedColor += albedoColor * mix(groundLighting.rgb, skyLighting.rgb, hemiFactor)*sampleScreenSpaceAmbientOcclusion();
+    accumulatedColor += albedo * mix(groundLighting.rgb, skyLighting.rgb, hemiFactor)*sampleScreenSpaceAmbientOcclusion();
 
     // Accumulate each one of the lights
     for(let i = 0; i < numberOfLights; i += 1)
@@ -123,16 +123,65 @@ code_block forwardLightingModel
 
         // Compute the fresnel factor
         let H = normalize(L + viewVector);
-        let F = fresnelSchlick(fresnel, dot(H, L));
+        let F = fresnelSchlick(F0, dot(H, L));
 
         // Compute the distribution factor.
         let NdotH = max(0.0f, dot(normal, H));
         let D = pow(NdotH, specularPower)*specularNormalization;
 
         // Add the light contribution.
-        accumulatedColor += lightSource.intensity.rgb*attenuation*(albedoColor + F*D)*NdotL;
+        accumulatedColor += lightSource.intensity.rgb*attenuation*(Cdiff + F*D)*NdotL;
     }
 
     // Return the final lighted color.
-    color = float4(accumulatedColor, albedo.a);
+    color = float4(accumulatedColor, translucencyFactor);
+}
+
+code_block forwardMetallicRoughnessLightingModel
+{
+    in normal: float3;
+    in surfaceNormal: float3;
+    in viewVector: float3;
+    in position: float3;
+    in albedo: float4;
+    in metallic: float;
+    in roughness: float;
+    out color: float4;
+
+	let dielectricSpecular = float3(0.04f, 0.04f, 0.04f);
+	let black = float3(0.0f, 0.0f, 0.0f);
+	let Cdiff = mix(albedo.rgb * (1.0f - dielectricSpecular.r), black, metallic);
+	let F0 = mix(dielectricSpecular, albedo.rgb, metallic);
+	let alpha = roughness*roughness;
+	
+    color: color <== forwardLightingModel
+		albedo: albedo.rgb
+        Cdiff: Cdiff
+        F0: F0 alpha: alpha
+		translucencyFactor: albedo.a
+        normal: normal surfaceNormal: surfaceNormal viewVector: viewVector position: position;
+}
+
+code_block forwardSpecularityGlossinessLightingModel
+{
+    in normal: float3;
+    in surfaceNormal: float3;
+    in viewVector: float3;
+    in position: float3;
+    in albedo: float4;
+    in specular: float3;
+    in glossiness: float;
+    out color: float4;
+
+	let Cdiff = albedo.rgb*(1.0f - max(specular.r, max(specular.g, specular.b)));
+	let F0 = specular;
+	let roughness = 1.0f - glossiness;
+	let alpha = roughness*roughness;
+
+    color: color <== forwardLightingModel
+		albedo: albedo.rgb
+        Cdiff: Cdiff
+        F0: F0 alpha: alpha
+		translucencyFactor: albedo.a
+        normal: normal surfaceNormal: surfaceNormal viewVector: viewVector position: position;
 }
