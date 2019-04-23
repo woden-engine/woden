@@ -109,6 +109,11 @@ RWView >> addRigidBody: rigidBody [
 	rigidBodies add: rigidBody
 ]
 
+{ #category : #accessing }
+RWView >> allElementsInScene [
+	^ internalElements , elements
+]
+
 { #category : #interaction }
 RWView >> announce: eventOrClassEvent [
 	eventHandler announce: eventOrClassEvent
@@ -210,6 +215,20 @@ RWView >> elementFromModel: aModel [
 { #category : #accessing }
 RWView >> elements [
 	^ elements
+]
+
+{ #category : #serialization }
+RWView >> encodeAllElementsInSceneAsJSON [
+	^ NeoJSONWriter toString: (Dictionary newFromPairs: {
+		#elements . RWJSONSerializeVisitor new visitAndCollectObjects: self allElementsInScene
+	})
+]
+
+{ #category : #serialization }
+RWView >> encodeAsJSON [
+	^ NeoJSONWriter toString: (Dictionary newFromPairs: {
+		#elements . RWJSONSerializeVisitor new visitAndCollectObjects: elements
+	})
 ]
 
 { #category : #interaction }

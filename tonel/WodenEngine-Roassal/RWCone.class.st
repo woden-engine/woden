@@ -14,6 +14,11 @@ RWCone class >> defaultSlices [
 	^ 32
 ]
 
+{ #category : #visiting }
+RWCone >> accept: aVisitor [
+	^ aVisitor visitConeShape: self
+]
+
 { #category : #hooks }
 RWCone >> baseShapeDescriptor [
 	^ {#UVConeShape . transparencyMode}

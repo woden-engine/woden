@@ -4,6 +4,11 @@ Class {
 	#category : 'WodenEngine-Roassal-Core'
 }
 
+{ #category : #visiting }
+RWCube >> accept: aVisitor [
+	^ aVisitor visitCubeShape: self
+]
+
 { #category : #hooks }
 RWCube >> baseShapeDescriptor [
 	^ {#CubeShape . transparencyMode}

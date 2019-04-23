@@ -14,6 +14,11 @@ RWUVSphere class >> defaultSlices [
 	^ 16
 ]
 
+{ #category : #visiting }
+RWUVSphere >> accept: aVisitor [
+	^ aVisitor visitUVSphereShape: self
+]
+
 { #category : #'as yet unclassified' }
 RWUVSphere >> baseShapeDescriptor [
 	^ {#UVSphere . transparencyMode}

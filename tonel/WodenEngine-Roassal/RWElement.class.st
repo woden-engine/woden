@@ -30,6 +30,11 @@ RWElement >> @ anInteractionClassOrInstance [
 	self addInteraction: anInteractionClassOrInstance
 ]
 
+{ #category : #visiting }
+RWElement >> accept: aVisitor [
+	^ aVisitor visitElement: self
+]
+
 { #category : #adding }
 RWElement >> addBehavior: aBehavior [
 	behaviors add: aBehavior.

@@ -7,6 +7,11 @@ Class {
 	#category : 'WodenEngine-Roassal-Core'
 }
 
+{ #category : #visiting }
+RWCamera >> accept: aVisitor [
+	^ aVisitor visitCamera: self
+]
+
 { #category : #initialization }
 RWCamera >> createSceneNode [
 	^ WDSGCamera new

@@ -4,6 +4,11 @@ Class {
 	#category : 'WodenEngine-Roassal-Core'
 }
 
+{ #category : #visiting }
+RWLine >> accept: aVisitor [
+	^ aVisitor visitLineShape: self
+]
+
 { #category : #hooks }
 RWLine >> createComponent: baseShape for: edge [
 "	| v1 v2 renderable |

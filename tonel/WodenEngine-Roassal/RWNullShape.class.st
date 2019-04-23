@@ -4,6 +4,11 @@ Class {
 	#category : 'WodenEngine-Roassal-Core'
 }
 
+{ #category : #visiting }
+RWNullShape >> accept: aVisitor [
+	^ aVisitor visitNullShape: self
+]
+
 { #category : #hooks }
 RWNullShape >> buildRenderableFor: anElement view: aView [
 	"Do nothing"

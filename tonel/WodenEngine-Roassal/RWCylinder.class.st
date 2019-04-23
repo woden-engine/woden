@@ -14,6 +14,11 @@ RWCylinder class >> defaultSlices [
 	^ 32
 ]
 
+{ #category : #visiting }
+RWCylinder >> accept: aVisitor [
+	^ aVisitor visitCylinderShape: self
+]
+
 { #category : #hooks }
 RWCylinder >> baseShapeDescriptor [
 	^ {#Cylinder . transparencyMode}

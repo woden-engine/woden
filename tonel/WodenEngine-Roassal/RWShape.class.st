@@ -104,6 +104,11 @@ RWShape class >> yellow [
 	^ self new color: Color yellow
 ]
 
+{ #category : #visiting }
+RWShape >> accept: aVisitor [
+	self subclassResponsibility
+]
+
 { #category : #'changing transparency' }
 RWShape >> alphaOverTranslucent [
 	self transparencyMode: WDCBlendingMode alphaOver

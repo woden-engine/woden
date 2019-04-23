@@ -14,6 +14,11 @@ RWEdge class >> linesFor: aCollectionOfAssociations [
 	^ aCollectionOfAssociations collect: [ :assoc | RWLine black elementFrom: assoc key to: assoc value ]
 ]
 
+{ #category : #visiting }
+RWEdge >> accept: aVisitor [
+	^ aVisitor visitEdge: self
+]
+
 { #category : #accessing }
 RWEdge >> controlPoint: at [
 	controlPoints ifNil: [ self error: 'Not a bezier edge' ].

@@ -55,6 +55,11 @@ RWMeshShape class >> yzLineGridWithWidth: width height: height subdivisions: sub
 	]
 ]
 
+{ #category : #visiting }
+RWMeshShape >> accept: aVisitor [
+	^ aVisitor visitMeshShape: self
+]
+
 { #category : #hooks }
 RWMeshShape >> buildRenderableFor: anElement view: aView [
 	^ mesh

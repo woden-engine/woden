@@ -13,3 +13,8 @@ RWPyramid class >> defaultSegments [
 RWPyramid class >> defaultSlices [
 	^ 4
 ]
+
+{ #category : #visiting }
+RWPyramid >> accept: aVisitor [
+	^ aVisitor visitPyramidShape: self
+]
