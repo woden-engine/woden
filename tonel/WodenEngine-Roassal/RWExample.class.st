@@ -6,9 +6,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 RWExample >> allClasses [
-	" 
-	self new allClasses
-	"
+	<script: 'self new allClasses open'>
 	| view els elementClass |
 	view := RWView new.
 	els := RWCube elementsOn: Object withAllSubclasses.
@@ -24,14 +22,12 @@ RWExample >> allClasses [
 	view addAll: els.
 	RWCubeLayout on: view elements.
 	view @ RWMouseKeyControl.
-	view open
+	^ view
 ]
 
 { #category : #layout }
 RWExample >> circleLayout [
-	" 
-	self new circleLayout
-	"
+	<script: 'self new circleLayout open'>
 	| v  |
 	v := RWView new.
 	1 to: 10 do: [ :i |
@@ -41,14 +37,40 @@ RWExample >> circleLayout [
 	RWCircleLayout on: v elements.
 
 	v addInteraction: RWMouseKeyControl.
-	v open
+	^ v
+]
+
+{ #category : #'as yet unclassified' }
+RWExample >> classBars [
+	<script: 'self new classBars open'>
+	| v shape elements |
+	v := RWView new.
+	shape := RWCube new height: [ :cls | cls numberOfMethods sqrt + 0.1 ].
+	elements := shape elementsOn: Collection withAllSubclasses.
+
+	v addAll: elements.
+
+	RWXZGridLayout on: elements.
+	RWAlign elements: elements abovePoint: WMVector3F zero.
+
+	elements do: [ :el |
+		el
+			addInteraction: RWHighlightable;
+			addInteraction: RWPopup.
+
+		(v elementFromModel: el model superclass) ifNotNil: [ :parentElement |
+			v add: (RWLine blue edgeFrom: el topAnchorPoint to: parentElement topAnchorPoint )
+		]
+	].
+
+
+	v addInteraction: RWOrbitController.
+	^ v
 ]
 
 { #category : #'as yet unclassified' }
 RWExample >> clickAddAbove [
-	" 
-	self new clickAddAbove
-	"
+	<script: 'self new clickAddAbove open'>
 	| v e cube position action |
 	cube := RWCube new.
 	v := RWView new.
@@ -76,9 +98,7 @@ RWExample >> clickAddAbove [
 
 { #category : #'as yet unclassified' }
 RWExample >> clickGreen [
-	" 
-	self new clickGreen
-	"
+	<script: 'self new clickGreen open'>
 	| v e |
 	v := RWView new.
 
@@ -93,15 +113,13 @@ RWExample >> clickGreen [
 	RWXZGridLayout on: v elements.
 	v addInteraction: RWMouseKeyControl.
 	v camera position: (WMVector3F x: 0.0 y: 1.0 z: 3.0).
-	v open.
+	^ v
 
 ]
 
 { #category : #'as yet unclassified' }
 RWExample >> clickLeds [
-	" 
-	self new clickLeds
-	"
+	<script: 'self new clickLeds open'>
 	| v e colors cube |
 	colors := {  Color gray . Color red . Color green . Color blue . Color yellow . Color white}.
 	cube := RWCube new.
@@ -133,9 +151,7 @@ RWExample >> clickLeds [
 
 { #category : #'as yet unclassified' }
 RWExample >> cubeLayout [
-	" 
-	self new cubeLayout
-	"
+	<script: 'self new cubeLayout open'>
 	| v  |
 	v := RWView new.
 	1 to: 1000 do: [ :i |
@@ -146,14 +162,12 @@ RWExample >> cubeLayout [
 	RWCubeLayout on: v elements.
 
 	v addInteraction: RWMouseKeyControl.
-	v open
+	^ v
 ]
 
 { #category : #trees }
 RWExample >> differentShapes [
-	"
-	self new differentShapes
-	"
+	<script: 'self new differentShapes open'>
 	| view  |
 	view := RWView new.
 	view addAll: ( RWCylinder elementsOn: (1 to: 4)).
@@ -163,14 +177,12 @@ RWExample >> differentShapes [
 
 	RWXZGridLayout on: view elements.
 	view @ RWMouseKeyControl .
-	view open.
+	^ view.
 ]
 
 { #category : #'as yet unclassified' }
 RWExample >> edges [
-	"
-	self new edges
-	"
+	<script: 'self new edges open'>
 
 	| v el1 el2 |
 	v := RWView new.
@@ -190,9 +202,7 @@ RWExample >> edges [
 
 { #category : #'as yet unclassified' }
 RWExample >> eventHandling [
-	"
-	self new eventHandling
-	"
+	<script: 'self new eventHandling open'>
 
 	| v cube |
 	v := RWView new.
@@ -220,9 +230,7 @@ RWExample >> eventHandling [
 
 { #category : #'as yet unclassified' }
 RWExample >> fallingCubeLayout [
-	" 
-	self new fallingCubeLayout
-	"
+	<script: 'self new fallingCubeLayout open'>
 	| v floor |
 	v := RWView new.
 	1 to: 300 do: [ :i |
@@ -244,9 +252,7 @@ RWExample >> fallingCubeLayout [
 
 { #category : #'as yet unclassified' }
 RWExample >> fallingLineLayout [
-	" 
-	self new fallingLineLayout
-	"
+	<script: 'self new fallingLineLayout open'>
 	| v floor |
 	v := RWView new.
 	1 to: 1000 do: [ :i |
@@ -263,14 +269,12 @@ RWExample >> fallingLineLayout [
 
 	v addInteraction: RWMouseKeyControl.
 	v withPhysics.
-	v open
+	^ v
 ]
 
 { #category : #layout }
 RWExample >> gridLayout [
-	" 
-	self new gridLayout
-	"
+	<script: 'self new gridLayout open'>
 	| v  |
 	v := RWView new.
 	1 to: 1000 do: [ :i |
@@ -281,14 +285,12 @@ RWExample >> gridLayout [
 	RWXZGridLayout on: v elements.
 
 	v addInteraction: RWMouseKeyControl.
-	v open
+	^ v
 ]
 
 { #category : #mesh }
 RWExample >> gridMesh [
-	"
-	self new gridMesh open
-	"
+	<script: 'self new gridMesh open'>
 	| view shape elements |
 	view := RWView new.
 	view
@@ -308,9 +310,7 @@ RWExample >> gridMesh [
 
 { #category : #'as yet unclassified' }
 RWExample >> growingCubes [
-	" 
-	self new growingCubes
-	"
+	<script: 'self new growingCubes open'>
 	| v shape es |
 	v := RWView new.
 	shape := RWCube new size: #yourself.
@@ -319,14 +319,34 @@ RWExample >> growingCubes [
 	v addInteraction: RWMouseKeyControl.
 	v camera position: (WMVector3F x: 5.0 y: 0.0 z: 10.0). 
 	RWXLineLayout on: es.
-	v open
+	^ v
+]
+
+{ #category : #'as yet unclassified' }
+RWExample >> highlighting [
+	<script: 'self new highlighting open'>
+	| v es |
+	v := RWView new.
+	es := ((RWCube new size: 1)) elementsOn: (1 to: 16).
+
+	es addInteraction: (RWHighlightable highlight: [ :vv | 
+		{
+			vv - 1.
+			vv.
+			vv + 1.
+			vv - 4.
+			vv + 4
+		}
+	]).
+
+	RWXYGridLayout on: es.
+	v addAll: es.
+	^	 v
 ]
 
 { #category : #'as yet unclassified' }
 RWExample >> manyCubeLayout [
-	" 
-	self new manyCubeLayout
-	"
+	<script: 'self new manyCubeLayout open'>
 	| v  |
 	v := RWView new.
 	1 to: 100000 do: [ :i |
@@ -337,14 +357,12 @@ RWExample >> manyCubeLayout [
 	RWCubeLayout on: v elements.
 
 	v addInteraction: RWMouseKeyControl.
-	v open
+	^ v
 ]
 
 { #category : #'as yet unclassified' }
 RWExample >> mediumCubeLayout [
-	" 
-	self new mediumCubeLayout
-	"
+	<script: 'self new mediumCubeLayout open'>
 	| v  |
 	v := RWView new.
 	1 to: 9261 do: [ :i |
@@ -355,111 +373,93 @@ RWExample >> mediumCubeLayout [
 	RWCubeLayout on: v elements.
 
 	v addInteraction: RWMouseKeyControl.
-	v open
+	^ v
 ]
 
 { #category : #shapes }
 RWExample >> oneCone [
-	" 
-	self new oneCone
-	"
+	<script: 'self new oneCone open'>
 	| v |
 	v := RWView new.
 	v add: RWCone element.
 	v camera translateByZ: 3.0. 
 	v  @ RWMouseKeyControl.
-	v open
+	^ v
 ]
 
 { #category : #shapes }
 RWExample >> oneCube [
-	" 
-	self new oneCube
-	"
+	<script: 'self new oneCube open'>
 	| v |
 	v := RWView new.
 	v add: RWCube element.
-	v open
+	^ v
 ]
 
 { #category : #shapes }
 RWExample >> oneCylinder [
-	" 
-	self new oneCylinder
-	"
+	<script: 'self new oneCylinder open'>
 	| v |
 	v := RWView new.
 	v add: RWCylinder element.
 	v  @ RWMouseKeyControl.
-	v open
+	^ v
 ]
 
 { #category : #shapes }
 RWExample >> onePyramid [
-	" 
-	self new onePyramid
-	"
+	<script: 'self new onePyramid open'>
 	| v |
 	v := RWView new.
 	v add: RWPyramid element.
 	v  @ RWMouseKeyControl.
-	v open
+	^ v open
 ]
 
 { #category : #shapes }
 RWExample >> oneRedCube [
-	" 
-	self new oneRedCube
-	"
+	<script: 'self new oneRedCube open'>
 	| v |
 	v := RWView new.
 	v add: RWCube red element.
 	v addInteraction: RWMouseKeyControl.
-	v open
+	^ v
 ]
 
 { #category : #shapes }
 RWExample >> oneUVSphere [
-	" 
-	self new oneUVSphere
-	"
+	<script: 'self new onUVSphere open'>
 	| v |
 	v := RWView new.
 	v add: RWUVSphere element.
 	v  @ RWMouseKeyControl.
-	v open
+	^ v
 ]
 
 { #category : #'as yet unclassified' }
 RWExample >> someEdges [
-"
-self new someEdges
-"
+	<script: 'self new someEdges open'>
+	| v els |
+	v := RWView new.
 
-| v els |
-v := RWView new.
+	els := RWCube blue elementsOn: (1 to: 10).
+	v addAll: els.
 
-els := RWCube blue elementsOn: (1 to: 10).
-v addAll: els.
+	RWXZGridLayout on: els.
 
-RWXZGridLayout on: els.
-
-1 to: 10 do: [ :i |
-	1 to: 10 do: [ :j |
-		i ~~ j ifTrue: [ v add: (RWLine green edgeFrom: (els at: i) to: (els at: j))]
+	1 to: 10 do: [ :i |
+		1 to: 10 do: [ :j |
+			i ~~ j ifTrue: [ v add: (RWLine green edgeFrom: (els at: i) to: (els at: j))]
+		].
 	].
-].
 
-v addInteraction: RWMouseKeyControl.
-v open.
-
+	v addInteraction: RWMouseKeyControl.
+	^ v
 ]
 
 { #category : #trees }
 RWExample >> spheroids [
-	"
-	self new spheroids
-	"
+	<script: 'self new spheroids open'>
 	| view shape |
 	view := RWView new.
 	shape := RWUVSphere new .
@@ -471,14 +471,12 @@ RWExample >> spheroids [
 
 	RWCubeLayout on: view elements.
 	view @ RWMouseKeyControl .
-	view open.
+	^ view
 ]
 
 { #category : #shapes }
 RWExample >> threeCubes [
-	" 
-	self new threeCubes
-	"
+	<script: 'self new threeCubes open'>
 	| v |
 	v := RWView new.
 	v add: (RWCube element).
@@ -486,14 +484,12 @@ RWExample >> threeCubes [
 	v add: (RWCube element).
 	RWXLineLayout on: v elements.
 	v addInteraction: RWMouseKeyControl.
-	v open
+	^ v
 ]
 
 { #category : #'as yet unclassified' }
 RWExample >> threeCubesAndLight [
-	" 
-	self new threeCubesAndLight
-	"
+	<script: 'self new threeCubesAndLight open'>
 	| v |
 	v := RWView new.
 	v blackBackground.
@@ -508,9 +504,7 @@ RWExample >> threeCubesAndLight [
 
 { #category : #'as yet unclassified' }
 RWExample >> threeCubesAndLightWithShadows [
-	" 
-	self new threeCubesAndLightWithShadows
-	"
+	<script: 'self new threeCubesAndLightWithShadows open'>
 	| v floor light|
 	v := RWView new.
 	v blackBackground.
@@ -532,14 +526,12 @@ RWExample >> threeCubesAndLightWithShadows [
 	v add: light.
 	v addInteraction: RWMouseKeyControl.
 	v withShadows.
-	v open
+	^ v
 ]
 
 { #category : #'as yet unclassified' }
 RWExample >> threeCubesAndLightWithShadowsAndPhysics [
-	" 
-	self new threeCubesAndLightWithShadowsAndPhysics
-	"
+	<script: 'self new threeCubesAndLightWithShadowsAndPhysics open'>
 	| v floor light|
 	v := RWView new.
 	v blackBackground.
@@ -565,14 +557,12 @@ RWExample >> threeCubesAndLightWithShadowsAndPhysics [
 	v addInteraction: RWMouseKeyControl.
 	v withShadows;
 		withPhysics.
-	v open
+	^ v
 ]
 
 { #category : #trees }
 RWExample >> translucentAlphaOverShape [
-	"
-	self new translucentAlphaOverShape open
-	"
+	<script: 'self new translucentAlphaOver open'>
 	| view translucentShape opaqueShape elements |
 	view := RWView new.
 
@@ -592,9 +582,7 @@ RWExample >> translucentAlphaOverShape [
 
 { #category : #trees }
 RWExample >> translucentShape [
-	"
-	self new translucentShape open
-	"
+	<script: 'self new translucentShape open'>
 	| view translucentShape opaqueShape elements |
 	view := RWView new.
 
@@ -614,23 +602,20 @@ RWExample >> translucentShape [
 
 { #category : #trees }
 RWExample >> treeSimple [
-	"
-	self new treeSimple
-	"
+	<script: 'self new treeSimple open'>
 	| view  objects associations elements assocWithElements|
 	view := RWView new.
 	objects := { 1 . 2 . 3 . 4 }.
 	associations := { 1 -> 2 . 2 -> 3 . 2 -> 4 }.
 	
 	elements := objects collect: [ :o | RWCube blue elementOn:  o ].
-"	elements do: [ :e | e addInteraction: RWPopup ]."
+	elements do: [ :e | e addInteraction: RWPopup ].
 	view addAll: elements.
 	
 	assocWithElements := associations collect: [ :a | (view elementFromModel: a key) -> (view elementFromModel: a value)].
 	view addAll: (RWEdge linesFor: assocWithElements).
 	
 	RWGridTreeLayout on: view elements.
-	view addInteraction: RWMouseKeyControl.
-"	view openWithOverlay."
-	view open
+	view addInteraction: RWOrbitController.
+	^ view
 ]

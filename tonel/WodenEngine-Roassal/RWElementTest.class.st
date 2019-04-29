@@ -22,6 +22,22 @@ RWElementTest >> testBasic [
 	self assert: element shape equals: shape
 ]
 
+{ #category : #test }
+RWElementTest >> testBottomAnchorPoint [
+	| anchor |
+	anchor := element bottomAnchorPoint.
+	self assert: anchor element equals: element.
+	self assert: anchor position closeTo: (element position - (WMVector3F y: 0.5)).
+]
+
+{ #category : #test }
+RWElementTest >> testCenterAnchorPoint [
+	| anchor |
+	anchor := element centerAnchorPoint.
+	self assert: anchor element equals: element.
+	self assert: anchor position equals: element position.
+]
+
 { #category : #'test connected edges' }
 RWElementTest >> testConnectedEdges01 [
 
@@ -170,6 +186,14 @@ RWElementTest >> testShapeSize [
 	el := shape elementOn: 5.
 
 	self assert: el extent = (WMVector3F x: 6.0 y: 7.0 z: 8.0)
+]
+
+{ #category : #test }
+RWElementTest >> testTopAnchorPoint [
+	| anchor |
+	anchor := element topAnchorPoint.
+	self assert: anchor element equals: element.
+	self assert: anchor position closeTo: (element position + (WMVector3F y: 0.5)).
 ]
 
 { #category : #tests }

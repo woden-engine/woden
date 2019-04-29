@@ -33,7 +33,7 @@ RWPopup >> color: anObject [
 
 { #category : #initialization }
 RWPopup >> defaultPopupColor [
-	^ Color red
+	^ Color black
 ]
 
 { #category : #initialization }
@@ -49,8 +49,7 @@ RWPopup >> initializeElement: anElement [
 	popupElement := nil.
 	popupMesh := nil.
 	anElement
-		when: RWMouseEnter
-		do: [ :evt |
+		when: RWMouseEnter do: [ :evt |
 			popupMesh := nil.
 			popupElement := anElement view createPopupAtViewPosition: evt position drawingWith: [ :canvas |
 				popupMesh ifNil: [
@@ -75,8 +74,9 @@ RWPopup >> initializeElement: anElement [
 				
 				canvas draw: popupMesh
 			].
-		].
-	anElement when: RWMouseLeave do: [ :evt | popupElement remove ]
+		];
+		"when: RWMouseMove do: [ :evt | popupElement position: evt position ];"
+		when: RWMouseLeave do: [ :evt | popupElement remove ]
 ]
 
 { #category : #accessing }

@@ -19,21 +19,20 @@ RWHighlightable >> accept: aVisitor with: args [
 
 { #category : #actions }
 RWHighlightable >> doHighlightElement: anElement [
-	| v |
-	self recordElement: anElement.	"not sure if we need to return something"
-	v := anElement trachelShape color: (self highlightColorFor: anElement).
-	anElement signalUpdate.
-	^ v
+	anElement attributes at: #originalColor put: anElement color.
+	anElement color: (self highlightColorFor: anElement).
+	anElement changed.
+
 ]
 
 { #category : #actions }
 RWHighlightable >> doUnhighlightElement: anElement [
 	(anElement attributes includesKey: #originalColor)
 		ifFalse: [ ^ self ].
-	anElement trachelShape color: (anElement attributes at: #originalColor).
+
+	anElement color: (anElement attributes at: #originalColor).
 	anElement attributes removeKey: #originalColor.
-	"anElement view ifNotNil: [ anElement view signalUpdate ]."
-	anElement signalUpdate.
+	anElement changed.
 	
 ]
 
@@ -61,6 +60,6 @@ RWHighlightable >> initialize [
 
 { #category : #actions }
 RWHighlightable >> recordElement: anElement [
-	anElement attributes at: #originalColor put: (anElement trachelShape color)
+	anElement attributes at: #originalColor put: (anElement color)
 
 ]

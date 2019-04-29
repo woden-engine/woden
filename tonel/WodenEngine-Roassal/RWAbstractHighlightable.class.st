@@ -29,44 +29,9 @@ RWAbstractHighlightable class >> highlightElements: aBlock [
 	^ self new highlightElements: aBlock
 ]
 
-{ #category : #'reset shape' }
-RWAbstractHighlightable class >> lastHighlightedElements [
-	^ lastHighlightedElements
-]
-
-{ #category : #'reset shape' }
-RWAbstractHighlightable class >> lastHighlightedElements: elements [
-	lastHighlightedElements := elements
-]
-
-{ #category : #private }
-RWAbstractHighlightable >> attributeIdentificator [
-	^ self className asSymbol
-]
-
-{ #category : #actions }
-RWAbstractHighlightable >> doHighlight: element [
-	| elements |
-	self unhighlightRecordedElements.
-	elements := highlightElements rwValue: element.
-	elements := elements copyWithout: nil.
-	elements do: [ :eachElement | self doHighlightElement: eachElement ].
-	element attributes at: self attributeIdentificator put: elements.
-	self class lastHighlightedElements: elements
-]
-
 { #category : #actions }
 RWAbstractHighlightable >> doHighlightElement: anElement [
 	self subclassResponsibility
-]
-
-{ #category : #actions }
-RWAbstractHighlightable >> doUnhighlight: element [
-	(element hasAttribute: self attributeIdentificator)
-		ifFalse: [ ^ self ].
-	(element attributeAt: self attributeIdentificator) 
-		do: [ :el | self doUnhighlightElement: el ].
-	element removeAttributeAt: self attributeIdentificator.
 ]
 
 { #category : #actions }
@@ -80,8 +45,8 @@ RWAbstractHighlightable >> highlight: aBlock [
 	highlightElements := [ :el | 
 		| objects |
 		objects := aBlock rwValue: el model.
-		(objects collect: [ :o | el view elementFromModel: o ]) copyWithout: nil
-		]
+		objects collect: [ :o | el view elementFromModel: o ]
+	]
 ]
 
 { #category : #public }
@@ -98,21 +63,20 @@ RWAbstractHighlightable >> initialize [
 
 { #category : #hooks }
 RWAbstractHighlightable >> initializeElement: element [
+	| elements |
+	elements := nil.
+	
 	element
 		when: RWMouseEnter
-		do: [ :e | 
-			self doHighlight: element.
-			e signalUpdate ].
+		do: [ :e |
+			elements := 	(highlightElements rwValue: element) copyWithout: nil.
+			elements do: [ :eachElement | self doHighlightElement: eachElement ].
+		].
 	element
 		when: RWMouseLeave
-		do: [ :e | 
-			self doUnhighlight: element.
-			e signalUpdate ]
-]
-
-{ #category : #actions }
-RWAbstractHighlightable >> unhighlightRecordedElements [
-	self class lastHighlightedElements ifNil: [ ^ self ].
-	self class lastHighlightedElements do: [ :el | self doUnhighlightElement: el ].
-	self class lastHighlightedElements: nil
+		do: [ :e |
+			elements ifNotNil: [ 
+				elements do: [ :eachElement | self doUnhighlightElement: eachElement ].
+			].
+		]
 ]

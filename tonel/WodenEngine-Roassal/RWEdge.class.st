@@ -19,6 +19,11 @@ RWEdge >> accept: aVisitor [
 	^ aVisitor visitEdge: self
 ]
 
+{ #category : #'as yet unclassified' }
+RWEdge >> connectedElementChanged: anElement [
+	self changed
+]
+
 { #category : #accessing }
 RWEdge >> controlPoint: at [
 	controlPoints ifNil: [ self error: 'Not a bezier edge' ].
@@ -50,7 +55,6 @@ RWEdge >> from [
 
 { #category : #accessing }
 RWEdge >> from: anElement [
-	[ anElement class == RWElement ] assert.
 	from := anElement.
 	anElement addConnectedEdge: self
 ]
@@ -84,7 +88,6 @@ RWEdge >> to [
 
 { #category : #accessing }
 RWEdge >> to: anElement [
-	[ anElement class == RWElement ] assert.
 	to := anElement.
 	anElement addConnectedEdge: self
 ]

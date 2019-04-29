@@ -12,7 +12,8 @@ Class {
 		'view',
 		'behaviors',
 		'localBoundingBox',
-		'boundingBox'
+		'boundingBox',
+		'color'
 	],
 	#category : #'WodenEngine-Roassal-Core'
 }
@@ -43,7 +44,7 @@ RWElement >> addBehavior: aBehavior [
 
 { #category : #adding }
 RWElement >> addConnectedEdge: anEdge [
-	[  anEdge class == RWEdge ] assert.
+	self assert: anEdge isEdge.
 	self connectedEdges add: anEdge
 ]
 
@@ -82,6 +83,11 @@ RWElement >> asSceneNode [
 	^ sceneNode
 ]
 
+{ #category : #anchors }
+RWElement >> bottomAnchorPoint [
+	^ RWElementBottomAnchorPoint for: self
+]
+
 { #category : #accessing }
 RWElement >> boundingBox [
 	^ boundingBox ifNil: [boundingBox := self localBoundingBox transformedWith: sceneNode transform ]
@@ -99,26 +105,38 @@ RWElement >> buildRigidBodyForView: aView [
 	aView addRigidBody: rigidBody
 ]
 
+{ #category : #anchors }
+RWElement >> centerAnchorPoint [
+	^ RWElementCenterAnchorPoint for: self
+]
+
 { #category : #updating }
 RWElement >> changed [
-	self flag: 'TODO: Refactor this part'.
-	(sceneNode isSpatialObject and: [ sceneNode isLocalSpatialNode not ]) ifTrue: [
-		sceneNode color: (shape colorFor: self)
-	].
-
+	self colorChanged.
 	shape changedElement: self sceneNode: sceneNode renderable: renderable.
 	sceneNode stateChanged.
-	self invalidateBoundingBoxCache
+	self invalidateBoundingBoxCache.
+	self notifyConnectedEdges.
 ]
 
-{ #category : #'trachel compatibility' }
+{ #category : #accessing }
 RWElement >> color [
-	^ self shape colorFor: self
+	^ color
 ]
 
-{ #category : #'trachel compatibility' }
+{ #category : #accessing }
 RWElement >> color: aColor [
-	^ self shape color: aColor
+	color := aColor.
+	self colorChanged.
+]
+
+{ #category : #updating }
+RWElement >> colorChanged [
+	sceneNode isSpatialObject ifTrue: [
+		sceneNode color: color asWMVector4F * (shape colorFor: self) asWMVector4F.
+		sceneNode stateChanged
+	].
+
 ]
 
 { #category : #accessing }
@@ -154,7 +172,7 @@ RWElement >> initialize [
 	behaviors := OrderedCollection new.
 	sceneNode := self createSceneNode.
 	shape := RWNullShape new.
-
+	color := WMVector4F x: 1.0 y: 1.0 z: 1.0 w: 1.0.
 ]
 
 { #category : #updating }
@@ -217,6 +235,12 @@ RWElement >> model: anObject [
 	model := anObject
 ]
 
+{ #category : #updating }
+RWElement >> notifyConnectedEdges [
+	connectedEdges ifNil: [ ^ nil ].
+	connectedEdges do: [ :edge | edge connectedElementChanged: self ]
+]
+
 { #category : #accessing }
 RWElement >> orientation [
 	^ sceneNode transform matrix
@@ -224,6 +248,7 @@ RWElement >> orientation [
 
 { #category : #accessing }
 RWElement >> orientation: anOrientation [
+	self notifyConnectedEdges.
 	self invalidateBoundingBoxCache.
 	sceneNode transform orthonormal: anOrientation asWMMatrix3F
 ]
@@ -352,6 +377,11 @@ RWElement >> simulateTime: delta [
 	behaviors do: [ :behavior | behavior simulateTime: delta onElement: self]
 ]
 
+{ #category : #anchors }
+RWElement >> topAnchorPoint [
+	^ RWElementTopAnchorPoint for: self
+]
+
 { #category : #'trachel compatibility' }
 RWElement >> trachelShape [
 	"Compatibility layer"
@@ -367,6 +397,7 @@ RWElement >> transform [
 RWElement >> translateBy: translation [
 	sceneNode transform translateBy: translation.
 	sceneNode stateChanged.
+	self notifyConnectedEdges.
 	self invalidateBoundingBoxCache.
 ]
 
@@ -394,6 +425,7 @@ RWElement >> translateByZ: translation [
 RWElement >> translateTo: aWMVector3 [
 	sceneNode transform translation: aWMVector3.
 	sceneNode stateChanged.
+	self notifyConnectedEdges.
 	self invalidateBoundingBoxCache.
 ]
 

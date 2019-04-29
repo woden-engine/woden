@@ -29,8 +29,7 @@ RWSimpleShape >> buildRenderableFor: anElement view: aView [
 { #category : #'changing shape' }
 RWSimpleShape >> changedElement: element sceneNode: sceneNode renderable: renderable [
 	sceneNode isLocalSpatialNode ifFalse: [ ^ self ].
-	sceneNode shapeTransform: (self shapeTransformFor: element);
-		color: (self colorFor: element).
+	sceneNode shapeTransform: (self shapeTransformFor: element)
 ]
 
 { #category : #hooks }

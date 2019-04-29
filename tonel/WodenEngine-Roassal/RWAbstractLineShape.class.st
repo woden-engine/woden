@@ -23,6 +23,14 @@ RWAbstractLineShape >> baseShapeDescriptor [
 	^ #lines
 ]
 
+{ #category : #computing }
+RWAbstractLineShape >> boundingBoxFor: element [
+	^ WMBox3DF empty
+		insertPoint: element from position;
+		insertPoint: element to position;
+		yourself
+]
+
 { #category : #hooks }
 RWAbstractLineShape >> buildRenderableFor: anElement view: aView [
 	| baseShape componentNode meshComponent |
