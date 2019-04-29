@@ -63,7 +63,6 @@ RWExample >> classBars [
 		]
 	].
 
-
 	v addInteraction: RWOrbitController.
 	^ v
 ]
@@ -147,6 +146,29 @@ RWExample >> clickLeds [
 	v camera position: (WMVector3F x: 0.0 y: 3.0 z: 0.0).
 	^ v
 
+]
+
+{ #category : #trees }
+RWExample >> collectionSubclassesTree [
+	<script: 'self new collectionSubclassesTree open'>
+	| view  objects associations elements assocWithElements shape |
+	view := RWView new.
+	objects := Collection withAllSubclasses.
+	associations := objects collect: [:o | o -> o superclass ].
+	
+	shape := RWCube new.
+	elements := shape elementsOn: objects.
+	elements addInteraction: RWPopup.
+	elements addInteraction: RWHighlightable.
+	view addAll: elements.
+	
+	assocWithElements := associations collect: [ :a | (view elementFromModel: a key) -> (view elementFromModel: a value)]
+		thenSelect: [:a | a key isNotNil and: [a value isNotNil ]].
+	view addAll: (RWEdge linesFor: assocWithElements).
+	
+	RWGridTreeLayout on: view elements.
+	view addInteraction: RWOrbitController.
+	^ view
 ]
 
 { #category : #'as yet unclassified' }
@@ -608,8 +630,9 @@ RWExample >> treeSimple [
 	objects := { 1 . 2 . 3 . 4 }.
 	associations := { 1 -> 2 . 2 -> 3 . 2 -> 4 }.
 	
-	elements := objects collect: [ :o | RWCube blue elementOn:  o ].
-	elements do: [ :e | e addInteraction: RWPopup ].
+	elements := RWCube elementsOn: objects.
+	elements addInteraction: RWPopup.
+	elements addInteraction: RWHighlightable.
 	view addAll: elements.
 	
 	assocWithElements := associations collect: [ :a | (view elementFromModel: a key) -> (view elementFromModel: a value)].
