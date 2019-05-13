@@ -8,3 +8,9 @@ Class {
 RWInteraction class >> initializeElement: element [
 	^ self new initializeElement: element; yourself
 ]
+
+{ #category : #hooks }
+RWInteraction >> registerOn: anElement [
+	"Register the interaction in the attribute field of the element"
+	anElement attributeAt: self class name asSymbol put: self.
+]
