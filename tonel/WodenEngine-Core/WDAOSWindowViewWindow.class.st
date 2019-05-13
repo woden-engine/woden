@@ -21,7 +21,7 @@ WDAOSWindowViewWindow class >> for: aView [
 { #category : #'instance creation' }
 WDAOSWindowViewWindow >> close [
 	view ifNotNil: [view closed].
-	super close
+	^ super close
 ]
 
 { #category : #accessing }

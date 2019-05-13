@@ -15,6 +15,14 @@ Class {
 	#category : #'WodenEngine-Core-Window'
 }
 
+{ #category : #'initialize-release' }
+WDCMorphicWindow >> announceDeleted [
+	engine renderingProcessCritical: [
+		self destroyRenderingResources
+	].
+	^ super announceDeleted
+]
+
 { #category : #'mouse capture' }
 WDCMorphicWindow >> captureMouse [
 ]
@@ -107,6 +115,10 @@ WDCMorphicWindow >> createRenderTarget [
 { #category : #accessing }
 WDCMorphicWindow >> defaultExtent [
 	^ 640@480
+]
+
+{ #category : #'initialize-release' }
+WDCMorphicWindow >> destroyRenderingResources [
 ]
 
 { #category : #initialization }

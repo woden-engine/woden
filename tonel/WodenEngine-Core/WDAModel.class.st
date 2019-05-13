@@ -125,7 +125,7 @@ WDAModel >> openInOSWindowWith: aView [
 
 { #category : #opening }
 WDAModel >> openWith: aView [
-	Smalltalk os isMacOSX ifTrue: [
+	(Smalltalk os isMacOSX or: [ Smalltalk os isWindows ]) ifTrue: [
 		^ self openInMorphicWith: aView
 	].
  

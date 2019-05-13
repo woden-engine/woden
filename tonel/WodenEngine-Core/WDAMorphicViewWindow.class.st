@@ -76,6 +76,12 @@ WDAMorphicViewWindow class >> initialize [
 	)
 ]
 
+{ #category : #'initialize-release' }
+WDAMorphicViewWindow >> announceDeleted [
+	view ifNotNil: [view closed].
+	^ super announceDeleted
+]
+
 { #category : #'rendering process stages' }
 WDAMorphicViewWindow >> commitSurfaces [
 ]
@@ -239,14 +245,13 @@ WDAMorphicViewWindow >> mouseWheel: evt [
 	view ifNotNil: [
 		osEvent := OSMouseWheelEvent new.
 		self mouseEventCommon: evt putOn: osEvent.
-		evt isUp ifTrue: [ evt scrollVertical: 1 ].
-		evt isDown ifTrue: [ evt scrollVertical: -1 ].
-		evt isLeft ifTrue: [ evt scrollHorizontal: -1 ].
-		evt isRight ifTrue: [ evt scrollHorizontal: 1 ].
+		evt isUp ifTrue: [ osEvent scrollVertical: 1 ].
+		evt isDown ifTrue: [ osEvent scrollVertical: -1 ].
+		evt isLeft ifTrue: [ osEvent scrollHorizontal: -1 ].
+		evt isRight ifTrue: [ osEvent scrollHorizontal: 1 ].
 		self enqueueEvent: osEvent.
 	].
 
-	evt inspect
 ]
 
 { #category : #'framebuffer description' }
