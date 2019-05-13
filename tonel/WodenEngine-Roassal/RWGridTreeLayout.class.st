@@ -10,6 +10,7 @@ RWGridTreeLayout >> distributeSubtreeNodes: subtreeNodes withBounds: allBounds [
 	oldPositions := Array new: subtreeNodes size.
 	oldShapes := Array new: subtreeNodes size.
 	
+	Transcript show: allBounds; cr.
 	subtreeNodes doWithIndex: [ :n :i |
 		nodeBounds := allBounds at: i.
 		oldPositions at: i put: n position.

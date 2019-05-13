@@ -133,10 +133,15 @@ RWElement >> color: aColor [
 { #category : #updating }
 RWElement >> colorChanged [
 	sceneNode isSpatialObject ifTrue: [
-		sceneNode color: color asWMVector4F * (shape colorFor: self) asWMVector4F.
+		sceneNode color: self colorUsedForRendering.
 		sceneNode stateChanged
 	].
 
+]
+
+{ #category : #updating }
+RWElement >> colorUsedForRendering [
+	^ color asWMVector4F * (shape colorFor: self) asWMVector4F
 ]
 
 { #category : #accessing }
