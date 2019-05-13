@@ -122,6 +122,11 @@ WDAMorphicViewWindow >> handlesMouseDown: anEvent [
 ]
 
 { #category : #'event handling' }
+WDAMorphicViewWindow >> handlesMouseMove: anEvent [
+	^ anEvent wasHandled not 
+]
+
+{ #category : #'event handling' }
 WDAMorphicViewWindow >> handlesMouseOver: anEvent [
 	^ anEvent wasHandled not 
 ]
