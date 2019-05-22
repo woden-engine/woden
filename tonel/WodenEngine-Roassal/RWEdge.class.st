@@ -48,6 +48,11 @@ RWEdge >> controlPoints: anObject [
 ]
 
 { #category : #accessing }
+RWEdge >> extent [
+	^ self localBoundingBox extent
+]
+
+{ #category : #accessing }
 RWEdge >> from [
 	
 	^ from
