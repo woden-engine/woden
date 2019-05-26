@@ -3,10 +3,24 @@ import rendering.environment;
 import lighting.functions;
 
 import fragment.stage; // For SSAO
+import math.constants;
 
 uniform(binding = LightingState.SpotShadowMaps) spotShadowMaps : depthTexture2DArray;
 uniform(binding = LightingState.PointShadowMaps) pointShadowMaps : depthTextureCubeArray;
 uniform(binding = LightingState.ScreenSpaceAmbientOcclusion) screenSpaceAmbientOcclusion : texture2D;
+
+function specularDistribution(alpha: float, cosTheta: float) -> float
+{
+	//return blinnPhongSpecularDistribution(alpha, cosTheta);
+	return ggxSpecularDistribution(alpha, cosTheta);
+}
+
+function cookTorranceMasking(alpha: float, NdotL: float, NdotV: float) -> float
+{
+	//return cookTorranceImplicitMasking(alpha, NdotL, NdotV);
+	//return cookTorranceSmithSchlickBeckmannMasking(alpha, NdotL, NdotV);
+	return cookTorranceSmithSchlickGGXMasking(alpha, NdotL, NdotV);
+}
 
 function projectShadowPosition(shadowPoint: float4, shadowMapLayer: float) -> float4
 {
@@ -54,15 +68,15 @@ code_block forwardLightingModel
 
     using GlobalLightingState;
 
-    let specularPower = exp2(10.0f*(1.0f - alpha));
-    let specularNormalization = (specularPower + 2.0f) * 0.125f;
-
+	let diff = Cdiff*PiReciprocal;
     let accumulatedColor = float3(0.0f, 0.0f, 0.0f);
 
     // Add the ambient hemispherical light.
     let hemiFactor = dot(normal, sunDirection)*0.5f + 0.5f;
     accumulatedColor += albedo * mix(groundLighting.rgb, skyLighting.rgb, hemiFactor)*sampleScreenSpaceAmbientOcclusion();
 
+	let NdotV = max(0.0f, dot(normal, viewVector));
+	
     // Accumulate each one of the lights
     for(let i = 0; i < numberOfLights; i += 1)
     {
@@ -123,14 +137,15 @@ code_block forwardLightingModel
 
         // Compute the fresnel factor
         let H = normalize(L + viewVector);
-        let F = fresnelSchlick(F0, dot(H, L));
-
-        // Compute the distribution factor.
         let NdotH = max(0.0f, dot(normal, H));
-        let D = pow(NdotH, specularPower)*specularNormalization;
+
+        // Compute the cook torrance factors.
+        let F = fresnelSchlick(F0, dot(H, L));
+        let D = specularDistribution(alpha, NdotH);
+		let G = cookTorranceMasking(alpha, NdotL, NdotV);
 
         // Add the light contribution.
-        accumulatedColor += lightSource.intensity.rgb*attenuation*(Cdiff + F*D)*NdotL;
+        accumulatedColor += lightSource.intensity.rgb*attenuation*(diff + F*D*G)*Pi*NdotL;
     }
 
     // Return the final lighted color.

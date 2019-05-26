@@ -1,3 +1,5 @@
+import math.constants;
+
 function fresnelSchlick(F0: float3, cosTheta: float) -> float3
 {
     let powFactor = 1.0f - cosTheta;
@@ -16,4 +18,42 @@ function fresnelSchlick(F0: float, cosTheta: float) -> float
     let powValue = powFactor4 * powFactor;
 
     return F0 + (1.0f - F0) * powValue;
+}
+
+// The lighting equations are taken from this Web Site: http://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html
+// And from the talk: Karis 2013, "Real Shading in Unreal Engine 4"
+function blinnPhongSpecularDistribution(alpha: float, cosTheta: float) -> float
+{
+	let alphaSquare = alpha*alpha;
+	return pow(cosTheta, 2.0f/alphaSquare - 2.0f) / (Pi * alphaSquare);
+}
+
+function ggxSpecularDistribution(alpha: float, cosTheta: float) -> float
+{
+	let alphaSquare = alpha*alpha;
+	let den = cosTheta*cosTheta*(alphaSquare - 1.0f) + 1.0f;
+	return alphaSquare / (Pi * den*den) ;
+}
+
+function cookTorranceImplicitMasking(alpha: float, NdotL: float, NdotV: float) -> float
+{
+	return 0.25f;
+}
+
+function smithSchlickBeckmannReciprocalFunction(k: float, cosTheta: float) -> float
+{
+	return cosTheta*(1.0f - k) + k;
+}
+
+constant SquareRootOfTwoOverPi : float = 0.7978845608028654f;
+function cookTorranceSmithSchlickBeckmannMasking(alpha: float, NdotL: float, NdotV: float) -> float
+{
+	let k = alpha * SquareRootOfTwoOverPi;
+	return 1.0f / (4.0f*smithSchlickBeckmannReciprocalFunction(k, NdotL)*smithSchlickBeckmannReciprocalFunction(k, NdotV));
+}
+
+function cookTorranceSmithSchlickGGXMasking(alpha: float, NdotL: float, NdotV: float) -> float
+{
+	let k = alpha * 0.5f;
+	return 1.0f / (4.0f*smithSchlickBeckmannReciprocalFunction(k, NdotL)*smithSchlickBeckmannReciprocalFunction(k, NdotV));
 }

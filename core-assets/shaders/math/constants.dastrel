@@ -1,0 +1,3 @@
+constant Pi : float = 3.141592653589793f;
+constant PiReciprocal : float = 0.3183098861837907f;
+constant E : float = 2.718281828459045f;
