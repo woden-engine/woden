@@ -49,7 +49,10 @@ Class {
 		'internalElements',
 		'eventHandler',
 		'overlays',
-		'babylonDefaultFont'
+		'babylonDefaultFont',
+		'elementByIdDictionary',
+		'genidCount',
+		'interactions'
 	],
 	#category : #'WodenEngine-Roassal-Core'
 }
@@ -87,7 +90,7 @@ RWView >> addCameraLight: color [
 
 { #category : #interaction }
 RWView >> addInteraction: anInteraction [
-	anInteraction initializeElement: self
+	anInteraction installOnElement: self
 ]
 
 { #category : #adding }
@@ -207,6 +210,17 @@ RWView >> drawOverlaysOnBabylonCanvas: canvas [
 	]
 ]
 
+{ #category : #internal }
+RWView >> element: element idChangedFrom: oldId into: newId [
+	oldId ifNotNil: [ 
+		elementByIdDictionary removeKey: oldId
+	].
+
+	newId ifNotNil: [ 
+		elementByIdDictionary at: newId put: element
+	].
+]
+
 { #category : #accessing }
 RWView >> elementFromModel: aModel [
 	^ elements detect: [ :el | el model == aModel ] ifNone: [ nil ]
@@ -236,6 +250,25 @@ RWView >> eventHandler [
 	^ eventHandler
 ]
 
+{ #category : #'as yet unclassified' }
+RWView >> generateIdForElement: anElement [
+	| id |
+	id := genidCount.
+	genidCount := genidCount + 1.
+	
+	anElement id: ('<genid:' , id asString, '>') asSymbol.
+]
+
+{ #category : #accessing }
+RWView >> getElementById: id [
+	^ self getElementById: id ifAbsent: [nil]
+]
+
+{ #category : #accessing }
+RWView >> getElementById: id ifAbsent: aBlock [
+	^ elementByIdDictionary at: id ifAbsent: aBlock
+]
+
 { #category : #initialization }
 RWView >> initializeModel [
 	elements := OrderedCollection new.
@@ -244,6 +277,9 @@ RWView >> initializeModel [
 	baseShapes := Dictionary new.
 	rigidBodies := OrderedCollection new.
 	overlays := OrderedCollection new.
+	elementByIdDictionary := Dictionary new.
+	interactions := OrderedCollection new.
+	genidCount := 0.
 	self initializeScene.
 ]
 
@@ -259,6 +295,11 @@ RWView >> initializeScene [
 	camera translateByZ: 5.0.
 	self addInternalElement: camera.
 	self addCameraLight: Color lightGray.
+]
+
+{ #category : #accessing }
+RWView >> interactions [
+	^ interactions
 ]
 
 { #category : #accessing }

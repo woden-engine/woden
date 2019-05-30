@@ -58,6 +58,17 @@ WDCMetallicRoughnessMaterial >> materialStateClass [
 ]
 
 { #category : #accessing }
+WDCMetallicRoughnessMaterial >> metallicFactor [
+	^ materialState metallicFactor
+]
+
+{ #category : #accessing }
+WDCMetallicRoughnessMaterial >> metallicFactor: factor [
+	materialState metallicFactor: factor asFloat.
+	self uploadMaterialStateData
+]
+
+{ #category : #accessing }
 WDCMetallicRoughnessMaterial >> metallicRoughnessTexture [
 	^ metallicRoughnessTexture
 ]
@@ -75,6 +86,17 @@ WDCMetallicRoughnessMaterial >> parse: materialFileReference data: data [
 		metallicFactor: (data at: 'metallic-factor' ifAbsent: [ materialState metallicFactor ]).
 	metallicRoughnessTexture := self parse: data at: materialFileReference optionalTexture: 'metallic-roughness-texture'.
 	self invalidateCache.
+]
+
+{ #category : #accessing }
+WDCMetallicRoughnessMaterial >> roughnessFactor [
+	^ materialState
+]
+
+{ #category : #accessing }
+WDCMetallicRoughnessMaterial >> roughnessFactor: factor [
+	materialState roughnessFactor: factor asFloat.
+	self uploadMaterialStateData
 ]
 
 { #category : #accessing }

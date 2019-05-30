@@ -1,12 +1,15 @@
 Class {
 	#name : #RWJSONSerializeVisitor,
 	#superclass : #RWAbstractVisitor,
-	#instVars : [
-		'idDictionary',
-		'idCount'
-	],
 	#category : #'WodenEngine-Roassal-Serialization'
 }
+
+{ #category : #visiting }
+RWJSONSerializeVisitor >> encodeElementInteractions: anElement [
+	| interactions |
+	interactions := anElement attributeAt: #interactions ifAbsent: [#()].
+	^ interactions collect: [ :interaction | interaction accept: self ]
+]
 
 { #category : #visiting }
 RWJSONSerializeVisitor >> encodeElementShape: anElement [ 
@@ -27,25 +30,17 @@ RWJSONSerializeVisitor >> encodeVector4: aVector4 [
 ]
 
 { #category : #visiting }
-RWJSONSerializeVisitor >> idForElement: element [
-	^ idDictionary at: element ifAbsentPut: [ idCount := idCount + 1 ]
-]
-
-{ #category : #visiting }
-RWJSONSerializeVisitor >> initialize [
-	super initialize.
-	idCount := -1.
-	idDictionary := IdentityDictionary new.
-	
-]
-
-{ #category : #visiting }
 RWJSONSerializeVisitor >> visitCamera: aCamera [
 	^ Dictionary newFromPairs: {
-		#id . self idForElement: aCamera.
+		#id . aCamera validId.
 		#type . #camera.
 		#position . self encodeVector3: aCamera position.
 	}
+]
+
+{ #category : #visiting }
+RWJSONSerializeVisitor >> visitConeShape: shape [
+	^ #cone
 ]
 
 { #category : #visiting }
@@ -54,29 +49,67 @@ RWJSONSerializeVisitor >> visitCubeShape: aCubeShape [
 ]
 
 { #category : #visiting }
+RWJSONSerializeVisitor >> visitCylinderShape: aCubeShape [
+	^ #cylinder
+]
+
+{ #category : #visiting }
 RWJSONSerializeVisitor >> visitEdge: anElement [
 	^ Dictionary newFromPairs: {
-		#id . self idForElement: anElement.
-		#from_id . self idForElement: anElement from.
-		#to_id . self idForElement: anElement to.
-		#type . #edge.
+		#id . anElement validId.
+		#from_id . anElement from isRWElement ifTrue: #validId ifFalse: nil.
+		#from_position . self encodeVector3: anElement fromPosition.
+		#to_id . anElement to isRWElement ifTrue: #validId ifFalse: nil.
+		#to_position . self encodeVector3: anElement toPosition.
 		#color . self encodeVector4: anElement colorUsedForRendering.
-		#shape . self encodeElementShape: anElement 
+		#shape . self encodeElementShape: anElement .
+		#interactions . self encodeElementInteractions: anElement
 	}
 ]
 
 { #category : #visiting }
 RWJSONSerializeVisitor >> visitElement: anElement [
 	^ Dictionary newFromPairs: {
-		#id . self idForElement: anElement.
+		#id . anElement validId.
 		#type . #element.
 		#position . self encodeVector3: anElement position.
 		#color . self encodeVector4: anElement colorUsedForRendering.
-		#shape . self encodeElementShape: anElement 
+		#shape . self encodeElementShape: anElement.
+		#interactions . self encodeElementInteractions: anElement
 	}
 ]
 
 { #category : #visiting }
 RWJSONSerializeVisitor >> visitLineShape: aCubeShape [
 	^ #line
+]
+
+{ #category : #visiting }
+RWJSONSerializeVisitor >> visitMenuActivableInteraction: interaction [
+	^ #menuActivable
+]
+
+{ #category : #visiting }
+RWJSONSerializeVisitor >> visitMeshShape: shape [
+	^ #meshShape
+]
+
+{ #category : #visiting }
+RWJSONSerializeVisitor >> visitNullShape: aCubeShape [
+	^ nil
+]
+
+{ #category : #visiting }
+RWJSONSerializeVisitor >> visitPopupInteraction: interaction [
+	^ #popup
+]
+
+{ #category : #visiting }
+RWJSONSerializeVisitor >> visitPyramidShape: shape [
+	^ #pyramid
+]
+
+{ #category : #visiting }
+RWJSONSerializeVisitor >> visitUVSphereShape: shape [
+	^ #uvSphere
 ]

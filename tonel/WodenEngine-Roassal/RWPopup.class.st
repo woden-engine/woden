@@ -21,6 +21,11 @@ Class {
 	#category : #'WodenEngine-Roassal-Interaction'
 }
 
+{ #category : #visiting }
+RWPopup >> accept: aVisitor [
+	^ aVisitor visitPopupInteraction: self
+]
+
 { #category : #accessing }
 RWPopup >> color [
 	^ color
@@ -48,7 +53,6 @@ RWPopup >> initializeElement: anElement [
 	| popupElement popupMesh builder font extent rectangle |
 	popupElement := nil.
 	popupMesh := nil.
-	self registerOn: anElement.
 	anElement
 		when: RWMouseEnter do: [ :evt |
 			popupMesh := nil.

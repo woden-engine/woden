@@ -12,6 +12,11 @@ RWHighlightable class >> highlightedColor [
 	^ Color blue
 ]
 
+{ #category : #visiting }
+RWHighlightable >> accept: aVisitor [
+	^ aVisitor visitHighlightableInteraction: self
+]
+
 { #category : #visitor }
 RWHighlightable >> accept: aVisitor with: args [
 	aVisitor visitHightlightableInteraction: self with: args.

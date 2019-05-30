@@ -64,6 +64,11 @@ RWEdge >> from: anElement [
 	anElement addConnectedEdge: self
 ]
 
+{ #category : #accessing }
+RWEdge >> fromPosition [
+	^ from position
+]
+
 { #category : #testing }
 RWEdge >> isEdge [
 	^ true.
@@ -95,4 +100,9 @@ RWEdge >> to [
 RWEdge >> to: anElement [
 	to := anElement.
 	anElement addConnectedEdge: self
+]
+
+{ #category : #accessing }
+RWEdge >> toPosition [
+	^ from position
 ]

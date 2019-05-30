@@ -4,13 +4,25 @@ Class {
 	#category : #'WodenEngine-Roassal-Interaction'
 }
 
-{ #category : #public }
-RWInteraction class >> initializeElement: element [
-	^ self new initializeElement: element; yourself
+{ #category : #hooks }
+RWInteraction class >> installOnElement: element [
+	^ self new installOnElement: element; yourself
+]
+
+{ #category : #visiting }
+RWInteraction >> accept: aVisitor [
+	self subclassResponsibility
+]
+
+{ #category : #hooks }
+RWInteraction >> installOnElement: anElement [
+	self
+		initializeElement: anElement;
+		registerOn: anElement
 ]
 
 { #category : #hooks }
 RWInteraction >> registerOn: anElement [
 	"Register the interaction in the attribute field of the element"
-	anElement attributeAt: self class name asSymbol put: self.
+	anElement interactions add: self
 ]

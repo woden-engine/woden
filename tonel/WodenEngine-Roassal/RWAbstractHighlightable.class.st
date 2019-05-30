@@ -65,7 +65,6 @@ RWAbstractHighlightable >> initialize [
 RWAbstractHighlightable >> initializeElement: element [
 	| elements |
 	elements := nil.
-	self registerOn: element.
 	element
 		when: RWMouseEnter
 		do: [ :e |

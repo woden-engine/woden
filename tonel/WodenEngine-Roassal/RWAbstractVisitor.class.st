@@ -15,7 +15,17 @@ RWAbstractVisitor >> visitCamera: element [
 ]
 
 { #category : #visiting }
+RWAbstractVisitor >> visitConeShape: shape [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
 RWAbstractVisitor >> visitCubeShape: shape [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
+RWAbstractVisitor >> visitCylinderShape: shape [
 	self subclassResponsibility
 ]
 
@@ -35,7 +45,22 @@ RWAbstractVisitor >> visitElement: element [
 ]
 
 { #category : #visiting }
+RWAbstractVisitor >> visitHighlightableInteraction: shape [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
 RWAbstractVisitor >> visitLight: element [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
+RWAbstractVisitor >> visitMenuActivableInteraction: shape [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
+RWAbstractVisitor >> visitMeshShape: shape [
 	self subclassResponsibility
 ]
 
@@ -55,6 +80,21 @@ RWAbstractVisitor >> visitPointLight: element [
 ]
 
 { #category : #visiting }
+RWAbstractVisitor >> visitPopupInteraction: shape [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
+RWAbstractVisitor >> visitPyramidShape: shape [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
 RWAbstractVisitor >> visitSpotLight: element [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
+RWAbstractVisitor >> visitUVSphereShape: shape [
 	self subclassResponsibility
 ]

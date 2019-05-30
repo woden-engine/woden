@@ -85,8 +85,40 @@ RWViewTest >> testElementFromModel [
 ]
 
 { #category : #tests }
+RWViewTest >> testElementValidId [
+	| firstElement secondElement secondElementId |
+	firstElement := RWCube element id: #firstElement.
+	secondElement := RWCube element.
+	view addAll: { firstElement . secondElement }.
+	
+	self assert: firstElement validId equals: #firstElement.
+	secondElementId := secondElement validId.
+	self assert: secondElementId isNotNil.
+	self assert: secondElement id equals: secondElementId.
+	self assert: secondElement validId equals: secondElementId.
+]
+
+{ #category : #tests }
 RWViewTest >> testEmpty [
 	self assert: view elements size equals: 0
+]
+
+{ #category : #tests }
+RWViewTest >> testGetElementById [
+	| element |
+	element := RWCube element id: #someElement.
+	view add: element.
+	self assert: (view getElementById: #someElement) equals: element
+]
+
+{ #category : #tests }
+RWViewTest >> testGetElementByIdChanged [
+	| element |
+	element := RWCube element id: #someElement.
+	view add: element.
+	element id: #newName.
+	self assert: (view getElementById: #someElement) equals: nil.
+	self assert: (view getElementById: #newName) equals: element.
 ]
 
 { #category : #tests }

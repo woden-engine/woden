@@ -13,7 +13,8 @@ Class {
 		'behaviors',
 		'localBoundingBox',
 		'boundingBox',
-		'color'
+		'color',
+		'id'
 	],
 	#category : #'WodenEngine-Roassal-Core'
 }
@@ -50,7 +51,7 @@ RWElement >> addConnectedEdge: anEdge [
 
 { #category : #interaction }
 RWElement >> addInteraction: anInteraction [
-	anInteraction initializeElement: self
+	anInteraction installOnElement: self
 ]
 
 { #category : #adding }
@@ -70,7 +71,8 @@ RWElement >> addedIn: aView [
 
 	self buildRigidBodyForView: aView.
 
-	view := aView
+	view := aView.
+	id ifNotNil: [ view element: self idChangedFrom: nil into: id ]
 ]
 
 { #category : #interaction }
@@ -171,6 +173,22 @@ RWElement >> height [
 	^ shape heightFor: self
 ]
 
+{ #category : #accessing }
+RWElement >> id [
+	^ id
+]
+
+{ #category : #accessing }
+RWElement >> id: anObject [
+	| oldID |
+	oldID := id.
+	id := anObject.
+	view ifNotNil: [
+		view element: self idChangedFrom: oldID into: id
+	]
+	
+]
+
 { #category : #initialization }
 RWElement >> initialize [
 	super initialize.
@@ -178,6 +196,11 @@ RWElement >> initialize [
 	sceneNode := self createSceneNode.
 	shape := RWNullShape new.
 	color := WMVector4F x: 1.0 y: 1.0 z: 1.0 w: 1.0.
+]
+
+{ #category : #'as yet unclassified' }
+RWElement >> interactions [
+	^ self attributeAt: #interactions ifAbsentPut: [ OrderedCollection new ]
 ]
 
 { #category : #updating }
@@ -205,6 +228,11 @@ RWElement >> isEdge [
 
 { #category : #testing }
 RWElement >> isElement [
+	^ true
+]
+
+{ #category : #testing }
+RWElement >> isRWElement [
 	^ true
 ]
 
@@ -454,6 +482,14 @@ RWElement >> translateToY: newY [
 { #category : #translation }
 RWElement >> translateToZ: newZ [
 	self translateTo: (self position z: newZ)
+]
+
+{ #category : #accessing }
+RWElement >> validId [
+	id ifNil: [
+		view generateIdForElement: self
+	].
+	^ id
 ]
 
 { #category : #accessing }

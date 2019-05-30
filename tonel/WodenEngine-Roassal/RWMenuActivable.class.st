@@ -18,6 +18,11 @@ RWMenuActivable class >> item: title action: action [
 	^ self new item: title action: action
 ]
 
+{ #category : #visiting }
+RWMenuActivable >> accept: aVisitor [
+	^ aVisitor visitMenuActivableInteraction: self
+]
+
 { #category : #public }
 RWMenuActivable >> action: aSymbol [
 	^ self item: aSymbol asString action: aSymbol
