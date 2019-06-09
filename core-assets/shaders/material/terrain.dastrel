@@ -20,8 +20,8 @@ uniform(binding=MaterialState.Attributes) MaterialState
     heightOffset: float;
 
     albedo: float4;
-    fresnel: float3;
-    smoothness: float;
+    metallicFactor: float;
+    roughnessFactor: float;
 
     textureScaleAndOffset: float4[5];
 }
@@ -58,6 +58,12 @@ function mixSplatting(v0: float4, v1: float4, v2: float4, v3: float4, v4: float4
     return v0*a0 + v1*alpha.x + v2*alpha.y + v3*alpha.z + v4*alpha.w;
 }
 
+function mixSplatting(v0: float3, v1: float3, v2: float3, v3: float3, v4: float3, alpha: float4) -> float3
+{
+    let a0 = 1.0f - dot(alpha, float4(1.0f, 1.0f, 1.0f, 1.0f));
+    return v0*a0 + v1*alpha.x + v2*alpha.y + v3*alpha.z + v4*alpha.w;
+}
+
 function transformNormalToView(normal: float3) -> float3
 {
     using CameraState;
@@ -88,7 +94,7 @@ function mixTriplanar(normal: float3, vx: float4, vy: float4, vz: float4) -> flo
     return vx*blending.x + vy*blending.y + vz*blending.z;
 }
 
-function mixTriplanarNormal(normal: float3, vx: float4, vy: float4, vz: float4) -> float4
+function mixTriplanarNormal(normal: float3, vx: float3, vy: float3, vz: float3) -> float3
 {
     let blending = normalize(fabs(normal));
 
@@ -104,40 +110,37 @@ function fetchAlbedo(objectPosition: float3, normal: float3, splatting: float4) 
     return mixTriplanar(normal, vx, vy, vz);
 }
 
-function fetchNormalPlane(texcoord: float2, splatting: float4) -> float4
+function fetchNormalPlane(texcoord: float2, splatting: float4) -> float3
 {
     using MaterialState;
 
-    let n0 = normalSampler.sample(normalTexture0, texcoord*textureScaleAndOffset[0].xy + textureScaleAndOffset[0].zw);
-    let n1 = normalSampler.sample(normalTexture1, texcoord*textureScaleAndOffset[1].xy + textureScaleAndOffset[1].zw);
-    let n2 = normalSampler.sample(normalTexture2, texcoord*textureScaleAndOffset[2].xy + textureScaleAndOffset[2].zw);
-    let n3 = normalSampler.sample(normalTexture3, texcoord*textureScaleAndOffset[3].xy + textureScaleAndOffset[3].zw);
-    let n4 = normalSampler.sample(normalTexture4, texcoord*textureScaleAndOffset[4].xy + textureScaleAndOffset[4].zw);
+    let n0 = normalSampler.sample(normalTexture0, texcoord*textureScaleAndOffset[0].xy + textureScaleAndOffset[0].zw).xyz;
+    let n1 = normalSampler.sample(normalTexture1, texcoord*textureScaleAndOffset[1].xy + textureScaleAndOffset[1].zw).xyz;
+    let n2 = normalSampler.sample(normalTexture2, texcoord*textureScaleAndOffset[2].xy + textureScaleAndOffset[2].zw).xyz;
+    let n3 = normalSampler.sample(normalTexture3, texcoord*textureScaleAndOffset[3].xy + textureScaleAndOffset[3].zw).xyz;
+    let n4 = normalSampler.sample(normalTexture4, texcoord*textureScaleAndOffset[4].xy + textureScaleAndOffset[4].zw).xyz;
 
-    return mixSplatting(n0, n1, n2, n3, n4, splatting)*float4(2.0f, 2.0f, 2.0f, 1.0f) - float4(1.0f, 1.0f, 1.0f, 0.0f);
+    return mixSplatting(n0, n1, n2, n3, n4, splatting)*float3(2.0f, 2.0f, 2.0f) - float3(1.0f, 1.0f, 1.0f);
 }
 
-function fetchNormalPlaneYZ(texcoord: float2, splatting: float4, objectNormalSigns: float3) -> float4
+function fetchNormalPlaneYZ(texcoord: float2, splatting: float4, objectNormalSigns: float3) -> float3
 {
-    let normal = fetchNormalPlane(texcoord, splatting);
-    return float4(normal.zxy*objectNormalSigns, normal.a);
+    return fetchNormalPlane(texcoord, splatting).zxy*objectNormalSigns;
 }
 
-function fetchNormalPlaneZX(texcoord: float2, splatting: float4, objectNormalSigns: float3) -> float4
+function fetchNormalPlaneZX(texcoord: float2, splatting: float4, objectNormalSigns: float3) -> float3
 {
-    let normal = fetchNormalPlane(texcoord, splatting);
-    return float4(normal.yzx*objectNormalSigns, normal.a);
+    return fetchNormalPlane(texcoord, splatting).yzx*objectNormalSigns;
 }
 
-function fetchNormalPlaneXY(texcoord: float2, splatting: float4, objectNormalSigns: float3) -> float4
+function fetchNormalPlaneXY(texcoord: float2, splatting: float4, objectNormalSigns: float3) -> float3
 {
-    let normal = fetchNormalPlane(texcoord, splatting);
-    return float4(normal.xyz*objectNormalSigns, normal.a);
+    return fetchNormalPlane(texcoord, splatting).xyz*objectNormalSigns;
 }
 
-function fetchNormal(objectPosition: float3, normal: float3, splatting: float4) -> float4
+function fetchNormal(objectPosition: float3, normal: float3, splatting: float4) -> float3
 {
-    let normalSigns = sign(normal);
+    let normalSigns = step(0.0f, normal)*2.0f - 1.0f;
     let vx = fetchNormalPlaneYZ(objectPosition.yz, splatting, normalSigns);
     let vy = fetchNormalPlaneZX(objectPosition.zx, splatting, normalSigns);
     let vz = fetchNormalPlaneXY(objectPosition.xy, splatting, normalSigns);
@@ -254,25 +257,26 @@ code_block(fragment) forward_splatting
     let albedo = FragmentInput.color*MaterialState.albedo*float4(rawAlbedo.rgb, 1.0f);
 
     // Fetch the actual normal
+	//walbedo = 1.0f;
+	//on = float3(-1.0f, 0.0f, 0.0f);
     let rawNormal = fetchNormal(objectPosition, on, splatting);
-    let N = normalize(transformNormalToView(rawNormal.xyz));
-    N = transformNormalToView(on);
+    let N = normalize(transformNormalToView(rawNormal));
 
     let SN = transformNormalToView(on);
 
     // Compute the smoothness and the fresnel factor.
-    let fresnel = MaterialState.fresnel*rawAlbedo.a;
-    let smoothness = MaterialState.smoothness*rawNormal.a;
+	let metallic = MaterialState.metallicFactor;
+	let roughness = MaterialState.roughnessFactor;
 
     let V = normalize(-FragmentInput.position);
 
-    forwardLightingOutput
+    forwardMetallicRoughnessLightingOutput
         albedo: albedo
-        fresnel: fresnel smoothness: smoothness
+        metallic: metallic roughness: roughness
         normal: N surfaceNormal: SN viewVector: V position: FragmentInput.position;
-    //FragmentOutput.color = float4(on*0.5f + 0.5f, 1.0f);
-    //FragmentOutput.color = float4(on, 1.0f);
-    //FragmentOutput.color = rawNormal;
+    //FragmentStage.colorOutput0 = float4(on*0.5f + 0.5f, 1.0f);
+    //FragmentStage.colorOutput0 = float4(on, 1.0f);
+    //FragmentStage.colorOutput0 = float4(SN*0.5f + 0.5f, 1.0f);
 }
 
 code_block(fragment) forward_solid
@@ -302,14 +306,14 @@ code_block(fragment) forward_solid
     let N = transformNormalToView(on);
 
     // Compute the smoothness and the fresnel factor.
-    let fresnel = MaterialState.fresnel;
-    let smoothness = MaterialState.smoothness;
+	let metallic = MaterialState.metallicFactor;
+	let roughness = MaterialState.roughnessFactor;
 
     let V = normalize(-FragmentInput.position);
 
-    forwardLightingOutput
+    forwardMetallicRoughnessLightingOutput
         albedo: albedo
-        fresnel: fresnel smoothness: smoothness
+        metallic: metallic roughness: roughness
         normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
 }
 

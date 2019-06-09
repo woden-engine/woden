@@ -8,8 +8,8 @@ Structure <<< #WDCTerrainMaterialState
         #heightOffset => Float32.
 
 		#albedo => WMVector4F.
-		#fresnel => WMCompactVector3F.
-		#smoothness => Float32.
+		#metallicFactor => Float32.
+		#roughnessFactor => Float32.
 
         #textureScaleAndOffset => (WMVector4F array: 5).
 	};
