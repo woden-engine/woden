@@ -216,8 +216,8 @@ WDCTerrainMaterial >> initialize [
 		heightScale: 1.0;
 
 		albedo: Color white asWMVector4F;
-		fresnel: (WMVector3F x: 0.03 y: 0.03 z: 0.03);
-		smoothness: 0.45;
+		metallicFactor: 0.0;
+		roughnessFactor: 0.55;
 		
 		textureScaleAndOffset: ((SLVMNativeArray for: WMVector4F new: 5) atAllPut: (WMVector4F x: 1.0 y: 1.0));
 		yourself.
@@ -280,8 +280,8 @@ WDCTerrainMaterial >> parse: materialFileReference data: data [
 		heightScale: (self parse: data at: materialFileReference scalar: 'height-scale' ifAbsent: [ 1.0 ]);
 		
 		albedo: (self parse: data at: materialFileReference srgbColor: 'albedo-color' ifAbsent: [ Color white ]);
-		fresnel: (self parse: data at: materialFileReference vector3: 'fresnel-constant' ifAbsent: [ WMVector3F x: 0.03 y: 0.03 z: 0.03 ]);
-		smoothness: (data at: 'smoothness' ifAbsent: [ materialState smoothness ]);
+		roughnessFactor: (data at: 'roughness-factor' ifAbsent: [ materialState roughnessFactor ]);
+		metallicFactor: (data at: 'metallic-factor' ifAbsent: [ materialState metallicFactor ]);
 		
 		textureScaleAndOffset: (self parse: data at: materialFileReference array: 'texture-scales-offsets' size: 5 nativeType: WMVector4F ifAbsent: [ WMVector4F x: 1.0 y: 1.0 z: 0.0 w: 0.0]).
 
