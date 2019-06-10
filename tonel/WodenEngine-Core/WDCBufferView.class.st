@@ -43,3 +43,8 @@ WDCBufferView >> offset [
 WDCBufferView >> offset: anObject [
 	offset := anObject
 ]
+
+{ #category : #accessing }
+WDCBufferView >> readStream [
+	^ buffer readStreamFrom: offset withSize: length
+]

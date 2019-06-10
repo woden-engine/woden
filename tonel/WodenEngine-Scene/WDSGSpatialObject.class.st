@@ -74,9 +74,10 @@ WDSGSpatialObject >> destroySceneDependentData [
 
 { #category : #adding }
 WDSGSpatialObject >> engineChanged [
+	super engineChanged.
 	renderable ifNotNil: [
 		renderable engineChangedTo: scene engine
-	]
+	].
 ]
 
 { #category : #initialization }

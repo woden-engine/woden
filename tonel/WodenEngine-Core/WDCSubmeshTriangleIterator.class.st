@@ -41,15 +41,20 @@ WDCSubmeshTriangleIterator >> indices: anObject [
 
 { #category : #enumerating }
 WDCSubmeshTriangleIterator >> iterateSubmesh: submesh with: aBlock [
-	| triangleCount nextIndex i1 i2 i3 |
+	| triangleCount nextIndex i1 i2 i3 submeshIndices |
 	submesh primitiveType ~= AGPU_TRIANGLES ifTrue: [ ^ self ].
+	
+	submeshIndices := indices.
+	submesh indexBufferAccessor ifNotNil: [ 
+		submeshIndices := submesh indexBufferAccessor asNativeArrayReference
+	].
 	
 	triangleCount := submesh indexCount // 3.
 	nextIndex := submesh firstIndex + 1.
 	1 to: triangleCount do: [ :t |
-		i1 := indices at: nextIndex.
-		i2 := indices at: nextIndex + 1.
-		i3 := indices at: nextIndex + 2.
+		i1 := submeshIndices at: nextIndex.
+		i2 := submeshIndices at: nextIndex + 1.
+		i3 := submeshIndices at: nextIndex + 2.
 		aBlock value: { i1 . i2 . i3 }.
 		
 		nextIndex := nextIndex + 3

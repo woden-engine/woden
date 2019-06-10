@@ -25,6 +25,11 @@ WDIGLTF2SubMesh >> asWDCGenericSubmesh [
 ]
 
 { #category : #accessing }
+WDIGLTF2SubMesh >> firstIndex [
+	^ 0
+]
+
+{ #category : #accessing }
 WDIGLTF2SubMesh >> indexBufferAccessor [
 	^ indexBufferAccessor
 ]
@@ -32,6 +37,11 @@ WDIGLTF2SubMesh >> indexBufferAccessor [
 { #category : #accessing }
 WDIGLTF2SubMesh >> indexBufferAccessor: anObject [
 	indexBufferAccessor := anObject
+]
+
+{ #category : #accessing }
+WDIGLTF2SubMesh >> indexCount [
+	^ indexBufferAccessor count
 ]
 
 { #category : #accessing }

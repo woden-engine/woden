@@ -3,13 +3,21 @@ Class {
 	#superclass : #WDCAbstractMeshVertexData,
 	#instVars : [
 		'channels',
-		'vertexCount'
+		'vertexCount',
+		'hasVertexTangents'
 	],
 	#pools : [
-		'AGPUConstants'
+		'AGPUConstants',
+		'WDCVertexBindingConstants'
 	],
 	#category : #'WodenEngine-Core-Mesh'
 }
+
+{ #category : #adding }
+WDCMeshExplicitSeparatedVertexData >> addChannel: aChannel [
+	channels := channels copyWith: aChannel.
+	hasVertexTangents := nil.
+]
 
 { #category : #accessing }
 WDCMeshExplicitSeparatedVertexData >> channels [
@@ -35,6 +43,44 @@ WDCMeshExplicitSeparatedVertexData >> createVertexBindingFor: anEngine [
 { #category : #'as yet unclassified' }
 WDCMeshExplicitSeparatedVertexData >> engineChangedTo: anEngine [
 	channels do: [ :channel | channel engineChangedTo: anEngine ]
+]
+
+{ #category : #testing }
+WDCMeshExplicitSeparatedVertexData >> getChannelWithVertexBindingLocation: aLocation [
+	channels do: [ :channel |
+		channel binding = aLocation ifTrue: [ ^ channel ]
+	].
+
+	^ nil
+]
+
+{ #category : #testing }
+WDCMeshExplicitSeparatedVertexData >> hasChannelWithVertexBindingLocation: aLocation [
+	channels do: [ :channel |
+		channel binding = aLocation ifTrue: [ ^ true ]
+	].
+
+	^ false
+]
+
+{ #category : #testing }
+WDCMeshExplicitSeparatedVertexData >> hasVertexTangents [
+	^ hasVertexTangents ifNil: [hasVertexTangents := self hasChannelWithVertexBindingLocation: Tangents4VertexBindingLocation]
+]
+
+{ #category : #testing }
+WDCMeshExplicitSeparatedVertexData >> normalsChannel [
+	^ self getChannelWithVertexBindingLocation: NormalsVertexBindingLocation
+]
+
+{ #category : #testing }
+WDCMeshExplicitSeparatedVertexData >> positionsChannel [
+	^ self getChannelWithVertexBindingLocation: PositionsVertexBindingLocation
+]
+
+{ #category : #testing }
+WDCMeshExplicitSeparatedVertexData >> texcoordsChannel [
+	^ self getChannelWithVertexBindingLocation: TexcoordsVertexBindingLocation
 ]
 
 { #category : #accessing }

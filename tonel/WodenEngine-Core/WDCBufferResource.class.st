@@ -89,6 +89,11 @@ WDCBufferResource >> pointer: anObject [
 	pointer := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDCBufferResource >> readStreamFrom: offset withSize: length [
+	^ ReadStream on: data from: offset + 1 to: offset + length
+]
+
 { #category : #accessing }
 WDCBufferResource >> validPointer [
 	self checkSession.

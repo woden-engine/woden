@@ -3,7 +3,7 @@ I represent a single chunk in a GLTF 2 binary file.
 "
 Class {
 	#name : #WDIGLTF2BinaryChunk,
-	#superclass : #WDSSceneAssetModelLoader,
+	#superclass : #Object,
 	#instVars : [
 		'type',
 		'content'

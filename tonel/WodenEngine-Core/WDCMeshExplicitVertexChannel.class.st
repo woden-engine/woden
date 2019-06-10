@@ -9,7 +9,8 @@ Class {
 		'BindingNameMap'
 	],
 	#pools : [
-		'AGPUConstants'
+		'AGPUConstants',
+		'WDCVertexBindingConstants'
 	],
 	#category : #'WodenEngine-Core-Mesh'
 }
@@ -26,6 +27,7 @@ WDCMeshExplicitVertexChannel class >> getBindingNamed: bindingName ifAbsent: aBl
 
 { #category : #'class initialization' }
 WDCMeshExplicitVertexChannel class >> initialize [
+	
 	BindingNameMap := Dictionary newFromPairs: #(
 		#positions 0
 		#texcoords 1
@@ -65,6 +67,11 @@ WDCMeshExplicitVertexChannel >> accessor: anObject [
 	accessor := anObject
 ]
 
+{ #category : #converting }
+WDCMeshExplicitVertexChannel >> asNativeArrayReference [
+	^ accessor asNativeArrayReference
+]
+
 { #category : #accessing }
 WDCMeshExplicitVertexChannel >> binding [
 	^ binding
@@ -101,5 +108,5 @@ WDCMeshExplicitVertexChannel >> vertexBuffer [
 
 { #category : #'as yet unclassified' }
 WDCMeshExplicitVertexChannel >> vertexBufferOffset [
-	^ accessor bufferView offset
+	^ accessor bufferView offset + accessor byteOffset
 ]

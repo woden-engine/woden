@@ -12,7 +12,10 @@ Class {
 		'scenes',
 		'convertedVertexChannels',
 		'meshesToCleanup',
-		'currentGLTFJson'
+		'currentGLTFJson',
+		'images',
+		'samplers',
+		'textures'
 	],
 	#classVars : [
 		'FullTypeToPixelName',
@@ -20,6 +23,7 @@ Class {
 	],
 	#pools : [
 		'AGPUConstants',
+		'WDCVertexBindingConstants',
 		'WDIGLTF2Constants'
 	],
 	#category : #'WodenEngine-Importers-GLTF'
@@ -59,12 +63,18 @@ WDIGLTF2Importer class >> initialize [
 
 { #category : #loading }
 WDIGLTF2Importer >> cleanupMeshes [
-	| indexBuffersToConvert indexCountToConvert indexBufferUsedByMesh haveTheSameIndexBuffer |
+	| indexBuffersToConvert indexCountToConvert indexBufferUsedByMesh haveTheSameIndexBuffer vertexDataToGenerateTangentSpace |
 	"We may need to convert some index buffers"
 	indexBuffersToConvert := IdentitySet new.
+	vertexDataToGenerateTangentSpace := IdentityDictionary new.
 	indexCountToConvert := 0.
 	meshesToCleanup do: [ :mesh |
 		mesh submeshes do: [ :submesh |
+			(submesh material requiresTangentSpaceData and: [submesh vertexData hasVertexTangents not]) ifTrue: [
+				(vertexDataToGenerateTangentSpace at: submesh vertexData ifAbsentPut: [ OrderedCollection new ])
+					add: submesh
+			].
+		
 			submesh indexBufferAccessor type size < 2 ifTrue: [
 				(indexBuffersToConvert includes: submesh indexBufferAccessor) ifFalse: [ 
 					indexBuffersToConvert add: submesh indexBufferAccessor.
@@ -72,6 +82,10 @@ WDIGLTF2Importer >> cleanupMeshes [
 				].
 			].
 		]
+	].
+
+	vertexDataToGenerateTangentSpace ifNotEmpty: [ 
+		self generateMissingVertexTangentSpaceFrames: vertexDataToGenerateTangentSpace
 	].
 
 	indexBuffersToConvert ifNotEmpty: [
@@ -90,6 +104,22 @@ WDIGLTF2Importer >> cleanupMeshes [
 			].
 		]
 	].
+
+]
+
+{ #category : #'as yet unclassified' }
+WDIGLTF2Importer >> computeTangent4WithTangent: rawTangent bitangent: rawBitangent normal: normal [
+	| tangent bitangent scaleFactor |
+	
+	((rawTangent closeTo: WMVector3F zero) and: [ rawBitangent closeTo: WMVector3F zero ]) ifTrue: [ 
+		^ self computeTangent4WithTangent: (WMVector3F x: 1.0) bitangent: (WMVector3F y: 1.0) normal: normal
+	].
+
+	"Gram schmidth orthogonalization"
+	tangent := (rawTangent - (normal * (normal dot: rawTangent))) normalized.
+	bitangent := (rawBitangent - (normal * (normal dot: rawBitangent)) - (tangent * (tangent dot: rawBitangent))) normalized.
+	scaleFactor := (normal cross: tangent) dot: bitangent.
+	^ WMVector4F x: tangent x y: tangent y z: tangent z w: scaleFactor.
 
 ]
 
@@ -131,6 +161,108 @@ WDIGLTF2Importer >> convertIndices: indexCountToConvert withAccessors: indexBuff
 
 ]
 
+{ #category : #'as yet unclassified' }
+WDIGLTF2Importer >> generateMissingVertexTangentSpaceFrames: vertexDataWithSubmeshesDictionary [
+	| encodedTangent4 tangent4BufferView encodedTangent4Data |
+	encodedTangent4 := SLVMNativeOrderedCollection for: WMVector4F.
+	tangent4BufferView := WDCBufferView new.
+	
+	vertexDataWithSubmeshesDictionary keysAndValuesDo: [ :vertex :submeshes |
+		self generateVertexDataTangentSpaceFrame: vertex submeshes: submeshes into: encodedTangent4 withBufferView: tangent4BufferView
+	].
+	
+	encodedTangent4Data := encodedTangent4 asByteArray.
+	tangent4BufferView 
+		buffer: (WDCBufferResource new
+			description: (AGPUBufferDescription new
+				size: encodedTangent4Data size;
+				usage: AGPU_STATIC;
+				binding: AGPU_ARRAY_BUFFER;
+				yourself);
+			data: encodedTangent4Data;
+			yourself);
+		offset: 0;
+		length: encodedTangent4Data size.
+
+]
+
+{ #category : #'as yet unclassified' }
+WDIGLTF2Importer >> generateVertexDataTangentSpaceFrame: vertexData submeshes: submeshes into: encodedTangents4 withBufferView: tangent4BufferView [
+	| positionChannel texcoordsChannel normalsChannel vertexCount tangents bitangents triangleIterator i1 i2 i3 p1 p2 p3 tc1 tc2 tc3 u v du1 dv1 du2 dv2 det den tangent bitangent normal tangent4Accessor channel |
+	positionChannel := vertexData positionsChannel asNativeArrayReference.
+	texcoordsChannel := vertexData texcoordsChannel asNativeArrayReference.
+	normalsChannel := vertexData normalsChannel asNativeArrayReference.
+	
+	self assert: positionChannel size = texcoordsChannel size.
+	self assert: texcoordsChannel size = normalsChannel size.
+	
+	vertexCount := positionChannel size.
+	tangents := (Array new: vertexCount) atAllPut: WMVector3F new.
+	bitangents := (Array new: vertexCount) atAllPut: WMVector3F new.
+	
+	triangleIterator := WDCSubmeshTriangleIterator new submeshes: submeshes.
+	triangleIterator do: [ :triangle |
+		i1 := triangle first + 1.
+		i2 := triangle second + 1.
+		i3 := triangle third + 1.
+		
+		p1 := (positionChannel at: i1) asWMVector3.
+		p2 := (positionChannel at: i2) asWMVector3.
+		p3 := (positionChannel at: i3) asWMVector3.
+
+		tc1 := texcoordsChannel at: i1.
+		tc2 := texcoordsChannel at: i2.
+		tc3 := texcoordsChannel at: i3.
+
+		u := p2 - p1.
+		v := p3 - p1.
+		
+		du1 := tc2 x - tc1 x.
+		dv1 := tc2 y - tc1 y.
+		
+		du2 := tc3 x - tc1 x.
+		dv2 := tc3 y - tc1 y.
+		
+		det := (du1*dv2) - (du2*dv1).
+		(det closeTo: 0.0) ifFalse: [ 
+			den := 1.0 / det.
+			
+			tangent := (u * (den*dv2))  - (v * (den*dv1)).
+			bitangent := (v * (den*du1)) - (u * (den*du2)).
+			
+			tangents at: i1 put: (tangents at: i1) + tangent.
+			tangents at: i2 put: (tangents at: i2) + tangent.
+			tangents at: i3 put: (tangents at: i3) + tangent.
+
+			bitangents at: i1 put: (bitangents at: i1) + bitangent.
+			bitangents at: i2 put: (bitangents at: i2) + bitangent.
+			bitangents at: i3 put: (bitangents at: i3) + bitangent.
+		].
+	].
+
+	tangent4Accessor := WDCBufferAccessor new
+		type: (WDCStructureFieldType typeNamed: #float4);
+		bufferView: tangent4BufferView;
+		byteOffset: encodedTangents4 size * WMVector4F structureSize;
+		count: vertexCount;
+		yourself.
+
+	channel := WDCMeshExplicitVertexChannel new
+		binding: Tangents4VertexBindingLocation;
+		accessor: tangent4Accessor;
+		yourself.
+	vertexData addChannel: channel.
+
+	1 to: vertexCount do: [ :vertexIndex |
+		tangent := tangents at: vertexIndex.
+		bitangent := bitangents at: vertexIndex.
+		normal := (normalsChannel at: vertexIndex) asWMVector3F.
+
+		encodedTangents4 add: (self computeTangent4WithTangent: tangent bitangent: bitangent normal: normal)
+	].
+
+]
+
 { #category : #loading }
 WDIGLTF2Importer >> getBinaryDataChunkWithIndex: binaryChunkIndex [
 	self error: 'Missing required binary data specification.'
@@ -138,14 +270,16 @@ WDIGLTF2Importer >> getBinaryDataChunkWithIndex: binaryChunkIndex [
 
 { #category : #loading }
 WDIGLTF2Importer >> loadAccessorFrom: accessorDescription [
-	| bufferView componentType type count pixelFormatName |
+	| bufferView componentType type count pixelFormatName byteOffset |
 	bufferView := bufferViews at: (accessorDescription at: 'bufferView') + 1.
 	componentType := accessorDescription at: 'componentType'.
 	type := accessorDescription at: 'type'.
 	count := accessorDescription at: 'count'.
+	byteOffset := accessorDescription at: 'byteOffset' ifAbsent: [0].
 	pixelFormatName := FullTypeToPixelName at: { componentType . type }.
 	accessors add: (WDCBufferAccessor new
 		bufferView: bufferView;
+		byteOffset: byteOffset;
 		type: (WDCStructureFieldType typeNamed: pixelFormatName);
 		count: count;
 		yourself)
@@ -187,7 +321,7 @@ WDIGLTF2Importer >> loadBuffer: bufferIndex from: bufferDescription [
 WDIGLTF2Importer >> loadBufferViewFrom: viewDescription [
 	bufferViews add: (WDCBufferView new
 		buffer: (buffers at: (viewDescription at: 'buffer') + 1);
-		offset: (viewDescription at: 'byteOffset');
+		offset: (viewDescription at: 'byteOffset' ifAbsent: [0]);
 		length: (viewDescription at: 'byteLength');
 		yourself)
 ]
@@ -205,11 +339,41 @@ WDIGLTF2Importer >> loadBuffersFrom: elements [
 ]
 
 { #category : #loading }
+WDIGLTF2Importer >> loadImageFrom: imageDescription [
+	| imageData imageReader image |
+	imageData := nil.
+	imageReader := nil.
+	
+	imageDescription at: 'uri' ifPresent: [ :uri |
+		imageData := self loadBinaryDataFromURI: uri.
+		imageReader := imageDescription at: 'mimeType' ifPresent: [ :mimeType |
+			WDCTextureReader loaderForMimeType: mimeType
+		] ifAbsent: [
+			WDCTextureReader loaderForExtension: (ZnUrl fromString: uri) path asFileReference extension.
+		]
+	].
+
+	imageDescription at: 'bufferView' ifPresent: [ :bufferViewIndex |
+		imageData := bufferViews at: bufferViewIndex + 1.
+		imageReader := WDCTextureReader loaderForMimeType: (imageDescription at: 'mimeType')
+	].
+
+	image := imageReader loadFromStream: imageData readStream.
+	images add: image
+]
+
+{ #category : #loading }
+WDIGLTF2Importer >> loadImagesFrom: elements [
+	images := OrderedCollection new.
+	elements do: [ :element | self loadImageFrom: element ].
+]
+
+{ #category : #loading }
 WDIGLTF2Importer >> loadMaterialFrom: materialDescription [
 	| material |
 	material := nil.
 	materialDescription at: 'pbrMetallicRoughness' ifPresent: [ :description |
-		material := self loadMetallicRoughnessMaterial: description
+		material := self loadMetallicRoughnessMaterial: description commonDescription: materialDescription
 	].
 	material ifNil: [ material := WDCMetallicRoughnessMaterial new ].
 	materials add: material
@@ -223,22 +387,23 @@ WDIGLTF2Importer >> loadMaterialsFrom: elements [
 
 { #category : #loading }
 WDIGLTF2Importer >> loadMeshFrom: meshDescription [
-	| name renderable |
-	name := meshDescription at: 'name'.
+	| name renderable meshComponents |
+	name := meshDescription at: 'name' ifAbsent: [nil].
 	renderable := nil.
 	meshDescription at: 'primitives' ifPresent: [ :primitives |
-		meshes := self loadMeshPrimitives: primitives.
-		meshes size = 1 ifTrue: [
-			renderable := meshes first.
+		meshComponents := self loadMeshPrimitives: primitives.
+		meshComponents size = 1 ifTrue: [
+			renderable := meshComponents first.
 		] ifFalse: [
-			"TODO: Mult mesh renderable"
-			self halt.
+			renderable := WDCCompositeRenderable new
+				renderables: meshComponents asArray;
+				yourself
 		]
 	].
 
-	^ renderable
+	meshes add: (renderable
 		name: name;
-		yourself
+		yourself)
 ]
 
 { #category : #loading }
@@ -280,12 +445,32 @@ WDIGLTF2Importer >> loadMeshesFrom: elements [
 ]
 
 { #category : #loading }
-WDIGLTF2Importer >> loadMetallicRoughnessMaterial: description [
+WDIGLTF2Importer >> loadMetallicRoughnessMaterial: description commonDescription: commonDescription [
 	| material |
 	material := WDCMetallicRoughnessMaterial new.
 	description at: 'baseColorFactor' ifPresent: [ :baseColor |
 		material albedoColor: (WMVector4F x: baseColor first y: baseColor second z: baseColor third w: baseColor fourth)
+	] ifAbsent: [
+		material albedoColor: (WMVector4F x: 1.0 y: 1.0 z: 1.0 w: 1.0)
 	].
+
+	material
+		metallicFactor: (description at: 'metallicFactor' ifAbsent: [1.0]);
+		roughnessFactor: (description at: 'roughnessFactor' ifAbsent: [1.0]).
+		
+	description at: 'baseColorTexture' ifPresent: [ :textureDescription |
+		material albedoTexture: (textures at: (textureDescription at: 'index') + 1) asSRGBTexture
+	].
+
+	commonDescription at: 'normalTexture' ifPresent: [ :textureDescription |
+		material normalTexture: (textures at: (textureDescription at: 'index') + 1) asNormalTexture
+	].
+	
+	
+	description at: 'metallicRoughnessTexture' ifPresent: [ :textureDescription |
+		material metallicRoughnessTexture: (textures at: (textureDescription at: 'index') + 1) asTexture
+	].
+
 	^ material
 ]
 
@@ -320,8 +505,7 @@ WDIGLTF2Importer >> loadNodeFrom: nodeDescription [
 	node ifNil: [ node := WDSGSpatialObject new ].
 	
 	nodeDescription at: 'matrix' ifPresent: [ :matrixElements |
-		matrix := WMMatrix4F newFrom: matrixElements.
-		self halt
+		node transform: (WMReversibleAffineTransformF fromInvertibleMatrix4: (WMMatrix4F newFrom: matrixElements) transposed).
 	].
 
 	nodeDescription at: 'scale' ifPresent: [ :scaleComponent |
@@ -347,6 +531,20 @@ WDIGLTF2Importer >> loadNodesFrom: elements [
 	nodes := OrderedCollection new.
 	elements do: [ :el | self loadNodeFrom: el ].
 	elements doWithIndex: [ :el :index | self loadNode: (nodes at: index) childrenFrom: el]
+]
+
+{ #category : #loading }
+WDIGLTF2Importer >> loadSamplerFrom: samplerDescription [
+	| sampler |
+	sampler := WDIGLTF2Sampler new.
+	self flag: 'TODO: Parse the sampler description.'.
+	samplers add: sampler
+]
+
+{ #category : #loading }
+WDIGLTF2Importer >> loadSamplersFrom: elements [
+	samplers := OrderedCollection new.
+	elements do: [ :el | self loadSamplerFrom: el ].
 ]
 
 { #category : #loading }
@@ -403,6 +601,27 @@ WDIGLTF2Importer >> loadSubMeshFrom: submeshDescription [
 ]
 
 { #category : #loading }
+WDIGLTF2Importer >> loadTextureFrom: textureDescription [
+	| texture |
+	texture := WDIGLTF2Texture new.
+	textureDescription at: 'sampler' ifPresent: [ :samplerIndex |
+		texture sampler: (samplers at: samplerIndex + 1)
+	].
+
+	textureDescription at: 'source' ifPresent: [ :sourceIndex |
+		texture image: (images at: sourceIndex + 1)
+	].
+
+	textures add: texture	
+]
+
+{ #category : #loading }
+WDIGLTF2Importer >> loadTexturesFrom: elements [
+	textures := OrderedCollection new.
+	elements do: [ :el | self loadTextureFrom: el ]
+]
+
+{ #category : #loading }
 WDIGLTF2Importer >> loadVertexChannel: vertexChannelName boundTo: accessor [
 	^ convertedVertexChannels at: {vertexChannelName . accessor} ifAbsentPut: [
 		WDCMeshExplicitVertexChannel new
@@ -432,6 +651,9 @@ WDIGLTF2Importer >> processGLTFJson: json [
 	json at: 'buffers' ifPresent: [ :elements | self loadBuffersFrom: elements ].
 	json at: 'bufferViews' ifPresent: [ :elements | self loadBufferViewsFrom: elements ].
 	json at: 'accessors' ifPresent: [ :elements | self loadAccessorsFrom: elements ].
+	json at: 'samplers' ifPresent: [ :elements | self loadSamplersFrom: elements ].
+	json at: 'images' ifPresent: [ :elements | self loadImagesFrom: elements ].
+	json at: 'textures' ifPresent: [ :elements | self loadTexturesFrom: elements ].
 	json at: 'materials' ifPresent: [ :elements | self loadMaterialsFrom: elements ].
 	json at: 'meshes' ifPresent: [ :elements | self loadMeshesFrom: elements ].
 	json at: 'nodes' ifPresent: [ :elements | self loadNodesFrom: elements ].

@@ -152,6 +152,11 @@ WDCTextureLayerData >> levels: anObject [
 	levels := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDCTextureLayerData >> swizzleXYZNormalMap [
+	levels do: #swizzleXYZNormalMap
+]
+
 { #category : #accessing }
 WDCTextureLayerData >> width [
 	^ width

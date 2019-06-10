@@ -5,6 +5,7 @@ Class {
 		'bufferView',
 		'type',
 		'count',
+		'byteOffset',
 		'min',
 		'max'
 	],
@@ -13,7 +14,7 @@ Class {
 
 { #category : #converting }
 WDCBufferAccessor >> asFirstIndexIndex [
-	^ bufferView offset // type size
+	^ (bufferView offset + byteOffset) // type size
 ]
 
 { #category : #converting }
@@ -23,7 +24,7 @@ WDCBufferAccessor >> asIndexBuffer [
 
 { #category : #converting }
 WDCBufferAccessor >> asNativeArrayReference [
-	^ SLVMNativeArrayReference for: type slvmType offset: bufferView offset size: count data: bufferView buffer data
+	^ SLVMNativeArrayReference for: type slvmType offset: bufferView offset + byteOffset size: count data: bufferView buffer data
 ]
 
 { #category : #accessing }
@@ -34,6 +35,16 @@ WDCBufferAccessor >> bufferView [
 { #category : #accessing }
 WDCBufferAccessor >> bufferView: anObject [
 	bufferView := anObject
+]
+
+{ #category : #accessing }
+WDCBufferAccessor >> byteOffset [
+	^ byteOffset
+]
+
+{ #category : #accessing }
+WDCBufferAccessor >> byteOffset: anObject [
+	byteOffset := anObject
 ]
 
 { #category : #accessing }

@@ -212,6 +212,11 @@ WDCAbstractGenericSurfaceMaterial >> parse: materialFileReference data: data [
 	isSkinned := data at: 'skinned' ifAbsent: [ false ].
 ]
 
+{ #category : #testing }
+WDCAbstractGenericSurfaceMaterial >> requiresTangentSpaceData [
+	^ normalTexture isNotNil
+]
+
 { #category : #accessing }
 WDCAbstractGenericSurfaceMaterial >> resourceBinding [
 	^ resourceBinding

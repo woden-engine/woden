@@ -12,7 +12,8 @@ Class {
 		'isPerspective',
 		'frustum',
 		'aspectRatio',
-		'projectionInvertedY'
+		'projectionInvertedY',
+		'isNotControlledByTheUser'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
@@ -86,6 +87,7 @@ WDSGCamera >> initialize [
 	fieldOfView := 60.0.
 	focalDistance := 10.
 	isPerspective := true.
+	isNotControlledByTheUser := false.
 	frustum := WMFrustumF new.
 	
 ]
@@ -93,6 +95,16 @@ WDSGCamera >> initialize [
 { #category : #testing }
 WDSGCamera >> isCamera [
 	^ true
+]
+
+{ #category : #accessing }
+WDSGCamera >> isNotControlledByTheUser [
+	^ isNotControlledByTheUser
+]
+
+{ #category : #accessing }
+WDSGCamera >> isNotControlledByTheUser: anObject [
+	isNotControlledByTheUser := anObject
 ]
 
 { #category : #accessing }

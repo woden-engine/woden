@@ -252,6 +252,11 @@ WDCResourceCache >> doActualMaterialLoading: materialFileReference [
 		yourself
 ]
 
+{ #category : #accessing }
+WDCResourceCache >> engine [
+	^ engine
+]
+
 { #category : #'auto reloading' }
 WDCResourceCache >> enqueueResourceReloadAction: aBlock [
 	pendingResourceReloadActions nextPut: aBlock

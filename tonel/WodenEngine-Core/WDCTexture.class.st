@@ -42,6 +42,21 @@ WDCTexture >> asTextureFor: anEngine [
 ]
 
 { #category : #converting }
+WDCTexture >> asWodenNormalTexture [
+	^ self
+]
+
+{ #category : #converting }
+WDCTexture >> asWodenSRGBTexture [
+	^ self
+]
+
+{ #category : #converting }
+WDCTexture >> asWodenTexture [
+	^ self
+]
+
+{ #category : #converting }
 WDCTexture >> athensFillRectangle: rectangle on: canvas [
 	
 ]
@@ -63,11 +78,19 @@ WDCTexture >> canUploadData [
 
 { #category : #'as yet unclassified' }
 WDCTexture >> concretizeWodenSRGBTextureWithResourceCache: aResourceCache [
-	^ self
+	^ self concretizeWodenTextureWithResourceCache: aResourceCache
 ]
 
 { #category : #'as yet unclassified' }
 WDCTexture >> concretizeWodenTextureWithResourceCache: aResourceCache [
+	engine == aResourceCache engine ifTrue: [ ^ self ].
+	
+	engine ifNil: [ 
+		engine := aResourceCache engine
+	] ifNotNil: [ 
+		self halt.
+	].
+
 	^ self
 ]
 

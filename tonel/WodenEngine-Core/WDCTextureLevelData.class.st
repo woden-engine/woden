@@ -229,6 +229,25 @@ WDCTextureLevelData >> slicePitch: anObject [
 	slicePitch := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDCTextureLevelData >> swizzleXYZNormalMap [
+	| pixelCount pixelIndex x y z |
+	pixelCount := slicePitch // 4.
+	pixelIndex := 1.
+	1 to: pixelCount do: [ :i |
+		x := data at: pixelIndex + 2.
+		y := data at: pixelIndex + 1.
+		z := data at: pixelIndex.
+
+		data at: pixelIndex put: z.
+		data at: pixelIndex + 1 put: y.
+		data at: pixelIndex + 2 put: 0.
+		data at: pixelIndex + 3 put: x.
+		pixelIndex := pixelIndex + 4
+	]
+
+]
+
 { #category : #accessing }
 WDCTextureLevelData >> width [
 	^ width

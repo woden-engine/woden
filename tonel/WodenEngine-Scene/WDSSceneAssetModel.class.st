@@ -13,7 +13,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 WDSSceneAssetModel >> createViewer [
-	| sceneModel |
+	| sceneModel camera hasLights sunLight |
 	sceneModel := WDASampleSceneModel new.
 	sceneModel
 		scene: mainScene.
@@ -21,13 +21,34 @@ WDSSceneAssetModel >> createViewer [
 	mainScene initializeWithEngine: sceneModel engine.
 	
 	"Try to find a camera."
+	hasLights := false.
 	mainScene allChildrenDo: [ :node |
+		hasLights := hasLights or: [node isLightSource].
 		node isCamera ifTrue: [
+			node isNotControlledByTheUser: true.
 			sceneModel camera: node
 		]
 	].
 
 	"If not camera is found, then we have to create a camera for the scene."
+	sceneModel camera ifNil: [ 
+		camera := WDSGCamera new.
+		
+		mainScene add: camera.
+		sceneModel camera: camera.
+	].
+
+	hasLights ifFalse: [
+		"Add a light"
+		sunLight := WDSGLightSource new.
+		sunLight directional; castShadows: false.
+		sunLight state
+				intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 1.0.
+		sunLight transform
+			rotateDegreesOnX: -45.
+		
+		mainScene add: sunLight.
+	].
 
 	^ sceneModel
 ]

@@ -63,8 +63,8 @@ WDCMaterial >> engine: anObject [
 { #category : #'as yet unclassified' }
 WDCMaterial >> engineChangedTo: newEngine [
 	engine == newEngine ifTrue: [ ^ self ].
-	engine := newEngine.
-	self invalidateCache
+	^ (self concreteMaterialFor: newEngine)
+		invalidateCache
 ]
 
 { #category : #shaders }
@@ -249,6 +249,11 @@ WDCMaterial >> parse: materialFileReference data: aDictionary [
 { #category : #parsing }
 WDCMaterial >> parseError: errorMessage at: fileReference [
 	self error: fileReference printString , ': ' , errorMessage
+]
+
+{ #category : #testing }
+WDCMaterial >> requiresTangentSpaceData [
+	^ false
 ]
 
 { #category : #preview }

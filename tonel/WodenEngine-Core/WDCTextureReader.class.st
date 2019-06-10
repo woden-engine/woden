@@ -10,6 +10,11 @@ WDCTextureReader class >> canLoadExtension: anExtension [
 ]
 
 { #category : #accessing }
+WDCTextureReader class >> canLoadMimeType: anExtension [
+	^ false
+]
+
+{ #category : #accessing }
 WDCTextureReader class >> extension [
 	^ nil
 ]
@@ -33,10 +38,24 @@ WDCTextureReader class >> loadFromFileReference: aFileReference withQuery: textu
 	self subclassResponsibility
 ]
 
+{ #category : #reading }
+WDCTextureReader class >> loadFromStream: aStream [
+	self subclassResponsibility
+]
+
 { #category : #accessing }
 WDCTextureReader class >> loaderForExtension: anExtension [
 	self withAllSubclassesDo: [ :sc |
 		(sc canLoadExtension: anExtension) ifTrue: [ ^ sc ]
+	].
+
+	^ nil
+]
+
+{ #category : #accessing }
+WDCTextureReader class >> loaderForMimeType: aMimeType [
+	self withAllSubclassesDo: [ :sc |
+		(sc canLoadMimeType: aMimeType) ifTrue: [ ^ sc ]
 	].
 
 	^ nil

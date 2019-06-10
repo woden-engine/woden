@@ -143,6 +143,9 @@ WDAFPSSceneView >> initialize [
 WDAFPSSceneView >> updateForFrameDelta: delta [
 	| orientation cameraTransform |
 	super updateForFrameDelta: delta.
+	camera := self camera.
+	camera isNotControlledByTheUser ifTrue: [ ^ self ].
+	
 	cameraAngle := cameraAngle + (cameraAngularVelocity * (cameraAngularSpeed * delta)).
 	cameraPosition ifNil: [ cameraPosition := self camera transform translation ].
 	

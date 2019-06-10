@@ -26,7 +26,7 @@ WDCGenericSubmesh >> = other [
 { #category : #'as yet unclassified' }
 WDCGenericSubmesh >> engineChangedTo: newEngine [
 	indexBuffer ifNotNil: [ indexBuffer engineChangedTo: newEngine ].
-	material ifNotNil: [ material engineChangedTo: newEngine ]
+	material ifNotNil: [ material := material engineChangedTo: newEngine ]
 ]
 
 { #category : #accessing }

@@ -160,6 +160,41 @@ WDCTextureData class >> extent: extent terrainMapsRenderWith: aBlock [
 }
 ]
 
+{ #category : #'instance creation' }
+WDCTextureData class >> fromForm: aForm [
+	| layer pitch slicePitch formData |
+	pitch := aForm width*4.
+	slicePitch := aForm width*4 * aForm height.
+	formData := ByteArray new: slicePitch.
+	aForm unhibernate.
+	LibC memCopy: aForm bits to: formData size: slicePitch.
+	
+	layer := WDCTextureLayerData new
+			width: aForm width;
+			height: aForm height;
+			depth: 1;
+			levels: {WDCTextureLevelData new
+				width: aForm width;
+				height: aForm height;
+				depth: 1;
+				pitch: pitch;
+				slicePitch: slicePitch;
+				data: formData;
+				yourself
+			}.
+	
+	^ self new
+		width: aForm width;
+		height: aForm width;
+		pixelFormat: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM;
+		srgbPixelFormat: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB;
+		depth: 1;
+		layers: { layer };
+		type: AGPU_TEXTURE_2D;
+		miplevels: layer levels size;
+		yourself
+]
+
 { #category : #initialization }
 WDCTextureData class >> initialize [
 	super initialize.
@@ -233,6 +268,21 @@ WDCTextureData >> asTextureFor: anEngine [
 			description: description;
 			data: self;
 			yourself
+]
+
+{ #category : #converting }
+WDCTextureData >> asWodenNormalTexture [
+	^ self asWodenTexture
+]
+
+{ #category : #converting }
+WDCTextureData >> asWodenSRGBTexture [
+	^ self asSRGBTextureFor: nil
+]
+
+{ #category : #converting }
+WDCTextureData >> asWodenTexture [
+	^ self asTextureFor: nil
 ]
 
 { #category : #converting }
@@ -754,6 +804,11 @@ WDCTextureData >> srgbPixelFormat [
 { #category : #accessing }
 WDCTextureData >> srgbPixelFormat: anObject [
 	srgbPixelFormat := anObject
+]
+
+{ #category : #'as yet unclassified' }
+WDCTextureData >> swizzleXYZNormalMap [
+	layers do: #swizzleXYZNormalMap
 ]
 
 { #category : #'as yet unclassified' }

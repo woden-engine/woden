@@ -73,7 +73,7 @@ WDCRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstanc
 ]
 
 { #category : #'as yet unclassified' }
-WDCRenderable >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
+WDCRenderable >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [
 	self subclassResponsibility
 ]
 

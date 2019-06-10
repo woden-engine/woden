@@ -37,7 +37,7 @@ WDCStructureFieldType class >> initializeFieldTypes [
 		R32G32B32A32_SINT 				(int 	4 false 16 4)
 
 		R32G32B32_TYPELESS 			(uint  3 false 12 4)
-		R32G32B32_FLOAT 				(float 3 false 12 4 WMVector3F)
+		R32G32B32_FLOAT 				(float 3 false 12 4 WMCompactVector3F)
 		R32G32B32_UINT 					(uint  3 false 12 4)
 		R32G32B32_SINT 					(int  3 false 12 4)
 
