@@ -2,6 +2,7 @@ Class {
 	#name : #WDCPharoProceduralScriptContext,
 	#superclass : #Object,
 	#instVars : [
+		'engine',
 		'parameters'
 	],
 	#category : #'WodenEngine-Core-Texture'
@@ -26,6 +27,16 @@ WDCPharoProceduralScriptContext >> at: aParamName [
 WDCPharoProceduralScriptContext >> at: aParamName ifAbsent: isAbsentBlock [
 	parameters ifNil: [ ^ isAbsentBlock value ].
 	^ self parameters at: aParamName ifAbsent: isAbsentBlock
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptContext >> engine [
+	^ engine
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptContext >> engine: anObject [
+	engine := anObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -88,6 +99,11 @@ WDCPharoProceduralScriptContext >> textureExtent: anExtent heightFunction: heigh
 ]
 
 { #category : #'rendering helpers' }
+WDCPharoProceduralScriptContext >> textureExtent: anExtent heightFunction: heightFunction colorWith: colorFunction  normalHeightScaleFactor: normalHeightScaleFactor [
+	^ self textureExtent: anExtent inspectorExtent: anExtent heightFunction: heightFunction colorWith: colorFunction normalHeightScaleFactor: normalHeightScaleFactor
+]
+
+{ #category : #'rendering helpers' }
 WDCPharoProceduralScriptContext >> textureExtent: anExtent inspectorExtent: anExtentForInspector heightFunction: heightFunction colorWith: colorFunction [
 	^ self textureExtent: anExtent inspectorExtent: anExtentForInspector heightFunction: heightFunction colorWith: colorFunction normalHeightScaleFactor: 1.0
 ]
@@ -115,4 +131,9 @@ WDCPharoProceduralScriptContext >> textureExtent: anExtent inspectorExtent: anEx
 	].
 
 	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+WDCPharoProceduralScriptContext >> validEngine [
+	^ engine ifNil: [ engine := WDCEngine default ]
 ]

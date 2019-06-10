@@ -63,6 +63,17 @@ WDCGenericComputeShaderArguments >> signature: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+WDCGenericComputeShaderArguments >> storageBuffer: buffer slot: slotIndex [
+	self storageBuffersShaderResourceBindings
+		bind: slotIndex storageBuffer: buffer
+]
+
+{ #category : #'as yet unclassified' }
+WDCGenericComputeShaderArguments >> storageBuffersShaderResourceBindings [
+	^ storageBufferShaderResourceBindings ifNil: [ storageBufferShaderResourceBindings := self signature newStorageBuffers ]
+]
+
+{ #category : #'as yet unclassified' }
 WDCGenericComputeShaderArguments >> storageImage: texture slot: slotIndex [
 	^ self storageImage: texture slot: slotIndex level: 0 layer: 0
 ]

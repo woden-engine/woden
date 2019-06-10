@@ -1,6 +1,17 @@
 Extension { #name : #Point }
 
 { #category : #'*WodenEngine-Core' }
+Point >> fbmGradientNoiseOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod [
+	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod with: #gradientNoiseTiledWith:
+
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> fbmGradientNoiseOctaves: octaves lacunarity: lacunarity tiledWith: tilingPeriod [
+	^ self fbmGradientNoiseOctaves: octaves lacunarity: lacunarity gain: lacunarity reciprocal tiledWith: tilingPeriod
+]
+
+{ #category : #'*WodenEngine-Core' }
 Point >> fbmSignedGradientNoiseOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod [
 	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod with: #signedGradientNoiseTiledWith:
 
@@ -9,6 +20,17 @@ Point >> fbmSignedGradientNoiseOctaves: octaves lacunarity: lacunarity gain: gai
 { #category : #'*WodenEngine-Core' }
 Point >> fbmSignedGradientNoiseOctaves: octaves lacunarity: lacunarity tiledWith: tilingPeriod [
 	^ self fbmSignedGradientNoiseOctaves: octaves lacunarity: lacunarity gain: lacunarity reciprocal tiledWith: tilingPeriod
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> fbmVoronoiNoiseOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod [
+	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod with: #voronoiNoiseTiledWith:
+
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> fbmVoronoiNoiseOctaves: octaves lacunarity: lacunarity tiledWith: tilingPeriod [
+	^ self fbmVoronoiNoiseOctaves: octaves lacunarity: lacunarity gain: lacunarity reciprocal tiledWith: tilingPeriod
 ]
 
 { #category : #'*WodenEngine-Core' }

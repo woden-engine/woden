@@ -15,7 +15,10 @@ Class {
 		'poolsMutex',
 		'pendingResourceReloadActions',
 		'screenQuadVertexShader',
-		'alwaysFrontDepthNormalFragmentShader'
+		'alwaysFrontDepthNormalFragmentShader',
+		'temporaryResourcesMutex',
+		'temporaryResourcesDictionary',
+		'proceduralMipmapGenerationLibrary'
 	],
 	#classVars : [
 		'ShaderLanguageTargetMap',
@@ -325,6 +328,10 @@ WDCResourceCache >> initializeForEngine: anEngine [
 
 	shaderLanguageTargetName := ShaderLanguageTargetMap at: shaderLanguageTarget.
 	pendingResourceReloadActions := WaitfreeQueue new.
+	
+	temporaryResourcesMutex := Semaphore forMutualExclusion.
+	temporaryResourcesDictionary := Dictionary new.
+	
 ]
 
 { #category : #'3d models' }
@@ -564,6 +571,75 @@ WDCResourceCache >> pipelineStateForDescription: description [
 	pso := self buildPipelineStateWithDescription: description.
 	pipelineStates at: pso description put: pso.
 	^ pso
+]
+
+{ #category : #'special shaders' }
+WDCResourceCache >> proceduralMipmapGenerationLibrary [
+	^ proceduralMipmapGenerationLibrary ifNil: [ proceduralMipmapGenerationLibrary := self loadShaderLibrary: 'shaders/compute/mipmapGeneration.dastrel' ]
+]
+
+{ #category : #'temporary resources' }
+WDCResourceCache >> proceduralTemporaryRenderTargetWithExtent: extent pixelFormat: pixelFormat [
+	| key texture |
+	temporaryResourcesMutex critical: [
+		key := { #renderTarget . pixelFormat }.
+		texture := temporaryResourcesDictionary at: key ifAbsent: [ nil ].
+		(texture isNil or: [ texture extent x < extent x or: [ texture extent y < extent y ] ]) ifTrue: [
+			texture := engine createTexture: (AGPUTextureDescription new
+				type: AGPU_TEXTURE_2D;
+				format: pixelFormat;
+				width: extent x asLargerPowerOfTwo;
+				height: extent y asLargerPowerOfTwo;
+				depthOrArraySize: 1;
+				miplevels: 1;
+				sample_count: 1;
+				sample_quality: 0;
+				flags: AGPU_TEXTURE_FLAG_RENDERBUFFER_ONLY | AGPU_TEXTURE_FLAG_RENDER_TARGET;
+				yourself
+			).
+			
+			temporaryResourcesDictionary at: key put: texture
+		]
+	].
+
+	^ texture
+]
+
+{ #category : #'temporary resources' }
+WDCResourceCache >> proceduralTextureMipmapGenerationParameters [
+	temporaryResourcesMutex critical: [
+		^ temporaryResourcesDictionary at: #proceduralTextureMipmapGenerationParameters ifAbsent: [ engine newGenericComputeShaderArguments ].
+	]
+]
+
+{ #category : #'temporary resources' }
+WDCResourceCache >> proceduralTextureTemporaryMipmapBufferWithExtent: extent [
+	| requiredBytes buffer |
+	temporaryResourcesMutex critical: [
+		requiredBytes := extent x * extent y * 16*2.
+		buffer := temporaryResourcesDictionary at: #proceduralTextureTemporaryMipmapBuffer ifAbsent: [ nil ].
+		(buffer isNil or: [ buffer description size < requiredBytes ]) ifTrue: [
+			buffer := engine createStreamingStorageBuffer: extent x asLargerPowerOfTwo * extent y asLargerPowerOfTwo * 16*2 initialData: nil.
+			temporaryResourcesDictionary at: #proceduralTextureTemporaryMipmapBuffer put: buffer
+		]
+	].
+
+	^ buffer
+]
+
+{ #category : #'temporary resources' }
+WDCResourceCache >> proceduralTextureTemporaryResultBufferWithExtent: extent [
+	| requiredBytes buffer |
+	temporaryResourcesMutex critical: [
+		requiredBytes := extent x * extent y * 4*2.
+		buffer := temporaryResourcesDictionary at: #proceduralTextureTemporaryResultBuffer ifAbsent: [ nil ].
+		(buffer isNil or: [ buffer description size < requiredBytes ]) ifTrue: [
+			buffer := engine createStreamingStorageBuffer: extent x asLargerPowerOfTwo * extent y asLargerPowerOfTwo * 4*2 initialData: nil.
+			temporaryResourcesDictionary at: #proceduralTextureTemporaryResultBuffer put: buffer
+		]
+	].
+
+	^ buffer
 ]
 
 { #category : #'auto reloading' }

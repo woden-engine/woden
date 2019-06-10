@@ -126,6 +126,11 @@ WDCTextureLevelData >> pitch: anObject [
 	pitch := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDCTextureLevelData >> pixelCount [
+	^ width * height * depth
+]
+
 { #category : #'cpu rendering' }
 WDCTextureLevelData >> r16RenderWith: aBlock [
 	| inverseHeight inverseWidth destIndex destRow value |
@@ -160,6 +165,13 @@ WDCTextureLevelData >> rRenderWith: aBlock [
 	
 		destRow := destRow + pitch
 	]
+]
+
+{ #category : #'as yet unclassified' }
+WDCTextureLevelData >> readDataFromPointer: pointer [
+	LibC memCopy: pointer to: data size: data size.
+	^ pointer + data size
+
 ]
 
 { #category : #'cpu rendering' }

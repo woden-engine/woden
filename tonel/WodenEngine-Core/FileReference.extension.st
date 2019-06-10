@@ -15,7 +15,11 @@ FileReference >> gtInspectorStTextScriptIn: composite [
 	<gtInspectorPresentationOrder: 0>
 	composite pharoScript
 			title: 'Procedural Texture';
-			doItReceiver: [ WDCPharoProceduralScriptContext forInspector ];
+			doItReceiver: [ :s |
+				(s contents beginsWith: '"!GPU')
+					ifTrue: [ WDCPharoProceduralGPUScriptContext forInspector ]
+					ifFalse: [ WDCPharoProceduralScriptContext forInspector ]
+			];
 			display: [ self readStreamDo: [ :s | s contents ] ];
 			act: [ :text |
 					text selectionInterval: (1 to: text text size).
