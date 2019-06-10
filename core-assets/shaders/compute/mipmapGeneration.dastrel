@@ -1,0 +1,151 @@
+import compute.environment;
+import compute.stage;
+
+uniform(binding = Textures.Textures) sourceTexture : texture2D;
+
+buffer(binding=StorageBuffers.Buffers) MipmapBuffer
+{
+    data: float4[];
+}
+
+buffer(binding=StorageBuffers.Buffers + 1) Output
+{
+    data: uint[];
+}
+
+code_block(compute, localSizeX = 8, localSizeY = 8) fetch_texture
+{
+	using ComputeStage;
+	
+	let extent = uint2(getTextureSize(sourceTexture, 0));
+	let destIndex = globalInvocationID.y*extent.x + globalInvocationID.x;
+	
+	let uv = (float2(globalInvocationID.xy) + 0.5f) / float2(extent);
+	MipmapBuffer.data[destIndex] = nearestWrapSampler.sampleLod(sourceTexture, uv, 0.0f);
+}
+
+uniform(push_constant=Arguments) MipmapLevelArguments
+{
+    sourceLevelIndex: uint;
+    sourceWidth: uint;
+    sourceHeight: uint;
+    destLevelIndex: uint;
+    destWidth: uint;
+    destHeight: uint;
+}
+
+code_block(compute, localSizeX = 8, localSizeY = 8) mipmap
+{
+	using ComputeStage;
+	using MipmapLevelArguments;
+	using MipmapBuffer;
+	
+	if(globalInvocationID.x < destWidth && globalInvocationID.y < destHeight)
+	{
+		let sourcePosition = globalInvocationID.xy*2u;
+		let sourceIndex = sourceLevelIndex + sourceWidth*sourcePosition.y + sourcePosition.x;
+		let topLeft = data[sourceIndex];
+		let topRight = data[sourceIndex + 1u];
+		let bottomLeft = data[sourceWidth + sourceIndex];
+		let bottomRight = data[sourceWidth + sourceIndex + 1u];
+		data[destLevelIndex + destWidth*globalInvocationID.y + globalInvocationID.x]
+			= (topLeft + topRight + bottomLeft + bottomRight) * 0.25f;
+	}
+}
+
+function encodeUnorm8(value: float) -> uint
+{
+	return uint(max(min(value, 1.0f), 0.0f)*255.0f);
+}
+
+function encodeSRGBChannel(value: float) -> float
+{
+	let a = 0.055f;
+	return (value <= 0.0031308f)
+		? value * 12.92f
+		: ((1.0f + a) * pow(value, 1.0f / 2.4f)) - a;
+}
+
+function encodeUnorm8_sRGB(value: float) -> uint
+{
+	return encodeUnorm8(encodeSRGBChannel(value));
+}
+
+uniform(push_constant=Arguments) EncodingArguments
+{
+    bufferSize: uint;
+}
+
+code_block(compute, localSizeX = 64) encode_bgra8
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let index = globalInvocationID.x;
+	if(index < bufferSize)
+	{
+		let color = MipmapBuffer.data[index];
+		Output.data[index] =
+			encodeUnorm8(color.b) | 
+			(encodeUnorm8(color.g) << 8u) |
+			(encodeUnorm8(color.r) << 16u) |
+			(encodeUnorm8(color.a) << 24u);
+	}
+}
+
+code_block(compute, localSizeX = 64) encode_bgra8_srgb
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let index = globalInvocationID.x;
+	if(index < bufferSize)
+	{
+		let color = MipmapBuffer.data[index];
+		Output.data[index] =
+			encodeUnorm8_sRGB(color.b) | 
+			(encodeUnorm8_sRGB(color.g) << 8u) |
+			(encodeUnorm8_sRGB(color.r) << 16u) |
+			(encodeUnorm8(color.a) << 24u);
+	}
+}
+
+code_block(compute, localSizeX = 64) encode_r8g8
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let sourceIndex = globalInvocationID.x*2u;
+	let destIndex = globalInvocationID.x;
+	if(sourceIndex < bufferSize)
+	{
+		let c1 = MipmapBuffer.data[sourceIndex].rg;
+		let c2 = MipmapBuffer.data[sourceIndex + 1u].rg;
+		Output.data[destIndex] =
+			encodeUnorm8(c1.r) | 
+			(encodeUnorm8(c1.g) << 8u) |
+			(encodeUnorm8(c2.r) << 16u) |
+			(encodeUnorm8(c2.g) << 24u);
+	}
+}
+
+code_block(compute, localSizeX = 64) encode_r8
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let sourceIndex = globalInvocationID.x*4u;
+	let destIndex = globalInvocationID.x;
+	if(sourceIndex < bufferSize)
+	{
+		let c1 = MipmapBuffer.data[sourceIndex].r;
+		let c2 = MipmapBuffer.data[sourceIndex + 1u].r;
+		let c3 = MipmapBuffer.data[sourceIndex + 2u].r;
+		let c4 = MipmapBuffer.data[sourceIndex + 3u].r;
+		Output.data[destIndex] =
+			encodeUnorm8(c1) | 
+			(encodeUnorm8(c2) << 8u) |
+			(encodeUnorm8(c3) << 16u) |
+			(encodeUnorm8(c4) << 24u);
+	}
+}

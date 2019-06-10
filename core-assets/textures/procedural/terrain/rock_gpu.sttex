@@ -1,16 +1,0 @@
-| textureSize colorRamp heightFunction |
-textureSize := 7.0@7.0.
-colorRamp := WDCLinearRamp with: {
-	0.0 -> '8a6025' asColor.
-	1.0 -> 'f7d8ac' asColor.
-}.
-
-heightFunction := [ :s :t |
-	| cracks st bumps height |
-	st := s@t.
-
-	cracks := (st*textureSize fbmWorleyNoiseOctaves: 4 lacunarity: 3.0 tiledWith: textureSize)*1.42.	bumps := st*textureSize*4.0 fbmSignedGradientNoiseOctaves: 4 lacunarity: 2.0 tiledWith: textureSize*4.0.	height := (cracks*0.5) + (bumps*0.5).
-
-].
-
-^ self textureExtent: 256@256 heightFunction: heightFunction "colorWith: colorRamp normalHeightScaleFactor: 3.0"

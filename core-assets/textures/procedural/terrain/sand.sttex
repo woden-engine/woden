@@ -1,10 +1,10 @@
-| textureSize colorRamp st sandFunction heightFunction |
+"!GPU"| textureSize colorRamp heightFunction |
 textureSize := 30.0@30.0.
 colorRamp := WDCLinearRamp with: {
 	0.0 -> Color black.
 	1.0 -> (Color fromHexString: 'b7a18b').
 }.
-heightFunction := [:s :t |
+heightFunction := [:s :t |	|st|
     st := s@t.
-    sandFunction := st*textureSize fractionalBrownianMotionOctaves: 4 lacunarity: 2.0 tiledWith: textureSize with: #gradientNoiseTiledWith:.
-].^ self textureExtent: 256@256 inspectorExtent: 128@128 heightFunction: heightFunction colorWith: colorRamp
+    st*textureSize fbmGradientNoiseOctaves: 4 lacunarity: 2.0 tiledWith: textureSize.
+].^ self textureExtent: 256@256 heightFunction: heightFunction colorWith: colorRamp
