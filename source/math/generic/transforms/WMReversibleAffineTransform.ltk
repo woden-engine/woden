@@ -4,6 +4,13 @@ WMReversibleAffineTransform class category: 'instance creation' methods: {
 	^ WMReversibleAffineTransform newValue setIdentity
 ].
 
+:[fromInvertibleMatrix4: <WMMatrix4> matrix4 -> WMReversibleAffineTransform.
+    <inline>
+	^ WMReversibleAffineTransform newValue
+		setInvertibleMatrix4: matrix4;
+		yourself
+].
+
 :[from: <WMVector3>eye lookAt: <WMVector3>reference up: <WMVector3>upVector -> WMReversibleAffineTransform.
     <inline>
 	^ WMReversibleAffineTransform newValue
@@ -78,6 +85,20 @@ WMReversibleAffineTransform category: 'accessing' methods: {
 	translation4 y: vector3 y.
 	translation4 z: vector3 z.
 	inverseTranslation4 := inverseMatrix transformVector4: translation4 negatedVec3.
+].
+
+:[setInvertibleMatrix4: <WMMatrix4> matrix4
+	<inline>
+	self matrix4: matrix4 inverseMatrix4: matrix4 inverted
+].
+
+:[matrix4: <WMMatrix4>matrix4 inverseMatrix4: <WMMatrix4>inverseMatrix4
+	<inline>
+	matrix := matrix4 topLeft3x3.
+	translation4 := matrix4 fourthColumn.
+	
+	inverseMatrix := inverseMatrix4 topLeft3x3.
+	inverseTranslation4 := inverseMatrix4 fourthColumn.
 ].
 
 }.

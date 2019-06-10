@@ -21,6 +21,15 @@ WMCompactVector3F category: 'converting' methods: {
 ].
 }.
 
+WMCompactVector3F category: 'printing' methods: {
+:[printOn: aStream
+	aStream nextPutAll: WMCompactVector3F name;
+		nextPutAll: ' x: '; print: x;
+		nextPutAll: ' y: '; print: y;
+		nextPutAll: ' z: '; print: z.
+].
+}.
+
 Structure <<< #WMVector2S
 	slots: {
 		#x => Int16. 

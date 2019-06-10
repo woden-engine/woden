@@ -292,7 +292,7 @@ code_block(fragment) forward_albedoNormal
     let V = normalize(-FragmentInput.position);
 
     let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
-    let tangentNormal = normalSampler.sample(normalTexture, FragmentInput.texcoord).agb*2.0f - 1.0f;
+	let tangentNormal = normalSampler.sample(normalTexture, FragmentInput.texcoord).agb*2.0f - 1.0f;
     let TBN = float3x3(t, b, n);
     let N = normalize(TBN*tangentNormal);
 
@@ -316,7 +316,7 @@ code_block(fragment) forward_albedoMetallicRoughness
         normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
 }
 
-code_block(fragment) forward_albedoNormalFresnel
+code_block(fragment) forward_albedoNormalMetallicRoughness
 {
     let t = normalize(FragmentInput.tangent);
     let b = normalize(FragmentInput.bitangent);
@@ -324,14 +324,14 @@ code_block(fragment) forward_albedoNormalFresnel
     let V = normalize(-FragmentInput.position);
 
     let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
-    let metallicRoughness = albedoSampler.sample(metallicRoughnessTexture, FragmentInput.texcoord).gb;
+    let aoMetallicRoughness = albedoSampler.sample(metallicRoughnessTexture, FragmentInput.texcoord);
     let tangentNormal = normalSampler.sample(normalTexture, FragmentInput.texcoord).agb*2.0f - 1.0f;
     let TBN = float3x3(t, b, n);
     let N = normalize(TBN*tangentNormal);
 
     forwardMetallicRoughnessLightingOutput
         albedo: albedo*MaterialState.albedo
-        metallic: metallicRoughness.x*MaterialState.metallicFactor
-		roughness: metallicRoughness.y*MaterialState.roughnessFactor
+        metallic: aoMetallicRoughness.g*MaterialState.metallicFactor
+		roughness: aoMetallicRoughness.b*MaterialState.roughnessFactor
         normal: N surfaceNormal: n viewVector: V position: FragmentInput.position;
 }
