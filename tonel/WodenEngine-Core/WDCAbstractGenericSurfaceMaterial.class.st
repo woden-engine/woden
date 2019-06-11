@@ -11,7 +11,8 @@ Class {
 		'isSkinned',
 		'depthNormalFragmentShader',
 		'forwardFragmentShader',
-		'shaderLibrary'
+		'shaderLibrary',
+		'doubleSided'
 	],
 	#classVars : [
 		'VertexShaderVariantTable'
@@ -43,11 +44,14 @@ WDCAbstractGenericSurfaceMaterial >> activateDepthNormalOn: stateTracker [
 		vertexShader: (self depthNormalVertexShaderFor: stateTracker);
 		fragmentShader: self depthNormalFragmentShader.
 		
-	normalTexture ifNotNil: [ 
-		resourceBinding ifNotNil: [ 
-			stateTracker useShaderResources: resourceBinding.
-		].
+	resourceBinding ifNotNil: [ 
+		stateTracker useShaderResources: resourceBinding.
 	].
+
+	doubleSided ifTrue: [ 
+		stateTracker materialCullMode: AGPU_CULL_MODE_NONE
+	].
+
 	^ true
 ]
 
@@ -57,6 +61,15 @@ WDCAbstractGenericSurfaceMaterial >> activateDepthOnlyOn: stateTracker [
 	stateTracker
 		vertexShader: self depthVertexShader;
 		fragmentShader: nil.
+		
+	resourceBinding ifNotNil: [ 
+		stateTracker useShaderResources: resourceBinding.
+	].
+
+	doubleSided ifTrue: [ 
+		stateTracker materialCullMode: AGPU_CULL_MODE_NONE
+	].
+
 	^ true
 ]
 
@@ -76,6 +89,10 @@ WDCAbstractGenericSurfaceMaterial >> activateForwardOn: stateTracker [
 			materialPolygonMode: AGPU_POLYGON_MODE_LINE;
 			materialCullMode: AGPU_CULL_MODE_NONE;
 			fragmentShader: self wireFragmentShader
+	].
+
+	doubleSided ifTrue: [ 
+		stateTracker materialCullMode: AGPU_CULL_MODE_NONE
 	].
 
 	resourceBinding ifNotNil: [ 
@@ -105,6 +122,17 @@ WDCAbstractGenericSurfaceMaterial >> albedoTexture [
 WDCAbstractGenericSurfaceMaterial >> albedoTexture: anObject [
 	albedoTexture := anObject.
 	self invalidateCache.
+]
+
+{ #category : #accessing }
+WDCAbstractGenericSurfaceMaterial >> alphaCutoff [
+	^ materialState alphaCutoff
+]
+
+{ #category : #accessing }
+WDCAbstractGenericSurfaceMaterial >> alphaCutoff: aFloat [
+	materialState alphaCutoff: aFloat asFloat.
+	self uploadMaterialStateData.
 ]
 
 { #category : #'state binding' }
@@ -139,7 +167,11 @@ WDCAbstractGenericSurfaceMaterial >> concretizeMaterial [
 { #category : #shaders }
 WDCAbstractGenericSurfaceMaterial >> depthNormalFragmentShader [
 	^ depthNormalFragmentShader ifNil: [
-		depthNormalFragmentShader := self shaderLibrary getFragmentStage: #depthNormal_fragment
+		albedoTexture ifNil: [ 
+			depthNormalFragmentShader := self shaderLibrary getFragmentStage: #depthNormal_fragment
+		] ifNotNil: [ 
+			depthNormalFragmentShader := self shaderLibrary getFragmentStage: #depthNormalMask_fragment
+		].
 	]
 
 ]
@@ -156,6 +188,16 @@ WDCAbstractGenericSurfaceMaterial >> depthVertexShader [
 			ifFalse: [ self shaderLibrary getVertexStage: #depth_vertex ]
 ]
 
+{ #category : #accessing }
+WDCAbstractGenericSurfaceMaterial >> doubleSided [
+	^ doubleSided
+]
+
+{ #category : #accessing }
+WDCAbstractGenericSurfaceMaterial >> doubleSided: anObject [
+	doubleSided := anObject
+]
+
 { #category : #rendering }
 WDCAbstractGenericSurfaceMaterial >> forwardFragmentShader [
 	self subclassResponsibility
@@ -167,6 +209,7 @@ WDCAbstractGenericSurfaceMaterial >> initialize [
 		albedo: Color white asWMVector4F;
 		yourself.
 	isSkinned := false.
+	doubleSided := false.
 	self invalidateCache.
 ]
 
@@ -209,6 +252,9 @@ WDCAbstractGenericSurfaceMaterial >> parse: materialFileReference data: data [
 	materialState albedo: (self parse: data at: materialFileReference srgbColor: 'albedo-color' ifAbsent: [ Color white ]).
 	albedoTexture := self parse: data at: materialFileReference optionalSRGBTexture: 'albedo-texture'.
 	normalTexture := self parse: data at: materialFileReference optionalTexture: 'normal-texture'.
+	materialState
+		alphaCutoff: (data at: 'alpha-cutoff' ifAbsent: [ materialState alphaCutoff ]).
+
 	isSkinned := data at: 'skinned' ifAbsent: [ false ].
 ]
 

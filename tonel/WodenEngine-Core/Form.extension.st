@@ -12,17 +12,35 @@ Form >> asTextureFor: anEngine [
 
 { #category : #'*WodenEngine-Core' }
 Form >> asWodenNormalTexture [
-	^ self asWodenTexture
+	WDCEngine generateOfflineMipmapsGPU ifTrue: [ 
+		^ ((WDCEngine default resourceCache mainProceduralOfflineTextureRendererForExtent: self extent)
+			createNormalTextureFromForm: self)
+				asWodenTexture
+	].
+
+	^ self asWodenTextureData swizzleXYZNormalMap asWodenTexture
 ]
 
 { #category : #'*WodenEngine-Core' }
 Form >> asWodenSRGBTexture [
+	WDCEngine generateOfflineMipmapsGPU ifTrue: [ 
+		^ ((WDCEngine default resourceCache mainProceduralOfflineTextureRendererForExtent: self extent)
+			createSRGBTextureDataFromForm: self)
+				asWodenSRGBTexture
+	].
 	^ self asWodenTextureData asWodenSRGBTexture
 ]
 
 { #category : #'*WodenEngine-Core' }
 Form >> asWodenTexture [
-	^ self asWodenTextureData swizzleXYZNormalMap asWodenTexture
+	WDCEngine generateOfflineMipmapsGPU ifTrue: [ 
+		^ ((WDCEngine default resourceCache mainProceduralOfflineTextureRendererForExtent: self extent)
+			createTextureDataFromForm: self)
+				asWodenTexture
+
+	].
+
+	^ self asWodenTextureData asWodenTexture
 ]
 
 { #category : #'*WodenEngine-Core' }

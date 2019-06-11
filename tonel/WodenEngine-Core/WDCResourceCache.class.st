@@ -18,7 +18,8 @@ Class {
 		'alwaysFrontDepthNormalFragmentShader',
 		'temporaryResourcesMutex',
 		'temporaryResourcesDictionary',
-		'proceduralMipmapGenerationLibrary'
+		'proceduralMipmapGenerationLibrary',
+		'proceduralOfflineTextureRenderer'
 	],
 	#classVars : [
 		'ShaderLanguageTargetMap',
@@ -236,7 +237,7 @@ WDCResourceCache >> defaultMaterial [
 
 { #category : #textures }
 WDCResourceCache >> defaultNormalTexture [
-	^ self getOrCreateColorTexture: (Color r: 0.5 g: 0.5 b: 1.0)
+	^ self getOrCreateColorTexture: (Color r: 0.0 g: 0.5 b: 1.0 alpha: 0.5)
 ]
 
 { #category : #materials }
@@ -461,6 +462,20 @@ WDCResourceCache >> loadVertexShader: aFileNameOrReference entryPoint: entryPoin
 		getVertexStage: entryPointName
 ]
 
+{ #category : #'temporary resources' }
+WDCResourceCache >> mainProceduralOfflineTextureRendererForExtent: anExtent [
+	| newWidth newHeight |
+	(proceduralOfflineTextureRenderer isNil or:
+	[ proceduralOfflineTextureRenderer bufferExtent x < anExtent x or: 
+	[ proceduralOfflineTextureRenderer bufferExtent y < anExtent y ]]) ifTrue: [ 
+		newWidth := anExtent x asLargerPowerOfTwo.
+		newHeight := anExtent y asLargerPowerOfTwo.
+		proceduralOfflineTextureRenderer := WDCProceduralOfflineTextureRenderer for: engine extent: newWidth @ newHeight
+	].
+
+	^ proceduralOfflineTextureRenderer 
+]
+
 { #category : #private }
 WDCResourceCache >> parseQuery: queryString [
 	| query in |
@@ -576,70 +591,6 @@ WDCResourceCache >> pipelineStateForDescription: description [
 { #category : #'special shaders' }
 WDCResourceCache >> proceduralMipmapGenerationLibrary [
 	^ proceduralMipmapGenerationLibrary ifNil: [ proceduralMipmapGenerationLibrary := self loadShaderLibrary: 'shaders/compute/mipmapGeneration.dastrel' ]
-]
-
-{ #category : #'temporary resources' }
-WDCResourceCache >> proceduralTemporaryRenderTargetWithExtent: extent pixelFormat: pixelFormat [
-	| key texture |
-	temporaryResourcesMutex critical: [
-		key := { #renderTarget . pixelFormat }.
-		texture := temporaryResourcesDictionary at: key ifAbsent: [ nil ].
-		(texture isNil or: [ texture extent x < extent x or: [ texture extent y < extent y ] ]) ifTrue: [
-			texture := engine createTexture: (AGPUTextureDescription new
-				type: AGPU_TEXTURE_2D;
-				format: pixelFormat;
-				width: extent x asLargerPowerOfTwo;
-				height: extent y asLargerPowerOfTwo;
-				depthOrArraySize: 1;
-				miplevels: 1;
-				sample_count: 1;
-				sample_quality: 0;
-				flags: AGPU_TEXTURE_FLAG_RENDERBUFFER_ONLY | AGPU_TEXTURE_FLAG_RENDER_TARGET;
-				yourself
-			).
-			
-			temporaryResourcesDictionary at: key put: texture
-		]
-	].
-
-	^ texture
-]
-
-{ #category : #'temporary resources' }
-WDCResourceCache >> proceduralTextureMipmapGenerationParameters [
-	temporaryResourcesMutex critical: [
-		^ temporaryResourcesDictionary at: #proceduralTextureMipmapGenerationParameters ifAbsent: [ engine newGenericComputeShaderArguments ].
-	]
-]
-
-{ #category : #'temporary resources' }
-WDCResourceCache >> proceduralTextureTemporaryMipmapBufferWithExtent: extent [
-	| requiredBytes buffer |
-	temporaryResourcesMutex critical: [
-		requiredBytes := extent x * extent y * 16*2.
-		buffer := temporaryResourcesDictionary at: #proceduralTextureTemporaryMipmapBuffer ifAbsent: [ nil ].
-		(buffer isNil or: [ buffer description size < requiredBytes ]) ifTrue: [
-			buffer := engine createStreamingStorageBuffer: extent x asLargerPowerOfTwo * extent y asLargerPowerOfTwo * 16*2 initialData: nil.
-			temporaryResourcesDictionary at: #proceduralTextureTemporaryMipmapBuffer put: buffer
-		]
-	].
-
-	^ buffer
-]
-
-{ #category : #'temporary resources' }
-WDCResourceCache >> proceduralTextureTemporaryResultBufferWithExtent: extent [
-	| requiredBytes buffer |
-	temporaryResourcesMutex critical: [
-		requiredBytes := extent x * extent y * 4*2.
-		buffer := temporaryResourcesDictionary at: #proceduralTextureTemporaryResultBuffer ifAbsent: [ nil ].
-		(buffer isNil or: [ buffer description size < requiredBytes ]) ifTrue: [
-			buffer := engine createStreamingStorageBuffer: extent x asLargerPowerOfTwo * extent y asLargerPowerOfTwo * 4*2 initialData: nil.
-			temporaryResourcesDictionary at: #proceduralTextureTemporaryResultBuffer put: buffer
-		]
-	].
-
-	^ buffer
 ]
 
 { #category : #'auto reloading' }

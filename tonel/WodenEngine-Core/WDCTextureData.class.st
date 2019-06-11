@@ -9,7 +9,8 @@ Class {
 		'depth',
 		'layers',
 		'type',
-		'miplevels'
+		'miplevels',
+		'normalMap'
 	],
 	#classVars : [
 		'PixelFormatDecoderSelector',
@@ -312,20 +313,30 @@ WDCTextureData >> convertToFormLayer: layerIndex level: levelIndex [
 { #category : #converting }
 WDCTextureData >> decodeBGRA8888: level [
 
-	| result |
+	| result rawData |
 	result := Form extent: level width @ level height depth: 32.
 	result unhibernate.
-	LibC memCopy: level data to: result bits size: level width * level height*4.
+	rawData := level data.
+	normalMap ifTrue: [ 
+		rawData := level decodedNormalData
+	].
+
+	LibC memCopy: rawData to: result bits size: level width * level height*4.
 	^ result
 ]
 
 { #category : #converting }
 WDCTextureData >> decodeBGRX8888: level [
 
-	| result |
+	| result rawData |
 	result := Form extent: level width @ level height depth: 32.
 	result unhibernate.
-	LibC memCopy: level data to: result bits size: level width * level height*4.
+	rawData := level data.
+	normalMap ifTrue: [ 
+		rawData := level decodedNormalData
+	].
+
+	LibC memCopy: rawData to: result bits size: level width * level height*4.
 	^ result
 ]
 
@@ -738,6 +749,13 @@ WDCTextureData >> height: anObject [
 	height := anObject
 ]
 
+{ #category : #initialization }
+WDCTextureData >> initialize [
+	super initialize.
+	normalMap := false.
+	
+]
+
 { #category : #accessing }
 WDCTextureData >> layers [
 	^ layers
@@ -761,6 +779,16 @@ WDCTextureData >> miplevels [
 { #category : #accessing }
 WDCTextureData >> miplevels: anObject [
 	miplevels := anObject
+]
+
+{ #category : #accessing }
+WDCTextureData >> normalMap [
+	^ normalMap
+]
+
+{ #category : #accessing }
+WDCTextureData >> normalMap: anObject [
+	normalMap := anObject
 ]
 
 { #category : #accessing }

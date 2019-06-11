@@ -22,6 +22,7 @@ Class {
 		'AllowVR',
 		'DebugLayerEnabled',
 		'DefaultEngine',
+		'GenerateOfflineMipmapsGPU',
 		'SSAOEnabled',
 		'ShadowMappingEnabled',
 		'TracingEnabled'
@@ -55,6 +56,16 @@ WDCEngine class >> debugLayerEnabled: aBoolean [
 { #category : #accessing }
 WDCEngine class >> default [
 	^ DefaultEngine ifNil: [ DefaultEngine := self new ]
+]
+
+{ #category : #'as yet unclassified' }
+WDCEngine class >> generateOfflineMipmapsGPU [
+	^ GenerateOfflineMipmapsGPU ifNil: [ GenerateOfflineMipmapsGPU := true ]
+]
+
+{ #category : #'as yet unclassified' }
+WDCEngine class >> generateOfflineMipmapsGPU: aBoolean [
+	GenerateOfflineMipmapsGPU := aBoolean
 ]
 
 { #category : #accessing }
@@ -120,7 +131,11 @@ WDCEngine class >> wodenSettingsOn: aBuilder [
 				description: 'This enables the support for screen space ambient occlusion.'.
 			(aBuilder setting: #shadowMappingEnabled)
 				label: 'Shadow Mapping enabled';
-				description: 'This enables the support shadow maps.'
+				description: 'This enables the support shadow maps.'.
+			(aBuilder setting: #generateOfflineMipmapsGPU)
+				label: 'Generate mipmaps for offline textures with the GPU';
+				description: 'This enables using compute shaders for mipmap generation..'
+
 		]
 ]
 

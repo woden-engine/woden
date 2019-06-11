@@ -358,7 +358,7 @@ WDIGLTF2Importer >> loadImageFrom: imageDescription [
 		imageReader := WDCTextureReader loaderForMimeType: (imageDescription at: 'mimeType')
 	].
 
-	image := imageReader loadFromStream: imageData readStream.
+	image := WDIGLTF2Image new imageData: imageData; imageReader: imageReader; yourself.
 	images add: image
 ]
 
@@ -469,6 +469,16 @@ WDIGLTF2Importer >> loadMetallicRoughnessMaterial: description commonDescription
 	
 	description at: 'metallicRoughnessTexture' ifPresent: [ :textureDescription |
 		material metallicRoughnessTexture: (textures at: (textureDescription at: 'index') + 1) asTexture
+	].
+
+	material doubleSided: (commonDescription at: 'doubleSided' ifAbsent: [false]).
+	commonDescription at: 'alphaMode' ifPresent: [ :alphaMode |
+		alphaMode = 'MASK' ifTrue: [
+			material alphaCutoff: (commonDescription at: 'alphaCutoff' ifAbsent: [0.5])
+		].
+		alphaMode = 'BLEND' ifTrue: [
+			self flag: 'TODO: Support this transparency mode.'
+		].
 	].
 
 	^ material

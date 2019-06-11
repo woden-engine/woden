@@ -98,7 +98,14 @@ WDCPharoProceduralGPUScriptContext >> renderNormalMapWithExtent: anExtent height
 	| normalShader |
 	normalShader := self normalShaderForHeightFunction: heightFunction
 		dx: 1.0 / anExtent x dy: 1.0 / anExtent y heightScaleFactor: heightScaleFactor.
-	^ self shader: normalShader toTextureDataExtent: anExtent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM encodeFunctionName: #encode_bgra8
+	^ (self shader: normalShader
+		toTextureDataExtent: anExtent bpp: 32 format:
+		AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM
+		textureFetchFunctionName: #fetch_normalTexture
+		mipmapComputationFunctionName: #mipmap_normal
+		encodeFunctionName: #encode_bgra_normal)
+			normalMap: true;
+			yourself
 ]
 
 { #category : #'rendering helpers' }
@@ -110,81 +117,36 @@ WDCPharoProceduralGPUScriptContext >> renderSRGBWithExtent: anExtent heightFunct
 
 { #category : #'as yet unclassified' }
 WDCPharoProceduralGPUScriptContext >> shader: spirvShader toTextureDataExtent: extent bpp: bitsPerPixel format: pixelFormat encodeFunctionName: encodeFunctionName [
-	| texture commandAllocator commandList stateTracker shader shaderArguments renderTarget resultDataBuffer mipmapGenerationLibrary mipmapDataBuffer resultTextureData resultLayer sourceLevelIndex destLevelIndex sourceLevel pushConstantBuffer |
+	^ self shader: spirvShader toTextureDataExtent: extent bpp: bitsPerPixel format: pixelFormat textureFetchFunctionName: #fetch_texture encodeFunctionName: encodeFunctionName
+]
+
+{ #category : #'as yet unclassified' }
+WDCPharoProceduralGPUScriptContext >> shader: spirvShader toTextureDataExtent: extent bpp: bitsPerPixel format: pixelFormat textureFetchFunctionName: textureFetchFunctionName encodeFunctionName: encodeFunctionName [
+	^ self shader: spirvShader toTextureDataExtent: extent bpp: bitsPerPixel format: pixelFormat textureFetchFunctionName: textureFetchFunctionName mipmapComputationFunctionName: #mipmap encodeFunctionName: encodeFunctionName
+]
+
+{ #category : #'as yet unclassified' }
+WDCPharoProceduralGPUScriptContext >> shader: spirvShader toTextureDataExtent: extent bpp: bitsPerPixel format: pixelFormat textureFetchFunctionName: textureFetchFunctionName mipmapComputationFunctionName: mipmapComputationFunctionName encodeFunctionName: encodeFunctionName [
+	| shader resultTextureData resultLayer renderer |
 	
 	shader := self getMainFragmentStageFrom: spirvShader.
-
-	texture := engine resourceCache proceduralTemporaryRenderTargetWithExtent: extent pixelFormat: pixelFormat.
-	mipmapDataBuffer := engine resourceCache proceduralTextureTemporaryMipmapBufferWithExtent: extent.
-	resultDataBuffer := engine resourceCache proceduralTextureTemporaryResultBufferWithExtent: extent.
-	shaderArguments := engine resourceCache proceduralTextureMipmapGenerationParameters.
-	mipmapGenerationLibrary := engine resourceCache proceduralMipmapGenerationLibrary.
-	shaderArguments
-		sampledTexture: texture slot: 0;
-		storageBuffer: mipmapDataBuffer slot: 0;
-		storageBuffer: resultDataBuffer slot: 1.
-	
-	renderTarget := WDCRenderTarget for: engine colorAttachments: {texture}.
-
-	commandAllocator := engine createGraphicsDirectCommandListAllocator.
-	commandList := commandAllocator createListNow.
-
+	renderer := engine resourceCache mainProceduralOfflineTextureRendererForExtent: extent.
 	resultTextureData := WDCTextureData extent: extent bpp: bitsPerPixel format: pixelFormat.
 	resultLayer := resultTextureData layers first.
 
-	pushConstantBuffer := SLVMNativeArray for: #uint new: 6.
-	
-	stateTracker := WDCStateTracker for: engine.
-	stateTracker commandList: commandList rebuildWith: [
-		stateTracker
-			beginRenderPass: renderTarget validMainRenderPass renderTarget: renderTarget;
-			activateShaderSignature: (WDCCompositionShaderSignature for: engine);
-			vertexShader: engine resourceCache screenQuadVertexShader;
-			fragmentShader: shader;
-			dispatchScreenQuadRender;
-			endRenderPass;
-
-			computeShader: (mipmapGenerationLibrary getComputeStage: #fetch_texture) arguments: shaderArguments;
-			dispatchComputeGlobalGridX: extent x y: extent y;
-			
-			computeShader: (mipmapGenerationLibrary getComputeStage: #mipmap) arguments: shaderArguments.
-
-		sourceLevelIndex := 0.
-		sourceLevel := resultLayer levels first.
-		destLevelIndex := sourceLevel pixelCount.
-		
-		resultLayer levels allButFirstDo: [ :destLevel |
-			pushConstantBuffer replaceFrom: 1 to: 6 with: {
-				sourceLevelIndex.
-				sourceLevel width.
-				sourceLevel height.
-				destLevelIndex.
-				destLevel width.
-				destLevel height
-			}.
-			
-			stateTracker
-				pushConstants: 0 size: pushConstantBuffer rawDataSize values: pushConstantBuffer rawData;
-				dispatchComputeGlobalGridX: destLevel width y: destLevel height.
-			
-			sourceLevelIndex := destLevelIndex.
-			destLevelIndex := destLevelIndex + destLevel pixelCount.
-			sourceLevel := destLevel
-		].
-
-		pushConstantBuffer at: 1 put: destLevelIndex.
-		
-		stateTracker
-			pushConstants: 0 size: pushConstantBuffer rawDataSize values: pushConstantBuffer rawData;
-			computeShader: (mipmapGenerationLibrary getComputeStage: encodeFunctionName) arguments: shaderArguments;
-			dispatchComputeGlobalGrid: destLevelIndex
+	renderer critical: [
+		renderer renderWith: [
+			renderer
+				renderProceduralTextureWithFragmentShader: shader extent: extent format: pixelFormat;
+				generateProceduralTextureWithExtent: extent fetchWith: textureFetchFunctionName mipmapWith: mipmapComputationFunctionName encodeWith: encodeFunctionName for: resultLayer
+			];
+			submit;
+			finish;
+			readMipmapLevelsInto: resultLayer
 	].
 
-	engine graphicsQueue
-		addCommandList: commandList validHandle; finishExecution.
-
-	resultLayer readLevelsFromPointer: resultDataBuffer validPointer.
 	^ resultTextureData
+
 ]
 
 { #category : #'rendering helpers' }

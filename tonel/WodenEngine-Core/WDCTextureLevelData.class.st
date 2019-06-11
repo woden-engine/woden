@@ -44,6 +44,28 @@ WDCTextureLevelData >> data: anObject [
 	valueRange := nil
 ]
 
+{ #category : #'as yet unclassified' }
+WDCTextureLevelData >> decodedNormalData [
+	| pixelCount pixelIndex x y z result |
+	pixelCount := slicePitch // 4.
+	pixelIndex := 1.
+	result := ByteArray new: data size.
+	1 to: pixelCount do: [ :i |
+		x := data at: pixelIndex + 3.
+		y := data at: pixelIndex + 1.
+		z := data at: pixelIndex.
+
+		result at: pixelIndex put: z.
+		result at: pixelIndex + 1 put: y.
+		result at: pixelIndex + 2 put: x.
+		result at: pixelIndex + 3 put: 255.
+		pixelIndex := pixelIndex + 4
+	].
+
+	^ result
+
+]
+
 { #category : #accessing }
 WDCTextureLevelData >> depth [
 	^ depth
