@@ -9,6 +9,8 @@ import rendering.lightingOutputs;
 import vertex.genericLayout;
 import vertex.genericSkinnedLayout;
 
+import texture.functions;
+
 //==============================================================================
 // Material state
 
@@ -17,6 +19,7 @@ uniform(binding = MaterialState.Attributes) MaterialState
     albedo: float4;
     metallicFactor: float;
     roughnessFactor: float;
+	alphaCutoff: float;
 }
 
 uniform(binding = MaterialState.Textures) albedoTexture : texture2D;
@@ -57,6 +60,8 @@ code_block(vertex) depth_vertex
         return;
     }
 
+    VertexOutput.color = MaterialState.albedo*currentObjectInstanceColor();
+    VertexOutput.texcoord = GenericVertexLayout.texcoord;
     VertexOutput.normal = transformNormalToView(GenericVertexLayout.normal);
 
     let position4 = transformPositionToView(GenericVertexLayout.position);
@@ -73,7 +78,7 @@ code_block(vertex) flat_vertex
         return;
     }
 
-    VertexOutput.color = currentObjectInstanceColor();
+    VertexOutput.color = MaterialState.albedo*currentObjectInstanceColor();
     VertexOutput.texcoord = GenericVertexLayout.texcoord;
     VertexOutput.normal = transformNormalToView(GenericVertexLayout.normal);
 
@@ -92,7 +97,7 @@ code_block(vertex) normal_vertex
         return;
     }
 
-    VertexOutput.color = currentObjectInstanceColor();
+    VertexOutput.color = MaterialState.albedo*currentObjectInstanceColor();
     VertexOutput.texcoord = GenericVertexLayout.texcoord;
     VertexOutput.tangent = transformNormalToView(GenericVertexLayout.tangent4.xyz);
     VertexOutput.normal = transformNormalToView(GenericVertexLayout.normal);
@@ -113,7 +118,7 @@ code_block(vertex) color_vertex
         return;
     }
 
-    VertexOutput.color = GenericVertexLayout.color*currentObjectInstanceColor();
+    VertexOutput.color = MaterialState.albedo*GenericVertexLayout.color*currentObjectInstanceColor();
     VertexOutput.texcoord = GenericVertexLayout.texcoord;
     VertexOutput.normal = transformNormalToView(GenericVertexLayout.normal);
 
@@ -132,7 +137,7 @@ code_block(vertex) colorNormal_vertex
         return;
     }
 
-    VertexOutput.color = GenericVertexLayout.color*currentObjectInstanceColor();
+    VertexOutput.color = MaterialState.albedo*GenericVertexLayout.color*currentObjectInstanceColor();
     VertexOutput.texcoord = GenericVertexLayout.texcoord;
     VertexOutput.tangent = transformNormalToView(GenericVertexLayout.tangent4.xyz);
     VertexOutput.normal = transformNormalToView(GenericVertexLayout.normal);
@@ -163,6 +168,7 @@ code_block(vertex) depthSkinned_vertex
         return;
     }
 
+    VertexOutput.color = MaterialState.albedo*GenericVertexLayout.color*currentObjectInstanceColor();
     VertexOutput.normal = transformNormalToView(skinVector(GenericVertexLayout.normal));
 
     let position4 = transformPositionToView(skinPosition(GenericVertexLayout.position));
@@ -179,7 +185,7 @@ code_block(vertex) skinnedColorNormal_vertex
         return;
     }
 
-    VertexOutput.color = GenericVertexLayout.color*currentObjectInstanceColor();
+    VertexOutput.color = MaterialState.albedo*GenericVertexLayout.color*currentObjectInstanceColor();
     VertexOutput.texcoord = GenericVertexLayout.texcoord;
     VertexOutput.tangent = transformNormalToView(skinVector(GenericVertexLayout.tangent4.xyz));
     VertexOutput.normal = transformNormalToView(skinVector(GenericVertexLayout.normal));
@@ -200,7 +206,7 @@ code_block(vertex) skinnedColor_vertex
         return;
     }
 
-    VertexOutput.color = GenericVertexLayout.color*currentObjectInstanceColor();
+    VertexOutput.color = MaterialState.albedo*GenericVertexLayout.color*currentObjectInstanceColor();
     VertexOutput.texcoord = GenericVertexLayout.texcoord;
     VertexOutput.normal = transformNormalToView(skinVector(GenericVertexLayout.normal));
 
@@ -219,7 +225,7 @@ code_block(vertex) skinnedNormal_vertex
         return;
     }
 
-    VertexOutput.color = currentObjectInstanceColor();
+    VertexOutput.color = MaterialState.albedo*currentObjectInstanceColor();
     VertexOutput.texcoord = GenericVertexLayout.texcoord;
     VertexOutput.tangent = transformNormalToView(skinVector(GenericVertexLayout.tangent4.xyz));
     VertexOutput.normal = transformNormalToView(skinVector(GenericVertexLayout.normal));
@@ -240,7 +246,7 @@ code_block(vertex) skinned_vertex
         return;
     }
 
-    VertexOutput.color = currentObjectInstanceColor();
+    VertexOutput.color = MaterialState.albedo*currentObjectInstanceColor();
     VertexOutput.texcoord = GenericVertexLayout.texcoord;
     VertexOutput.normal = transformNormalToView(skinVector(GenericVertexLayout.normal));
 
@@ -254,6 +260,18 @@ code_block(vertex) skinned_vertex
 
 code_block(fragment) depthNormal_fragment
 {
+	if(FragmentInput.color.a < MaterialState.alphaCutoff)
+		discard;
+
+    encodeViewNormalOutput(normalize(FragmentInput.normal));
+}
+
+code_block(fragment) depthNormalMask_fragment
+{
+    let alpha = FragmentInput.color.a * albedoSampler.sample(albedoTexture, FragmentInput.texcoord).a;
+	if(alpha < MaterialState.alphaCutoff)
+		discard;
+
     encodeViewNormalOutput(normalize(FragmentInput.normal));
 }
 
@@ -265,8 +283,16 @@ code_block(fragment) forward_color
     let N = normalize(FragmentInput.normal);
     let V = normalize(-FragmentInput.position);
 
+	let albedo = FragmentInput.color;
+	if(albedo.a < MaterialState.alphaCutoff)
+		discard;
+
+	// For double sided material.
+	if(dot(V, N) < 0.0f)
+		N = -N;
+
     forwardMetallicRoughnessLightingOutput
-        albedo: FragmentInput.color*MaterialState.albedo
+        albedo: albedo
         metallic: MaterialState.metallicFactor roughness: MaterialState.roughnessFactor
         normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
 }
@@ -277,8 +303,15 @@ code_block(fragment) forward_albedo
     let V = normalize(-FragmentInput.position);
 
     let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
+	if(albedo.a < MaterialState.alphaCutoff)
+		discard;
+
+	// For double sided material.
+	if(dot(V, N) < 0.0f)
+		N = -N;
+
     forwardMetallicRoughnessLightingOutput
-        albedo: albedo*MaterialState.albedo
+        albedo: albedo
         metallic: MaterialState.metallicFactor roughness: MaterialState.roughnessFactor
         normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
 }
@@ -292,12 +325,19 @@ code_block(fragment) forward_albedoNormal
     let V = normalize(-FragmentInput.position);
 
     let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
-	let tangentNormal = normalSampler.sample(normalTexture, FragmentInput.texcoord).agb*2.0f - 1.0f;
+	if(albedo.a < MaterialState.alphaCutoff)
+		discard;
+
+	// For double sided material.
+	if(dot(V, n) < 0.0f)
+		n = -n;
+		
+	let tangentNormal = decodeNormalTexel(normalSampler.sample(normalTexture, FragmentInput.texcoord));
     let TBN = float3x3(t, b, n);
     let N = normalize(TBN*tangentNormal);
 
     forwardMetallicRoughnessLightingOutput
-        albedo: albedo*MaterialState.albedo
+        albedo: albedo
         metallic: MaterialState.metallicFactor roughness: MaterialState.roughnessFactor
         normal: N surfaceNormal: n viewVector: V position: FragmentInput.position;
 }
@@ -308,11 +348,18 @@ code_block(fragment) forward_albedoMetallicRoughness
     let V = normalize(-FragmentInput.position);
 
     let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
-    let metallicRoughness = albedoSampler.sample(metallicRoughnessTexture, FragmentInput.texcoord).gb;
+	if(albedo.a < MaterialState.alphaCutoff)
+		discard;
+
+	// For double sided material.
+	if(dot(V, N) < 0.0f)
+		N = -N;
+
+    let aoRoughnessMetallic = albedoSampler.sample(metallicRoughnessTexture, FragmentInput.texcoord);
     forwardMetallicRoughnessLightingOutput
-        albedo: albedo*MaterialState.albedo
-        metallic: metallicRoughness.x*MaterialState.metallicFactor
-		roughness: metallicRoughness.y*MaterialState.roughnessFactor
+        albedo: albedo
+        metallic: aoRoughnessMetallic.b*MaterialState.metallicFactor
+		roughness: aoRoughnessMetallic.g*MaterialState.roughnessFactor
         normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
 }
 
@@ -324,14 +371,21 @@ code_block(fragment) forward_albedoNormalMetallicRoughness
     let V = normalize(-FragmentInput.position);
 
     let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
-    let aoMetallicRoughness = albedoSampler.sample(metallicRoughnessTexture, FragmentInput.texcoord);
-    let tangentNormal = normalSampler.sample(normalTexture, FragmentInput.texcoord).agb*2.0f - 1.0f;
+	if(albedo.a < MaterialState.alphaCutoff)
+		discard;
+
+	// For double sided material.
+	if(dot(V, n) < 0.0f)
+		n = -n;
+
+    let aoRoughnessMetallic = albedoSampler.sample(metallicRoughnessTexture, FragmentInput.texcoord);
+    let tangentNormal = decodeNormalTexel(normalSampler.sample(normalTexture, FragmentInput.texcoord));
     let TBN = float3x3(t, b, n);
     let N = normalize(TBN*tangentNormal);
 
     forwardMetallicRoughnessLightingOutput
-        albedo: albedo*MaterialState.albedo
-        metallic: aoMetallicRoughness.g*MaterialState.metallicFactor
-		roughness: aoMetallicRoughness.b*MaterialState.roughnessFactor
+        albedo: albedo
+        metallic: aoRoughnessMetallic.b*MaterialState.metallicFactor
+		roughness: aoRoughnessMetallic.g*MaterialState.roughnessFactor
         normal: N surfaceNormal: n viewVector: V position: FragmentInput.position;
 }

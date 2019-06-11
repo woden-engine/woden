@@ -9,6 +9,7 @@ import lighting.forwardModel;
 import lighting.functions;
 
 import vertex.genericLayout;
+import texture.functions;
 
 struct WaterHarmonic
 {
@@ -188,7 +189,7 @@ code_block(fragment) forward_color
 {
     let texcoord = WaterFragmentInput.texcoord;
     let albedo = WaterFragmentInput.color*MaterialState.albedo*albedoSampler.sample(albedoTexture, texcoord);
-    let normalMapValue = normalSampler.sample(normalTexture, texcoord).xyz*2.0f - 1.0f;
+    let normalMapValue = decodeNormalTexel(normalSampler.sample(normalTexture, texcoord));
 
     let surfacePosition = WaterFragmentInput.surfaceCoordinate;
     let N = evalWaterNormalMapValue(surfacePosition, normalMapValue);
@@ -204,7 +205,7 @@ code_block(fragment) forward_sky
 {
     let texcoord = WaterFragmentInput.texcoord;
     let albedo = WaterFragmentInput.color*MaterialState.albedo*albedoSampler.sample(albedoTexture, texcoord);
-    let normalMapValue = normalSampler.sample(normalTexture, texcoord).xyz*2.0f - 1.0f;
+    let normalMapValue = decodeNormalTexel(normalSampler.sample(normalTexture, texcoord));
 
     let surfacePosition = WaterFragmentInput.surfaceCoordinate;
     let N = evalWaterNormalMapValue(surfacePosition, normalMapValue);

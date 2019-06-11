@@ -1,0 +1,10 @@
+function decodeNormalTexel(texel: float4) -> float3
+{
+	return texel.agb*2.0f - 1.0f;
+}
+
+function encodeNormalTexel(normal: float3) -> float4
+{
+	let n = normal*0.5f + 0.5f;
+	return float4(0.0f, n.gbr);
+}

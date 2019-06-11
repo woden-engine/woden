@@ -9,6 +9,8 @@ import rendering.lightingOutputs;
 import vertex.genericLayout;
 import vertex.genericSkinnedLayout;
 
+import texture.functions;
+
 //==============================================================================
 // Material state
 
@@ -17,6 +19,7 @@ uniform(binding = MaterialState.Attributes) MaterialState
     albedo: float4;
     specularFactor: float3;
     glossinessFactor: float;
+	alphaCutoff: float;
 }
 
 uniform(binding = MaterialState.Textures) albedoTexture : texture2D;
@@ -57,6 +60,8 @@ code_block(vertex) depth_vertex
         return;
     }
 
+    VertexOutput.color = currentObjectInstanceColor();
+    VertexOutput.texcoord = GenericVertexLayout.texcoord;
     VertexOutput.normal = transformNormalToView(GenericVertexLayout.normal);
 
     let position4 = transformPositionToView(GenericVertexLayout.position);
@@ -163,6 +168,8 @@ code_block(vertex) depthSkinned_vertex
         return;
     }
 
+    VertexOutput.color = currentObjectInstanceColor();
+    VertexOutput.texcoord = GenericVertexLayout.texcoord;
     VertexOutput.normal = transformNormalToView(skinVector(GenericVertexLayout.normal));
 
     let position4 = transformPositionToView(skinPosition(GenericVertexLayout.position));
@@ -254,6 +261,18 @@ code_block(vertex) skinned_vertex
 
 code_block(fragment) depthNormal_fragment
 {
+	if(FragmentInput.color.a < MaterialState.alphaCutoff)
+		discard;
+
+    encodeViewNormalOutput(normalize(FragmentInput.normal));
+}
+
+code_block(fragment) depthNormalMask_fragment
+{
+    let alpha = FragmentInput.color.a * albedoSampler.sample(albedoTexture, FragmentInput.texcoord).a;
+	if(alpha < MaterialState.alphaCutoff)
+		discard;
+
     encodeViewNormalOutput(normalize(FragmentInput.normal));
 }
 
@@ -292,7 +311,7 @@ code_block(fragment) forward_albedoNormal
     let V = normalize(-FragmentInput.position);
 
     let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
-    let tangentNormal = normalSampler.sample(normalTexture, FragmentInput.texcoord).agb*2.0f - 1.0f;
+    let tangentNormal = decodeNormalTexel(normalSampler.sample(normalTexture, FragmentInput.texcoord));
     let TBN = float3x3(t, b, n);
     let N = normalize(TBN*tangentNormal);
 
@@ -324,7 +343,7 @@ code_block(fragment) forward_albedoNormalSpecularGlosiness
 
     let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
     let specularGlosiness = albedoSampler.sample(specularGlosinessTexture, FragmentInput.texcoord);
-    let tangentNormal = normalSampler.sample(normalTexture, FragmentInput.texcoord).agb*2.0f - 1.0f;
+    let tangentNormal = decodeNormalTexel(normalSampler.sample(normalTexture, FragmentInput.texcoord));
     let TBN = float3x3(t, b, n);
     let N = normalize(TBN*tangentNormal);
 

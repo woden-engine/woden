@@ -1,6 +1,7 @@
 import fragment.stage;
 import fragment.screenQuad;
 import procedural.noise;
+import texture.functions;
 
 code_block(fragment) main
 {
@@ -15,5 +16,5 @@ code_block(fragment) main
 	let bitangent = float3(0.0f, 1.0f, dy*HeightScaleFactor);
 	let normal = normalize(cross(tangent, bitangent));
 
-	FragmentStage.colorOutput0 = float4(normal*0.5f + 0.5f, 1.0f);
+	FragmentStage.colorOutput0 = encodeNormalTexel(normal);
 }

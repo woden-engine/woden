@@ -9,6 +9,8 @@ import rendering.lightingOutputs;
 
 import vertex.genericLayout;
 
+import texture.functions;
+
 uniform(binding=MaterialState.Attributes) MaterialState
 {
     clipMapPeriod: float2;
@@ -114,13 +116,13 @@ function fetchNormalPlane(texcoord: float2, splatting: float4) -> float3
 {
     using MaterialState;
 
-    let n0 = normalSampler.sample(normalTexture0, texcoord*textureScaleAndOffset[0].xy + textureScaleAndOffset[0].zw).xyz;
-    let n1 = normalSampler.sample(normalTexture1, texcoord*textureScaleAndOffset[1].xy + textureScaleAndOffset[1].zw).xyz;
-    let n2 = normalSampler.sample(normalTexture2, texcoord*textureScaleAndOffset[2].xy + textureScaleAndOffset[2].zw).xyz;
-    let n3 = normalSampler.sample(normalTexture3, texcoord*textureScaleAndOffset[3].xy + textureScaleAndOffset[3].zw).xyz;
-    let n4 = normalSampler.sample(normalTexture4, texcoord*textureScaleAndOffset[4].xy + textureScaleAndOffset[4].zw).xyz;
+    let n0 = decodeNormalTexel(normalSampler.sample(normalTexture0, texcoord*textureScaleAndOffset[0].xy + textureScaleAndOffset[0].zw));
+    let n1 = decodeNormalTexel(normalSampler.sample(normalTexture1, texcoord*textureScaleAndOffset[1].xy + textureScaleAndOffset[1].zw));
+    let n2 = decodeNormalTexel(normalSampler.sample(normalTexture2, texcoord*textureScaleAndOffset[2].xy + textureScaleAndOffset[2].zw));
+    let n3 = decodeNormalTexel(normalSampler.sample(normalTexture3, texcoord*textureScaleAndOffset[3].xy + textureScaleAndOffset[3].zw));
+    let n4 = decodeNormalTexel(normalSampler.sample(normalTexture4, texcoord*textureScaleAndOffset[4].xy + textureScaleAndOffset[4].zw));
 
-    return mixSplatting(n0, n1, n2, n3, n4, splatting)*float3(2.0f, 2.0f, 2.0f) - float3(1.0f, 1.0f, 1.0f);
+    return mixSplatting(n0, n1, n2, n3, n4, splatting);
 }
 
 function fetchNormalPlaneYZ(texcoord: float2, splatting: float4, objectNormalSigns: float3) -> float3
