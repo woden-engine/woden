@@ -10,7 +10,7 @@ Class {
 { #category : #'state binding' }
 WDCMetallicRoughnessMaterial >> bindResources [
 	super bindResources.
-	metallicRoughnessTexture ifNotNil: [ resourceBinding bind: 4 texture: metallicRoughnessTexture].
+	metallicRoughnessTexture ifNotNil: [ resourceBinding bind: 5 texture: metallicRoughnessTexture].
 ]
 
 { #category : #'as yet unclassified' }

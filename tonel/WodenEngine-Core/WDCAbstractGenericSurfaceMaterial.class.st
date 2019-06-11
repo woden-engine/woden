@@ -2,6 +2,7 @@ Class {
 	#name : #WDCAbstractGenericSurfaceMaterial,
 	#superclass : #WDCMaterial,
 	#instVars : [
+		'emissionTexture',
 		'albedoTexture',
 		'normalTexture',
 		'resourceBindingsAreUpdated',
@@ -152,7 +153,7 @@ WDCAbstractGenericSurfaceMaterial >> bindResources [
 	resourceBinding bind: 0 uniformBuffer: stateUniformBuffer.
 	albedoTexture ifNotNil: [ resourceBinding bind: 2 texture: albedoTexture].
 	normalTexture ifNotNil: [ resourceBinding bind: 3 texture: normalTexture].
-	"fresnelTexture ifNotNil: [ resourceBinding bind: 4 texture: fresnelTexture]."
+	resourceBinding bind: 4 texture: (emissionTexture ifNil: [engine resourceCache whiteTexture]).
 ]
 
 { #category : #'as yet unclassified' }
@@ -162,6 +163,7 @@ WDCAbstractGenericSurfaceMaterial >> concretizeMaterial [
 	resourceCache := engine resourceCache.
 	albedoTexture := engine resourceCache concretizeTexture: albedoTexture.
 	normalTexture := engine resourceCache concretizeTexture: normalTexture.
+	emissionTexture := engine resourceCache concretizeTexture: emissionTexture.
 ]
 
 { #category : #shaders }
@@ -196,6 +198,27 @@ WDCAbstractGenericSurfaceMaterial >> doubleSided [
 { #category : #accessing }
 WDCAbstractGenericSurfaceMaterial >> doubleSided: anObject [
 	doubleSided := anObject
+]
+
+{ #category : #accessing }
+WDCAbstractGenericSurfaceMaterial >> emissionColor [
+	^ materialState emission
+]
+
+{ #category : #accessing }
+WDCAbstractGenericSurfaceMaterial >> emissionColor: aColor [
+	materialState emission: aColor asWMVector4F.
+	self uploadMaterialStateData.
+]
+
+{ #category : #accessing }
+WDCAbstractGenericSurfaceMaterial >> emissionTexture [
+	^ emissionTexture
+]
+
+{ #category : #accessing }
+WDCAbstractGenericSurfaceMaterial >> emissionTexture: anObject [
+	emissionTexture := anObject
 ]
 
 { #category : #rendering }

@@ -466,7 +466,6 @@ WDIGLTF2Importer >> loadMetallicRoughnessMaterial: description commonDescription
 		material normalTexture: (textures at: (textureDescription at: 'index') + 1) asNormalTexture
 	].
 	
-	
 	description at: 'metallicRoughnessTexture' ifPresent: [ :textureDescription |
 		material metallicRoughnessTexture: (textures at: (textureDescription at: 'index') + 1) asTexture
 	].
@@ -479,6 +478,16 @@ WDIGLTF2Importer >> loadMetallicRoughnessMaterial: description commonDescription
 		alphaMode = 'BLEND' ifTrue: [
 			self flag: 'TODO: Support this transparency mode.'
 		].
+	].
+
+	commonDescription at: 'emissiveFactor' ifPresent: [ :factor |
+		material emissionColor: (WMVector4F x: factor first y: factor second z: factor third w: 0.0)
+	] ifAbsent: [
+		material emissionColor: WMVector4F zero
+	].
+
+	commonDescription at: 'emissiveTexture' ifPresent: [ :textureDescription |
+		material emissionTexture: (textures at: (textureDescription at: 'index') + 1) asSRGBTexture
 	].
 
 	^ material

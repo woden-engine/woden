@@ -10,7 +10,7 @@ Class {
 { #category : #'state binding' }
 WDCSpecularityGlossinessMaterial >> bindResources [
 	super bindResources.
-	specularityGlossinessTexture ifNotNil: [ resourceBinding bind: 4 texture: specularityGlossinessTexture].
+	specularityGlossinessTexture ifNotNil: [ resourceBinding bind: 5 texture: specularityGlossinessTexture].
 ]
 
 { #category : #'as yet unclassified' }
