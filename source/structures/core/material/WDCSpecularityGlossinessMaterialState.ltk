@@ -1,5 +1,6 @@
 Structure <<< #WDCSpecularityGlossinessMaterialState
 	slots: {
+		#emission => WMVector4F. 
 		#albedo => WMVector4F. 
 		#specularFactor => WMCompactVector3F. 
 		#glossinessFactor => Float32.

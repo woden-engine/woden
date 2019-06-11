@@ -1,5 +1,6 @@
 Structure <<< #WDCMetallicRoughnessMaterialState
 	slots: {
+		#emission => WMVector4F. 
 		#albedo => WMVector4F. 
 		#metallicFactor => Float32.
 		#roughnessFactor => Float32.

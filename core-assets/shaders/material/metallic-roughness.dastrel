@@ -16,6 +16,7 @@ import texture.functions;
 
 uniform(binding = MaterialState.Attributes) MaterialState
 {
+    emission: float4;
     albedo: float4;
     metallicFactor: float;
     roughnessFactor: float;
@@ -24,7 +25,8 @@ uniform(binding = MaterialState.Attributes) MaterialState
 
 uniform(binding = MaterialState.Textures) albedoTexture : texture2D;
 uniform(binding = MaterialState.Textures + 1) normalTexture : texture2D;
-uniform(binding = MaterialState.Textures + 2) metallicRoughnessTexture : texture2D;
+uniform(binding = MaterialState.Textures + 2) emissionTexture : texture2D;
+uniform(binding = MaterialState.Textures + 3) metallicRoughnessTexture : texture2D;
 
 //==============================================================================
 // Vertex and fragment shader interface
@@ -169,6 +171,7 @@ code_block(vertex) depthSkinned_vertex
     }
 
     VertexOutput.color = MaterialState.albedo*GenericVertexLayout.color*currentObjectInstanceColor();
+    VertexOutput.texcoord = GenericVertexLayout.texcoord;
     VertexOutput.normal = transformNormalToView(skinVector(GenericVertexLayout.normal));
 
     let position4 = transformPositionToView(skinPosition(GenericVertexLayout.position));
@@ -291,8 +294,9 @@ code_block(fragment) forward_color
 	if(dot(V, N) < 0.0f)
 		N = -N;
 
+	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
     forwardMetallicRoughnessLightingOutput
-        albedo: albedo
+        emission: emission albedo: albedo
         metallic: MaterialState.metallicFactor roughness: MaterialState.roughnessFactor
         normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
 }
@@ -310,8 +314,9 @@ code_block(fragment) forward_albedo
 	if(dot(V, N) < 0.0f)
 		N = -N;
 
+	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
     forwardMetallicRoughnessLightingOutput
-        albedo: albedo
+        emission: emission albedo: albedo
         metallic: MaterialState.metallicFactor roughness: MaterialState.roughnessFactor
         normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
 }
@@ -336,8 +341,9 @@ code_block(fragment) forward_albedoNormal
     let TBN = float3x3(t, b, n);
     let N = normalize(TBN*tangentNormal);
 
+	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
     forwardMetallicRoughnessLightingOutput
-        albedo: albedo
+        emission: emission albedo: albedo
         metallic: MaterialState.metallicFactor roughness: MaterialState.roughnessFactor
         normal: N surfaceNormal: n viewVector: V position: FragmentInput.position;
 }
@@ -355,9 +361,10 @@ code_block(fragment) forward_albedoMetallicRoughness
 	if(dot(V, N) < 0.0f)
 		N = -N;
 
+	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
     let aoRoughnessMetallic = albedoSampler.sample(metallicRoughnessTexture, FragmentInput.texcoord);
     forwardMetallicRoughnessLightingOutput
-        albedo: albedo
+        emission: emission albedo: albedo
         metallic: aoRoughnessMetallic.b*MaterialState.metallicFactor
 		roughness: aoRoughnessMetallic.g*MaterialState.roughnessFactor
         normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
@@ -378,13 +385,14 @@ code_block(fragment) forward_albedoNormalMetallicRoughness
 	if(dot(V, n) < 0.0f)
 		n = -n;
 
+	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
     let aoRoughnessMetallic = albedoSampler.sample(metallicRoughnessTexture, FragmentInput.texcoord);
     let tangentNormal = decodeNormalTexel(normalSampler.sample(normalTexture, FragmentInput.texcoord));
     let TBN = float3x3(t, b, n);
     let N = normalize(TBN*tangentNormal);
 
     forwardMetallicRoughnessLightingOutput
-        albedo: albedo
+        emission: emission albedo: albedo
         metallic: aoRoughnessMetallic.b*MaterialState.metallicFactor
 		roughness: aoRoughnessMetallic.g*MaterialState.roughnessFactor
         normal: N surfaceNormal: n viewVector: V position: FragmentInput.position;
