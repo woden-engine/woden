@@ -104,6 +104,24 @@ kAwgVcMYCCCuOKQMIHXAaDWQPP9KWhRIXTBa62VJsa5/JVU+ruj/9tYJA/kPitlXck5Hw7UA
 AAAASUVORK5CYII='
 ]
 
+{ #category : #sources }
+RWRoassal3dLayoutExample >> exampleForceBasedLayout [
+	<script: 'self new exampleForceBasedLayout'>
+	| v boxes |
+	v := RWView new.
+	boxes := RWCube new
+		size: 10;
+		elementsOn: (1 to: 20).
+	RWEdgeBuilder new
+		view: v;
+		elements: boxes;
+		connectFrom: [ :value | value // 2 ] to: #yourself.
+	v addAll: boxes.
+	RWForceBasedLayout on: boxes.
+	v addInteraction: RWOrbitController.
+	v open.
+]
+
 { #category : #accessing }
 RWRoassal3dLayoutExample >> label [
 	^ 'Roassal 3d layouts'

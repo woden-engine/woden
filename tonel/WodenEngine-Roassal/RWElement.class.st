@@ -146,7 +146,7 @@ RWElement >> colorUsedForRendering [
 	^ color asWMVector4F * (shape colorFor: self) asWMVector4F
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing - edges' }
 RWElement >> connectedEdges [
 	"Return the list of connected egdes (i.e., incoming and outgoing edges)"
 	connectedEdges ifNil: [ connectedEdges := RWGroup new ].
@@ -187,6 +187,13 @@ RWElement >> id: anObject [
 		view element: self idChangedFrom: oldID into: id
 	]
 	
+]
+
+{ #category : #'accessing - edges' }
+RWElement >> incomingEdges [
+	"Return the list of incoming edges from the node"
+	connectedEdges ifNil: [ ^ #() ].
+	^ self connectedEdges select: [ :e | e to == self ]
 ]
 
 { #category : #initialization }

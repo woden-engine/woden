@@ -21,14 +21,36 @@ RWLayout >> centerElements: elements [
 	RWMove centerElements: elements
 ]
 
-{ #category : #public }
-RWLayout >> on: elements [
-	"Override this method to particularize the layout"
+{ #category : #hooks }
+RWLayout >> doExecute: elements [
+	"Performs the layout"
+
 	self subclassResponsibility
 ]
 
 { #category : #public }
-RWLayout >> on: elements edges: edges [
+RWLayout >> doInitialize: elements [
+	"Method executed before beginning the layout. Useful when the graph to be ordered need to be prepared"
+]
+
+{ #category : #hooks }
+RWLayout >> doPost: elements [
+	"Method executed after performing the layout"
+
+]
+
+{ #category : #hooks }
+RWLayout >> executeOnElements: elements [ 
+	"Execute the layout, myself, on the elements"
+		
+	self doInitialize: elements.
+	self doExecute: elements asOrderedCollection.
+	self doPost: elements.
+
+]
+
+{ #category : #public }
+RWLayout >> on: elements [
 	"Override this method to particularize the layout"
 	self subclassResponsibility
 ]
