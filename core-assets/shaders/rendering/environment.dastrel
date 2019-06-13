@@ -31,6 +31,7 @@ uniform(binding=CameraState.ObjectState) CameraState
     inverseScreenSize: float2;
 
     currentTime: float;
+	exposure: float;
 }
 
 uniform(binding=LightingState.GlobalLightingState) GlobalLightingState
