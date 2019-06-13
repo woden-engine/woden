@@ -55,7 +55,7 @@ WDSForwardSceneRenderer >> setupRenderingViewportStates: renderingViewport [
 
 { #category : #rendering }
 WDSForwardSceneRenderer >> updateFrameLightingStates [
-	| transform lightingState lightingStateBinding lightSources viewport viewportLights shadowMapExtent shadowMapInverseExtent |
+	| transform lightingState lightingStateBinding lightSources viewport viewportLights shadowMapExtent shadowMapInverseExtent scene |
 	self ensureLightingStatesFor: renderingViewports size.
 	currentGlobalLigthingStates := globalLightingStates at: engine bufferingFrameIndex.
 
@@ -65,6 +65,7 @@ WDSForwardSceneRenderer >> updateFrameLightingStates [
 	renderingViewports doWithIndex: [ :renderingViewport :viewportIndex |
 		viewport := renderingViewport viewport.
 		transform := viewport cameraTransform.
+		scene := viewport camera scene.
 
 		lightSources := SLVMNativeArray for: WTLightSourceData new: 16.
 
@@ -75,9 +76,9 @@ WDSForwardSceneRenderer >> updateFrameLightingStates [
 		
 		lightingState := WTGlobalLightingState  new.
 		lightingState
-			skyLighting: Color darkGray asWMVector4F;
-			groundLighting: Color veryDarkGray asWMVector4F;
-			sunDirection: (transform inverseTransformVector3: (WMVector3F y: 1.0));
+			skyLighting: scene skyLighting;
+			groundLighting: scene groundLighting;
+			sunDirection: scene sunDirection;
 			shadowMapExtent: shadowMapExtent;
 			shadowMapInverseExtent: shadowMapInverseExtent;
 			numberOfLights: viewportLights size;

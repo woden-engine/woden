@@ -13,7 +13,10 @@ Class {
 		'genericObjectStatePool',
 		'neutralObjectInstanceStatePool',
 		'neutralObjectInstanceState',
-		'commonGPUStateRenderingComponent'
+		'commonGPUStateRenderingComponent',
+		'skyLighting',
+		'groundLighting',
+		'sunDirection'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
@@ -42,6 +45,13 @@ WDSGScene >> allChildrenDo: aBlock [
 { #category : #enumerating }
 WDSGScene >> allVisibleRenderingChildrenDo: aBlock [
 	roots do: [ :root | root withAllVisibleRenderingChildrenDo: aBlock ]
+]
+
+{ #category : #accessing }
+WDSGScene >> ambientLighting: lighting [
+	self 
+		skyLighting: lighting;
+		skyLighting: lighting
 ]
 
 { #category : #accessing }
@@ -98,11 +108,26 @@ WDSGScene >> genericObjectStatePool [
 	^ genericObjectStatePool
 ]
 
+{ #category : #accessing }
+WDSGScene >> groundLighting [
+	^ groundLighting
+]
+
+{ #category : #accessing }
+WDSGScene >> groundLighting: anObject [
+	groundLighting := anObject
+]
+
 { #category : #initialization }
 WDSGScene >> initialize [
 	super initialize.
 	backgroundColor := Color black.
+	skyLighting := WMVector4F x: 0.1 y: 0.1 z: 0.1 w: 0.1.
+	groundLighting := skyLighting*0.5.
+	sunDirection := (WMVector3F y: 1.0).
+
 	roots := OrderedCollection new.
+
 ]
 
 { #category : #accessing }
@@ -171,6 +196,26 @@ WDSGScene >> roots [
 { #category : #accessing }
 WDSGScene >> shaderSignature [
 	^ shaderSignature
+]
+
+{ #category : #accessing }
+WDSGScene >> skyLighting [
+	^ skyLighting
+]
+
+{ #category : #accessing }
+WDSGScene >> skyLighting: anObject [
+	skyLighting := anObject
+]
+
+{ #category : #accessing }
+WDSGScene >> sunDirection [
+	^ sunDirection
+]
+
+{ #category : #accessing }
+WDSGScene >> sunDirection: anObject [
+	sunDirection := anObject
 ]
 
 { #category : #'rendering phases' }

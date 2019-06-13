@@ -17,7 +17,7 @@ WDSSceneAssetModel >> createViewer [
 	sceneModel := WDASampleSceneModel new.
 	sceneModel
 		scene: mainScene.
-	mainScene backgroundColor: Color lightGray.
+	mainScene backgroundColor: Color gray.
 	mainScene initializeWithEngine: sceneModel engine.
 	
 	"Try to find a camera."
@@ -65,7 +65,7 @@ WDSSceneAssetModel >> mainScene: anObject [
 
 { #category : #'as yet unclassified' }
 WDSSceneAssetModel >> openViewer [
-	^ self createViewer openWith: WDAFPSSceneView.
+	^ self createViewer openWith: WDAFPSSceneView allowingVR.
 ]
 
 { #category : #accessing }

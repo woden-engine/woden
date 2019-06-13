@@ -26,6 +26,87 @@ WDASceneExamples class >> cloudTexture [
 	]
 ]
 
+{ #category : #examples }
+WDASceneExamples class >> constructPoolSceneInto: scene [
+	| engine tilesMaterial concreteMaterial waterMaterial meshBuilder floor mesh cube waterMesh waterSurface borderThickness |
+	engine := scene engine.
+	tilesMaterial := engine resourceCache loadMaterial: 'materials/demos/tile.json'.
+	concreteMaterial := engine resourceCache loadMaterial: 'materials/demos/esug-floor.json'.
+	waterMaterial := engine resourceCache loadMaterial: 'materials/demos/water.json'.
+	
+	"Add the floor"
+	meshBuilder := WDCComplexGenericMeshBuilder for: engine.
+	borderThickness := 0.5.
+	meshBuilder
+		currentMaterial: tilesMaterial;
+
+		translateToX: (borderThickness*0.5) negated - 4.5 y: -1.0 z: 0.0;
+		addCubeWithWidth: 4.0 - borderThickness height: 2.0 depth: 5.0 + (borderThickness*2.0);
+		
+		translateToX: (borderThickness*0.5)+ 4.5 y: -1.0 z: 0.0;
+		addCubeWithWidth: 4.0 - borderThickness height: 2.0 depth: 5.0 + (borderThickness*2.0);
+		
+		translateToX: 0.0 y: -1.0 z: borderThickness + 4.5;
+		addCubeWithWidth: 13.0 height: 2.0 depth: 4.0;
+		
+		translateToX: 0.0 y: -1.0 z: borderThickness negated - 4.5;
+		addCubeWithWidth: 13.0 height: 2.0 depth: 4.0;
+
+		"Bottom"
+		currentMaterial: concreteMaterial;
+		translateToX: 0.0 y: -2.05 z: 0.0;
+		addCubeWithWidth: 5.0 height: 0.1 depth: 5.0;
+
+		"Border"
+		translateToX: -2.5 - (borderThickness*0.5) y: -1.0 z: 0.0;
+		addCubeWithWidth: borderThickness height: 2.2 depth: 5.0 + (borderThickness*2.0);
+		
+		translateToX: 2.5 + (borderThickness*0.5) y: -1.0 z: 0.0;
+		addCubeWithWidth: borderThickness height: 2.2 depth: 5.0 + (borderThickness*2.0);
+		
+		translateToX: 0.0 y: -1.0 z: 2.5 + (borderThickness*0.5);
+		addCubeWithWidth: 5.0 height: 2.2 depth: borderThickness;
+		
+		translateToX: 0.0 y: -1.0 z: -2.5 - (borderThickness*0.5);
+		addCubeWithWidth: 5.0 height: 2.2 depth: borderThickness;
+
+		"Use a planar texture coordinates"
+		planeTextureScale: (WMVector2F x: 2.0 y: 2.0) offset: (WMVector2F x: 0.0 y: 0.0);
+		computeTangentsBitangents.
+	floor := WDSGSpatialObject new.
+	floor renderable: meshBuilder mesh.
+	scene add: floor.
+	
+	"Add a cube"
+	meshBuilder := WDCGenericMeshBuilder for: scene engine.
+	meshBuilder addCubeWithWidth: 1.0 height: 1.0 depth: 1.0.
+	mesh := meshBuilder mesh.
+	
+	cube := WDSGSpatialObject new.
+	cube renderable: mesh.
+	cube transform translateByX: 4.5 y: 0.5 z: 0.0.
+	scene add: cube.
+
+	"Setup the water material"
+	waterMaterial
+		harmonicAt: 1 amplitude: 0.05 frequency: 1.1 center: WMVector2F new;
+		harmonicAt: 2 amplitude: 0.02 frequency: 2.23 direction: (WMVector2F y: 1.0);
+		harmonicAt: 3 amplitude: 0.015 frequency: 1.80 direction: (WMVector2F x: 1.0).
+
+	"Add the water"
+	waterMesh := (WDCTerrainMeshBuilder for: scene engine)
+		material: waterMaterial;
+		createGridWithSize: (WMVector2F x: 5.0 y: 5.0) subdivisions: 64;
+		mesh.
+		
+	waterSurface := WDSGSpatialObject new.
+	waterSurface translucentRenderPriority;
+		isOpaqueShadowCaster: false;
+		renderable: waterMesh.
+	waterSurface transform translateToX: 0.0 y: -0.3 z: 0.0.
+	scene add: waterSurface.
+]
+
 { #category : #'examples procedural' }
 WDASceneExamples class >> createIslandTerrainObjectFor: engine [
 	| material mesh terrain |
@@ -167,69 +248,77 @@ WDASceneExamples class >> example03Floor [
 ]
 
 { #category : #examples }
-WDASceneExamples class >> example04Pool [
-	| model meshBuilder cube scene camera engine floorMaterial waterMaterial skyMaterial sunLight skyBox waterSurface view floor mesh waterMesh |
+WDASceneExamples class >> example04PoolHDR [
+	| model scene camera sunLight view  |
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
-	camera farDistance: 100.0.
+	camera
+		farDistance: 100.0;
+		exponentialToneMapping;
+		exposure: 0.0006.
 	camera transform translateToX: 0.0 y: 1.0 z: -4.0.
-	engine := scene engine.
+	scene backgroundColor: Color cyan.
+	camera inspect.
 	
-	floorMaterial := engine resourceCache loadMaterial: 'materials/demos/tile.json'.
-	waterMaterial := engine resourceCache loadMaterial: 'materials/demos/water.json'.
-	skyMaterial := engine resourceCache loadMaterial: 'materials/demos/skybox.json'.
-	
-	"Add the floor"
-	meshBuilder := WDCComplexGenericMeshBuilder for: engine.
-	meshBuilder
-		currentMaterial: floorMaterial;
-		"Bottom"
-		translateToX: 0.0 y: -2.05 z: 0.0;
-		addCubeWithWidth: 5.0 height: 0.1 depth: 5.0;
+	self constructPoolSceneInto: scene.
 
-		translateToX: -4.5 y: -1.0 z: 0.0;
-		addCubeWithWidth: 4.0 height: 2.0 depth: 5.0;
-		
-		translateToX: 4.5 y: -1.0 z: 0.0;
-		addCubeWithWidth: 4.0 height: 2.0 depth: 5.0;
-		
-		translateToX: 0.0 y: -1.0 z: 4.5;
-		addCubeWithWidth: 13.0 height: 2.0 depth: 4.0;
-		
-		translateToX: 0.0 y: -1.0 z: -4.5;
-		addCubeWithWidth: 13.0 height: 2.0 depth: 4.0;
-						
-		"Use a planar texture coordinates"
-		planeTextureScale: (WMVector2F x: 2.0 y: 2.0) offset: (WMVector2F x: 0.0 y: 0.0);
-		computeTangentsBitangents.
-	floor := WDSGSpatialObject new.
-	floor renderable: meshBuilder mesh.
-	scene add: floor.
+	"Add a light"
+	sunLight := WDSGLightSource new.
+	sunLight directional; castShadows: true.
+	sunLight intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 10000.
+	sunLight transform
+		rotateDegreesOnX: -45;
+		translateToX: 0.0 y: 1.5 z: 2.5.
+
+	scene add: sunLight.
+
+	scene ambientLighting: sunLight intensity * 0.01.
+
+	"Add the sky box"
+	"meshBuilder := WDCGenericMeshBuilder for: engine.
+	meshBuilder
+		currentMaterial: skyMaterial;
+		addInteriorCubeWithWidth: 40.0 height: 40.0 depth: 40.0.
+
+	skyBox := WDSGSpatialObject new.
+	skyBox isOpaqueShadowCaster: false;
+		renderable: meshBuilder mesh.
+	scene add: skyBox."
+
+	view := WDAFPSSceneView allowingVR.
+	view cameraAngle: (WMVector3F y: Float pi).
+	model openWith: view.
+]
+
+{ #category : #examples }
+WDASceneExamples class >> example04PoolLDR [
+	| model scene camera engine sunLight view  meshBuilder skyMaterial skyBox |
+	model := WDASampleSceneModel new.
+	scene := model newScene.
+	engine := model engine.
+	camera := model camera.
+	camera
+		farDistance: 100.0.
+	camera transform translateToX: 0.0 y: 1.0 z: -4.0.
 	
-	"Add a cube"
-	meshBuilder := WDCGenericMeshBuilder for: scene engine.
-	meshBuilder addCubeWithWidth: 1.0 height: 1.0 depth: 1.0.
-	mesh := meshBuilder mesh.
-	
-	cube := WDSGSpatialObject new.
-	cube renderable: mesh.
-	cube transform translateByX: 4.5 y: 0.5 z: 0.0.
-	scene add: cube.
+	self constructPoolSceneInto: scene.
 
 
 	"Add a light"
 	sunLight := WDSGLightSource new.
 	sunLight directional; castShadows: true.
-	sunLight state
-			intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.8.
+	sunLight intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.8..
 	sunLight transform
 		rotateDegreesOnX: -45;
 		translateToX: 0.0 y: 1.5 z: 2.5.
-		
+
 	scene add: sunLight.
-		
+
+	scene ambientLighting: sunLight intensity * 0.01.
+
 	"Add the sky box"
+	skyMaterial := engine resourceCache loadMaterial: 'materials/demos/skybox.json'.
 	meshBuilder := WDCGenericMeshBuilder for: engine.
 	meshBuilder
 		currentMaterial: skyMaterial;
@@ -240,26 +329,6 @@ WDASceneExamples class >> example04Pool [
 		renderable: meshBuilder mesh.
 	scene add: skyBox.
 
-	"Setup the water material"
-	waterMaterial
-		skyTexture: skyMaterial skyTexture;
-		harmonicAt: 1 amplitude: 0.05 frequency: 1.1 center: WMVector2F new;
-		harmonicAt: 2 amplitude: 0.02 frequency: 2.23 direction: (WMVector2F y: 1.0);
-		harmonicAt: 3 amplitude: 0.015 frequency: 1.80 direction: (WMVector2F x: 1.0).
-
-	"Add the water"
-	waterMesh := (WDCTerrainMeshBuilder for: scene engine)
-		material: waterMaterial;
-		createGridWithSize: (WMVector2F x: 5.0 y: 5.0) subdivisions: 64;
-		mesh.
-		
-	waterSurface := WDSGSpatialObject new.
-	waterSurface translucentRenderPriority;
-		isOpaqueShadowCaster: false;
-		renderable: waterMesh.
-	waterSurface transform translateToX: 0.0 y: -0.3 z: 0.0.
-	scene add: waterSurface.
-	
 	view := WDAFPSSceneView allowingVR.
 	view cameraAngle: (WMVector3F y: Float pi).
 	model openWith: view.
@@ -267,7 +336,7 @@ WDASceneExamples class >> example04Pool [
 
 { #category : #examples }
 WDASceneExamples class >> example05DangerousPool [
-	| model meshBuilder cube scene camera engine floorMaterial waterMaterial skyMaterial sunLight skyBox waterSurface view magnumMesh pickedGun animationState gunAction gunActionFrame gunActionRepeated waterMesh |
+	| model meshBuilder scene camera engine skyMaterial sunLight skyBox view magnumMesh pickedGun animationState gunAction gunActionFrame gunActionRepeated |
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
@@ -275,37 +344,8 @@ WDASceneExamples class >> example05DangerousPool [
 	camera transform translateToX: 0.0 y: 1.0 z: -4.0.
 	engine := scene engine.
 	
-	floorMaterial := engine resourceCache loadMaterial: 'materials/demos/tile.json'.
-	waterMaterial := engine resourceCache loadMaterial: 'materials/demos/water.json'.
-	skyMaterial := engine resourceCache loadMaterial: 'materials/demos/skybox.json'.
+	self constructPoolSceneInto: scene.
 	
-	"Add the floor"
-	meshBuilder := WDCComplexGenericMeshBuilder for: engine.
-	meshBuilder
-		currentMaterial: floorMaterial;
-		"Bottom"
-		translateToX: 0.0 y: -2.05 z: 0.0;
-		addCubeWithWidth: 5.0 height: 0.1 depth: 5.0;
-
-		translateToX: -4.5 y: -1.0 z: 0.0;
-		addCubeWithWidth: 4.0 height: 2.0 depth: 5.0;
-		
-		translateToX: 4.5 y: -1.0 z: 0.0;
-		addCubeWithWidth: 4.0 height: 2.0 depth: 5.0;
-		
-		translateToX: 0.0 y: -1.0 z: 4.5;
-		addCubeWithWidth: 13.0 height: 2.0 depth: 4.0;
-		
-		translateToX: 0.0 y: -1.0 z: -4.5;
-		addCubeWithWidth: 13.0 height: 2.0 depth: 4.0;
-						
-		"Use a planar texture coordinates"
-		planeTextureScale: (WMVector2F x: 2.0 y: 2.0) offset: (WMVector2F x: 0.0 y: 0.0);
-		computeTangentsBitangents.
-	cube := WDSGSpatialObject new.
-	cube renderable: meshBuilder mesh.
-	scene add: cube.
-
 	"Add a light"
 	sunLight := WDSGLightSource new.
 	sunLight directional; castShadows: true.
@@ -318,6 +358,7 @@ WDASceneExamples class >> example05DangerousPool [
 	scene add: sunLight.
 		
 	"Add the sky box"
+	skyMaterial := engine resourceCache loadMaterial: 'materials/demos/skybox.json'.
 	meshBuilder := WDCGenericMeshBuilder for: engine.
 	meshBuilder
 		currentMaterial: skyMaterial;
@@ -326,27 +367,8 @@ WDASceneExamples class >> example05DangerousPool [
 	skyBox := WDSGSpatialObject new.
 	skyBox isOpaqueShadowCaster: false;
 		renderable: meshBuilder mesh.
-	scene add: skyBox.
-
-	"Setup the water material"
-	waterMaterial
-		skyTexture: skyMaterial skyTexture;
-		harmonicAt: 1 amplitude: 0.05 frequency: 1.1 center: WMVector2F new;
-		harmonicAt: 2 amplitude: 0.02 frequency: 2.23 direction: (WMVector2F y: 1.0);
-		harmonicAt: 3 amplitude: 0.015 frequency: 1.80 direction: (WMVector2F x: 1.0).
-
-	"Add the water"
-	waterMesh := (WDCTerrainMeshBuilder for: scene engine)
-		material: waterMaterial;
-		createGridWithSize: (WMVector2F x: 5.0 y: 5.0) subdivisions: 64;
-		mesh.
 		
-	waterSurface := WDSGSpatialObject new.
-	waterSurface translucentRenderPriority;
-		isOpaqueShadowCaster: false;
-		renderable: waterMesh.
-	waterSurface transform translateToX: 0.0 y: -0.3 z: 0.0.
-	scene add: waterSurface.
+	scene add: skyBox.
 	
 	magnumMesh := engine resourceCache loadMesh: 'models/demos/magnum_fps.fmdl'.
 	

@@ -7,14 +7,20 @@ Class {
 		'selectedLights',
 		'lightRenderingStates',
 		'gbufferRenderTarget',
-		'sceneRenderTarget',
+		'hdrSceneRenderPass',
+		'hdrSceneRenderTarget',
+		'ldrSceneRenderPass',
+		'ldrSceneRenderTarget',
+		'hdrToneMappingFullscreenPass',
 		'ambientOcclusionTexture',
 		'globalLightingStateShaderBindings',
 		'ambientOcclusionComputationArguments',
 		'gbufferRenderPass',
-		'sceneRenderPass',
 		'ambientOcclusionHorizontalBlurArguments',
-		'ambientOcclusionVerticalBlurArguments'
+		'ambientOcclusionVerticalBlurArguments',
+		'skyLighting',
+		'groundLighting',
+		'sunDirection'
 	],
 	#category : #'WodenEngine-Scene-Rendering'
 }
@@ -94,6 +100,16 @@ WDSLightedSceneRendererViewport >> globalLightingStateShaderBindings: anObject [
 	globalLightingStateShaderBindings := anObject
 ]
 
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> hdrToneMappingFullscreenPass [
+	^ hdrToneMappingFullscreenPass
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> hdrToneMappingFullscreenPass: anObject [
+	hdrToneMappingFullscreenPass := anObject
+]
+
 { #category : #initialization }
 WDSLightedSceneRendererViewport >> initialize [
 	super initialize.
@@ -121,23 +137,43 @@ WDSLightedSceneRendererViewport >> lights: anObject [
 ]
 
 { #category : #accessing }
-WDSLightedSceneRendererViewport >> sceneRenderPass [
-	^ sceneRenderPass
+WDSLightedSceneRendererViewport >> sceneHDRRenderPass [
+	^ hdrSceneRenderPass
 ]
 
 { #category : #accessing }
-WDSLightedSceneRendererViewport >> sceneRenderPass: anObject [
-	sceneRenderPass := anObject
+WDSLightedSceneRendererViewport >> sceneHDRRenderPass: anObject [
+	hdrSceneRenderPass := anObject
 ]
 
 { #category : #accessing }
-WDSLightedSceneRendererViewport >> sceneRenderTarget [
-	^ sceneRenderTarget
+WDSLightedSceneRendererViewport >> sceneHDRRenderTarget [
+	^ hdrSceneRenderTarget
 ]
 
 { #category : #accessing }
-WDSLightedSceneRendererViewport >> sceneRenderTarget: anObject [
-	sceneRenderTarget := anObject
+WDSLightedSceneRendererViewport >> sceneHDRRenderTarget: anObject [
+	hdrSceneRenderTarget := anObject
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> sceneLDRRenderPass [
+	^ ldrSceneRenderPass
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> sceneLDRRenderPass: anObject [
+	ldrSceneRenderPass := anObject
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> sceneLDRRenderTarget [
+	^ ldrSceneRenderTarget
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> sceneLDRRenderTarget: anObject [
+	ldrSceneRenderTarget := anObject
 ]
 
 { #category : #accessing }
@@ -182,8 +218,14 @@ WDSLightedSceneRendererViewport >> validGBufferRenderPass [
 ]
 
 { #category : #accessing }
-WDSLightedSceneRendererViewport >> validSceneRenderPass [
+WDSLightedSceneRendererViewport >> validSceneHDRRenderPass [
 	self flag: 'TODO: Check this MT correctness.'.
-	sceneRenderPass setColorClearValue: 0 value: self scene backgroundColor asAGPUColor4f.
-	^ sceneRenderPass
+	hdrSceneRenderPass setColorClearValue: 0 value: self scene backgroundColor asAGPUColor4f.
+	^ hdrSceneRenderPass
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> validSceneLDRRenderPass [
+	ldrSceneRenderPass setColorClearValue: 0 value: self scene backgroundColor asAGPUColor4f.
+	^ ldrSceneRenderPass
 ]

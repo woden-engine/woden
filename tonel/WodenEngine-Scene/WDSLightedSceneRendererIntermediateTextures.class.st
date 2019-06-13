@@ -5,13 +5,19 @@ Class {
 		'ambientOcclusionTexture',
 		'ambientOcclusionBlurIntermediateTexture',
 		'depthStencilTexture',
-		'sceneColorTexture',
 		'normalTexture',
 		'ambientOcclusionHorizontalBlurArguments',
 		'ambientOcclusionVerticalBlurArguments',
 		'ambientOcclusionRenderTarget',
 		'ambientOcclusionIntermediateRenderTarget',
-		'ambientOcclusionComputationArguments'
+		'ambientOcclusionComputationArguments',
+		'hdrToneMappingFullscreenPass',
+		'sceneHDRColorTexture',
+		'sceneHDRRenderPass',
+		'sceneHDRRenderTarget',
+		'sceneLDRColorTexture',
+		'sceneLDRRenderPass',
+		'sceneLDRRenderTarget'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -43,6 +49,12 @@ WDSLightedSceneRendererIntermediateTextures >> applyToRenderingViewport: renderi
 			ambientOcclusionTexture: engine resourceCache whiteTexture
 	].
 
+	renderingViewport
+		sceneHDRRenderTarget: sceneHDRRenderTarget;
+		sceneHDRRenderPass: sceneHDRRenderPass;
+		sceneLDRRenderTarget: sceneLDRRenderTarget;
+		sceneLDRRenderPass: sceneLDRRenderPass;
+		hdrToneMappingFullscreenPass: hdrToneMappingFullscreenPass.
 ]
 
 { #category : #'multi eye rendering' }
@@ -58,8 +70,27 @@ WDSLightedSceneRendererIntermediateTextures >> createMainRenderTargets [
 			sample_count: sampleCount;
 			yourself).
 	normalTexture := engine createRenderTargetColorTextureWithExtent: extent sampleCount: sampleCount format: AGPU_TEXTURE_FORMAT_R10G10B10A2_UNORM.
-						
-	sceneColorTexture := engine createRenderTargetColorTextureWithExtent: extent sampleCount: sampleCount format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB.
+
+	sceneHDRColorTexture := engine createRenderTargetColorTextureWithExtent: extent sampleCount: sampleCount format: AGPU_TEXTURE_FORMAT_R16G16B16A16_FLOAT.
+	sceneLDRColorTexture := engine createRenderTargetColorTextureWithExtent: extent sampleCount: sampleCount format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB.
+
+	sceneHDRRenderTarget := WDCRenderTarget for: engine colorAttachments: { sceneHDRColorTexture } depthStencilAttachment: depthStencilTexture.
+	sceneHDRRenderPass := sceneHDRRenderTarget createRenderPassDescription
+		setColorAttachmentBeginAction: AGPU_ATTACHMENT_CLEAR endAction: AGPU_ATTACHMENT_KEEP;
+		setDepthStencilBeginAction: AGPU_ATTACHMENT_KEEP endAction: AGPU_ATTACHMENT_KEEP;
+		checkSession;
+		yourself.
+
+	sceneLDRRenderTarget := WDCRenderTarget for: engine colorAttachments: { sceneLDRColorTexture } depthStencilAttachment: depthStencilTexture.
+	sceneLDRRenderPass := sceneLDRRenderTarget createRenderPassDescription
+		setColorAttachmentBeginAction: AGPU_ATTACHMENT_CLEAR endAction: AGPU_ATTACHMENT_KEEP;
+		setDepthStencilBeginAction: AGPU_ATTACHMENT_KEEP endAction: AGPU_ATTACHMENT_KEEP;
+		checkSession;
+		yourself.
+
+	hdrToneMappingFullscreenPass := (WDCToneMappingFullScreenPass for: engine)
+		sceneHDRColorTexture: sceneHDRColorTexture;
+		yourself.
 
 ]
 

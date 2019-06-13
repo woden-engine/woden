@@ -112,7 +112,8 @@ WDASceneViewScreenDisplayMode >> viewportForCamera: camera renderTarget: renderT
 	projectionMatrix := self computeProjectionMatrixFor: camera.
 	cameraState
 		projectionMatrix: projectionMatrix;
-		inverseProjectionMatrix: projectionMatrix inverted.
+		inverseProjectionMatrix: projectionMatrix inverted;
+		exposure: camera exposure.
 	^ WDSGViewport new
 		camera: camera;
 		cameraState: cameraState;

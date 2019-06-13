@@ -13,7 +13,9 @@ Class {
 		'frustum',
 		'aspectRatio',
 		'projectionInvertedY',
-		'isNotControlledByTheUser'
+		'isNotControlledByTheUser',
+		'exposure',
+		'toneMappingOperator'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
@@ -26,6 +28,21 @@ WDSGCamera >> aspectRatio [
 { #category : #accessing }
 WDSGCamera >> aspectRatio: anObject [
 	aspectRatio := anObject
+]
+
+{ #category : #'tone mapping' }
+WDSGCamera >> exponentialToneMapping [
+	self toneMappingOperator: #exponential
+]
+
+{ #category : #accessing }
+WDSGCamera >> exposure [
+	^ exposure
+]
+
+{ #category : #accessing }
+WDSGCamera >> exposure: anObject [
+	exposure := anObject
 ]
 
 { #category : #accessing }
@@ -89,12 +106,18 @@ WDSGCamera >> initialize [
 	isPerspective := true.
 	isNotControlledByTheUser := false.
 	frustum := WMFrustumF new.
-	
+	exposure := 1.0.
+	toneMappingOperator := #linear.
 ]
 
 { #category : #testing }
 WDSGCamera >> isCamera [
 	^ true
+]
+
+{ #category : #testing }
+WDSGCamera >> isLdrToneMapping [
+	^ exposure == 1.0 and: [ toneMappingOperator == #linear ]
 ]
 
 { #category : #accessing }
@@ -117,6 +140,11 @@ WDSGCamera >> isPerspective: anObject [
 	isPerspective := anObject
 ]
 
+{ #category : #'tone mapping' }
+WDSGCamera >> linearToneMapping [
+	self toneMappingOperator: #linear
+]
+
 { #category : #accessing }
 WDSGCamera >> nearDistance [
 	^ nearDistance
@@ -125,6 +153,21 @@ WDSGCamera >> nearDistance [
 { #category : #accessing }
 WDSGCamera >> nearDistance: anObject [
 	nearDistance := anObject
+]
+
+{ #category : #'tone mapping' }
+WDSGCamera >> reinhardToneMapping [
+	self toneMappingOperator: #reinhard
+]
+
+{ #category : #accessing }
+WDSGCamera >> toneMappingOperator [
+	^ toneMappingOperator
+]
+
+{ #category : #accessing }
+WDSGCamera >> toneMappingOperator: anObject [
+	toneMappingOperator := anObject
 ]
 
 { #category : #'as yet unclassified' }

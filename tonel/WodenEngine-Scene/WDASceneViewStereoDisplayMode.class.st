@@ -115,7 +115,8 @@ WDASceneViewStereoDisplayMode >> leftViewportForCamera: camera [
 	cameraState := WTCameraState new.
 	cameraState
 		projectionMatrix: leftProjectionMatrix;
-		inverseProjectionMatrix: leftProjectionMatrix inverted.
+		inverseProjectionMatrix: leftProjectionMatrix inverted;
+		exposure: camera exposure.
 	
 	^ WDSGViewport new
 		camera: camera;
@@ -176,7 +177,8 @@ WDASceneViewStereoDisplayMode >> rightViewportForCamera: camera [
 	cameraState := WTCameraState new.
 	cameraState
 		projectionMatrix: rightProjectionMatrix;
-		inverseProjectionMatrix: rightProjectionMatrix inverted.
+		inverseProjectionMatrix: rightProjectionMatrix inverted;
+		exposure: camera exposure.
 	
 	^ WDSGViewport new
 		camera: camera;
