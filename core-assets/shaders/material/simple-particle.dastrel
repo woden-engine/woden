@@ -46,14 +46,17 @@ code_block(vertex) particleVertex
     }
 
 	let particleTexcoord = particleQuadVertices[VertexStage.vertexID].xy + 0.5f;
-	let particlePosition = particleQuadVertices[VertexStage.vertexID]*particleState.size + particleState.position;
+	let particleVertex = particleQuadVertices[VertexStage.vertexID]*particleState.size;
 	
-	let worldParticlePosition = (objectState.matrix*float4(particlePosition, 1.0f)).xyz;
-	let viewParticlePosition = float4(worldParticlePosition.xyz + CameraState.viewMatrix[3].xyz, 1.0f);
+	let rotatedParticleVertex = objectState.matrix*float4(particleVertex, 0.0f);
+
+	let worldParticlePosition = objectState.matrix*float4(particleState.position, 1.0f);
+	let viewParticlePosition = CameraState.viewMatrix*worldParticlePosition;
+	let viewParticleVertex = rotatedParticleVertex + viewParticlePosition;
 
     VertexOutput.color = objectState.color*particleState.color;
 	VertexOutput.texcoord = particleTexcoord;
-    VertexStage.screenPosition = projectionMatrix * viewParticlePosition;
+    VertexStage.screenPosition = projectionMatrix * viewParticleVertex;
 }
 
 //==============================================================================
