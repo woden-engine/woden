@@ -3,7 +3,7 @@ I represent the animation state of a skinned mesh.
 "
 Class {
 	#name : #WDCSkinnedMeshAnimationState,
-	#superclass : #Object,
+	#superclass : #WDCSceneDependantRenderableData,
 	#instVars : [
 		'mesh',
 		'poseBuffer',

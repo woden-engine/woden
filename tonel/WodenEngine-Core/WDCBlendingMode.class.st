@@ -15,6 +15,7 @@ Class {
 		'AddAlpha',
 		'AlphaOver',
 		'AlphaOverCompose',
+		'PremultipliedAlphaOver',
 		'Replace'
 	],
 	#pools : [
@@ -46,10 +47,16 @@ WDCBlendingMode class >> alphaOverCompose [
 { #category : #initialization }
 WDCBlendingMode class >> initialize [
 	Replace := self sourceFactor: AGPU_BLENDING_ONE destFactor: AGPU_BLENDING_ZERO.
+	PremultipliedAlphaOver := self sourceFactor: AGPU_BLENDING_ONE destFactor: AGPU_BLENDING_INVERTED_SRC_ALPHA.
 	AlphaOver := self sourceFactor: AGPU_BLENDING_SRC_ALPHA destFactor: AGPU_BLENDING_INVERTED_SRC_ALPHA.
 	AlphaOverCompose := self sourceFactor: AGPU_BLENDING_SRC_ALPHA destFactor: AGPU_BLENDING_INVERTED_SRC_ALPHA sourceFactorAlpha: AGPU_BLENDING_ONE destFactorAlpha: AGPU_BLENDING_INVERTED_SRC_ALPHA.
 	Add := self sourceFactor: AGPU_BLENDING_ONE destFactor: AGPU_BLENDING_ONE.
 	AddAlpha := self sourceFactor: AGPU_BLENDING_SRC_ALPHA destFactor: AGPU_BLENDING_ONE.
+]
+
+{ #category : #'blending modes' }
+WDCBlendingMode class >> premultipliedAlphaOver [
+	^ PremultipliedAlphaOver
 ]
 
 { #category : #'blending modes' }

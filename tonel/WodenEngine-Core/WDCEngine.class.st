@@ -68,6 +68,11 @@ WDCEngine class >> generateOfflineMipmapsGPU: aBoolean [
 	GenerateOfflineMipmapsGPU := aBoolean
 ]
 
+{ #category : #'as yet unclassified' }
+WDCEngine class >> gpuBasedParticleSimulation [
+	^ false
+]
+
 { #category : #accessing }
 WDCEngine class >> reset [
 	<script: 'self reset'>
@@ -252,6 +257,23 @@ WDCEngine >> createDevice [
 
 	graphicsQueue := device getDefaultCommandQueue.
 
+]
+
+{ #category : #'resource building' }
+WDCEngine >> createGPUStorageBuffer: size [
+	^ self createGPUStorageBuffer: size initialData: nil
+]
+
+{ #category : #'resource building' }
+WDCEngine >> createGPUStorageBuffer: size initialData: initialData [
+	| desc |
+	desc := AGPUBufferDescription new
+		size: size;
+		usage: AGPU_STATIC;
+		binding: AGPU_STORAGE_BUFFER;
+		mapping_flags: self streamingMappedBufferMappingFlags;
+		stride: 0.
+	^ (WDCBufferResource for: self) description: desc; data: initialData; checkSession ; yourself
 ]
 
 { #category : #'resource building' }

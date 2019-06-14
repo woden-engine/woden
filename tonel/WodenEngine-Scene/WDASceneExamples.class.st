@@ -591,6 +591,83 @@ WDASceneExamples class >> example09DragonIsland [
 	view := model openWith: WDAFPSSceneView allowingVR
 ]
 
+{ #category : #examples }
+WDASceneExamples class >> example10ParticleSystem [
+	| model meshBuilder mesh cube light scene camera particleSystemRenderable particleSystem engine colorRamp |
+	model := WDASampleSceneModel new.
+	scene := model newScene.
+	engine := model engine.
+	camera := model camera.
+	camera transform translateByX: 0.0 y: 1.0 z: 3.0.
+	
+	meshBuilder := WDCComplexGenericMeshBuilder for: scene engine.
+	meshBuilder
+		translateToX: 0.0 y: 0.5 z: 0.0;
+		addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+		translateToX: 0.0 y: -0.25 z: 0.0;
+		addCubeWithWidth: 10.0 height: 0.5 depth: 10.0.
+	mesh := meshBuilder mesh.
+	
+	cube := WDSGSpatialObject new.
+	cube renderable: mesh.
+	scene add: cube.
+	
+	light := WDSGLightSource new.
+	light point.
+	light state
+			intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.9) normalized * 0.8.
+	light transform
+		translateByX: -1.5 y: 1.5 z: 1.6.
+	scene add: light.
+
+	"Particle system"
+	colorRamp := WDCLinearRamp with: {
+		0.0 -> '000000' asColor asWMVector3F.
+		0.6 -> 'ff0000' asColor asWMVector3F.
+		0.90 -> 'ffff00' asColor asWMVector3F.
+		1.0 -> 'ffff80' asColor asWMVector3F.
+	}.
+
+	particleSystemRenderable := WDCParticleSystemRenderable new.
+	particleSystemRenderable particleCount: (WDCEngine gpuBasedParticleSimulation
+		ifTrue: [ 10000 ]
+		ifFalse: [ 2000 ]).
+	particleSystemRenderable simulationBlock: [ :particleState :index :delta |
+		| lifeTime color flickering |
+		lifeTime := particleState lifeTime  - delta.
+		lifeTime <= 0.0 ifTrue:[
+			lifeTime := 1.7 + particleState nextRandom*1.5.
+			particleState
+				startingUp: false;
+				position: particleState nextRandomVector3F * 0.25;
+				velocity: (WMVector3F
+					x: particleState nextRandom*0.5
+					y: 2.0 + (particleState nextRandom *0.5)
+					z: particleState nextRandom*0.5).
+		].
+	
+		color := (colorRamp value: lifeTime / 3.0) asWMVector4F.
+		flickering := (lifeTime*25.0) signedGradientNoise  *0.4 + 0.6.
+		
+		particleState
+			size: (WMVector3F x: 0.2 y: 0.2);
+			velocity: (particleState velocity + (WMVector3F y: -9.8 * delta*0.04));
+			position: (particleState position + (particleState velocity *delta));
+			color: color * flickering;
+			lifeTime: lifeTime.
+	].
+
+	particleSystem := WDSGSpatialObject new.
+	particleSystem translucentRenderPriority;
+		isOpaqueShadowCaster: false.
+
+	particleSystem renderable: particleSystemRenderable.
+	particleSystem transform translateByY: 0.5.
+	scene add: particleSystem.
+
+	model openWith: WDAFPSSceneView.
+]
+
 { #category : #'example models' }
 WDASceneExamples class >> exampleModelBabyDragon [
 	(WDCEngine default resourceCache load3DModel: 'models/demos/baby_dragon.fmdl') openViewer

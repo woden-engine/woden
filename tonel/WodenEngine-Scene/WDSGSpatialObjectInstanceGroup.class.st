@@ -174,7 +174,9 @@ WDSGSpatialObjectInstanceGroup >> renderOn: stateTracker [
 		useShaderResources: self currentObjectStateBinding;
 		objectBlendingMode: blendingMode.
 		
-	renderable renderOn: stateTracker instanceCount: children size baseInstance: 0 baseVertex: 0
+	renderable
+		renderingSceneDependantData: renderableSceneData;
+		renderOn: stateTracker instanceCount: children size baseInstance: 0 baseVertex: 0
 ]
 
 { #category : #rendering }

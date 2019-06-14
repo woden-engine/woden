@@ -7,7 +7,11 @@ Class {
 	#instVars : [
 		'name',
 		'boundingBox',
-		'modificationCount'
+		'modificationCount',
+		'renderingSceneDependantData'
+	],
+	#pools : [
+		'AGPUConstants'
 	],
 	#category : #'WodenEngine-Core-Mesh'
 }
@@ -75,6 +79,16 @@ WDCRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstanc
 { #category : #'as yet unclassified' }
 WDCRenderable >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [
 	self subclassResponsibility
+]
+
+{ #category : #accessing }
+WDCRenderable >> renderingSceneDependantData [
+	^ renderingSceneDependantData
+]
+
+{ #category : #accessing }
+WDCRenderable >> renderingSceneDependantData: anObject [
+	renderingSceneDependantData := anObject
 ]
 
 { #category : #'as yet unclassified' }
