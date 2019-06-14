@@ -14,14 +14,16 @@ WDCSmalltalkProceduralTextureReader class >> loadFromFileReference: aFileReferen
 	| script scriptEvaluatorClass |
 	script := aFileReference contents.
 	^ WDCResourceCache cachedValueFor: { #sttextEval . textureFileAndQuery . '|' . script } ifAbsentPut: [
-		scriptEvaluatorClass := WDCPharoProceduralScriptContext.
+		scriptEvaluatorClass := WDCPharoProceduralScriptEvaluator.
 		(script beginsWith: '"!GPU') ifTrue: [ 
-			scriptEvaluatorClass := WDCPharoProceduralGPUScriptContext
+			scriptEvaluatorClass := WDCPharoProceduralGPUScriptEvaluator
 		].
 	
 		Smalltalk compiler
-			receiver: (scriptEvaluatorClass new
-				parameters: textureFileAndQuery);
+			receiver: (WDCPharoProceduralScriptContext new
+				textureGenerator: (scriptEvaluatorClass new
+					parameters: textureFileAndQuery)
+				);
 			evaluate: script
 	]
 ]

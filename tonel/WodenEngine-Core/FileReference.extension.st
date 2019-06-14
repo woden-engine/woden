@@ -15,10 +15,13 @@ FileReference >> gtInspectorStTextScriptIn: composite [
 	<gtInspectorPresentationOrder: 0>
 	composite pharoScript
 			title: 'Procedural Texture';
+			smalltalkClass: [ WDCPharoProceduralScriptContext ];
 			doItReceiver: [ :s |
-				(s contents beginsWith: '"!GPU')
-					ifTrue: [ WDCPharoProceduralGPUScriptContext forInspector ]
-					ifFalse: [ WDCPharoProceduralScriptContext forInspector ]
+				WDCPharoProceduralScriptContext new textureGenerator: (
+					(s contents beginsWith: '"!GPU')
+						ifTrue: [ WDCPharoProceduralGPUScriptEvaluator forInspector ]
+						ifFalse: [ WDCPharoProceduralScriptEvaluator forInspector ]
+				)
 			];
 			display: [ self readStreamDo: [ :s | s contents ] ];
 			act: [ :text |
