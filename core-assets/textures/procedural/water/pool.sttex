@@ -10,5 +10,4 @@ heightFunction := [ :s :t |
 	st := s@t.
 	st*textureSize fbmVoronoiNoiseOctaves: 3 lacunarity: 2.0 tiledWith: textureSize.
 ].
-
-^ self textureExtent: 256@256 heightFunction: heightFunction colorWith: colorRamp normalHeightScaleFactor: 3.0
+^ textureGenerator	textureExtent: 256@256;	heightFunction: heightFunction;	colorMapFunction: colorRamp;	normalHeightScaleFactor: 3.0;	evaluate

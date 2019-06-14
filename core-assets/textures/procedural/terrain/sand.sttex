@@ -7,4 +7,4 @@ colorRamp := WDCLinearRamp with: {
 heightFunction := [:s :t |	|st|
     st := s@t.
     st*textureSize fbmGradientNoiseOctaves: 4 lacunarity: 2.0 tiledWith: textureSize.
-].^ self textureExtent: 256@256 heightFunction: heightFunction colorWith: colorRamp
+].^ textureGenerator	textureExtent: 256@256;	heightFunction: heightFunction;	colorMapFunction: colorRamp;	evaluate
