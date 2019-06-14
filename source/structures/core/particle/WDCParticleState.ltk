@@ -1,0 +1,71 @@
+Structure <<< #WDCParticleState
+	slots: {
+		#position => WMVector3F.
+		#velocity => WMVector3F.
+		#size => WMVector3F.
+		#color => WMVector4F.
+
+		#lifeTime => Float32.
+		#randomSeed => UInt32.
+		#flags => UInt32.
+		#padding => UInt32.
+	};
+	package: 'WodenEngine-Structures-Core-Material';
+	yourself.
+
+WDCParticleState category: 'accessing' methods: {
+:[startingUp -> BooleanBit.
+	^ (flags & 1) ~= 0
+].
+
+:[startingUp: <BooleanBit>value
+	value ifTrue: [
+		flags := flags | 1
+	] ifFalse:[
+		flags := flags & 16rFFFFFFFE
+	].
+].
+
+}.
+
+WDCParticleState category: 'random' methods: {
+	:[setInitialSeedForIndex: index
+		randomSeed := index randomNoiseHash castTo: UInt32.
+		randomSeed == 0 ifTrue: [
+			randomSeed := 1.
+		].
+	].
+
+
+	:[nextRandomUInt -> UInt32.
+		"https://en.wikipedia.org/wiki/Linear_congruential_generator"
+		"GlibC 2^31 	1103515245 	12345"
+		randomSeed := (randomSeed*1103515245 + 12345) & 16r7FFFFFFF.
+		^ randomSeed
+	].
+
+	:[nextRandomInt -> Int32.
+		^ self nextRandomUInt - 16r40000000 castTo: Int32
+	].
+
+	:[nextRandom -> Float32.
+		^ (self nextRandomInt castTo: Float32) / 1073741823.0
+	].
+
+	:[nextRandomVector2F -> WMVector2F.
+		^ WMVector2F x: self nextRandom y: self nextRandom
+	].
+
+	:[nextRandomVector3F_xz -> WMVector3F.
+		^ WMVector3F x: self nextRandom y: 0.0 z: self nextRandom
+	].
+
+	:[nextRandomVector3F -> WMVector3F.
+		^ WMVector3F x: self nextRandom y: self nextRandom z: self nextRandom
+	].
+
+	:[nextRandomVector4F -> WMVector4F.
+		^ WMVector4F x: self nextRandom y: self nextRandom z: self nextRandom w: self nextRandom
+	].
+
+}.

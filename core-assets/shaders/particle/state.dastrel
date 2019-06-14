@@ -1,0 +1,17 @@
+struct ParticleStateData
+{
+	position: float3;
+	velocity: float3;
+	size: float3;
+	color: float4;
+
+	lifeTime: float;
+	randomSeed: uint;
+	flags: uint;
+	_padding: float;
+}
+
+function isParticleStartingUp(particle: ref ParticleStateData) -> bool
+{
+	return (particle.flags & 1u) != 0u;
+}
