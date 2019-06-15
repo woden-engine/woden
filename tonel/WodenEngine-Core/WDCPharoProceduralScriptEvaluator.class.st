@@ -59,7 +59,7 @@ WDCPharoProceduralScriptEvaluator >> evaluate [
 	self isInInspector ifTrue: [
 		^ WDCMultiTextureView new textures: { 
 			'Albedo' -> (WDCTextureData extent: self extentForInspector srgbColorRenderWith: [ :s :t |
-				colorMapFunction value: (heightFunction value: s value: t)
+				self colorMapFunction value: (heightFunction value: s value: t)
 			]).
 			'Normal Map' -> (WDCTextureData extent: self extentForInspector normalMapWithHeightFunction: heightFunction heightScaleFactor: normalHeightScaleFactor).
 		}.
@@ -68,7 +68,7 @@ WDCPharoProceduralScriptEvaluator >> evaluate [
 
 	(self isAlbedoRequested or: [self isDefaultTextureRequested]) ifTrue: [ 
 		^ WDCTextureData extent: textureExtent srgbColorRenderWith: [ :s :t |
-			colorMapFunction value: (heightFunction value: s value: t)
+			self colorMapFunction value: (heightFunction value: s value: t)
 		]
 	].
 

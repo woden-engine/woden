@@ -5,15 +5,14 @@ Class {
 }
 
 { #category : #converting }
-WDCGrayscaleColorMap >> asDastrelColorMapFunction [
+WDCGrayscaleColorMap >> generateDastrelFunctionWith: codeConverter withName: requiredName argumentTypes: argumentType returnType: returnType [
 	| source |
-	source := '
-	function colorMapFunction(x: float) -> float4 {
+	source := 'function ' , requiredName , '(x: float) -> float4 {
 		return float4(x, x, x, 1.0f);
 	}
 '.
 
-	^ (DASLParser parse: source) modules first
+	^ codeConverter parseFunctionDefinition: source
 ]
 
 { #category : #testing }

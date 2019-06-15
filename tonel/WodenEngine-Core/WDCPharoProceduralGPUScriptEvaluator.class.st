@@ -12,13 +12,11 @@ Class {
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> colorShaderForHeightFunction: heightFunctionObject coloredWith: colorFunctionObject [
-	| heightFunctionNode colorMapFunctionNode |
 	codeConverter := DASLPharoCodeConverter new.
-	heightFunctionNode :=
-		codeConverter convertFunction: heightFunctionObject name: #heightFieldFunction argumentTypes: #(float float) returnType: #float.
-	colorMapFunctionNode := colorFunctionObject asDastrelColorMapFunction.
+	codeConverter convertFunction: colorFunctionObject name: #colorMapFunction argumentTypes: #(float) returnType: #float4.
+	codeConverter convertFunction: heightFunctionObject name: #heightFieldFunction argumentTypes: #(float float) returnType: #float.
 
-	^ self compileShader: 'procedural/coloredHeightFieldTextureInterface.dastrel' injectingNodes: { heightFunctionNode . colorMapFunctionNode }
+	^ self compileShader: 'procedural/coloredHeightFieldTextureInterface.dastrel' injectingNodes: codeConverter generatedNodes
 
 ]
 
@@ -47,7 +45,7 @@ WDCPharoProceduralGPUScriptEvaluator >> compileShader: shaderFileName injectingN
 WDCPharoProceduralGPUScriptEvaluator >> evaluate [
 	self isInInspector ifTrue: [
 		^ WDCMultiTextureView new textures: { 
-			'Albedo' -> (self renderSRGBWithExtent: self extentForInspector heightFunction: heightFunction coloredWith: colorMapFunction).
+			'Albedo' -> (self renderSRGBWithExtent: self extentForInspector heightFunction: heightFunction coloredWith: self colorMapFunction).
 			'Normal Map' -> (self renderNormalMapWithExtent: self extentForInspector heightFunction: heightFunction heightScaleFactor: normalHeightScaleFactor).
 			'Height Map' -> (self renderHeightMapWithExtent: self extentForInspector heightFunction: heightFunction).
 		}.
@@ -55,7 +53,7 @@ WDCPharoProceduralGPUScriptEvaluator >> evaluate [
 	].
 
 	(self isAlbedoRequested or: [self isDefaultTextureRequested]) ifTrue: [ 
-		^ self renderSRGBWithExtent: textureExtent heightFunction: heightFunction coloredWith: colorMapFunction
+		^ self renderSRGBWithExtent: textureExtent heightFunction: heightFunction coloredWith: self colorMapFunction
 	].
 
 	self isNormalMapRequested ifTrue: [
@@ -83,22 +81,21 @@ WDCPharoProceduralGPUScriptEvaluator >> getMainFragmentStageFrom: spirvShader [
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> heightFieldShaderFor: heightFunctionObject [
-	| heightFunctionNode |
 	codeConverter := DASLPharoCodeConverter new.
-	heightFunctionNode :=
-		codeConverter convertFunction: heightFunctionObject name: #heightFieldFunction argumentTypes: #(float float) returnType: #float.
+	codeConverter convertFunction: heightFunctionObject name: #heightFieldFunction argumentTypes: #(float float) returnType: #float.
 
-	^ self compileShader: 'procedural/heightFieldTextureInterface.dastrel' injectingNodes: { heightFunctionNode }
+	^ self compileShader: 'procedural/heightFieldTextureInterface.dastrel' injectingNodes: codeConverter generatedNodes.
+
 
 ]
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> normalShaderForHeightFunction: heightFunctionObject dx: dx dy: dy heightScaleFactor: heightScaleFactor [
-	| heightFunctionNode heightScaleFactorNode builder dxNode dyNode |
+	| heightScaleFactorNode builder dxNode dyNode |
 	
 	codeConverter := DASLPharoCodeConverter new.
-	heightFunctionNode :=
-		codeConverter convertFunction: heightFunctionObject name: #heightFieldFunction argumentTypes: #(float float) returnType: #float.
+	codeConverter
+		convertFunction: heightFunctionObject name: #heightFieldFunction argumentTypes: #(float float) returnType: #float.
 	builder := DASLAstBuilder new.
 			
 	heightScaleFactorNode := builder constantGlobalNamed: #HeightScaleFactor typeNamed: #float value: 
@@ -108,7 +105,7 @@ WDCPharoProceduralGPUScriptEvaluator >> normalShaderForHeightFunction: heightFun
 	dyNode := builder constantGlobalNamed: #HeightFieldDy typeNamed: #float value: 
 		(builder literalFloat: dy asFloat).
 		
-	^ self compileShader: 'procedural/heightFieldToNormalMapTextureInterface.dastrel' injectingNodes: { heightFunctionNode . heightScaleFactorNode . dxNode . dyNode }
+	^ self compileShader: 'procedural/heightFieldToNormalMapTextureInterface.dastrel' injectingNodes: codeConverter generatedNodes , { heightScaleFactorNode . dxNode . dyNode }
 
 ]
 

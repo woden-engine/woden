@@ -32,6 +32,15 @@ WDCMultiTextureView >> gtInspectorTextures: composite [
 		]"
 ]
 
+{ #category : #'as yet unclassified' }
+WDCMultiTextureView >> saveToDisk: namePrefix [
+	| fileName |
+	textures do: [ :assoc |
+		fileName := namePrefix , assoc key , '.png'.
+		PNGReadWriter putForm: (assoc value firstLayerLevelAsForm) onFileNamed: fileName
+	]
+]
+
 { #category : #accessing }
 WDCMultiTextureView >> textures [
 	^ textures

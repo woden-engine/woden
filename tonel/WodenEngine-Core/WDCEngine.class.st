@@ -70,7 +70,7 @@ WDCEngine class >> generateOfflineMipmapsGPU: aBoolean [
 
 { #category : #'as yet unclassified' }
 WDCEngine class >> gpuBasedParticleSimulation [
-	^ false
+	^ true
 ]
 
 { #category : #accessing }

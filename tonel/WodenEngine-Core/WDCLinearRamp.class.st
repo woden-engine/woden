@@ -12,25 +12,6 @@ WDCLinearRamp class >> with: edges [
 	^ self new edges: edges
 ]
 
-{ #category : #'dastrel color ramp' }
-WDCLinearRamp >> asDastrelColorMapFunction [
-	| source |
-	source := ByteString streamContents: [ :out |
-		out nextPutAll: 'function colorMapFunction(x: float) -> float4 {'; lf.
-		
-		out nextPutAll: ('if(x < {1}f) return {2};' format: {edges first key asFloat . edges first value valueForLinearInterpolation formatAsDastrelColor}); lf.
-		out nextPutAll: ('if(x > {1}f) return {2};' format: {edges last key asFloat . edges last value valueForLinearInterpolation formatAsDastrelColor}); lf.
-		
-		out tab; nextPutAll: 'let result : float4;'; lf.
-		self emitDastrelColorMapPartitionStart: 1 size: edges size - 1 into: out.
-	
-		out tab; nextPutAll: 'return result;'; lf.
-		out nextPutAll: '}'; lf
-	].
-
-	^ (DASLParser parse: source) modules first
-]
-
 { #category : #converting }
 WDCLinearRamp >> asMorph [
 	^ self visualizationForm asMorph
@@ -91,6 +72,25 @@ WDCLinearRamp >> evalValue: aValue between: lowerEdge and: upperEdge [
 	self assert: aValue <= upperEdge key.
 	alpha := (aValue - lowerEdge key) / (upperEdge key - lowerEdge key).
 	^ (self interpolate: lowerEdge value valueForLinearInterpolation with: upperEdge value valueForLinearInterpolation at: alpha) resultForLinearInterpolation
+]
+
+{ #category : #'dastrel color ramp' }
+WDCLinearRamp >> generateDastrelFunctionWith: codeConverter withName: requiredName argumentTypes: argumentType returnType: returnType [
+	| source |
+	source := ByteString streamContents: [ :out |
+		out nextPutAll: 'function '; nextPutAll: requiredName; nextPutAll: '(x: float) -> float4 {'; lf.
+		
+		out nextPutAll: ('if(x < {1}f) return {2};' format: {edges first key asFloat . edges first value valueForLinearInterpolation formatAsDastrelColor}); lf.
+		out nextPutAll: ('if(x > {1}f) return {2};' format: {edges last key asFloat . edges last value valueForLinearInterpolation formatAsDastrelColor}); lf.
+		
+		out tab; nextPutAll: 'let result : float4;'; lf.
+		self emitDastrelColorMapPartitionStart: 1 size: edges size - 1 into: out.
+	
+		out tab; nextPutAll: 'return result;'; lf.
+		out nextPutAll: '}'; lf
+	].
+
+	^ codeConverter parseFunctionDefinition: source
 ]
 
 { #category : #'as yet unclassified' }
