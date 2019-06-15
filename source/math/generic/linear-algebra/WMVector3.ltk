@@ -1,23 +1,27 @@
 WMVector3 class category: 'construction' methods: {
 :[x: <Scalar>x -> WMVector3.
+	<constructor>
 	^ WMVector3 newValue
 		x: x;
 		yourself
 ].
 
 :[y: <Scalar>y -> WMVector3.
+	<constructor>
 	^ WMVector3 newValue
 		y: y;
 		yourself
 ].
 
 :[z: <Scalar>z -> WMVector3.
+	<constructor>
 	^ WMVector3 newValue
 		z: z;
 		yourself
 ].
 
 :[x: <Scalar>x y: <Scalar>y -> WMVector3.
+	<constructor>
 	^ WMVector3 newValue
 		x: x;
 		y: y;
@@ -25,6 +29,7 @@ WMVector3 class category: 'construction' methods: {
 ].
 
 :[x: <Scalar>x z: <Scalar>z -> WMVector3.
+	<constructor>
 	^ WMVector3 newValue
 		x: x;
 		z: z;
@@ -32,6 +37,7 @@ WMVector3 class category: 'construction' methods: {
 ].
 
 :[y: <Scalar>y z: <Scalar>z -> WMVector3.
+	<constructor>
 	^ WMVector3 newValue
 		y: y;
 		z: z;
@@ -39,6 +45,7 @@ WMVector3 class category: 'construction' methods: {
 ].
 
 :[x: <Scalar>x y: <Scalar>y z: <Scalar>z -> WMVector3.
+	<constructor>
     <inline>
 	^ WMVector3 newValue
 		x: x;
@@ -235,5 +242,13 @@ WMVector3 category: 'printing' methods: {
 		nextPutAll: ' x: '; print: x;
 		nextPutAll: ' y: '; print: y;
 		nextPutAll: ' z: '; print: z.
+].
+
+:[formatAsDastrelColor -> _DynamicObject.
+	^ 'float4({1}f, {2}f, {3}f, 1.0f)' format: {
+		x asFloat.
+		y asFloat.
+		z asFloat.
+	}
 ].
 }.

@@ -281,4 +281,13 @@ WMVector4 category: 'printing' methods: {
 		nextPutAll: ' z: '; print: z;
 		nextPutAll: ' w: '; print: w.
 ].
+
+:[formatAsDastrelColor -> _DynamicObject.
+	^ 'float4({1}f, {2}f, {3}f, {4}f)' format: {
+		x asFloat.
+		y asFloat.
+		z asFloat.
+		w asFloat.
+	}
+].
 }.

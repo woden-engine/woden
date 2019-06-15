@@ -1,17 +1,20 @@
 WMVector2 class category: 'construction' methods: {
 :[x: <Scalar>x -> WMVector2.
+	<constructor>
 	^ WMVector2 newValue
 		x: x;
 		yourself
 ].
 
 :[y: <Scalar>y -> WMVector2.
+	<constructor>
 	^ WMVector2 newValue
 		y: y;
 		yourself
 ].
 
 :[x: <Scalar>x y: <Scalar>y -> WMVector2.
+	<constructor>
 	^ WMVector2 newValue
 		x: x;
 		y: y;
@@ -159,5 +162,12 @@ WMVector2 category: 'printing' methods: {
 	aStream nextPutAll: WMVector2 name;
 		nextPutAll: ' x: '; print: x;
 		nextPutAll: ' y: '; print: y.
+].
+
+:[formatAsDastrelColor -> _DynamicObject.
+	^ 'float4({1}f, {2}f, 0.0f, 1.0f)' format: {
+		x asFloat.
+		y asFloat.
+	}
 ].
 }.

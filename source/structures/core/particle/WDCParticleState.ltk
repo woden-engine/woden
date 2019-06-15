@@ -15,10 +15,12 @@ Structure <<< #WDCParticleState
 
 WDCParticleState category: 'accessing' methods: {
 :[startingUp -> BooleanBit.
+	<dastrelShaderFunction: #isParticleStartingUp returnType: #bool>
 	^ (flags & 1) ~= 0
 ].
 
 :[startingUp: <BooleanBit>value
+	<dastrelShaderFunction: #setParticleStartingUp returnType: #void>
 	value ifTrue: [
 		flags := flags | 1
 	] ifFalse:[
@@ -38,6 +40,7 @@ WDCParticleState category: 'random' methods: {
 
 
 	:[nextRandomUInt -> UInt32.
+		<dastrelShaderFunction: #particleNextRandomUInt returnType: #uint>
 		"https://en.wikipedia.org/wiki/Linear_congruential_generator"
 		"GlibC 2^31 	1103515245 	12345"
 		randomSeed := (randomSeed*1103515245 + 12345) & 16r7FFFFFFF.
@@ -45,27 +48,56 @@ WDCParticleState category: 'random' methods: {
 	].
 
 	:[nextRandomInt -> Int32.
+		<dastrelShaderFunction: #particleNextRandomInt returnType: #int>
 		^ self nextRandomUInt - 16r40000000 castTo: Int32
 	].
 
 	:[nextRandom -> Float32.
+		<dastrelShaderFunction: #particleNextRandom returnType: #float>
 		^ (self nextRandomInt castTo: Float32) / 1073741823.0
 	].
 
 	:[nextRandomVector2F -> WMVector2F.
+		<dastrelShaderFunction: #particleNextRandomVector2F returnType: #float2>
 		^ WMVector2F x: self nextRandom y: self nextRandom
 	].
 
 	:[nextRandomVector3F_xz -> WMVector3F.
+		<dastrelShaderFunction: #particleNextRandomVector3F_xz returnType: #float3>
 		^ WMVector3F x: self nextRandom y: 0.0 z: self nextRandom
 	].
 
 	:[nextRandomVector3F -> WMVector3F.
+		<dastrelShaderFunction: #particleNextRandomVector3F returnType: #float3>
 		^ WMVector3F x: self nextRandom y: self nextRandom z: self nextRandom
 	].
 
 	:[nextRandomVector4F -> WMVector4F.
+		<dastrelShaderFunction: #particleNextRandomVector4F>
 		^ WMVector4F x: self nextRandom y: self nextRandom z: self nextRandom w: self nextRandom
 	].
+}.
 
+WDCParticleState class category: 'dastrel conversion' methods: {
+:[asDastrelConversionTypeWith: codeConverter
+	^ codeConverter lowcodeStructureWrapper: self to: #ParticleState
+].
+}.
+
+WMVector2F class category: 'dastrel conversion' methods: {
+:[asDastrelConversionTypeWith: codeConverter
+	^ codeConverter lowcodeStructureWrapper: self to: #float2
+].
+}.
+
+WMVector3F class category: 'dastrel conversion' methods: {
+:[asDastrelConversionTypeWith: codeConverter
+	^ codeConverter lowcodeStructureWrapper: self to: #float3
+].
+}.
+
+WMVector4F class category: 'dastrel conversion' methods: {
+:[asDastrelConversionTypeWith: codeConverter
+	^ codeConverter lowcodeStructureWrapper: self to: #float4
+].
 }.
