@@ -6,7 +6,10 @@ Class {
 		'engine',
 		'particleStateBuffer',
 		'particleMaterial',
-		'cpuParticleSimulationBuffer'
+		'cpuParticleSimulationBuffer',
+		'particleSimulationShaderLibrary',
+		'particleSimulationComputeParameters',
+		'perFrameCommandLists'
 	],
 	#category : #'WodenEngine-Core-Particle'
 }
@@ -24,6 +27,12 @@ WDCParticleSystemRenderableSceneData >> cpuParticleSimulationBuffer [
 { #category : #accessing }
 WDCParticleSystemRenderableSceneData >> cpuParticleSimulationBuffer: anObject [
 	cpuParticleSimulationBuffer := anObject
+]
+
+{ #category : #'as yet unclassified' }
+WDCParticleSystemRenderableSceneData >> deltaTime [
+	^ 1.0 / WDCFrameBufferingDriver defaultTargetFrameRate.
+
 ]
 
 { #category : #accessing }
@@ -57,6 +66,11 @@ WDCParticleSystemRenderableSceneData >> particleSystem: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+WDCParticleSystemRenderableSceneData >> shadersDirectory [
+	^ WodenCoreAssets location / #shaders
+]
+
+{ #category : #'as yet unclassified' }
 WDCParticleSystemRenderableSceneData >> simulateFrame: frameBufferingIndex [
 	WDCEngine gpuBasedParticleSimulation ifTrue: [
 		self simulateFrameWithTheGPU
@@ -69,7 +83,7 @@ WDCParticleSystemRenderableSceneData >> simulateFrame: frameBufferingIndex [
 WDCParticleSystemRenderableSceneData >> simulateFrameWithTheCPU: frameBufferingIndex [
 	| simulationBlock deltaTime |
 	simulationBlock := particleSystem simulationBlock.
-	deltaTime := 1.0 / WDCFrameBufferingDriver defaultTargetFrameRate.
+	deltaTime := self deltaTime.
 	cpuParticleSimulationBuffer doWithIndex: [ :particleState :index |
 		simulationBlock value: particleState value: index value: deltaTime.
 		cpuParticleSimulationBuffer at: index put: particleState
@@ -83,10 +97,72 @@ WDCParticleSystemRenderableSceneData >> simulateFrameWithTheCPU: frameBufferingI
 
 { #category : #'as yet unclassified' }
 WDCParticleSystemRenderableSceneData >> simulateFrameWithTheGPU [
-	self flag: 'TODO: Implement this'
+	| shader simulationParameters stateTracker currentCommandLists pushConstants deltaTime |
+	shader := self validParticleSimulationShaderLibrary
+		getComputeStage: #particle_simulation.
+	simulationParameters := self validParticleSimulationComputeParameters.
+
+	perFrameCommandLists ifNil: [ perFrameCommandLists := WDCPerFrameSimpleCommandList for: engine ].
+	currentCommandLists := perFrameCommandLists currentList.
+	currentCommandLists validCommandAllocator reset.
+
+	stateTracker := WDCStateTracker for: engine.
+	stateTracker commandList: currentCommandLists validCommandList rebuildWith: [
+		pushConstants := ByteArray new: 8.
+		pushConstants
+			longAt: 1 put: particleSystem particleCount bigEndian: false;
+			floatAt: 5 put: self deltaTime.
+
+		stateTracker			
+			computeShader: shader arguments: simulationParameters;
+			pushConstants: 0 size: pushConstants size values: pushConstants;
+			dispatchComputeGlobalGrid: particleSystem particleCount.
+	].
+
+	engine graphicsQueue addCommandList: currentCommandLists validCommandList validHandle.
+
 ]
 
 { #category : #'as yet unclassified' }
 WDCParticleSystemRenderableSceneData >> validParticleMaterial [
 	^ particleMaterial ifNil: [ particleMaterial := WDCSimpleParticleMaterial for: engine ]
+]
+
+{ #category : #'as yet unclassified' }
+WDCParticleSystemRenderableSceneData >> validParticleSimulationComputeParameters [
+	^ particleSimulationComputeParameters ifNil: [ particleSimulationComputeParameters :=
+		engine newGenericComputeShaderArguments
+			storageBuffer: particleStateBuffer slot: 0
+	]
+]
+
+{ #category : #'as yet unclassified' }
+WDCParticleSystemRenderableSceneData >> validParticleSimulationShaderLibrary [
+	| codeConverter lowLevelShader spirvShader compiler |
+	particleSimulationShaderLibrary ifNil: [
+		codeConverter := DASLPharoCodeConverter new.
+		codeConverter
+			convertFunction: particleSystem simulationBlock name: #particleStateTransitionFunction argumentTypes: #((ref WDCParticleState) uint float) returnType: #void.
+
+		compiler := 	DASLCompiler new.
+		spirvShader := compiler 
+			target: #'spir-v';
+			withDebugInformation;
+			optimizationLevel: 2;
+			addIncludeDirectory: self shadersDirectory;
+			sourceFromFileNamed: (self shadersDirectory resolve: 'particle/simulation-interface.dastrel' asFileReference) injectingNodes: codeConverter generatedNodes;
+			compile;
+			generatedCode.
+	
+			lowLevelShader := WDCLowLevelShaderSource new
+				engine: engine;
+				entryFile: 'generated shader' asFileReference;
+				source: spirvShader asShaderCode;
+				entryPoints: spirvShader entryPoints;
+				yourself.
+		
+			particleSimulationShaderLibrary := lowLevelShader asShaderLibrary
+	].
+
+	^ particleSimulationShaderLibrary
 ]

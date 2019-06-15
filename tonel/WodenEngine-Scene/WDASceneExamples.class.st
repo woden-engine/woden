@@ -622,10 +622,10 @@ WDASceneExamples class >> example10ParticleSystem [
 
 	"Particle system"
 	colorRamp := WDCLinearRamp with: {
-		0.0 -> '000000' asColor asWMVector3F.
-		0.6 -> 'ff0000' asColor asWMVector3F.
-		0.90 -> 'ffff00' asColor asWMVector3F.
-		1.0 -> 'ffff80' asColor asWMVector3F.
+		0.0 -> '000000' asColor asWMVector3F asWMVector4F.
+		0.6 -> 'ff0000' asColor asWMVector3F asWMVector4F.
+		0.90 -> 'ffff00' asColor asWMVector3F asWMVector4F.
+		1.0 -> 'ffff80' asColor asWMVector3F asWMVector4F.
 	}.
 
 	particleSystemRenderable := WDCParticleSystemRenderable new.
@@ -646,7 +646,7 @@ WDASceneExamples class >> example10ParticleSystem [
 					z: particleState nextRandom*0.5).
 		].
 	
-		color := (colorRamp value: lifeTime / 3.0) asWMVector4F.
+		color := colorRamp value: lifeTime / 3.0.
 		flickering := (lifeTime*25.0) signedGradientNoise  *0.4 + 0.6.
 		
 		particleState
