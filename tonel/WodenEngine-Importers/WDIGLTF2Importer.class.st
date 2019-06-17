@@ -358,7 +358,7 @@ WDIGLTF2Importer >> loadImageFrom: imageDescription [
 		imageReader := WDCTextureReader loaderForMimeType: (imageDescription at: 'mimeType')
 	].
 
-	image := imageReader loadFromStream: imageData readStream.
+	image := WDIGLTF2Image new imageData: imageData; imageReader: imageReader; yourself.
 	images add: image
 ]
 
@@ -466,9 +466,28 @@ WDIGLTF2Importer >> loadMetallicRoughnessMaterial: description commonDescription
 		material normalTexture: (textures at: (textureDescription at: 'index') + 1) asNormalTexture
 	].
 	
-	
 	description at: 'metallicRoughnessTexture' ifPresent: [ :textureDescription |
 		material metallicRoughnessTexture: (textures at: (textureDescription at: 'index') + 1) asTexture
+	].
+
+	material doubleSided: (commonDescription at: 'doubleSided' ifAbsent: [false]).
+	commonDescription at: 'alphaMode' ifPresent: [ :alphaMode |
+		alphaMode = 'MASK' ifTrue: [
+			material alphaCutoff: (commonDescription at: 'alphaCutoff' ifAbsent: [0.5])
+		].
+		alphaMode = 'BLEND' ifTrue: [
+			self flag: 'TODO: Support this transparency mode.'
+		].
+	].
+
+	commonDescription at: 'emissiveFactor' ifPresent: [ :factor |
+		material emissionColor: (WMVector4F x: factor first y: factor second z: factor third w: 0.0)
+	] ifAbsent: [
+		material emissionColor: WMVector4F zero
+	].
+
+	commonDescription at: 'emissiveTexture' ifPresent: [ :textureDescription |
+		material emissionTexture: (textures at: (textureDescription at: 'index') + 1) asSRGBTexture
 	].
 
 	^ material

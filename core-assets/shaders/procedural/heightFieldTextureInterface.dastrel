@@ -1,15 +1,10 @@
-import compute.environment;
-import compute.stage;
+import fragment.stage;
+import fragment.screenQuad;
 import procedural.noise;
 
-uniform(binding = StorageImages.Images, format = rgba8) destinationImage : image2D;
-
-code_block(compute, localSizeX=8, localSizeY=8) main
+code_block(fragment) main
 {
-	let st = int2(ComputeStage.globalInvocationID.xy);
-	let size = getImageSize(destinationImage);
-	let uv = float2(st) / float2(size);
-	
+	let uv = FragmentInput.texcoord;
 	let height = heightFieldFunction(uv.x, uv.y);
-	imageWrite(destinationImage, st, float4(height, height, height, 1.0f));
+	FragmentStage.colorOutput0 = float4(height, height, height, 1.0f);
 }

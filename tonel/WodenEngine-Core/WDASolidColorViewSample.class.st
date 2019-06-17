@@ -43,7 +43,7 @@ WDASolidColorViewSample >> constructRenderingCommandLists [
 	currentCommandLists validCommandAllocator reset.
 	
 	renderPass ifNil: [ renderPass := renderTarget createRenderPassWithColor: Color white ].
-	renderPass setColorClearValue: 0 value: color asAGPUColor4f.
+	renderPass setColorClearValue: 0 value: color asWMVector4F asAGPUColor4f.
 	
 	commandList := currentCommandLists validCommandList.
 	commandList withPipelineState: nil rebuild: [ :builder |

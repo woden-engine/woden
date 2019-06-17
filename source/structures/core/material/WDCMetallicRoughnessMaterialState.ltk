@@ -1,8 +1,10 @@
 Structure <<< #WDCMetallicRoughnessMaterialState
 	slots: {
+		#emission => WMVector4F. 
 		#albedo => WMVector4F. 
 		#metallicFactor => Float32.
-		#roughnessFactor => Float32
+		#roughnessFactor => Float32.
+		#alphaCutoff => Float32.
 	};
 	package: 'WodenEngine-Structures-Core-Material';
 	yourself.

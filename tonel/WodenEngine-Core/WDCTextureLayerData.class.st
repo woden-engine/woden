@@ -153,6 +153,17 @@ WDCTextureLayerData >> levels: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+WDCTextureLayerData >> readLevelsFromPointer: pointer [
+	| newPointer |
+	newPointer := pointer.
+	levels do: [ :level |
+		newPointer := level readDataFromPointer: newPointer
+	].
+
+	^ newPointer
+]
+
+{ #category : #'as yet unclassified' }
 WDCTextureLayerData >> swizzleXYZNormalMap [
 	levels do: #swizzleXYZNormalMap
 ]

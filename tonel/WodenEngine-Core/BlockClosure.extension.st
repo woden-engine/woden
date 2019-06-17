@@ -3,12 +3,14 @@ Extension { #name : #BlockClosure }
 { #category : #'*WodenEngine-Core' }
 BlockClosure >> closureDescriptionForCaching [
 	^ ByteString streamContents: [ :out |
+		out nextPut: $[.
 		out nextPutAll: self method sourceCode; cr.
 		out nextPut: $|.
 		1 to: self numCopiedValues do: [ :i |
-			out print: (self copiedValueAt: i) closureDescriptionForCaching
+			out nextPutAll: (self copiedValueAt: i) closureDescriptionForCaching
 		].
-		out nextPut: $|
+		out nextPut: $|.
+		out nextPut: $].
 	]
 ]
 
@@ -33,8 +35,13 @@ BlockClosure >> noiseValueAt: coord withAmplitude: amplitude withTilingPeriod: t
 
 { #category : #'*WodenEngine-Core' }
 BlockClosure >> valueCachedInDisk [
+	^ self valueCachedInDiskWithHash: self closureHashForCaching hex
+]
+
+{ #category : #'*WodenEngine-Core' }
+BlockClosure >> valueCachedInDiskWithHash: hashString [
 	| fileName value |
-	fileName := WDCResourceCache proceduralContentDiskCache / (self closureHashForCaching hex , '.fuel').
+	fileName := WDCResourceCache proceduralContentDiskCache / (hashString , '.fuel').
 	fileName exists ifTrue: [ 
 		^ FLMaterializer materializeFromFileNamed: fileName fullName
 	].
@@ -42,4 +49,9 @@ BlockClosure >> valueCachedInDisk [
 	value := self value.
 	FLSerializer serialize: value toFileNamed: fileName fullName.
 	^ value
+]
+
+{ #category : #'*WodenEngine-Core' }
+BlockClosure >> valueCachedInDiskWithKey: keyValue [
+	^ self valueCachedInDiskWithHash: (SHA256 hashMessage: keyValue closureDescriptionForCaching) hex
 ]

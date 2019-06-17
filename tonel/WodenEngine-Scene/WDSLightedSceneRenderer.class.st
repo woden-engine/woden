@@ -235,10 +235,11 @@ WDSLightedSceneRenderer >> renderShadowMaps [
 
 { #category : #rendering }
 WDSLightedSceneRenderer >> renderViewport: renderingViewport index: viewportIndex [
-	| resolveTarget viewport |
+	| resolveTarget viewport camera|
 	activeDebugRenderingViewport := renderingViewport.
 	viewport := renderingViewport viewport.
 	resolveTarget := viewport resolveRenderTarget.
+	camera := viewport camera.
 
 	"First pass: g-buffer rendering. Normal and depth-only rendering."
 	self setupStateTrackerForRenderMode: self gbufferRenderMode.
@@ -253,14 +254,35 @@ WDSLightedSceneRenderer >> renderViewport: renderingViewport index: viewportInde
 		self computeScreenSpaceAmbientOcclusionFor: renderingViewport.
 	].
 
-	"Second pass: main scene rendering"
+	"Second pass: main scene HDR rendering"
 	self setupStateTracker.
-	stateTracker
-		beginRenderPass: renderingViewport validSceneRenderPass renderTarget: renderingViewport sceneRenderTarget bounds: viewport bounds.
+	
+	camera isLdrToneMapping ifTrue: [ 
+		stateTracker
+			beginRenderPass: renderingViewport validSceneLDRRenderPass renderTarget: renderingViewport sceneLDRRenderTarget bounds: viewport bounds.
+	] ifFalse: [ 
+		stateTracker
+			beginRenderPass: renderingViewport validSceneHDRRenderPass renderTarget: renderingViewport sceneHDRRenderTarget bounds: viewport bounds.
+	].
+
 	self
 		setupRenderingViewportStates: renderingViewport;
 		renderViewportVisibleObjects: renderingViewport.
-	
+
+	camera isLdrToneMapping ifFalse: [ 
+		stateTracker
+			endRenderPass.
+		
+		"Third Pass: HDR -> LDR tone mapping. And LDR overlay rendering."
+		renderingViewport hdrToneMappingFullscreenPass toneMappingOperator: camera toneMappingOperator.
+		
+		stateTracker
+			beginRenderPass: renderingViewport validSceneLDRRenderPass renderTarget: renderingViewport sceneLDRRenderTarget bounds: viewport bounds;
+			depthEnabled: false;
+			depthWriteMask: false;
+			applyFullScreenPass: renderingViewport hdrToneMappingFullscreenPass.
+	].
+
 	"Render the overlays"
 	viewport overlayRenderer ifNotNil: [ 
 		viewport overlayRenderer renderViewport: viewport overlayWith: stateTracker 
@@ -270,8 +292,8 @@ WDSLightedSceneRenderer >> renderViewport: renderingViewport index: viewportInde
 	stateTracker endRenderPass.
 		
 	"Resolve the target"
-	renderingViewport sceneRenderTarget ~~ resolveTarget ifTrue: [
-		stateTracker resolveRenderTarget: renderingViewport sceneRenderTarget into: resolveTarget
+	renderingViewport sceneLDRRenderTarget ~~ resolveTarget ifTrue: [
+		stateTracker resolveRenderTarget: renderingViewport sceneLDRRenderTarget into: resolveTarget
 	]
 
 ]

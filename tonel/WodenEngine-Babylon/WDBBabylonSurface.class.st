@@ -222,7 +222,7 @@ WDBBabylonSurface >> beginRenderPassWithColor: aColor [
 	isInRenderPass ifTrue: [ self finishCurrentRenderPass ].
 	
 	pass := self solidRenderPass.
-	pass setColorClearValue: 0 value: aColor asAGPUColor4f.
+	pass setColorClearValue: 0 value: aColor asWMVector4F asAGPUColor4f.
 	
 	stateTracker
 		beginRenderPass: pass renderTarget: renderTarget.

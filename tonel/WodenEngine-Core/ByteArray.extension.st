@@ -25,6 +25,15 @@ ByteArray >> bgraColorAt: index put: aColor [
 ]
 
 { #category : #'*WodenEngine-Core' }
+ByteArray >> closureDescriptionForCaching [
+	^ 'ba ' , (self size < 32 ifTrue: [
+		 self hex
+	] ifFalse: [
+		(SHA256 hashMessage: self) hex
+	])
+]
+
+{ #category : #'*WodenEngine-Core' }
 ByteArray >> sBGR_A_colorAt: index [
 	| b g r a |
 	b := (self unsignedByteAt: index) asFloatFromNormalizedUByte decodeSRGBComponent.

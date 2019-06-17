@@ -9,19 +9,24 @@ import rendering.lightingOutputs;
 import vertex.genericLayout;
 import vertex.genericSkinnedLayout;
 
+import texture.functions;
+
 //==============================================================================
 // Material state
 
 uniform(binding = MaterialState.Attributes) MaterialState
 {
+    emission: float4;
     albedo: float4;
     specularFactor: float3;
     glossinessFactor: float;
+	alphaCutoff: float;
 }
 
 uniform(binding = MaterialState.Textures) albedoTexture : texture2D;
 uniform(binding = MaterialState.Textures + 1) normalTexture : texture2D;
-uniform(binding = MaterialState.Textures + 2) specularGlosinessTexture : texture2D;
+uniform(binding = MaterialState.Textures + 2) emissionTexture : texture2D;
+uniform(binding = MaterialState.Textures + 3) specularGlosinessTexture : texture2D;
 
 //==============================================================================
 // Vertex and fragment shader interface
@@ -57,6 +62,8 @@ code_block(vertex) depth_vertex
         return;
     }
 
+    VertexOutput.color = currentObjectInstanceColor();
+    VertexOutput.texcoord = GenericVertexLayout.texcoord;
     VertexOutput.normal = transformNormalToView(GenericVertexLayout.normal);
 
     let position4 = transformPositionToView(GenericVertexLayout.position);
@@ -163,6 +170,8 @@ code_block(vertex) depthSkinned_vertex
         return;
     }
 
+    VertexOutput.color = currentObjectInstanceColor();
+    VertexOutput.texcoord = GenericVertexLayout.texcoord;
     VertexOutput.normal = transformNormalToView(skinVector(GenericVertexLayout.normal));
 
     let position4 = transformPositionToView(skinPosition(GenericVertexLayout.position));
@@ -254,6 +263,18 @@ code_block(vertex) skinned_vertex
 
 code_block(fragment) depthNormal_fragment
 {
+	if(FragmentInput.color.a < MaterialState.alphaCutoff)
+		discard;
+
+    encodeViewNormalOutput(normalize(FragmentInput.normal));
+}
+
+code_block(fragment) depthNormalMask_fragment
+{
+    let alpha = FragmentInput.color.a * albedoSampler.sample(albedoTexture, FragmentInput.texcoord).a;
+	if(alpha < MaterialState.alphaCutoff)
+		discard;
+
     encodeViewNormalOutput(normalize(FragmentInput.normal));
 }
 
@@ -265,8 +286,9 @@ code_block(fragment) forward_color
     let N = normalize(FragmentInput.normal);
     let V = normalize(-FragmentInput.position);
 
+	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
     forwardSpecularityGlossinessLightingOutput
-        albedo: FragmentInput.color*MaterialState.albedo
+        emission: emission albedo: FragmentInput.color*MaterialState.albedo
         specular: MaterialState.specularFactor glossiness: MaterialState.glossinessFactor
         normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
 }
@@ -276,9 +298,10 @@ code_block(fragment) forward_albedo
     let N = normalize(FragmentInput.normal);
     let V = normalize(-FragmentInput.position);
 
+	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
     let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
     forwardSpecularityGlossinessLightingOutput
-        albedo: albedo*MaterialState.albedo
+        emission: emission albedo: albedo*MaterialState.albedo
         specular: MaterialState.specularFactor glossiness: MaterialState.glossinessFactor
         normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
 }
@@ -291,13 +314,14 @@ code_block(fragment) forward_albedoNormal
     let n = normalize(FragmentInput.normal);
     let V = normalize(-FragmentInput.position);
 
+	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
     let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
-    let tangentNormal = normalSampler.sample(normalTexture, FragmentInput.texcoord).agb*2.0f - 1.0f;
+    let tangentNormal = decodeNormalTexel(normalSampler.sample(normalTexture, FragmentInput.texcoord));
     let TBN = float3x3(t, b, n);
     let N = normalize(TBN*tangentNormal);
 
     forwardSpecularityGlossinessLightingOutput
-        albedo: albedo*MaterialState.albedo
+        emission: emission albedo: albedo*MaterialState.albedo
         specular: MaterialState.specularFactor glossiness: MaterialState.glossinessFactor
         normal: N surfaceNormal: n viewVector: V position: FragmentInput.position;
 }
@@ -307,10 +331,11 @@ code_block(fragment) forward_albedoSpecularGlosiness
     let N = normalize(FragmentInput.normal);
     let V = normalize(-FragmentInput.position);
 
+	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
     let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
     let specularGlosiness = albedoSampler.sample(specularGlosinessTexture, FragmentInput.texcoord);
     forwardSpecularityGlossinessLightingOutput
-        albedo: albedo*MaterialState.albedo
+        emission: emission albedo: albedo*MaterialState.albedo
         specular: specularGlosiness.rgb*MaterialState.specularFactor glossiness: specularGlosiness.a*MaterialState.glossinessFactor
         normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
 }
@@ -322,14 +347,15 @@ code_block(fragment) forward_albedoNormalSpecularGlosiness
     let n = normalize(FragmentInput.normal);
     let V = normalize(-FragmentInput.position);
 
+	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
     let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
     let specularGlosiness = albedoSampler.sample(specularGlosinessTexture, FragmentInput.texcoord);
-    let tangentNormal = normalSampler.sample(normalTexture, FragmentInput.texcoord).agb*2.0f - 1.0f;
+    let tangentNormal = decodeNormalTexel(normalSampler.sample(normalTexture, FragmentInput.texcoord));
     let TBN = float3x3(t, b, n);
     let N = normalize(TBN*tangentNormal);
 
     forwardSpecularityGlossinessLightingOutput
-        albedo: albedo*MaterialState.albedo
+        emission: emission albedo: albedo*MaterialState.albedo
         specular: specularGlosiness.rgb*MaterialState.specularFactor glossiness: specularGlosiness.a*MaterialState.glossinessFactor
         normal: N surfaceNormal: n viewVector: V position: FragmentInput.position;
 }

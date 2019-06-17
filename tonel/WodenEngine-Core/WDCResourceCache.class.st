@@ -15,7 +15,11 @@ Class {
 		'poolsMutex',
 		'pendingResourceReloadActions',
 		'screenQuadVertexShader',
-		'alwaysFrontDepthNormalFragmentShader'
+		'alwaysFrontDepthNormalFragmentShader',
+		'temporaryResourcesMutex',
+		'temporaryResourcesDictionary',
+		'proceduralMipmapGenerationLibrary',
+		'proceduralOfflineTextureRenderer'
 	],
 	#classVars : [
 		'ShaderLanguageTargetMap',
@@ -233,7 +237,7 @@ WDCResourceCache >> defaultMaterial [
 
 { #category : #textures }
 WDCResourceCache >> defaultNormalTexture [
-	^ self getOrCreateColorTexture: (Color r: 0.5 g: 0.5 b: 1.0)
+	^ self getOrCreateColorTexture: (Color r: 0.0 g: 0.5 b: 1.0 alpha: 0.5)
 ]
 
 { #category : #materials }
@@ -325,6 +329,10 @@ WDCResourceCache >> initializeForEngine: anEngine [
 
 	shaderLanguageTargetName := ShaderLanguageTargetMap at: shaderLanguageTarget.
 	pendingResourceReloadActions := WaitfreeQueue new.
+	
+	temporaryResourcesMutex := Semaphore forMutualExclusion.
+	temporaryResourcesDictionary := Dictionary new.
+	
 ]
 
 { #category : #'3d models' }
@@ -454,6 +462,20 @@ WDCResourceCache >> loadVertexShader: aFileNameOrReference entryPoint: entryPoin
 		getVertexStage: entryPointName
 ]
 
+{ #category : #'temporary resources' }
+WDCResourceCache >> mainProceduralOfflineTextureRendererForExtent: anExtent [
+	| newWidth newHeight |
+	(proceduralOfflineTextureRenderer isNil or:
+	[ proceduralOfflineTextureRenderer bufferExtent x < anExtent x or: 
+	[ proceduralOfflineTextureRenderer bufferExtent y < anExtent y ]]) ifTrue: [ 
+		newWidth := anExtent x asLargerPowerOfTwo.
+		newHeight := anExtent y asLargerPowerOfTwo.
+		proceduralOfflineTextureRenderer := WDCProceduralOfflineTextureRenderer for: engine extent: newWidth @ newHeight
+	].
+
+	^ proceduralOfflineTextureRenderer 
+]
+
 { #category : #private }
 WDCResourceCache >> parseQuery: queryString [
 	| query in |
@@ -566,6 +588,11 @@ WDCResourceCache >> pipelineStateForDescription: description [
 	^ pso
 ]
 
+{ #category : #'special shaders' }
+WDCResourceCache >> proceduralMipmapGenerationLibrary [
+	^ proceduralMipmapGenerationLibrary ifNil: [ proceduralMipmapGenerationLibrary := self loadShaderLibrary: 'shaders/compute/mipmapGeneration.dastrel' ]
+]
+
 { #category : #'auto reloading' }
 WDCResourceCache >> reloadPendingResources [
 	| action hasSynchronizedWithGpu |
@@ -638,7 +665,13 @@ WDCResourceCache >> resourceAt: name ifAbsentPut: aBlock [
 
 { #category : #'special shaders' }
 WDCResourceCache >> screenQuadVertexShader [
-	^ screenQuadVertexShader ifNil: [ screenQuadVertexShader := self loadVertexShader: 'shaders/vertex/screenQuad.dastrel' ]
+	| shaderLibrary |
+	^ screenQuadVertexShader ifNil: [
+		shaderLibrary := self loadShaderLibrary: 'shaders/vertex/screenQuad.dastrel'.
+		engine projectionInvertedY
+			ifTrue: [ shaderLibrary getVertexStage: 'screenQuad' ]
+			ifFalse: [ shaderLibrary getVertexStage: 'screenQuadFlippedY' ]
+	]
 ]
 
 { #category : #'session management' }

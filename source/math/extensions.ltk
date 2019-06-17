@@ -68,6 +68,20 @@ Float category: '*WodenMath-Core' methods: {
 }.
 
 Color category: '*WodenMath-Core' methods: {
+:[asWMVector3D -> WMVector3D.
+	^ WMVector3D
+		x: (self red decodeSRGBComponent castTo: Float64)
+		y: (self green decodeSRGBComponent castTo: Float64)
+		z: (self blue decodeSRGBComponent castTo: Float64)
+].
+
+:[asWMVector3F -> WMVector3F.
+	^ WMVector3F
+		x: (self red decodeSRGBComponent castTo: Float32)
+		y: (self green decodeSRGBComponent castTo: Float32)
+		z: (self blue decodeSRGBComponent castTo: Float32)
+].
+
 :[asWMVector4D -> WMVector4D.
 	^ WMVector4D
 		x: (self red decodeSRGBComponent castTo: Float64)

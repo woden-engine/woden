@@ -1,0 +1,70 @@
+import vertex.stage;
+import fragment.stage;
+import rendering.environment;
+import rendering.lightingOutputs;
+import particle.state;
+
+semantic VertexOutput
+{
+    out(0) color: float4;
+	out(1) texcoord: float2;
+}
+
+semantic FragmentInput
+{
+    in(0) color: float4;
+    in(1) texcoord: float2;
+}
+
+buffer(binding=ObjectState.ExtraObjectState) ParticleState
+{
+    states: ParticleStateData[];
+}
+
+
+//==============================================================================
+// Color vertex shader
+
+constant particleQuadVertices : float3[4] = {
+    {-0.5f, -0.5f, 0.0f},
+    {0.5f, -0.5f, 0.0f},
+    {-0.5f, 0.5f, 0.0f},
+    {0.5f, 0.5f, 0.0f},
+};
+
+code_block(vertex) particleVertex
+{
+    using CameraState;
+	using ObjectState;
+
+    // Discard invisible objects by pushing away from the clipping cube.
+    let particleState = ParticleState.states[VertexStage.instanceID];
+    if(objectState.visible == 0 || isParticleStartingUp(particleState))
+    {
+        VertexStage.screenPosition = float4(2.0f, 2.0f, -2.0f, 1.0f);
+        return;
+    }
+
+	let particleTexcoord = particleQuadVertices[VertexStage.vertexID].xy + 0.5f;
+	let particleVertex = particleQuadVertices[VertexStage.vertexID]*particleState.size;
+	
+	let rotatedParticleVertex = objectState.matrix*float4(particleVertex, 0.0f);
+
+	let worldParticlePosition = objectState.matrix*float4(particleState.position, 1.0f);
+	let viewParticlePosition = CameraState.viewMatrix*worldParticlePosition;
+	let viewParticleVertex = rotatedParticleVertex + viewParticlePosition;
+
+    VertexOutput.color = objectState.color*particleState.color;
+	VertexOutput.texcoord = particleTexcoord;
+    VertexStage.screenPosition = projectionMatrix * viewParticleVertex;
+}
+
+//==============================================================================
+// Flat color
+
+code_block(fragment) particleFragment
+{
+	let dist = length(FragmentInput.texcoord*2.0f - 1.0f);
+	let attenuation = max(0.0f, 1.0f - dist*dist);
+    forwardFlatOutput color: FragmentInput.color*attenuation;
+}

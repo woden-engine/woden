@@ -58,6 +58,7 @@ code_block forwardLightingModel
     in normal: float3;
     in surfaceNormal: float3;
     in viewVector: float3;
+	in emission: float4;
     in position: float3;
     in albedo: float3;
     in Cdiff: float3;
@@ -69,7 +70,7 @@ code_block forwardLightingModel
     using GlobalLightingState;
 
 	let diff = Cdiff*PiReciprocal;
-    let accumulatedColor = float3(0.0f, 0.0f, 0.0f);
+    let accumulatedColor = emission.rgb;
 
     // Add the ambient hemispherical light.
     let hemiFactor = dot(normal, sunDirection)*0.5f + 0.5f;
@@ -158,6 +159,7 @@ code_block forwardMetallicRoughnessLightingModel
     in surfaceNormal: float3;
     in viewVector: float3;
     in position: float3;
+	in emission: float4;
     in albedo: float4;
     in metallic: float;
     in roughness: float;
@@ -170,6 +172,7 @@ code_block forwardMetallicRoughnessLightingModel
 	let alpha = roughness*roughness;
 	
     color: color <== forwardLightingModel
+		emission: emission
 		albedo: albedo.rgb
         Cdiff: Cdiff
         F0: F0 alpha: alpha
@@ -183,6 +186,7 @@ code_block forwardSpecularityGlossinessLightingModel
     in surfaceNormal: float3;
     in viewVector: float3;
     in position: float3;
+    in emission: float4;
     in albedo: float4;
     in specular: float3;
     in glossiness: float;
@@ -194,6 +198,7 @@ code_block forwardSpecularityGlossinessLightingModel
 	let alpha = roughness*roughness;
 
     color: color <== forwardLightingModel
+		emission: emission
 		albedo: albedo.rgb
         Cdiff: Cdiff
         F0: F0 alpha: alpha

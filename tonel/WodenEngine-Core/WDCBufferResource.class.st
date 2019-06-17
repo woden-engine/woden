@@ -94,6 +94,11 @@ WDCBufferResource >> readStreamFrom: offset withSize: length [
 	^ ReadStream on: data from: offset + 1 to: offset + length
 ]
 
+{ #category : #'as yet unclassified' }
+WDCBufferResource >> size [
+	^ description size
+]
+
 { #category : #accessing }
 WDCBufferResource >> validPointer [
 	self checkSession.

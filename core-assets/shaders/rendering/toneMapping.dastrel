@@ -1,0 +1,39 @@
+import fragment.stage;
+import rendering.shaderSignature;
+import rendering.environment;
+
+import fragment.screenQuad;
+
+uniform(binding = MaterialState.Textures) hdrColorTexture : texture2D;
+
+code_block(fragment) linear
+{
+	let hdrTexel = albedoSampler.sample(hdrColorTexture, FragmentInput.texcoord);
+	
+	let hdrColor = hdrTexel.rgb;
+	let ldrColor = CameraState.exposure*hdrColor;
+	
+	FragmentStage.colorOutput0 = float4(ldrColor, hdrTexel.a);
+}
+
+code_block(fragment) reinhard
+{
+	let hdrTexel = albedoSampler.sample(hdrColorTexture, FragmentInput.texcoord);
+	
+	// Tone mapping operator from: https://learnopengl.com/Advanced-Lighting/HDR
+	let hdrColor = hdrTexel.rgb;
+	let ldrColor = hdrColor / (hdrColor + 1.0f);
+	
+	FragmentStage.colorOutput0 = float4(ldrColor, hdrTexel.a);
+}
+
+code_block(fragment) exponential
+{
+	let hdrTexel = albedoSampler.sample(hdrColorTexture, FragmentInput.texcoord);
+	
+	// Tone mapping operator from: https://learnopengl.com/Advanced-Lighting/HDR
+	let hdrColor = hdrTexel.rgb;
+	let ldrColor = 1.0f - exp(-hdrColor * CameraState.exposure);
+	
+	FragmentStage.colorOutput0 = float4(ldrColor, hdrTexel.a);
+}

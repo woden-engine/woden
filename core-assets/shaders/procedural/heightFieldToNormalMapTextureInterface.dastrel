@@ -1,0 +1,20 @@
+import fragment.stage;
+import fragment.screenQuad;
+import procedural.noise;
+import texture.functions;
+
+code_block(fragment) main
+{
+	let uv = FragmentInput.texcoord;
+	let s = uv.x;
+	let t = uv.y;
+
+	let dx = heightFieldFunction(s + HeightFieldDx*0.5f, t) - heightFieldFunction(s - HeightFieldDx*0.5f, t);
+	let dy = heightFieldFunction(s, t + HeightFieldDy*0.5f) - heightFieldFunction(s, t - HeightFieldDy*0.5f);
+	
+	let tangent = float3(1.0f, 0.0f, dx*HeightScaleFactor);
+	let bitangent = float3(0.0f, 1.0f, dy*HeightScaleFactor);
+	let normal = normalize(cross(tangent, bitangent));
+
+	FragmentStage.colorOutput0 = encodeNormalTexel(normal);
+}

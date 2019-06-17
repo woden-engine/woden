@@ -4,9 +4,16 @@ Class {
 	#category : #'WodenEngine-Core-Texture'
 }
 
-{ #category : #converting }
-WDCAbstractProceduralMap >> asDastrelColorMapFunction [
-	self subclassResponsibility
+{ #category : #'as yet unclassified' }
+WDCAbstractProceduralMap >> asDastrelLiteralAt: aPosition inContext: context for: variable [
+	^ (context codeConverter generateAnonymousFunction: self argumentTypes: #(float) returnType: #float4)
+		position: aPosition;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
+WDCAbstractProceduralMap >> inferDastrelTypeIn: context for: var [
+	^ context codeConverter functionTypeReturning: (context codeConverter evaluateTypeSpecification: #float4)
 ]
 
 { #category : #testing }

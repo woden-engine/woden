@@ -9,6 +9,7 @@ import lighting.forwardModel;
 import lighting.functions;
 
 import vertex.genericLayout;
+import texture.functions;
 
 struct WaterHarmonic
 {
@@ -188,14 +189,14 @@ code_block(fragment) forward_color
 {
     let texcoord = WaterFragmentInput.texcoord;
     let albedo = WaterFragmentInput.color*MaterialState.albedo*albedoSampler.sample(albedoTexture, texcoord);
-    let normalMapValue = normalSampler.sample(normalTexture, texcoord).xyz*2.0f - 1.0f;
+    let normalMapValue = decodeNormalTexel(normalSampler.sample(normalTexture, texcoord));
 
     let surfacePosition = WaterFragmentInput.surfaceCoordinate;
     let N = evalWaterNormalMapValue(surfacePosition, normalMapValue);
     let V = normalize(-WaterFragmentInput.position);
 
     forwardLightingOutput
-        albedo: albedo
+        emission: 0.0f albedo: albedo
         fresnel: MaterialState.fresnel smoothness: MaterialState.smoothness
         normal: N surfaceNormal: N viewVector: V position: WaterFragmentInput.position;
 }
@@ -204,7 +205,7 @@ code_block(fragment) forward_sky
 {
     let texcoord = WaterFragmentInput.texcoord;
     let albedo = WaterFragmentInput.color*MaterialState.albedo*albedoSampler.sample(albedoTexture, texcoord);
-    let normalMapValue = normalSampler.sample(normalTexture, texcoord).xyz*2.0f - 1.0f;
+    let normalMapValue = decodeNormalTexel(normalSampler.sample(normalTexture, texcoord));
 
     let surfacePosition = WaterFragmentInput.surfaceCoordinate;
     let N = evalWaterNormalMapValue(surfacePosition, normalMapValue);
@@ -214,7 +215,7 @@ code_block(fragment) forward_sky
 	let roughness = 1.0f - MaterialState.smoothness;
 	let alpha = roughness*roughness;
     color: lightedColor <== forwardLightingModel
-        albedo: albedo.rgb
+        emission: 0.0f albedo: albedo.rgb
         Cdiff: albedo.rgb
 		translucencyFactor: albedo.a
         F0: MaterialState.fresnel alpha: alpha

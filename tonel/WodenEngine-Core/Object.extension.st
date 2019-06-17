@@ -6,7 +6,7 @@ Object >> addWodenResourceDependant: dependant [
 
 { #category : #'*WodenEngine-Core' }
 Object >> closureDescriptionForCaching [
-	^ self
+	^ self printString
 ]
 
 { #category : #'*WodenEngine-Core' }

@@ -1,18 +1,20 @@
 import fragment.stage;
 import lighting.forwardModel;
 
+/// TODO: Check the users of this.
 code_block forwardLightingOutput
 {
     in normal: float3;
     in surfaceNormal: float3;
     in viewVector: float3;
     in position: float3;
+    in emission: float4;
     in albedo: float4;
     in smoothness: float;
     in fresnel: float3;
 
     color: FragmentStage.colorOutput0 <== forwardLightingModel
-        albedo: albedo.rgb
+        emission: emission albedo: albedo.rgb
         Cdiff: albedo.rgb
 		translucencyFactor: albedo.a
         F0: fresnel alpha: smoothness
@@ -25,12 +27,13 @@ code_block forwardMetallicRoughnessLightingOutput
     in surfaceNormal: float3;
     in viewVector: float3;
     in position: float3;
+    in emission: float4;
     in albedo: float4;
     in metallic: float;
     in roughness: float;
 
     color: FragmentStage.colorOutput0 <== forwardMetallicRoughnessLightingModel
-        albedo: albedo
+        emission: emission albedo: albedo
         metallic: metallic roughness: roughness
         normal: normal surfaceNormal: surfaceNormal viewVector: viewVector position: position;
 }
@@ -41,12 +44,13 @@ code_block forwardSpecularityGlossinessLightingOutput
     in surfaceNormal: float3;
     in viewVector: float3;
     in position: float3;
+    in emission: float4;
     in albedo: float4;
     in specular: float3;
     in glossiness: float;
 
     color: FragmentStage.colorOutput0 <== forwardSpecularityGlossinessLightingModel
-        albedo: albedo
+        emission: emission albedo: albedo
         specular: specular glossiness: glossiness
         normal: normal surfaceNormal: surfaceNormal viewVector: viewVector position: position;
 }

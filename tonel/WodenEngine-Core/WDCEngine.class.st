@@ -22,6 +22,7 @@ Class {
 		'AllowVR',
 		'DebugLayerEnabled',
 		'DefaultEngine',
+		'GenerateOfflineMipmapsGPU',
 		'SSAOEnabled',
 		'ShadowMappingEnabled',
 		'TracingEnabled'
@@ -55,6 +56,21 @@ WDCEngine class >> debugLayerEnabled: aBoolean [
 { #category : #accessing }
 WDCEngine class >> default [
 	^ DefaultEngine ifNil: [ DefaultEngine := self new ]
+]
+
+{ #category : #'as yet unclassified' }
+WDCEngine class >> generateOfflineMipmapsGPU [
+	^ GenerateOfflineMipmapsGPU ifNil: [ GenerateOfflineMipmapsGPU := true ]
+]
+
+{ #category : #'as yet unclassified' }
+WDCEngine class >> generateOfflineMipmapsGPU: aBoolean [
+	GenerateOfflineMipmapsGPU := aBoolean
+]
+
+{ #category : #'as yet unclassified' }
+WDCEngine class >> gpuBasedParticleSimulation [
+	^ true
 ]
 
 { #category : #accessing }
@@ -120,7 +136,11 @@ WDCEngine class >> wodenSettingsOn: aBuilder [
 				description: 'This enables the support for screen space ambient occlusion.'.
 			(aBuilder setting: #shadowMappingEnabled)
 				label: 'Shadow Mapping enabled';
-				description: 'This enables the support shadow maps.'
+				description: 'This enables the support shadow maps.'.
+			(aBuilder setting: #generateOfflineMipmapsGPU)
+				label: 'Generate mipmaps for offline textures with the GPU';
+				description: 'This enables using compute shaders for mipmap generation..'
+
 		]
 ]
 
@@ -182,7 +202,7 @@ WDCEngine >> createBasicRenderPassWithColor: aColor [
 			format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB;
 			begin_action: AGPU_ATTACHMENT_CLEAR;
 			end_action: AGPU_ATTACHMENT_KEEP;
-			clear_value: aColor asAGPUColor4f;
+			clear_value: aColor asWMVector4F asAGPUColor4f;
 			yourself
 	}.
 		
@@ -208,7 +228,7 @@ WDCEngine >> createBasicRenderPassWithOnlyColor: aColor [
 			format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB;
 			begin_action: AGPU_ATTACHMENT_CLEAR;
 			end_action: AGPU_ATTACHMENT_KEEP;
-			clear_value: aColor asAGPUColor4f;
+			clear_value: aColor asWMVector4F asAGPUColor4f;
 			yourself
 	}.
 	^ (WDCRenderPass for: self)
@@ -237,6 +257,23 @@ WDCEngine >> createDevice [
 
 	graphicsQueue := device getDefaultCommandQueue.
 
+]
+
+{ #category : #'resource building' }
+WDCEngine >> createGPUStorageBuffer: size [
+	^ self createGPUStorageBuffer: size initialData: nil
+]
+
+{ #category : #'resource building' }
+WDCEngine >> createGPUStorageBuffer: size initialData: initialData [
+	| desc |
+	desc := AGPUBufferDescription new
+		size: size;
+		usage: AGPU_STATIC;
+		binding: AGPU_STORAGE_BUFFER;
+		mapping_flags: self streamingMappedBufferMappingFlags;
+		stride: 0.
+	^ (WDCBufferResource for: self) description: desc; data: initialData; checkSession ; yourself
 ]
 
 { #category : #'resource building' }

@@ -9,7 +9,8 @@ Class {
 		'depth',
 		'layers',
 		'type',
-		'miplevels'
+		'miplevels',
+		'normalMap'
 	],
 	#classVars : [
 		'PixelFormatDecoderSelector',
@@ -212,6 +213,7 @@ WDCTextureData class >> initialize [
 		AGPU_TEXTURE_FORMAT_B5G6R5_UNORM . #decodeBGR565: .
 		AGPU_TEXTURE_FORMAT_B8G8R8X8_UNORM . #decodeBGRX8888: .
 		AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM . #decodeBGRA8888: .
+		AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB . #decodeBGRA8888: .
 		
 		AGPU_TEXTURE_FORMAT_BC1_UNORM  . #decodeDXT1: .
 		AGPU_TEXTURE_FORMAT_BC2_UNORM  . #decodeDXT3: .
@@ -311,20 +313,30 @@ WDCTextureData >> convertToFormLayer: layerIndex level: levelIndex [
 { #category : #converting }
 WDCTextureData >> decodeBGRA8888: level [
 
-	| result |
+	| result rawData |
 	result := Form extent: level width @ level height depth: 32.
 	result unhibernate.
-	LibC memCopy: level data to: result bits size: level width * level height*4.
+	rawData := level data.
+	normalMap ifTrue: [ 
+		rawData := level decodedNormalData
+	].
+
+	LibC memCopy: rawData to: result bits size: level width * level height*4.
 	^ result
 ]
 
 { #category : #converting }
 WDCTextureData >> decodeBGRX8888: level [
 
-	| result |
+	| result rawData |
 	result := Form extent: level width @ level height depth: 32.
 	result unhibernate.
-	LibC memCopy: level data to: result bits size: level width * level height*4.
+	rawData := level data.
+	normalMap ifTrue: [ 
+		rawData := level decodedNormalData
+	].
+
+	LibC memCopy: rawData to: result bits size: level width * level height*4.
 	^ result
 ]
 
@@ -737,6 +749,13 @@ WDCTextureData >> height: anObject [
 	height := anObject
 ]
 
+{ #category : #initialization }
+WDCTextureData >> initialize [
+	super initialize.
+	normalMap := false.
+	
+]
+
 { #category : #accessing }
 WDCTextureData >> layers [
 	^ layers
@@ -760,6 +779,16 @@ WDCTextureData >> miplevels [
 { #category : #accessing }
 WDCTextureData >> miplevels: anObject [
 	miplevels := anObject
+]
+
+{ #category : #accessing }
+WDCTextureData >> normalMap [
+	^ normalMap
+]
+
+{ #category : #accessing }
+WDCTextureData >> normalMap: anObject [
+	normalMap := anObject
 ]
 
 { #category : #accessing }

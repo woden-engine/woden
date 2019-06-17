@@ -244,6 +244,10 @@ WMVector4 category: 'converting' methods: {
 	^ Color r: x encodeSRGBComponent g: y encodeSRGBComponent b: z encodeSRGBComponent alpha: w
 ].
 
+:[asVisualizationColor -> _DynamicObject.
+	^ self asColor
+].
+
 :[asWMVector4 -> WMVector4.
     <inline>
 	^ self
@@ -267,6 +271,14 @@ WMVector4 category: 'converting' methods: {
 		w: (w asNormalizedUShort castTo: UInt16)
 ].
 
+:[asAGPUColor4f -> _DynamicObject.
+	^ (Smalltalk globals at: #AGPUColor4f) new
+		r: x;
+		g: y;
+		b: z;
+		a: w;
+		yourself
+].
 }.
 
 WMVector4 category: 'printing' methods: {
@@ -276,5 +288,14 @@ WMVector4 category: 'printing' methods: {
 		nextPutAll: ' y: '; print: y;
 		nextPutAll: ' z: '; print: z;
 		nextPutAll: ' w: '; print: w.
+].
+
+:[formatAsDastrelColor -> _DynamicObject.
+	^ 'float4({1}f, {2}f, {3}f, {4}f)' format: {
+		x asFloat.
+		y asFloat.
+		z asFloat.
+		w asFloat.
+	}
 ].
 }.

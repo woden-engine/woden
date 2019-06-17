@@ -5,7 +5,7 @@ WDCSimpleModel >> createViewer [
 	| sceneModel scene camera engine mesh node light |
 	sceneModel := WDASampleSceneModel new.
 	scene := sceneModel newScene.
-	scene backgroundColor: Color lightGray.
+	scene backgroundColor: Color gray.
 
 	camera := sceneModel camera.
 	camera transform translateByZ: 3.0.
@@ -29,5 +29,5 @@ WDCSimpleModel >> createViewer [
 
 { #category : #'*WodenEngine-Scene' }
 WDCSimpleModel >> openViewer [
-	^ self createViewer openWith: WDAFPSSceneView.
+	^ self createViewer openWith: WDAFPSSceneView allowingVR.
 ]

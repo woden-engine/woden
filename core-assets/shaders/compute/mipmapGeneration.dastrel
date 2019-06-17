@@ -1,0 +1,274 @@
+import compute.environment;
+import compute.stage;
+import texture.functions;
+
+uniform(binding = Textures.Textures) sourceTexture : texture2D;
+
+buffer(binding=StorageBuffers.Buffers) DecodedBuffer
+{
+    data: float4[];
+}
+
+buffer(binding=StorageBuffers.Buffers + 1) EncodedBuffer
+{
+    data: uint[];
+}
+
+uniform(push_constant=Arguments) TextureFetchArguments
+{
+    textureWidth: uint;
+    textureHeight: uint;
+}
+
+code_block(compute, localSizeX = 8, localSizeY = 8) fetch_texture
+{
+	using ComputeStage;
+	using TextureFetchArguments;
+	
+	let destIndex = globalInvocationID.y*textureWidth + globalInvocationID.x;
+	DecodedBuffer.data[destIndex] = texelFetch(sourceTexture, globalInvocationID.xy);
+}
+
+code_block(compute, localSizeX = 8, localSizeY = 8) fetch_normalTexture
+{
+	using ComputeStage;
+	using TextureFetchArguments;
+	
+	let destIndex = globalInvocationID.y*textureWidth + globalInvocationID.x;
+	DecodedBuffer.data[destIndex] = float4(decodeNormalTexel(texelFetch(sourceTexture, globalInvocationID.xy)), 1.0f);
+}
+
+uniform(push_constant=Arguments) MipmapLevelArguments
+{
+    sourceLevelIndex: uint;
+    sourceWidth: uint;
+    sourceHeight: uint;
+    destLevelIndex: uint;
+    destWidth: uint;
+    destHeight: uint;
+}
+
+code_block(compute, localSizeX = 8, localSizeY = 8) mipmap
+{
+	using ComputeStage;
+	using MipmapLevelArguments;
+	using DecodedBuffer;
+	
+	if(globalInvocationID.x < destWidth && globalInvocationID.y < destHeight)
+	{
+		let sourcePosition = globalInvocationID.xy*2u;
+		let sourceIndex = sourceLevelIndex + sourceWidth*sourcePosition.y + sourcePosition.x;
+		let topLeft = data[sourceIndex];
+		let topRight = data[sourceIndex + 1u];
+		let bottomLeft = data[sourceWidth + sourceIndex];
+		let bottomRight = data[sourceWidth + sourceIndex + 1u];
+		data[destLevelIndex + destWidth*globalInvocationID.y + globalInvocationID.x]
+			= (topLeft + topRight + bottomLeft + bottomRight) * 0.25f;
+	}
+}
+
+code_block(compute, localSizeX = 8, localSizeY = 8) mipmap_normal
+{
+	using ComputeStage;
+	using MipmapLevelArguments;
+	using DecodedBuffer;
+	
+	if(globalInvocationID.x < destWidth && globalInvocationID.y < destHeight)
+	{
+		let sourcePosition = globalInvocationID.xy*2u;
+		let sourceIndex = sourceLevelIndex + sourceWidth*sourcePosition.y + sourcePosition.x;
+		let topLeft = data[sourceIndex];
+		let topRight = data[sourceIndex + 1u];
+		let bottomLeft = data[sourceWidth + sourceIndex];
+		let bottomRight = data[sourceWidth + sourceIndex + 1u];
+		data[destLevelIndex + destWidth*globalInvocationID.y + globalInvocationID.x]
+			= normalize(topLeft + topRight + bottomLeft + bottomRight);
+	}
+}
+
+function decodeUnorm8(value: uint) -> float
+{
+	return float(value) / 255.0f;
+}
+
+function decodeSRGBChannel(value: float) -> float
+{
+	let a = 0.055f;
+	return (value <= 0.04045f)
+		? value / 12.92f
+		: pow((value + a) / (1.0f + a), 2.4f);
+
+}
+
+function decodeUnorm8_sRGB(value: uint) -> float
+{
+	return decodeSRGBChannel(decodeUnorm8(value));
+}
+
+function encodeUnorm8(value: float) -> uint
+{
+	return uint(max(min(value, 1.0f), 0.0f)*255.0f);
+}
+
+function encodeSRGBChannel(value: float) -> float
+{
+	let a = 0.055f;
+	return (value <= 0.0031308f)
+		? value * 12.92f
+		: ((1.0f + a) * pow(value, 1.0f / 2.4f)) - a;
+}
+
+function encodeUnorm8_sRGB(value: float) -> uint
+{
+	return encodeUnorm8(encodeSRGBChannel(value));
+}
+
+uniform(push_constant=Arguments) EncodingArguments
+{
+    bufferSize: uint;
+	width: uint;
+	height: uint;
+}
+
+code_block(compute, localSizeX = 8, localSizeY = 8) decode_bgra8
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let index = width*globalInvocationID.y + globalInvocationID.x;
+	if(index < bufferSize)
+	{
+		let encodedTexel = EncodedBuffer.data[index];
+		let b = decodeUnorm8(encodedTexel & 255u);
+		let g = decodeUnorm8((encodedTexel >> 8u) & 255u);
+		let r = decodeUnorm8((encodedTexel >> 16u) & 255u);
+		let a = decodeUnorm8((encodedTexel >> 24u) & 255u);
+		
+		DecodedBuffer.data[index] = float4(r, g, b, a);
+	}
+}
+
+code_block(compute, localSizeX = 8, localSizeY = 8) decode_bgra8_normalXYZ
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let index = width*globalInvocationID.y + globalInvocationID.x;
+	if(index < bufferSize)
+	{
+		let encodedTexel = EncodedBuffer.data[index];
+		let b = decodeUnorm8(encodedTexel & 255u);
+		let g = decodeUnorm8((encodedTexel >> 8u) & 255u);
+		let r = decodeUnorm8((encodedTexel >> 16u) & 255u);
+		
+		DecodedBuffer.data[index] = float4(float3(r, g, b)*2.0f - 1.0f, 0.0f);
+	}
+}
+code_block(compute, localSizeX = 8, localSizeY = 8) decode_bgra8_srgb
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let index = width*globalInvocationID.y + globalInvocationID.x;
+	if(index < bufferSize)
+	{
+		let encodedTexel = EncodedBuffer.data[index];
+		let b = decodeUnorm8_sRGB(encodedTexel & 255u);
+		let g = decodeUnorm8_sRGB((encodedTexel >> 8u) & 255u);
+		let r = decodeUnorm8_sRGB((encodedTexel >> 16u)  & 255u);
+		let a = decodeUnorm8((encodedTexel >> 24u) & 255u);
+		
+		DecodedBuffer.data[index] = float4(r, g, b, a);
+	}
+}
+
+code_block(compute, localSizeX = 8, localSizeY = 8) encode_bgra8
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let index = width*globalInvocationID.y + globalInvocationID.x;
+	if(index < bufferSize)
+	{
+		let color = DecodedBuffer.data[index];
+		EncodedBuffer.data[index] =
+			encodeUnorm8(color.b) | 
+			(encodeUnorm8(color.g) << 8u) |
+			(encodeUnorm8(color.r) << 16u) |
+			(encodeUnorm8(color.a) << 24u);
+	}
+}
+
+code_block(compute, localSizeX = 8, localSizeY = 8) encode_bgra_normal
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let index = width*globalInvocationID.y + globalInvocationID.x;
+	if(index < bufferSize)
+	{
+		let color = encodeNormalTexel(DecodedBuffer.data[index].xyz);
+		EncodedBuffer.data[index] =
+			encodeUnorm8(color.b) | 
+			(encodeUnorm8(color.g) << 8u) |
+			(encodeUnorm8(color.r) << 16u) |
+			(encodeUnorm8(color.a) << 24u);
+	}
+}
+
+code_block(compute, localSizeX = 8, localSizeY = 8) encode_bgra8_srgb
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let index = width*globalInvocationID.y + globalInvocationID.x;
+	if(index < bufferSize)
+	{
+		let color = DecodedBuffer.data[index];
+		EncodedBuffer.data[index] =
+			encodeUnorm8_sRGB(color.b) | 
+			(encodeUnorm8_sRGB(color.g) << 8u) |
+			(encodeUnorm8_sRGB(color.r) << 16u) |
+			(encodeUnorm8(color.a) << 24u);
+	}
+}
+
+code_block(compute, localSizeX = 8, localSizeY = 8) encode_r8g8
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let sourceIndex = (width*globalInvocationID.y + globalInvocationID.x)*2u;
+	let destIndex = width*globalInvocationID.y + globalInvocationID.x;
+	if(sourceIndex < bufferSize)
+	{
+		let c1 = DecodedBuffer.data[sourceIndex].rg;
+		let c2 = DecodedBuffer.data[sourceIndex + 1u].rg;
+		EncodedBuffer.data[destIndex] =
+			encodeUnorm8(c1.r) | 
+			(encodeUnorm8(c1.g) << 8u) |
+			(encodeUnorm8(c2.r) << 16u) |
+			(encodeUnorm8(c2.g) << 24u);
+	}
+}
+
+code_block(compute, localSizeX = 8, localSizeY = 8) encode_r8
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let sourceIndex = (width*globalInvocationID.y + globalInvocationID.x)*4u;
+	let destIndex = width*globalInvocationID.y + globalInvocationID.x;
+	if(sourceIndex < bufferSize)
+	{
+		let c1 = DecodedBuffer.data[sourceIndex].r;
+		let c2 = DecodedBuffer.data[sourceIndex + 1u].r;
+		let c3 = DecodedBuffer.data[sourceIndex + 2u].r;
+		let c4 = DecodedBuffer.data[sourceIndex + 3u].r;
+		EncodedBuffer.data[destIndex] =
+			encodeUnorm8(c1) | 
+			(encodeUnorm8(c2) << 8u) |
+			(encodeUnorm8(c3) << 16u) |
+			(encodeUnorm8(c4) << 24u);
+	}
+}

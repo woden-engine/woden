@@ -1,0 +1,31 @@
+import compute.environment;
+import compute.stage;
+import procedural.noise;
+import particle.state;
+
+uniform(binding = Textures.Textures) sourceTexture : texture2D;
+
+buffer(binding=StorageBuffers.Buffers) ParticleStateBuffer
+{
+    particles: ParticleStateData[];
+}
+
+uniform(push_constant=Arguments) ParticleSimulationArguments
+{
+    particleCount: uint;
+	deltaTime: float;
+}
+
+code_block(compute, localSizeX = 64) particle_simulation
+{
+	using ComputeStage;
+	using ParticleSimulationArguments;
+	
+	let particleIndex = globalInvocationID.x;
+	if(particleIndex < particleCount)
+	{
+		let particle = ParticleStateBuffer.particles[particleIndex];
+		particleStateTransitionFunction(particle, particleIndex, deltaTime);
+		ParticleStateBuffer.particles[particleIndex] = particle;
+	}
+}

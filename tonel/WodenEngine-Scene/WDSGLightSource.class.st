@@ -91,6 +91,16 @@ WDSGLightSource >> innerSpotCutoff: anObject [
 ]
 
 { #category : #accessing }
+WDSGLightSource >> intensity [
+	^ state intensity
+]
+
+{ #category : #accessing }
+WDSGLightSource >> intensity: aLightIntensity [
+	^ state intensity: aLightIntensity
+]
+
+{ #category : #accessing }
 WDSGLightSource >> isDirectionalLight [
 	^ type == #directional
 ]
