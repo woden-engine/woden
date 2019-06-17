@@ -241,7 +241,7 @@ WDCTextureData >> asSRGBTextureFor: anEngine [
 		width: width;
 		height: height;
 		depth: depth;
-		layers: layers size;
+		layers: self layerCount;
 		miplevels: miplevels;
 		sample_count: 1;
 		sample_quality: 0;
@@ -264,7 +264,7 @@ WDCTextureData >> asTextureFor: anEngine [
 		width: width;
 		height: height;
 		depth: depth;
-		layers: layers size;
+		layers: self layerCount;
 		miplevels: miplevels;
 		sample_count: 1;
 		sample_quality: 0;
@@ -760,6 +760,12 @@ WDCTextureData >> initialize [
 	super initialize.
 	normalMap := false.
 	
+]
+
+{ #category : #'as yet unclassified' }
+WDCTextureData >> layerCount [
+	type == AGPU_TEXTURE_CUBE ifTrue: [ ^ layers size // 6 ].
+	^ layers size
 ]
 
 { #category : #accessing }
