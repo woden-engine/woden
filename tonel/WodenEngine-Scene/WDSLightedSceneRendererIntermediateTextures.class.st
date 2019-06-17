@@ -63,10 +63,13 @@ WDSLightedSceneRendererIntermediateTextures >> createMainRenderTargets [
 			type: AGPU_TEXTURE_2D;
 			width: extent x;
 			height: extent y;
-			depthOrArraySize: 1;
+			depth: 1;
+			layers: 1;
 			miplevels: 1;
 			format: sceneRenderer depthStencilFormat;
-			flags: AGPU_TEXTURE_FLAG_DEPTH | AGPU_TEXTURE_FLAG_RENDERBUFFER_ONLY | AGPU_TEXTURE_FLAG_RENDER_TARGET;
+			heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
+			usage_modes: AGPU_TEXTURE_USAGE_DEPTH_ATTACHMENT | AGPU_TEXTURE_USAGE_SAMPLED;
+			main_usage_mode: AGPU_TEXTURE_USAGE_SAMPLED;
 			sample_count: sampleCount;
 			yourself).
 	normalTexture := engine createRenderTargetColorTextureWithExtent: extent sampleCount: sampleCount format: AGPU_TEXTURE_FORMAT_R10G10B10A2_UNORM.

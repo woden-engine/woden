@@ -11,6 +11,9 @@ Class {
 		'particleSimulationComputeParameters',
 		'perFrameCommandLists'
 	],
+	#pools : [
+		'AGPUConstants'
+	],
 	#category : #'WodenEngine-Core-Particle'
 }
 
@@ -116,7 +119,10 @@ WDCParticleSystemRenderableSceneData >> simulateFrameWithTheGPU [
 		stateTracker			
 			computeShader: shader arguments: simulationParameters;
 			pushConstants: 0 size: pushConstants size values: pushConstants;
-			dispatchComputeGlobalGrid: particleSystem particleCount.
+			dispatchComputeGlobalGrid: particleSystem particleCount;
+			memoryBarrier: AGPU_PIPELINE_STAGE_COMPUTE_SHADER
+				dest_stage: AGPU_PIPELINE_STAGE_VERTEX_SHADER | AGPU_PIPELINE_STAGE_FRAGMENT_SHADER
+				source_accesses: AGPU_ACCESS_SHADER_WRITE dest_accesses: AGPU_ACCESS_SHADER_READ.
 	].
 
 	engine graphicsQueue addCommandList: currentCommandLists validCommandList validHandle.

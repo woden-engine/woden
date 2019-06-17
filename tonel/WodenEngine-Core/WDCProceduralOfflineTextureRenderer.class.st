@@ -175,7 +175,8 @@ encodeWith: imageEncodingFunctionName for: textureDataLayer [
 	stateTracker
 		computeShader: (self mipmapGenerationLibrary getComputeStage: fetchFunctionName) arguments: shaderArguments;
 		pushConstants: 0 size: pushConstantBuffer rawDataSize values: pushConstantBuffer rawData;
-		dispatchComputeGlobalGridX: extent x y: extent y.
+		dispatchComputeGlobalGridX: extent x y: extent y;
+		computeShaderBuffersReadWriteMemoryBarrier.
 		
 	"Generate the mipmaps."
 	self generateOfflineMipmapDataBufferWithParameters: shaderArguments
@@ -211,7 +212,8 @@ imageEncodingFunctionName: imageEncodingFunctionName textureDataLayer: textureDa
 			
 		stateTracker
 			pushConstants: 0 size: pushConstantBuffer rawDataSize values: pushConstantBuffer rawData;
-			dispatchComputeGlobalGridX: destLevel width y: destLevel height.
+			dispatchComputeGlobalGridX: destLevel width y: destLevel height;
+			computeShaderBuffersReadWriteMemoryBarrier.
 		
 		sourceLevelIndex := destLevelIndex.
 		destLevelIndex := destLevelIndex + destLevel pixelCount.
@@ -255,7 +257,8 @@ imageEncodingFunctionName: imageEncodingFunctionName textureDataLayer: textureDa
 	stateTracker
 		computeShader: (self mipmapGenerationLibrary getComputeStage: textureFetchFunctionName) arguments: shaderArguments;
 		pushConstants: 0 size: pushConstantBuffer rawDataSize values: pushConstantBuffer rawData;
-		dispatchComputeGlobalGridX: extent x y: extent y.
+		dispatchComputeGlobalGridX: extent x y: extent y;
+		computeShaderBuffersReadWriteMemoryBarrier.
 		
 	"Generate the mipmaps."
 	self generateOfflineMipmapDataBufferWithParameters: shaderArguments
@@ -370,11 +373,14 @@ WDCProceduralOfflineTextureRenderer >> temporaryRenderTargetTextureWithPixelForm
 			format: pixelFormat;
 			width: bufferExtent x asLargerPowerOfTwo;
 			height: bufferExtent y asLargerPowerOfTwo;
-			depthOrArraySize: 1;
+			depth: 1;
+			layers: 1;
 			miplevels: 1;
 			sample_count: 1;
 			sample_quality: 0;
-			flags: AGPU_TEXTURE_FLAG_RENDERBUFFER_ONLY | AGPU_TEXTURE_FLAG_RENDER_TARGET;
+			heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
+			usage_modes: AGPU_TEXTURE_USAGE_SAMPLED | AGPU_TEXTURE_USAGE_COLOR_ATTACHMENT;
+			main_usage_mode: AGPU_TEXTURE_USAGE_SAMPLED;
 			yourself
 		)
 	].

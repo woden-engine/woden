@@ -269,7 +269,7 @@ WDCEngine >> createGPUStorageBuffer: size initialData: initialData [
 	| desc |
 	desc := AGPUBufferDescription new
 		size: size;
-		usage: AGPU_STATIC;
+		heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
 		binding: AGPU_STORAGE_BUFFER;
 		mapping_flags: self streamingMappedBufferMappingFlags;
 		stride: 0.
@@ -291,7 +291,7 @@ WDCEngine >> createIndex: indexSize elements: elementCount immutableBuffer: data
 	| desc |
 	desc := AGPUBufferDescription new
 		size: indexSize*elementCount;
-		usage: AGPU_STATIC;
+		heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
 		binding: AGPU_ELEMENT_ARRAY_BUFFER;
 		mapping_flags: 0;
 		stride: indexSize.
@@ -303,7 +303,7 @@ WDCEngine >> createIndex: indexSize elements: elementCount streamingData: data [
 	| desc |
 	desc := AGPUBufferDescription new
 		size: indexSize*elementCount;
-		usage: AGPU_STATIC;
+		heap_type: AGPU_MEMORY_HEAP_TYPE_HOST_TO_DEVICE;
 		binding: AGPU_ELEMENT_ARRAY_BUFFER;
 		mapping_flags: self streamingMappedBufferMappingFlags;
 		stride: indexSize.
@@ -335,11 +335,14 @@ WDCEngine >> createRenderTargetColorTextureWithExtent: anExtent sampleCount: sam
 		format: aTextureFormat;
 		width: width;
 		height: height;
-		depthOrArraySize: 1;
+		depth: 1;
+		layers: 1;
 		miplevels: 1;
 		sample_count: sampleCount;
 		sample_quality: 0;
-		flags: AGPU_TEXTURE_FLAG_RENDERBUFFER_ONLY | AGPU_TEXTURE_FLAG_RENDER_TARGET;
+		heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
+		usage_modes: AGPU_TEXTURE_USAGE_SAMPLED | AGPU_TEXTURE_USAGE_COLOR_ATTACHMENT;
+		main_usage_mode: AGPU_TEXTURE_USAGE_SAMPLED
 		yourself.
 	^ self createTexture: description
 ]
@@ -394,11 +397,14 @@ WDCEngine >> createStorageImageWithExtent: anExtent format: aTextureFormat [
 		format: aTextureFormat;
 		width: width;
 		height: height;
-		depthOrArraySize: 1;
+		depth: 1;
+		layers: 1;
 		miplevels: 1;
 		sample_count: 1;
 		sample_quality: 0;
-		flags: AGPU_TEXTURE_FLAG_STORAGE | AGPU_TEXTURE_FLAG_READED_BACK;
+		heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
+		usage_modes: AGPU_TEXTURE_USAGE_STORAGE | AGPU_TEXTURE_USAGE_READED_BACK | AGPU_TEXTURE_USAGE_SAMPLED;
+		main_usage_mode: AGPU_TEXTURE_USAGE_STORAGE;
 		yourself.
 	^ (WDCTexture for: self)
 		description: description;
@@ -416,7 +422,7 @@ WDCEngine >> createStreamingStorageBuffer: size initialData: initialData [
 	| desc |
 	desc := AGPUBufferDescription new
 		size: size;
-		usage: AGPU_STREAM;
+		heap_type: AGPU_MEMORY_HEAP_TYPE_HOST_TO_DEVICE;
 		binding: AGPU_STORAGE_BUFFER;
 		mapping_flags: self streamingMappedBufferMappingFlags;
 		stride: 0.
@@ -433,7 +439,7 @@ WDCEngine >> createStreamingUniformBuffer: size initialData: initialData [
 	| desc |
 	desc := AGPUBufferDescription new
 		size: size;
-		usage: AGPU_STREAM;
+		heap_type: AGPU_MEMORY_HEAP_TYPE_HOST_TO_DEVICE;
 		binding: AGPU_UNIFORM_BUFFER;
 		mapping_flags: self streamingMappedBufferMappingFlags;
 		stride: 0.
@@ -469,11 +475,14 @@ WDCEngine >> createTextureFromForm: aForm format: aTextureFormat [
 		format: aTextureFormat;
 		width: width;
 		height: height;
-		depthOrArraySize: 1;
+		depth: 1;
+		layers: 1;
 		miplevels: 1;
 		sample_count: 1;
 		sample_quality: 0;
-		flags: AGPU_TEXTURE_FLAG_UPLOADED;
+		heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
+		usage_modes: AGPU_TEXTURE_USAGE_SAMPLED | AGPU_TEXTURE_USAGE_UPLOADED;
+		main_usage_mode: AGPU_TEXTURE_USAGE_SAMPLED;
 		yourself.
 	^ (WDCTexture for: self)
 		description: description; 
@@ -487,7 +496,7 @@ WDCEngine >> createUniformBuffer: size immutableData: data [
 	| desc |
 	desc := AGPUBufferDescription new
 		size: size;
-		usage: AGPU_STATIC;
+		heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
 		binding: AGPU_UNIFORM_BUFFER;
 		mapping_flags: 0;
 		stride: 0.
@@ -499,7 +508,7 @@ WDCEngine >> createVertex: vertexSize elements: elementCount immutableBuffer: da
 	| desc |
 	desc := AGPUBufferDescription new
 		size: vertexSize*elementCount;
-		usage: AGPU_STATIC;
+		heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
 		binding: AGPU_ARRAY_BUFFER;
 		mapping_flags: 0;
 		stride: vertexSize.
@@ -511,7 +520,7 @@ WDCEngine >> createVertex: vertexSize elements: elementCount streamingData: data
 	| desc |
 	desc := AGPUBufferDescription new
 		size: vertexSize*elementCount;
-		usage: AGPU_STATIC;
+		heap_type: AGPU_MEMORY_HEAP_TYPE_HOST_TO_DEVICE;
 		binding: AGPU_ARRAY_BUFFER;
 		mapping_flags: self streamingMappedBufferMappingFlags;
 		stride: vertexSize.

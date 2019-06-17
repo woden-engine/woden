@@ -73,7 +73,7 @@ WDCTexture >> buildHandle [
 
 { #category : #'resource building' }
 WDCTexture >> canUploadData [
-	^ data isNotNil and: [ description flags anyMask: AGPU_TEXTURE_FLAG_UPLOADED ]
+	^ data isNotNil and: [ description usage_modes anyMask: AGPU_TEXTURE_USAGE_UPLOADED ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -153,7 +153,7 @@ WDCTexture >> hasStencilAspect [
 
 { #category : #testing }
 WDCTexture >> isDepthReaded [
-	^ self hasDepthAspect and: [ description flags anyMask: AGPU_TEXTURE_FLAG_RENDER_TARGET ]
+	^ self hasDepthAspect and: [ description usage_modes anyMask: AGPU_TEXTURE_USAGE_SAMPLED ]
 ]
 
 { #category : #preview }
