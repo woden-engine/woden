@@ -271,6 +271,14 @@ WMVector4 category: 'converting' methods: {
 		w: (w asNormalizedUShort castTo: UInt16)
 ].
 
+:[asAGPUColor4f -> _DynamicObject.
+	^ (Smalltalk globals at: #AGPUColor4f) new
+		r: x;
+		g: y;
+		b: z;
+		a: w;
+		yourself
+].
 }.
 
 WMVector4 category: 'printing' methods: {

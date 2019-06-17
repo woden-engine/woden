@@ -10,9 +10,16 @@ constant screenQuadVertices : float4[3] = {
     {3.0f, -1.0f, 0.0f, 1.0f},
 };
 
-code_block(vertex) main
+code_block(vertex) screenQuad
 {
     let position = screenQuadVertices[VertexStage.vertexID];
     VertexOutput.texcoord = position.xy*0.5f + 0.5f;
+    VertexStage.screenPosition = position;
+}
+
+code_block(vertex) screenQuadFlippedY
+{
+    let position = screenQuadVertices[VertexStage.vertexID];
+    VertexOutput.texcoord = position.xy*float2(0.5f, -0.5f) + 0.5f;
     VertexStage.screenPosition = position;
 }
