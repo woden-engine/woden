@@ -23,3 +23,39 @@ function setParticleStartingUp(particle: ref ParticleStateData, value: bool) -> 
 	else
 		particle.flags = particle.flags & (~1u);
 }
+
+function particleNextRandomUInt(particle: ref ParticleStateData) -> uint
+{
+	particle.randomSeed = (particle.randomSeed*1103515245u + 12345u) & 2147483647u;
+	return particle.randomSeed;
+}
+
+function particleNextRandomInt(particle: ref ParticleStateData) -> int
+{
+	return int(particleNextRandomUInt(particle)) - 1073741824;
+}
+
+function particleNextRandom(particle: ref ParticleStateData) -> float
+{
+	return float(particleNextRandomInt(particle)) / 1073741823.0f;
+}
+
+function particleNextRandomVector2F(particle: ref ParticleStateData) -> float2
+{
+	return float2(particleNextRandom(particle), particleNextRandom(particle));
+}
+
+function particleNextRandomVector3F_xz(particle: ref ParticleStateData) -> float3
+{
+	return float3(particleNextRandom(particle), 0.0f, particleNextRandom(particle));
+}
+
+function particleNextRandomVector3F(particle: ref ParticleStateData) -> float3
+{
+	return float3(particleNextRandom(particle), particleNextRandom(particle), particleNextRandom(particle));
+}
+
+function particleNextRandomVector4F(particle: ref ParticleStateData) -> float4
+{
+	return float4(particleNextRandom(particle), particleNextRandom(particle), particleNextRandom(particle), particleNextRandom(particle));
+}

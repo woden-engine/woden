@@ -80,7 +80,7 @@ WDCParticleState category: 'random' methods: {
 
 WDCParticleState class category: 'dastrel conversion' methods: {
 :[asDastrelConversionTypeWith: codeConverter
-	^ codeConverter lowcodeStructureWrapper: self to: #ParticleState
+	^ codeConverter lowcodeStructureWrapper: self to: #ParticleStateData
 ].
 }.
 
