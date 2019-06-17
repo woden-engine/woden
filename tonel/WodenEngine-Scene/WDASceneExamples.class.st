@@ -258,7 +258,7 @@ WDASceneExamples class >> example04PoolHDR [
 		exponentialToneMapping;
 		exposure: 0.0006.
 	camera transform translateToX: 0.0 y: 1.0 z: -4.0.
-	scene backgroundColor: Color cyan.
+	scene backgroundColor: (Color cyan asWMVector4F * 1000.0).
 	camera inspect.
 	
 	self constructPoolSceneInto: scene.

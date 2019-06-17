@@ -665,7 +665,13 @@ WDCResourceCache >> resourceAt: name ifAbsentPut: aBlock [
 
 { #category : #'special shaders' }
 WDCResourceCache >> screenQuadVertexShader [
-	^ screenQuadVertexShader ifNil: [ screenQuadVertexShader := self loadVertexShader: 'shaders/vertex/screenQuad.dastrel' ]
+	| shaderLibrary |
+	^ screenQuadVertexShader ifNil: [
+		shaderLibrary := self loadShaderLibrary: 'shaders/vertex/screenQuad.dastrel'.
+		engine projectionInvertedY
+			ifTrue: [ shaderLibrary getVertexStage: 'screenQuad' ]
+			ifFalse: [ shaderLibrary getVertexStage: 'screenQuadFlippedY' ]
+	]
 ]
 
 { #category : #'session management' }

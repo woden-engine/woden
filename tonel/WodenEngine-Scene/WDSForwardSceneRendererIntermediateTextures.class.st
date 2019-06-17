@@ -26,6 +26,6 @@ WDSForwardSceneRendererIntermediateTextures >> createMainRenderTargets [
 	gbufferRenderTarget := WDCRenderTarget for: engine colorAttachments: { normalTexture } depthStencilAttachment: depthStencilTexture.
 
 	gbufferRenderPass := gbufferRenderTarget validMainRenderPass.
-	gbufferRenderPass setColorClearValue: 0 value: (Color r: 0.5 g: 0.5 b: 1.0) asAGPUColor4f.
+	gbufferRenderPass setColorClearValue: 0 value: (WMVector4F x: 0.5 y: 0.5 z: 1.0) asAGPUColor4f.
 	
 ]

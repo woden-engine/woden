@@ -96,7 +96,7 @@ WDCAbstractRenderTarget >> createRenderPassWithColors: initialColors depth: init
 				sample_count: sampleCount;
 				begin_action: AGPU_ATTACHMENT_CLEAR;
 				end_action: AGPU_ATTACHMENT_KEEP;
-				clear_value: color asAGPUColor4f;
+				clear_value: color asWMVector4F asAGPUColor4f;
 				yourself
 		].
 	].
