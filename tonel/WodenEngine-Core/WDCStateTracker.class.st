@@ -140,6 +140,14 @@ WDCStateTracker >> computeShader: shader arguments: shaderArguments [
 	shaderArguments applyBindingsOnStateTracker: self
 ]
 
+{ #category : #barriers }
+WDCStateTracker >> computeShaderBuffersReadWriteMemoryBarrier [
+	self memoryBarrier: AGPU_PIPELINE_STAGE_COMPUTE_SHADER
+		dest_stage: AGPU_PIPELINE_STAGE_COMPUTE_SHADER
+		source_accesses: AGPU_ACCESS_SHADER_WRITE
+		dest_accesses: AGPU_ACCESS_SHADER_READ
+]
+
 { #category : #'pipeline state' }
 WDCStateTracker >> cullMode: cullMode [
 	pipelineStateDescription cullMode: cullMode
@@ -271,6 +279,11 @@ WDCStateTracker >> initialize [
 	super initialize.
 	pipelineStateDescription := WDCGraphicsPipelineStateDescription new.
 	computePipelineStateDescription := WDCComputePipelineStateDescription new.
+]
+
+{ #category : #barriers }
+WDCStateTracker >> memoryBarrier: source_stage dest_stage: dest_stage source_accesses: source_accesses dest_accesses: dest_accesses [
+	commandListBuilder memoryBarrier: source_stage dest_stage: dest_stage source_accesses: source_accesses dest_accesses: dest_accesses
 ]
 
 { #category : #accessing }

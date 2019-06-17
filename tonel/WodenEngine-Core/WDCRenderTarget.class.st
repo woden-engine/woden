@@ -49,12 +49,10 @@ WDCRenderTarget class >> for: anEngine extent: anExtent [
 
 { #category : #initialization }
 WDCRenderTarget >> createFramebuffer [
-	| colorBufferFags description colorAttachments depthStencilView depthStencilAttachment depthStencilFlags depthStencilDesc colorViews |
-	colorBufferFags := AGPU_TEXTURE_FLAG_RENDER_TARGET.
-	self gpuOnly ifTrue: [
-		colorBufferFags := colorBufferFags | AGPU_TEXTURE_FLAG_RENDERBUFFER_ONLY
-	] ifFalse: [
-		colorBufferFags := colorBufferFags | AGPU_TEXTURE_FLAG_READED_BACK
+	| colorBufferUsages description colorAttachments depthStencilView depthStencilAttachment depthStencilFlags depthStencilDesc colorViews mainUsageMode |
+	colorBufferUsages := AGPU_TEXTURE_USAGE_COLOR_ATTACHMENT | AGPU_TEXTURE_USAGE_SAMPLED.
+	self gpuOnly ifFalse: [
+		colorBufferUsages := colorBufferUsages | AGPU_TEXTURE_USAGE_READED_BACK
 	].
 	
 	colorAttachments := self colorAttachmentFormats collect: [ :format |
@@ -62,10 +60,13 @@ WDCRenderTarget >> createFramebuffer [
 		type: AGPU_TEXTURE_2D;
 		width: width;
 		height: height;
-		depthOrArraySize: 1;
+		depth: 1;
+		layers: 1;
 		miplevels: 1;
 		format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB;
-		flags: colorBufferFags;
+		heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
+		usage_modes: colorBufferUsages;
+		main_usage_mode: AGPU_TEXTURE_USAGE_SAMPLED;
 		sample_count: sampleCount.
 		
 		engine createTexture: description
@@ -76,18 +77,25 @@ WDCRenderTarget >> createFramebuffer [
 	depthStencilView := nil.
 	depthStencilAttachment := nil.
 	(hasDepth or: [ hasStencil ]) ifTrue: [
-		depthStencilFlags := AGPU_TEXTURE_FLAG_DEPTH | AGPU_TEXTURE_FLAG_RENDERBUFFER_ONLY.
-		hasStencil ifTrue: [ depthStencilFlags := depthStencilFlags | AGPU_TEXTURE_FLAG_STENCIL ].
-		isDepthReaded ifTrue: [ depthStencilFlags := depthStencilFlags | AGPU_TEXTURE_FLAG_RENDER_TARGET  ].
+		depthStencilFlags := AGPU_TEXTURE_USAGE_DEPTH_ATTACHMENT.
+		hasStencil ifTrue: [ depthStencilFlags := depthStencilFlags | AGPU_TEXTURE_USAGE_STENCIL_ATTACHMENT ].
+		mainUsageMode := depthStencilFlags.
+		isDepthReaded ifTrue: [
+			depthStencilFlags := depthStencilFlags | AGPU_TEXTURE_USAGE_SAMPLED.
+			mainUsageMode := AGPU_TEXTURE_USAGE_SAMPLED
+		].
 		
 		depthStencilDesc := AGPUTextureDescription new
 			type: AGPU_TEXTURE_2D;
 			width: width;
 			height: height;
-			depthOrArraySize: 1;
+			depth: 1;
+			layers: 1;
 			miplevels: 1;
 			format: self depthStencilFormat;
-			flags: depthStencilFlags;
+			heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
+			usage_modes: depthStencilFlags;
+			main_usage_mode: mainUsageMode;
 			sample_count: sampleCount.
 			
 		depthStencilAttachment := (engine createTexture: depthStencilDesc)

@@ -240,11 +240,14 @@ WDCTextureData >> asSRGBTextureFor: anEngine [
 		format: srgbPixelFormat;
 		width: width;
 		height: height;
-		depthOrArraySize: depth;
+		depth: depth;
+		layers: self layerCount;
 		miplevels: miplevels;
 		sample_count: 1;
 		sample_quality: 0;
-		flags: AGPU_TEXTURE_FLAG_UPLOADED;
+		heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
+		usage_modes: AGPU_TEXTURE_USAGE_SAMPLED | AGPU_TEXTURE_USAGE_UPLOADED;
+		main_usage_mode: AGPU_TEXTURE_USAGE_SAMPLED;
 		yourself.
 	^ (WDCTexture for: anEngine)
 			description: description;
@@ -260,11 +263,14 @@ WDCTextureData >> asTextureFor: anEngine [
 		format: pixelFormat;
 		width: width;
 		height: height;
-		depthOrArraySize: depth;
+		depth: depth;
+		layers: self layerCount;
 		miplevels: miplevels;
 		sample_count: 1;
 		sample_quality: 0;
-		flags: AGPU_TEXTURE_FLAG_UPLOADED;
+		heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
+		usage_modes: AGPU_TEXTURE_USAGE_SAMPLED | AGPU_TEXTURE_USAGE_UPLOADED;
+		main_usage_mode: AGPU_TEXTURE_USAGE_SAMPLED;
 		yourself.
 	^ (WDCTexture for: anEngine)
 			description: description;
@@ -754,6 +760,12 @@ WDCTextureData >> initialize [
 	super initialize.
 	normalMap := false.
 	
+]
+
+{ #category : #'as yet unclassified' }
+WDCTextureData >> layerCount [
+	type == AGPU_TEXTURE_CUBE ifTrue: [ ^ layers size // 6 ].
+	^ layers size
 ]
 
 { #category : #accessing }

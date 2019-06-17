@@ -134,7 +134,7 @@ WDIGLTF2Importer >> convertIndices: indexCountToConvert withAccessors: indexBuff
 	newIndexBuffer := WDCBufferResource new
 		description: (AGPUBufferDescription new
 			size: newIndexDataArray rawData size;
-			usage: AGPU_STATIC;
+			heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
 			binding: AGPU_ELEMENT_ARRAY_BUFFER;
 			stride: newIndexDataArray elementSize;
 			yourself);
@@ -176,7 +176,7 @@ WDIGLTF2Importer >> generateMissingVertexTangentSpaceFrames: vertexDataWithSubme
 		buffer: (WDCBufferResource new
 			description: (AGPUBufferDescription new
 				size: encodedTangent4Data size;
-				usage: AGPU_STATIC;
+				heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
 				binding: AGPU_ARRAY_BUFFER;
 				yourself);
 			data: encodedTangent4Data;
@@ -307,7 +307,7 @@ WDIGLTF2Importer >> loadBuffer: bufferIndex from: bufferDescription [
 	byteLength := bufferDescription at: 'byteLength'.
 	description := AGPUBufferDescription new
 		size: byteLength;
-		usage: AGPU_STATIC;
+		heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
 		binding: AGPU_ARRAY_BUFFER | AGPU_ELEMENT_ARRAY_BUFFER;
 		yourself.
 	self assert: data size >= byteLength.

@@ -327,11 +327,14 @@ WDSLightedSceneRenderer >> shadowMapBuffer [
 		format: shadowMapFormat;
 		width: shadowMapExtent x;
 		height: shadowMapExtent y;
-		depthOrArraySize: self maxShadowCastingLightCount;
+		depth: 1;
+		layers: self maxShadowCastingLightCount;
 		miplevels: 1;
 		sample_count: 1;
 		sample_quality: 0;
-		flags: AGPU_TEXTURE_FLAG_RENDERBUFFER_ONLY | AGPU_TEXTURE_FLAG_DEPTH |AGPU_TEXTURE_FLAG_RENDER_TARGET;
+		heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
+		usage_modes: AGPU_TEXTURE_USAGE_SAMPLED | AGPU_TEXTURE_USAGE_DEPTH_ATTACHMENT;
+		main_usage_mode: AGPU_TEXTURE_USAGE_SAMPLED;
 		yourself.
 		
 	shadowMapBuffer := (WDCTexture for: engine)

@@ -74,11 +74,14 @@ WDBBabylonFontCache >> validTexture [
 			format: AGPU_TEXTURE_FORMAT_R8_UNORM;
 			width: self width;
 			height: self height;
-			depthOrArraySize: 1;
+			depth: 1;
+			layers: 1;
 			miplevels: 1;
 			sample_count: 1;
 			sample_quality: 0;
-			flags: AGPU_TEXTURE_FLAG_UPLOADED;
+			heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
+			usage_modes: AGPU_TEXTURE_USAGE_SAMPLED | AGPU_TEXTURE_USAGE_UPLOADED;
+			main_usage_mode: AGPU_TEXTURE_USAGE_SAMPLED;
 			yourself.
 		texture := (WDCTexture for: driver engine)
 			description: description; 
