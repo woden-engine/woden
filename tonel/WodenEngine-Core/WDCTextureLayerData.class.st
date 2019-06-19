@@ -103,13 +103,15 @@ WDCTextureLayerData >> depth: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-WDCTextureLayerData >> generateLevelsWithBpp: bitsPerPixel [
-	| levelWidth levelHeight levelDepth pitch slicePitch data |
+WDCTextureLayerData >> generateLevels: requiredLevelCount withBpp: bitsPerPixel [
+	| levelWidth levelHeight levelDepth pitch slicePitch data finished levelCount |
 	levelWidth := width.
 	levelHeight := height.
 	levelDepth := depth.
 	levels := Array streamContents: [ :out |
-		[ levelWidth > 0 or: [ levelHeight > 0 or: levelDepth > 0] ] whileTrue: [
+		finished := false.
+		levelCount := 0.
+		[ levelWidth > 0 or: [ levelHeight > 0 or: [levelDepth > 0 and: [finished not ]] ] ] whileTrue: [
 			levelWidth := levelWidth max: 1.
 			levelHeight := levelHeight max: 1.
 			levelDepth := levelDepth max: 1.
@@ -128,8 +130,18 @@ WDCTextureLayerData >> generateLevelsWithBpp: bitsPerPixel [
 			levelWidth := levelWidth // 2.
 			levelHeight := levelHeight // 2.
 			levelDepth := levelDepth // 2.
+			levelCount := levelCount + 1.
+			
+			(levelCount >= requiredLevelCount and: [requiredLevelCount > 0]) ifTrue: [ 
+				finished := true
+			]
 		]
 	]
+]
+
+{ #category : #'as yet unclassified' }
+WDCTextureLayerData >> generateLevelsWithBpp: bitsPerPixel [
+	self generateLevels: -1 withBpp: bitsPerPixel
 ]
 
 { #category : #accessing }

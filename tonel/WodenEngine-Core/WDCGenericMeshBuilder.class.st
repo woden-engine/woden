@@ -733,6 +733,11 @@ WDCGenericMeshBuilder >> currentMaterial: anObject [
 ]
 
 { #category : #accessing }
+WDCGenericMeshBuilder >> defaultMaterial [
+	currentMaterial := engine defaultMaterial
+]
+
+{ #category : #accessing }
 WDCGenericMeshBuilder >> engine [
 	^ engine
 ]
@@ -740,7 +745,7 @@ WDCGenericMeshBuilder >> engine [
 { #category : #accessing }
 WDCGenericMeshBuilder >> engine: anObject [
 	engine := anObject.
-	currentMaterial ifNil: [ currentMaterial := engine defaultMaterial ]
+	currentMaterial ifNil: [ self defaultMaterial ]
 ]
 
 { #category : #'as yet unclassified' }

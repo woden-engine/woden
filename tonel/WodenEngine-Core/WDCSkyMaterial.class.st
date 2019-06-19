@@ -4,10 +4,10 @@ Class {
 	#instVars : [
 		'skyTexture',
 		'resourceBindingsAreUpdated',
-		'vertexShader',
 		'resourceBinding',
 		'shaderLibrary',
-		'forwardFragmentShader'
+		'forwardFragmentShader',
+		'objectSpace'
 	],
 	#category : #'WodenEngine-Core-Material'
 }
@@ -44,11 +44,22 @@ WDCSkyMaterial >> forwardFragmentShader [
 { #category : #initialization }
 WDCSkyMaterial >> initialize [
 	self invalidateCache.
+	objectSpace := false.
 ]
 
 { #category : #'state binding' }
 WDCSkyMaterial >> invalidateCache [
 	resourceBindingsAreUpdated := false.
+]
+
+{ #category : #accessing }
+WDCSkyMaterial >> objectSpace [
+	^ objectSpace
+]
+
+{ #category : #accessing }
+WDCSkyMaterial >> objectSpace: aBoolean [
+	objectSpace := aBoolean
 ]
 
 { #category : #parsing }
@@ -70,7 +81,8 @@ WDCSkyMaterial >> skyTexture [
 
 { #category : #accessing }
 WDCSkyMaterial >> skyTexture: anObject [
-	skyTexture := anObject
+	skyTexture := anObject.
+	self invalidateCache
 ]
 
 { #category : #preview }
@@ -87,5 +99,7 @@ WDCSkyMaterial >> validateCache [
 
 { #category : #shaders }
 WDCSkyMaterial >> vertexShader [
-	^ vertexShader ifNil: [ vertexShader := self shaderLibrary getVertexStage: #vertex ]
+	^ objectSpace
+		ifTrue: [ self shaderLibrary getVertexStage: #vertexObject ]
+		ifFalse: [ self shaderLibrary getVertexStage: #vertex ]
 ]

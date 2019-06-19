@@ -31,7 +31,9 @@ WDCSceneRenderingShaderSignature class >> signatureSpec: spec [
 				uniform: #GlobalLightingState;
 				texture: #SpotShadowMaps count: 1;
 				texture: #PointShadowMaps count: 1;
-				texture: #AmbientOcclusion count: 1
+				texture: #AmbientOcclusion count: 1;
+				texture: #LightEnvironmentMap count: 1;
+				texture: #ImageBasedLightingBRDFLut: count: 1
 		];
 		bank: #ObjectState with: [ :bank |
 			bank
@@ -74,6 +76,8 @@ WDCSceneRenderingShaderSignature >> createHandleForDevice: device [
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "SpotShadowMaps"
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "PointShadowMaps"
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "AmbientOcclusion"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "LightEnvironmentMap"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "ImageBasedLightingBRDFLut:"
 
 		"ObjectState"
 		beginBindingBank: 100000;
@@ -145,7 +149,7 @@ WDCSceneRenderingShaderSignature >> newCameraState [
 
 { #category : #'generated shader signature methods' }
 WDCSceneRenderingShaderSignature >> newLightingState [
-	^ engine createShaderSignature: self resourceBinding: 2 elements: 4
+	^ engine createShaderSignature: self resourceBinding: 2 elements: 6
 ]
 
 { #category : #'generated shader signature methods' }

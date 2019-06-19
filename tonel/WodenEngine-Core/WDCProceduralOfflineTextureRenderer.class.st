@@ -15,7 +15,8 @@ Class {
 		'commandList',
 		'temporaryRenderTargets',
 		'lastRenderedTexture',
-		'temporaryMipmapResultBuffer'
+		'temporaryMipmapResultBuffer',
+		'cubeFaceId'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -31,6 +32,7 @@ WDCProceduralOfflineTextureRenderer class >> for: anEngine extent: anExtent [
 { #category : #public }
 WDCProceduralOfflineTextureRenderer >> begin [
 	lastRenderedTexture := nil.
+	cubeFaceId := nil.
 ]
 
 { #category : #accessing }
@@ -139,6 +141,16 @@ WDCProceduralOfflineTextureRenderer >> createTextureDataFromForm: form [
 { #category : #public }
 WDCProceduralOfflineTextureRenderer >> critical: aBlock [
 	^ mutex critical: aBlock
+]
+
+{ #category : #accessing }
+WDCProceduralOfflineTextureRenderer >> cubeFaceId [
+	^ cubeFaceId
+]
+
+{ #category : #accessing }
+WDCProceduralOfflineTextureRenderer >> cubeFaceId: anInteger [
+	cubeFaceId := anInteger
 ]
 
 { #category : #public }
@@ -322,9 +334,20 @@ WDCProceduralOfflineTextureRenderer >> renderProceduralTextureWithFragmentShader
 	stateTracker
 		beginRenderPass: renderTarget validMainRenderPass renderTarget: renderTarget x: 0 y: 0 width: extent x height: extent y;
 		activateShaderSignature: (WDCCompositionShaderSignature for: engine);
-		vertexShader: engine resourceCache screenQuadVertexShader;
-		fragmentShader: shader;
-		dispatchScreenQuadRender;
+		vertexShader: (cubeFaceId
+			ifNil: [engine resourceCache screenQuadVertexShader]
+			ifNotNil: [engine resourceCache cubeScreenQuadVertexShader]);
+		fragmentShader: shader.
+
+	cubeFaceId ifNil: [ 
+		stateTracker
+			dispatchScreenQuadRender.
+	] ifNotNil: 	[ 
+		stateTracker
+			dispatchCubeFaceScreenQuadRender: cubeFaceId.
+	].
+
+	stateTracker
 		endRenderPass.
 
 ]

@@ -25,6 +25,8 @@ WDSForwardSceneRenderer >> ensureLightingStatesFor: requiredNumberOfCameras [
 			self shaderSignature newLightingState
 				bind: 0 uniformBufferElement: bufferElement;
 				bind: 1 texture: self shadowMapBuffer;
+				bind: 4 texture: engine resourceCache blackCubeMap;
+				bind: 5 texture: engine resourceCache imageBasedLightingBRDFLut;
 				yourself
 		])
 	].
@@ -91,7 +93,10 @@ WDSForwardSceneRenderer >> updateFrameLightingStates [
 		(lightingStateBinding slotValueAt: 0) value: lightingState.
 		
 		"Bind the ambient occlusion texture."
-		lightingStateBinding bind: 3 texture: renderingViewport ambientOcclusionTexture
+		lightingStateBinding bind: 3 texture: renderingViewport ambientOcclusionTexture.
+		scene lightingEnvironmentMap ifNotNil: [ 
+			lightingStateBinding bind: 4 texture: scene lightingEnvironmentMap
+		]
 	].
 ]
 

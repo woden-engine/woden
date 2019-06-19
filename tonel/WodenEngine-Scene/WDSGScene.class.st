@@ -16,7 +16,8 @@ Class {
 		'commonGPUStateRenderingComponent',
 		'skyLighting',
 		'groundLighting',
-		'sunDirection'
+		'sunDirection',
+		'lightingEnvironmentMap'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
@@ -140,6 +141,16 @@ WDSGScene >> initializeWithEngine: anEngine shaderSignatureClass: shaderSignatur
 	engine := anEngine.
 	shaderSignature := shaderSignatureClass for: anEngine.
 	roots do: #engineChanged.
+]
+
+{ #category : #accessing }
+WDSGScene >> lightingEnvironmentMap [
+	^ lightingEnvironmentMap
+]
+
+{ #category : #accessing }
+WDSGScene >> lightingEnvironmentMap: anObject [
+	lightingEnvironmentMap := anObject
 ]
 
 { #category : #'rendering graph' }
