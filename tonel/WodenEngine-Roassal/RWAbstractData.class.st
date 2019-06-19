@@ -1,3 +1,6 @@
+"
+I have values to handle the data with RWGrapher
+"
 Class {
 	#name : #RWAbstractData,
 	#superclass : #RWObject,
@@ -16,10 +19,10 @@ Class {
 		'barBuilder',
 		'elementActions'
 	],
-	#category : 'WodenEngine-Roassal-Builder-Grapher'
+	#category : #'WodenEngine-Roassal-Builder-Grapher'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RWAbstractData >> addedInBuilder: aBuilder [
 	self builder: aBuilder.
 ]
@@ -29,62 +32,34 @@ RWAbstractData >> builder: aBuilder [
 	builder := aBuilder 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private computation' }
 RWAbstractData >> computeMinAndMax [
-	self computeMinAndMaxForX.
-	self computeMinAndMaxForY.
-	self computeMinAndMaxForZ.
+	#(x y z) do: [ :sel | self computeMinAndMaxFor: sel ].
 ]
 
-{ #category : #'as yet unclassified' }
-RWAbstractData >> computeMinAndMaxForX [
-	| computed |
-	computed := elements collect: x.
-	self assert: [ computed allSatisfy: [ :obj | obj isKindOf: Number ] ] description: 'You have provided objects that are not number. Please adjust what you provide to #points: #x: and #y:'.
-	minX := computed min.
-	maxX := computed max.
-
-	(minX < 0 and: [ maxX < 0 ]) ifTrue: [ maxX := 0 ].
-	(minX > 0 and: [ maxX > 0 ]) ifTrue: [ minX := 0 ].
-	
-
-
-]
-
-{ #category : #'as yet unclassified' }
-RWAbstractData >> computeMinAndMaxForY [
-	| computed |
-	computed := elements collect: y.
-	self assert: [ computed allSatisfy: [ :obj | obj isKindOf: Number ] ] description: 'You have provided objects that are not number. Please adjust what you provide to #points: #x: and #y:'.
-	minY := computed min.
-	maxY := computed max.
-	
-	(minY < 0 and: [ maxY < 0 ]) ifTrue: [ maxY := 0 ].
-	(minY > 0 and: [ maxY > 0 ]) ifTrue: [ minY := 0 ].
-	
-]
-
-{ #category : #'as yet unclassified' }
-RWAbstractData >> computeMinAndMaxForZ [
-	| computed |
-	computed := elements collect: z.
-	self assert: [ computed allSatisfy: [ :obj | obj isKindOf: Number ] ] description: 'You have provided objects that are not number. Please adjust what you provide to #points: #x: and #y:'.
-	minZ := computed min.
-	maxZ := computed max.
-	
-	(minZ < 0 and: [ maxZ < 0 ]) ifTrue: [ maxZ := 0 ].
-	(minZ > 0 and: [ maxZ > 0 ]) ifTrue: [ minZ := 0 ].
-	
-]
-
-{ #category : #'as yet unclassified' }
-RWAbstractData >> defaultMaxValue [
-	^ 1000000
-]
-
-{ #category : #'as yet unclassified' }
-RWAbstractData >> defaultMinValue [
-	^ -1000000
+{ #category : #'private computation' }
+RWAbstractData >> computeMinAndMaxFor: selector [
+	| computed arg min max |
+	arg := self perform: selector.
+	computed := elements collect: arg .
+	self
+		 assert: [ computed allSatisfy: [ :obj | obj isNumber ] ] 
+		description: 'You have provided objects that are not number.'.
+	min := SmallInteger maxVal.
+	max := SmallInteger minVal.
+	computed do: [ :n | 
+		min := min min: n.
+		max := max max: n ].
+	(min < 0 and: [max < 0])
+		ifTrue: [ max := 0 ].
+	(min > 0 and: [max > 0])
+		ifTrue: [ min := 0 ].
+	self 
+		perform: ('min', selector asUppercase, ':') asSymbol 
+		withArguments: (Array with: min).
+	self 
+		perform: ('max', selector asUppercase, ':') asSymbol 
+		withArguments: (Array with: max).
 ]
 
 { #category : #accessing }
@@ -94,7 +69,7 @@ RWAbstractData >> elements [
 	^ elements
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RWAbstractData >> getModelForElement: element atIndex: index [
 	"Return the model that is used to insert a label for the element. index is index-th label to be provided."
 	"The default behavior is simply to return the model of the element"
@@ -165,4 +140,49 @@ RWAbstractData >> minZ [
 { #category : #accessing }
 RWAbstractData >> minZ: anObject [
 	minZ := anObject
+]
+
+{ #category : #'accessing - position' }
+RWAbstractData >> x [
+	^ x
+]
+
+{ #category : #'accessing - position' }
+RWAbstractData >> x: blockOrSymbol [
+	self xElement: [ :anElement | blockOrSymbol rwValue: anElement model ]
+]
+
+{ #category : #'accessing - position' }
+RWAbstractData >> xElement: blockOrSymbol [
+	x := blockOrSymbol
+]
+
+{ #category : #'accessing - position' }
+RWAbstractData >> y [
+	^ y
+]
+
+{ #category : #'accessing - position' }
+RWAbstractData >> y: blockOrSymbol [
+	self yElement: [ :anElement | blockOrSymbol rwValue: anElement model ]
+]
+
+{ #category : #'accessing - position' }
+RWAbstractData >> yElement: blockOrSymbol [
+	y := blockOrSymbol
+]
+
+{ #category : #'accessing - position' }
+RWAbstractData >> z [
+	^ z
+]
+
+{ #category : #'accessing - position' }
+RWAbstractData >> z: blockOrSymbol [
+	self zElement: [ :anElement | blockOrSymbol rwValue: anElement model ]
+]
+
+{ #category : #'accessing - position' }
+RWAbstractData >> zElement: blockOrSymbol [
+	z := blockOrSymbol
 ]

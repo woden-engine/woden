@@ -189,6 +189,16 @@ RWView >> cameraLightIntensity: aColor [
 ]
 
 { #category : #overlays }
+RWView >> createBillboardAtWorldPosition: worldPosition drawingWith: aBlock [
+	| overlay |
+	overlay := RWBillboardOverlay new
+		position: worldPosition;
+		drawingBlock: aBlock.
+	self addOverlay: overlay.
+	^ overlay
+]
+
+{ #category : #overlays }
 RWView >> createPopupAtViewPosition: viewPosition drawingWith: aBlock [
 	| overlay |
 	overlay := RWPopupOverlay new
