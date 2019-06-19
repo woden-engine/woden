@@ -29,6 +29,14 @@ code_block(vertex) vertex
     VertexStage.screenPosition = projectionMatrix * transformPositionToView(GenericVertexLayout.position);
 }
 
+code_block(vertex) vertexObject
+{
+    using CameraState;
+
+    VertexOutput.position = transformPositionToWorld(GenericVertexLayout.position).xyz;
+    VertexStage.screenPosition = projectionMatrix * transformPositionToView(GenericVertexLayout.position);
+}
+
 //==============================================================================
 // Forward lighting model.
 

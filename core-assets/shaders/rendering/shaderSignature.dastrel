@@ -16,7 +16,9 @@ shader_signature SceneRendering
         SpotShadowMaps: texture;
         PointShadowMaps: texture;
         ScreenSpaceAmbientOcclusion: texture;
-    }
+        LightEnvironmentMap: texture;
+        ImageBasedLightingBRDFLut: texture;
+   }
 
     descriptor_set(max_bindings = 1000000) ObjectState
     {
@@ -38,3 +40,4 @@ uniform(binding = Samplers.Samplers+1) normalSampler : sampler;
 uniform(binding = Samplers.Samplers+2) displacementSampler : sampler;
 uniform(binding = Samplers.Samplers+2) cubeMapSampler : sampler;
 uniform(binding = Samplers.Samplers+3) shadowSampler : sampler;
+uniform(binding = Samplers.Samplers+2) brdfLutSampler : sampler;

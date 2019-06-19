@@ -157,6 +157,12 @@ WMVector2 category: 'converting' methods: {
 ].
 }.
 
+WMVector2 category: 'math functions' methods: {
+:[interpolateTo: <WMVector2> other at: <Scalar> param -> WMVector2.
+	^ self * (1 - param) + (other * param)
+].
+}.
+
 WMVector2 category: 'printing' methods: {
 :[printOn: aStream
 	aStream nextPutAll: WMVector2 name;

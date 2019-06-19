@@ -1,0 +1,11 @@
+import fragment.stage;
+import fragment.cubeScreenQuad;
+import procedural.noise;
+
+code_block(fragment) main
+{
+	let direction = FragmentInput.direction;
+	let color = colorFunction(direction.x, direction.y, direction.z);
+	FragmentStage.colorOutput0 = color;
+}
+

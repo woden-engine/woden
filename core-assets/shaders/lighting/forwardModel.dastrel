@@ -4,10 +4,13 @@ import lighting.functions;
 
 import fragment.stage; // For SSAO
 import math.constants;
+import math.functions;
 
 uniform(binding = LightingState.SpotShadowMaps) spotShadowMaps : depthTexture2DArray;
 uniform(binding = LightingState.PointShadowMaps) pointShadowMaps : depthTextureCubeArray;
 uniform(binding = LightingState.ScreenSpaceAmbientOcclusion) screenSpaceAmbientOcclusion : texture2D;
+uniform(binding = LightingState.LightEnvironmentMap) lightEnvironmentMap : textureCube;
+uniform(binding = LightingState.ImageBasedLightingBRDFLut) imageBasedLightingBRDFLut : texture2D;
 
 function specularDistribution(alpha: float, cosTheta: float) -> float
 {
@@ -76,7 +79,16 @@ code_block forwardLightingModel
     let hemiFactor = dot(normal, sunDirection)*0.5f + 0.5f;
     accumulatedColor += albedo * mix(groundLighting.rgb, skyLighting.rgb, hemiFactor)*sampleScreenSpaceAmbientOcclusion();
 
-	let NdotV = max(0.0f, dot(normal, viewVector));
+	let NdotV = saturate(dot(normal, viewVector));
+
+	// Add the lighting cube.
+    let R = reflect(-viewVector, normal);
+    let worldR = (CameraState.inverseViewMatrix * float4(R, 0.0f)).xyz;
+	let roughness = sqrt(alpha);
+    let ambientLightSample = cubeMapSampler.sample(lightEnvironmentMap, worldR).rgb;
+	let ambientReflectionFactors = brdfLutSampler.sample(imageBasedLightingBRDFLut, float2(NdotV, roughness));
+	//let reflectionF = fresnelSchlickRoughness(F0, NdotV, roughness);
+	accumulatedColor += ambientLightSample*(F0*ambientReflectionFactors.x + ambientReflectionFactors.y);
 	
     // Accumulate each one of the lights
     for(let i = 0; i < numberOfLights; i += 1)
@@ -139,9 +151,10 @@ code_block forwardLightingModel
         // Compute the fresnel factor
         let H = normalize(L + viewVector);
         let NdotH = max(0.0f, dot(normal, H));
+		let VdotH = max(0.0f, dot(viewVector, H));
 
         // Compute the cook torrance factors.
-        let F = fresnelSchlick(F0, dot(H, L));
+        let F = fresnelSchlick(F0, VdotH);
         let D = specularDistribution(alpha, NdotH);
 		let G = cookTorranceMasking(alpha, NdotL, NdotV);
 

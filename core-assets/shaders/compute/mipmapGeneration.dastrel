@@ -91,6 +91,7 @@ function decodeUnorm8(value: uint) -> float
 	return float(value) / 255.0f;
 }
 
+
 function decodeSRGBChannel(value: float) -> float
 {
 	let a = 0.055f;
@@ -108,6 +109,11 @@ function decodeUnorm8_sRGB(value: uint) -> float
 function encodeUnorm8(value: float) -> uint
 {
 	return uint(max(min(value, 1.0f), 0.0f)*255.0f);
+}
+
+function encodeUnorm16(value: float) -> uint
+{
+	return uint(max(min(value, 1.0f), 0.0f)*65535.0f);
 }
 
 function encodeSRGBChannel(value: float) -> float
@@ -270,5 +276,18 @@ code_block(compute, localSizeX = 8, localSizeY = 8) encode_r8
 			(encodeUnorm8(c2) << 8u) |
 			(encodeUnorm8(c3) << 16u) |
 			(encodeUnorm8(c4) << 24u);
+	}
+}
+
+code_block(compute, localSizeX = 8, localSizeY = 8) encode_r16g16
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let index = width*globalInvocationID.y + globalInvocationID.x;
+	if(index < bufferSize)
+	{
+		let color = DecodedBuffer.data[index];
+		EncodedBuffer.data[index] = encodeUnorm16(color.r) | (encodeUnorm16(color.g) << 16u);
 	}
 }
