@@ -43,7 +43,7 @@ function ggxSpecularDistribution(alpha: float, cosTheta: float) -> float
 {
 	let alphaSquare = alpha*alpha;
 	let den = cosTheta*cosTheta*(alphaSquare - 1.0f) + 1.0f;
-	return alphaSquare / (Pi * den*den) ;
+	return alphaSquare / (Pi * den*den);
 }
 
 function cookTorranceImplicitMasking(alpha: float, NdotL: float, NdotV: float) -> float

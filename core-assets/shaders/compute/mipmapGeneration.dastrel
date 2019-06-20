@@ -14,28 +14,38 @@ buffer(binding=StorageBuffers.Buffers + 1) EncodedBuffer
     data: uint[];
 }
 
-uniform(push_constant=Arguments) TextureFetchArguments
+uniform(push_constant=Arguments) EncodingArguments
 {
-    textureWidth: uint;
-    textureHeight: uint;
+    bufferSize: uint;
+	width: uint;
+	height: uint;
+	bufferBaseIndex: uint;
 }
 
 code_block(compute, localSizeX = 8, localSizeY = 8) fetch_texture
 {
 	using ComputeStage;
-	using TextureFetchArguments;
+	using EncodingArguments;
 	
-	let destIndex = globalInvocationID.y*textureWidth + globalInvocationID.x;
-	DecodedBuffer.data[destIndex] = texelFetch(sourceTexture, globalInvocationID.xy);
+	let texelIndex = globalInvocationID.y*width + globalInvocationID.x;
+	if(texelIndex < bufferSize)
+	{
+		DecodedBuffer.data[bufferBaseIndex + texelIndex]
+			= texelFetch(sourceTexture, globalInvocationID.xy);
+	}
 }
 
 code_block(compute, localSizeX = 8, localSizeY = 8) fetch_normalTexture
 {
 	using ComputeStage;
-	using TextureFetchArguments;
+	using EncodingArguments;
 	
-	let destIndex = globalInvocationID.y*textureWidth + globalInvocationID.x;
-	DecodedBuffer.data[destIndex] = float4(decodeNormalTexel(texelFetch(sourceTexture, globalInvocationID.xy)), 1.0f);
+	let texelIndex = globalInvocationID.y*width + globalInvocationID.x;
+	if(texelIndex < bufferSize)
+	{
+		DecodedBuffer.data[bufferBaseIndex + texelIndex]
+			= float4(decodeNormalTexel(texelFetch(sourceTexture, globalInvocationID.xy)), 1.0f);
+	}
 }
 
 uniform(push_constant=Arguments) MipmapLevelArguments
@@ -127,13 +137,6 @@ function encodeSRGBChannel(value: float) -> float
 function encodeUnorm8_sRGB(value: float) -> uint
 {
 	return encodeUnorm8(encodeSRGBChannel(value));
-}
-
-uniform(push_constant=Arguments) EncodingArguments
-{
-    bufferSize: uint;
-	width: uint;
-	height: uint;
 }
 
 code_block(compute, localSizeX = 8, localSizeY = 8) decode_bgra8

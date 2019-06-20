@@ -13,11 +13,13 @@ code_block forwardLightingOutput
     in smoothness: float;
     in fresnel: float3;
 
+	let Cdiff = albedo.rgb*(1.0f - max(fresnel.r, max(fresnel.g, fresnel.b)));
+	
     color: FragmentStage.colorOutput0 <== forwardLightingModel
         emission: emission albedo: albedo.rgb
-        Cdiff: albedo.rgb
+        Cdiff: Cdiff
 		translucencyFactor: albedo.a
-        F0: fresnel alpha: smoothness
+        F0: fresnel roughness: 1.0f - smoothness
         normal: normal surfaceNormal: surfaceNormal viewVector: viewVector position: position;
 }
 

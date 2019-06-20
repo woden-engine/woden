@@ -1,9 +1,10 @@
 {
     "type" : "Water",
     "albedo-texture" : "textures/procedural/water/pool.sttex?texture=albedo",
+    "normal-texture" : "textures/procedural/water/pool.sttex?texture=normal",
 
     "texture-scale" : [1.0, 1.0],
 
-    "constant-fresnel" : [0.02, 0.02, 0.02],
-    "smoothness" : 1.0
+    "fresnel" : [0.02, 0.02, 0.02],
+    "roughness" : 0.0
 }

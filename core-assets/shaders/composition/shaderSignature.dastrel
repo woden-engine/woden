@@ -3,6 +3,7 @@ shader_signature Composition
     descriptor_set(max_bindings=100) Sampler
     {
         Sampler: sampler;
+        CubeSampler: sampler;
     }
 
     descriptor_set(max_bindings=1000) Sources
@@ -14,4 +15,9 @@ shader_signature Composition
     {
         Parameters: uniform;
     }
+
+	push_constant QuickArguments;
 }
+
+uniform(binding = Sampler.Sampler) mainSampler : sampler;
+uniform(binding = Sampler.CubeSampler) cubeSampler : sampler;

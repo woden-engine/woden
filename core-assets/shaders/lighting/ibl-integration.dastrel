@@ -1,5 +1,7 @@
 import fragment.stage;
 import fragment.screenQuad;
+import fragment.cubeScreenQuad;
+import composition.shaderSignature;
 import lighting.functions;
 import math.constants;
 import math.functions;
@@ -67,4 +69,86 @@ code_block(fragment) brdfLutComputation
 	}
 	
 	FragmentStage.colorOutput0 = float4(lutResult/float(SampleCount), 0.0f, 0.0f);
+}
+
+
+uniform(binding = Sources.Textures) radianceMap : textureCube;
+
+code_block(fragment) irradianceMapComputation
+{
+	let SampleThetaCount = 16u;
+	let SamplePhiCount = 16u;
+	let SampleCount = SampleThetaCount*SamplePhiCount;
+	
+	let N = normalize(CubeFragmentInput.direction);
+	let upVector = float3(0.0f, 1.0f, 0.0f);
+	let T = 	cross(upVector, N);
+	let B = cross(N, T);
+	
+	//let irradiance = cubeSampler.sample(radianceMap, N).rgb;
+	let irradiance = float3(0.0f, 0.0f, 0.0f);
+	
+	let dTheta = HalfPi / float(SampleThetaCount);
+	let dPhi = TwoPi / float(SamplePhiCount);
+	let theta = 0.0f;
+	for(let i = 0u; i < SampleThetaCount; i += 1u)
+	{
+		let cosTheta = cos(theta);
+		let sinTheta = sin(theta);
+		let phi = 0.0f;
+		let dS = sinTheta;
+		for(let i = 0u; i < SamplePhiCount; i += 1u)
+		{
+			let cosPhi = cos(phi);
+			let sinPhi = sin(phi);
+			let tangentL = float3(sinTheta*cosPhi, sinTheta*sinPhi, cosTheta);
+			let L = tangentL.x * T + tangentL.y * B + tangentL.z * N;
+			let sample = cubeSampler.sampleLod(radianceMap, L, 0.0f).rgb;
+			irradiance += sample * cosTheta * dS;
+			
+			phi += dPhi;
+		}
+		
+		theta += dTheta;
+	}
+	
+	irradiance = Pi * irradiance / float(SampleCount);
+	FragmentStage.colorOutput0 = float4(irradiance, 1.0f);
+}
+
+uniform(push_constant=Arguments) MipmapRenderingArguments
+{
+    level: uint;
+	levelCount: uint;
+}
+
+code_block(fragment) specularIrradianceMapComputation
+{
+	let SampleCount = 1024u;
+
+	let N = normalize(CubeFragmentInput.direction);
+	let V = N;
+
+	let roughness = float(MipmapRenderingArguments.level) /
+		float(MipmapRenderingArguments.levelCount - 1u);
+	let alpha = roughness*roughness;
+
+	let specular = float3(0.0f, 0.0f, 0.0f);
+	let totalWeight = 0.0f;
+	for(let i = 0u; i < SampleCount; i += 1u)
+	{
+		let Xi = hammersleySample(i, SampleCount);
+		let H = importanceSampleGGX(Xi, alpha, N);
+		let L = normalize(2.0f*dot(V, H)*H - V);
+
+		let NdotL = saturate(dot(N, L));
+		if(NdotL > 0.0f)
+		{
+			let sample = cubeSampler.sampleLod(radianceMap, L, 0.0f).rgb;
+			specular += sample*NdotL;
+			totalWeight += NdotL;
+		}
+	}
+	
+	FragmentStage.colorOutput0 = float4(specular/totalWeight, 1.0f);
 }

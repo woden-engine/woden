@@ -307,11 +307,12 @@ code_block(fragment) forward_solid
     // Fetch the actual normal
     let N = transformNormalToView(on);
 
+	// For double sided material.
+    let V = normalize(-FragmentInput.position);
+		
     // Compute the smoothness and the fresnel factor.
 	let metallic = MaterialState.metallicFactor;
 	let roughness = MaterialState.roughnessFactor;
-
-    let V = normalize(-FragmentInput.position);
 
     forwardMetallicRoughnessLightingOutput
         emission: 0.0f albedo: albedo

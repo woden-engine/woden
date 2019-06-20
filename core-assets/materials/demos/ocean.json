@@ -5,6 +5,6 @@
     "normal-texture" : "textures/procedural/water/ocean.sttex?texture=normal",
     "texture-scale": [0.5, 0.5],
 
-    "constant-fresnel" : [0.02, 0.02, 0.02],
-    "smoothness" : 1.0
+    "fresnel" : [0.04, 0.04, 0.04],
+    "roughness" : 0.0
 }

@@ -2,7 +2,7 @@ shader_signature GenericComputation
 {
     descriptor_set(max_bindings=10) Samplers
     {
-        Samplers: sampler*4;
+        Samplers: sampler*6;
     }
 
     descriptor_set(max_bindings=10000) UniformBuffers
@@ -31,5 +31,8 @@ shader_signature GenericComputation
 
 uniform(binding = Samplers.Samplers) nearestWrapSampler : sampler;
 uniform(binding = Samplers.Samplers+1) nearestClampToEdgeSampler : sampler;
-uniform(binding = Samplers.Samplers+2) linearWrapSampler : sampler;
-uniform(binding = Samplers.Samplers+3) linearClampToEdgeSampler : sampler;
+uniform(binding = Samplers.Samplers+2) nearestClampToBorder : sampler;
+
+uniform(binding = Samplers.Samplers+3) linearWrapSampler : sampler;
+uniform(binding = Samplers.Samplers+4) linearClampToEdgeSampler : sampler;
+uniform(binding = Samplers.Samplers+5) linearClampToBorder : sampler;

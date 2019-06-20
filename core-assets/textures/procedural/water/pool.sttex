@@ -2,7 +2,7 @@
 textureSize := 5.0@5.0.
 colorRamp := WDCLinearRamp with: {
 	0.25 -> ('0089E7' asColor alpha: 0.2).
-	1.0 -> ('0089E7' asColor alpha: 1.0).
+	1.0 -> ('0089E7' asColor alpha: 0.4).
 }.
 
 heightFunction := [ :s :t |

@@ -1,7 +1,5 @@
 import composition.shaderSignature;
 
-uniform(binding = Sampler.Sampler) mainSampler : sampler;
-
 uniform(binding = Sources.Textures) sourceTexture : texture2D;
 uniform(binding = Sources.Textures + 1) sourceTexture2 : texture2D;
 uniform(binding = Sources.Textures + 2) sourceTexture3 : texture2D;

@@ -1,9 +1,10 @@
 "!GPU"| textureSize heightFunction colorRamp |
 textureSize := 10.0@10.0.
 colorRamp := WDCLinearRamp with: {
-	0.15 -> ('33299c' asColor alpha: 0.7).
-	1.0 -> ('11fae6' asColor alpha: 1.0).
-"	0.15 -> (Color red alpha: 0.7).
+	0.25 -> ('17425f' asColor alpha: 0.9).
+	1.0 -> ('3d769d' asColor alpha: 1.0)."	0.25 -> ('18144b' asColor alpha: 0.2).
+	1.0 -> ('11fae6' asColor alpha: 0.4).
+""	0.15 -> (Color red alpha: 0.7).
 	1.0 -> (Color yellow alpha: 1.0).""	0.15 -> (Color red alpha: 0.7).
 	0.4 -> (Color magenta alpha: 0.8).
 	1.0 -> (Color yellow alpha: 1.0).""	0.15 -> (Color green alpha: 0.7).
