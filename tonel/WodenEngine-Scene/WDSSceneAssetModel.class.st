@@ -43,13 +43,13 @@ WDSSceneAssetModel >> createViewer [
 		sunLight := WDSGLightSource new.
 		sunLight directional; castShadows: false.
 		sunLight state
-				intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.8.
+				intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.6.
 		sunLight transform
 			rotateDegreesOnX: -35.
 		
 		mainScene add: sunLight.
 
-		mainScene ambientLighting: WMVector4F ones*0.8.
+		mainScene ambientLighting: WMVector4F ones.
 		
 		skyTexture := WDASceneExamples proceduralSkySunDirection: (sunLight transform
 				transformVector3:(WMVector3F z: 1.0)
