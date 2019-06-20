@@ -187,6 +187,81 @@ WDCResourceCache >> buildVertexLayout: vertexLayout [
 ]
 
 { #category : #'special textures' }
+WDCResourceCache >> computeCubeTextureIrradianceMap: cubeTexture [
+	| extent resultTextureData shader resultLayer renderer cubeLayers |
+	extent := 32@32.
+	shader := self imageBasedLightingIntegrationLibrary getFragmentStage: #irradianceMapComputation.
+	cubeLayers := (1 to: 6) collect: [ :faceId |
+		resultTextureData := WDCTextureData extent: extent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM mipmapCount: 1.
+		resultLayer := resultTextureData layers first.
+	
+		renderer := self mainProceduralOfflineTextureRendererForExtent: extent.
+		renderer critical: [ 
+			renderer renderWith: [ 
+				renderer
+					cubeFaceId: faceId - 1;
+					proceduralTextureRendererInputTextures: { cubeTexture };
+					renderProceduralTextureWithFragmentShader: shader extent: extent format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM;
+					generateProceduralTextureWithExtent: extent fetchWith: #fetch_texture mipmapWith: #mipmap encodeWith: #encode_bgra8 for: resultLayer
+			];
+			submit;
+			finish;
+			readMipmapLevelsInto: resultLayer
+		].
+		resultLayer
+	].
+
+	resultTextureData
+		type: AGPU_TEXTURE_CUBE;
+		layers: cubeLayers.
+	^ resultTextureData
+]
+
+{ #category : #'special textures' }
+WDCResourceCache >> computeCubeTextureSpecularMap: cubeTexture [
+	| extent resultTextureData shader resultLayer renderer cubeLayers |
+	extent := 128@128.
+	shader := self imageBasedLightingIntegrationLibrary getFragmentStage: #specularIrradianceMapComputation.
+	cubeLayers := (1 to: 6) collect: [ :faceId |
+		resultTextureData := WDCTextureData extent: extent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM mipmapCount: 1.
+		resultLayer := resultTextureData layers first.
+	
+		renderer := self mainProceduralOfflineTextureRendererForExtent: extent.
+		renderer critical: [ 
+			renderer renderWith: [ 
+				renderer
+					cubeFaceId: faceId - 1;
+					proceduralTextureRendererInputTextures: { cubeTexture };
+					renderProceduralTextureMipmapsWithFragmentShader: shader extent: extent format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM encodeWith: #encode_bgra8 intoTextureLayerData: resultLayer
+			];
+			submit;
+			finish;
+			readMipmapLevelsInto: resultLayer
+		].
+		resultLayer
+	].
+
+	resultTextureData
+		type: AGPU_TEXTURE_CUBE;
+		layers: cubeLayers.
+	^ resultTextureData
+]
+
+{ #category : #'special textures' }
+WDCResourceCache >> computeEnvironmentLightProbeFromCubeTexture: cubeTexture [
+	| irradianceTextureData irradianceTexture specularTextureData specularTexture |
+	irradianceTextureData := self computeCubeTextureIrradianceMap: cubeTexture.
+	irradianceTexture := irradianceTextureData asTextureFor: engine.
+
+	specularTextureData := self computeCubeTextureSpecularMap: cubeTexture.
+	specularTexture := specularTextureData asTextureFor: engine.
+	^ WDCEnvironmentLightingProbe new
+		diffuseIrradianceMap: irradianceTexture;
+		specularIrradianceMap: specularTexture;
+		yourself
+]
+
+{ #category : #'special textures' }
 WDCResourceCache >> computeImageBasedLightingBRDFLut [
 	<script: 'WDCEngine default resourceCache computeImageBasedLightingBRDFLut inspect'>
 	| extent resultTextureData shader resultLayer renderer |

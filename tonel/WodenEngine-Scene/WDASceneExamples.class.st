@@ -120,12 +120,11 @@ WDASceneExamples class >> createIslandTerrainObjectFor: engine [
 ]
 
 { #category : #'examples procedural' }
-WDASceneExamples class >> createIslandWaterObjectFor: engine skyTexture: skyTexture [
+WDASceneExamples class >> createIslandWaterObjectFor: engine [
 	"Setup the water material"
 	| material mesh waterObject |
 	material := (engine resourceCache loadMaterial: 'materials/demos/ocean.json').
 	material
-		skyTexture: skyTexture;
 		harmonicAt: 1 amplitude: 0.015 frequency: 2.23 center: (WMVector2F zero);
 		harmonicAt: 2 amplitude: 0.03 frequency: 0.50 center: (WMVector2F zero).
 
@@ -308,14 +307,14 @@ WDASceneExamples class >> example04PoolLDR [
 	"Add a light"
 	sunLight := WDSGLightSource new.
 	sunLight directional; castShadows: true.
-	sunLight intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.8..
+	sunLight intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.4.
 	sunLight transform
-		rotateDegreesOnX: -45;
+		rotateDegreesOnX: -25;
 		translateToX: 0.0 y: 1.5 z: 2.5.
 
 	scene add: sunLight.
 
-	scene ambientLighting: sunLight intensity * 0.01.
+	scene ambientLighting: WMVector4F zero.
 
 	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector3: (WMVector3F z: 1.0)).
 	skyTexture := skyTexture asSRGBTextureFor: engine.
@@ -334,7 +333,7 @@ WDASceneExamples class >> example04PoolLDR [
 	skyBox isOpaqueShadowCaster: false;
 		renderable: meshBuilder mesh.
 	scene add: skyBox.
-	scene lightingEnvironmentMap: skyMaterial skyTexture.
+	scene lightingProbe: (engine resourceCache computeEnvironmentLightProbeFromCubeTexture: skyTexture).
 
 	view := WDAFPSSceneView allowingVR.
 	view cameraAngle: (WMVector3F y: Float pi).
@@ -594,7 +593,7 @@ WDASceneExamples class >> example09DragonIsland [
 	sunLight state
 		intensity: (Color fromHexString: 'f1efd7') asWMVector4F.
 	sunLight transform
-		rotateDegreesOnX: -45;
+		rotateDegreesOnX: -25;
 		translateToX: 0.0 y: 1.5 z: 2.5.
 	scene add: sunLight.
 	
@@ -607,12 +606,12 @@ WDASceneExamples class >> example09DragonIsland [
 	"skyMaterial := scene engine resourceCache loadMaterial: 'materials/demos/skybox.json'."
 	skyBox := self createSkybox: (WMVector3F x: 200.0 y: 200.0 z: 200.0) for: scene engine material: skyMaterial.
 	scene add: skyBox.
-	scene lightingEnvironmentMap: skyMaterial skyTexture.
+	scene lightingProbe: (model engine resourceCache computeEnvironmentLightProbeFromCubeTexture: skyTexture).
 
 	terrain := self createIslandTerrainObjectFor: scene engine.
 	scene add: terrain.
 
-	water := self createIslandWaterObjectFor: scene engine skyTexture: nil.
+	water := self createIslandWaterObjectFor: scene engine.
 	scene add: water.
 	
 	

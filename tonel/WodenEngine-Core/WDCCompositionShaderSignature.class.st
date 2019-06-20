@@ -18,7 +18,8 @@ WDCCompositionShaderSignature class >> signatureSpec: spec [
 		bank: #Samplers with: [ :bank |
 			bank
 				maxBindings: 10;
-				sampler: #Sampler
+				sampler: #Sampler;
+				sampler: #CubeSampler
 		];
 		bank: #Sources with: [ :bank |
 			bank
@@ -30,6 +31,7 @@ WDCCompositionShaderSignature class >> signatureSpec: spec [
 				maxBindings: 1000;
 				uniform: #Parameters
 		];
+		pushConstant: #QuickArguments size: 128;
 		yourself
 ]
 
@@ -40,12 +42,23 @@ WDCCompositionShaderSignature >> activeOnStateTracker: stateTracker [
 ]
 
 { #category : #'generated shader signature methods' }
+WDCCompositionShaderSignature >> constantQuickArgumentsOffset [
+	^ 0
+]
+
+{ #category : #'generated shader signature methods' }
+WDCCompositionShaderSignature >> constantQuickArgumentsSize [
+	^ 128
+]
+
+{ #category : #'generated shader signature methods' }
 WDCCompositionShaderSignature >> createHandleForDevice: device [
 	^ device createShaderSignatureBuilder
 
 		"Samplers"
 		beginBindingBank: 10;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLER bindingPointCount: 1; "Sampler"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLER bindingPointCount: 1; "CubeSampler"
 
 		"Sources"
 		beginBindingBank: 1000;
@@ -55,6 +68,38 @@ WDCCompositionShaderSignature >> createHandleForDevice: device [
 		beginBindingBank: 1000;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "Parameters"
 
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
+		addBindingConstant; "QuickArguments"
 		build
 
 ]
@@ -70,12 +115,23 @@ WDCCompositionShaderSignature >> defaultSamplers [
 		address_v: AGPU_TEXTURE_ADDRESS_MODE_CLAMP;
 		address_w: AGPU_TEXTURE_ADDRESS_MODE_CLAMP;
 		max_lod: 10000.0;
-		maxanisotropy: 1;
+		maxanisotropy: engine maxAnisotropy;
 		yourself.
 		
 	bindings := self newSamplers.
 	bindings
 		createSampler: 0 description: samplerDesc.
+
+	samplerDesc := AGPUSamplerDescription new
+		filter: AGPU_FILTER_MIN_LINEAR_MAG_LINEAR_MIPMAP_NEAREST;
+		address_u: AGPU_TEXTURE_ADDRESS_MODE_BORDER;
+		address_v: AGPU_TEXTURE_ADDRESS_MODE_BORDER;
+		address_w: AGPU_TEXTURE_ADDRESS_MODE_BORDER;
+		max_lod: 10000.0;
+		maxanisotropy: engine maxAnisotropy;
+		yourself.
+	bindings
+		createSampler: 1 description: samplerDesc.
 
 	defaultSamplersSession := Smalltalk session.
 	^ defaultSamplers := bindings
@@ -88,7 +144,7 @@ WDCCompositionShaderSignature >> newParameters [
 
 { #category : #'generated shader signature methods' }
 WDCCompositionShaderSignature >> newSamplers [
-	^ engine createShaderSignature: self resourceBinding: 0 elements: 1
+	^ engine createShaderSignature: self resourceBinding: 0 elements: 2
 ]
 
 { #category : #'generated shader signature methods' }

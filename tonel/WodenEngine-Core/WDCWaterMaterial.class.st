@@ -2,7 +2,6 @@ Class {
 	#name : #WDCWaterMaterial,
 	#superclass : #WDCMaterial,
 	#instVars : [
-		'skyTexture',
 		'resourceBindingsAreUpdated',
 		'vertexShader',
 		'fragmentShader',
@@ -24,7 +23,7 @@ WDCWaterMaterial >> activateForwardOn: stateTracker [
 	stateTracker
 		vertexShader: self vertexShader;
 		fragmentShader: self fragmentShader;
-		materialBlendingMode: WDCBlendingMode alphaOver;
+		materialBlendingMode: WDCBlendingMode premultipliedAlphaOver;
 		materialCullMode: AGPU_CULL_MODE_NONE.
 	stateTracker submode == #solid ifTrue: [
 		stateTracker fragmentShader: self solidFragmentShader
@@ -61,8 +60,6 @@ WDCWaterMaterial >> bindResources [
 		bind: 0 uniformBuffer: stateUniformBuffer;
 		bind: 2 texture: (albedoTexture ifNil: [resourceCache whiteTexture]);
 		bind: 3 texture: (normalTexture ifNil: [resourceCache defaultNormalTexture]).
-	skyTexture ifNotNil: [ resourceBinding bind: 4 texture: skyTexture ].
-		
 ]
 
 { #category : #accessing }
@@ -83,9 +80,7 @@ WDCWaterMaterial >> createTerrainMeshForSceneNode: sceneNode boundingBox: boundi
 { #category : #shaders }
 WDCWaterMaterial >> fragmentShader [
 	^ fragmentShader ifNil: [
-		fragmentShader := skyTexture
-			ifNotNil: [ self shaderLibrary getFragmentStage: #forward_sky ]
-			ifNil: [ self shaderLibrary getFragmentStage: #forward_color ]
+		fragmentShader := self shaderLibrary getFragmentStage: #forward_color
 	]
 ]
 
@@ -115,7 +110,7 @@ WDCWaterMaterial >> harmonicAt: index amplitude: amplitude frequency: frequency 
 WDCWaterMaterial >> initialize [
 	materialState := WTWaterMaterialState new
 		albedo: Color white asWMVector4F;
-		fresnel: (WMVector3F x: 0.03 y: 0.03 z: 0.03);
+		fresnel: (WMVector3F x: 0.04 y: 0.04 z: 0.04);
 		smoothness: 0.45;
 		propagationSpeed: 2.0;
 		textureScale: (WMVector2F x: 1.0 y: 1.0);
@@ -133,7 +128,6 @@ WDCWaterMaterial >> invalidateCache [
 WDCWaterMaterial >> loadStateFromOldVersion: oldVersion [
 	| oldMaterialState |
 	super loadStateFromOldVersion: oldVersion.
-	self skyTexture: oldVersion skyTexture.
 	oldMaterialState := oldVersion materialState.
 	materialState
 		clipMapPeriod: oldMaterialState clipMapPeriod;
@@ -153,7 +147,8 @@ WDCWaterMaterial >> parse: materialFileReference data: data [
 		textureScale: (self parse: data at: materialFileReference vector2: 'texture-scale' ifAbsent: [ WMVector2F x: 1.0 y: 1.0 ]);
 
 		albedo: (self parse: data at: materialFileReference srgbColor: 'albedo' ifAbsent: [ Color white ]);
-		fresnel: (self parse: data at: materialFileReference vector3: 'fresnel-constant' ifAbsent: [ WMVector3F x: 0.03 y: 0.03 z: 0.03 ]).
+		fresnel: (self parse: data at: materialFileReference vector3: 'fresnel' ifAbsent: [ WMVector3F x: 0.04 y: 0.04 z: 0.04 ]);
+		smoothness: (1.0 - (data at: 'roughness' ifAbsent: [0.0])).
 	albedoTexture := self parse: data at: materialFileReference optionalSRGBTexture: 'albedo-texture'.
 	normalTexture := self parse: data at: materialFileReference optionalTexture: 'normal-texture'.
 	self invalidateCache.
@@ -163,16 +158,6 @@ WDCWaterMaterial >> parse: materialFileReference data: data [
 WDCWaterMaterial >> shaderLibrary [
 	^ shaderLibrary ifNil: [ shaderLibrary := engine loadShaderLibrary: 'shaders/material/water.dastrel' ].
 
-]
-
-{ #category : #accessing }
-WDCWaterMaterial >> skyTexture [
-	^ skyTexture
-]
-
-{ #category : #accessing }
-WDCWaterMaterial >> skyTexture: anObject [
-	skyTexture := anObject
 ]
 
 { #category : #shaders }

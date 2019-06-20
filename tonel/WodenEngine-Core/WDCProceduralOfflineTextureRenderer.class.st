@@ -16,7 +16,8 @@ Class {
 		'temporaryRenderTargets',
 		'lastRenderedTexture',
 		'temporaryMipmapResultBuffer',
-		'cubeFaceId'
+		'cubeFaceId',
+		'proceduralTextureRendererInputTextures'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -33,6 +34,7 @@ WDCProceduralOfflineTextureRenderer class >> for: anEngine extent: anExtent [
 WDCProceduralOfflineTextureRenderer >> begin [
 	lastRenderedTexture := nil.
 	cubeFaceId := nil.
+	proceduralTextureRendererInputTextures := nil.
 ]
 
 { #category : #accessing }
@@ -153,9 +155,47 @@ WDCProceduralOfflineTextureRenderer >> cubeFaceId: anInteger [
 	cubeFaceId := anInteger
 ]
 
+{ #category : #initialization }
+WDCProceduralOfflineTextureRenderer >> encodeMipmapsToBufferWith: imageEncodingFunctionName texelCount: texelCount parameters: shaderArguments [
+	| computationGridWidth computationGridHeight pushConstantBuffer |
+	computationGridWidth := (texelCount sqrt + 0.5) ceiling asInteger max: 1.
+	computationGridHeight := (texelCount + computationGridWidth - 1) // computationGridWidth.
+	self assert: computationGridWidth * computationGridHeight >= texelCount.
+
+	pushConstantBuffer := SLVMNativeArray for: #uint new: 3.
+	pushConstantBuffer
+		at: 1 put: texelCount;
+		at: 2 put: computationGridWidth;
+		at: 3 put: computationGridHeight.
+
+	stateTracker
+		pushConstants: 0 size: pushConstantBuffer rawDataSize values: pushConstantBuffer rawData;
+		computeShader: (self mipmapGenerationLibrary getComputeStage: imageEncodingFunctionName) arguments: shaderArguments;
+		dispatchComputeGlobalGridX: computationGridWidth y: computationGridHeight
+]
+
 { #category : #public }
 WDCProceduralOfflineTextureRenderer >> end [
 	
+]
+
+{ #category : #'as yet unclassified' }
+WDCProceduralOfflineTextureRenderer >> fetchTextureDataWith: fetchFunctionName extent: extent destIndex: destIndex shaderArguments: shaderArguments [
+	| pushConstantBuffer |
+	pushConstantBuffer := SLVMNativeArray for: #uint new: 4.
+	pushConstantBuffer
+		at: 1 put: extent x*extent y;
+		at: 2 put: extent x;
+		at: 3 put: extent y;
+		at: 4 put: destIndex.
+
+	"Fetch the texture data."
+	stateTracker
+		computeShader: (self mipmapGenerationLibrary getComputeStage: fetchFunctionName) arguments: shaderArguments;
+		pushConstants: 0 size: pushConstantBuffer rawDataSize values: pushConstantBuffer rawData;
+		dispatchComputeGlobalGridX: extent x y: extent y;
+		computeShaderBuffersReadWriteMemoryBarrier.
+
 ]
 
 { #category : #public }
@@ -169,26 +209,16 @@ WDCProceduralOfflineTextureRenderer >> generateMipmapFromResultBufferWithExtent:
 fetchWith: fetchFunctionName mipmapWith: mipmapComputationFunctionName
 encodeWith: imageEncodingFunctionName for: textureDataLayer [
 
-	| shaderArguments pushConstantBuffer |
+	| shaderArguments |
 	
 	"Set the shader arguments."
 	shaderArguments := self mipmapGenerationShaderParameters.
 	shaderArguments
 		storageBuffer: self temporaryMipmapComputationBuffer slot: 0;
 		storageBuffer: self temporaryMipmapResultBuffer slot: 1.
-
-	pushConstantBuffer := SLVMNativeArray for: #uint new: 3.
-	pushConstantBuffer
-		at: 1 put: extent x*extent y;
-		at: 2 put: extent x;
-		at: 3 put: extent y.
-
-	"Fetch the texture data."
-	stateTracker
-		computeShader: (self mipmapGenerationLibrary getComputeStage: fetchFunctionName) arguments: shaderArguments;
-		pushConstants: 0 size: pushConstantBuffer rawDataSize values: pushConstantBuffer rawData;
-		dispatchComputeGlobalGridX: extent x y: extent y;
-		computeShaderBuffersReadWriteMemoryBarrier.
+	self
+		fetchTextureDataWith: fetchFunctionName extent: extent
+		destIndex: 0 shaderArguments: shaderArguments.
 		
 	"Generate the mipmaps."
 	self generateOfflineMipmapDataBufferWithParameters: shaderArguments
@@ -232,17 +262,9 @@ imageEncodingFunctionName: imageEncodingFunctionName textureDataLayer: textureDa
 		sourceLevel := destLevel
 	].
 
-	pushConstantBuffer at: 1 put: destLevelIndex.
+	self encodeMipmapsToBufferWith: imageEncodingFunctionName texelCount: destLevelIndex parameters: shaderArguments.
 
-	pushConstantBuffer
-		at: 1 put: destLevelIndex;
-		at: 2 put: firstLevel width*2;
-		at: 3 put: firstLevel height.
-	
-	stateTracker
-		pushConstants: 0 size: pushConstantBuffer rawDataSize values: pushConstantBuffer rawData;
-		computeShader: (mipmapGenerationLibrary getComputeStage: imageEncodingFunctionName) arguments: shaderArguments;
-		dispatchComputeGlobalGridX: firstLevel width*2 y: firstLevel height
+
 
 ]
 
@@ -250,7 +272,7 @@ imageEncodingFunctionName: imageEncodingFunctionName textureDataLayer: textureDa
 WDCProceduralOfflineTextureRenderer >> generateOfflineProceduralTexture: texture fetchWith: textureFetchFunctionName mipmapWithComputationFunctionName: mipmapComputationFunctionName
 imageEncodingFunctionName: imageEncodingFunctionName textureDataLayer: textureDataLayer [
 
-	| extent shaderArguments pushConstantBuffer |
+	| extent shaderArguments |
 	extent := textureDataLayer width @ textureDataLayer height.
 	
 	"Set the shader arguments."
@@ -260,17 +282,8 @@ imageEncodingFunctionName: imageEncodingFunctionName textureDataLayer: textureDa
 		storageBuffer: self temporaryMipmapComputationBuffer slot: 0;
 		storageBuffer: self temporaryMipmapResultBuffer slot: 1.
 
-	pushConstantBuffer := SLVMNativeArray for: #uint new: 2.
-	pushConstantBuffer
-		at: 1 put: extent x;
-		at: 2 put: extent y.
-
-	"Fetch the texture data."
-	stateTracker
-		computeShader: (self mipmapGenerationLibrary getComputeStage: textureFetchFunctionName) arguments: shaderArguments;
-		pushConstants: 0 size: pushConstantBuffer rawDataSize values: pushConstantBuffer rawData;
-		dispatchComputeGlobalGridX: extent x y: extent y;
-		computeShaderBuffersReadWriteMemoryBarrier.
+	self 
+		fetchTextureDataWith: textureFetchFunctionName extent: extent destIndex: 0 shaderArguments: shaderArguments.
 		
 	"Generate the mipmaps."
 	self generateOfflineMipmapDataBufferWithParameters: shaderArguments
@@ -320,6 +333,15 @@ WDCProceduralOfflineTextureRenderer >> mipmapGenerationShaderParameters [
 	^ mipmapGenerationShaderParameters ifNil: [ mipmapGenerationShaderParameters := engine newGenericComputeShaderArguments ]
 ]
 
+{ #category : #'as yet unclassified' }
+WDCProceduralOfflineTextureRenderer >> proceduralTextureRendererInputTextures: inputTextures [
+	proceduralTextureRendererInputTextures := (WDCCompositionShaderSignature for: engine) newSources.
+	inputTextures doWithIndex: [ :texture :index |
+		proceduralTextureRendererInputTextures bind: index - 1 texture: texture
+	]
+
+]
+
 { #category : #public }
 WDCProceduralOfflineTextureRenderer >> readMipmapLevelsInto: textureLayerData [
 	textureLayerData readLevelsFromPointer: self temporaryMipmapResultBuffer validPointer.
@@ -327,17 +349,72 @@ WDCProceduralOfflineTextureRenderer >> readMipmapLevelsInto: textureLayerData [
 ]
 
 { #category : #public }
+WDCProceduralOfflineTextureRenderer >> renderProceduralTextureMipmaps: levelCount withFragmentShader: shader extent: extent format: format [
+	| width height destIndex pushConstants texelCount currentExtent |
+	width := extent x.
+	height := extent y.
+	currentExtent := extent.
+	destIndex := 0.
+	pushConstants := SLVMNativeArray for: #uint new: 2.
+	
+	1 to: levelCount do: [ :i |
+		texelCount := width * height.
+		pushConstants
+			at: 1 put: i - 1;
+			at: 2 put: levelCount.
+		self renderProceduralTextureWithFragmentShader: shader
+			pushConstants: pushConstants rawData extent: currentExtent
+			format: format.
+			
+		self fetchTextureDataWith: #fetch_texture extent: currentExtent destIndex: destIndex shaderArguments: self mipmapGenerationShaderParameters.
+		destIndex := destIndex + texelCount.
+		width := width // 2 max: 1.
+		height := height // 2 max: 1.
+		currentExtent := width @ height
+	].
+
+	^ destIndex
+]
+
+{ #category : #public }
+WDCProceduralOfflineTextureRenderer >> renderProceduralTextureMipmapsWithFragmentShader: shader extent: extent format: pixelFormat encodeWith: encodingFunction intoTextureLayerData: resultLayer [
+	| shaderArguments texture texelCount |
+	texture := self temporaryRenderTargetTextureWithPixelFormat: pixelFormat.
+
+	shaderArguments := self mipmapGenerationShaderParameters.
+	shaderArguments
+		sampledTexture: texture slot: 0;
+		storageBuffer: self temporaryMipmapComputationBuffer slot: 0;
+		storageBuffer: self temporaryMipmapResultBuffer slot: 1.
+
+	texelCount := self
+		renderProceduralTextureMipmaps: resultLayer levels size withFragmentShader: shader extent: extent format: pixelFormat.
+	self encodeMipmapsToBufferWith: encodingFunction texelCount: texelCount parameters: shaderArguments.
+]
+
+{ #category : #public }
 WDCProceduralOfflineTextureRenderer >> renderProceduralTextureWithFragmentShader: shader extent: extent format: pixelFormat [
+	self renderProceduralTextureWithFragmentShader: shader pushConstants: nil extent: extent format: pixelFormat
+]
+
+{ #category : #public }
+WDCProceduralOfflineTextureRenderer >> renderProceduralTextureWithFragmentShader: shader pushConstants: pushConstants extent: extent format: pixelFormat [
 	| renderTarget |
 	renderTarget := self temporaryRenderTargetWithPixelFormat: pixelFormat.
 	lastRenderedTexture := self temporaryRenderTargetTextureWithPixelFormat: pixelFormat.
 	stateTracker
 		beginRenderPass: renderTarget validMainRenderPass renderTarget: renderTarget x: 0 y: 0 width: extent x height: extent y;
-		activateShaderSignature: (WDCCompositionShaderSignature for: engine);
+		activateShaderSignature: (WDCCompositionShaderSignature for: engine).
+	proceduralTextureRendererInputTextures ifNotNil: [ stateTracker useShaderResources: proceduralTextureRendererInputTextures ].
+	stateTracker
 		vertexShader: (cubeFaceId
 			ifNil: [engine resourceCache screenQuadVertexShader]
 			ifNotNil: [engine resourceCache cubeScreenQuadVertexShader]);
 		fragmentShader: shader.
+
+	pushConstants ifNotNil: [
+		stateTracker pushConstants: 0 size: pushConstants size values: pushConstants
+	].
 
 	cubeFaceId ifNil: [ 
 		stateTracker

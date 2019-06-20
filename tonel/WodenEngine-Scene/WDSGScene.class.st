@@ -17,7 +17,7 @@ Class {
 		'skyLighting',
 		'groundLighting',
 		'sunDirection',
-		'lightingEnvironmentMap'
+		'lightingProbe'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
@@ -52,7 +52,7 @@ WDSGScene >> allVisibleRenderingChildrenDo: aBlock [
 WDSGScene >> ambientLighting: lighting [
 	self 
 		skyLighting: lighting;
-		skyLighting: lighting
+		groundLighting: lighting
 ]
 
 { #category : #accessing }
@@ -144,13 +144,13 @@ WDSGScene >> initializeWithEngine: anEngine shaderSignatureClass: shaderSignatur
 ]
 
 { #category : #accessing }
-WDSGScene >> lightingEnvironmentMap [
-	^ lightingEnvironmentMap
+WDSGScene >> lightingProbe [
+	^ lightingProbe
 ]
 
 { #category : #accessing }
-WDSGScene >> lightingEnvironmentMap: anObject [
-	lightingEnvironmentMap := anObject
+WDSGScene >> lightingProbe: anObject [
+	lightingProbe := anObject
 ]
 
 { #category : #'rendering graph' }
