@@ -12,6 +12,7 @@ code_block forwardLightingOutput
     in albedo: float4;
     in smoothness: float;
     in fresnel: float3;
+	in occlusion: float;
 
 	let Cdiff = albedo.rgb*(1.0f - max(fresnel.r, max(fresnel.g, fresnel.b)));
 	
@@ -19,7 +20,7 @@ code_block forwardLightingOutput
         emission: emission albedo: albedo.rgb
         Cdiff: Cdiff
 		translucencyFactor: albedo.a
-        F0: fresnel roughness: 1.0f - smoothness
+        F0: fresnel roughness: 1.0f - smoothness occlusion: occlusion
         normal: normal surfaceNormal: surfaceNormal viewVector: viewVector position: position;
 }
 
@@ -33,10 +34,11 @@ code_block forwardMetallicRoughnessLightingOutput
     in albedo: float4;
     in metallic: float;
     in roughness: float;
+	in occlusion: float;
 
     color: FragmentStage.colorOutput0 <== forwardMetallicRoughnessLightingModel
         emission: emission albedo: albedo
-        metallic: metallic roughness: roughness
+        metallic: metallic roughness: roughness occlusion: occlusion
         normal: normal surfaceNormal: surfaceNormal viewVector: viewVector position: position;
 }
 
@@ -50,10 +52,11 @@ code_block forwardSpecularityGlossinessLightingOutput
     in albedo: float4;
     in specular: float3;
     in glossiness: float;
+	in occlusion: float;
 
     color: FragmentStage.colorOutput0 <== forwardSpecularityGlossinessLightingModel
         emission: emission albedo: albedo
-        specular: specular glossiness: glossiness
+        specular: specular glossiness: glossiness occlusion: occlusion
         normal: normal surfaceNormal: surfaceNormal viewVector: viewVector position: position;
 }
 

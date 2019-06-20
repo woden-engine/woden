@@ -273,7 +273,7 @@ code_block(fragment) forward_splatting
     let V = normalize(-FragmentInput.position);
 
     forwardMetallicRoughnessLightingOutput
-        emission: 0.0f albedo: albedo
+        emission: 0.0f albedo: albedo occlusion: 1.0f
         metallic: metallic roughness: roughness
         normal: N surfaceNormal: SN viewVector: V position: FragmentInput.position;
     //FragmentStage.colorOutput0 = float4(on*0.5f + 0.5f, 1.0f);
@@ -315,7 +315,7 @@ code_block(fragment) forward_solid
 	let roughness = MaterialState.roughnessFactor;
 
     forwardMetallicRoughnessLightingOutput
-        emission: 0.0f albedo: albedo
+        emission: 0.0f albedo: albedo occlusion: 1.0f
         metallic: metallic roughness: roughness
         normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
 }
