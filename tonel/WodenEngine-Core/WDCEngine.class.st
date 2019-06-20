@@ -639,6 +639,11 @@ WDCEngine >> loadVertexShader: aFileName [
 	^ resourceCache loadVertexShader: aFileName
 ]
 
+{ #category : #accessing }
+WDCEngine >> maxAnisotropy [
+	^ 1
+]
+
 { #category : #'resource building' }
 WDCEngine >> newCompositionFullScreenPass [
 	^ WDCCompositionFullScreenPass for: self

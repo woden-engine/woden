@@ -446,7 +446,7 @@ WDIGLTF2Importer >> loadMeshesFrom: elements [
 
 { #category : #loading }
 WDIGLTF2Importer >> loadMetallicRoughnessMaterial: description commonDescription: commonDescription [
-	| material |
+	| material occlusionTexture metallicRoughnessTexture |
 	material := WDCMetallicRoughnessMaterial new.
 	description at: 'baseColorFactor' ifPresent: [ :baseColor |
 		material albedoColor: (WMVector4F x: baseColor first y: baseColor second z: baseColor third w: baseColor fourth)
@@ -466,8 +466,22 @@ WDIGLTF2Importer >> loadMetallicRoughnessMaterial: description commonDescription
 		material normalTexture: (textures at: (textureDescription at: 'index') + 1) asNormalTexture
 	].
 	
+	occlusionTexture := nil.
+	commonDescription at: 'occlusionTexture' ifPresent: [ :textureDescription |
+		occlusionTexture := textures at: (textureDescription at: 'index') + 1
+	].
+
+	metallicRoughnessTexture := nil.
 	description at: 'metallicRoughnessTexture' ifPresent: [ :textureDescription |
-		material metallicRoughnessTexture: (textures at: (textureDescription at: 'index') + 1) asTexture
+		metallicRoughnessTexture := textures at: (textureDescription at: 'index') + 1.
+	].
+
+	(occlusionTexture isNotNil or: [ metallicRoughnessTexture isNotNil ]) ifTrue: [ 
+		metallicRoughnessTexture ifNotNil: [ 
+			material metallicRoughnessTexture: (metallicRoughnessTexture asMetallicRoughnessTextureCombinedWithAO: occlusionTexture)
+		] ifNil: [ 
+			material metallicRoughnessTexture: occlusionTexture asTexture
+		].
 	].
 
 	material doubleSided: (commonDescription at: 'doubleSided' ifAbsent: [false]).

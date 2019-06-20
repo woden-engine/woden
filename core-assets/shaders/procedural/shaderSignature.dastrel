@@ -1,4 +1,5 @@
 shader_signature ProceduralTexture
 {
+	push_constant Arguments;
 }
 

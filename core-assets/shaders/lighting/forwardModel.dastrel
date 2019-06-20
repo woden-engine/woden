@@ -4,10 +4,14 @@ import lighting.functions;
 
 import fragment.stage; // For SSAO
 import math.constants;
+import math.functions;
 
 uniform(binding = LightingState.SpotShadowMaps) spotShadowMaps : depthTexture2DArray;
 uniform(binding = LightingState.PointShadowMaps) pointShadowMaps : depthTextureCubeArray;
 uniform(binding = LightingState.ScreenSpaceAmbientOcclusion) screenSpaceAmbientOcclusion : texture2D;
+uniform(binding = LightingState.SpecularBRDFLut) imageBasedLightingBRDFLut : texture2D;
+uniform(binding = LightingState.DiffuseIrradianceMap) diffuseIrradianceMap : textureCube;
+uniform(binding = LightingState.SpecularIrradianceMap) specularIrradianceMap : textureCube;
 
 function specularDistribution(alpha: float, cosTheta: float) -> float
 {
@@ -63,7 +67,8 @@ code_block forwardLightingModel
     in albedo: float3;
     in Cdiff: float3;
 	in translucencyFactor: float;
-    in alpha: float;
+    in roughness: float;
+	in occlusion: float;
     in F0: float3;
     out color: float4;
 
@@ -71,14 +76,33 @@ code_block forwardLightingModel
 
 	let diff = Cdiff*PiReciprocal;
     let accumulatedColor = emission.rgb;
+	let alpha = roughness*roughness;
 
-    // Add the ambient hemispherical light.
+    // Compute the hemisphere lighting factor.
     let hemiFactor = dot(normal, sunDirection)*0.5f + 0.5f;
-    accumulatedColor += albedo * mix(groundLighting.rgb, skyLighting.rgb, hemiFactor)*sampleScreenSpaceAmbientOcclusion();
+    let hemiLightingFactor = mix(groundLighting.rgb, skyLighting.rgb, hemiFactor);
 
-	let NdotV = max(0.0f, dot(normal, viewVector));
-	
-    // Accumulate each one of the lights
+	let NdotV = saturate(dot(normal, viewVector));
+
+	// Add the lighting cube.
+    let R = reflect(-viewVector, normal);
+    let worldN = (CameraState.inverseViewMatrix * float4(normal, 0.0f)).xyz;
+    let worldR = (CameraState.inverseViewMatrix * float4(R, 0.0f)).xyz;
+
+    let diffuseLightProbeSample = cubeMapSampler.sampleLod(diffuseIrradianceMap, worldN, 0.0f).rgb;
+	let specularLightProbeLevel = float(getTextureLevelCount(specularIrradianceMap)) * roughness;
+    let specularLightProbeSample = cubeMapSampler.sampleLod(specularIrradianceMap, worldR, specularLightProbeLevel).rgb;
+	let ambientReflectionFactors = brdfLutSampler.sample(imageBasedLightingBRDFLut, float2(NdotV, roughness));
+	let reflectionF = fresnelSchlickRoughness(F0, NdotV, roughness);
+	let translucencyWithFresnel = fresnelSchlick(translucencyFactor, NdotV);
+
+	accumulatedColor += hemiLightingFactor*(diffuseLightProbeSample*diff +
+		specularLightProbeSample*(reflectionF*ambientReflectionFactors.x + ambientReflectionFactors.y));
+
+	// Apply ambient occlusion.
+	accumulatedColor *= occlusion*sampleScreenSpaceAmbientOcclusion();
+
+    // Add the indirect lighting.
     for(let i = 0; i < numberOfLights; i += 1)
     {
         using lightSource = lightSources[i];
@@ -139,9 +163,10 @@ code_block forwardLightingModel
         // Compute the fresnel factor
         let H = normalize(L + viewVector);
         let NdotH = max(0.0f, dot(normal, H));
+		let VdotH = max(0.0f, dot(viewVector, H));
 
         // Compute the cook torrance factors.
-        let F = fresnelSchlick(F0, dot(H, L));
+        let F = fresnelSchlick(F0, VdotH);
         let D = specularDistribution(alpha, NdotH);
 		let G = cookTorranceMasking(alpha, NdotL, NdotV);
 
@@ -150,7 +175,7 @@ code_block forwardLightingModel
     }
 
     // Return the final lighted color.
-    color = float4(accumulatedColor, translucencyFactor);
+    color = float4(accumulatedColor, translucencyWithFresnel);
 }
 
 code_block forwardMetallicRoughnessLightingModel
@@ -163,6 +188,7 @@ code_block forwardMetallicRoughnessLightingModel
     in albedo: float4;
     in metallic: float;
     in roughness: float;
+	in occlusion: float;
     out color: float4;
 
 	let dielectricSpecular = float3(0.04f, 0.04f, 0.04f);
@@ -175,7 +201,8 @@ code_block forwardMetallicRoughnessLightingModel
 		emission: emission
 		albedo: albedo.rgb
         Cdiff: Cdiff
-        F0: F0 alpha: alpha
+        F0: F0 roughness: roughness
+		occlusion: occlusion
 		translucencyFactor: albedo.a
         normal: normal surfaceNormal: surfaceNormal viewVector: viewVector position: position;
 }
@@ -190,18 +217,19 @@ code_block forwardSpecularityGlossinessLightingModel
     in albedo: float4;
     in specular: float3;
     in glossiness: float;
+	in occlusion: float;
     out color: float4;
 
 	let Cdiff = albedo.rgb*(1.0f - max(specular.r, max(specular.g, specular.b)));
 	let F0 = specular;
 	let roughness = 1.0f - glossiness;
-	let alpha = roughness*roughness;
 
     color: color <== forwardLightingModel
 		emission: emission
 		albedo: albedo.rgb
         Cdiff: Cdiff
-        F0: F0 alpha: alpha
+        F0: F0 roughness: roughness
+		occlusion: occlusion
 		translucencyFactor: albedo.a
         normal: normal surfaceNormal: surfaceNormal viewVector: viewVector position: position;
 }

@@ -1,0 +1,89 @@
+import vertex.stage;
+
+semantic VertexOutput {
+    out(0) direction: float3;
+}
+
+constant screenQuadVertices : float4[3] = {
+    {-1.0f, -1.0f, 0.0f, 1.0f},
+    {-1.0f, 3.0f, 0.0f, 1.0f},
+    {3.0f, -1.0f, 0.0f, 1.0f},
+};
+
+// Vulkan spec 15.6.4. Cube Map Face Selection
+constant faceCoordinateTransformS : float3[6] = {
+	// Positive X
+	{0.0f, 0.0f, -1.0f},
+	// Negative X
+	{0.0f, 0.0f,  1.0f},
+	// Positive Y
+	{1.0f, 0.0f,  0.0f},
+	// Negative Y
+	{1.0f, 0.0f,  0.0f},
+	// Positive Z
+	{1.0f, 0.0f,  0.0f},
+	// Negative Z
+	{-1.0f, 0.0f,  0.0f},
+};
+
+constant faceCoordinateTransformT : float3[6] = {
+	// Positive X
+	 {0.0f, -1.0f, 0.0f},
+	// Negative X
+	 {0.0f, -1.0f, 0.0f},
+	// Positive Y
+	 {0.0f, 0.0f, 1.0f},
+	// Negative Y
+	 {0.0f, 0.0f, -1.0f},
+	// Positive Z
+	 {0.0f, -1.0f, 0.0f},
+	// Negative Z
+	 {0.0f, -1.0f, 0.0f},
+};
+
+constant faceCoordinateTransformR : float3[6] = {
+	// Positive X
+	 {1.0f, 0.0f, 0.0f},
+	// Negative X
+	 {-1.0f, 0.0f, 0.0f},
+	// Positive Y
+	 {0.0f, 1.0f, 0.0f},
+	// Negative Y
+	 {0.0f, -1.0f, 0.0f},
+	// Positive Z
+	 {0.0f, 0.0f, 1.0f},
+	// Negative Z
+	 {0.0f, 0.0f, -1.0f},
+};
+
+code_block(vertex) screenQuad
+{
+	let faceID = VertexStage.instanceID % 6u;
+    let position = screenQuadVertices[VertexStage.vertexID];
+    let str = float3(position.xy, 1.0f);
+
+	let faceTransform = float3x3(
+		faceCoordinateTransformS[faceID],
+		faceCoordinateTransformT[faceID],
+		faceCoordinateTransformR[faceID]
+	);
+
+    VertexOutput.direction = faceTransform*str;
+    VertexStage.screenPosition = position;
+}
+
+code_block(vertex) screenQuadFlippedY
+{
+	let faceID = VertexStage.instanceID % 6u;
+    let position = screenQuadVertices[VertexStage.vertexID];
+    let str = float3(position.xy*float2(1.0f, -1.0f), 1.0f);
+
+	let faceTransform = float3x3(
+		faceCoordinateTransformS[faceID],
+		faceCoordinateTransformT[faceID],
+		faceCoordinateTransformR[faceID]
+	);
+
+    VertexOutput.direction = faceTransform*str;
+    VertexStage.screenPosition = position;
+}

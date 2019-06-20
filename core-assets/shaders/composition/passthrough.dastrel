@@ -1,3 +1,4 @@
+import composition.shaderSignature;
 import composition.environment;
 import fragment.stage;
 import fragment.screenQuad;

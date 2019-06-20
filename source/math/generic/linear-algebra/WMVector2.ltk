@@ -32,8 +32,17 @@ WMVector2 class category: 'construction' methods: {
 ].
 
 :[zero -> WMVector2.
+	<constructor>
+    <inline>
 	^ WMVector2 newValue
 ].
+
+:[ones -> WMVector2.
+	<constructor>
+    <inline>
+	^ WMVector2 x: 1.0 y: 1.0
+].
+
 }.
 
 WMVector2 class category: 'serialization' methods: {
@@ -154,6 +163,12 @@ WMVector2 category: 'converting' methods: {
 
 :[asWMVector2D -> WMVector2D.
 	^ WMVector2D x: x y: y
+].
+}.
+
+WMVector2 category: 'math functions' methods: {
+:[interpolateTo: <WMVector2> other at: <Scalar> param -> WMVector2.
+	^ self * (1 - param) + (other * param)
 ].
 }.
 

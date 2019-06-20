@@ -1,0 +1,4 @@
+function saturate(x: float) -> float
+{
+	return max(0.0f, min(1.0f, x));
+}

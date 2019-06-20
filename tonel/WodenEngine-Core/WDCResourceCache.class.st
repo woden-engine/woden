@@ -19,7 +19,9 @@ Class {
 		'temporaryResourcesMutex',
 		'temporaryResourcesDictionary',
 		'proceduralMipmapGenerationLibrary',
-		'proceduralOfflineTextureRenderer'
+		'proceduralOfflineTextureRenderer',
+		'imageBasedLightingIntegrationLibrary',
+		'imageBasedLightingBRDFLut'
 	],
 	#classVars : [
 		'ShaderLanguageTargetMap',
@@ -117,6 +119,11 @@ WDCResourceCache >> binaryContentsOf: aFileReference [
 ]
 
 { #category : #textures }
+WDCResourceCache >> blackCubeMap [
+	^ self getOrCreateColorCubeMap: Color black
+]
+
+{ #category : #textures }
 WDCResourceCache >> blackTexture [
 	^ self getOrCreateColorTexture: Color black
 ]
@@ -179,6 +186,105 @@ WDCResourceCache >> buildVertexLayout: vertexLayout [
 
 ]
 
+{ #category : #'special textures' }
+WDCResourceCache >> computeCubeTextureIrradianceMap: cubeTexture [
+	| extent resultTextureData shader resultLayer renderer cubeLayers |
+	extent := 32@32.
+	shader := self imageBasedLightingIntegrationLibrary getFragmentStage: #irradianceMapComputation.
+	cubeLayers := (1 to: 6) collect: [ :faceId |
+		resultTextureData := WDCTextureData extent: extent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM mipmapCount: 1.
+		resultLayer := resultTextureData layers first.
+	
+		renderer := self mainProceduralOfflineTextureRendererForExtent: extent.
+		renderer critical: [ 
+			renderer renderWith: [ 
+				renderer
+					cubeFaceId: faceId - 1;
+					proceduralTextureRendererInputTextures: { cubeTexture };
+					renderProceduralTextureWithFragmentShader: shader extent: extent format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM;
+					generateProceduralTextureWithExtent: extent fetchWith: #fetch_texture mipmapWith: #mipmap encodeWith: #encode_bgra8 for: resultLayer
+			];
+			submit;
+			finish;
+			readMipmapLevelsInto: resultLayer
+		].
+		resultLayer
+	].
+
+	resultTextureData
+		type: AGPU_TEXTURE_CUBE;
+		layers: cubeLayers.
+	^ resultTextureData
+]
+
+{ #category : #'special textures' }
+WDCResourceCache >> computeCubeTextureSpecularMap: cubeTexture [
+	| extent resultTextureData shader resultLayer renderer cubeLayers |
+	extent := 128@128.
+	shader := self imageBasedLightingIntegrationLibrary getFragmentStage: #specularIrradianceMapComputation.
+	cubeLayers := (1 to: 6) collect: [ :faceId |
+		resultTextureData := WDCTextureData extent: extent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM mipmapCount: 1.
+		resultLayer := resultTextureData layers first.
+	
+		renderer := self mainProceduralOfflineTextureRendererForExtent: extent.
+		renderer critical: [ 
+			renderer renderWith: [ 
+				renderer
+					cubeFaceId: faceId - 1;
+					proceduralTextureRendererInputTextures: { cubeTexture };
+					renderProceduralTextureMipmapsWithFragmentShader: shader extent: extent format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM encodeWith: #encode_bgra8 intoTextureLayerData: resultLayer
+			];
+			submit;
+			finish;
+			readMipmapLevelsInto: resultLayer
+		].
+		resultLayer
+	].
+
+	resultTextureData
+		type: AGPU_TEXTURE_CUBE;
+		layers: cubeLayers.
+	^ resultTextureData
+]
+
+{ #category : #'special textures' }
+WDCResourceCache >> computeEnvironmentLightProbeFromCubeTexture: cubeTexture [
+	| irradianceTextureData irradianceTexture specularTextureData specularTexture |
+	irradianceTextureData := self computeCubeTextureIrradianceMap: cubeTexture.
+	irradianceTexture := irradianceTextureData asTextureFor: engine.
+
+	specularTextureData := self computeCubeTextureSpecularMap: cubeTexture.
+	specularTexture := specularTextureData asTextureFor: engine.
+	^ WDCEnvironmentLightingProbe new
+		diffuseIrradianceMap: irradianceTexture;
+		specularIrradianceMap: specularTexture;
+		yourself
+]
+
+{ #category : #'special textures' }
+WDCResourceCache >> computeImageBasedLightingBRDFLut [
+	<script: 'WDCEngine default resourceCache computeImageBasedLightingBRDFLut inspect'>
+	| extent resultTextureData shader resultLayer renderer |
+	extent := 512@512.
+	shader := self imageBasedLightingIntegrationLibrary getFragmentStage: #brdfLutComputation.
+	resultTextureData := WDCTextureData extent: extent bpp: 32 format: AGPU_TEXTURE_FORMAT_R16G16_UNORM mipmapCount: 1.
+	resultLayer := resultTextureData layers first.
+	
+	renderer := self mainProceduralOfflineTextureRendererForExtent: extent.
+	renderer critical: [ 
+		renderer renderWith: [ 
+			renderer
+				renderProceduralTextureWithFragmentShader: shader extent: extent format: AGPU_TEXTURE_FORMAT_R16G16_UNORM;
+				generateProceduralTextureWithExtent: extent fetchWith: #fetch_texture mipmapWith: #mipmap encodeWith: #encode_r16g16 for: resultLayer
+		];
+		submit;
+		finish;
+		readMipmapLevelsInto: resultLayer
+	].
+
+	^ resultTextureData
+]
+
 { #category : #'lazy resource loading' }
 WDCResourceCache >> concretizeSRGBTexture: aTextureDescription [
 	^ aTextureDescription concretizeWodenSRGBTextureWithResourceCache: self
@@ -187,6 +293,29 @@ WDCResourceCache >> concretizeSRGBTexture: aTextureDescription [
 { #category : #'lazy resource loading' }
 WDCResourceCache >> concretizeTexture: aTextureDescription [
 	^ aTextureDescription concretizeWodenTextureWithResourceCache: self
+]
+
+{ #category : #textures }
+WDCResourceCache >> createCubeTextureWithColor: aColor [
+	| level layer textureData |
+	level := WDCTextureLevelData new
+		width: 1; height: 1; depth: 1; pitch: 4; slicePitch:4;
+		data: (ByteArray new: 4);
+		colorRenderWith: [ :x :y | aColor ];
+		yourself.
+	layer := WDCTextureLayerData new width: 1; height: 1; depth: 1; levels: { level }; yourself.
+	textureData := WDCTextureData new
+		type: AGPU_TEXTURE_CUBE;
+		pixelFormat: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM;
+		srgbPixelFormat: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB;
+		miplevels: 1;
+		width: 1;
+		height: 1;
+		depth: 1;
+		layers: ((1 to: 6) collect: [ :i | layer ]);
+		yourself.
+		
+	^ textureData asSRGBTextureFor: engine 
 ]
 
 { #category : #private }
@@ -227,6 +356,17 @@ WDCResourceCache >> createVertexLayoutForChannelDescriptions: channelDescription
 	layout := WDCVertexLayout new buffers: (channelDescriptions collect: #asWodenVertexStructureDescription).
 	self buildVertexLayout: layout.
 	^ layout
+]
+
+{ #category : #'special shaders' }
+WDCResourceCache >> cubeScreenQuadVertexShader [
+	| shaderLibrary |
+	^ screenQuadVertexShader ifNil: [
+		shaderLibrary := self loadShaderLibrary: 'shaders/vertex/cubeScreenQuad.dastrel'.
+		engine projectionInvertedY
+			ifTrue: [ shaderLibrary getVertexStage: 'screenQuad' ]
+			ifFalse: [ shaderLibrary getVertexStage: 'screenQuadFlippedY' ]
+	]
 ]
 
 { #category : #accessing }
@@ -281,6 +421,11 @@ WDCResourceCache >> flatColorMaterial [
 ]
 
 { #category : #'resource loading' }
+WDCResourceCache >> getOrCreateColorCubeMap: aColor [
+	^ self resourceAt: aColor -> #colorCubeTexture ifAbsentPut: [ self createCubeTextureWithColor: aColor ].
+]
+
+{ #category : #'resource loading' }
 WDCResourceCache >> getOrCreateColorTexture: aColor [
 	^ self resourceAt: aColor -> #colorTexture ifAbsentPut: [ self createTextureWithColor: aColor ].
 ]
@@ -305,6 +450,23 @@ WDCResourceCache >> grayTextureExtent: extent renderWith: aBlock [
 	| data |
 	data := WDCTextureData extent: extent grayRenderWith: aBlock.
 	^ data asTextureFor: engine
+]
+
+{ #category : #'special textures' }
+WDCResourceCache >> imageBasedLightingBRDFLut [
+	^ imageBasedLightingBRDFLut ifNil: [ imageBasedLightingBRDFLut :=  self imageBasedLightingBRDFLutData asTextureFor: engine ]
+]
+
+{ #category : #'special textures' }
+WDCResourceCache >> imageBasedLightingBRDFLutData [
+	^ self computeImageBasedLightingBRDFLut
+]
+
+{ #category : #'special shaders' }
+WDCResourceCache >> imageBasedLightingIntegrationLibrary [
+	^ imageBasedLightingIntegrationLibrary ifNil: [
+		imageBasedLightingIntegrationLibrary := self loadShaderLibrary: 'shaders/lighting/ibl-integration.dastrel'.
+	]
 ]
 
 { #category : #initialization }
@@ -714,6 +876,11 @@ WDCResourceCache >> vertexLayoutFor: aVertexClass [
 { #category : #'resource loading' }
 WDCResourceCache >> vertexLayoutForVertexChannelDescriptions: channelDescriptions [
 	^ vertexLayouts at: channelDescriptions ifAbsentPut: [ self createVertexLayoutForChannelDescriptions: channelDescriptions ]
+]
+
+{ #category : #textures }
+WDCResourceCache >> whiteCubeMap [
+	^ self getOrCreateColorCubeMap: Color white
 ]
 
 { #category : #textures }

@@ -1,0 +1,154 @@
+import fragment.stage;
+import fragment.screenQuad;
+import fragment.cubeScreenQuad;
+import composition.shaderSignature;
+import lighting.functions;
+import math.constants;
+import math.functions;
+import math.hammersley;
+
+// From UE 4 talk and course notes "Real Shading in Unreal Engine 4" by Brian Karis,
+// Incident light = SampleColor * NdotL
+// Microfacet specular = D*G*F / (4*NdotL*NdotV)
+// pdf = D * NdotH / (4 * VdotH)
+// Microfacet specular *NdotL / pdf = G*F*VdotH / (NdotV*NdotH)
+ 
+function importanceSampleGGX(Xi: float2, alpha: float, N: float3) ->float3
+{
+	let phi = TwoPi*Xi.x;
+	let cosTheta = sqrt((1.0f - Xi.y) / (1.0f + (alpha*alpha - 1.0f)*Xi.y));
+	let sinTheta = sqrt(1.0f - cosTheta*cosTheta);
+	let H = float3(sinTheta*cos(phi), sinTheta*sin(phi), cosTheta);
+	
+	let upVector = fabs(N.z) < 0.999f ? float3(0.0f,0.0f,1.0f) : float3(1.0f,0.0f,0.0f);
+	let tangentX = normalize( cross( upVector , N ) );
+	let tangentY = cross( N, tangentX );
+
+	// Tangent to world space
+	return tangentX * H.x + tangentY * H.y + N * H.z;
+}
+
+code_block(fragment) brdfLutComputation
+{
+	let SampleCount = 1024u;
+
+	let NdotV = FragmentInput.texcoord.x;
+	let sinNdotV = sqrt(1.0f - NdotV*NdotV);
+	let N = float3(0.0f, 0.0f, 1.0f);
+
+	let V = float3(sinNdotV, 0.0f, NdotV);
+	let roughness = FragmentInput.texcoord.y;
+	let alpha = roughness*roughness;
+	
+	let lutResult = float2(0.0f, 0.0f);
+	for(let i = 0u; i < SampleCount; i += 1u)
+	{
+		let Xi = hammersleySample(i, SampleCount);
+		let H = importanceSampleGGX(Xi, alpha, N);//normalize(float3(Xi, 1.0f));
+		let L = normalize(2.0f*dot(V, H)*H - V);
+			
+		let NdotH = saturate(H.z); //max(0.0f, dot(N, H));
+		let NdotL = saturate(L.z); //max(0.0f, dot(N, L));
+		let VdotH = saturate(dot(V, H));
+		if(NdotL > 0.0f)
+		{
+			let G = smithSchlickGGXMasking(alpha, NdotL, NdotV);
+			let G_vis = G*VdotH/(NdotH*NdotV);
+
+	        //let D = ggxSpecularDistribution(alpha, NdotH);
+			//let G = cookTorranceSmithSchlickGGXMasking(alpha, NdotL, NdotV);
+			//let pdf = D*NdotH / (4.0f * VdotH);
+			//let G_vis = D*G*NdotL/pdf;
+			
+			let fresnelCos = 1.0f - VdotH;
+			let fresnelCos2 = fresnelCos*fresnelCos;
+			let fresnelCos5 = fresnelCos2*fresnelCos2*fresnelCos;
+			
+			lutResult += G_vis*float2(1.0f - fresnelCos5, fresnelCos5);
+		}
+	}
+	
+	FragmentStage.colorOutput0 = float4(lutResult/float(SampleCount), 0.0f, 0.0f);
+}
+
+
+uniform(binding = Sources.Textures) radianceMap : textureCube;
+
+code_block(fragment) irradianceMapComputation
+{
+	let SampleThetaCount = 16u;
+	let SamplePhiCount = 16u;
+	let SampleCount = SampleThetaCount*SamplePhiCount;
+	
+	let N = normalize(CubeFragmentInput.direction);
+	let upVector = float3(0.0f, 1.0f, 0.0f);
+	let T = 	cross(upVector, N);
+	let B = cross(N, T);
+	
+	//let irradiance = cubeSampler.sample(radianceMap, N).rgb;
+	let irradiance = float3(0.0f, 0.0f, 0.0f);
+	
+	let dTheta = HalfPi / float(SampleThetaCount);
+	let dPhi = TwoPi / float(SamplePhiCount);
+	let theta = 0.0f;
+	for(let i = 0u; i < SampleThetaCount; i += 1u)
+	{
+		let cosTheta = cos(theta);
+		let sinTheta = sin(theta);
+		let phi = 0.0f;
+		let dS = sinTheta;
+		for(let i = 0u; i < SamplePhiCount; i += 1u)
+		{
+			let cosPhi = cos(phi);
+			let sinPhi = sin(phi);
+			let tangentL = float3(sinTheta*cosPhi, sinTheta*sinPhi, cosTheta);
+			let L = tangentL.x * T + tangentL.y * B + tangentL.z * N;
+			let sample = cubeSampler.sampleLod(radianceMap, L, 0.0f).rgb;
+			irradiance += sample * cosTheta * dS;
+			
+			phi += dPhi;
+		}
+		
+		theta += dTheta;
+	}
+	
+	irradiance = Pi * irradiance / float(SampleCount);
+	FragmentStage.colorOutput0 = float4(irradiance, 1.0f);
+}
+
+uniform(push_constant=Arguments) MipmapRenderingArguments
+{
+    level: uint;
+	levelCount: uint;
+}
+
+code_block(fragment) specularIrradianceMapComputation
+{
+	let SampleCount = 1024u;
+
+	let N = normalize(CubeFragmentInput.direction);
+	let V = N;
+
+	let roughness = float(MipmapRenderingArguments.level) /
+		float(MipmapRenderingArguments.levelCount - 1u);
+	let alpha = roughness*roughness;
+
+	let specular = float3(0.0f, 0.0f, 0.0f);
+	let totalWeight = 0.0f;
+	for(let i = 0u; i < SampleCount; i += 1u)
+	{
+		let Xi = hammersleySample(i, SampleCount);
+		let H = importanceSampleGGX(Xi, alpha, N);
+		let L = normalize(2.0f*dot(V, H)*H - V);
+
+		let NdotL = saturate(dot(N, L));
+		if(NdotL > 0.0f)
+		{
+			let sample = cubeSampler.sampleLod(radianceMap, L, 0.0f).rgb;
+			specular += sample*NdotL;
+			totalWeight += NdotL;
+		}
+	}
+	
+	FragmentStage.colorOutput0 = float4(specular/totalWeight, 1.0f);
+}

@@ -18,7 +18,7 @@ WDCSceneRenderingShaderSignature class >> signatureSpec: spec [
 		bank: #Samplers with: [ :bank |
 			bank
 				maxBindings: 10;
-				sampler: #Samplers count: 5
+				sampler: #Samplers count: 6
 		];
 		bank: #CameraState with: [ :bank |
 			bank
@@ -31,7 +31,10 @@ WDCSceneRenderingShaderSignature class >> signatureSpec: spec [
 				uniform: #GlobalLightingState;
 				texture: #SpotShadowMaps count: 1;
 				texture: #PointShadowMaps count: 1;
-				texture: #AmbientOcclusion count: 1
+				texture: #AmbientOcclusion count: 1;
+				texture: #SpecularBRDFLut count: 1;
+				texture: #DiffuseIrradianceMap count: 1;
+				texture: #SpecularIrradianceMap count: 1
 		];
 		bank: #ObjectState with: [ :bank |
 			bank
@@ -62,7 +65,7 @@ WDCSceneRenderingShaderSignature >> createHandleForDevice: device [
 
 		"Samplers"
 		beginBindingBank: 10;
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLER bindingPointCount: 5; "Samplers"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLER bindingPointCount: 6; "Samplers"
 
 		"CameraState"
 		beginBindingBank: 1000;
@@ -74,6 +77,9 @@ WDCSceneRenderingShaderSignature >> createHandleForDevice: device [
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "SpotShadowMaps"
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "PointShadowMaps"
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "AmbientOcclusion"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "SpecularBRDFLut"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "DiffuseIrradianceMap"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 1; "SpecularIrradianceMap"
 
 		"ObjectState"
 		beginBindingBank: 100000;
@@ -102,7 +108,7 @@ WDCSceneRenderingShaderSignature >> defaultSamplers [
 		address_v: AGPU_TEXTURE_ADDRESS_MODE_WRAP;
 		address_w: AGPU_TEXTURE_ADDRESS_MODE_WRAP;
 		max_lod: 10000.0;
-		maxanisotropy: 1;
+		maxanisotropy: engine maxAnisotropy;
 		yourself.
 		
 	bindings := self newSamplers.
@@ -116,7 +122,7 @@ WDCSceneRenderingShaderSignature >> defaultSamplers [
 		address_v: AGPU_TEXTURE_ADDRESS_MODE_CLAMP;
 		address_w: AGPU_TEXTURE_ADDRESS_MODE_CLAMP;
 		max_lod: 10000.0;
-		maxanisotropy: 1;
+		maxanisotropy: engine maxAnisotropy;
 		yourself.
 	bindings
 		createSampler: 2 description: samplerDesc.
@@ -129,10 +135,33 @@ WDCSceneRenderingShaderSignature >> defaultSamplers [
 		comparison_enabled: 1;
 		comparison_function: AGPU_GREATER;
 		max_lod: 10000.0;
-		maxanisotropy: 1;
+		maxanisotropy: engine maxAnisotropy;
 		yourself.
 	bindings
 		createSampler: 3 description: samplerDesc.
+
+	samplerDesc := AGPUSamplerDescription new
+		filter: AGPU_FILTER_MIN_LINEAR_MAG_LINEAR_MIPMAP_LINEAR;
+		address_u: AGPU_TEXTURE_ADDRESS_MODE_BORDER;
+		address_v: AGPU_TEXTURE_ADDRESS_MODE_BORDER;
+		address_w: AGPU_TEXTURE_ADDRESS_MODE_BORDER;
+		max_lod: 10000.0;
+		maxanisotropy: engine maxAnisotropy;
+		yourself.
+	bindings
+		createSampler: 4 description: samplerDesc.
+
+	"IBL BRDF Lookup function"
+	samplerDesc := AGPUSamplerDescription new
+		filter: AGPU_FILTER_MIN_LINEAR_MAG_LINEAR_MIPMAP_LINEAR;
+		address_u: AGPU_TEXTURE_ADDRESS_MODE_CLAMP ;
+		address_v: AGPU_TEXTURE_ADDRESS_MODE_CLAMP;
+		address_w: AGPU_TEXTURE_ADDRESS_MODE_CLAMP;
+		max_lod: 10000.0;
+		maxanisotropy: 1;
+		yourself.
+	bindings
+		createSampler: 5 description: samplerDesc.
 
 	defaultSamplersSession := Smalltalk session.
 	^ defaultSamplers := bindings
@@ -145,7 +174,7 @@ WDCSceneRenderingShaderSignature >> newCameraState [
 
 { #category : #'generated shader signature methods' }
 WDCSceneRenderingShaderSignature >> newLightingState [
-	^ engine createShaderSignature: self resourceBinding: 2 elements: 4
+	^ engine createShaderSignature: self resourceBinding: 2 elements: 7
 ]
 
 { #category : #'generated shader signature methods' }
@@ -160,5 +189,5 @@ WDCSceneRenderingShaderSignature >> newObjectState [
 
 { #category : #'generated shader signature methods' }
 WDCSceneRenderingShaderSignature >> newSamplers [
-	^ engine createShaderSignature: self resourceBinding: 0 elements: 5
+	^ engine createShaderSignature: self resourceBinding: 0 elements: 6
 ]

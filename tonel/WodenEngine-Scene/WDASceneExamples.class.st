@@ -120,12 +120,11 @@ WDASceneExamples class >> createIslandTerrainObjectFor: engine [
 ]
 
 { #category : #'examples procedural' }
-WDASceneExamples class >> createIslandWaterObjectFor: engine skyTexture: skyTexture [
+WDASceneExamples class >> createIslandWaterObjectFor: engine [
 	"Setup the water material"
 	| material mesh waterObject |
 	material := (engine resourceCache loadMaterial: 'materials/demos/ocean.json').
 	material
-		skyTexture: skyTexture;
 		harmonicAt: 1 amplitude: 0.015 frequency: 2.23 center: (WMVector2F zero);
 		harmonicAt: 2 amplitude: 0.03 frequency: 0.50 center: (WMVector2F zero).
 
@@ -293,7 +292,7 @@ WDASceneExamples class >> example04PoolHDR [
 
 { #category : #examples }
 WDASceneExamples class >> example04PoolLDR [
-	| model scene camera engine sunLight view  meshBuilder skyMaterial skyBox |
+	| model scene camera engine sunLight view  meshBuilder skyMaterial skyBox skyTexture |
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	engine := model engine.
@@ -308,17 +307,23 @@ WDASceneExamples class >> example04PoolLDR [
 	"Add a light"
 	sunLight := WDSGLightSource new.
 	sunLight directional; castShadows: true.
-	sunLight intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.8..
+	sunLight intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.8.
 	sunLight transform
-		rotateDegreesOnX: -45;
+		rotateDegreesOnX: -35;
 		translateToX: 0.0 y: 1.5 z: 2.5.
 
 	scene add: sunLight.
 
-	scene ambientLighting: sunLight intensity * 0.01.
+	scene ambientLighting: WMVector4F ones*0.6.
+
+	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector3: (WMVector3F z: 1.0)).
+	skyTexture := skyTexture asSRGBTextureFor: engine.
+	skyMaterial := (WDCSkyMaterial for: engine)
+		skyTexture: skyTexture;
+		yourself.
 
 	"Add the sky box"
-	skyMaterial := engine resourceCache loadMaterial: 'materials/demos/skybox.json'.
+	"skyMaterial := engine resourceCache loadMaterial: 'materials/demos/skybox.json'."
 	meshBuilder := WDCGenericMeshBuilder for: engine.
 	meshBuilder
 		currentMaterial: skyMaterial;
@@ -328,10 +333,46 @@ WDASceneExamples class >> example04PoolLDR [
 	skyBox isOpaqueShadowCaster: false;
 		renderable: meshBuilder mesh.
 	scene add: skyBox.
+	scene lightingProbe: (engine resourceCache computeEnvironmentLightProbeFromCubeTexture: skyTexture).
 
 	view := WDAFPSSceneView allowingVR.
 	view cameraAngle: (WMVector3F y: Float pi).
 	model openWith: view.
+]
+
+{ #category : #examples }
+WDASceneExamples class >> example04ProceduralSky [
+	| texture model scene material camera meshBuilder mesh cube sunDirection |
+	model := WDASampleSceneModel new.
+	scene := model newScene.
+	material := WDCSkyMaterial for: model engine.
+
+	camera := model camera.
+	camera transform translateByY: 1.7.
+	
+	
+	meshBuilder := WDCGenericMeshBuilder for: scene engine.
+	meshBuilder
+		defaultMaterial;
+		addCubeWithWidth: 10.0 height: 0.5 depth: 10.0;
+		material: material;
+		addInteriorCubeWithWidth: 10.0 height: 10.0 depth: 10.0.
+	mesh := meshBuilder mesh.
+	
+	cube := WDSGSpatialObject new.
+	cube renderable: mesh.
+	scene add: cube.
+	
+	sunDirection := WMReversibleAffineTransformF identity
+		rotateDegreesOnX: -45;
+		transformVector3: (WMVector3F z: 1.0).
+		
+	texture := self proceduralSkySunDirection: sunDirection.
+material
+	skyTexture: (texture asSRGBTextureFor: model engine).
+		
+	model openWith: WDAFPSSceneView.
+
 ]
 
 { #category : #examples }
@@ -536,7 +577,7 @@ WDASceneExamples class >> example08MediumTerrain [
 
 { #category : #examples }
 WDASceneExamples class >> example09DragonIsland [
-	| model terrain light scene camera water view skyMaterial skyBox dragonMesh dragon dragonAction dragonActionRepeated dragonActionFrame |
+	| model terrain scene camera water view skyMaterial skyBox dragonMesh dragon dragonAction dragonActionRepeated dragonActionFrame sunLight skyTexture |
 	
 	model := WDASampleSceneModel new.
 	scene := model newScene.
@@ -544,14 +585,35 @@ WDASceneExamples class >> example09DragonIsland [
 	camera farDistance: 250.0.
 	camera transform translateByZ: 85.0; translateByY: 1.5.
 	
-	skyMaterial := scene engine resourceCache loadMaterial: 'materials/demos/skybox.json'.
+	sunLight := WDSGLightSource new.
+	sunLight directional; castShadows: true;
+		extraShadowDistanceFactor: 100;
+		shadowMapDepthBiasConstant: 20.0;
+		shadowMapDepthBiasSlope: 5.0.
+	sunLight state
+		intensity: (Color fromHexString: 'f1efd7') asWMVector4F.
+	sunLight transform
+		rotateDegreesOnX: -35;
+		translateToX: 0.0 y: 1.5 z: 2.5.
+	scene add: sunLight.
+	
+	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector3: (WMVector3F z: 1.0)).
+	skyTexture := skyTexture asSRGBTextureFor: model engine.
+	skyMaterial := (WDCSkyMaterial for: model engine)
+		skyTexture: skyTexture;
+		yourself.
+		
+	"skyMaterial := scene engine resourceCache loadMaterial: 'materials/demos/skybox.json'."
 	skyBox := self createSkybox: (WMVector3F x: 200.0 y: 200.0 z: 200.0) for: scene engine material: skyMaterial.
 	scene add: skyBox.
+	scene
+		ambientLighting: WMVector4F ones*0.6;
+		lightingProbe: (model engine resourceCache computeEnvironmentLightProbeFromCubeTexture: skyTexture).
 
 	terrain := self createIslandTerrainObjectFor: scene engine.
 	scene add: terrain.
 
-	water := self createIslandWaterObjectFor: scene engine skyTexture: skyMaterial skyTexture.
+	water := self createIslandWaterObjectFor: scene engine.
 	scene add: water.
 	
 	
@@ -575,18 +637,6 @@ WDASceneExamples class >> example09DragonIsland [
 			addAction: dragonAction repeated: dragonActionRepeated frame: dragonActionFrame;
 			computePoseMatrices.
 	].
-
-	light := WDSGLightSource new.
-	light directional; castShadows: true;
-		extraShadowDistanceFactor: 100;
-		shadowMapDepthBiasConstant: 20.0;
-		shadowMapDepthBiasSlope: 5.0.
-	light state
-		intensity: (Color fromHexString: 'f1efd7') asWMVector4F.
-	light transform
-		rotateDegreesOnX: -45;
-		translateToX: 0.0 y: 1.5 z: 2.5.
-	scene add: light.
 
 	view := model openWith: WDAFPSSceneView allowingVR
 ]
@@ -681,6 +731,47 @@ WDASceneExamples class >> exampleModelBunny [
 { #category : #'example models' }
 WDASceneExamples class >> exampleModelCube [
 	(WDCEngine default resourceCache load3DModel: 'models/obj/cube.obj') openViewer
+]
+
+{ #category : #'as yet unclassified' }
+WDASceneExamples class >> proceduralSkySunDirection: sunDirection [
+	| horizonRamp sunColor sunAngleSizeCos sunAngleSizeOuterCos shader |
+	horizonRamp := WDCLinearRamp with: { 
+		0.0 -> (Color fromHexString: '83b4dd').
+		1.0 -> (Color fromHexString: '001c6f').
+	}.
+		
+	sunColor := (Color fromHexString: 'f3f3e8') asWMVector4F.
+		
+	shader := [ :x :y :z |
+		| direction background atmosphere clouds sunCos sunFactor |
+		direction := (WMVector3F x: x y: y z: z) normalized.
+		sunCos := direction dot: sunDirection.
+		"sunAngleSizeCos := 0.5 degreesToRadians cos.
+		sunAngleSizeOuterCos := 20.0 degreesToRadians cos."
+		sunFactor := sunCos smoothStepFrom: 0.9396926207859084 to: 0.9999619230641713.
+
+		atmosphere := horizonRamp value: direction y.
+
+		clouds := 0.0.
+		direction y > 0.0 ifTrue: [
+			|t|
+			t := 2.5 / direction y.
+			clouds := (direction xz * t) fbmGradientNoiseOctaves: 4 lacunarity: 2.0.
+			clouds := (clouds*2.0 - 1.0 max: 0.0) min: 1.0.
+		
+			clouds := clouds * (direction y smoothStepFrom: 0.0 to: 0.25)
+		].
+	
+		background := atmosphere interpolateTo: (WMVector4F x: 1.0 y: 1.0 z: 1.0 w: 1.0) at: clouds.
+		background interpolateTo: sunColor at: (sunFactor raisedTo: 8.0)
+	].
+
+	^ WDCPharoProceduralGPUScriptEvaluator new
+		textureExtent: 512@512;
+		cubeMap: true;
+		colorFunction: shader;
+		evaluate.
 ]
 
 { #category : #'see class side' }

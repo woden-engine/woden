@@ -13,7 +13,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 WDSSceneAssetModel >> createViewer [
-	| sceneModel camera hasLights sunLight |
+	| sceneModel camera hasLights sunLight skyTexture |
 	sceneModel := WDASampleSceneModel new.
 	sceneModel
 		scene: mainScene.
@@ -43,11 +43,20 @@ WDSSceneAssetModel >> createViewer [
 		sunLight := WDSGLightSource new.
 		sunLight directional; castShadows: false.
 		sunLight state
-				intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 1.0.
+				intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.6.
 		sunLight transform
-			rotateDegreesOnX: -45.
+			rotateDegreesOnX: -35.
 		
 		mainScene add: sunLight.
+
+		mainScene ambientLighting: WMVector4F ones*0.6.
+		
+		skyTexture := WDASceneExamples proceduralSkySunDirection: (sunLight transform
+				transformVector3:(WMVector3F z: 1.0)
+			).
+		skyTexture := skyTexture asSRGBTextureFor: sceneModel engine.
+		mainScene lightingProbe: (sceneModel engine resourceCache computeEnvironmentLightProbeFromCubeTexture: skyTexture).
+				
 	].
 
 	^ sceneModel

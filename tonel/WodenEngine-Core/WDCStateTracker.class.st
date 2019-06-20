@@ -221,6 +221,13 @@ WDCStateTracker >> dispatchComputeGroupCountX: x y: y z: z [
 ]
 
 { #category : #commands }
+WDCStateTracker >> dispatchCubeFaceScreenQuadRender: cubeFaceId [
+	self 
+		primitiveType: AGPU_TRIANGLES;
+		drawArrays: 3 instance_count: 1 first_vertex: 0 base_instance: cubeFaceId
+]
+
+{ #category : #commands }
 WDCStateTracker >> dispatchScreenQuadRender [
 	self 
 		primitiveType: AGPU_TRIANGLES;

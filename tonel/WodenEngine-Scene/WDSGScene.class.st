@@ -16,7 +16,8 @@ Class {
 		'commonGPUStateRenderingComponent',
 		'skyLighting',
 		'groundLighting',
-		'sunDirection'
+		'sunDirection',
+		'lightingProbe'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
@@ -51,7 +52,7 @@ WDSGScene >> allVisibleRenderingChildrenDo: aBlock [
 WDSGScene >> ambientLighting: lighting [
 	self 
 		skyLighting: lighting;
-		skyLighting: lighting
+		groundLighting: lighting
 ]
 
 { #category : #accessing }
@@ -140,6 +141,16 @@ WDSGScene >> initializeWithEngine: anEngine shaderSignatureClass: shaderSignatur
 	engine := anEngine.
 	shaderSignature := shaderSignatureClass for: anEngine.
 	roots do: #engineChanged.
+]
+
+{ #category : #accessing }
+WDSGScene >> lightingProbe [
+	^ lightingProbe
+]
+
+{ #category : #accessing }
+WDSGScene >> lightingProbe: anObject [
+	lightingProbe := anObject
 ]
 
 { #category : #'rendering graph' }

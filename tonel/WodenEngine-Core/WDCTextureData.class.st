@@ -28,7 +28,17 @@ WDCTextureData class >> extent: anExtent bpp: bitsPerPixel format: pixelFormat [
 ]
 
 { #category : #'as yet unclassified' }
+WDCTextureData class >> extent: anExtent bpp: bitsPerPixel format: pixelFormat mipmapCount: mipmapCount [
+	^ self extent: anExtent bpp: bitsPerPixel format: pixelFormat srgbFormat: pixelFormat mipmapCount: mipmapCount
+]
+
+{ #category : #'as yet unclassified' }
 WDCTextureData class >> extent: anExtent bpp: bitsPerPixel format: pixelFormat srgbFormat: srgbPixelFormat [
+	^ self extent: anExtent bpp: bitsPerPixel format: pixelFormat srgbFormat: srgbPixelFormat mipmapCount: -1
+]
+
+{ #category : #'as yet unclassified' }
+WDCTextureData class >> extent: anExtent bpp: bitsPerPixel format: pixelFormat srgbFormat: srgbPixelFormat mipmapCount: mipmapCount [
 	| w h layer |
 	w := anExtent x.
 	h := anExtent y.
@@ -36,7 +46,7 @@ WDCTextureData class >> extent: anExtent bpp: bitsPerPixel format: pixelFormat s
 			width: w;
 			height: h;
 			depth: 1;
-			generateLevelsWithBpp: bitsPerPixel.
+			generateLevels: mipmapCount withBpp: bitsPerPixel.
 	^ self new
 		width: anExtent x;
 		height: anExtent y;
@@ -209,6 +219,9 @@ WDCTextureData class >> initialize [
 
 		AGPU_TEXTURE_FORMAT_R8G8_UNORM . #decodeR8G8: .
 		AGPU_TEXTURE_FORMAT_R8G8_SNORM . #decodeSR8G8: .
+
+		AGPU_TEXTURE_FORMAT_R16G16_UNORM . #decodeR16G16: .
+		AGPU_TEXTURE_FORMAT_R16G16_SNORM . #decodeSR16G16: .
 	
 		AGPU_TEXTURE_FORMAT_B5G6R5_UNORM . #decodeBGR565: .
 		AGPU_TEXTURE_FORMAT_B8G8R8X8_UNORM . #decodeBGRX8888: .
@@ -612,6 +625,40 @@ WDCTextureData >> decodeR16: level [
 ]
 
 { #category : #converting }
+WDCTextureData >> decodeR16G16: level [
+
+	| result data size levelWidth levelHeight source destIndex sourceRow sourcePitch sourceIndex red green |
+	size := level width * level height*4.
+	levelWidth := level width.
+	levelHeight := level height.
+	
+	source := level data.
+	data := ByteArray new: size.
+	destIndex := 1.
+	sourceRow := 1.
+	sourcePitch := level pitch.
+	1 to: levelHeight do: [ :y |
+		sourceIndex := sourceRow.
+		1 to: levelWidth do: [ :x |
+			red := (source unsignedShortAt: sourceIndex) >> 8.
+			green := (source unsignedShortAt: sourceIndex + 2) >> 8.
+
+			data at: destIndex put: 0. destIndex := destIndex + 1.
+			data at: destIndex put: green. destIndex := destIndex + 1.
+			data at: destIndex put: red. destIndex := destIndex + 1.
+			data at: destIndex put: 16rff. destIndex := destIndex + 1.
+			sourceIndex := sourceIndex + 4
+		].
+		sourceRow := sourceRow + sourcePitch
+	].
+	
+	result := Form extent: level width @ level height depth: 32.
+	result unhibernate.
+	LibC memCopy: data to: result bits size: size.
+	^ result
+]
+
+{ #category : #converting }
 WDCTextureData >> decodeR8: level [
 
 	| result data size levelWidth levelHeight source destIndex sourceRow sourcePitch sourceIndex gray |
@@ -699,6 +746,40 @@ WDCTextureData >> decodeSR16: level [
 			data at: destIndex put: gray. destIndex := destIndex + 1.
 			data at: destIndex put: 16rff. destIndex := destIndex + 1.
 			sourceIndex := sourceIndex + 2
+		].
+		sourceRow := sourceRow + sourcePitch
+	].
+	
+	result := Form extent: level width @ level height depth: 32.
+	result unhibernate.
+	LibC memCopy: data to: result bits size: size.
+	^ result
+]
+
+{ #category : #converting }
+WDCTextureData >> decodeSR16G16: level [
+
+	| result data size levelWidth levelHeight source destIndex sourceRow sourcePitch sourceIndex red green |
+	size := level width * level height*4.
+	levelWidth := level width.
+	levelHeight := level height.
+	
+	source := level data.
+	data := ByteArray new: size.
+	destIndex := 1.
+	sourceRow := 1.
+	sourcePitch := level pitch.
+	1 to: levelHeight do: [ :y |
+		sourceIndex := sourceRow.
+		1 to: levelWidth do: [ :x |
+			red := (source signedShortAt: sourceIndex) >> 8 + 128.
+			green := (source signedShortAt: sourceIndex + 2) >> 8 + 128.
+
+			data at: destIndex put: 0. destIndex := destIndex + 1.
+			data at: destIndex put: green. destIndex := destIndex + 1.
+			data at: destIndex put: red. destIndex := destIndex + 1.
+			data at: destIndex put: 16rff. destIndex := destIndex + 1.
+			sourceIndex := sourceIndex + 4
 		].
 		sourceRow := sourceRow + sourcePitch
 	].

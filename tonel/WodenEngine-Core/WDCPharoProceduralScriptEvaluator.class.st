@@ -8,7 +8,9 @@ Class {
 		'normalHeightScaleFactor',
 		'textureExtent',
 		'colorMapFunction',
-		'extentForInspector'
+		'extentForInspector',
+		'cubeMap',
+		'colorFunction'
 	],
 	#category : #'WodenEngine-Core-Texture'
 }
@@ -35,6 +37,16 @@ WDCPharoProceduralScriptEvaluator >> at: aParamName ifAbsent: isAbsentBlock [
 ]
 
 { #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> colorFunction [
+	^ colorFunction
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> colorFunction: anObject [
+	colorFunction := anObject
+]
+
+{ #category : #accessing }
 WDCPharoProceduralScriptEvaluator >> colorMapFunction [
 	^ colorMapFunction ifNil: [ colorMapFunction := WDCGrayscaleColorMap new ]
 ]
@@ -42,6 +54,16 @@ WDCPharoProceduralScriptEvaluator >> colorMapFunction [
 { #category : #accessing }
 WDCPharoProceduralScriptEvaluator >> colorMapFunction: anObject [
 	colorMapFunction := anObject
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> cubeMap [
+	^ cubeMap
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> cubeMap: anObject [
+	cubeMap := anObject
 ]
 
 { #category : #accessing }
@@ -56,6 +78,7 @@ WDCPharoProceduralScriptEvaluator >> engine: anObject [
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralScriptEvaluator >> evaluate [
+	self cubeMap ifTrue: [ ^ self evaluateCubeMap ].
 	self isInInspector ifTrue: [
 		^ WDCMultiTextureView new textures: { 
 			'Albedo' -> (WDCTextureData extent: self extentForInspector srgbColorRenderWith: [ :s :t |
@@ -79,6 +102,11 @@ WDCPharoProceduralScriptEvaluator >> evaluate [
 	].
 
 	^ nil
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralScriptEvaluator >> evaluateCubeMap [
+	self shouldBeImplemented
 ]
 
 { #category : #'as yet unclassified' }
@@ -108,6 +136,7 @@ WDCPharoProceduralScriptEvaluator >> heightFunction: anObject [
 WDCPharoProceduralScriptEvaluator >> initialize [
 	super initialize.
 	normalHeightScaleFactor := 1.0.
+	cubeMap := false.
 ]
 
 { #category : #testing }

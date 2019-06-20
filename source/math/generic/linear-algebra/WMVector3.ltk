@@ -65,7 +65,15 @@ WMVector3 class category: 'construction' methods: {
 ].
 
 :[zero -> WMVector3.
+	<constructor>
+    <inline>
 	^ WMVector3 newValue
+].
+
+:[ones -> WMVector3.
+	<constructor>
+    <inline>
+	^ WMVector3 x: 1.0 y: 1.0 z: 1.0
 ].
 }.
 
@@ -233,6 +241,12 @@ WMVector3 category: 'converting' methods: {
 
 :[asVisualizationColor -> _DynamicObject.
 	^ self asColor
+].
+}.
+
+WMVector3 category: 'math functions' methods: {
+:[interpolateTo: <WMVector3> other at: <Scalar> param -> WMVector3.
+	^ self * (1 - param) + (other * param)
 ].
 }.
 

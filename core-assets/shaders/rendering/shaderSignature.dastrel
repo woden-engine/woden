@@ -2,7 +2,7 @@ shader_signature SceneRendering
 {
     descriptor_set(max_bindings = 10) Samplers
     {
-        Samplers: sampler * 5;
+        Samplers: sampler * 6;
     }
 
     descriptor_set(max_bindings = 1000000) CameraState
@@ -16,7 +16,10 @@ shader_signature SceneRendering
         SpotShadowMaps: texture;
         PointShadowMaps: texture;
         ScreenSpaceAmbientOcclusion: texture;
-    }
+        SpecularBRDFLut: texture;
+        DiffuseIrradianceMap: texture;
+        SpecularIrradianceMap: texture;
+   }
 
     descriptor_set(max_bindings = 1000000) ObjectState
     {
@@ -36,5 +39,6 @@ shader_signature SceneRendering
 uniform(binding = Samplers.Samplers) albedoSampler : sampler;
 uniform(binding = Samplers.Samplers+1) normalSampler : sampler;
 uniform(binding = Samplers.Samplers+2) displacementSampler : sampler;
-uniform(binding = Samplers.Samplers+2) cubeMapSampler : sampler;
 uniform(binding = Samplers.Samplers+3) shadowSampler : sampler;
+uniform(binding = Samplers.Samplers+4) cubeMapSampler : sampler;
+uniform(binding = Samplers.Samplers+5) brdfLutSampler : sampler;

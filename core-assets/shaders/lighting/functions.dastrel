@@ -1,5 +1,16 @@
 import math.constants;
 
+function fresnelSchlickRoughness(F0: float3, cosTheta: float, roughness: float) -> float3
+{
+	// Function obtained from: https://learnopengl.com/PBR/IBL/Diffuse-irradiance
+    let powFactor = 1.0f - cosTheta;
+    let powFactor2 = powFactor * powFactor;
+    let powFactor4 = powFactor2 * powFactor2;
+    let powValue = powFactor4 * powFactor;
+
+    return F0 + (max(float3(1.0f, 1.0f, 1.0f) - roughness, F0) - F0) * powValue;
+}
+
 function fresnelSchlick(F0: float3, cosTheta: float) -> float3
 {
     let powFactor = 1.0f - cosTheta;
@@ -32,12 +43,17 @@ function ggxSpecularDistribution(alpha: float, cosTheta: float) -> float
 {
 	let alphaSquare = alpha*alpha;
 	let den = cosTheta*cosTheta*(alphaSquare - 1.0f) + 1.0f;
-	return alphaSquare / (Pi * den*den) ;
+	return alphaSquare / (Pi * den*den);
 }
 
 function cookTorranceImplicitMasking(alpha: float, NdotL: float, NdotV: float) -> float
 {
 	return 0.25f;
+}
+
+function smithSchlickBeckmannFunction(k: float, cosTheta: float) -> float
+{
+	return cosTheta / (cosTheta*(1.0f - k) + k);
 }
 
 function smithSchlickBeckmannReciprocalFunction(k: float, cosTheta: float) -> float
@@ -56,4 +72,10 @@ function cookTorranceSmithSchlickGGXMasking(alpha: float, NdotL: float, NdotV: f
 {
 	let k = alpha * 0.5f;
 	return 1.0f / (4.0f*smithSchlickBeckmannReciprocalFunction(k, NdotL)*smithSchlickBeckmannReciprocalFunction(k, NdotV));
+}
+
+function smithSchlickGGXMasking(alpha: float, NdotL: float, NdotV: float) -> float
+{
+	let k = alpha * 0.5f;
+	return smithSchlickBeckmannFunction(k, NdotL)*smithSchlickBeckmannFunction(k, NdotV);
 }

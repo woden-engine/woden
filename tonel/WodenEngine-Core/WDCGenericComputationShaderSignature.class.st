@@ -18,7 +18,7 @@ WDCGenericComputationShaderSignature class >> signatureSpec: spec [
 		bank: #Samplers with: [ :bank |
 			bank
 				maxBindings: 10;
-				sampler: #Samplers count: 4
+				sampler: #Samplers count: 6
 		];
 		bank: #UniformBuffers with: [ :bank |
 			bank
@@ -66,7 +66,7 @@ WDCGenericComputationShaderSignature >> createHandleForDevice: device [
 
 		"Samplers"
 		beginBindingBank: 10;
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLER bindingPointCount: 4; "Samplers"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLER bindingPointCount: 6; "Samplers"
 
 		"UniformBuffers"
 		beginBindingBank: 1000;
@@ -122,7 +122,7 @@ WDCGenericComputationShaderSignature >> createHandleForDevice: device [
 
 { #category : #accessing }
 WDCGenericComputationShaderSignature >> defaultSamplers [
-	| wrapSampler clampSampler bindings |
+	| wrapSampler clampSampler bindings borderSampler |
 	(defaultSamplersSession == Smalltalk session and: [ defaultSamplers isNotNil ]) ifTrue: [ ^ defaultSamplers ].
 	
 	"Nearest wrap"
@@ -131,7 +131,7 @@ WDCGenericComputationShaderSignature >> defaultSamplers [
 		address_v: AGPU_TEXTURE_ADDRESS_MODE_WRAP;
 		address_w: AGPU_TEXTURE_ADDRESS_MODE_WRAP;
 		max_lod: 10000.0;
-		maxanisotropy: 1;
+		maxanisotropy: engine maxAnisotropy;
 		yourself.
 
 	clampSampler := AGPUSamplerDescription new
@@ -139,23 +139,35 @@ WDCGenericComputationShaderSignature >> defaultSamplers [
 		address_v: AGPU_TEXTURE_ADDRESS_MODE_CLAMP;
 		address_w: AGPU_TEXTURE_ADDRESS_MODE_CLAMP;
 		max_lod: 10000.0;
-		maxanisotropy: 1;
+		maxanisotropy: engine maxAnisotropy;
 		yourself.
 
+	borderSampler := AGPUSamplerDescription new
+		address_u: AGPU_TEXTURE_ADDRESS_MODE_BORDER;
+		address_v: AGPU_TEXTURE_ADDRESS_MODE_BORDER;
+		address_w: AGPU_TEXTURE_ADDRESS_MODE_BORDER;
+		max_lod: 10000.0;
+		maxanisotropy: engine maxAnisotropy;
+		yourself.
+		
 	wrapSampler filter: AGPU_FILTER_MIN_NEAREST_MAG_NEAREST_MIPMAP_NEAREST.
 	clampSampler filter: AGPU_FILTER_MIN_NEAREST_MAG_NEAREST_MIPMAP_NEAREST.
+	borderSampler filter: AGPU_FILTER_MIN_NEAREST_MAG_NEAREST_MIPMAP_NEAREST.
 		
 	bindings := self newSamplers.
 	bindings
 		createSampler: 0 description: wrapSampler;
-		createSampler: 1 description: clampSampler.
+		createSampler: 1 description: clampSampler;
+		createSampler: 2 description: borderSampler.
 		
 	wrapSampler filter: AGPU_FILTER_MIN_LINEAR_MAG_LINEAR_MIPMAP_NEAREST.
 	clampSampler filter: AGPU_FILTER_MIN_LINEAR_MAG_LINEAR_MIPMAP_NEAREST.
+	borderSampler filter: AGPU_FILTER_MIN_LINEAR_MAG_LINEAR_MIPMAP_NEAREST.
 		
 	bindings
-		createSampler: 2 description: wrapSampler;
-		createSampler: 3 description: clampSampler.
+		createSampler: 3 description: wrapSampler;
+		createSampler: 4 description: clampSampler;
+		createSampler: 5 description: borderSampler.
 
 	defaultSamplersSession := Smalltalk session.
 	^ defaultSamplers := bindings
@@ -168,7 +180,7 @@ WDCGenericComputationShaderSignature >> newSampledTextures [
 
 { #category : #'generated shader signature methods' }
 WDCGenericComputationShaderSignature >> newSamplers [
-	^ engine createShaderSignature: self resourceBinding: 0 elements: 4
+	^ engine createShaderSignature: self resourceBinding: 0 elements: 6
 ]
 
 { #category : #'generated shader signature methods' }

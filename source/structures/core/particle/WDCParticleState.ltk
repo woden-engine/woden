@@ -88,16 +88,75 @@ WMVector2F class category: 'dastrel conversion' methods: {
 :[asDastrelConversionTypeWith: codeConverter
 	^ codeConverter lowcodeStructureWrapper: self to: #float2
 ].
+
+}.
+
+WMVector2F category: 'dastrel conversion' methods: {
+:[inferDastrelTypeIn: context for: variable ->_DynamicObject.
+	^ #float2
+].
+
+:[asDastrelLiteralAt: aPosition inContext: context for: variable ->_DynamicObject.
+	| type |
+	type := self inferDastrelTypeIn: context for: nil.
+	^ (context astBuilder literalVector: #float2 values: {
+			context astBuilder literalFloat: x.
+			context astBuilder literalFloat: y
+		})
+		position: aPosition;
+		yourself
+].
 }.
 
 WMVector3F class category: 'dastrel conversion' methods: {
 :[asDastrelConversionTypeWith: codeConverter
 	^ codeConverter lowcodeStructureWrapper: self to: #float3
 ].
+
+}.
+
+WMVector3F category: 'dastrel conversion' methods: {
+:[inferDastrelTypeIn: context for: variable ->_DynamicObject.
+	^ #float3
+].
+
+:[asDastrelLiteralAt: aPosition inContext: context for: variable ->_DynamicObject.
+	| type |
+	type := self inferDastrelTypeIn: context for: nil.
+	^ (context astBuilder literalVector: #float3 values: {
+			context astBuilder literalFloat: x.
+			context astBuilder literalFloat: y.
+			context astBuilder literalFloat: z
+		})
+		position: aPosition;
+		yourself
+].
+
 }.
 
 WMVector4F class category: 'dastrel conversion' methods: {
 :[asDastrelConversionTypeWith: codeConverter
 	^ codeConverter lowcodeStructureWrapper: self to: #float4
 ].
+
+}.
+
+WMVector4F category: 'dastrel conversion' methods: {
+:[inferDastrelTypeIn: context for: variable ->_DynamicObject.
+	^ #float4
+].
+
+:[asDastrelLiteralAt: aPosition inContext: context for: variable ->_DynamicObject.
+	| type |
+	type := self inferDastrelTypeIn: context for: nil.
+	^ (context astBuilder literalVector: #float4 values: {
+			context astBuilder literalFloat: x.
+			context astBuilder literalFloat: y.
+			context astBuilder literalFloat: z.
+			context astBuilder literalFloat: w
+		})
+		position: aPosition;
+		yourself
+].
+
 }.

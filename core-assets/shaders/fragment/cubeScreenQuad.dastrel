@@ -1,0 +1,4 @@
+semantic CubeFragmentInput
+{
+    in(0) direction: float3;
+}

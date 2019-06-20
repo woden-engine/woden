@@ -1,9 +1,20 @@
-"!GPU"| textureSize heightFunction colorRamp |
+"!GPU"
+| textureSize heightFunction colorRamp |
 textureSize := 20.0@20.0.
 colorRamp := WDCLinearRamp with: {
 	0.05 -> '25525c' asColor.
 	0.4 -> Color white.
 }.
-heightFunction := [ :s :t |	| st snowFunction |
+
+heightFunction := [ :s :t |
+	| st snowFunction |
 	st := s@t.
-	snowFunction := st*textureSize fbmGradientNoiseOctaves: 4 lacunarity: 2.0 tiledWith: textureSize.].^ textureGenerator	textureExtent: 256@256;	heightFunction: heightFunction;	colorMapFunction: colorRamp;	normalHeightScaleFactor: 3.0;	evaluate
+	snowFunction := st*textureSize fbmGradientNoiseOctaves: 4 lacunarity: 2.0 tiledWith: textureSize.
+].
+
+^ textureGenerator
+	textureExtent: 512@512;
+	heightFunction: heightFunction;
+	colorMapFunction: colorRamp;
+	normalHeightScaleFactor: 10.0;
+	evaluate

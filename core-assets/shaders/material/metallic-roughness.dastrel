@@ -296,8 +296,8 @@ code_block(fragment) forward_color
 
 	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
     forwardMetallicRoughnessLightingOutput
-        emission: emission albedo: albedo
-        metallic: MaterialState.metallicFactor roughness: MaterialState.roughnessFactor
+        emission: emission albedo: albedo occlusion: 1.0f
+        metallic: MaterialState.metallicFactor roughness: MaterialState.roughnessFactor		
         normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
 }
 
@@ -316,7 +316,7 @@ code_block(fragment) forward_albedo
 
 	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
     forwardMetallicRoughnessLightingOutput
-        emission: emission albedo: albedo
+        emission: emission albedo: albedo occlusion: 1.0f
         metallic: MaterialState.metallicFactor roughness: MaterialState.roughnessFactor
         normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
 }
@@ -343,7 +343,7 @@ code_block(fragment) forward_albedoNormal
 
 	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
     forwardMetallicRoughnessLightingOutput
-        emission: emission albedo: albedo
+        emission: emission albedo: albedo occlusion: 1.0f
         metallic: MaterialState.metallicFactor roughness: MaterialState.roughnessFactor
         normal: N surfaceNormal: n viewVector: V position: FragmentInput.position;
 }
@@ -364,7 +364,7 @@ code_block(fragment) forward_albedoMetallicRoughness
 	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
     let aoRoughnessMetallic = albedoSampler.sample(metallicRoughnessTexture, FragmentInput.texcoord);
     forwardMetallicRoughnessLightingOutput
-        emission: emission albedo: albedo
+        emission: emission albedo: albedo occlusion: aoRoughnessMetallic.r
         metallic: aoRoughnessMetallic.b*MaterialState.metallicFactor
 		roughness: aoRoughnessMetallic.g*MaterialState.roughnessFactor
         normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
@@ -392,7 +392,7 @@ code_block(fragment) forward_albedoNormalMetallicRoughness
     let N = normalize(TBN*tangentNormal);
 
     forwardMetallicRoughnessLightingOutput
-        emission: emission albedo: albedo
+        emission: emission albedo: albedo occlusion: aoRoughnessMetallic.r
         metallic: aoRoughnessMetallic.b*MaterialState.metallicFactor
 		roughness: aoRoughnessMetallic.g*MaterialState.roughnessFactor
         normal: N surfaceNormal: n viewVector: V position: FragmentInput.position;

@@ -11,6 +11,15 @@ Class {
 }
 
 { #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> colorShaderForFunction: aColorFunction [
+	codeConverter := DASLPharoCodeConverter new.
+	codeConverter convertFunction: aColorFunction name: #colorFunction argumentTypes: #(float float) returnType: #float4.
+
+	^ self compileShader: 'procedural/coloredTextureInterface.dastrel' injectingNodes: codeConverter generatedNodes
+
+]
+
+{ #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> colorShaderForHeightFunction: heightFunctionObject coloredWith: colorFunctionObject [
 	codeConverter := DASLPharoCodeConverter new.
 	codeConverter convertFunction: colorFunctionObject name: #colorMapFunction argumentTypes: #(float) returnType: #float4.
@@ -43,9 +52,10 @@ WDCPharoProceduralGPUScriptEvaluator >> compileShader: shaderFileName injectingN
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> evaluate [
+	cubeMap ifTrue: [ ^ self evaluateCubeMap ].
 	self isInInspector ifTrue: [
 		^ WDCMultiTextureView new textures: { 
-			'Albedo' -> (self renderSRGBWithExtent: self extentForInspector heightFunction: heightFunction coloredWith: self colorMapFunction).
+			'Albedo' -> (self renderAlbedoWithExtent: self extentForInspector).
 			'Normal Map' -> (self renderNormalMapWithExtent: self extentForInspector heightFunction: heightFunction heightScaleFactor: normalHeightScaleFactor).
 			'Height Map' -> (self renderHeightMapWithExtent: self extentForInspector heightFunction: heightFunction).
 		}.
@@ -53,7 +63,7 @@ WDCPharoProceduralGPUScriptEvaluator >> evaluate [
 	].
 
 	(self isAlbedoRequested or: [self isDefaultTextureRequested]) ifTrue: [ 
-		^ self renderSRGBWithExtent: textureExtent heightFunction: heightFunction coloredWith: self colorMapFunction
+		^ self renderAlbedoWithExtent: textureExtent
 	].
 
 	self isNormalMapRequested ifTrue: [
@@ -62,6 +72,16 @@ WDCPharoProceduralGPUScriptEvaluator >> evaluate [
 
 	^ nil
 
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> evaluateCubeMap [
+	| shader |
+	codeConverter := DASLPharoCodeConverter new.
+	codeConverter convertFunction: colorFunction name: #colorFunction argumentTypes: #(float float float) returnType: #float4.
+
+	shader := self compileShader: 'procedural/coloredCubeMapInterface.dastrel' injectingNodes: codeConverter generatedNodes.
+	^ self shader: shader toCubeTextureDataExtent: textureExtent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB textureFetchFunctionName: #fetch_texture mipmapComputationFunctionName: #mipmap encodeFunctionName: #encode_bgra8_srgb
 ]
 
 { #category : #'as yet unclassified' }
@@ -110,6 +130,16 @@ WDCPharoProceduralGPUScriptEvaluator >> normalShaderForHeightFunction: heightFun
 ]
 
 { #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> renderAlbedoWithExtent: anExtent [
+	^ colorFunction ifNotNil: [ 
+		self renderSRGBWithExtent: anExtent colorFunction: colorFunction
+	] ifNil: [
+		self renderSRGBWithExtent: anExtent heightFunction: heightFunction coloredWith: self colorMapFunction
+	].
+
+]
+
+{ #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> renderHeightMapWithExtent: anExtent heightFunction: heightFunction [
 	| colorShader |
 	colorShader := self heightFieldShaderFor: heightFunction.
@@ -132,10 +162,47 @@ WDCPharoProceduralGPUScriptEvaluator >> renderNormalMapWithExtent: anExtent heig
 ]
 
 { #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> renderSRGBWithExtent: anExtent colorFunction: aColorFunction [
+	| colorShader |
+	colorShader := self colorShaderForFunction: aColorFunction.
+	^ self shader: colorShader toTextureDataExtent: anExtent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB encodeFunctionName: #encode_bgra8_srgb
+]
+
+{ #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> renderSRGBWithExtent: anExtent heightFunction: heightFunction coloredWith: colorFunction [
 	| colorShader |
 	colorShader := self colorShaderForHeightFunction: heightFunction coloredWith: colorFunction.
 	^ self shader: colorShader toTextureDataExtent: anExtent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB encodeFunctionName: #encode_bgra8_srgb
+]
+
+{ #category : #'as yet unclassified' }
+WDCPharoProceduralGPUScriptEvaluator >> shader: spirvShader toCubeTextureDataExtent: extent bpp: bitsPerPixel format: pixelFormat textureFetchFunctionName: textureFetchFunctionName mipmapComputationFunctionName: mipmapComputationFunctionName encodeFunctionName: encodeFunctionName [
+	| shader renderer resultTextureData resultLayer layers |
+	layers := (1 to: 6) collect: [ :cubeFaceID |
+		shader := self getMainFragmentStageFrom: spirvShader.
+		renderer := engine resourceCache mainProceduralOfflineTextureRendererForExtent: extent.
+		resultTextureData := WDCTextureData extent: extent bpp: bitsPerPixel format: pixelFormat.
+
+		resultLayer := resultTextureData layers first.
+		renderer critical: [
+			renderer renderWith: [
+				renderer
+					cubeFaceId: cubeFaceID - 1;
+					renderProceduralTextureWithFragmentShader: shader extent: extent format: pixelFormat;
+					generateProceduralTextureWithExtent: extent fetchWith: textureFetchFunctionName mipmapWith: mipmapComputationFunctionName encodeWith: encodeFunctionName for: resultLayer
+			];
+			submit;
+			finish;
+			readMipmapLevelsInto: resultLayer
+		].
+	
+		resultLayer
+	].
+
+	^ resultTextureData
+		type: AGPU_TEXTURE_CUBE;
+		layers: layers;
+		yourself
 ]
 
 { #category : #'as yet unclassified' }

@@ -51,7 +51,7 @@ function transformNormalToView(normal: float3) -> float3
     return ((float4(normal, 0.0f) * objectState.inverseMatrix) * inverseViewMatrix).xyz;
 }
 
-function evalWaterWaves(position: float2) -> float3
+function evalWaterWaves(position: float2, lod: float) -> float3
 {
     using CameraState;
     using MaterialState;
@@ -59,12 +59,13 @@ function evalWaterWaves(position: float2) -> float3
     // Add the harmonics.
     let height = 0.0f;
     let tangentialContributions = float2(0.0f, 0.0f);
+	let lodAttenuation = 1.0f;//max(0.0f, 1.0f - fabs(lod)/20.0f);
     for(let i = 0; i < 5; i += 1)
     {
         // Fetch the harmonic parameters
         // Fetch the fields manually as a work-around for a metal bug.
         let centerOrDirection = harmonics[i].centerOrDirection;
-        let amplitude = harmonics[i].amplitude;
+        let amplitude = harmonics[i].amplitude*lodAttenuation;
         let frequency = harmonics[i].frequency;
         let isRadial = harmonics[i].isRadial;
 
@@ -85,6 +86,7 @@ function evalWaterWaves(position: float2) -> float3
         // Compute the propagation speed factor.
         let omega = 6.283185307179586f * frequency;
         let kappa = omega / propagationSpeed;
+		//let wavelength = omega * propagationSpeed;
 
         // Compute the contribution by the harmonic.
         let phase = kappa*distance + omega*currentTime;
@@ -97,19 +99,19 @@ function evalWaterWaves(position: float2) -> float3
     return float3(height, tangentialContributions);
 }
 
-function evalWaterHeight(position: float2) -> float
+function evalWaterHeight(position: float2, lod: float) -> float
 {
-    return evalWaterWaves(position).x;
+    return evalWaterWaves(position, lod).x;
 }
 
-function evalWaterDerivatives(position: float2) -> float2
+function evalWaterDerivatives(position: float2, lod: float) -> float2
 {
-    return evalWaterWaves(position).yz;
+    return evalWaterWaves(position, lod).yz;
 }
 
-function evalWaterNormal(position: float2) -> float3
+function evalWaterNormal(position: float2, lod: float) -> float3
 {
-    let derivatives = evalWaterDerivatives(position);
+    let derivatives = evalWaterDerivatives(position, lod);
     let dx = derivatives.x;
     let dy = derivatives.y;
 
@@ -118,14 +120,14 @@ function evalWaterNormal(position: float2) -> float3
     return normalize(transformNormalToView(cross(t, b)));
 }
 
-function evalWaterNormalMapValue(position: float2, tangentNormal: float3) -> float3
+function evalWaterNormalMapValue(position: float2, tangentNormal: float3, lod: float) -> float3
 {
-    let derivatives = evalWaterDerivatives(position);
+    let derivatives = evalWaterDerivatives(position, lod);
     let dx = derivatives.x;
     let dy = derivatives.y;
 
     let t = normalize(float3(1.0f, dx, 0.0f));
-    let b = normalize(float3(0.0f, dy, -1.0f));
+    let b = normalize(float3(0.0f, dy, 1.0f));
     let n = normalize(transformNormalToView(cross(t, b)));
 
     let TBN = float3x3(t, b, n);
@@ -140,6 +142,7 @@ semantic WaterVertexOutput {
     out(1) surfaceCoordinate: float2;
     out(2) texcoord: float2;
     out(3) color: float4;
+    out(4) lod: float;
 }
 
 semantic WaterFragmentInput {
@@ -147,6 +150,7 @@ semantic WaterFragmentInput {
     in(1) surfaceCoordinate: float2;
     in(2) texcoord: float2;
     in(3) color: float4;
+    in(4) lod: float;
 }
 
 //==============================================================================
@@ -158,14 +162,15 @@ code_block(vertex) vertex
     using MaterialState;
 
     // Fetch the position and texcoord.
-    let position = float3(GenericVertexLayout.position.x, 0.0f,  GenericVertexLayout.position.y) + clipMapOffsetWithPeriod(clipMapPeriod);
-    let surfacePosition = float2(position.x, -position.z);
+    let position = float3(GenericVertexLayout.position.x, 0.0f, GenericVertexLayout.position.y)
+					 + clipMapOffsetWithPeriod(clipMapPeriod);
+    let surfacePosition = float2(position.x, position.z);
 
-    let lod = GenericVertexLayout.position.z;
+    let lod = transformPositionToView(position).z;
     let texcoord = surfacePosition;
 
     // Eval the water waves.
-    let waterWaveEffect = evalWaterWaves(surfacePosition);
+    let waterWaveEffect = evalWaterWaves(surfacePosition, lod);
     let height = waterWaveEffect.x;
     let tangentialContributions = waterWaveEffect.yz;
 
@@ -175,6 +180,7 @@ code_block(vertex) vertex
     WaterVertexOutput.color = currentObjectInstanceColor();
     WaterVertexOutput.surfaceCoordinate = surfacePosition;
     WaterVertexOutput.texcoord = surfacePosition*textureScale + textureOffset;
+    WaterVertexOutput.lod = lod;
     let position4 = transformPositionToView(position);
 
     WaterVertexOutput.position =  position4.xyz;
@@ -192,46 +198,15 @@ code_block(fragment) forward_color
     let normalMapValue = decodeNormalTexel(normalSampler.sample(normalTexture, texcoord));
 
     let surfacePosition = WaterFragmentInput.surfaceCoordinate;
-    let N = evalWaterNormalMapValue(surfacePosition, normalMapValue);
+    let N = evalWaterNormalMapValue(surfacePosition, normalMapValue, WaterFragmentInput.lod);
     let V = normalize(-WaterFragmentInput.position);
+
+	// For double sided material.
+	if(dot(V, N) < 0.0f)
+		N = -N;
 
     forwardLightingOutput
-        emission: 0.0f albedo: albedo
+        emission: 0.0f albedo: albedo occlusion: 1.0f
         fresnel: MaterialState.fresnel smoothness: MaterialState.smoothness
         normal: N surfaceNormal: N viewVector: V position: WaterFragmentInput.position;
-}
-
-code_block(fragment) forward_sky
-{
-    let texcoord = WaterFragmentInput.texcoord;
-    let albedo = WaterFragmentInput.color*MaterialState.albedo*albedoSampler.sample(albedoTexture, texcoord);
-    let normalMapValue = decodeNormalTexel(normalSampler.sample(normalTexture, texcoord));
-
-    let surfacePosition = WaterFragmentInput.surfaceCoordinate;
-    let N = evalWaterNormalMapValue(surfacePosition, normalMapValue);
-    let V = normalize(-WaterFragmentInput.position);
-
-    let lightedColor : float4;
-	let roughness = 1.0f - MaterialState.smoothness;
-	let alpha = roughness*roughness;
-    color: lightedColor <== forwardLightingModel
-        emission: 0.0f albedo: albedo.rgb
-        Cdiff: albedo.rgb
-		translucencyFactor: albedo.a
-        F0: MaterialState.fresnel alpha: alpha
-        normal: N surfaceNormal: N viewVector: V position: WaterFragmentInput.position;
-
-    let R = reflect(-V, N);
-    let skyPosition = (CameraState.inverseViewMatrix * float4(R, 0.0f)).xyz;
-    let skyColor = cubeMapSampler.sample(skyTexture, skyPosition);
-
-    let NdotV = fabs(dot(N, V));
-    let reflectionFresnel = fresnelSchlick(MaterialState.fresnel, NdotV);
-    let reflectionFactor = fresnelSchlick(lightedColor.a, NdotV);
-
-    FragmentStage.colorOutput0 = float4(skyColor.rgb*reflectionFresnel + lightedColor.rgb, reflectionFactor);
-
-    //FragmentOutput.color = float4(step(NdotV, 0.0f), 1.0f - step(NdotV, 0.0f), 0.0f, 1.0f);
-    //FragmentOutput.color = albedo;
-    //FragmentOutput.color = float4(normalMapValue, 1.0f);
 }
