@@ -307,14 +307,14 @@ WDASceneExamples class >> example04PoolLDR [
 	"Add a light"
 	sunLight := WDSGLightSource new.
 	sunLight directional; castShadows: true.
-	sunLight intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.4.
+	sunLight intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.8.
 	sunLight transform
-		rotateDegreesOnX: -25;
+		rotateDegreesOnX: -35;
 		translateToX: 0.0 y: 1.5 z: 2.5.
 
 	scene add: sunLight.
 
-	scene ambientLighting: WMVector4F zero.
+	scene ambientLighting: WMVector4F ones.
 
 	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector3: (WMVector3F z: 1.0)).
 	skyTexture := skyTexture asSRGBTextureFor: engine.
@@ -593,7 +593,7 @@ WDASceneExamples class >> example09DragonIsland [
 	sunLight state
 		intensity: (Color fromHexString: 'f1efd7') asWMVector4F.
 	sunLight transform
-		rotateDegreesOnX: -25;
+		rotateDegreesOnX: -35;
 		translateToX: 0.0 y: 1.5 z: 2.5.
 	scene add: sunLight.
 	
@@ -606,7 +606,9 @@ WDASceneExamples class >> example09DragonIsland [
 	"skyMaterial := scene engine resourceCache loadMaterial: 'materials/demos/skybox.json'."
 	skyBox := self createSkybox: (WMVector3F x: 200.0 y: 200.0 z: 200.0) for: scene engine material: skyMaterial.
 	scene add: skyBox.
-	scene lightingProbe: (model engine resourceCache computeEnvironmentLightProbeFromCubeTexture: skyTexture).
+	scene
+		ambientLighting: WMVector4F ones;
+		lightingProbe: (model engine resourceCache computeEnvironmentLightProbeFromCubeTexture: skyTexture).
 
 	terrain := self createIslandTerrainObjectFor: scene engine.
 	scene add: terrain.
