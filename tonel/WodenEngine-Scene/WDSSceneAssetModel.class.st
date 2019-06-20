@@ -49,7 +49,7 @@ WDSSceneAssetModel >> createViewer [
 		
 		mainScene add: sunLight.
 
-		mainScene ambientLighting: WMVector4F ones.
+		mainScene ambientLighting: WMVector4F ones*0.6.
 		
 		skyTexture := WDASceneExamples proceduralSkySunDirection: (sunLight transform
 				transformVector3:(WMVector3F z: 1.0)

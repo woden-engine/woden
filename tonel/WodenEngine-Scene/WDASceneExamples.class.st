@@ -314,7 +314,7 @@ WDASceneExamples class >> example04PoolLDR [
 
 	scene add: sunLight.
 
-	scene ambientLighting: WMVector4F ones.
+	scene ambientLighting: WMVector4F ones*0.6.
 
 	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector3: (WMVector3F z: 1.0)).
 	skyTexture := skyTexture asSRGBTextureFor: engine.
@@ -607,7 +607,7 @@ WDASceneExamples class >> example09DragonIsland [
 	skyBox := self createSkybox: (WMVector3F x: 200.0 y: 200.0 z: 200.0) for: scene engine material: skyMaterial.
 	scene add: skyBox.
 	scene
-		ambientLighting: WMVector4F ones;
+		ambientLighting: WMVector4F ones*0.6;
 		lightingProbe: (model engine resourceCache computeEnvironmentLightProbeFromCubeTexture: skyTexture).
 
 	terrain := self createIslandTerrainObjectFor: scene engine.
