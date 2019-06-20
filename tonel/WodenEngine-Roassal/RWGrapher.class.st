@@ -1,3 +1,6 @@
+"
+I am a basic builder, that creates 3d visualizations from a basic model
+"
 Class {
 	#name : #RWGrapher,
 	#superclass : #RWBuilder,
@@ -14,20 +17,8 @@ Class {
 		'maxZ',
 		'extent'
 	],
-	#category : 'WodenEngine-Roassal-Builder-Grapher'
+	#category : #'WodenEngine-Roassal-Builder-Grapher'
 }
-
-{ #category : #public }
-RWGrapher class >> sampleData [
-	| res r |
-	r := SharedRandom globalGenerator.
-	
-	res := OrderedCollection new.
-	1 to: 20 do: [ :x | 
-		1 to: 20 do: [ :z |
-			res add: { x. r next * 10. z } ] ].
-	^ res
-]
 
 { #category : #adding }
 RWGrapher >> add: aDataSet [
@@ -98,18 +89,20 @@ RWGrapher >> hasDataSet [
 RWGrapher >> homogenizeMinAndMax [
 	
 	minX := self minX.
-	maxX := self maxX.
 	minY := self minY.
-	maxY := self maxY.
 	minZ := self minZ.
+	
+	maxX := self maxX.
+	maxY := self maxY.
 	maxZ := self maxZ.
 	datasets do: [ :ds |
 		ds minX: minX.
 		ds minY: minY.
+		ds minZ: minZ.
+		
 		ds maxX: maxX.
 		ds maxY: maxY.
-		ds maxX: maxZ.
-		ds maxY: maxZ. ]
+		ds maxZ: maxZ. ].
 ]
 
 { #category : #initialization }
@@ -184,7 +177,7 @@ RWGrapher >> maxYFromDataSets [
 { #category : #accessing }
 RWGrapher >> maxZ [
 	^ self hasDataSet 
-		ifTrue: [ maxZ max: self maxYFromDataSets ]
+		ifTrue: [ maxZ max: self maxZFromDataSets ]
 		ifFalse: [ maxZ ] 
 ]
 
@@ -254,6 +247,33 @@ RWGrapher >> numberOfDataSets [
 
 { #category : #rendering }
 RWGrapher >> renderAxis [
+	| theme line cube e1 e2 mesh textElement |
+	self renderGrid.
+	theme := Smalltalk ui theme.
+	line := RWLine new
+		color: theme textColor.
+	cube := RWCube new size: 0.
+	e1 := cube element.
+	e2 := cube element.
+	"TODO"
+	e2 translateToY: 21.
+	"view add: e1; add: e2."
+	view add: (line edgeFrom: e1 to: e2).
+	mesh := nil.
+	textElement := view 
+		createBillboardAtWorldPosition: e2 position
+		drawingWith: [ :canvas |
+			mesh ifNil: [ | builder |
+				builder := canvas driver mesh2DBuilder.
+				builder text
+					color: theme textColor;
+					font: view babylonDefaultFont;
+					draw: 'Y' onRectangleCenter: (0@0 corner: 20@20).
+				mesh := builder mesh.
+			].
+			canvas draw: mesh.
+		 ].
+	
 ]
 
 { #category : #rendering }
@@ -262,12 +282,33 @@ RWGrapher >> renderDataSetsIn: aView [
 ]
 
 { #category : #rendering }
+RWGrapher >> renderGrid [
+	| theme shape grid |
+	theme := Smalltalk ui theme.
+	view backgroundColor: theme backgroundColor.
+	"TODO"
+	shape := RWMeshShape
+		xzLineGridWithWidth: 21
+		height: 21
+		subdivisions: 21
+		for: view.
+	shape color: theme textColor.
+	
+	grid := shape element.
+	"TODO"
+	grid 
+		translateByX: 21 / 2.0;
+		translateByZ: 21 / 2.0.
+	view add: grid.
+]
+
+{ #category : #rendering }
 RWGrapher >> renderIn: aView [
+	view := aView.
 	self datasetComputeMinAndMax.
 	self defineAxesIfNecessary.
 	self homogenizeMinAndMax.
-	self renderAxis.
-"	self renderAllDecoratorsInFront."
+	
 	self renderDataSetsIn: aView.
-"	self renderAllDecoratorsBehind"
+	self renderAxis.
 ]

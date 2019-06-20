@@ -1,10 +1,13 @@
+"
+I am the main component for RWGrapher
+"
 Class {
 	#name : #RWData,
 	#superclass : #RWAbstractData,
 	#instVars : [
 		'dotBuilder'
 	],
-	#category : 'WodenEngine-Roassal-Builder-Grapher'
+	#category : #'WodenEngine-Roassal-Builder-Grapher'
 }
 
 { #category : #accessing }
@@ -86,44 +89,4 @@ RWData >> renderDotAndLinesIn: aView [
 RWData >> renderIn: aView [
 
 	self renderDotAndLinesIn: aView
-]
-
-{ #category : #accessing }
-RWData >> x: blockOrSymbol [
-	self xElement: [ :anElement | blockOrSymbol rwValue: anElement model ]
-]
-
-{ #category : #accessing }
-RWData >> xElement: blockOrSymbol [
-	x := blockOrSymbol
-]
-
-{ #category : #accessing }
-RWData >> y [
-	^ y
-]
-
-{ #category : #accessing }
-RWData >> y: blockOrSymbol [
-	self yElement: [ :anElement | blockOrSymbol rwValue: anElement model ]
-]
-
-{ #category : #accessing }
-RWData >> yElement: blockOrSymbol [
-	y := blockOrSymbol
-]
-
-{ #category : #accessing }
-RWData >> z [
-	^ z
-]
-
-{ #category : #accessing }
-RWData >> z: blockOrSymbol [
-	self zElement: [ :anElement | blockOrSymbol rwValue: anElement model ]
-]
-
-{ #category : #accessing }
-RWData >> zElement: blockOrSymbol [
-	z := blockOrSymbol
 ]

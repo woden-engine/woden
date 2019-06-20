@@ -60,7 +60,7 @@ RWOrbitController >> initializeElement: aView [
 	orbitMovement phi: (Float pi)/2.0.
 	
 	r := ((aView boundingBox width) + (aView boundingBox height) + (aView boundingBox depth )) /3.0.
-	r := r*1.1.
+	r := r*1.7.
 	orbitMovement r: r.
 		
 	aView when: RWKeyDown do: [ :evt |

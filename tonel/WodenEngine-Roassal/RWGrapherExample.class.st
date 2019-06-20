@@ -1,14 +1,15 @@
+"
+I have a collection of examples for RWGrapher class
+"
 Class {
 	#name : #RWGrapherExample,
 	#superclass : #RWObject,
-	#category : 'WodenEngine-Roassal-Builder-Grapher'
+	#category : #'WodenEngine-Roassal-Builder-Grapher'
 }
 
 { #category : #examples }
 RWGrapherExample >> example01 [
-	"
-	self new example01
-	"	
+	<script: 'self new example01'>
 	| g d |
 	g := RWGrapher new.
 	d := RWData new.
@@ -18,35 +19,30 @@ RWGrapherExample >> example01 [
 	d z: #third.
 	g add: d.
 	g build.
-	"g view addInteraction: OrbitController."
-	^ g view
+	
+	g view open
 
 ]
 
 { #category : #examples }
 RWGrapherExample >> example02 [
-	"
-	self new example02
-	"	
+	<script: 'self new example02'>
 	| g d |
 	g := RWGrapher new.
 	d := RWData new.
-	d points: RTShape withAllSubclasses.
-	d x: #numberOfVariables.
+	d points: RWShape withAllSubclasses.
+	d x: [:m | m instVarNames size ].
 	d y: #numberOfMethods.
-	d z: #numberOfLinesOfCode.
+	d z: #linesOfCode.
 	g add: d.
 	g build.
-	g view addInteraction: OrbitController.
-	^ g view
-
+	g view addInteraction: RWOrbitController.
+	g view open
 ]
 
 { #category : #examples }
 RWGrapherExample >> example03 [
-	"
-	self new example01
-	"	
+	<script: 'self new example03'>
 	| g d |
 	g := RWGrapher new.
 	d := RWData new.
@@ -56,43 +52,47 @@ RWGrapherExample >> example03 [
 	d z: #yourself.
 	g add: d.
 	g build.
-	g view addInteraction: OrbitController.
-	^ g view
+	g view addInteraction: RWOrbitController.
+	g view open
 
 ]
 
 { #category : #examples }
 RWGrapherExample >> example04 [
 	"
-	self new example04
+	self new sampleData
 	"
-
-	| points g ds shape |
-	points := RWGrapher sampleData.
+	<script: 'self new example04'>
+	| points g ds  colors view  |
+	points := self sampleData.
 	g := RWGrapher new.
 	g extent: {20 . 20 . 20}.
+	colors := (Color wheel: points size) asOrderedCollection.
 	ds := RWData new.
 	ds dotShape sphere
 		size: 1;
-		color: [ Color random ].
+		color: [ colors removeFirst ].
 	ds points: points.
 	ds
 		x: #first;
 		y: #second;
-		z: #third.
+		z: [:m | m third ].
 	g add: ds.
 	g build.
+	view := g view.
+	view addInteraction: RWOrbitController.
+	view open.
+]
+
+{ #category : #data }
+RWGrapherExample >> sampleData [
+	<script: 'self new sampleData inspect' >
+	| res r |
+	r := SharedRandom globalGenerator.
 	
-	
-	g view backgroundColor: Color white.
-	shape := RWMeshShape
-		xzLineGridWithWidth: 20
-		height: 20
-		subdivisions: 20
-		for: g view.
-	shape color: Color black.
-	g view add: shape element.
-	"g view addInteraction: RWMouseKeyControl."
-	g view addInteraction: RWOrbitController.
-	g view open
+	res := OrderedCollection new.
+	1 to: 20 do: [ :x | 
+		1 to: 20 do: [ :z |
+			res add: { x. r next * 10 + 1. z } ] ].
+	^ res
 ]
