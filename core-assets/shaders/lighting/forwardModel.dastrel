@@ -80,7 +80,7 @@ code_block forwardLightingModel
 
     // Compute the hemisphere lighting factor.
     let hemiFactor = dot(normal, sunDirection)*0.5f + 0.5f;
-    let hemiLightingFactor = albedo * mix(groundLighting.rgb, skyLighting.rgb, hemiFactor);
+    let hemiLightingFactor = mix(groundLighting.rgb, skyLighting.rgb, hemiFactor);
 
 	let NdotV = saturate(dot(normal, viewVector));
 

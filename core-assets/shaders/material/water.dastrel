@@ -206,7 +206,7 @@ code_block(fragment) forward_color
 		N = -N;
 
     forwardLightingOutput
-        emission: 0.0f albedo: albedo
+        emission: 0.0f albedo: albedo occlusion: 1.0f
         fresnel: MaterialState.fresnel smoothness: MaterialState.smoothness
         normal: N surfaceNormal: N viewVector: V position: WaterFragmentInput.position;
 }
