@@ -2,7 +2,7 @@ shader_signature SceneRendering
 {
     descriptor_set(max_bindings = 10) Samplers
     {
-        Samplers: sampler * 5;
+        Samplers: sampler * 6;
     }
 
     descriptor_set(max_bindings = 1000000) CameraState
@@ -40,5 +40,5 @@ uniform(binding = Samplers.Samplers) albedoSampler : sampler;
 uniform(binding = Samplers.Samplers+1) normalSampler : sampler;
 uniform(binding = Samplers.Samplers+2) displacementSampler : sampler;
 uniform(binding = Samplers.Samplers+3) shadowSampler : sampler;
-uniform(binding = Samplers.Samplers+2) brdfLutSampler : sampler;
 uniform(binding = Samplers.Samplers+4) cubeMapSampler : sampler;
+uniform(binding = Samplers.Samplers+5) brdfLutSampler : sampler;
