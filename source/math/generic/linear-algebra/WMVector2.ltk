@@ -32,8 +32,17 @@ WMVector2 class category: 'construction' methods: {
 ].
 
 :[zero -> WMVector2.
+	<constructor>
+    <inline>
 	^ WMVector2 newValue
 ].
+
+:[ones -> WMVector2.
+	<constructor>
+    <inline>
+	^ WMVector2 x: 1.0 y: 1.0
+].
+
 }.
 
 WMVector2 class category: 'serialization' methods: {

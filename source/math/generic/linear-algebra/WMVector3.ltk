@@ -65,7 +65,15 @@ WMVector3 class category: 'construction' methods: {
 ].
 
 :[zero -> WMVector3.
+	<constructor>
+    <inline>
 	^ WMVector3 newValue
+].
+
+:[ones -> WMVector3.
+	<constructor>
+    <inline>
+	^ WMVector3 x: 1.0 y: 1.0 z: 1.0
 ].
 }.
 

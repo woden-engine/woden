@@ -103,6 +103,12 @@ WMVector4 class category: 'construction' methods: {
 	^ WMVector4 newValue
 ].
 
+:[ones -> WMVector4.
+	<constructor>
+    <inline>
+	^ WMVector4 x: 1.0 y: 1.0 z: 1.0 w: 1.0
+].
+
 }.
 
 WMVector4 class category: 'serialization' methods: {
