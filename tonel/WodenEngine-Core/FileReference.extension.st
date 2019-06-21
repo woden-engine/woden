@@ -32,7 +32,7 @@ FileReference >> gtInspectorStTextScriptIn: composite [
 				entitled: 'Do it all and go';
 			installDefaultSelectionActions;
 			act: [ :text |
-				self ensureDelete; writeStreamDo: [ :s | s nextPutAll: text text asString ] ]
+				self ensureDelete; writeStreamDo: [ :s | s nextPutAll: text text asString copy withUnixLineEndings ] ]
 				icon: GLMUIThemeExtraIcons glamorousSave
 				on: $s
 				entitled: 'Save';

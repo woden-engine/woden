@@ -591,7 +591,7 @@ WDASceneExamples class >> example09DragonIsland [
 		shadowMapDepthBiasConstant: 20.0;
 		shadowMapDepthBiasSlope: 5.0.
 	sunLight state
-		intensity: (Color fromHexString: 'f1efd7') asWMVector4F.
+		intensity: (Color fromHexString: 'f1efd7') asWMVector4F*0.6.
 	sunLight transform
 		rotateDegreesOnX: -35;
 		translateToX: 0.0 y: 1.5 z: 2.5.
@@ -607,7 +607,7 @@ WDASceneExamples class >> example09DragonIsland [
 	skyBox := self createSkybox: (WMVector3F x: 200.0 y: 200.0 z: 200.0) for: scene engine material: skyMaterial.
 	scene add: skyBox.
 	scene
-		ambientLighting: WMVector4F ones*0.6;
+		ambientLighting: WMVector4F ones*1.2;
 		lightingProbe: (model engine resourceCache computeEnvironmentLightProbeFromCubeTexture: skyTexture).
 
 	terrain := self createIslandTerrainObjectFor: scene engine.
