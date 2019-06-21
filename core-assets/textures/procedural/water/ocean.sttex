@@ -1,19 +1,34 @@
-"!GPU"| textureSize heightFunction colorRamp |
+"!GPU"
+| textureSize heightFunction colorRamp |
 textureSize := 10.0@10.0.
 colorRamp := WDCLinearRamp with: {
-	0.25 -> ('17425f' asColor alpha: 0.9).
-	1.0 -> ('3d769d' asColor alpha: 1.0)."	0.25 -> ('18144b' asColor alpha: 0.2).
+	0.25 -> ('17425f' asColor alpha: 0.7).
+	1.0 -> ('3d769d' asColor alpha: 0.9).
+
+"	0.25 -> ('18144b' asColor alpha: 0.2).
 	1.0 -> ('11fae6' asColor alpha: 0.4).
-""	0.15 -> (Color red alpha: 0.7).
-	1.0 -> (Color yellow alpha: 1.0).""	0.15 -> (Color red alpha: 0.7).
+"
+"	0.15 -> (Color red alpha: 0.7).
+	1.0 -> (Color yellow alpha: 1.0)."
+
+"	0.15 -> (Color red alpha: 0.7).
 	0.4 -> (Color magenta alpha: 0.8).
-	1.0 -> (Color yellow alpha: 1.0).""	0.15 -> (Color green alpha: 0.7).
+	1.0 -> (Color yellow alpha: 1.0).
+"
+"	0.15 -> (Color green alpha: 0.7).
 	0.4 -> (Color magenta alpha: 0.8).
-	1.0 -> (Color green alpha: 1.0)."}.
+	1.0 -> (Color green alpha: 1.0)."
+}.
 
 heightFunction := [ :s :t |
 	| st |
 	st := s@t.
 	st*textureSize fbmVoronoiNoiseOctaves: 3 lacunarity: 2.0 tiledWith: textureSize.
 ].
-^ textureGenerator	textureExtent: 256@256;	heightFunction: heightFunction;	colorMapFunction: colorRamp;	normalHeightScaleFactor: 3.0;	evaluate
+
+^ textureGenerator
+	textureExtent: 256@256;
+	heightFunction: heightFunction;
+	colorMapFunction: colorRamp;
+	normalHeightScaleFactor: 3.0;
+	evaluate

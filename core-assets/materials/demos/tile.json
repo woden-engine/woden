@@ -4,5 +4,5 @@
     "normal-texture" : "textures/demos/tile-normal.dds",
 
 	"metallic-factor" : 0.0,
-    "roughness-factor" : 0.33
+    "roughness-factor" : 0.45
 }

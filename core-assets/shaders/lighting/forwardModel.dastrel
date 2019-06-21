@@ -76,7 +76,12 @@ code_block forwardLightingModel
 
 	let diff = Cdiff*PiReciprocal;
     let accumulatedColor = emission.rgb;
+
 	let alpha = roughness*roughness;
+
+	// Remap the roughness factor for direct lighting to avoid GGX numerical explosion.
+	let directRoughness = mix(0.05f, 1.0f, roughness);
+	let directAlpha = directRoughness*directRoughness;
 
     // Compute the hemisphere lighting factor.
     let hemiFactor = dot(normal, sunDirection)*0.5f + 0.5f;
@@ -167,8 +172,8 @@ code_block forwardLightingModel
 
         // Compute the cook torrance factors.
         let F = fresnelSchlick(F0, VdotH);
-        let D = specularDistribution(alpha, NdotH);
-		let G = cookTorranceMasking(alpha, NdotL, NdotV);
+        let D = specularDistribution(directAlpha, NdotH);
+		let G = cookTorranceMasking(directAlpha, NdotL, NdotV);
 
         // Add the light contribution.
         accumulatedColor += lightSource.intensity.rgb*attenuation*(diff + F*D*G)*Pi*NdotL;
