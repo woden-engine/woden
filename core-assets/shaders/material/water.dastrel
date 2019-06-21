@@ -109,17 +109,6 @@ function evalWaterDerivatives(position: float2, lod: float) -> float2
     return evalWaterWaves(position, lod).yz;
 }
 
-function evalWaterNormal(position: float2, lod: float) -> float3
-{
-    let derivatives = evalWaterDerivatives(position, lod);
-    let dx = derivatives.x;
-    let dy = derivatives.y;
-
-    let t = normalize(float3(1.0f, dx, 0.0f));
-    let b = normalize(float3(0.0f, dy, -1.0f));
-    return normalize(transformNormalToView(cross(t, b)));
-}
-
 function evalWaterNormalMapValue(position: float2, tangentNormal: float3, lod: float) -> float3
 {
     let derivatives = evalWaterDerivatives(position, lod);
@@ -127,7 +116,7 @@ function evalWaterNormalMapValue(position: float2, tangentNormal: float3, lod: f
     let dy = derivatives.y;
 
     let t = normalize(float3(1.0f, dx, 0.0f));
-    let b = normalize(float3(0.0f, dy, 1.0f));
+    let b = normalize(float3(0.0f, dy, -1.0f));
     let n = normalize(transformNormalToView(cross(t, b)));
 
     let TBN = float3x3(t, b, n);
