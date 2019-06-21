@@ -93,6 +93,7 @@ WDCWaterMaterial >> harmonicAt: index amplitude: amplitude frequency: frequency 
 		center: center;
 		radial: true asBit
 	).
+	self uploadMaterialStateData.
 ]
 
 { #category : #accessing }
@@ -104,6 +105,7 @@ WDCWaterMaterial >> harmonicAt: index amplitude: amplitude frequency: frequency 
 		center: direction;
 		radial: false asBit
 	).
+	self uploadMaterialStateData.
 ]
 
 { #category : #initialization }
