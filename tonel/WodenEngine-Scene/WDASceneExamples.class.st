@@ -307,14 +307,14 @@ WDASceneExamples class >> example04PoolLDR [
 	"Add a light"
 	sunLight := WDSGLightSource new.
 	sunLight directional; castShadows: true.
-	sunLight intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.8.
+	sunLight intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.7.
 	sunLight transform
 		rotateDegreesOnX: -35;
 		translateToX: 0.0 y: 1.5 z: 2.5.
 
 	scene add: sunLight.
 
-	scene ambientLighting: WMVector4F ones*0.6.
+	scene ambientLighting: WMVector4F ones.
 
 	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector3: (WMVector3F z: 1.0)).
 	skyTexture := skyTexture asSRGBTextureFor: engine.
@@ -336,7 +336,6 @@ WDASceneExamples class >> example04PoolLDR [
 	scene lightingProbe: (engine resourceCache computeEnvironmentLightProbeFromCubeTexture: skyTexture).
 
 	view := WDAFPSSceneView allowingVR.
-	view cameraAngle: (WMVector3F y: Float pi).
 	model openWith: view.
 ]
 

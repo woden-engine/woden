@@ -17,10 +17,21 @@ Class {
 		'wireFragmentShader',
 		'isolinesFragmentShader',
 		'depthNormalFragmentShader',
-		'shaderLibrary'
+		'shaderLibrary',
+		'metallicRoughnessTextures'
 	],
 	#category : #'WodenEngine-Core-Material'
 }
+
+{ #category : #'as yet unclassified' }
+WDCTerrainMaterial class >> defaultMetallicFactor [
+	^ 0.0
+]
+
+{ #category : #'as yet unclassified' }
+WDCTerrainMaterial class >> defaultRoughnessFactor [
+	^ 0.55
+]
 
 { #category : #rendering }
 WDCTerrainMaterial >> activateDepthNormalOn: stateTracker [
@@ -123,6 +134,10 @@ WDCTerrainMaterial >> bindResources [
 		resourceBinding bind: 9 + i texture: (self validNormalTexture: i + 1).
 	].
 	
+	0 to: 4 do: [ :i |
+		resourceBinding bind:  14 + i texture: (self validMetallicRoughnessTexture: i + 1).
+	].
+
 ]
 
 { #category : #accessing }
@@ -216,13 +231,14 @@ WDCTerrainMaterial >> initialize [
 		heightScale: 1.0;
 
 		albedo: Color white asWMVector4F;
-		metallicFactor: 0.0;
-		roughnessFactor: 0.55;
+		metallicFactor: self class defaultMetallicFactor;
+		roughnessFactor: self class defaultRoughnessFactor;
 		
 		textureScaleAndOffset: ((SLVMNativeArray for: WMVector4F new: 5) atAllPut: (WMVector4F x: 1.0 y: 1.0));
 		yourself.
 	albedoTextures := { nil . nil . nil . nil . nil }.
 	normalTextures := { nil . nil . nil . nil . nil }.
+	metallicRoughnessTextures := { nil . nil . nil . nil . nil }.
 	self invalidateCache.
 ]
 
@@ -275,20 +291,30 @@ WDCTerrainMaterial >> parse: materialFileReference data: data [
 		heightMapSize: (self parse: data at: materialFileReference vector2: 'height-map-size' ifAbsent: [ (WMVector2F x: 2.0 y: 2.0) ]);
 		yourself.
 
+	heightMapTexture := self parse: data at: materialFileReference optionalTexture: 'height-map'.
+	splattingTexture := self parse: data at: materialFileReference optionalTexture: 'splatter'.
+	albedoTextures := self parse: data at: materialFileReference srgbTexture: 'albedo-textures' arrayOfSize: 5.
+	normalTextures := self parse: data at: materialFileReference texture: 'normal-textures' arrayOfSize: 5.
+	metallicRoughnessTextures := self parse: data at: materialFileReference texture: 'metallic-roughness-textures' arrayOfSize: 5.
+
 	materialState
 		heightMapOffset: (self parse: data at: materialFileReference vector2: 'height-map-offset' ifAbsent: [ WMVector2F zero ]);
 		heightScale: (self parse: data at: materialFileReference scalar: 'height-scale' ifAbsent: [ 1.0 ]);
 		
 		albedo: (self parse: data at: materialFileReference srgbColor: 'albedo-color' ifAbsent: [ Color white ]);
-		roughnessFactor: (data at: 'roughness-factor' ifAbsent: [ materialState roughnessFactor ]);
-		metallicFactor: (data at: 'metallic-factor' ifAbsent: [ materialState metallicFactor ]);
+		roughnessFactor: (data at: 'roughness-factor' ifAbsent: [
+			metallicRoughnessTextures first
+				ifNil: [ self class defaultRoughnessFactor ]
+				ifNotNil: [ 1.0 ]
+		]);
+		metallicFactor: (data at: 'metallic-factor' ifAbsent: [
+			metallicRoughnessTextures first
+				ifNil: [ self class defaultMetallicFactor ]
+				ifNotNil: [ 1.0 ]
+		]);
 		
 		textureScaleAndOffset: (self parse: data at: materialFileReference array: 'texture-scales-offsets' size: 5 nativeType: WMVector4F ifAbsent: [ WMVector4F x: 1.0 y: 1.0 z: 0.0 w: 0.0]).
 
-	heightMapTexture := self parse: data at: materialFileReference optionalTexture: 'height-map'.
-	splattingTexture := self parse: data at: materialFileReference optionalTexture: 'splatter'.
-	albedoTextures := self parse: data at: materialFileReference srgbTexture: 'albedo-textures' arrayOfSize: 5.
-	normalTextures := self parse: data at: materialFileReference texture: 'normal-textures' arrayOfSize: 5.
 	self invalidateCache.
 ]
 
@@ -333,6 +359,11 @@ WDCTerrainMaterial >> uploadMaterialStateData [
 { #category : #'as yet unclassified' }
 WDCTerrainMaterial >> validAlbedoTexture: textureIndex [
 	^ (albedoTextures at: textureIndex) ifNil: [ engine resourceCache whiteTexture ]
+]
+
+{ #category : #'as yet unclassified' }
+WDCTerrainMaterial >> validMetallicRoughnessTexture: textureIndex [
+	^ (metallicRoughnessTextures at: textureIndex) ifNil: [ engine resourceCache whiteTexture ]
 ]
 
 { #category : #'as yet unclassified' }

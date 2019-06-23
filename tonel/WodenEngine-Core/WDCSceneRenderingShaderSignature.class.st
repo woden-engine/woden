@@ -48,7 +48,7 @@ WDCSceneRenderingShaderSignature class >> signatureSpec: spec [
 				maxBindings: 10000;
 				uniform: #Attributes;
 				storage: #BigAttributes;
-				texture: #Textures count: 15
+				texture: #Textures count: 20
 		];
 		yourself
 ]
@@ -91,7 +91,7 @@ WDCSceneRenderingShaderSignature >> createHandleForDevice: device [
 		beginBindingBank: 10000;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "Attributes"
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_STORAGE_BUFFER bindingPointCount: 1; "BigAttributes"
-			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 15; "Textures"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 20; "Textures"
 
 		build
 
@@ -179,7 +179,7 @@ WDCSceneRenderingShaderSignature >> newLightingState [
 
 { #category : #'generated shader signature methods' }
 WDCSceneRenderingShaderSignature >> newMaterialState [
-	^ engine createShaderSignature: self resourceBinding: 4 elements: 17
+	^ engine createShaderSignature: self resourceBinding: 4 elements: 22
 ]
 
 { #category : #'generated shader signature methods' }

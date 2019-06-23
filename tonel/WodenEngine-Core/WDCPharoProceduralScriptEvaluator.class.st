@@ -8,9 +8,15 @@ Class {
 		'normalHeightScaleFactor',
 		'textureExtent',
 		'colorMapFunction',
+		'albedoFunction',
+		'metallicFunction',
+		'roughnessFunction',
 		'extentForInspector',
 		'cubeMap',
-		'colorFunction'
+		'colorFunction',
+		'ambientOcclusionRadius',
+		'ambientOcclusionHeightThreshold',
+		'ambientOcclusionSampleCount'
 	],
 	#category : #'WodenEngine-Core-Texture'
 }
@@ -23,6 +29,46 @@ WDCPharoProceduralScriptEvaluator class >> evaluateScriptFromFile: aFileReferenc
 { #category : #'as yet unclassified' }
 WDCPharoProceduralScriptEvaluator class >> forInspector [
 	^ self new parameters: (Dictionary newFromPairs: #(texture inspector))
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> albedoFunction [
+	^ albedoFunction
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> albedoFunction: anObject [
+	albedoFunction := anObject
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> ambientOcclusionHeightThreshold [
+	^ ambientOcclusionHeightThreshold
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> ambientOcclusionHeightThreshold: anObject [
+	ambientOcclusionHeightThreshold := anObject
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> ambientOcclusionRadius [
+	^ ambientOcclusionRadius
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> ambientOcclusionRadius: anObject [
+	ambientOcclusionRadius := anObject
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> ambientOcclusionSampleCount [
+	^ ambientOcclusionSampleCount
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> ambientOcclusionSampleCount: anObject [
+	ambientOcclusionSampleCount := anObject
 ]
 
 { #category : #accessing }
@@ -79,34 +125,95 @@ WDCPharoProceduralScriptEvaluator >> engine: anObject [
 { #category : #'rendering helpers' }
 WDCPharoProceduralScriptEvaluator >> evaluate [
 	self cubeMap ifTrue: [ ^ self evaluateCubeMap ].
-	self isInInspector ifTrue: [
-		^ WDCMultiTextureView new textures: { 
-			'Albedo' -> (WDCTextureData extent: self extentForInspector srgbColorRenderWith: [ :s :t |
-				self colorMapFunction value: (heightFunction value: s value: t)
-			]).
-			'Normal Map' -> (WDCTextureData extent: self extentForInspector normalMapWithHeightFunction: heightFunction heightScaleFactor: normalHeightScaleFactor).
-		}.
+	^ self evaluate2DTexture
 
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralScriptEvaluator >> evaluate2DTexture [
+	self isInInspector ifTrue: [
+		^ WDCMultiTextureView new textures: {
+			'Albedo' -> (self evaluateAlbedoTextureWithExtent: self extentForInspector).
+			'Normal Map' -> (self evaluateNormalMapTextureWithExtent: self extentForInspector).
+			'Height Map' -> (self evaluateHeightMapTextureWithExtent: self extentForInspector).
+			'Ambient Occlusion' -> (self evaluateAmbientOcclusionTextureWithExtent: self extentForInspector).
+			'Metallic' -> (self evaluateMetallicTextureWithExtent: self extentForInspector).
+			'Roughness' -> (self evaluateRoughnessTextureWithExtent: self extentForInspector).
+			'RMA' -> (self evaluateRoughnessMetallicAOTextureWithExtent: self extentForInspector).
+		}
 	].
 
 	(self isAlbedoRequested or: [self isDefaultTextureRequested]) ifTrue: [ 
-		^ WDCTextureData extent: textureExtent srgbColorRenderWith: [ :s :t |
-			self colorMapFunction value: (heightFunction value: s value: t)
-		]
+		^ self evaluateAlbedoTextureWithExtent: textureExtent
 	].
 
 	self isNormalMapRequested ifTrue: [
-		^ WDCTextureData extent: textureExtent
-			normalMapWithHeightFunction: heightFunction
-			heightScaleFactor: normalHeightScaleFactor
+		^ self evaluateNormalMapTextureWithExtent: textureExtent
+	].
+
+	self isHeightMapRequested ifTrue: [
+		^ self evaluateHeightMapTextureWithExtent: textureExtent
+	].
+
+	self isAmbientOcclusionRequested ifTrue: [ 
+		^ self evaluateAmbientOcclusionTextureWithExtent: self extentForInspector
+	].
+
+	self isMetallicRequested ifTrue: [ 
+		^ self evaluateMetallicTextureWithExtent: self extentForInspector
+	].
+
+	self isRoughnessRequested ifTrue: [ 
+		^ self evaluateRoughnessTextureWithExtent: self extentForInspector
+	].
+
+	self isMetallicRoughnessAORequested ifTrue: [ 
+		^ self evaluateRoughnessMetallicAOTextureWithExtent: self extentForInspector
 	].
 
 	^ nil
 ]
 
 { #category : #'rendering helpers' }
+WDCPharoProceduralScriptEvaluator >> evaluateAlbedoTextureWithExtent: anExtent [
+	^ WDCTextureData extent: anExtent srgbColorRenderWith: [ :s :t |
+		self colorMapFunction value: (heightFunction value: s value: t)
+	]
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralScriptEvaluator >> evaluateAmbientOcclusionTextureWithExtent: anExtent [
+	^ nil
+]
+
+{ #category : #'rendering helpers' }
 WDCPharoProceduralScriptEvaluator >> evaluateCubeMap [
 	self shouldBeImplemented
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralScriptEvaluator >> evaluateHeightMapTextureWithExtent: anExtent [
+	^ nil
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralScriptEvaluator >> evaluateMetallicTextureWithExtent: anExtent [
+	^ nil
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralScriptEvaluator >> evaluateNormalMapTextureWithExtent: anExtent [
+	^ WDCTextureData extent: anExtent normalMapWithHeightFunction: heightFunction heightScaleFactor: normalHeightScaleFactor
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralScriptEvaluator >> evaluateRoughnessMetallicAOTextureWithExtent: anExtent [
+	^ nil
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralScriptEvaluator >> evaluateRoughnessTextureWithExtent: anExtent [
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -136,6 +243,9 @@ WDCPharoProceduralScriptEvaluator >> heightFunction: anObject [
 WDCPharoProceduralScriptEvaluator >> initialize [
 	super initialize.
 	normalHeightScaleFactor := 1.0.
+	ambientOcclusionRadius := nil.
+	ambientOcclusionHeightThreshold := nil.
+	ambientOcclusionSampleCount := 512.
 	cubeMap := false.
 ]
 
@@ -145,8 +255,18 @@ WDCPharoProceduralScriptEvaluator >> isAlbedoRequested [
 ]
 
 { #category : #testing }
+WDCPharoProceduralScriptEvaluator >> isAmbientOcclusionRequested [
+	^ self requestedTexture = #ao
+]
+
+{ #category : #testing }
 WDCPharoProceduralScriptEvaluator >> isDefaultTextureRequested [
 	^ self requestedTexture = #default
+]
+
+{ #category : #testing }
+WDCPharoProceduralScriptEvaluator >> isHeightMapRequested [
+	^ self requestedTexture = #height
 ]
 
 { #category : #testing }
@@ -155,8 +275,33 @@ WDCPharoProceduralScriptEvaluator >> isInInspector [
 ]
 
 { #category : #testing }
+WDCPharoProceduralScriptEvaluator >> isMetallicRequested [
+	^ self requestedTexture = #metallic
+]
+
+{ #category : #testing }
+WDCPharoProceduralScriptEvaluator >> isMetallicRoughnessAORequested [
+	^ self requestedTexture = #rma
+]
+
+{ #category : #testing }
 WDCPharoProceduralScriptEvaluator >> isNormalMapRequested [
 	^ self requestedTexture = #normal
+]
+
+{ #category : #testing }
+WDCPharoProceduralScriptEvaluator >> isRoughnessRequested [
+	^ self requestedTexture = #roughness
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> metallicFunction [
+	^ metallicFunction
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> metallicFunction: anObject [
+	metallicFunction := anObject
 ]
 
 { #category : #accessing }
@@ -188,6 +333,16 @@ WDCPharoProceduralScriptEvaluator >> printOn: aStream [
 { #category : #accessing }
 WDCPharoProceduralScriptEvaluator >> requestedTexture [
 	^ (self at: #texture) ifNil: [ #default ]
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> roughnessFunction [
+	^ roughnessFunction
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> roughnessFunction: anObject [
+	roughnessFunction := anObject
 ]
 
 { #category : #accessing }

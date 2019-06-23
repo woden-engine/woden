@@ -11,6 +11,26 @@ Class {
 }
 
 { #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> aoShaderFor: heightFunctionObject aoRadius: aoRadius aoHeightThreshold: heightThreshold aoSampleCount: sampleCount [
+	| builder aoFactorNode aoHeightThresholdNode aoSampleCountNode |
+	
+	codeConverter := DASLPharoCodeConverter new.
+	codeConverter
+		convertFunction: heightFunctionObject name: #heightFieldFunction argumentTypes: #(float float) returnType: #float.
+	builder := DASLAstBuilder new.
+			
+	aoFactorNode := builder constantGlobalNamed: #AmbientOcclusionRadius typeNamed: #float value: 
+		(builder literalFloat: aoRadius asFloat).
+	aoHeightThresholdNode := builder constantGlobalNamed: #AmbientOcclusionHeightThreshold typeNamed: #float value: 
+		(builder literalFloat: heightThreshold asFloat).
+	aoSampleCountNode := builder constantGlobalNamed: #AmbientOcclusionSampleCount typeNamed: #uint value: 
+		(builder literalUInt: sampleCount asInteger).
+		
+	^ self compileShader: 'procedural/ambientOcclusionTextureInterface.dastrel' injectingNodes: codeConverter generatedNodes , { aoFactorNode . aoHeightThresholdNode . aoSampleCountNode }
+
+]
+
+{ #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> colorShaderForFunction: aColorFunction [
 	codeConverter := DASLPharoCodeConverter new.
 	codeConverter convertFunction: aColorFunction name: #colorFunction argumentTypes: #(float float) returnType: #float4.
@@ -51,27 +71,19 @@ WDCPharoProceduralGPUScriptEvaluator >> compileShader: shaderFileName injectingN
 ]
 
 { #category : #'rendering helpers' }
-WDCPharoProceduralGPUScriptEvaluator >> evaluate [
-	cubeMap ifTrue: [ ^ self evaluateCubeMap ].
-	self isInInspector ifTrue: [
-		^ WDCMultiTextureView new textures: { 
-			'Albedo' -> (self renderAlbedoWithExtent: self extentForInspector).
-			'Normal Map' -> (self renderNormalMapWithExtent: self extentForInspector heightFunction: heightFunction heightScaleFactor: normalHeightScaleFactor).
-			'Height Map' -> (self renderHeightMapWithExtent: self extentForInspector heightFunction: heightFunction).
-		}.
-
+WDCPharoProceduralGPUScriptEvaluator >> evaluateAlbedoTextureWithExtent: anExtent [
+	^ colorFunction ifNotNil: [ 
+		self renderSRGBWithExtent: anExtent colorFunction: colorFunction
+	] ifNil: [
+		self renderSRGBWithExtent: anExtent heightFunction: heightFunction coloredWith: self colorMapFunction
 	].
 
-	(self isAlbedoRequested or: [self isDefaultTextureRequested]) ifTrue: [ 
-		^ self renderAlbedoWithExtent: textureExtent
-	].
+]
 
-	self isNormalMapRequested ifTrue: [
-		^ self renderNormalMapWithExtent: textureExtent heightFunction: heightFunction heightScaleFactor: normalHeightScaleFactor.
-	].
-
-	^ nil
-
+{ #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> evaluateAmbientOcclusionTextureWithExtent: anExtent [
+	(ambientOcclusionRadius isNil or: [ ambientOcclusionHeightThreshold isNil ]) ifTrue: [ ^ nil ].
+	^ self renderAmbientOcclusionWithExtent: self extentForInspector heightFunction: heightFunction
 ]
 
 { #category : #'rendering helpers' }
@@ -82,6 +94,41 @@ WDCPharoProceduralGPUScriptEvaluator >> evaluateCubeMap [
 
 	shader := self compileShader: 'procedural/coloredCubeMapInterface.dastrel' injectingNodes: codeConverter generatedNodes.
 	^ self shader: shader toCubeTextureDataExtent: textureExtent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB textureFetchFunctionName: #fetch_texture mipmapComputationFunctionName: #mipmap encodeFunctionName: #encode_bgra8_srgb
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> evaluateHeightMapTextureWithExtent: anExtent [
+	heightFunction ifNil: [ ^ nil ].
+	^ self renderHeightMapWithExtent: self extentForInspector heightFunction: heightFunction
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> evaluateMetallicTextureWithExtent: anExtent [
+	metallicFunction ifNil: [ ^ nil ].
+	^ self renderHeightMapWithExtent: self extentForInspector heightFunction: metallicFunction
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> evaluateNormalMapTextureWithExtent: anExtent [
+	heightFunction ifNil: [ ^ nil ].
+	^ self renderNormalMapWithExtent: anExtent heightFunction: heightFunction heightScaleFactor: normalHeightScaleFactor
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> evaluateRoughnessMetallicAOTextureWithExtent: anExtent [
+	| hasAmbient |
+	hasAmbient := ambientOcclusionRadius isNotNil and: [ ambientOcclusionHeightThreshold isNotNil ].
+	(hasAmbient or: [ roughnessFunction isNotNil or: [ metallicFunction isNotNil ] ]) ifFalse: [ ^ nil ].
+	
+	^ hasAmbient
+		ifTrue: [ self renderRoughnessMetallicAOWithExtent: self extentForInspector]
+		ifFalse: [ self renderRoughnessMetallicWithExtent: self extentForInspector] 
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> evaluateRoughnessTextureWithExtent: anExtent [
+	roughnessFunction ifNil: [ ^ nil ].
+	^ self renderHeightMapWithExtent: self extentForInspector heightFunction: roughnessFunction
 ]
 
 { #category : #'as yet unclassified' }
@@ -130,12 +177,11 @@ WDCPharoProceduralGPUScriptEvaluator >> normalShaderForHeightFunction: heightFun
 ]
 
 { #category : #'rendering helpers' }
-WDCPharoProceduralGPUScriptEvaluator >> renderAlbedoWithExtent: anExtent [
-	^ colorFunction ifNotNil: [ 
-		self renderSRGBWithExtent: anExtent colorFunction: colorFunction
-	] ifNil: [
-		self renderSRGBWithExtent: anExtent heightFunction: heightFunction coloredWith: self colorMapFunction
-	].
+WDCPharoProceduralGPUScriptEvaluator >> renderAmbientOcclusionWithExtent: anExtent heightFunction: aHeightFunction [
+	| aoShader |
+	
+	aoShader := self aoShaderFor: aHeightFunction aoRadius: ambientOcclusionRadius aoHeightThreshold: ambientOcclusionHeightThreshold aoSampleCount: ambientOcclusionSampleCount.
+	^ self shader: aoShader toTextureDataExtent: anExtent bpp: 8 format: AGPU_TEXTURE_FORMAT_R8_UNORM encodeFunctionName: #encode_r8.
 
 ]
 
@@ -162,6 +208,29 @@ WDCPharoProceduralGPUScriptEvaluator >> renderNormalMapWithExtent: anExtent heig
 ]
 
 { #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> renderRoughnessMetallicAOWithExtent: anExtent [
+	| rmaShader |
+	
+	rmaShader := self rmaShaderFor: heightFunction
+		roughnessFunction: (roughnessFunction ifNil: [1.0])
+		metallicFunction: (metallicFunction ifNil: [1.0])
+		aoRadius: ambientOcclusionRadius aoHeightThreshold: ambientOcclusionHeightThreshold aoSampleCount: ambientOcclusionSampleCount.
+	^ self shader: rmaShader toTextureDataExtent: anExtent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM encodeFunctionName: #encode_bgra8.
+
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> renderRoughnessMetallicWithExtent: anExtent [
+	| rmaShader |
+	
+	rmaShader := self roughnessMetallicShaderFor: heightFunction
+		roughnessFunction: (roughnessFunction ifNil: [1.0])
+		metallicFunction: (metallicFunction ifNil: [1.0]).
+	^ self shader: rmaShader toTextureDataExtent: anExtent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM encodeFunctionName: #encode_bgra8.
+
+]
+
+{ #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> renderSRGBWithExtent: anExtent colorFunction: aColorFunction [
 	| colorShader |
 	colorShader := self colorShaderForFunction: aColorFunction.
@@ -173,6 +242,30 @@ WDCPharoProceduralGPUScriptEvaluator >> renderSRGBWithExtent: anExtent heightFun
 	| colorShader |
 	colorShader := self colorShaderForHeightFunction: heightFunction coloredWith: colorFunction.
 	^ self shader: colorShader toTextureDataExtent: anExtent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB encodeFunctionName: #encode_bgra8_srgb
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> rmaShaderFor: heightFunctionObject
+roughnessFunction: roughnessFunctionObject metallicFunction: metallicFunctionObject
+aoRadius: aoRadius aoHeightThreshold: heightThreshold aoSampleCount: sampleCount [
+	| builder aoFactorNode aoHeightThresholdNode aoSampleCountNode |
+	
+	codeConverter := DASLPharoCodeConverter new.
+	codeConverter
+		convertFunction: heightFunctionObject name: #heightFieldFunction argumentTypes: #(float float) returnType: #float;
+		convertFunction: roughnessFunctionObject name: #roughnessFunction argumentTypes: #(float float) returnType: #float;
+		convertFunction: metallicFunctionObject name: #metallicFunction argumentTypes: #(float float) returnType: #float.
+	builder := DASLAstBuilder new.
+			
+	aoFactorNode := builder constantGlobalNamed: #AmbientOcclusionRadius typeNamed: #float value: 
+		(builder literalFloat: aoRadius asFloat).
+	aoHeightThresholdNode := builder constantGlobalNamed: #AmbientOcclusionHeightThreshold typeNamed: #float value: 
+		(builder literalFloat: heightThreshold asFloat).
+	aoSampleCountNode := builder constantGlobalNamed: #AmbientOcclusionSampleCount typeNamed: #uint value: 
+		(builder literalUInt: sampleCount asInteger).
+		
+	^ self compileShader: 'procedural/rmaTextureInterface.dastrel' injectingNodes: codeConverter generatedNodes , { aoFactorNode . aoHeightThresholdNode . aoSampleCountNode }
+
 ]
 
 { #category : #'as yet unclassified' }

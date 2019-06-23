@@ -18,7 +18,7 @@ WDCMultiTextureView >> gtInspectorTextures: composite [
 	browser transmit
 		to: #one;
 		andShow: [ :a |
-			textures select: [:kv | kv value canBeDecoded] thenDo: [ :tex |
+			textures select: [:kv | kv value isNotNil and: [kv value canBeDecoded]] thenDo: [ :tex |
 				(tex value gtInspectorFormIn: a) title: tex key
 			]
 	].

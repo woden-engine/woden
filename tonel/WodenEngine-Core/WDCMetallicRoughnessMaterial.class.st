@@ -7,6 +7,16 @@ Class {
 	#category : #'WodenEngine-Core-Material'
 }
 
+{ #category : #'as yet unclassified' }
+WDCMetallicRoughnessMaterial class >> defaultMetallicFactor [
+	^ 0.0
+]
+
+{ #category : #'as yet unclassified' }
+WDCMetallicRoughnessMaterial class >> defaultRoughnessFactor [
+	^ 0.55
+]
+
 { #category : #'state binding' }
 WDCMetallicRoughnessMaterial >> bindResources [
 	super bindResources.
@@ -48,8 +58,8 @@ WDCMetallicRoughnessMaterial >> forwardFragmentShader [
 WDCMetallicRoughnessMaterial >> initialize [
 	super initialize.
 	materialState
-		metallicFactor: 0.0;
-		roughnessFactor: 0.55
+		metallicFactor: self class defaultMetallicFactor;
+		roughnessFactor: self class defaultRoughnessFactor
 ]
 
 { #category : #'state binding' }
@@ -81,10 +91,19 @@ WDCMetallicRoughnessMaterial >> metallicRoughnessTexture: anObject [
 { #category : #parsing }
 WDCMetallicRoughnessMaterial >> parse: materialFileReference data: data [
 	super parse: materialFileReference data: data.
-	materialState
-		roughnessFactor: (data at: 'roughness-factor' ifAbsent: [ materialState roughnessFactor ]);
-		metallicFactor: (data at: 'metallic-factor' ifAbsent: [ materialState metallicFactor ]).
 	metallicRoughnessTexture := self parse: data at: materialFileReference optionalTexture: 'metallic-roughness-texture'.
+
+	materialState
+		roughnessFactor: (data at: 'roughness-factor' ifAbsent: [
+			metallicRoughnessTexture
+				ifNil: [ self class defaultRoughnessFactor ]
+				ifNotNil: [ 1.0 ]
+		]);
+		metallicFactor: (data at: 'metallic-factor' ifAbsent: [
+			metallicRoughnessTexture
+				ifNil: [ self class defaultMetallicFactor ]
+				ifNotNil: [ 1.0 ]
+		]).
 	self invalidateCache.
 ]
 
