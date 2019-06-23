@@ -94,15 +94,16 @@ code_block forwardLightingModel
     let worldN = (CameraState.inverseViewMatrix * float4(normal, 0.0f)).xyz;
     let worldR = (CameraState.inverseViewMatrix * float4(R, 0.0f)).xyz;
 
+	let reflectionF0 = fresnelSchlickRoughness(F0, NdotV, roughness);
+	
     let diffuseLightProbeSample = cubeMapSampler.sampleLod(diffuseIrradianceMap, worldN, 0.0f).rgb;
 	let specularLightProbeLevel = float(getTextureLevelCount(specularIrradianceMap)) * roughness;
     let specularLightProbeSample = cubeMapSampler.sampleLod(specularIrradianceMap, worldR, specularLightProbeLevel).rgb;
 	let ambientReflectionFactors = brdfLutSampler.sample(imageBasedLightingBRDFLut, float2(NdotV, roughness));
-	let reflectionF = fresnelSchlickRoughness(F0, NdotV, roughness);
 	let translucencyWithFresnel = fresnelSchlick(translucencyFactor, NdotV);
 
 	accumulatedColor += hemiLightingFactor*(diffuseLightProbeSample*diff +
-		specularLightProbeSample*(reflectionF*ambientReflectionFactors.x + ambientReflectionFactors.y));
+		specularLightProbeSample*(F0*ambientReflectionFactors.x + ambientReflectionFactors.y));
 
 	// Apply ambient occlusion.
 	accumulatedColor *= occlusion*sampleScreenSpaceAmbientOcclusion();

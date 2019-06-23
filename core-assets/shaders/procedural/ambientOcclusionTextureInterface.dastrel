@@ -1,0 +1,24 @@
+import fragment.stage;
+import fragment.screenQuad;
+import procedural.noise;
+ 
+code_block(fragment) main
+{
+	// This is an offline evaluation, so just go for a high number of samples.
+	let uv = FragmentInput.texcoord;
+	let referenceHeight = heightFieldFunction(uv.x, uv.y);
+
+	let occlusionSampleCount = 0.0f;
+	for(let i = 0u; i < AmbientOcclusionSampleCount; i+= 1u)
+	{
+		let delta = boxRandomSamplingSequence(i, AmbientOcclusionSampleCount) * AmbientOcclusionRadius;
+		let sampleUV = uv + delta;
+		let sampleHeight = heightFieldFunction(sampleUV.x, sampleUV.y);
+		if(sampleHeight - referenceHeight >= AmbientOcclusionHeightThreshold)
+			occlusionSampleCount += 1.0f;
+	}
+	
+	let ao = 1.0f - occlusionSampleCount / float(AmbientOcclusionSampleCount);
+	
+	FragmentStage.colorOutput0 = float4(ao, 1.0f, 1.0f, 1.0f);
+}

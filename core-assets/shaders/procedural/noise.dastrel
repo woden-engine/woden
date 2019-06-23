@@ -31,6 +31,14 @@ function randomNoiseHash(x: uint) -> uint
 	return r;
 }
 
+function boxRandomSamplingSequence(index: uint, N: uint) -> float2
+{
+	let a = randomNoiseHash(index ^ N);
+	let b = randomNoiseHash(a ^ index);
+	let r = float2(float(a), float(b)) / 4294967295.0f;
+	return r*2.0f - 1.0f;
+}
+
 function randomNoiseHashNormalized(x: uint) -> float
 {
 	return float(randomNoiseHash(x)) / 4294967295.0f;

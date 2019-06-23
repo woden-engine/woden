@@ -43,6 +43,12 @@ uniform(binding = MaterialState.Textures + 9) normalTexture2 : texture2D;
 uniform(binding = MaterialState.Textures + 10) normalTexture3 : texture2D;
 uniform(binding = MaterialState.Textures + 11) normalTexture4 : texture2D;
 
+uniform(binding = MaterialState.Textures + 12) rmaTexture0 : texture2D;
+uniform(binding = MaterialState.Textures + 13) rmaTexture1 : texture2D;
+uniform(binding = MaterialState.Textures + 14) rmaTexture2 : texture2D;
+uniform(binding = MaterialState.Textures + 15) rmaTexture3 : texture2D;
+uniform(binding = MaterialState.Textures + 16) rmaTexture4 : texture2D;
+
 function surfacePositionIntoTexcoord(position: float3) -> float2
 {
     return float2(position.x, -position.z)*0.5f*MaterialState.heightMapScale + 0.5f + MaterialState.heightMapOffset;
@@ -88,6 +94,19 @@ function fetchAlbedoPlane(texcoord: float2, splatting: float4) -> float4
     return mixSplatting(a0, a1, a2, a3, a4, splatting);
 }
 
+function fetchRMAPlane(texcoord: float2, splatting: float4) -> float4
+{
+    using MaterialState;
+
+    let a0 = albedoSampler.sample(rmaTexture0, texcoord*textureScaleAndOffset[0].xy + textureScaleAndOffset[0].zw);
+    let a1 = albedoSampler.sample(rmaTexture1, texcoord*textureScaleAndOffset[1].xy + textureScaleAndOffset[1].zw);
+    let a2 = albedoSampler.sample(rmaTexture2, texcoord*textureScaleAndOffset[2].xy + textureScaleAndOffset[2].zw);
+    let a3 = albedoSampler.sample(rmaTexture3, texcoord*textureScaleAndOffset[3].xy + textureScaleAndOffset[3].zw);
+    let a4 = albedoSampler.sample(rmaTexture4, texcoord*textureScaleAndOffset[4].xy + textureScaleAndOffset[4].zw);
+
+    return mixSplatting(a0, a1, a2, a3, a4, splatting);
+}
+
 function mixTriplanar(normal: float3, vx: float4, vy: float4, vz: float4) -> float4
 {
     let blending = fabs(normal);
@@ -108,6 +127,15 @@ function fetchAlbedo(objectPosition: float3, normal: float3, splatting: float4) 
     let vx = fetchAlbedoPlane(objectPosition.yz, splatting);
     let vy = fetchAlbedoPlane(objectPosition.zx, splatting);
     let vz = fetchAlbedoPlane(objectPosition.xy, splatting);
+
+    return mixTriplanar(normal, vx, vy, vz);
+}
+
+function fetchRMA(objectPosition: float3, normal: float3, splatting: float4) -> float4
+{
+    let vx = fetchRMAPlane(objectPosition.yz, splatting);
+    let vy = fetchRMAPlane(objectPosition.zx, splatting);
+    let vz = fetchRMAPlane(objectPosition.xy, splatting);
 
     return mixTriplanar(normal, vx, vy, vz);
 }
@@ -193,13 +221,6 @@ code_block(vertex) vertex
     position += float3(0.0f, height, 0.0f);
 
     VertexOutput.color = currentObjectInstanceColor();
-    /*if(lod == 0.0f)
-        VertexOutput.color = float4(1.0f, 0.0f, 0.0f, 1.0f);
-    else if(lod == 1.0f)
-        VertexOutput.color = float4(0.0f, 1.0f, 0.0f, 1.0f);
-    else if(lod == 2.0f)
-        VertexOutput.color = float4(0.0f, 0.0f, 1.0f, 1.0f);*/
-
     VertexOutput.surfaceTexcoord = surfaceTexcoord;
     VertexOutput.objectPosition = position;
     let position4 = transformPositionToView(position);
@@ -256,6 +277,7 @@ code_block(fragment) forward_splatting
 
     // Fetch the albedo.
     let rawAlbedo = fetchAlbedo(objectPosition, on, splatting);
+	let aoRoughnessMetallicSample = fetchRMA(objectPosition, on, splatting);
     let albedo = FragmentInput.color*MaterialState.albedo*float4(rawAlbedo.rgb, 1.0f);
 
     // Fetch the actual normal
@@ -267,18 +289,20 @@ code_block(fragment) forward_splatting
     let SN = transformNormalToView(on);
 
     // Compute the smoothness and the fresnel factor.
-	let metallic = MaterialState.metallicFactor;
-	let roughness = MaterialState.roughnessFactor;
+	let ao = aoRoughnessMetallicSample.r;
+	let metallic = aoRoughnessMetallicSample.b*MaterialState.metallicFactor;
+	let roughness = aoRoughnessMetallicSample.g*MaterialState.roughnessFactor;
 
     let V = normalize(-FragmentInput.position);
 
     forwardMetallicRoughnessLightingOutput
-        emission: 0.0f albedo: albedo occlusion: 1.0f
+        emission: 0.0f albedo: albedo occlusion: ao
         metallic: metallic roughness: roughness
         normal: N surfaceNormal: SN viewVector: V position: FragmentInput.position;
     //FragmentStage.colorOutput0 = float4(on*0.5f + 0.5f, 1.0f);
     //FragmentStage.colorOutput0 = float4(on, 1.0f);
     //FragmentStage.colorOutput0 = float4(SN*0.5f + 0.5f, 1.0f);
+	//FragmentStage.colorOutput0 = float4(on, 1.0f);
 }
 
 code_block(fragment) forward_solid

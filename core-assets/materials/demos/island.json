@@ -1,9 +1,6 @@
 {
     "type" : "Terrain",
 
-    "metallic-factor" : 0.0,
-    "roughness-factor" : 0.7,
-
     "height-map-size" : [200.0, 200.0],
     "height-scale" : 110.0,
 
@@ -22,6 +19,13 @@
         "textures/procedural/terrain/grass.sttex?texture=normal",
         "textures/procedural/terrain/rock.sttex?texture=normal",
         "textures/procedural/terrain/snow.sttex?texture=normal"
+    ],
+
+    "metallic-roughness-textures" : [
+        "textures/procedural/terrain/sand.sttex?texture=rma",
+        "textures/procedural/terrain/grass.sttex?texture=rma",
+        "textures/procedural/terrain/rock.sttex?texture=rma",
+        "textures/procedural/terrain/snow.sttex?texture=rma"
     ],
 
     "texture-scales-offsets" : [

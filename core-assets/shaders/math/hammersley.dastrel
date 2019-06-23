@@ -263,3 +263,8 @@ function hammersleySample(index: uint, N: uint) -> float2
 {
 	return float2(float(index)/float(N), HammersleySequenceNumbers[index]);
 }
+
+function hammersleySampleNoZero(index: uint, N: uint) -> float2
+{
+	return hammersleySample(index + 1u, N + 1u);
+}

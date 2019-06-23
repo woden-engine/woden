@@ -32,7 +32,7 @@ shader_signature SceneRendering
     {
         Attributes: uniform;
         BigAttributes: buffer;
-        Textures: texture * 15;
+        Textures: texture * 20;
     }
 }
 

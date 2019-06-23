@@ -3,6 +3,6 @@
     "albedo-texture" : "textures/demos/baby-dragon-albedo.png",
 
     "roughness-factor" : 0.6,
-	 "metallic-factor" : 0.0,
+	"metallic-factor" : 0.0,
     "skinned" : true
 }

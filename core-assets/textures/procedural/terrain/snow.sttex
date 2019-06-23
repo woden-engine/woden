@@ -17,4 +17,8 @@ heightFunction := [ :s :t |
 	heightFunction: heightFunction;
 	colorMapFunction: colorRamp;
 	normalHeightScaleFactor: 10.0;
+	roughnessFunction: 0.1;
+	metallicFunction: 0.0;
+	ambientOcclusionHeightThreshold: 0.09;
+	ambientOcclusionRadius: 0.03;
 	evaluate
