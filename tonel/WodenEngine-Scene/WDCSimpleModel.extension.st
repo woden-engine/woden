@@ -5,7 +5,7 @@ WDCSimpleModel >> createViewer [
 	| sceneModel scene camera engine mesh node light |
 	sceneModel := WDASampleSceneModel new.
 	scene := sceneModel newScene.
-	scene backgroundColor: Color gray.
+	scene backgroundColor: Color darkGray.
 
 	camera := sceneModel camera.
 	camera transform translateByZ: 3.0.

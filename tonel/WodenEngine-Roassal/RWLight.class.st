@@ -37,7 +37,7 @@ RWLight >> influenceRadius [
 
 { #category : #accessing }
 RWLight >> influenceRadius: aNumber [
-	sceneNode state radius: aNumber asFloat
+	sceneNode radius: aNumber asFloat
 ]
 
 { #category : #'ray casting' }

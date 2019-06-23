@@ -158,6 +158,11 @@ WDSGLightSource >> point [
 		innerCosCutoff: -1.0
 ]
 
+{ #category : #accessing }
+WDSGLightSource >> radius: aNumber [
+	state radius: aNumber
+]
+
 { #category : #'shadow mapping' }
 WDSGLightSource >> setupRenderingWithShadowMap: shadowMapIndex mainCamera: mainCamera engine: engine [
 	^ self lightRenderingStateClass new

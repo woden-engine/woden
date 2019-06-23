@@ -17,7 +17,7 @@ WDSSceneAssetModel >> createViewer [
 	sceneModel := WDASampleSceneModel new.
 	sceneModel
 		scene: mainScene.
-	mainScene backgroundColor: Color gray.
+	mainScene backgroundColor: Color darkGray.
 	mainScene initializeWithEngine: sceneModel engine.
 	
 	"Try to find a camera."

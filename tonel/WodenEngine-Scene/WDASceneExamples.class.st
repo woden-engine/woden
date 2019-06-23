@@ -732,6 +732,56 @@ WDASceneExamples class >> exampleModelCube [
 	(WDCEngine default resourceCache load3DModel: 'models/obj/cube.obj') openViewer
 ]
 
+{ #category : #'example models' }
+WDASceneExamples class >> exampleModelDamagedHelmet [
+	(WDCEngine default resourceCache load3DModel: 'models/glTF-Samples/DamagedHelmet/DamagedHelmet.glb') openViewer
+]
+
+{ #category : #'example models' }
+WDASceneExamples class >> exampleModelSponza [
+	| sceneModel sponzaModel scene camera light moonLight |
+	sceneModel := WDASampleSceneModel new.
+
+	sponzaModel := WDCAbstractModelLoader loadFromFile: (WodenCoreAssets location resolve: 'models/glTF-Samples/Sponza/glTF/Sponza.gltf').
+	scene := sponzaModel mainScene.
+	sceneModel scene: scene.
+	
+	scene backgroundColor: Color black.
+	scene ambientLighting: WMVector4F ones*0.05.
+	scene initializeWithEngine: sceneModel engine.
+	
+	camera := WDSGCamera new.
+	scene add: camera.
+	sceneModel camera: camera.
+	
+	camera transform translateByY: 0.5.
+	
+	moonLight := WDSGLightSource new.
+	moonLight directional.
+	moonLight state
+			intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.3.
+	moonLight transform
+		rotateDegreesOnX: -35.
+		
+	scene add: moonLight.
+
+	{
+		WMVector3F x: 3.9 y: 1.3 z: 1.18.
+		WMVector3F x: 3.9 y: 1.3 z: -1.72.
+		WMVector3F x: -4.95 y: 1.3 z: 1.18.
+		WMVector3F x: -4.95 y: 1.3 z: -1.72.
+	} do: [ :position |
+		light := WDSGLightSource new.
+		light point
+			radius: 9.0;
+			intensity: (WMVector4F ones)*2.5.
+		light transform translation: position.
+		scene add: light.
+	].
+	
+	sceneModel openWith: WDAFPSSceneView allowingVR.
+]
+
 { #category : #'as yet unclassified' }
 WDASceneExamples class >> proceduralSkySunDirection: sunDirection [
 	| horizonRamp sunColor sunAngleSizeCos sunAngleSizeOuterCos shader |
