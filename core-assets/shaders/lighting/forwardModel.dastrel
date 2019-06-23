@@ -57,6 +57,15 @@ function computeShadowFactorFor(shadowPoint: float3, depthReference: float) -> f
         ) * 0.25f;
 }
 
+function computeLightFalloff(distance: float, radius: float) -> float
+{
+	let a = distance/radius;
+	let a2 = a*a;
+	let a4 = a2*a2;
+	let num = saturate(1.0f - a4);
+	return num*num / (distance*distance + 1.0f);
+}
+
 code_block forwardLightingModel
 {
     in normal: float3;
@@ -112,9 +121,14 @@ code_block forwardLightingModel
     for(let i = 0; i < numberOfLights; i += 1)
     {
         using lightSource = lightSources[i];
-        let L = lightSource.position.xyz - position*lightSource.position.w;
-        let dist = length(L);
-        L = L / dist;
+        let L = lightSource.position.xyz;
+		let dist = 0.0f;
+		if(lightSource.position.w != 0.0f)
+		{
+		 	L -= position;
+			dist = length(L);
+			L = L / dist;
+		}
 
         let NdotL = max(dot(normal, L), 0.0f);
         if(NdotL == 0.0f)
@@ -158,13 +172,12 @@ code_block forwardLightingModel
 		if(shadowFactor <= 0.0f)
 			continue;
 
+		let lightRadius = lightSource.radius;
 		let spotAttenuation = smoothstep(lightSource.outerCosCutoff, lightSource.innerCosCutoff, spotCos)*pow(spotCos, lightSource.spotExponent);
 
-        // Compute the attenuation factor.
-        // I am using (partly) the technique that I found here: https://imdoingitwrong.wordpress.com/2011/01/31/light-attenuation/
-        let attenuationDistance = max(0.0f, dist - lightSource.radius);
-        let attDen = 1.0f + attenuationDistance/lightSource.radius;
-        let attenuation = shadowFactor*spotAttenuation/(attDen*attDen);
+		// Attenuation factor from "Real Shading in Unreal Engine 4"
+		let falloff = computeLightFalloff(dist, lightRadius);
+        let attenuation = shadowFactor*spotAttenuation*falloff;
 
         // Compute the fresnel factor
         let H = normalize(L + viewVector);
