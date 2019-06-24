@@ -13,12 +13,18 @@ Class {
 }
 
 { #category : #converting }
+WDCBufferAccessor >> applyAsIndexBufferToCommandList: commandListBuilder [
+	commandListBuilder useIndexBufferAt: bufferView buffer validHandle offset: 0 index_size: type size
+]
+
+{ #category : #converting }
 WDCBufferAccessor >> asFirstIndexIndex [
 	^ (bufferView offset + byteOffset) // type size
 ]
 
 { #category : #converting }
 WDCBufferAccessor >> asIndexBuffer [
+	bufferView buffer description stride ~= type size ifTrue: [ ^ self ].
 	^ bufferView buffer
 ]
 

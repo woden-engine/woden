@@ -374,7 +374,7 @@ WDCStateTracker >> useComputeShaderResources: shaderResource [
 
 { #category : #commands }
 WDCStateTracker >> useIndexBuffer: indexBuffer [
-	commandListBuilder useIndexBuffer: indexBuffer validHandle
+	indexBuffer applyAsIndexBufferToCommandList: commandListBuilder
 ]
 
 { #category : #commands }

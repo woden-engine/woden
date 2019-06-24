@@ -9,6 +9,11 @@ Class {
 	#category : 'WodenEngine-Core-GPU-Resources'
 }
 
+{ #category : #'as yet unclassified' }
+WDCBufferResource >> applyAsIndexBufferToCommandList: commandListBuilder [
+	commandListBuilder useIndexBuffer: self validHandle
+]
+
 { #category : #'resource building' }
 WDCBufferResource >> buildHandle [
 	self assert: description isNotNil.
