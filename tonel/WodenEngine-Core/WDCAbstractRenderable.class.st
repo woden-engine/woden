@@ -178,6 +178,10 @@ WDCAbstractRenderable >> translucentSortedRenderPriority [
 	self renderPriority: RenderPriorityTranslucentSorted
 ]
 
+{ #category : #'renderable state' }
+WDCAbstractRenderable >> updateCommonGpuStateForFrame: frameIndex [
+]
+
 { #category : #'as yet unclassified' }
 WDCAbstractRenderable >> validateForNode: aNode [
 	"This is the place for validating dynamic renderables."

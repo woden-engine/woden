@@ -2,7 +2,7 @@
 I represent the rendering state for a light. I am used for computing shadow mapping transforms.
 "
 Class {
-	#name : #WDSGAbstractLightRenderingState,
+	#name : #WDCAbstractLightRenderingState,
 	#superclass : #Object,
 	#instVars : [
 		'shadowMapIndex',
@@ -14,68 +14,68 @@ Class {
 }
 
 { #category : #accessing }
-WDSGAbstractLightRenderingState >> engine [
+WDCAbstractLightRenderingState >> engine [
 	^ engine
 ]
 
 { #category : #accessing }
-WDSGAbstractLightRenderingState >> engine: anObject [
+WDCAbstractLightRenderingState >> engine: anObject [
 	engine := anObject
 ]
 
 { #category : #accessing }
-WDSGAbstractLightRenderingState >> globalTransform [
+WDCAbstractLightRenderingState >> globalTransform [
 	^ renderingLight transform
 ]
 
 { #category : #accessing }
-WDSGAbstractLightRenderingState >> light [
+WDCAbstractLightRenderingState >> light [
 	^ renderingLight lightSource
 ]
 
 { #category : #accessing }
-WDSGAbstractLightRenderingState >> mainCamera [
+WDCAbstractLightRenderingState >> mainCamera [
 	^ mainCamera
 ]
 
 { #category : #accessing }
-WDSGAbstractLightRenderingState >> mainCamera: anObject [
+WDCAbstractLightRenderingState >> mainCamera: anObject [
 	mainCamera := anObject
 ]
 
 { #category : #accessing }
-WDSGAbstractLightRenderingState >> renderingLight [
+WDCAbstractLightRenderingState >> renderingLight [
 	^ renderingLight
 ]
 
 { #category : #accessing }
-WDSGAbstractLightRenderingState >> renderingLight: anObject [
+WDCAbstractLightRenderingState >> renderingLight: anObject [
 	renderingLight := anObject
 ]
 
 { #category : #accessing }
-WDSGAbstractLightRenderingState >> scene [
+WDCAbstractLightRenderingState >> scene [
 	^ renderingLight node scene
 ]
 
 { #category : #'shadow mapping' }
-WDSGAbstractLightRenderingState >> setupShadowMapWithIndex: newShadowMapIndex [
+WDCAbstractLightRenderingState >> setupShadowMapWithIndex: newShadowMapIndex [
 	shadowMapIndex := newShadowMapIndex.
 	shadowMapIndex < 0 ifTrue: [ ^ self ].
 	self setupShadowMappingTransforms
 ]
 
 { #category : #'shadow mapping' }
-WDSGAbstractLightRenderingState >> setupShadowMappingTransforms [
+WDCAbstractLightRenderingState >> setupShadowMappingTransforms [
 	self subclassResponsibility
 ]
 
 { #category : #accessing }
-WDSGAbstractLightRenderingState >> shadowMapIndex [
+WDCAbstractLightRenderingState >> shadowMapIndex [
 	^ shadowMapIndex
 ]
 
 { #category : #'as yet unclassified' }
-WDSGAbstractLightRenderingState >> viewStateForCameraTransform: cameraTransform [
+WDCAbstractLightRenderingState >> viewStateForCameraTransform: cameraTransform [
 	^ renderingLight lightSource viewStateForRenderingState: self cameraTransform: cameraTransform
 ]

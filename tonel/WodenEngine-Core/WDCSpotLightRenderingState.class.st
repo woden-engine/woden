@@ -2,13 +2,13 @@
 I represent a spot light rendering state.
 "
 Class {
-	#name : #WDSGSpotLightRenderingState,
-	#superclass : #WDSGShadowLightRenderingStateLayer,
+	#name : #WDCSpotLightRenderingState,
+	#superclass : #WDCShadowLightRenderingStateLayer,
 	#category : #'WodenEngine-Core-Lighting'
 }
 
 { #category : #'shadow mapping' }
-WDSGSpotLightRenderingState >> setupShadowMappingTransforms [
+WDCSpotLightRenderingState >> setupShadowMappingTransforms [
 	| fov |
 	renderTransform := renderingLight globalTransform.
 	fov := renderingLight isSpotLight ifTrue: [ renderingLight outerSpotCutoff ] ifFalse: [ 45.0 ].

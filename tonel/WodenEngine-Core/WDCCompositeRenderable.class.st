@@ -7,10 +7,6 @@ Class {
 	#category : #'WodenEngine-Core-Mesh'
 }
 
-{ #category : #'extra per object rendering data' }
-WDCCompositeRenderable >> createSceneDependentDataFor: engine into: bindings [
-]
-
 { #category : #'as yet unclassified' }
 WDCCompositeRenderable >> engine: newEngine [
 	renderables do: [ :renderable |

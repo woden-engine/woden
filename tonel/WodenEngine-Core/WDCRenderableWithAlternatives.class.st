@@ -25,11 +25,6 @@ WDCRenderableWithAlternatives >> alternativeForSubmode: submode [
 	^ alternatives at: submode ifAbsent: [ self defaultAlternative ]
 ]
 
-{ #category : #'extra per object rendering data' }
-WDCRenderableWithAlternatives >> createSceneDependentDataFor: engine into: objectStateBindings [
-	^ self defaultAlternative createSceneDependentDataFor: engine into: objectStateBindings
-]
-
 { #category : #'as yet unclassified' }
 WDCRenderableWithAlternatives >> defaultAlternative [
 	^ alternatives at: #default ifAbsentPut: [ WDCNullRenderable new ]

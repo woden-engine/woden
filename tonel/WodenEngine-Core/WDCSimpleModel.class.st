@@ -131,7 +131,7 @@ WDCSimpleModel >> meshFor: anEngine [
 		submeshes: (submeshes collect: [:sm | sm subMeshFor: anEngine]).
 		
 	armature ifNotNil: [
-		^ WDCSkinnedGenericMesh new
+		^ WDCSkinnedRenderableMesh new
 			mesh: mesh;
 			armature: armature;
 			actions: actions;

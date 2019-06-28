@@ -30,3 +30,9 @@ WDCRenderingSceneRenderableObject >> renderable [
 WDCRenderingSceneRenderableObject >> renderable: anObject [
 	renderable := anObject
 ]
+
+{ #category : #'as yet unclassified' }
+WDCRenderingSceneRenderableObject >> updateCommonGpuStateForFrame: frameIndex [
+	super updateCommonGpuStateForFrame: frameIndex.
+	renderable updateCommonGpuStateForFrame: frameIndex.
+]

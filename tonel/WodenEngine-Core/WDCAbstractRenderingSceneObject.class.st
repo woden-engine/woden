@@ -53,6 +53,6 @@ WDCAbstractRenderingSceneObject >> transform [
 ]
 
 { #category : #'as yet unclassified' }
-WDCAbstractRenderingSceneObject >> updateCommonGpuStateForFrame: frameBufferingIndex [
-	spatialObject updateCommonGpuStateForFrame: frameBufferingIndex.
+WDCAbstractRenderingSceneObject >> updateCommonGpuStateForFrame: frameIndex [
+	spatialObject updateCommonGpuStateForFrame: frameIndex.
 ]

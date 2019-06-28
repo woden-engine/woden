@@ -13,11 +13,6 @@ Class {
 	#category : #'WodenEngine-Core-Mesh'
 }
 
-{ #category : #'extra per object rendering data' }
-WDCGenericMesh >> createSceneDependentDataFor: engine into: bindings [
-	^ nil
-]
-
 { #category : #'as yet unclassified' }
 WDCGenericMesh >> engine: newEngine [
 	indexBuffer ifNotNil: [ indexBuffer engine: newEngine ].

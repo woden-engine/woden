@@ -67,5 +67,5 @@ WDCAbstractSpatialObject >> transform: aTransform [
 ]
 
 { #category : #'as yet unclassified' }
-WDCAbstractSpatialObject >> updateCommonGpuStateForFrame: frameBufferingIndex [
+WDCAbstractSpatialObject >> updateCommonGpuStateForFrame: frameIndex [
 ]

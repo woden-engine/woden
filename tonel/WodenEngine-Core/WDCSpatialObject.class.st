@@ -34,6 +34,6 @@ WDCSpatialObject >> renderRenderable: renderable with: stateTracker [
 ]
 
 { #category : #'as yet unclassified' }
-WDCSpatialObject >> updateCommonGpuStateForFrame: frameBufferingIndex [
+WDCSpatialObject >> updateCommonGpuStateForFrame: frameIndex [
 	self currentGpuObjectState value: state
 ]

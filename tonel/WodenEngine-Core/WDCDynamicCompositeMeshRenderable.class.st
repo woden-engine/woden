@@ -24,11 +24,6 @@ WDCDynamicCompositeMeshRenderable >> builder: anObject [
 	builder := anObject
 ]
 
-{ #category : #'extra per object rendering data' }
-WDCDynamicCompositeMeshRenderable >> createSceneDependentDataFor: engine into: bindings [
-	^ nil
-]
-
 { #category : #'as yet unclassified' }
 WDCDynamicCompositeMeshRenderable >> initialize [
 	super initialize.

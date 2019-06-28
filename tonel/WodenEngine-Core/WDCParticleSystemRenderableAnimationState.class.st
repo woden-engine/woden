@@ -1,9 +1,8 @@
 Class {
-	#name : #WDCParticleSystemRenderableSceneData,
-	#superclass : #WDCSceneDependantRenderableData,
+	#name : #WDCParticleSystemRenderableAnimationState,
+	#superclass : #WDCRenderableAnimationState,
 	#instVars : [
 		'particleSystem',
-		'engine',
 		'particleStateBuffer',
 		'particleMaterial',
 		'cpuParticleSimulationBuffer',
@@ -18,72 +17,113 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-WDCParticleSystemRenderableSceneData >> activateParticleMaterialOn: stateTracker [
+WDCParticleSystemRenderableAnimationState >> activateParticleMaterialOn: stateTracker [
 	^ self validParticleMaterial activateOn: stateTracker
 ]
 
 { #category : #accessing }
-WDCParticleSystemRenderableSceneData >> cpuParticleSimulationBuffer [
+WDCParticleSystemRenderableAnimationState >> cpuParticleSimulationBuffer [
+	cpuParticleSimulationBuffer ifNil: [ self createCPUParticleSimulationBuffer ].
 	^ cpuParticleSimulationBuffer
 ]
 
 { #category : #accessing }
-WDCParticleSystemRenderableSceneData >> cpuParticleSimulationBuffer: anObject [
-	cpuParticleSimulationBuffer := anObject
+WDCParticleSystemRenderableAnimationState >> createCPUParticleSimulationBuffer [
+	| initialParticleState particleCount startupTime |
+	particleCount := particleSystem particleCount.
+	startupTime := particleSystem startupTime.
+	
+	cpuParticleSimulationBuffer := SLVMNativeArray for: WDCParticleState new: particleCount.
+	initialParticleState := WDCParticleState new
+		size: (WMVector3F x: 0.2 y: 0.2 z: 0.2);
+		color: Color black asWMVector4F;
+		startingUp: true.
+		
+	1 to: particleSystem particleCount do: [ :index |
+		initialParticleState
+			lifeTime: (index - 1) * (startupTime / particleCount);
+			setInitialSeedForIndex: index.
+		
+		cpuParticleSimulationBuffer at: index put: initialParticleState
+	].
+]
+
+{ #category : #accessing }
+WDCParticleSystemRenderableAnimationState >> createEngineDependantData [
+	| stateBufferSize |
+	super createEngineDependantData.
+
+	stateBufferSize := self cpuParticleSimulationBuffer rawDataSize.
+	WDCEngine gpuBasedParticleSimulation ifTrue: [
+		particleStateBuffer := engine createGPUStorageBuffer: stateBufferSize initialData: cpuParticleSimulationBuffer rawData.
+		renderableStateBindings do: [ :binding |
+			binding bind: 0 storageBuffer: particleStateBuffer offset: 0 size: stateBufferSize
+		].
+	] ifFalse: [
+		| cpuInitialData |
+		cpuInitialData := ByteArray new.
+		renderableStateBindings do: [ :b |
+			cpuInitialData := cpuInitialData , cpuParticleSimulationBuffer rawData
+		].
+		
+		particleStateBuffer := engine createStreamingStorageBuffer: cpuInitialData size initialData: cpuInitialData.
+	].
+
+	renderableStateBindings doWithIndex: [ :bindings :index |
+		bindings
+			bind: 0 storageBuffer: particleStateBuffer offset: (index - 1) * stateBufferSize size: stateBufferSize
+	]
+
+
 ]
 
 { #category : #'as yet unclassified' }
-WDCParticleSystemRenderableSceneData >> deltaTime [
+WDCParticleSystemRenderableAnimationState >> deltaTime [
 	^ 1.0 / WDCFrameBufferingDriver defaultTargetFrameRate.
 
 ]
 
 { #category : #accessing }
-WDCParticleSystemRenderableSceneData >> engine [
-	^ engine
-]
-
-{ #category : #accessing }
-WDCParticleSystemRenderableSceneData >> engine: anObject [
-	engine := anObject
-]
-
-{ #category : #accessing }
-WDCParticleSystemRenderableSceneData >> particleStateBuffer [
+WDCParticleSystemRenderableAnimationState >> particleStateBuffer [
 	^ particleStateBuffer
 ]
 
 { #category : #accessing }
-WDCParticleSystemRenderableSceneData >> particleStateBuffer: anObject [
+WDCParticleSystemRenderableAnimationState >> particleStateBuffer: anObject [
 	particleStateBuffer := anObject
 ]
 
 { #category : #accessing }
-WDCParticleSystemRenderableSceneData >> particleSystem [
+WDCParticleSystemRenderableAnimationState >> particleSystem [
 	^ particleSystem
 ]
 
 { #category : #accessing }
-WDCParticleSystemRenderableSceneData >> particleSystem: anObject [
+WDCParticleSystemRenderableAnimationState >> particleSystem: anObject [
 	particleSystem := anObject
 ]
 
+{ #category : #accessing }
+WDCParticleSystemRenderableAnimationState >> requiresAccessFromTheCPU [
+	^ WDCEngine gpuBasedParticleSimulation not
+]
+
 { #category : #'as yet unclassified' }
-WDCParticleSystemRenderableSceneData >> shadersDirectory [
+WDCParticleSystemRenderableAnimationState >> shadersDirectory [
 	^ WodenCoreAssets location / #shaders
 ]
 
 { #category : #'as yet unclassified' }
-WDCParticleSystemRenderableSceneData >> simulateFrame: frameBufferingIndex [
+WDCParticleSystemRenderableAnimationState >> simulateFrame: frameIndex [
 	WDCEngine gpuBasedParticleSimulation ifTrue: [
 		self simulateFrameWithTheGPU
 	] ifFalse: [ 
-		self simulateFrameWithTheCPU: frameBufferingIndex
+		self simulateFrameWithTheCPU: frameIndex
 	]
 ]
 
 { #category : #'as yet unclassified' }
-WDCParticleSystemRenderableSceneData >> simulateFrameWithTheCPU: frameBufferingIndex [
+WDCParticleSystemRenderableAnimationState >> simulateFrameWithTheCPU: frameIndex [
 	| simulationBlock deltaTime |
 	simulationBlock := particleSystem simulationBlock.
 	deltaTime := self deltaTime.
@@ -93,13 +133,13 @@ WDCParticleSystemRenderableSceneData >> simulateFrameWithTheCPU: frameBufferingI
 	].
 
 	LibC memCopy: cpuParticleSimulationBuffer rawData
-		to: particleStateBuffer validPointer + (cpuParticleSimulationBuffer rawDataSize * (frameBufferingIndex - 1))
+		to: particleStateBuffer validPointer + (cpuParticleSimulationBuffer rawDataSize * (engine bufferingFrameIndex - 1))
 		size: cpuParticleSimulationBuffer rawDataSize
 	
 ]
 
 { #category : #'as yet unclassified' }
-WDCParticleSystemRenderableSceneData >> simulateFrameWithTheGPU [
+WDCParticleSystemRenderableAnimationState >> simulateFrameWithTheGPU [
 	| shader simulationParameters stateTracker currentCommandLists pushConstants deltaTime |
 	shader := self validParticleSimulationShaderLibrary
 		getComputeStage: #particle_simulation.
@@ -130,12 +170,17 @@ WDCParticleSystemRenderableSceneData >> simulateFrameWithTheGPU [
 ]
 
 { #category : #'as yet unclassified' }
-WDCParticleSystemRenderableSceneData >> validParticleMaterial [
+WDCParticleSystemRenderableAnimationState >> updateCommonGpuStateForFrame: frameIndex [
+	self simulateFrame: frameIndex
+]
+
+{ #category : #'as yet unclassified' }
+WDCParticleSystemRenderableAnimationState >> validParticleMaterial [
 	^ particleMaterial ifNil: [ particleMaterial := WDCSimpleParticleMaterial for: engine ]
 ]
 
 { #category : #'as yet unclassified' }
-WDCParticleSystemRenderableSceneData >> validParticleSimulationComputeParameters [
+WDCParticleSystemRenderableAnimationState >> validParticleSimulationComputeParameters [
 	^ particleSimulationComputeParameters ifNil: [ particleSimulationComputeParameters :=
 		engine newGenericComputeShaderArguments
 			storageBuffer: particleStateBuffer slot: 0
@@ -143,7 +188,7 @@ WDCParticleSystemRenderableSceneData >> validParticleSimulationComputeParameters
 ]
 
 { #category : #'as yet unclassified' }
-WDCParticleSystemRenderableSceneData >> validParticleSimulationShaderLibrary [
+WDCParticleSystemRenderableAnimationState >> validParticleSimulationShaderLibrary [
 	| codeConverter lowLevelShader spirvShader compiler |
 	particleSimulationShaderLibrary ifNil: [
 		codeConverter := DASLPharoCodeConverter new.
