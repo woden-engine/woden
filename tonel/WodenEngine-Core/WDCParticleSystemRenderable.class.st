@@ -1,6 +1,6 @@
 Class {
 	#name : #WDCParticleSystemRenderable,
-	#superclass : #WDCRenderable,
+	#superclass : #WDCAbstractRenderable,
 	#instVars : [
 		'particleMaterial',
 		'particleCount',
@@ -57,8 +57,9 @@ WDCParticleSystemRenderable >> createSceneDependentDataFor: anEngine into: bindi
 { #category : #initialization }
 WDCParticleSystemRenderable >> initialize [
 	super initialize.
-	particleCount := 1000.
-	startupTime := 3.0.
+	self
+		isOpaqueShadowCaster: false;
+		translucentRenderPriority
 ]
 
 { #category : #accessing }
@@ -72,21 +73,12 @@ WDCParticleSystemRenderable >> particleCount: anObject [
 ]
 
 { #category : #'extra per object rendering data' }
-WDCParticleSystemRenderable >> performCommonGpuStateUpdateFor: anEngine frameIndex: frameBufferingIndex into: particleSystemSceneData [
-	particleSystemSceneData simulateFrame: frameBufferingIndex
-]
-
-{ #category : #'extra per object rendering data' }
 WDCParticleSystemRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [
-	(renderingSceneDependantData activateParticleMaterialOn: stateTracker) ifTrue: [ 
+	"(renderingSceneDependantData activateParticleMaterialOn: stateTracker) ifTrue: [ 
 		stateTracker
 			primitiveType: AGPU_TRIANGLE_STRIP;
 			drawArrays: 4 instance_count: particleCount first_vertex: baseInstance base_instance: baseVertex
-	].
-]
-
-{ #category : #'extra per object rendering data' }
-WDCParticleSystemRenderable >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [
+	]."
 ]
 
 { #category : #accessing }

@@ -25,8 +25,3 @@ WDSGLocalShapedSpatialInstanceObject >> shapeTransform [
 WDSGLocalShapedSpatialInstanceObject >> shapeTransform: anObject [
 	shapeTransform := anObject
 ]
-
-{ #category : #accessing }
-WDSGLocalShapedSpatialInstanceObject >> updateRenderTransform [
-	renderTransform := transform transformTransform: shapeTransform.
-]

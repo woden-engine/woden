@@ -21,7 +21,8 @@ Class {
 		'proceduralMipmapGenerationLibrary',
 		'proceduralOfflineTextureRenderer',
 		'imageBasedLightingIntegrationLibrary',
-		'imageBasedLightingBRDFLut'
+		'imageBasedLightingBRDFLut',
+		'neutralObjectInstanceState'
 	],
 	#classVars : [
 		'ShaderLanguageTargetMap',
@@ -420,6 +421,11 @@ WDCResourceCache >> flatColorMaterial [
 	^ self loadMaterial: 'materials/basic/flat.json'
 ]
 
+{ #category : #'memory pools' }
+WDCResourceCache >> genericObjectStatePool [
+	^ self streamingUniformBufferPoolFor: WTGenericObjectState
+]
+
 { #category : #'resource loading' }
 WDCResourceCache >> getOrCreateColorCubeMap: aColor [
 	^ self resourceAt: aColor -> #colorCubeTexture ifAbsentPut: [ self createCubeTextureWithColor: aColor ].
@@ -556,7 +562,8 @@ WDCResourceCache >> loadMaterial: aFileNameOrReference fallback: aBlock [
 WDCResourceCache >> loadMesh: aFileNameOrReference [
 	| modelFile |
 	modelFile := self resolveResourceFileReference: aFileNameOrReference.
-	^ self resourceAt: modelFile -> #mesh ifAbsentPut: [ (self load3DModel: modelFile) meshFor: engine  ].
+	^ (self resourceAt: modelFile -> #mesh ifAbsentPut: [ (self load3DModel: modelFile) meshFor: engine  ])
+	copyForResourceCacheInstancing.
 
 ]
 
@@ -636,6 +643,15 @@ WDCResourceCache >> mainProceduralOfflineTextureRendererForExtent: anExtent [
 	].
 
 	^ proceduralOfflineTextureRenderer 
+]
+
+{ #category : #'memory pools' }
+WDCResourceCache >> neutralGenericObjectInstanceState [
+	neutralObjectInstanceState ifNil: [
+		neutralObjectInstanceState := (self streamingStorageBufferPoolFor: WTGenericObjectState) allocate.
+		neutralObjectInstanceState value: WTGenericObjectState neutralState
+	].
+	^ neutralObjectInstanceState
 ]
 
 { #category : #private }

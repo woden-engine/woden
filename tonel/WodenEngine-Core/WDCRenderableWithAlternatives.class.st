@@ -3,7 +3,7 @@ I am a renderable with different alternatives.
 "
 Class {
 	#name : #WDCRenderableWithAlternatives,
-	#superclass : #WDCRenderable,
+	#superclass : #WDCMutableRenderable,
 	#instVars : [
 		'alternatives'
 	],
@@ -41,14 +41,10 @@ WDCRenderableWithAlternatives >> initialize [
 	alternatives := Dictionary new.
 ]
 
-{ #category : #'extra per object rendering data' }
-WDCRenderableWithAlternatives >> performCommonGpuStateUpdateFor: engine frameIndex: frameIndex into: renderableSceneData [
-	^ self defaultAlternative performCommonGpuStateUpdateFor: engine frameIndex: frameIndex into: renderableSceneData
-]
-
-{ #category : #'extra per object rendering data' }
-WDCRenderableWithAlternatives >> performGpuStateUpdateFor: engine frameIndex: frameIndex into: renderableSceneData [
-	^ self defaultAlternative performGpuStateUpdateFor: engine frameIndex: frameIndex into: renderableSceneData
+{ #category : #copying }
+WDCRenderableWithAlternatives >> postCopy [
+	super postCopy.
+	alternatives := alternatives copy.
 ]
 
 { #category : #rendering }
@@ -56,11 +52,4 @@ WDCRenderableWithAlternatives >> renderOn: stateTracker instanceCount: instanceC
 	| alternative |
 	alternative := self alternativeForSubmode: stateTracker submode.
 	^ alternative renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex
-]
-
-{ #category : #rendering }
-WDCRenderableWithAlternatives >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [
-	| alternative |
-	alternative := self alternativeForSubmode: submode.
-	^ alternative renderOn: listBuilder mode: renderMode submode: #full instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex
 ]

@@ -83,8 +83,9 @@ WDASceneExamples class >> constructPoolSceneInto: scene [
 	mesh := meshBuilder mesh.
 	
 	cube := WDSGSpatialObject new.
-	cube renderable: mesh.
-	cube transform translateByX: 4.5 y: 0.5 z: 0.0.
+	cube
+		renderable: mesh;
+		translateByX: 4.5 y: 0.5 z: 0.0.
 	scene add: cube.
 
 	"Setup the water material"
@@ -98,12 +99,14 @@ WDASceneExamples class >> constructPoolSceneInto: scene [
 		material: waterMaterial;
 		createGridWithSize: (WMVector2F x: 5.0 y: 5.0) subdivisions: 64;
 		mesh.
+	waterMesh 
+		isOpaqueShadowCaster: false;
+		translucentRenderPriority.
 		
 	waterSurface := WDSGSpatialObject new.
-	waterSurface translucentRenderPriority;
-		isOpaqueShadowCaster: false;
-		renderable: waterMesh.
-	waterSurface transform translateToX: 0.0 y: -0.3 z: 0.0.
+	waterSurface
+		renderable: waterMesh;
+		translateToX: 0.0 y: -0.3 z: 0.0.
 	scene add: waterSurface.
 ]
 
@@ -134,10 +137,11 @@ WDASceneExamples class >> createIslandWaterObjectFor: engine [
 		createClipMapWithLevels: 3 size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
 		mesh.
 		
+	mesh translucentRenderPriority;
+		isOpaqueShadowCaster: false.
+		
 	waterObject := WDSGSpatialObject new.
-	waterObject translucentRenderPriority;
-		isOpaqueShadowCaster: false;
-		renderable: mesh.
+	waterObject renderable: mesh.
 	^ waterObject
 ]
 
@@ -150,8 +154,9 @@ WDASceneExamples class >> createSkybox: extent for: engine material: skyMaterial
 		addInteriorCubeWithWidth: extent x height: extent y depth: extent z.
 
 	skyBox := WDSGSpatialObject new.
-	skyBox isOpaqueShadowCaster: false;
-		renderable: meshBuilder mesh.
+	skyBox
+		renderable: (meshBuilder mesh
+			isOpaqueShadowCaster: false).
 	^ skyBox
 ]
 
@@ -161,7 +166,7 @@ WDASceneExamples class >> example01Cube [
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
-	camera transform translateByZ: 3.0.
+	camera translateByZ: 3.0.
 	
 	meshBuilder := WDCGenericMeshBuilder for: scene engine.
 	meshBuilder addCubeWithWidth: 1.0 height: 1.0 depth: 1.0.
@@ -173,9 +178,9 @@ WDASceneExamples class >> example01Cube [
 	
 	light := WDSGLightSource new.
 	light point.
-	light state
-		intensity: Color yellow asWMVector4F.
-	light transform
+	light
+		radius: 4.0; 
+		intensity: Color yellow asWMVector4F * 5.0;
 		translateByX: -1.5 y: 1.5 z: 1.6.
 	scene add: light.
 
@@ -188,7 +193,7 @@ WDASceneExamples class >> example02TextureCube [
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
-	camera transform translateByZ: 3.0.
+	camera translateByZ: 3.0.
 	
 	material := scene engine resourceCache loadMaterial: 'materials/basic/checkboard.json'.
 	
@@ -203,10 +208,9 @@ WDASceneExamples class >> example02TextureCube [
 	scene add: cube.
 	
 	light := WDSGLightSource new.
-	light point.
-	light state
-		intensity: Color yellow asWMVector4F.
-	light transform
+	light
+		point;
+		intensity: Color yellow asWMVector4F;
 		translateByX: -1.5 y: 1.5 z: 1.6.
 	scene add: light.
 
@@ -219,7 +223,7 @@ WDASceneExamples class >> example03Floor [
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
-	camera transform translateByX: 0.0 y: 1.0 z: 3.0.
+	camera translateByX: 0.0 y: 1.0 z: 3.0.
 	
 	material := scene engine resourceCache loadMaterial: 'materials/demos/tile.json'.
 
@@ -236,10 +240,9 @@ WDASceneExamples class >> example03Floor [
 	scene add: cube.
 	
 	light := WDSGLightSource new.
-	light point.
-	light state
-			intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.3 w: 1.0) * 0.8.
-	light transform
+	light
+		point;
+		intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.3 w: 1.0) * 0.8;
 		translateByX: -1.5 y: 1.5 z: 1.6.
 	scene add: light.
 
@@ -256,7 +259,7 @@ WDASceneExamples class >> example04PoolHDR [
 		farDistance: 100.0;
 		exponentialToneMapping;
 		exposure: 0.0006.
-	camera transform translateToX: 0.0 y: 1.0 z: -4.0.
+	camera translateToX: 0.0 y: 1.0 z: -4.0.
 	scene backgroundColor: (Color cyan asWMVector4F * 1000.0).
 	camera inspect.
 	
@@ -264,9 +267,10 @@ WDASceneExamples class >> example04PoolHDR [
 
 	"Add a light"
 	sunLight := WDSGLightSource new.
-	sunLight directional; castShadows: true.
-	sunLight intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 10000.
-	sunLight transform
+	sunLight
+		directional;
+		castShadows: true;
+		intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 10000;
 		rotateDegreesOnX: -45;
 		translateToX: 0.0 y: 1.5 z: 2.5.
 
@@ -299,16 +303,17 @@ WDASceneExamples class >> example04PoolLDR [
 	camera := model camera.
 	camera
 		farDistance: 100.0.
-	camera transform translateToX: 0.0 y: 1.0 z: -4.0.
+	camera translateToX: 0.0 y: 1.0 z: -4.0.
 	
 	self constructPoolSceneInto: scene.
 
 
 	"Add a light"
 	sunLight := WDSGLightSource new.
-	sunLight directional; castShadows: true.
-	sunLight intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.7.
-	sunLight transform
+	sunLight
+		directional;
+		castShadows: true;
+		intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.7;
 		rotateDegreesOnX: -35;
 		translateToX: 0.0 y: 1.5 z: 2.5.
 
@@ -330,8 +335,9 @@ WDASceneExamples class >> example04PoolLDR [
 		addInteriorCubeWithWidth: 40.0 height: 40.0 depth: 40.0.
 
 	skyBox := WDSGSpatialObject new.
-	skyBox isOpaqueShadowCaster: false;
-		renderable: meshBuilder mesh.
+	skyBox 
+		renderable: (meshBuilder mesh
+			isOpaqueShadowCaster: false; yourself).
 	scene add: skyBox.
 	scene lightingProbe: (engine resourceCache computeEnvironmentLightProbeFromCubeTexture: skyTexture).
 
@@ -347,8 +353,7 @@ WDASceneExamples class >> example04ProceduralSky [
 	material := WDCSkyMaterial for: model engine.
 
 	camera := model camera.
-	camera transform translateByY: 1.7.
-	
+	camera translateByY: 1.7.
 	
 	meshBuilder := WDCGenericMeshBuilder for: scene engine.
 	meshBuilder
@@ -381,17 +386,17 @@ WDASceneExamples class >> example05DangerousPool [
 	scene := model newScene.
 	camera := model camera.
 	camera farDistance: 100.0.
-	camera transform translateToX: 0.0 y: 1.0 z: -4.0.
+	camera translateToX: 0.0 y: 1.0 z: -4.0.
 	engine := scene engine.
 	
 	self constructPoolSceneInto: scene.
 	
 	"Add a light"
 	sunLight := WDSGLightSource new.
-	sunLight directional; castShadows: true.
-	sunLight state
-			intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.8.
-	sunLight transform
+	sunLight
+		directional;
+		castShadows: true;
+		intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.8;
 		rotateDegreesOnX: -45;
 		translateToX: 0.0 y: 1.5 z: 2.5.
 		
@@ -405,8 +410,8 @@ WDASceneExamples class >> example05DangerousPool [
 		addInteriorCubeWithWidth: 40.0 height: 40.0 depth: 40.0.
 
 	skyBox := WDSGSpatialObject new.
-	skyBox isOpaqueShadowCaster: false;
-		renderable: meshBuilder mesh.
+	skyBox
+		renderable: (meshBuilder mesh isOpaqueShadowCaster: false).
 		
 	scene add: skyBox.
 	
@@ -416,14 +421,14 @@ WDASceneExamples class >> example05DangerousPool [
 	pickedGun renderable: magnumMesh.
 	camera addChild: pickedGun.
 
-	animationState := pickedGun renderableSceneData.
+	animationState := magnumMesh animationState.
 	gunAction := animationState actionNamed: 'Draw'.
 	gunActionFrame := 0.0.
 	gunActionRepeated := false.
 	
 	model onDeltaTimeDo: [ :delta |
 		gunActionFrame := gunActionFrame + (delta *30.0).
-		pickedGun renderableSceneData
+		animationState
 			setRestPose;
 			addAction: gunAction repeated: gunActionRepeated frame: gunActionFrame;
 			computePoseMatrices.
@@ -445,7 +450,7 @@ WDASceneExamples class >> example06MeshGrid [
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
-	camera transform translateByZ: 3.0.
+	camera translateByZ: 3.0.
 	
 	material := scene engine resourceCache loadMaterial: 'materials/basic/flat.json'.
 	
@@ -460,10 +465,9 @@ WDASceneExamples class >> example06MeshGrid [
 	scene add: cube.
 	
 	light := WDSGLightSource new.
-	light point.
-	light state
-		intensity: Color yellow asWMVector4F.
-	light transform
+	light
+		point;
+		intensity: Color yellow asWMVector4F;
 		translateByX: -1.5 y: 1.5 z: 1.6.
 	scene add: light.
 
@@ -487,7 +491,7 @@ WDASceneExamples class >> example07SmallTerrain [
 	scene := model newScene.
 	camera := model camera.
 	camera farDistance: 100.0.
-	camera transform translateByZ: 3.0; translateByY: 1.0.
+	camera translateByZ: 3.0; translateByY: 1.0.
 
 	material := WDCTerrainMaterial for: scene engine.
 	material
@@ -501,23 +505,22 @@ WDASceneExamples class >> example07SmallTerrain [
 		mesh.
 		
 	terrain := WDSGSpatialObject new.
-	terrain transform translateByY: -1.0.
+	terrain translateByY: -1.0.
 	terrain renderable: mesh.
 	
 	cube := WDSGSpatialObject new.
 	cube renderable: ((WDCGenericMeshBuilder for: scene engine)
 		addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
 		mesh).
-	cube transform translateByY: 3.0.	
+	cube translateByY: 3.0.	
 	scene add: cube.
 	
 	scene add: terrain.
 	
 	light := WDSGLightSource new.
 	light directional; castShadows: true.
-	light state
-		intensity: (Color fromHexString: 'f1efd7') asWMVector4F.
-	light transform
+	light 
+		intensity: (Color fromHexString: 'f1efd7') asWMVector4F;
 		rotateDegreesOnX: -45;
 		rotateDegreesOnY: 135;
 		translateToX: 0.0 y: 1.5 z: 2.5.
@@ -543,7 +546,7 @@ WDASceneExamples class >> example08MediumTerrain [
 	scene := model newScene.
 	camera := model camera.
 	camera farDistance: 200.0.
-	camera transform translateByZ: 3.0; translateByY: 1.0.
+	camera translateByZ: 3.0; translateByY: 1.0.
 
 	material := WDCTerrainMaterial for: scene engine.
 	material
@@ -562,10 +565,10 @@ WDASceneExamples class >> example08MediumTerrain [
 	scene add: terrain.
 	
 	light := WDSGLightSource new.
-	light directional; castShadows: true.
-	light state
-		intensity: (Color fromHexString: 'f1efd7') asWMVector4F.
-	light transform
+	light
+		directional;
+		castShadows: true;
+		intensity: (Color fromHexString: 'f1efd7') asWMVector4F;
 		rotateDegreesOnX: -45;
 		rotateDegreesOnY: 135;
 		translateToX: 0.0 y: 1.5 z: 2.5.
@@ -576,22 +579,20 @@ WDASceneExamples class >> example08MediumTerrain [
 
 { #category : #examples }
 WDASceneExamples class >> example09DragonIsland [
-	| model terrain scene camera water view skyMaterial skyBox dragonMesh dragon dragonAction dragonActionRepeated dragonActionFrame sunLight skyTexture |
+	| model terrain scene camera water view skyMaterial skyBox dragonMesh dragon dragonAction dragonActionRepeated dragonActionFrame sunLight skyTexture dragonAnimationState |
 	
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
 	camera farDistance: 250.0.
-	camera transform translateByZ: 85.0; translateByY: 1.5.
+	camera translateByZ: 85.0; translateByY: 1.5.
 	
 	sunLight := WDSGLightSource new.
 	sunLight directional; castShadows: true;
 		extraShadowDistanceFactor: 100;
 		shadowMapDepthBiasConstant: 20.0;
-		shadowMapDepthBiasSlope: 5.0.
-	sunLight state
-		intensity: (Color fromHexString: 'f1efd7') asWMVector4F*0.6.
-	sunLight transform
+		shadowMapDepthBiasSlope: 5.0;
+		intensity: (Color fromHexString: 'f1efd7') asWMVector4F*0.6;
 		rotateDegreesOnX: -35;
 		translateToX: 0.0 y: 1.5 z: 2.5.
 	scene add: sunLight.
@@ -615,7 +616,6 @@ WDASceneExamples class >> example09DragonIsland [
 	water := self createIslandWaterObjectFor: scene engine.
 	scene add: water.
 	
-	
 	dragonMesh := scene engine resourceCache loadMesh: 'models/demos/baby_dragon.fmdl'.
 	dragon := WDSGSpatialObject new.
 	dragon renderable: dragonMesh.
@@ -626,12 +626,13 @@ WDASceneExamples class >> example09DragonIsland [
 
 	scene add: dragon.
 	
-	dragonAction := dragon renderableSceneData actionNamed: 'Idle'.
+	dragonAnimationState := dragonMesh animationState.
+	dragonAction := dragonAnimationState actionNamed: 'Idle'.
 	dragonActionRepeated := true.
 	dragonActionFrame := 0.0.
 	model onDeltaTimeDo: [ :delta |
 		dragonActionFrame := dragonActionFrame + (delta *30.0).
-		dragon renderableSceneData
+		dragonAnimationState
 			setRestPose;
 			addAction: dragonAction repeated: dragonActionRepeated frame: dragonActionFrame;
 			computePoseMatrices.
@@ -662,10 +663,9 @@ WDASceneExamples class >> example10ParticleSystem [
 	scene add: cube.
 	
 	light := WDSGLightSource new.
-	light point.
-	light state
-			intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.9) normalized * 0.8.
-	light transform
+	light
+		point;
+		intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.9) normalized * 0.8;
 		translateByX: -1.5 y: 1.5 z: 1.6.
 	scene add: light.
 
@@ -707,11 +707,8 @@ WDASceneExamples class >> example10ParticleSystem [
 	].
 
 	particleSystem := WDSGSpatialObject new.
-	particleSystem translucentRenderPriority;
-		isOpaqueShadowCaster: false.
-
 	particleSystem renderable: particleSystemRenderable.
-	particleSystem transform translateByY: 0.5.
+	particleSystem translateByY: 0.5.
 	scene add: particleSystem.
 
 	model openWith: WDAFPSSceneView.
@@ -757,10 +754,9 @@ WDASceneExamples class >> exampleModelSponza [
 	camera transform translateByY: 0.5.
 	
 	moonLight := WDSGLightSource new.
-	moonLight directional.
-	moonLight state
-			intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.3.
-	moonLight transform
+	moonLight
+		directional;
+		intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.3;
 		rotateDegreesOnX: -35.
 		
 	scene add: moonLight.
@@ -775,7 +771,7 @@ WDASceneExamples class >> exampleModelSponza [
 		light point
 			radius: 9.0;
 			intensity: (WMVector4F ones)*2.5.
-		light transform translation: position.
+		light position: position.
 		scene add: light.
 	].
 	

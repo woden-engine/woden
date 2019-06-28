@@ -92,8 +92,8 @@ WDCMeshExplicitVertexChannel >> description [
 ]
 
 { #category : #'as yet unclassified' }
-WDCMeshExplicitVertexChannel >> engineChangedTo: anEngine [
-	accessor engineChangedTo: anEngine
+WDCMeshExplicitVertexChannel >> engine: anEngine [
+	accessor engine: anEngine
 ]
 
 { #category : #comparing }

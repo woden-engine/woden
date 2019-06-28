@@ -5,12 +5,12 @@ Class {
 	#name : #WDSGAbstractLightRenderingState,
 	#superclass : #Object,
 	#instVars : [
-		'light',
 		'shadowMapIndex',
 		'engine',
-		'mainCamera'
+		'mainCamera',
+		'renderingLight'
 	],
-	#category : #'WodenEngine-Scene-Rendering'
+	#category : #'WodenEngine-Core-Lighting'
 }
 
 { #category : #accessing }
@@ -24,13 +24,13 @@ WDSGAbstractLightRenderingState >> engine: anObject [
 ]
 
 { #category : #accessing }
-WDSGAbstractLightRenderingState >> light [
-	^ light
+WDSGAbstractLightRenderingState >> globalTransform [
+	^ renderingLight transform
 ]
 
 { #category : #accessing }
-WDSGAbstractLightRenderingState >> light: anObject [
-	light := anObject
+WDSGAbstractLightRenderingState >> light [
+	^ renderingLight lightSource
 ]
 
 { #category : #accessing }
@@ -44,8 +44,18 @@ WDSGAbstractLightRenderingState >> mainCamera: anObject [
 ]
 
 { #category : #accessing }
+WDSGAbstractLightRenderingState >> renderingLight [
+	^ renderingLight
+]
+
+{ #category : #accessing }
+WDSGAbstractLightRenderingState >> renderingLight: anObject [
+	renderingLight := anObject
+]
+
+{ #category : #accessing }
 WDSGAbstractLightRenderingState >> scene [
-	^ light scene
+	^ renderingLight node scene
 ]
 
 { #category : #'shadow mapping' }
@@ -67,5 +77,5 @@ WDSGAbstractLightRenderingState >> shadowMapIndex [
 
 { #category : #'as yet unclassified' }
 WDSGAbstractLightRenderingState >> viewStateForCameraTransform: cameraTransform [
-	^ light viewStateForRenderingState: self cameraTransform: cameraTransform
+	^ renderingLight lightSource viewStateForRenderingState: self cameraTransform: cameraTransform
 ]

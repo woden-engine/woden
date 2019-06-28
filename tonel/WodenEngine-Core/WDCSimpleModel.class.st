@@ -123,19 +123,21 @@ WDCSimpleModel >> mapMaterials: aDictionary [
 { #category : #'as yet unclassified' }
 WDCSimpleModel >> meshFor: anEngine [
 	| mesh |
-	armature ifNotNil: [
-		mesh := WDCSkinnedGenericMesh new.
-		mesh
-			armature: armature;
-			actions: actions
-	] ifNil: [ 
-		mesh := WDCGenericMesh new.
-	].
+	mesh := WDCGenericMesh new.
 	mesh
 		boundingBox: boundingBox copy;
 		vertexBinding: (self createVertexBindingFor: anEngine);
 		indexBuffer: (self createIndexBufferFor: anEngine);
 		submeshes: (submeshes collect: [:sm | sm subMeshFor: anEngine]).
+		
+	armature ifNotNil: [
+		^ WDCSkinnedGenericMesh new
+			mesh: mesh;
+			armature: armature;
+			actions: actions;
+			yourself
+	].
+
 	^ mesh
 ]
 

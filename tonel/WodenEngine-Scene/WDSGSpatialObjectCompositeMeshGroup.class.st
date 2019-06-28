@@ -26,12 +26,6 @@ WDSGSpatialObjectCompositeMeshGroup >> removeChild: aChild [
 	self invalidateRenderable
 ]
 
-{ #category : #rendering }
-WDSGSpatialObjectCompositeMeshGroup >> renderOn: stateTracker [
-	self validateRenderable.
-	^ super renderOn: stateTracker
-]
-
 { #category : #changing }
 WDSGSpatialObjectCompositeMeshGroup >> stateChanged [
 	super stateChanged.

@@ -3,16 +3,9 @@ I represent a light source in the Woden scene graph.
 "
 Class {
 	#name : #WDSGLightSource,
-	#superclass : #WDSGNode,
+	#superclass : #WDSGAbstractSpatialObject,
 	#instVars : [
-		'state',
-		'type',
-		'castShadows',
-		'outerSpotCutoff',
-		'innerSpotCutoff',
-		'extraShadowDistanceFactor',
-		'shadowMapDepthBiasConstant',
-		'shadowMapDepthBiasSlope'
+		'renderingRenderable'
 	],
 	#classVars : [
 		'DefaultExtraShadowDistanceFactor',
@@ -24,85 +17,68 @@ Class {
 	#category : #'WodenEngine-Scene-Graph'
 }
 
-{ #category : #initialization }
-WDSGLightSource class >> initialize [	
-	DefaultSpotOuterCutoff := 45.
-	DefaultSpotInnerCutoff := 40.
-	DefaultExtraShadowDistanceFactor := 50.0.
-	DefaultShadowMapDepthBiasConstant := 4.0.
-	DefaultShadowMapDepthBiasSlope := 1.5.
-]
-
 { #category : #accessing }
 WDSGLightSource >> castShadows [
-	^ castShadows
+	^ objectState castShadows
 ]
 
 { #category : #accessing }
-WDSGLightSource >> castShadows: anObject [
-	castShadows := anObject
+WDSGLightSource >> castShadows: aBoolean [
+	objectState castShadows: aBoolean
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
+WDSGLightSource >> createSpatialObjectState [
+	objectState := WDCLightSource new
+]
+
+{ #category : #'light type' }
 WDSGLightSource >> directional [
-	type := #directional.
-	state
-		outerCosCutoff: -1.0;
-		innerCosCutoff: -1.0
+	objectState directional
 ]
 
 { #category : #accessing }
 WDSGLightSource >> extraShadowDistanceFactor [
-	^ extraShadowDistanceFactor
+	^ objectState extraShadowDistanceFactor
 ]
 
 { #category : #accessing }
 WDSGLightSource >> extraShadowDistanceFactor: aNumber [
-	extraShadowDistanceFactor := aNumber
+	objectState extraShadowDistanceFactor: aNumber
 ]
 
 { #category : #initialization }
 WDSGLightSource >> initialize [
 	super initialize.
-	castShadows := false.
-	outerSpotCutoff := DefaultSpotOuterCutoff.
-	innerSpotCutoff := DefaultSpotInnerCutoff.
-	extraShadowDistanceFactor := DefaultExtraShadowDistanceFactor.
-	shadowMapDepthBiasConstant := DefaultShadowMapDepthBiasConstant.
-	shadowMapDepthBiasSlope := DefaultShadowMapDepthBiasSlope.
-	state := WTLightSourceData new.
-	state
-		intensity: Color white asWMVector4F;
-		radius: 3.0.
-	self point.
+	renderingRenderable := WDCRenderingSceneLightSourceObject new
+		node: self;
+		spatialObject: objectState;
+		yourself.
 ]
 
 { #category : #accessing }
 WDSGLightSource >> innerSpotCutoff [
-	^ innerSpotCutoff
+	^ objectState innerSpotCutoff
 ]
 
 { #category : #accessing }
-WDSGLightSource >> innerSpotCutoff: anObject [
-	innerSpotCutoff := anObject.
-	self isSpotLight ifTrue: [ 
-		state innerCosCutoff: innerSpotCutoff degreeCos.
-	]
+WDSGLightSource >> innerSpotCutoff: aNumber [
+	objectState innerSpotCutoff: aNumber
 ]
 
 { #category : #accessing }
 WDSGLightSource >> intensity [
-	^ state intensity
+	^ objectState intensity
 ]
 
 { #category : #accessing }
 WDSGLightSource >> intensity: aLightIntensity [
-	^ state intensity: aLightIntensity
+	^ objectState intensity: aLightIntensity
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
 WDSGLightSource >> isDirectionalLight [
-	^ type == #directional
+	^ objectState isDirectionalLight
 ]
 
 { #category : #testing }
@@ -110,123 +86,67 @@ WDSGLightSource >> isLightSource [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
 WDSGLightSource >> isPointLight [
-	^ type == #point
+	^ objectState isPointLight
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
 WDSGLightSource >> isShadowCasting [
-	^ castShadows and: [ self isSpotLight or: [ self isDirectionalLight ] ]
+	^ objectState isShadowCasting
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
 WDSGLightSource >> isSpotLight [
-	^ type == #spot
-]
-
-{ #category : #'shadow mapping' }
-WDSGLightSource >> lightRenderingStateClass [
-	(WDCEngine shadowMappingEnabled and: [castShadows]) ifFalse: [ ^ WDSGNonShadowingLightRenderingState ].
-	
-	self isSpotLight ifTrue: [ ^ WDSGSpotLightRenderingState ].
-	"self isDirectionalLight ifTrue: [ ^ WDSGDirectionalLightRenderingState ]."
-	self isDirectionalLight ifTrue: [ ^ WDSGCascadeDirectionalLightRenderingState ].
-	^ WDSGNonShadowingLightRenderingState
+	^ objectState isSpotLight
 ]
 
 { #category : #accessing }
 WDSGLightSource >> outerSpotCutoff [
-	^ outerSpotCutoff
+	^ objectState outerSpotCutoff
 ]
 
 { #category : #accessing }
-WDSGLightSource >> outerSpotCutoff: anObject [
-	outerSpotCutoff := anObject.
-	self isSpotLight ifTrue: [ 
-		state outerCosCutoff: outerSpotCutoff degreeCos.
-	].
-
-
+WDSGLightSource >> outerSpotCutoff: aNumber [
+	objectState outerSpotCutoff: aNumber
 ]
 
-{ #category : #accessing }
+{ #category : #'light type' }
 WDSGLightSource >> point [
-	type := #point.
-	state
-		outerCosCutoff: -1.0;
-		innerCosCutoff: -1.0
+	objectState point
 ]
 
 { #category : #accessing }
 WDSGLightSource >> radius: aNumber [
-	state radius: aNumber
+	objectState radius: aNumber
 ]
 
-{ #category : #'shadow mapping' }
-WDSGLightSource >> setupRenderingWithShadowMap: shadowMapIndex mainCamera: mainCamera engine: engine [
-	^ self lightRenderingStateClass new
-		light: self;
-		mainCamera: mainCamera;
-		engine: engine;
-		setupShadowMapWithIndex: shadowMapIndex;
-		yourself
-]
-
-{ #category : #'as yet unclassified' }
-WDSGLightSource >> shadowLayerCount [
-	self isSpotLight ifTrue: [ ^ 1 ].
-	self isDirectionalLight ifTrue: [ ^ 3 ].
-	^ 0
+{ #category : #accessing }
+WDSGLightSource >> renderingRenderables [
+	^ { renderingRenderable }
 ]
 
 { #category : #accessing }
 WDSGLightSource >> shadowMapDepthBiasConstant [
-	^ shadowMapDepthBiasConstant
+	^ objectState shadowMapDepthBiasConstant
 ]
 
 { #category : #accessing }
-WDSGLightSource >> shadowMapDepthBiasConstant: anObject [
-	shadowMapDepthBiasConstant := anObject
+WDSGLightSource >> shadowMapDepthBiasConstant: aNumber [
+	objectState shadowMapDepthBiasConstant: aNumber
 ]
 
 { #category : #accessing }
 WDSGLightSource >> shadowMapDepthBiasSlope [
-	^ shadowMapDepthBiasSlope
+	^ objectState shadowMapDepthBiasSlope
 ]
 
 { #category : #accessing }
-WDSGLightSource >> shadowMapDepthBiasSlope: anObject [
-	shadowMapDepthBiasSlope := anObject
+WDSGLightSource >> shadowMapDepthBiasSlope: aNumber [
+	objectState shadowMapDepthBiasSlope: aNumber
 ]
 
-{ #category : #accessing }
+{ #category : #'light type' }
 WDSGLightSource >> spot [
-	type := #spot.
-	state
-		outerCosCutoff: outerSpotCutoff degreeCos;
-		innerCosCutoff: innerSpotCutoff degreeCos
-]
-
-{ #category : #accessing }
-WDSGLightSource >> state [
-	^ state
-]
-
-{ #category : #'shadow mapping' }
-WDSGLightSource >> viewStateForRenderingState: renderingState cameraTransform: cameraTransform [
-	| result |
-	result := state copy.
-	result shadowMapLayer: -1.0.
-	type == #directional ifTrue: [
-		result direction: (cameraTransform inverseTransformVector3: (renderTransform transformVector3: (WMVector3F z: 1.0))).
-	] ifFalse: [
-		result position: (cameraTransform inverseTransformPosition3: renderTransform translation).
-	].
-
-	type == #spot ifTrue: [ 
-		result spotDirection: (cameraTransform inverseTransformVector3: (renderTransform transformVector3: (WMVector3F z: 1.0))).
-	].
-
-	^ result
+	objectState spot
 ]

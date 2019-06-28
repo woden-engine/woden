@@ -3,11 +3,13 @@ I am a generic mesh that is also deformed by an armature.
 "
 Class {
 	#name : #WDCSkinnedGenericMesh,
-	#superclass : #WDCGenericMesh,
+	#superclass : #WDCMutableRenderable,
 	#instVars : [
+		'mesh',
 		'armature',
 		'actions',
-		'pose'
+		'pose',
+		'animationState'
 	],
 	#category : #'WodenEngine-Core-Mesh'
 }
@@ -20,6 +22,16 @@ WDCSkinnedGenericMesh >> actions [
 { #category : #accessing }
 WDCSkinnedGenericMesh >> actions: anObject [
 	actions := anObject
+]
+
+{ #category : #accessing }
+WDCSkinnedGenericMesh >> animationState [
+	^ animationState ifNil: [ animationState := WDCSkinnedMeshAnimationState new
+		mesh: self;
+		pose: armature bones copy;
+		setRestPoseAndMatrices;
+		yourself
+	]
 ]
 
 { #category : #accessing }
@@ -49,14 +61,28 @@ WDCSkinnedGenericMesh >> createSceneDependentDataFor: engine into: bindings [
 		yourself
 ]
 
-{ #category : #'extra per object rendering data' }
-WDCSkinnedGenericMesh >> performCommonGpuStateUpdateFor: engine frameIndex: frameIndex into: animationState [
-	| poseStateSize |
-	poseStateSize := self poseStateSize.
-	LibC memCopy: animationState poseMatrices rawData to: animationState poseBuffer validPointer getHandle + (poseStateSize * (frameIndex - 1)) size: poseStateSize
+{ #category : #accessing }
+WDCSkinnedGenericMesh >> mesh [
+	^ mesh
+]
+
+{ #category : #accessing }
+WDCSkinnedGenericMesh >> mesh: anObject [
+	mesh := anObject
 ]
 
 { #category : #'extra per object rendering data' }
 WDCSkinnedGenericMesh >> poseStateSize [
 	^ WMMatrix4F structureSize * armature bones size alignedTo: 256.
+]
+
+{ #category : #copying }
+WDCSkinnedGenericMesh >> postCopy [
+	super postCopy.
+	mesh := mesh copyForResourceCacheInstancing.
+	animationState := animationState copy.
+]
+
+{ #category : #rendering }
+WDCSkinnedGenericMesh >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 ]

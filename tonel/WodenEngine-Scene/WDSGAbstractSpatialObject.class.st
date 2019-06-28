@@ -5,12 +5,21 @@ Class {
 	#name : #WDSGAbstractSpatialObject,
 	#superclass : #WDSGNode,
 	#instVars : [
-		'isOpaqueShadowCaster',
-		'objectState',
-		'renderPriority'
+		'objectState'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
+
+{ #category : #adding }
+WDSGAbstractSpatialObject >> addedToScene: aScene [
+	super addedToScene: aScene.
+	aScene addNodeWithPendingState: self.
+]
+
+{ #category : #'rendering phases' }
+WDSGAbstractSpatialObject >> bakeLazyObjectStates [
+	objectState transform: self globalTransform
+]
 
 { #category : #accessing }
 WDSGAbstractSpatialObject >> color [
@@ -24,25 +33,29 @@ WDSGAbstractSpatialObject >> color: aColor [
 ]
 
 { #category : #initialization }
+WDSGAbstractSpatialObject >> createSpatialObjectState [
+	self subclassResponsibility
+]
+
+{ #category : #caching }
+WDSGAbstractSpatialObject >> globalTransformValidated [
+	objectState transform: globalTransform
+]
+
+{ #category : #initialization }
 WDSGAbstractSpatialObject >> initialize [
 	super initialize.
-	renderPriority := RenderPriorityDefault.
-	isOpaqueShadowCaster := true.
-	objectState := WTGenericObjectState new.
-	objectState
-		visible: 1;
-		color: Color white asWMVector4F.
-	
+	self createSpatialObjectState
 ]
 
 { #category : #accessing }
 WDSGAbstractSpatialObject >> isOpaqueShadowCaster [
-	^ isOpaqueShadowCaster
+	^ objectState isOpaqueShadowCaster
 ]
 
 { #category : #accessing }
-WDSGAbstractSpatialObject >> isOpaqueShadowCaster: anObject [
-	isOpaqueShadowCaster := anObject
+WDSGAbstractSpatialObject >> isOpaqueShadowCaster: aBoolean [
+	objectState isOpaqueShadowCaster: aBoolean
 ]
 
 { #category : #testing }
@@ -55,29 +68,15 @@ WDSGAbstractSpatialObject >> objectState [
 	^ objectState
 ]
 
-{ #category : #accessing }
-WDSGAbstractSpatialObject >> renderPriority [
-	^ renderPriority
-]
-
-{ #category : #accessing }
-WDSGAbstractSpatialObject >> renderPriority: aPriority [
-	renderPriority := aPriority
-]
-
-{ #category : #'some render priorities' }
-WDSGAbstractSpatialObject >> translucentRenderPriority [
-	self renderPriority: RenderPriorityTranslucent
-]
-
-{ #category : #'some render priorities' }
-WDSGAbstractSpatialObject >> translucentSortedRenderPriority [
-	self renderPriority: RenderPriorityTranslucentSorted
+{ #category : #changing }
+WDSGAbstractSpatialObject >> stateChanged [
+	super stateChanged.
+	scene ifNotNil: [ scene addNodeWithPendingState: self ].
 ]
 
 { #category : #'as yet unclassified' }
 WDSGAbstractSpatialObject >> visible: aBoolean [
 	super visible: aBoolean.
-	objectState visible: aBoolean asBit.
+	objectState visible: aBoolean.
 	self stateChanged.
 ]

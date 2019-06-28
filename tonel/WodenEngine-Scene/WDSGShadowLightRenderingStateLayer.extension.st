@@ -1,15 +1,4 @@
-"
-I represent the state for a single shadow map rendering layer.
-"
-Class {
-	#name : #WDSGShadowLightRenderingStateLayer,
-	#superclass : #WDSGAbstractLightRenderingState,
-	#instVars : [
-		'shadowProjectionMatrix',
-		'renderTransform'
-	],
-	#category : #'WodenEngine-Scene-Rendering'
-}
+Extension { #name : #WDSGShadowLightRenderingStateLayer }
 
 { #category : #'*WodenEngine-Scene' }
 WDSGShadowLightRenderingStateLayer >> viewportForShadowMap: renderTarget camera: camera submode: submode [

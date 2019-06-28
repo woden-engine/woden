@@ -73,7 +73,7 @@ WDSGViewport >> cameraState: anObject [
 
 { #category : #accessing }
 WDSGViewport >> cameraTransform [
-	^ cameraTransform ifNil: [ cameraTransform := cameraTransformFunction value: camera renderTransform ]
+	^ cameraTransform ifNil: [ cameraTransform := cameraTransformFunction value: camera globalTransform ]
 ]
 
 { #category : #accessing }

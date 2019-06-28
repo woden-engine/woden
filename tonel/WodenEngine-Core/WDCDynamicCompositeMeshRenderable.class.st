@@ -1,6 +1,6 @@
 Class {
 	#name : #WDCDynamicCompositeMeshRenderable,
-	#superclass : #WDCRenderable,
+	#superclass : #WDCMutableRenderable,
 	#instVars : [
 		'builder',
 		'isValid',
@@ -45,14 +45,16 @@ WDCDynamicCompositeMeshRenderable >> invalidate [
 	isValid := false
 ]
 
+{ #category : #copying }
+WDCDynamicCompositeMeshRenderable >> postCopy [
+	super postCopy.
+	isValid := false.
+	concreteRenderable := nil.
+]
+
 { #category : #rendering }
 WDCDynamicCompositeMeshRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	^ concreteRenderable renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex 
-]
-
-{ #category : #'as yet unclassified' }
-WDCDynamicCompositeMeshRenderable >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [
-	concreteRenderable renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex
 ]
 
 { #category : #'as yet unclassified' }
@@ -60,7 +62,7 @@ WDCDynamicCompositeMeshRenderable >> validateForNode: aNode [
 	isValid ifTrue: [ ^ self ].
 	builder clear.
 	
-	aNode children do: [ :child |
+	aNode childrenDo: [ :child |
 		child buildMeshOn: builder
 	].
 	

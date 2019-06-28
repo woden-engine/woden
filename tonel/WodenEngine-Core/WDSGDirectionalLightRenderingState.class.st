@@ -13,7 +13,7 @@ Class {
 		'cameraNearDistance',
 		'cameraFarDistance'
 	],
-	#category : #'WodenEngine-Scene-Rendering'
+	#category : #'WodenEngine-Core-Lighting'
 }
 
 { #category : #accessing }
@@ -102,10 +102,10 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
     Date: October 14, 2004
 	"
 	| frustumBox viewVector viewPosition cosGamma sinGamma lightDepth z_n z_f nearDistance farDistance upVector perspectivePoint perspectiveTransform falloff bodyNearDistance alpha paperNearDistance shortRangeNearDistance |
-	mainCameraTransform := "self roundCameraTransform:" mainCamera renderTransform.
-	extraShadowDistanceFactor := light extraShadowDistanceFactor.
+	mainCameraTransform := "self roundCameraTransform:" mainCamera globalTransform.
+	extraShadowDistanceFactor := renderingLight lightSource extraShadowDistanceFactor.
 	
-	lightVector := light renderTransform matrix transformVector3: (WMVector3F z: -1.0).
+	lightVector := renderingLight transform matrix transformVector3: (WMVector3F z: -1.0).
 	viewPosition := mainCameraTransform translation.
 	viewVector := (mainCameraTransform transformVector3: (WMVector3F z: -1.0)) normalized.
 	shadowCastingBody := self extractShadowCastingBodyPoints.
@@ -113,7 +113,7 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 	"Compute an initial render transform."	
 	upVector := self computeUpVectorWithViewVector: viewVector lightVector: lightVector.
 	"self computeUpVectorWithShadowCastingBody: shadowCastingBody."
-	
+
 	"When the up vector and the lightvector are close to parallel, fallback to uniform shadow mapping."
 	(viewVector dot: lightVector) abs > 0.999 ifTrue: [
 		^ self setupUniformShadowMappingTransforms
@@ -171,14 +171,14 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 { #category : #'shadow mapping' }
 WDSGDirectionalLightRenderingState >> setupUniformShadowMappingTransforms [
 	| frustumBox viewVector viewPosition |
-	mainCameraTransform := self roundCameraTransform: mainCamera renderTransform.
-	extraShadowDistanceFactor := light extraShadowDistanceFactor.
+	mainCameraTransform := self roundCameraTransform: mainCamera globalTransform.
+	extraShadowDistanceFactor := renderingLight lightSource extraShadowDistanceFactor.
 	
 	viewPosition := mainCameraTransform translation.
 	viewVector := mainCameraTransform transformVector3: (WMVector3F z: -1.0).
 	
 	"renderTransform := WMReversibleAffineTransformF from: viewPosition lookAtDirection: lightVector up: viewVector."
-	renderTransform := light renderTransform.
+	renderTransform := renderingLight transform.
 	
 	frustumBox := WMBox3DF empty.
 	shadowCastingBody do: [ :point |

@@ -64,8 +64,8 @@ WDCBufferAccessor >> count: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-WDCBufferAccessor >> engineChangedTo: anEngine [
-	bufferView engineChangedTo: anEngine
+WDCBufferAccessor >> engine: anEngine [
+	bufferView engine: anEngine
 ]
 
 { #category : #accessing }

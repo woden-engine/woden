@@ -59,7 +59,7 @@ WDSLightedSceneRenderer >> applyDebugRenderShadowMapViewport [
 
 	cameraState := renderingViewports first viewport cameraState copy.
 	cameraState
-		transform: shadowLight renderTransform;
+		transform: shadowLight globalTransform;
 		projectionMatrix: shadowLight shadowProjectionMatrix.
 			
 	gpuCameraState := renderingViewports first cameraStateShaderBindings slotValueAt: 0.
@@ -187,16 +187,17 @@ WDSLightedSceneRenderer >> maxShadowCastingLightCount [
 ]
 
 { #category : #'rendering preparations' }
-WDSLightedSceneRenderer >> prepareLightSource: lightSource forViewportCamera: viewportCamera [
-	| shadowMapIndex lightRenderingState |
+WDSLightedSceneRenderer >> prepareLightSource: renderingLightSource forViewportCamera: viewportCamera [
+	| shadowMapIndex lightRenderingState lightSource |
 	shadowMapIndex := -1.
+	lightSource := renderingLightSource lightSource.
 	(engine shadowMappingEnabled and:
 	 [lightSource isShadowCasting and:
 	 [ shadowCastingLightCount + lightSource shadowLayerCount <= shadowCastingLights size ]]) ifTrue: [
 		shadowMapIndex := shadowCastingLightCount
 	].
 
-	lightRenderingState := lightSource setupRenderingWithShadowMap: shadowMapIndex mainCamera: viewportCamera engine: engine.
+	lightRenderingState := renderingLightSource setupRenderingWithShadowMap: shadowMapIndex mainCamera: viewportCamera engine: engine.
 	shadowMapIndex >= 0 ifTrue: [
 		lightRenderingState cascades do: [ :cascade | 
 			shadowCastingLightCount := shadowCastingLightCount + 1.

@@ -3,7 +3,7 @@ I am a generic mesh renderable
 "
 Class {
 	#name : #WDCGenericMesh,
-	#superclass : #WDCRenderable,
+	#superclass : #WDCImmutableRenderable,
 	#instVars : [
 		'vertexData',
 		'vertexBinding',
@@ -19,15 +19,15 @@ WDCGenericMesh >> createSceneDependentDataFor: engine into: bindings [
 ]
 
 { #category : #'as yet unclassified' }
-WDCGenericMesh >> engineChangedTo: newEngine [
-	indexBuffer ifNotNil: [ indexBuffer engineChangedTo: newEngine ].
-	vertexData ifNotNil: [ vertexData engineChangedTo: newEngine ].
-	vertexBinding ifNotNil: [ vertexBinding engineChangedTo: newEngine ].
+WDCGenericMesh >> engine: newEngine [
+	indexBuffer ifNotNil: [ indexBuffer engine: newEngine ].
+	vertexData ifNotNil: [ vertexData engine: newEngine ].
+	vertexBinding ifNotNil: [ vertexBinding engine: newEngine ].
 	(vertexBinding isNil and: [ vertexData isNotNil ]) ifTrue: [
 		vertexBinding := vertexData createVertexBindingFor: newEngine
 	].
 
-	submeshes do: [ :sm | sm engineChangedTo: newEngine ]
+	submeshes do: [ :sm | sm engine: newEngine ]
 ]
 
 { #category : #accessing }
@@ -37,8 +37,7 @@ WDCGenericMesh >> indexBuffer [
 
 { #category : #accessing }
 WDCGenericMesh >> indexBuffer: anObject [
-	indexBuffer := anObject.
-	modificationCount := modificationCount + 1.
+	indexBuffer := anObject
 ]
 
 { #category : #rendering }
@@ -53,14 +52,6 @@ WDCGenericMesh >> renderOn: stateTracker instanceCount: instanceCount baseInstan
 
 ]
 
-{ #category : #rendering }
-WDCGenericMesh >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [
-	listBuilder
-		useVertexBinding: vertexBinding validHandle;
-		useIndexBuffer: indexBuffer validHandle.
-	submeshes do: [ :sm | sm renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex ]
-]
-
 { #category : #accessing }
 WDCGenericMesh >> submeshes [
 	^ submeshes
@@ -68,8 +59,7 @@ WDCGenericMesh >> submeshes [
 
 { #category : #accessing }
 WDCGenericMesh >> submeshes: anObject [
-	submeshes := anObject.
-	modificationCount := modificationCount + 1.
+	submeshes := anObject
 ]
 
 { #category : #accessing }
@@ -79,8 +69,7 @@ WDCGenericMesh >> vertexBinding [
 
 { #category : #accessing }
 WDCGenericMesh >> vertexBinding: anObject [
-	vertexBinding := anObject.
-	modificationCount := modificationCount + 1.
+	vertexBinding := anObject
 ]
 
 { #category : #accessing }

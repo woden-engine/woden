@@ -11,13 +11,13 @@ Class {
 		'roots',
 		'shaderSignature',
 		'genericObjectStatePool',
-		'neutralObjectInstanceStatePool',
-		'neutralObjectInstanceState',
 		'commonGPUStateRenderingComponent',
 		'skyLighting',
 		'groundLighting',
 		'sunDirection',
-		'lightingProbe'
+		'lightingProbe',
+		'renderingRenderables',
+		'nodesWithPendingStates'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
@@ -33,9 +33,19 @@ WDSGScene >> add: aNode [
 	aNode addedToScene: self
 ]
 
+{ #category : #adding }
+WDSGScene >> addNodeWithPendingState: aNode [
+	nodesWithPendingStates add: aNode
+]
+
 { #category : #'rendering graph' }
 WDSGScene >> addRenderingElementsToGraph: renderingDependencyGraph [
 	self renderingGraphDependencies.
+]
+
+{ #category : #adding }
+WDSGScene >> addRenderingRenderables: aCollection [
+	renderingRenderables addAll: aCollection
 ]
 
 { #category : #enumerating }
@@ -65,17 +75,24 @@ WDSGScene >> backgroundColor: anObject [
 	backgroundColor := anObject
 ]
 
+{ #category : #'rendering phases' }
+WDSGScene >> bakeLazyObjectStates [
+	nodesWithPendingStates do: [ :node | node bakeLazyObjectStates ].
+	nodesWithPendingStates removeAll.
+]
+
 { #category : #enumerating }
 WDSGScene >> collectVisibleObjectsAndLightIntoViewport: renderingViewport [
-	self allVisibleRenderingChildrenDo: [ :child |
-		(renderingViewport shouldRenderObject: child) ifTrue: [ 
-			renderingViewport addVisibleObject: child.
-		
-			child isLightSource ifTrue: [ 
-				renderingViewport addLight: child
+	renderingRenderables do: [ :rr |
+		(renderingViewport shouldRenderObject: rr) ifTrue: [
+			rr isLightSource ifTrue: [ 
+				renderingViewport addLight: rr
+			] ifFalse: [ 
+				renderingViewport addVisibleObject: rr.
 			]
-		]
-	]
+		].
+	].
+
 ]
 
 { #category : #'rendering graph' }
@@ -88,8 +105,6 @@ WDSGScene >> detachFromEngine [
 	engine := nil.
 	shaderSignature := nil.
 	genericObjectStatePool := nil.
-	neutralObjectInstanceStatePool := nil.
-	neutralObjectInstanceState := nil.
 	commonGPUStateRenderingComponent := nil.
 	roots engineChanged.
 ]
@@ -128,7 +143,8 @@ WDSGScene >> initialize [
 	sunDirection := (WMVector3F y: 1.0).
 
 	roots := OrderedCollection new.
-
+	renderingRenderables := OrderedCollection new.
+	nodesWithPendingStates := IdentitySet new.
 ]
 
 { #category : #accessing }
@@ -169,18 +185,8 @@ WDSGScene >> name: anObject [
 ]
 
 { #category : #accessing }
-WDSGScene >> neutralGenericObjectInstanceState [
-	neutralObjectInstanceStatePool ifNil: [
-		neutralObjectInstanceStatePool := WDCStreamingStorageBufferPool new
-			heapSize: 1;
-			elementType: WTGenericObjectState;
-			engine: engine;
-			yourself.
-			
-		neutralObjectInstanceState := neutralObjectInstanceStatePool allocate.
-		neutralObjectInstanceState value: WTGenericObjectState neutralState
-	].
-	^ neutralObjectInstanceState
+WDSGScene >> nodesWithPendingStates [
+	^ nodesWithPendingStates
 ]
 
 { #category : #accessing }
@@ -194,9 +200,24 @@ WDSGScene >> remove: aNode [
 	aNode removedFromScene: self
 ]
 
+{ #category : #adding }
+WDSGScene >> removeNodeWithPendingState: aNode [
+	nodesWithPendingStates remove: aNode
+]
+
+{ #category : #adding }
+WDSGScene >> removeRenderingRenderables: aCollection [
+	renderingRenderables removeAll: aCollection
+]
+
 { #category : #'rendering graph' }
 WDSGScene >> renderingGraphDependencies [
 	^ self modelRenderingGraphDependencies
+]
+
+{ #category : #accessing }
+WDSGScene >> renderingRenderables [
+	^ renderingRenderables
 ]
 
 { #category : #accessing }
@@ -233,10 +254,8 @@ WDSGScene >> sunDirection: anObject [
 WDSGScene >> updateCommonGPUState [
 	| fullFrameIndex |
 	fullFrameIndex := engine frameBufferingDriver frameIndex.
-
-	self allChildrenDo: [ :object |
-		object
-			updateRenderTransform;
-			updateCommonGpuStateForFrame: fullFrameIndex
+	self bakeLazyObjectStates.
+	renderingRenderables do: [ :renderingRenderable |
+		renderingRenderable updateCommonGpuStateForFrame: fullFrameIndex
 	]
 ]

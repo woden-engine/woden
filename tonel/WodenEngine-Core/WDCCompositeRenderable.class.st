@@ -1,6 +1,6 @@
 Class {
 	#name : #WDCCompositeRenderable,
-	#superclass : #WDCRenderable,
+	#superclass : #WDCMutableRenderable,
 	#instVars : [
 		'renderables'
 	],
@@ -12,23 +12,22 @@ WDCCompositeRenderable >> createSceneDependentDataFor: engine into: bindings [
 ]
 
 { #category : #'as yet unclassified' }
-WDCCompositeRenderable >> engineChangedTo: newEngine [
+WDCCompositeRenderable >> engine: newEngine [
 	renderables do: [ :renderable |
-		renderable engineChangedTo: newEngine
+		renderable engine: newEngine
 	]
+]
+
+{ #category : #copying }
+WDCCompositeRenderable >> postCopy [
+	super postCopy.
+	renderables := renderables collect: #copyForResourceCacheInstancing
 ]
 
 { #category : #rendering }
 WDCCompositeRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [
 	renderables do: [ :renderable |
 		renderable renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex
-	]
-]
-
-{ #category : #rendering }
-WDCCompositeRenderable >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [
-	renderables do: [ :renderable |
-		renderable renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex
 	]
 ]
 

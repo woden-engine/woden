@@ -4,7 +4,7 @@ I represent the light rendering state for a light without shadow mapping
 Class {
 	#name : #WDSGNonShadowingLightRenderingState,
 	#superclass : #WDSGAbstractLightRenderingState,
-	#category : #'WodenEngine-Scene-Rendering'
+	#category : #'WodenEngine-Core-Lighting'
 }
 
 { #category : #'shadow mapping' }
