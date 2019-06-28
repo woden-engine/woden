@@ -199,11 +199,11 @@ WDSSceneRenderer >> renderViewport: renderingViewport index: viewportIndex [
 ]
 
 { #category : #rendering }
-WDSSceneRenderer >> renderViewportVisibleObjects: renderingViewport [
+WDSSceneRenderer >> renderViewportVisibleObjects: renderingViewport [	
 	renderingViewport visibleObjects do: [ :object |
 		object renderOn: stateTracker
 	].
-
+	engine frameRenderingMetrics renderedObjectCount: engine frameRenderingMetrics renderedObjectCount + renderingViewport visibleObjects size.
 ]
 
 { #category : #rendering }

@@ -65,6 +65,13 @@ WDSGNode >> children [
 	^ children
 ]
 
+{ #category : #accessing }
+WDSGNode >> computeGlobalTransform [
+	^ parent
+			ifNil: [ transform ]
+			ifNotNil: [ parent globalTransform transformTransform: transform ]
+]
+
 { #category : #copying }
 WDSGNode >> copyForResourceCacheInstancing [
 	^ self copy
@@ -84,9 +91,7 @@ WDSGNode >> engineChanged [
 { #category : #accessing }
 WDSGNode >> globalTransform [
 	globalTransform ifNil: [
-		globalTransform := parent
-			ifNil: [ transform ]
-			ifNotNil: [ parent globalTransform transformTransform: transform ].
+		globalTransform := self computeGlobalTransform.
 		self globalTransformValidated.
 	].
 

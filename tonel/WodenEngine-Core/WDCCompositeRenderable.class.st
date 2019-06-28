@@ -8,6 +8,15 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+WDCCompositeRenderable >> createRenderingRenderablesFor: spatialObject [
+	^ Array streamContents: [:out |
+		renderables do: [ :renderable |
+			out nextPutAll: (renderable createRenderingRenderablesFor: spatialObject)
+		]
+	]
+]
+
+{ #category : #'as yet unclassified' }
 WDCCompositeRenderable >> engine: newEngine [
 	renderables do: [ :renderable |
 		renderable engine: newEngine

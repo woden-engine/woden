@@ -10,12 +10,12 @@ Class {
 { #category : #'as yet unclassified' }
 WDSGSpatialObjectInstanceGroup >> addChild: aChild [
 	super addChild: aChild.
-	self halt.
+	objectState addChild: aChild objectState.
 ]
 
 { #category : #initialization }
 WDSGSpatialObjectInstanceGroup >> createSpatialObjectState [
-	objectState := WDCLocalSpatialObject new
+	objectState := WDCInstanceGroupSpatialObject new
 ]
 
 { #category : #testing }
@@ -26,7 +26,7 @@ WDSGSpatialObjectInstanceGroup >> isInstanceGroup [
 { #category : #'as yet unclassified' }
 WDSGSpatialObjectInstanceGroup >> removeChild: aChild [
 	super removeChild: aChild.
-	self halt
+	objectState removeChild: aChild objectState
 ]
 
 { #category : #rendering }
@@ -37,6 +37,16 @@ WDSGSpatialObjectInstanceGroup >> renderOn: commandList mode: renderMode submode
 		useShaderResources: self currentObjectStateBinding validHandle.
 		
 	renderable renderOn: commandList mode: renderMode submode: submode instanceCount: children size baseInstance: 0 baseVertex: 0
+]
+
+{ #category : #'as yet unclassified' }
+WDSGSpatialObjectInstanceGroup >> updatedPerFrame [
+	^ objectState updatedPerFrame
+]
+
+{ #category : #'as yet unclassified' }
+WDSGSpatialObjectInstanceGroup >> updatedPerFrame: aBoolean [
+	objectState updatedPerFrame: aBoolean
 ]
 
 { #category : #enumerating }

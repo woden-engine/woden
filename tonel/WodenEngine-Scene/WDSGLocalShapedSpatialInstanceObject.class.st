@@ -10,6 +10,11 @@ Class {
 	#category : #'WodenEngine-Scene-Graph'
 }
 
+{ #category : #accessing }
+WDSGLocalShapedSpatialInstanceObject >> computeGlobalTransform [
+	^ super computeGlobalTransform transformTransform: shapeTransform.
+]
+
 { #category : #initialization }
 WDSGLocalShapedSpatialInstanceObject >> initialize [
 	super initialize.
@@ -23,5 +28,6 @@ WDSGLocalShapedSpatialInstanceObject >> shapeTransform [
 
 { #category : #accessing }
 WDSGLocalShapedSpatialInstanceObject >> shapeTransform: anObject [
-	shapeTransform := anObject
+	shapeTransform := anObject.
+	self transformChanged
 ]

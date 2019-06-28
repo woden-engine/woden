@@ -219,6 +219,7 @@ WDCFrameBufferingDriver >> renderForDeltaMicroseconds: delta [
 	currentVRLeftEyeTexture := nil.
 	currentVRRightEyeTexture := nil.
 	
+	engine frameRenderingMetrics reset.
 	engine vrSystem pollVREvents.
 
 	self renderingProcessesDo: [ :process |

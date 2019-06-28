@@ -16,7 +16,8 @@ Class {
 		'hasTopLeftNDCOrigin',
 		'hasBottomLeftTextureCoordinates',
 		'projectiveTextureBiasMatrix',
-		'vrSystem'
+		'vrSystem',
+		'frameRenderingMetrics'
 	],
 	#classVars : [
 		'AllowVR',
@@ -565,6 +566,11 @@ WDCEngine >> frameBufferingCount [
 { #category : #accessing }
 WDCEngine >> frameBufferingDriver [
 	^ frameBufferingDriver
+]
+
+{ #category : #accessing }
+WDCEngine >> frameRenderingMetrics [
+	^ frameRenderingMetrics ifNil: [ frameRenderingMetrics := WDCFrameRenderingMetrics new ]
 ]
 
 { #category : #accessing }

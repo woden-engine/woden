@@ -68,9 +68,14 @@ WDSGAbstractSpatialObject >> objectState [
 	^ objectState
 ]
 
+{ #category : #accessing }
+WDSGAbstractSpatialObject >> renderable: ignored [
+]
+
 { #category : #changing }
 WDSGAbstractSpatialObject >> stateChanged [
 	super stateChanged.
+	objectState changed.
 	scene ifNotNil: [ scene addNodeWithPendingState: self ].
 ]
 

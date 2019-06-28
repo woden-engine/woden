@@ -39,6 +39,7 @@ WDCGenericMesh >> indexBuffer: anObject [
 WDCGenericMesh >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	stateTracker withVertexData: vertexData do: [
 		stateTracker
+			objectBlendingMode: blendingMode;
 			useVertexBinding: vertexBinding.
 		indexBuffer ifNotNil: [ stateTracker useIndexBuffer: indexBuffer ].
 		

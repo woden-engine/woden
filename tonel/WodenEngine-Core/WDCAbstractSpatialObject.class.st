@@ -12,6 +12,16 @@ Class {
 }
 
 { #category : #accessing }
+WDCAbstractSpatialObject >> color [
+	^ state color
+]
+
+{ #category : #accessing }
+WDCAbstractSpatialObject >> color: aColor [
+	state color: aColor
+]
+
+{ #category : #accessing }
 WDCAbstractSpatialObject >> createEngineDependantData [
 ]
 
@@ -68,4 +78,14 @@ WDCAbstractSpatialObject >> transform: aTransform [
 
 { #category : #'as yet unclassified' }
 WDCAbstractSpatialObject >> updateCommonGpuStateForFrame: frameIndex [
+]
+
+{ #category : #accessing }
+WDCAbstractSpatialObject >> visible [
+	^ state visible
+]
+
+{ #category : #accessing }
+WDCAbstractSpatialObject >> visible: aBoolean [
+	state visible: aBoolean
 ]

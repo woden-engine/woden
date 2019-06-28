@@ -6,8 +6,3 @@ Class {
 	#superclass : #WDSGAbstractLocalSpatialObject,
 	#category : #'WodenEngine-Scene-Graph'
 }
-
-{ #category : #changing }
-WDSGLocalSpatialInstanceObject >> stateChanged [
-	super stateChanged.
-]

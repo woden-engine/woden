@@ -8,7 +8,8 @@ Class {
 		'name',
 		'boundingBox',
 		'renderPriority',
-		'isOpaqueShadowCaster'
+		'isOpaqueShadowCaster',
+		'blendingMode'
 	],
 	#classVars : [
 		'RenderPriorityDefault',
@@ -85,6 +86,16 @@ WDCAbstractRenderable class >> renderPriorityTranslucent [
 { #category : #accessing }
 WDCAbstractRenderable class >> renderPriorityTranslucentSorted [
 	^ RenderPriorityTranslucentSorted
+]
+
+{ #category : #accessing }
+WDCAbstractRenderable >> blendingMode [
+	^ blendingMode
+]
+
+{ #category : #accessing }
+WDCAbstractRenderable >> blendingMode: anObject [
+	blendingMode := anObject
 ]
 
 { #category : #accessing }
