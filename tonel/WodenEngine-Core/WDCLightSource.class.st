@@ -156,6 +156,11 @@ WDCLightSource >> point [
 ]
 
 { #category : #accessing }
+WDCLightSource >> radius [
+	^ lightState radius
+]
+
+{ #category : #accessing }
 WDCLightSource >> radius: aNumber [
 	lightState radius: aNumber
 ]

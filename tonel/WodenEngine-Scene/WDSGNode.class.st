@@ -13,7 +13,9 @@ Class {
 		'parent',
 		'globalTransform',
 		'model',
-		'stateChangeListeners'
+		'stateChangeListeners',
+		'globalBoundingBox',
+		'globalOrientedBoundingBox'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
@@ -71,6 +73,17 @@ WDSGNode >> childrenDo: aBlock [
 ]
 
 { #category : #accessing }
+WDSGNode >> computeGlobalOrientedBoundingBox [
+	| result |
+	result := self localBoundingBox copy.
+	self childrenDo: [ :child |
+		result insertBox: child globalBoundingBox
+	].
+
+	^ result
+]
+
+{ #category : #accessing }
 WDSGNode >> computeGlobalTransform [
 	^ parent
 			ifNil: [ transform ]
@@ -95,6 +108,18 @@ WDSGNode >> engine [
 WDSGNode >> engineChanged [
 	children do: #engineChanged
 	
+]
+
+{ #category : #accessing }
+WDSGNode >> globalBoundingBox [
+	globalBoundingBox ifNil: [ globalBoundingBox := (self globalOrientedBoundingBox transformedWith: self globalTransform) ].
+	^ globalBoundingBox
+]
+
+{ #category : #accessing }
+WDSGNode >> globalOrientedBoundingBox [
+	globalOrientedBoundingBox ifNil: [ globalOrientedBoundingBox := self computeGlobalOrientedBoundingBox ].
+	^ globalOrientedBoundingBox
 ]
 
 { #category : #accessing }
@@ -158,6 +183,11 @@ WDSGNode >> isOpaqueShadowCaster [
 { #category : #testing }
 WDSGNode >> isSpatialObject [
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+WDSGNode >> localBoundingBox [
+	^ WMBox3DF new
 ]
 
 { #category : #accessing }
@@ -317,6 +347,7 @@ WDSGNode >> transform: aTransform [
 
 { #category : #caching }
 WDSGNode >> transformChanged [
+	self renderingRenderables do: #transformChanged.
 	parent ifNotNil: [ parent childTransformChanged: self ].
 	self parentTransformChanged
 ]

@@ -11,10 +11,18 @@ Class {
 		'vertexLayout',
 		'boundingBox',
 		'usedClipMapPeriod',
-		'vertexData'
+		'vertexData',
+		'minHeight',
+		'maxHeight'
 	],
 	#category : #'WodenEngine-Core-Mesh'
 }
+
+{ #category : #'terrain mesh building' }
+WDCTerrainMeshBuilder >> addVertex: aVertex [
+	vertices add: aVertex.
+	boundingBox insertPoint: (WMVector3F x: aVertex x y: 0.0 z: aVertex y).
+]
 
 { #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> clipMapPeriodForGridSize: size subdivisions: subdivisions [
@@ -60,7 +68,7 @@ WDCTerrainMeshBuilder >> createGridWithSize: size offset: offset subdivisions: s
 		x := sx.
 		0 to: subdivisions do: [ :ix |
 			vertex := WMVector3F x: x y: y z: lodLevel asFloat.
-			vertices add: vertex.
+			self addVertex: vertex.
 			x := x + dx
 		].
 	
@@ -189,6 +197,13 @@ WDCTerrainMeshBuilder >> engine: anObject [
 ]
 
 { #category : #accessing }
+WDCTerrainMeshBuilder >> heightScale: aFloat [
+	self
+		minHeight: aFloat negated;
+		maxHeight: aFloat
+]
+
+{ #category : #accessing }
 WDCTerrainMeshBuilder >> indices [
 	^ indices
 ]
@@ -204,8 +219,8 @@ WDCTerrainMeshBuilder >> initialize [
 	vertices := SLVMNativeOrderedCollection for: self vertexClass.
 	indices := SLVMNativeOrderedCollection for: #uint.
 	self createVertexData.
-	boundingBox := WMBox3DF new
-	
+	boundingBox := WMBox3DF empty.
+	minHeight := maxHeight := 0.0.
 ]
 
 { #category : #accessing }
@@ -218,17 +233,39 @@ WDCTerrainMeshBuilder >> material: anObject [
 	material := anObject
 ]
 
+{ #category : #accessing }
+WDCTerrainMeshBuilder >> maxHeight [
+	^ maxHeight
+]
+
+{ #category : #accessing }
+WDCTerrainMeshBuilder >> maxHeight: anObject [
+	maxHeight := anObject
+]
+
 { #category : #'mesh building' }
 WDCTerrainMeshBuilder >> mesh [
 	| mesh |
 	mesh := WDCGenericMesh new.
 	mesh
-		boundingBox: boundingBox;
+		boundingBox: (WMBox3DF
+			nx: boundingBox min x ny: minHeight nz: boundingBox min z
+			px: boundingBox max x py: maxHeight pz: boundingBox max x);
 		vertexData: vertexData;
 		vertexBinding: self createVertexBinding;
 		indexBuffer: self createIndexBuffer;
 		submeshes: {self createSubmesh}.
 	^ mesh
+]
+
+{ #category : #accessing }
+WDCTerrainMeshBuilder >> minHeight [
+	^ minHeight
+]
+
+{ #category : #accessing }
+WDCTerrainMeshBuilder >> minHeight: anObject [
+	minHeight := anObject
 ]
 
 { #category : #'mesh building' }

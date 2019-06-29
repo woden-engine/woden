@@ -83,12 +83,23 @@ WDSGScene >> bakeLazyObjectStates [
 
 { #category : #enumerating }
 WDSGScene >> collectVisibleObjectsAndLightIntoViewport: renderingViewport [
+	| frustumConvexHull boundingBox |
+	frustumConvexHull := renderingViewport globalFrustumConvexHull.
 	renderingRenderables do: [ :rr |
+		boundingBox := rr boundingBox.
 		(renderingViewport shouldRenderObject: rr) ifTrue: [
-			rr isLightSource ifTrue: [ 
-				renderingViewport addLight: rr
+			rr isLightSource ifTrue: [
+				rr isDirectionalLight ifTrue: [ 
+					renderingViewport addLight: rr
+				] ifFalse: [ 
+					(frustumConvexHull isBoxOutside: boundingBox) ifFalse: [ 
+						renderingViewport addLight: rr
+					]
+				]
 			] ifFalse: [ 
-				renderingViewport addVisibleObject: rr.
+				(frustumConvexHull isBoxOutside: boundingBox) ifFalse: [ 
+					renderingViewport addVisibleObject: rr.
+				]
 			]
 		].
 	].

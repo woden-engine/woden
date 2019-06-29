@@ -679,6 +679,7 @@ WDCGenericMeshBuilder >> createIndexBuffer [
 { #category : #'as yet unclassified' }
 WDCGenericMeshBuilder >> createMeshWithSubmeshes: newSubmeshes [
 	| mesh |
+	self computeBoundingBox.
 	mesh := self instantiateMesh.
 	mesh
 		boundingBox: boundingBox;

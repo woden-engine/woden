@@ -17,7 +17,8 @@ Class {
 		'overlayRenderer',
 		'editorViewType',
 		'babylonCanvasSafeZoneTransform',
-		'sampleCount'
+		'sampleCount',
+		'globalFrustumConvexHull'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -109,6 +110,13 @@ WDSGViewport >> filter [
 { #category : #accessing }
 WDSGViewport >> filter: anObject [
 	filter := anObject
+]
+
+{ #category : #'as yet unclassified' }
+WDSGViewport >> globalFrustumConvexHull [
+	^ globalFrustumConvexHull ifNil: [ 
+		globalFrustumConvexHull := camera frustumConvexHullTransformedWith: self cameraTransform.
+	]
 ]
 
 { #category : #initialization }

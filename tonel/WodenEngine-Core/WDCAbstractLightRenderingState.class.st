@@ -23,6 +23,11 @@ WDCAbstractLightRenderingState >> engine: anObject [
 	engine := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDCAbstractLightRenderingState >> frustumConvexHullTransformedWith: aTransform [
+	^ WDCConvexHullWithPlanes new
+]
+
 { #category : #accessing }
 WDCAbstractLightRenderingState >> globalTransform [
 	^ renderingLight transform

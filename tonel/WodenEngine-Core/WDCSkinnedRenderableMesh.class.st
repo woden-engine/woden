@@ -34,6 +34,11 @@ WDCSkinnedRenderableMesh >> armature: anObject [
 ]
 
 { #category : #accessing }
+WDCSkinnedRenderableMesh >> boundingBox [
+	^ mesh boundingBox
+]
+
+{ #category : #accessing }
 WDCSkinnedRenderableMesh >> createAnimationState [
 	^ WDCSkinnedMeshAnimationState new
 		mesh: self;

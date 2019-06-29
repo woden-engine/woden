@@ -11,6 +11,12 @@ Class {
 }
 
 { #category : #accessing }
+WDCRenderingSceneRenderableObject >> computeBoundingBox [
+	"Transcript show: (renderable boundingBox transformedWith: spatialObject transform); cr."
+	^ renderable boundingBox transformedWith: spatialObject transform
+]
+
+{ #category : #accessing }
 WDCRenderingSceneRenderableObject >> renderOn: stateTracker [
 	renderable validateForNode: node.
 	spatialObject renderRenderable: renderable with: stateTracker

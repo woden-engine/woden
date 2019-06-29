@@ -81,6 +81,14 @@ WDSGCamera >> frustum [
 ]
 
 { #category : #'as yet unclassified' }
+WDSGCamera >> frustumConvexHullTransformedWith: aTransform [
+	| transformedFrustum |
+	transformedFrustum := self frustum transformedWith: aTransform.
+	^ WDCConvexHullWithPlanes new planes: transformedFrustum planes
+
+]
+
+{ #category : #'as yet unclassified' }
 WDSGCamera >> frustumForNearDistance: newNearDistance farDistance: newFarDistance [
 	| result hh hw |
 	result := WMFrustumF new.
@@ -94,6 +102,11 @@ WDSGCamera >> frustumForNearDistance: newNearDistance farDistance: newFarDistanc
 			near: newNearDistance far: newFarDistance invertedY: projectionInvertedY
 	].
 	^ result
+]
+
+{ #category : #accessing }
+WDSGCamera >> globalFrustum [
+	^ frustum transformedWith: self globalTransform
 ]
 
 { #category : #initialization }

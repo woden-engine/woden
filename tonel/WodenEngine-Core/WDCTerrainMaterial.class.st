@@ -154,6 +154,7 @@ WDCTerrainMaterial >> createTerrainMeshForSceneNode: sceneNode [
 	self flag: 'TODO: Support parameterizing this.'.
 	^ (WDCTerrainMeshBuilder for: engine)
 		material: self;
+		heightScale: materialState heightScale;
 		createClipMapWithLevels: 3 size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
 		mesh
 ]

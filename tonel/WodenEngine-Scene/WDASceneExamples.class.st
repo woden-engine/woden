@@ -97,8 +97,10 @@ WDASceneExamples class >> constructPoolSceneInto: scene [
 	"Add the water"
 	waterMesh := (WDCTerrainMeshBuilder for: scene engine)
 		material: waterMaterial;
+		heightScale: 0.1;
 		createGridWithSize: (WMVector2F x: 5.0 y: 5.0) subdivisions: 64;
 		mesh.
+	Transcript show: waterMesh boundingBox; cr.
 	waterMesh
 		makeTranslucentSorted.
 		
@@ -133,9 +135,11 @@ WDASceneExamples class >> createIslandWaterObjectFor: engine [
 	"Add the water"
 	mesh := (WDCTerrainMeshBuilder for: engine)
 		material: material;
+		heightScale: 0.1;
 		createClipMapWithLevels: 3 size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
 		mesh.
 		
+	mesh inspect.
 	mesh makeTranslucentSorted.
 		
 	waterObject := WDSGSpatialObject new.
@@ -499,6 +503,8 @@ WDASceneExamples class >> example07SmallTerrain [
 	
 	mesh := (WDCTerrainMeshBuilder for: scene engine)
 		material: material;
+		minHeight: 0.0;
+		maxHeight: 8.0;
 		createGridWithSize: (WMVector2F x: 20.0 y: 20.0) subdivisions: 128;
 		mesh.
 		
@@ -554,6 +560,7 @@ WDASceneExamples class >> example08MediumTerrain [
 	
 	mesh := (WDCTerrainMeshBuilder for: scene engine)
 		material: material;
+		maxHeight: 8.0;
 		createClipMapWithLevels: 3 size: (WMVector2F x: 20.0 y: 20.0) subdivisions: 128;
 		mesh.
 		

@@ -14,12 +14,17 @@ Class {
 
 { #category : #accessing }
 WDCAbstractRenderingSceneObject >> boundingBox [
-	^ boundingBox
+	^ boundingBox ifNil:[ boundingBox := self computeBoundingBox]
 ]
 
 { #category : #accessing }
 WDCAbstractRenderingSceneObject >> boundingBox: anObject [
 	boundingBox := anObject
+]
+
+{ #category : #accessing }
+WDCAbstractRenderingSceneObject >> computeBoundingBox [
+	self subclassResponsibility
 ]
 
 { #category : #accessing }
@@ -50,6 +55,11 @@ WDCAbstractRenderingSceneObject >> spatialObject: anObject [
 { #category : #accessing }
 WDCAbstractRenderingSceneObject >> transform [
 	^ spatialObject transform
+]
+
+{ #category : #caching }
+WDCAbstractRenderingSceneObject >> transformChanged [
+	boundingBox := nil.
 ]
 
 { #category : #'as yet unclassified' }

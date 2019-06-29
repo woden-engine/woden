@@ -49,6 +49,11 @@ WDSAbstractSceneRendererViewport >> extent [
 	^ viewport extent
 ]
 
+{ #category : #'as yet unclassified' }
+WDSAbstractSceneRendererViewport >> globalFrustumConvexHull [
+	^ viewport globalFrustumConvexHull
+]
+
 { #category : #initialization }
 WDSAbstractSceneRendererViewport >> initialize [
 	super initialize.

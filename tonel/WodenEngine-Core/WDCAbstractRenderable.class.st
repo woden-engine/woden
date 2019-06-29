@@ -157,7 +157,7 @@ WDCAbstractRenderable >> engine: newEngine [
 WDCAbstractRenderable >> initialize [
 	super initialize.
 	renderPriority := RenderPriorityDefault.
-	boundingBox := WMBox3DF empty.
+	boundingBox := WMBox3DF new.
 	isOpaqueShadowCaster := true.
 	depthWriteMask := nil.
 	depthTestingEnabled := nil.
