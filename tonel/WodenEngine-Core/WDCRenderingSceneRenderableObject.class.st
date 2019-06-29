@@ -12,6 +12,7 @@ Class {
 
 { #category : #accessing }
 WDCRenderingSceneRenderableObject >> renderOn: stateTracker [
+	renderable validateForNode: node.
 	spatialObject renderRenderable: renderable with: stateTracker
 
 ]

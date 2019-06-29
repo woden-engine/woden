@@ -57,7 +57,7 @@ WDCDynamicCompositeMeshRenderable >> validateForNode: aNode [
 	isValid ifTrue: [ ^ self ].
 	builder clear.
 	
-	aNode childrenDo: [ :child |
+	aNode allChildrenDo: [ :child |
 		child buildMeshOn: builder
 	].
 	

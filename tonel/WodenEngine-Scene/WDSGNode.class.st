@@ -65,6 +65,11 @@ WDSGNode >> children [
 	^ children
 ]
 
+{ #category : #enumerating }
+WDSGNode >> childrenDo: aBlock [
+	children do: aBlock
+]
+
 { #category : #accessing }
 WDSGNode >> computeGlobalTransform [
 	^ parent
@@ -376,10 +381,4 @@ WDSGNode >> visible [
 { #category : #accessing }
 WDSGNode >> visible: anObject [
 	visible := anObject
-]
-
-{ #category : #enumerating }
-WDSGNode >> withAllChildrenDo: aBlock [
-	aBlock value: self.
-	children do: [ :child | child withAllChildrenDo: aBlock ]
 ]
