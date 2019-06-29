@@ -40,6 +40,8 @@ WDCAbstractGenericSurfaceMaterial class >> initialize [
 
 { #category : #rendering }
 WDCAbstractGenericSurfaceMaterial >> activateDepthNormalOn: stateTracker [
+	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
+
 	self validateCache.
 	stateTracker
 		vertexShader: (self depthNormalVertexShaderFor: stateTracker);
@@ -58,6 +60,8 @@ WDCAbstractGenericSurfaceMaterial >> activateDepthNormalOn: stateTracker [
 
 { #category : #rendering }
 WDCAbstractGenericSurfaceMaterial >> activateDepthOnlyOn: stateTracker [
+	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
+
 	self validateCache.
 	stateTracker
 		vertexShader: self depthVertexShader;

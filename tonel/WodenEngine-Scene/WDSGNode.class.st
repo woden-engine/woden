@@ -78,6 +78,10 @@ WDSGNode >> copyForResourceCacheInstancing [
 ]
 
 { #category : #accessing }
+WDSGNode >> depthSorted: aBoolean [
+]
+
+{ #category : #accessing }
 WDSGNode >> engine [
 	^ scene ifNotNil: [scene engine]
 ]

@@ -214,10 +214,11 @@ RWShape >> opaque [
 RWShape >> setupTransparency: node renderable: renderable [
 	renderable blendingMode: transparencyMode.
 	self isTranslucent ifTrue: [ 
-		renderable translucentRenderPriority
+		renderable makeTranslucent
 	].
-	self isAlphaOverTranslucent ifTrue: [ 
-		renderable translucentSortedRenderPriority
+	self isAlphaOverTranslucent ifTrue: [
+		node depthSorted: true.
+		renderable makeTranslucentSorted
 	].
 
 ]

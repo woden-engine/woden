@@ -15,7 +15,8 @@ WDSAbstractSceneRendererViewport >> addLight: aLight [
 
 { #category : #adding }
 WDSAbstractSceneRendererViewport >> addVisibleObject: aNode [
-	visibleObjects add: aNode
+	visibleObjects add: aNode.
+	aNode updateGpuStateForFrame: self engine frameBufferingDriver frameIndex camera: viewport camera
 ]
 
 { #category : #accessing }

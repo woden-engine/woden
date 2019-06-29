@@ -9,7 +9,9 @@ Class {
 		'boundingBox',
 		'renderPriority',
 		'isOpaqueShadowCaster',
-		'blendingMode'
+		'blendingMode',
+		'depthWriteMask',
+		'depthTestingEnabled'
 	],
 	#classVars : [
 		'RenderPriorityDefault',
@@ -127,6 +129,26 @@ WDCAbstractRenderable >> createSceneDependentDataFor: engine into: bindings [
 	self subclassResponsibility
 ]
 
+{ #category : #accessing }
+WDCAbstractRenderable >> depthTestingEnabled [
+	^ depthTestingEnabled
+]
+
+{ #category : #accessing }
+WDCAbstractRenderable >> depthTestingEnabled: anObject [
+	depthTestingEnabled := anObject
+]
+
+{ #category : #accessing }
+WDCAbstractRenderable >> depthWriteMask [
+	^ depthWriteMask
+]
+
+{ #category : #accessing }
+WDCAbstractRenderable >> depthWriteMask: anObject [
+	depthWriteMask := anObject
+]
+
 { #category : #'as yet unclassified' }
 WDCAbstractRenderable >> engine: newEngine [
 ]
@@ -137,6 +159,8 @@ WDCAbstractRenderable >> initialize [
 	renderPriority := RenderPriorityDefault.
 	boundingBox := WMBox3DF empty.
 	isOpaqueShadowCaster := true.
+	depthWriteMask := nil.
+	depthTestingEnabled := nil.
 ]
 
 { #category : #'as yet unclassified' }
@@ -152,6 +176,22 @@ WDCAbstractRenderable >> isOpaqueShadowCaster [
 { #category : #accessing }
 WDCAbstractRenderable >> isOpaqueShadowCaster: anObject [
 	isOpaqueShadowCaster := anObject
+]
+
+{ #category : #accessing }
+WDCAbstractRenderable >> makeTranslucent [
+	self
+		depthWriteMask: false;
+		isOpaqueShadowCaster: false;
+		translucentRenderPriority
+]
+
+{ #category : #accessing }
+WDCAbstractRenderable >> makeTranslucentSorted [
+	self 
+		depthWriteMask: false;
+		isOpaqueShadowCaster: false;
+		translucentSortedRenderPriority
 ]
 
 { #category : #accessing }
@@ -177,6 +217,14 @@ WDCAbstractRenderable >> renderPriority [
 { #category : #accessing }
 WDCAbstractRenderable >> renderPriority: anObject [
 	renderPriority := anObject
+]
+
+{ #category : #rendering }
+WDCAbstractRenderable >> setupObjectRenderingStatesOn: stateTracker [
+	stateTracker
+		objectDepthWriteMask: depthWriteMask;
+		objectDepthEnabled: depthTestingEnabled;
+		objectBlendingMode: blendingMode
 ]
 
 { #category : #accessing }

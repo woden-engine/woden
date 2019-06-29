@@ -18,6 +18,11 @@ WDSGSpatialObjectInstanceGroup >> createSpatialObjectState [
 	objectState := WDCInstanceGroupSpatialObject new
 ]
 
+{ #category : #accessing }
+WDSGSpatialObjectInstanceGroup >> depthSorted: aBoolean [
+	objectState depthSorted: aBoolean
+]
+
 { #category : #testing }
 WDSGSpatialObjectInstanceGroup >> isInstanceGroup [
 	^ true

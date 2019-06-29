@@ -80,6 +80,10 @@ WDCAbstractSpatialObject >> transform: aTransform [
 WDCAbstractSpatialObject >> updateCommonGpuStateForFrame: frameIndex [
 ]
 
+{ #category : #'as yet unclassified' }
+WDCAbstractSpatialObject >> updateGpuStateForFrame: frameIndex camera: camera [
+]
+
 { #category : #accessing }
 WDCAbstractSpatialObject >> visible [
 	^ state visible

@@ -99,9 +99,8 @@ WDASceneExamples class >> constructPoolSceneInto: scene [
 		material: waterMaterial;
 		createGridWithSize: (WMVector2F x: 5.0 y: 5.0) subdivisions: 64;
 		mesh.
-	waterMesh 
-		isOpaqueShadowCaster: false;
-		translucentRenderPriority.
+	waterMesh
+		makeTranslucentSorted.
 		
 	waterSurface := WDSGSpatialObject new.
 	waterSurface
@@ -137,8 +136,7 @@ WDASceneExamples class >> createIslandWaterObjectFor: engine [
 		createClipMapWithLevels: 3 size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
 		mesh.
 		
-	mesh translucentRenderPriority;
-		isOpaqueShadowCaster: false.
+	mesh makeTranslucentSorted.
 		
 	waterObject := WDSGSpatialObject new.
 	waterObject renderable: mesh.

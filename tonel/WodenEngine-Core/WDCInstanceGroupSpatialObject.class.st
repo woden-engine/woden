@@ -7,7 +7,7 @@ Class {
 		'childOffsetDictionary',
 		'pendingUpdates',
 		'depthSorted',
-		'lastForwardDirection'
+		'lastDepthSortedFrame'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -57,7 +57,7 @@ WDCInstanceGroupSpatialObject >> createEngineDependantData [
 			bind: 1 storageBufferElement: gpuObjectState second;
 			yourself.
 		updatedPerFrame ifTrue: [
-			state second reallocatedAction: [ :newVector |
+			gpuObjectState second reallocatedAction: [ :newVector |
 				binding bind: 1 storageBufferElement: newVector
 			].
 		].
@@ -82,14 +82,24 @@ WDCInstanceGroupSpatialObject >> createInstanceStateBuffer [
 			yourself.
 ]
 
+{ #category : #'as yet unclassified' }
+WDCInstanceGroupSpatialObject >> depthSortFor: aCamera [
+	| forwardDirection |
+	forwardDirection := (aCamera globalTransform matrix * self transform matrix) thirdColumn negated.
+	instances sort: [ :a :b |
+		(forwardDirection dot: a transform translation) > (forwardDirection dot: b transform translation)
+	]
+]
+
 { #category : #accessing }
 WDCInstanceGroupSpatialObject >> depthSorted [
 	^ depthSorted
 ]
 
 { #category : #accessing }
-WDCInstanceGroupSpatialObject >> depthSorted: anObject [
-	depthSorted := anObject
+WDCInstanceGroupSpatialObject >> depthSorted: aBoolean [
+	depthSorted := aBoolean.
+	depthSorted ifTrue: [ self updatedPerFrame: true ]
 ]
 
 { #category : #initialization }
@@ -99,7 +109,6 @@ WDCInstanceGroupSpatialObject >> initialize [
 	pendingUpdates := Set new.
 	childOffsetDictionary := Dictionary new.
 	depthSorted := false.
-	lastForwardDirection := WMVector3F new.
 ]
 
 { #category : #accessing }
@@ -137,6 +146,17 @@ WDCInstanceGroupSpatialObject >> renderRenderable: renderable with: stateTracker
 WDCInstanceGroupSpatialObject >> updateCommonGpuStateForFrame: frameIndex [
 	depthSorted ifFalse: [ self updateInstancesGPUStates. ].
 
+]
+
+{ #category : #'as yet unclassified' }
+WDCInstanceGroupSpatialObject >> updateGpuStateForFrame: frameIndex camera: aCamera [
+	depthSorted ifTrue: [ 
+		lastDepthSortedFrame ~~ frameIndex ifTrue: [
+			self depthSortFor: aCamera.
+			self updateInstancesGPUStates.
+			lastDepthSortedFrame := frameIndex
+		]
+	]
 ]
 
 { #category : #'as yet unclassified' }

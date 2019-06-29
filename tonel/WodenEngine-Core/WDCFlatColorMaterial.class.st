@@ -15,6 +15,8 @@ Class {
 
 { #category : #rendering }
 WDCFlatColorMaterial >> activateDepthNormalOn: stateTracker [
+	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
+	
 	stateTracker
 		vertexShader: self vertexShader;
 		fragmentShader: engine resourceCache alwaysFrontDepthNormalFragmentShader.
@@ -23,6 +25,8 @@ WDCFlatColorMaterial >> activateDepthNormalOn: stateTracker [
 
 { #category : #rendering }
 WDCFlatColorMaterial >> activateDepthOnlyOn: stateTracker [
+	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
+	
 	stateTracker
 		vertexShader: self vertexShader;
 		fragmentShader: nil.

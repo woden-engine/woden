@@ -271,10 +271,10 @@ WDSSceneRenderer >> setupStateTrackerForRenderMode: renderMode [
 		useShaderResources: self shaderSignature defaultSamplers;
 		
 		frontFaceWinding: AGPU_COUNTER_CLOCKWISE;
-		objectCullMode: AGPU_CULL_MODE_BACK;
-		objectDepthEnabled: true;
-		objectDepthWriteMask: true;
-		objectDepthFunction: AGPU_GREATER_EQUAL;
+		sceneCullMode: AGPU_CULL_MODE_BACK;
+		sceneDepthEnabled: true;
+		sceneDepthWriteMask: true;
+		sceneDepthFunction: AGPU_GREATER_EQUAL;
 
 		blendingAllMode: WDCBlendingMode replace.
 

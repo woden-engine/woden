@@ -21,9 +21,7 @@ WDCParticleSystemRenderable >> createAnimationState [
 { #category : #initialization }
 WDCParticleSystemRenderable >> initialize [
 	super initialize.
-	self
-		isOpaqueShadowCaster: false;
-		translucentRenderPriority.
+	self makeTranslucent.
 		
 	particleCount := 1000.
 	startupTime := 3.0.

@@ -56,3 +56,8 @@ WDCAbstractRenderingSceneObject >> transform [
 WDCAbstractRenderingSceneObject >> updateCommonGpuStateForFrame: frameIndex [
 	spatialObject updateCommonGpuStateForFrame: frameIndex.
 ]
+
+{ #category : #'as yet unclassified' }
+WDCAbstractRenderingSceneObject >> updateGpuStateForFrame: frameIndex camera: camera [
+	spatialObject updateGpuStateForFrame: frameIndex camera: camera.
+]

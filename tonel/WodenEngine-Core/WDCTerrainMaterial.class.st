@@ -35,6 +35,8 @@ WDCTerrainMaterial class >> defaultRoughnessFactor [
 
 { #category : #rendering }
 WDCTerrainMaterial >> activateDepthNormalOn: stateTracker [
+	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
+	
 	self validateCache.
 	stateTracker
 		vertexShader: self vertexShader;
@@ -50,6 +52,8 @@ WDCTerrainMaterial >> activateDepthNormalOn: stateTracker [
 
 { #category : #rendering }
 WDCTerrainMaterial >> activateDepthOnlyOn: stateTracker [
+	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
+	
 	self validateCache.
 	stateTracker
 		vertexShader: self vertexShader;
