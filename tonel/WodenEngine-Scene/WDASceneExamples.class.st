@@ -100,7 +100,6 @@ WDASceneExamples class >> constructPoolSceneInto: scene [
 		heightScale: 0.1;
 		createGridWithSize: (WMVector2F x: 5.0 y: 5.0) subdivisions: 64;
 		mesh.
-	Transcript show: waterMesh boundingBox; cr.
 	waterMesh
 		makeTranslucentSorted.
 		
@@ -683,6 +682,7 @@ WDASceneExamples class >> example10ParticleSystem [
 	}.
 
 	particleSystemRenderable := WDCParticleSystemRenderable new.
+	particleSystemRenderable boundingBox: (WMBox3DF halfExtent: (WMVector3F ones*5.0)).
 	particleSystemRenderable particleCount: (WDCEngine gpuBasedParticleSimulation
 		ifTrue: [ 10000 ]
 		ifFalse: [ 2000 ]).
