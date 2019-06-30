@@ -3,7 +3,7 @@ I represent the animation state of a skinned mesh.
 "
 Class {
 	#name : #WDCSkinnedMeshAnimationState,
-	#superclass : #WDCSceneDependantRenderableData,
+	#superclass : #WDCRenderableAnimationState,
 	#instVars : [
 		'mesh',
 		'poseBuffer',
@@ -75,6 +75,24 @@ WDCSkinnedMeshAnimationState >> computePoseMatrices [
 	].
 ]
 
+{ #category : #accessing }
+WDCSkinnedMeshAnimationState >> createEngineDependantData [
+	| stateSize |
+	super createEngineDependantData.
+	stateSize := self poseStateSize.
+	poseBuffer := engine createStreamingStorageBuffer: stateSize * renderableStateBindings size.
+
+	renderableStateBindings doWithIndex: [ :bindings :index |
+		bindings
+			bind: 0 storageBuffer: poseBuffer offset: (index - 1) * stateSize size: stateSize
+	]
+]
+
+{ #category : #accessing }
+WDCSkinnedMeshAnimationState >> destroyEngineDependantData [
+	poseBuffer := nil.
+]
+
 { #category : #adding }
 WDCSkinnedMeshAnimationState >> interpolateFrame: a with: b alpha: alpha [
 	| translation rotation |
@@ -120,6 +138,16 @@ WDCSkinnedMeshAnimationState >> poseMatrices [
 	^ poseMatrices
 ]
 
+{ #category : #accessing }
+WDCSkinnedMeshAnimationState >> poseStateSize [
+	^ mesh poseStateSize
+]
+
+{ #category : #accessing }
+WDCSkinnedMeshAnimationState >> requiresAccessFromTheCPU [
+	^ true
+]
+
 { #category : #'as yet unclassified' }
 WDCSkinnedMeshAnimationState >> setRestPose [
 	LibC memCopy: mesh armature bones rawData to: pose rawData size: pose rawDataSize.
@@ -136,4 +164,11 @@ WDCSkinnedMeshAnimationState >> setRestPoseAndMatrices [
 { #category : #'as yet unclassified' }
 WDCSkinnedMeshAnimationState >> setRestPoseMatrices [
 	LibC memCopy: mesh armature restPoseMatrices rawData to: poseMatrices rawData size: poseMatrices rawDataSize.
+]
+
+{ #category : #'renderable state' }
+WDCSkinnedMeshAnimationState >> updateCommonGpuStateForFrame: frameIndex [
+	| poseStateSize |
+	poseStateSize := self poseStateSize.
+	LibC memCopy: poseMatrices rawData to: poseBuffer validPointer getHandle + (poseStateSize * (engine bufferingFrameIndex - 1)) size: poseStateSize
 ]

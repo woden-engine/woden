@@ -8,8 +8,12 @@ Class {
 		'materialBlendingMode',
 		'materialCullMode',
 		'objectCullMode',
+		'sceneCullMode',
 		'objectPolygonMode',
 		'materialPolygonMode',
+		'sceneDepthEnabled',
+		'sceneDepthWriteMask',
+		'sceneDepthFunction',
 		'objectDepthEnabled',
 		'objectDepthWriteMask',
 		'objectDepthFunction',
@@ -63,8 +67,11 @@ WDCObjectStateTracker >> applyCullMode [
 
 	objectCullMode ifNotNil: [
 		^ self cullMode: objectCullMode.
-	]
+	].
 
+	sceneCullMode ifNotNil: [
+		^ self cullMode: sceneCullMode.
+	]
 ]
 
 { #category : #private }
@@ -75,6 +82,10 @@ WDCObjectStateTracker >> applyDepthEnabled [
 
 	objectDepthEnabled ifNotNil: [
 		^ self depthEnabled: objectDepthEnabled.
+	].
+
+	sceneDepthEnabled ifNotNil: [
+		^ self depthEnabled: sceneDepthEnabled.
 	]
 
 ]
@@ -87,8 +98,11 @@ WDCObjectStateTracker >> applyDepthFunction [
 
 	objectDepthFunction ifNotNil: [
 		^ self depthFunction: objectDepthFunction.
-	]
+	].
 
+	sceneDepthFunction ifNotNil: [
+		^ self depthFunction: sceneDepthFunction.
+	].
 ]
 
 { #category : #private }
@@ -99,8 +113,11 @@ WDCObjectStateTracker >> applyDepthWriteMask [
 
 	objectDepthWriteMask ifNotNil: [
 		^ self depthWriteMask: objectDepthWriteMask.
-	]
+	].
 
+	sceneDepthWriteMask ifNotNil: [
+		^ self depthWriteMask: sceneDepthWriteMask.
+	]
 ]
 
 { #category : #private }
@@ -255,6 +272,40 @@ WDCObjectStateTracker >> reset [
 	materialDepthEnabled := nil.
 	materialDepthWriteMask := nil.
 	materialDepthFunction := nil.
+]
+
+{ #category : #'per object per material states' }
+WDCObjectStateTracker >> sceneCullMode: anObject [
+	sceneCullMode := anObject.
+	self applyCullMode
+]
+
+{ #category : #'per object per material states' }
+WDCObjectStateTracker >> sceneDepthEnabled [
+	^ sceneDepthEnabled
+]
+
+{ #category : #'per object per material states' }
+WDCObjectStateTracker >> sceneDepthEnabled: anObject [
+	sceneDepthEnabled := anObject.
+	self applyDepthEnabled
+]
+
+{ #category : #'per object per material states' }
+WDCObjectStateTracker >> sceneDepthFunction [
+	^ sceneDepthFunction
+]
+
+{ #category : #'per object per material states' }
+WDCObjectStateTracker >> sceneDepthFunction: anObject [
+	sceneDepthFunction := anObject.
+	self applyDepthFunction
+]
+
+{ #category : #'per object per material states' }
+WDCObjectStateTracker >> sceneDepthWriteMask: anObject [
+	sceneDepthWriteMask := anObject.
+	self applyDepthWriteMask
 ]
 
 { #category : #'as yet unclassified' }

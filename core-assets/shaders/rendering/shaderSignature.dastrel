@@ -25,7 +25,11 @@ shader_signature SceneRendering
     {
         ObjectState : uniform;
         InstanceObjectState: buffer;
-        ExtraObjectState: buffer;
+    }
+
+    descriptor_set(max_bindings = 10000) RenderableState
+    {
+        AnimationState: buffer;
     }
 
     descriptor_set(max_bindings = 10000) MaterialState

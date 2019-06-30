@@ -573,6 +573,7 @@ WDCGenericMeshBuilder >> clear [
 	submeshes removeAll.
 	baseVertex := 0.
 	currentColor := Color white asWMVector4F.
+	boundingBox := WMBox3DF empty.
 ]
 
 { #category : #accessing }
@@ -679,6 +680,7 @@ WDCGenericMeshBuilder >> createIndexBuffer [
 { #category : #'as yet unclassified' }
 WDCGenericMeshBuilder >> createMeshWithSubmeshes: newSubmeshes [
 	| mesh |
+	self computeBoundingBox.
 	mesh := self instantiateMesh.
 	mesh
 		boundingBox: boundingBox;

@@ -1,6 +1,6 @@
 Class {
 	#name : #WDCParticleRandomGenerator,
-	#superclass : #WDCRenderable,
+	#superclass : #WDCAbstractRenderable,
 	#instVars : [
 		'particleCount',
 		'particleIndex',

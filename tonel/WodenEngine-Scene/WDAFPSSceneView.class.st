@@ -83,7 +83,9 @@ WDAFPSSceneView >> drawFrameRateOn: canvas [
 				engine frameBufferingDriver lastFrameCPUConsumption * 1000.0 printShowingDecimalPlaces: 3});
 			newline;
 			draw: ('CPU Consumption {1} ms' format: {
-				engine frameBufferingDriver lastFrameCPUConsumption * 1000.0 printShowingDecimalPlaces: 3}).
+				engine frameBufferingDriver lastFrameCPUConsumption * 1000.0 printShowingDecimalPlaces: 3});
+			newline;
+			draw: ('Rendered object count {1}' format: {engine frameRenderingMetrics renderedObjectCount asString}).
 				
 	mesh := builder mesh.
 	

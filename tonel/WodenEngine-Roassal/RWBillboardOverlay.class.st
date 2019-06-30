@@ -17,7 +17,11 @@ RWBillboardOverlay >> drawOnBabylonCanvas: canvas [
 	ndcPosition := (WMVector2F x: projectedPosition x y: projectedPosition y) / projectedPosition w.
 	surfaceExtent := canvas surface extent.
 	x := (ndcPosition x * 0.5 + 0.5) * surfaceExtent x.
-	y := (1.0 - (ndcPosition y * 0.5 + 0.5)) * surfaceExtent y.
+	y := (ndcPosition y * 0.5 + 0.5).
+	view engine hasTopLeftNDCOrigin ifFalse: [
+		y := 1.0 - y
+	].
+	y := y * surfaceExtent y.
 	canvas transform restoreAfter: [
 		canvas transform translateBy: x@y.
 		drawingBlock cull: canvas

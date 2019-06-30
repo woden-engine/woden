@@ -516,7 +516,7 @@ RWExample >> threeCubesAndLight [
 	v := RWView new.
 	v blackBackground.
 	v add: (RWCube element).
-	v add: (RWPointLight new color: Color red).
+	v add: (RWPointLight new color: Color red asWMVector4F *10.0).
 	v add: (RWCube element).
 	v add: (RWCube element).
 	RWXLineLayout on: v elements.
@@ -541,7 +541,7 @@ RWExample >> threeCubesAndLightWithShadows [
 	
 	light := RWSpotLight new.
 	light lookDown;
-		color: Color lightGray;
+		color: WMVector4F ones *10.0;
 		translateByX: 2.0 y: 3.0 z: 0.0;
 		influenceRadius: 10.0;
 		castShadows: true.
@@ -571,7 +571,7 @@ RWExample >> threeCubesAndLightWithShadowsAndPhysics [
 	
 	light := RWSpotLight new.
 	light lookDown;
-		color: Color lightGray;
+		color: WMVector4F ones *10.0;
 		translateByX: 2.0 y: 3.0 z: 0.0;
 		influenceRadius: 10.0;
 		castShadows: true.
@@ -584,7 +584,7 @@ RWExample >> threeCubesAndLightWithShadowsAndPhysics [
 
 { #category : #trees }
 RWExample >> translucentAlphaOverShape [
-	<script: 'self new translucentAlphaOver open'>
+	<script: 'self new translucentAlphaOverShape open'>
 	| view translucentShape opaqueShape elements |
 	view := RWView new.
 

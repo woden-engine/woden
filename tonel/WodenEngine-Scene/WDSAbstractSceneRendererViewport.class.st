@@ -16,11 +16,7 @@ WDSAbstractSceneRendererViewport >> addLight: aLight [
 { #category : #adding }
 WDSAbstractSceneRendererViewport >> addVisibleObject: aNode [
 	visibleObjects add: aNode.
-	
-	self flag: 'TODO: Cleanup this part.'.
-	aNode useViewportCamera ifTrue: [
-		aNode updateGpuStateForFrame: self engine frameBufferingDriver frameIndex camera: viewport camera
-	]
+	aNode updateGpuStateForFrame: self engine frameBufferingDriver frameIndex camera: viewport camera
 ]
 
 { #category : #accessing }
@@ -53,6 +49,11 @@ WDSAbstractSceneRendererViewport >> extent [
 	^ viewport extent
 ]
 
+{ #category : #'as yet unclassified' }
+WDSAbstractSceneRendererViewport >> globalFrustumConvexHull [
+	^ viewport globalFrustumConvexHull
+]
+
 { #category : #initialization }
 WDSAbstractSceneRendererViewport >> initialize [
 	super initialize.
@@ -82,15 +83,15 @@ WDSAbstractSceneRendererViewport >> shouldRenderObject: aNode [
 { #category : #sorting }
 WDSAbstractSceneRendererViewport >> sortVisibleObjects [
 	| translucentSortedPriority forwardDirection |
-	translucentSortedPriority := WDSGNode renderPriorityTranslucentSorted.
+	translucentSortedPriority := WDCAbstractRenderable renderPriorityTranslucentSorted.
 	
-	forwardDirection := self camera renderTransform matrix thirdColumn negated.
+	forwardDirection := self camera globalTransform matrix thirdColumn negated.
 	visibleObjects sort: [ :a :b |
 		a renderPriority = b renderPriority ifFalse: [
 			a renderPriority < b renderPriority
 		] ifTrue: [
 			a renderPriority >= translucentSortedPriority ifTrue: [ 
-				(forwardDirection dot: a renderTransform translation) > (forwardDirection dot: b renderTransform translation)
+				(forwardDirection dot: a transform translation) > (forwardDirection dot: b transform translation)
 			] ifFalse: [ false ]
 		]
 	]

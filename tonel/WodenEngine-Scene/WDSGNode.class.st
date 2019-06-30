@@ -3,7 +3,7 @@ I represent a node in the Woden scene graph.
 "
 Class {
 	#name : #WDSGNode,
-	#superclass : #Object,
+	#superclass : #WDCAbstractSceneNode,
 	#instVars : [
 		'name',
 		'scene',
@@ -11,94 +11,19 @@ Class {
 		'children',
 		'visible',
 		'parent',
-		'renderTransform',
+		'globalTransform',
 		'model',
-		'modificationCount',
-		'updatedPerFrame',
 		'stateChangeListeners',
-		'useViewportCamera'
-	],
-	#classVars : [
-		'RenderPriorityDefault',
-		'RenderPriorityEditorOpaqueAfter',
-		'RenderPriorityEditorOpaqueBefore',
-		'RenderPriorityEditorTranslucentAfter',
-		'RenderPriorityEditorTranslucentSortedAfter',
-		'RenderPriorityOpaque',
-		'RenderPriorityOpaqueStatic',
-		'RenderPriorityTranslucent',
-		'RenderPriorityTranslucentSorted'
+		'globalBoundingBox',
+		'globalOrientedBoundingBox'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
-
-{ #category : #'class initialization' }
-WDSGNode class >> initialize [
-	super initialize.
-	
-	RenderPriorityEditorOpaqueBefore := 0.
-
-	RenderPriorityOpaque := 200.
-	RenderPriorityOpaqueStatic := RenderPriorityOpaque.
-	RenderPriorityDefault := RenderPriorityOpaque.
-
-	RenderPriorityEditorOpaqueAfter := 800.
-	
-	RenderPriorityTranslucent := 1000.
-	
-	RenderPriorityEditorTranslucentAfter := 1500.
-
-	RenderPriorityTranslucentSorted := 2000.
-	
-	RenderPriorityEditorTranslucentSortedAfter := 2500.
-	
-]
-
-{ #category : #accessing }
-WDSGNode class >> renderPriorityDefault [
-	^ RenderPriorityDefault
-]
-
-{ #category : #accessing }
-WDSGNode class >> renderPriorityEditorOpaqueAfter [
-	^ RenderPriorityEditorOpaqueAfter
-]
-
-{ #category : #accessing }
-WDSGNode class >> renderPriorityEditorOpaqueBefore [
-	^ RenderPriorityEditorOpaqueBefore
-]
-
-{ #category : #'class initialization' }
-WDSGNode class >> renderPriorityEditorTranslucentAfter [
-	^ RenderPriorityEditorTranslucentAfter
-]
-
-{ #category : #accessing }
-WDSGNode class >> renderPriorityOpaque [
-	^ RenderPriorityOpaque
-]
-
-{ #category : #accessing }
-WDSGNode class >> renderPriorityOpaqueStatic [
-	^ RenderPriorityOpaqueStatic
-]
-
-{ #category : #accessing }
-WDSGNode class >> renderPriorityTranslucent [
-	^ RenderPriorityTranslucent
-]
-
-{ #category : #accessing }
-WDSGNode class >> renderPriorityTranslucentSorted [
-	^ RenderPriorityTranslucentSorted
-]
 
 { #category : #adding }
 WDSGNode >> addChild: aChild [
 	children add: aChild.
 	aChild addedToNode: self.
-	self increaseModificationCount.
 ]
 
 { #category : #adding }
@@ -109,9 +34,13 @@ WDSGNode >> addedToNode: newParentNode [
 
 { #category : #adding }
 WDSGNode >> addedToScene: aScene [
+	| oldEngine newEngine |
+	oldEngine := self engine.
 	self assert: scene isNil.
 	scene := aScene.
-	self createSceneDependentData.
+	newEngine := self engine.
+	oldEngine ~~ newEngine ifTrue: [ self engineChanged ].
+	scene addRenderingRenderables: self renderingRenderables.
 	children do: [ :child | child addedToScene: scene ].
 ]
 
@@ -120,9 +49,17 @@ WDSGNode >> asSceneNode [
 	^ self
 ]
 
+{ #category : #'rendering phases' }
+WDSGNode >> bakeLazyObjectStates [
+]
+
 { #category : #testing }
 WDSGNode >> canBeRendered [
 	^ false
+]
+
+{ #category : #caching }
+WDSGNode >> childTransformChanged: aChild [
 ]
 
 { #category : #accessing }
@@ -130,47 +67,82 @@ WDSGNode >> children [
 	^ children
 ]
 
-{ #category : #rendering }
-WDSGNode >> createSceneDependentData [
-	"Here goes the creation of scene dependent data."
+{ #category : #enumerating }
+WDSGNode >> childrenDo: aBlock [
+	children do: aBlock
 ]
 
-{ #category : #rendering }
-WDSGNode >> destroySceneDependentData [
-	"Here goes the destruction of scene dependent data."
+{ #category : #accessing }
+WDSGNode >> computeGlobalOrientedBoundingBox [
+	| result |
+	result := self localBoundingBox copy.
+	self childrenDo: [ :child |
+		result insertBox: child globalBoundingBox
+	].
+
+	^ result
+]
+
+{ #category : #accessing }
+WDSGNode >> computeGlobalTransform [
+	^ parent
+			ifNil: [ transform ]
+			ifNotNil: [ parent globalTransform transformTransform: transform ]
+]
+
+{ #category : #copying }
+WDSGNode >> copyForResourceCacheInstancing [
+	^ self copy
+]
+
+{ #category : #accessing }
+WDSGNode >> depthSorted: aBoolean [
 ]
 
 { #category : #accessing }
 WDSGNode >> engine [
-	^ scene engine
+	^ scene ifNotNil: [scene engine]
 ]
 
 { #category : #adding }
 WDSGNode >> engineChanged [
-	self engine ifNil: [ 
-		self destroySceneDependentData
-	] ifNotNil: [ 
-		self createSceneDependentData
-	].
-
 	children do: #engineChanged
 	
 ]
 
-{ #category : #initialization }
-WDSGNode >> increaseModificationCount [
-	modificationCount := modificationCount + 1
+{ #category : #accessing }
+WDSGNode >> globalBoundingBox [
+	globalBoundingBox ifNil: [ globalBoundingBox := (self globalOrientedBoundingBox transformedWith: self globalTransform) ].
+	^ globalBoundingBox
+]
+
+{ #category : #accessing }
+WDSGNode >> globalOrientedBoundingBox [
+	globalOrientedBoundingBox ifNil: [ globalOrientedBoundingBox := self computeGlobalOrientedBoundingBox ].
+	^ globalOrientedBoundingBox
+]
+
+{ #category : #accessing }
+WDSGNode >> globalTransform [
+	globalTransform ifNil: [
+		globalTransform := self computeGlobalTransform.
+		self globalTransformValidated.
+	].
+
+	^ globalTransform
+]
+
+{ #category : #caching }
+WDSGNode >> globalTransformValidated [
 ]
 
 { #category : #initialization }
 WDSGNode >> initialize [
 	super initialize.
 	transform := WMReversibleAffineTransformF identity.
+	globalTransform := nil.
 	children := OrderedCollection new.
 	visible := true.
-	modificationCount := 0.
-	updatedPerFrame := true.
-	useViewportCamera := false.
 ]
 
 { #category : #testing }
@@ -213,6 +185,11 @@ WDSGNode >> isSpatialObject [
 	^ false
 ]
 
+{ #category : #'as yet unclassified' }
+WDSGNode >> localBoundingBox [
+	^ WMBox3DF new
+]
+
 { #category : #accessing }
 WDSGNode >> model [
 	^ model
@@ -251,6 +228,15 @@ WDSGNode >> parent [
 	^ parent
 ]
 
+{ #category : #caching }
+WDSGNode >> parentTransformChanged [
+	self stateChanged.
+	globalTransform := nil.
+	self renderingRenderables do: #transformChanged.
+	children do: [ :child | child parentTransformChanged ].
+
+]
+
 { #category : #rendering }
 WDSGNode >> performCommonGpuStateUpdate [
 ]
@@ -259,11 +245,21 @@ WDSGNode >> performCommonGpuStateUpdate [
 WDSGNode >> performGpuStateUpdateWithCamera: aCamera [
 ]
 
+{ #category : #accessing }
+WDSGNode >> position [
+	^ transform translation
+]
+
+{ #category : #accessing }
+WDSGNode >> position: aPosition [
+	transform translation: aPosition.
+	self transformChanged
+]
+
 { #category : #adding }
 WDSGNode >> removeChild: node [
 	children remove: node.
 	node removedFromNode: self.
-	self increaseModificationCount.
 ]
 
 { #category : #adding }
@@ -278,34 +274,51 @@ WDSGNode >> removedFromNode: oldParentNode [
 ]
 
 { #category : #adding }
-WDSGNode >> removedFromScene: Scene [
+WDSGNode >> removedFromScene: oldScene [
+	oldScene removeNodeWithPendingState: self.
 	scene := nil.
-	children do: [ :child | child removedFromScene: scene ].
+	children do: [ :child | child removedFromScene: oldScene ].
 ]
 
 { #category : #accessing }
-WDSGNode >> renderModificationCountFor: mode submode: submode [
-	^ 0
+WDSGNode >> renderingRenderables [
+	^ #()
 ]
 
-{ #category : #rendering }
-WDSGNode >> renderOn: stateTracker [
-	"Nothing to do by default"
+{ #category : #transforming }
+WDSGNode >> rotateDegreesOnX: degrees [
+	transform rotateDegreesOnX: degrees.
+	self transformChanged
 ]
 
-{ #category : #rendering }
-WDSGNode >> renderOn: commandList mode: renderMode submode: submode [
-	"Nothing to do by default"
+{ #category : #transforming }
+WDSGNode >> rotateDegreesOnY: degrees [
+	transform rotateDegreesOnY: degrees.
+	self transformChanged
 ]
 
-{ #category : #accessing }
-WDSGNode >> renderPriority [
-	^ RenderPriorityDefault
+{ #category : #transforming }
+WDSGNode >> rotateDegreesOnZ: degrees [
+	transform rotateDegreesOnZ: degrees.
+	self transformChanged
 ]
 
-{ #category : #accessing }
-WDSGNode >> renderTransform [
-	^ renderTransform
+{ #category : #transforming }
+WDSGNode >> rotateRadiansOnX: radians [
+	transform rotateRadiansOnX: radians.
+	self transformChanged
+]
+
+{ #category : #transforming }
+WDSGNode >> rotateRadiansOnY: radians [
+	transform rotateRadiansOnY: radians.
+	self transformChanged
+]
+
+{ #category : #transforming }
+WDSGNode >> rotateRadiansOnZ: radians [
+	transform rotateRadiansOnZ: radians.
+	self transformChanged
 ]
 
 { #category : #accessing }
@@ -331,52 +344,66 @@ WDSGNode >> transform [
 { #category : #accessing }
 WDSGNode >> transform: aTransform [
 	transform := aTransform asWMReversibleAffineTransformF.
-	self stateChanged
+	self transformChanged
 ]
 
-{ #category : #'as yet unclassified' }
-WDSGNode >> updateCommonGpuStateForFrame: frameIndex [
-	self
-		updateRenderTransform;
-		performCommonGpuStateUpdate
-
+{ #category : #caching }
+WDSGNode >> transformChanged [
+	self renderingRenderables do: #transformChanged.
+	parent ifNotNil: [ parent childTransformChanged: self ].
+	self parentTransformChanged
 ]
 
-{ #category : #'as yet unclassified' }
-WDSGNode >> updateGpuStateForFrame: frameIndex camera: currentCamera [
-	self flag: 'TODO: Cleanup the camera specific rendering data.'.
-	self performGpuStateUpdateWithCamera: currentCamera
-
+{ #category : #transforming }
+WDSGNode >> translateBy: translation [
+	transform translateBy: translation.
+	self transformChanged
 ]
 
-{ #category : #accessing }
-WDSGNode >> updateRenderTransform [
-	parent ifNotNil: [
-		renderTransform := parent renderTransform transformTransform: transform.
-	] ifNil: [
-		renderTransform := transform.
-	].
-
+{ #category : #transforming }
+WDSGNode >> translateByX: translation [
+	self translateBy: (WMVector3F x: translation)
 ]
 
-{ #category : #accessing }
-WDSGNode >> updatedPerFrame [
-	^ updatedPerFrame
+{ #category : #transforming }
+WDSGNode >> translateByX: x y: y z: z [
+	self translateBy: (WMVector3F x: x y: y z: z)
 ]
 
-{ #category : #accessing }
-WDSGNode >> updatedPerFrame: anObject [
-	updatedPerFrame := anObject
+{ #category : #transforming }
+WDSGNode >> translateByY: translation [
+	self translateBy: (WMVector3F y: translation)
 ]
 
-{ #category : #accessing }
-WDSGNode >> useViewportCamera [
-	^ useViewportCamera
+{ #category : #transforming }
+WDSGNode >> translateByZ: translation [
+	self translateBy: (WMVector3F new z: translation)
 ]
 
-{ #category : #accessing }
-WDSGNode >> useViewportCamera: anObject [
-	useViewportCamera := anObject
+{ #category : #transforming }
+WDSGNode >> translateTo: translation [
+	transform translation: translation.
+	self transformChanged
+]
+
+{ #category : #transforming }
+WDSGNode >> translateToX: newX [
+	self translateTo: (self position x: newX)
+]
+
+{ #category : #transforming }
+WDSGNode >> translateToX: newX y: newY z: newZ [ 
+	self translateTo: (WMVector3F x: newX y: newY z: newZ)
+]
+
+{ #category : #transforming }
+WDSGNode >> translateToY: newY [
+	self translateTo: (self position y: newY)
+]
+
+{ #category : #transforming }
+WDSGNode >> translateToZ: newZ [
+	self translateTo: (self position z: newZ)
 ]
 
 { #category : #accessing }
@@ -387,18 +414,4 @@ WDSGNode >> visible [
 { #category : #accessing }
 WDSGNode >> visible: anObject [
 	visible := anObject
-]
-
-{ #category : #enumerating }
-WDSGNode >> withAllChildrenDo: aBlock [
-	aBlock value: self.
-	children do: [ :child | child withAllChildrenDo: aBlock ]
-]
-
-{ #category : #enumerating }
-WDSGNode >> withAllVisibleRenderingChildrenDo: aBlock [
-	visible ifFalse: [ ^ self ].
-	aBlock value: self.
-	
-	children do: [ :child | child withAllVisibleRenderingChildrenDo: aBlock ]
 ]

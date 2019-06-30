@@ -6,21 +6,3 @@ Class {
 	#superclass : #WDSGAbstractLocalSpatialObject,
 	#category : #'WodenEngine-Scene-Graph'
 }
-
-{ #category : #changing }
-WDSGLocalSpatialInstanceObject >> stateChanged [
-	super stateChanged.
-	parent ifNotNil: [ parent addPendingUpdate: self ]
-]
-
-{ #category : #accessing }
-WDSGLocalSpatialInstanceObject >> updateRenderTransform [
-	renderTransform := transform.
-]
-
-{ #category : #'as yet unclassified' }
-WDSGLocalSpatialInstanceObject >> writeGPUStateInto: pointer at: offset [
-	self updateRenderTransform.
-	objectState transform: renderTransform.
-	objectState storeBytesIn: pointer position: offset + 1.
-]

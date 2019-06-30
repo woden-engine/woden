@@ -17,7 +17,8 @@ Class {
 		'overlayRenderer',
 		'editorViewType',
 		'babylonCanvasSafeZoneTransform',
-		'sampleCount'
+		'sampleCount',
+		'globalFrustumConvexHull'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -73,7 +74,7 @@ WDSGViewport >> cameraState: anObject [
 
 { #category : #accessing }
 WDSGViewport >> cameraTransform [
-	^ cameraTransform ifNil: [ cameraTransform := cameraTransformFunction value: camera renderTransform ]
+	^ cameraTransform ifNil: [ cameraTransform := cameraTransformFunction value: camera globalTransform ]
 ]
 
 { #category : #accessing }
@@ -109,6 +110,13 @@ WDSGViewport >> filter [
 { #category : #accessing }
 WDSGViewport >> filter: anObject [
 	filter := anObject
+]
+
+{ #category : #'as yet unclassified' }
+WDSGViewport >> globalFrustumConvexHull [
+	^ globalFrustumConvexHull ifNil: [ 
+		globalFrustumConvexHull := camera frustumConvexHullTransformedWith: self cameraTransform.
+	]
 ]
 
 { #category : #initialization }

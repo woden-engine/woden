@@ -16,7 +16,7 @@ semantic FragmentInput
     in(1) texcoord: float2;
 }
 
-buffer(binding=ObjectState.ExtraObjectState) ParticleState
+buffer(binding=RenderableState.AnimationState) ParticleState
 {
     states: ParticleStateData[];
 }

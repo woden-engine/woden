@@ -29,6 +29,11 @@ WDCModelSubmesh >> firstIndex: anObject [
 ]
 
 { #category : #accessing }
+WDCModelSubmesh >> indexBufferAccessor [
+	^ nil
+]
+
+{ #category : #accessing }
 WDCModelSubmesh >> indexCount [
 	^ indexCount
 ]

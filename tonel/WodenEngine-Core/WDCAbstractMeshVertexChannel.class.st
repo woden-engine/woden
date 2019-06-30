@@ -8,5 +8,5 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-WDCAbstractMeshVertexChannel >> engineChangedTo: anEngine [
+WDCAbstractMeshVertexChannel >> engine: anEngine [
 ]

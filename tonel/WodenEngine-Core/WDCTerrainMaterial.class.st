@@ -35,6 +35,8 @@ WDCTerrainMaterial class >> defaultRoughnessFactor [
 
 { #category : #rendering }
 WDCTerrainMaterial >> activateDepthNormalOn: stateTracker [
+	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
+	
 	self validateCache.
 	stateTracker
 		vertexShader: self vertexShader;
@@ -50,6 +52,8 @@ WDCTerrainMaterial >> activateDepthNormalOn: stateTracker [
 
 { #category : #rendering }
 WDCTerrainMaterial >> activateDepthOnlyOn: stateTracker [
+	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
+	
 	self validateCache.
 	stateTracker
 		vertexShader: self vertexShader;
@@ -150,6 +154,7 @@ WDCTerrainMaterial >> createTerrainMeshForSceneNode: sceneNode [
 	self flag: 'TODO: Support parameterizing this.'.
 	^ (WDCTerrainMeshBuilder for: engine)
 		material: self;
+		heightScale: materialState heightScale;
 		createClipMapWithLevels: 3 size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
 		mesh
 ]

@@ -175,11 +175,6 @@ WDGSRenderingModels >> performCommonGpuStateUpdateFor: engine frameIndex: frameI
 	
 ]
 
-{ #category : #'extra per object rendering data' }
-WDGSRenderingModels >> performGpuStateUpdateFor: engine frameIndex: frameIndex into: renderableSceneData [
-	
-]
-
 { #category : #'as yet unclassified' }
 WDGSRenderingModels >> playModeCopyWith: copyDictionary [
 	^ WDGSMesh new mesh: self bestModel
@@ -201,14 +196,6 @@ WDGSRenderingModels >> renderOn: stateTracker instanceCount: instanceCount baseI
 	
 	model := self modelForSubMode: stateTracker submode.
 	model renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex 
-]
-
-{ #category : #rendering }
-WDGSRenderingModels >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
-	| model |
-	
-	model := self modelForSubMode: submode.
-	model renderOn: listBuilder mode: renderMode submode: #full instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex 
 ]
 
 { #category : #rendering }

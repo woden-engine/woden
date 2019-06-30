@@ -41,10 +41,9 @@ WDSSceneAssetModel >> createViewer [
 	hasLights ifFalse: [
 		"Add a light"
 		sunLight := WDSGLightSource new.
-		sunLight directional; castShadows: false.
-		sunLight state
-				intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.6.
-		sunLight transform
+		sunLight
+			directional; castShadows: false;
+			intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.6;
 			rotateDegreesOnX: -35.
 		
 		mainScene add: sunLight.

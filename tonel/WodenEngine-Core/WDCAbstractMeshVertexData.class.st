@@ -142,7 +142,7 @@ WDCAbstractMeshVertexData >> createVertexBufferFor: engine [
 ]
 
 { #category : #'as yet unclassified' }
-WDCAbstractMeshVertexData >> engineChangedTo: anEngine [
+WDCAbstractMeshVertexData >> engine: anEngine [
 ]
 
 { #category : #testing }

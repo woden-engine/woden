@@ -2,22 +2,22 @@
 I represent the light rendering state for a light that uses cascaded shadow maps.
 "
 Class {
-	#name : #WDSGCascadeDirectionalLightRenderingState,
-	#superclass : #WDSGAbstractLightRenderingState,
+	#name : #WDCCascadeDirectionalLightRenderingState,
+	#superclass : #WDCAbstractLightRenderingState,
 	#instVars : [
 		'cascades',
 		'frustumDivisions'
 	],
-	#category : #'WodenEngine-Scene-Rendering'
+	#category : #'WodenEngine-Core-Lighting'
 }
 
 { #category : #accessing }
-WDSGCascadeDirectionalLightRenderingState >> cascades [
+WDCCascadeDirectionalLightRenderingState >> cascades [
 	^ cascades
 ]
 
 { #category : #'shadow mapping' }
-WDSGCascadeDirectionalLightRenderingState >> computeFrustumDivisions [
+WDCCascadeDirectionalLightRenderingState >> computeFrustumDivisions [
 	"Parallel split shadow mapping split schema from GPU Gems chapter 3: 	https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch10.html
 	"
 	| n f lambda m uniformSplit logarithmicSplit |
@@ -34,11 +34,11 @@ WDSGCascadeDirectionalLightRenderingState >> computeFrustumDivisions [
 ]
 
 { #category : #'shadow mapping' }
-WDSGCascadeDirectionalLightRenderingState >> setupShadowMappingTransforms [
+WDCCascadeDirectionalLightRenderingState >> setupShadowMappingTransforms [
 	frustumDivisions := self computeFrustumDivisions.
 	cascades := (1 to: 3) collect: [ :i |
-		WDSGDirectionalLightRenderingState new
-		light: light;
+		WDCDirectionalLightRenderingState new
+		renderingLight: renderingLight;
 		mainCamera: mainCamera;
 		engine: engine;
 		nearDistance: (frustumDivisions at: i) farDistance: (frustumDivisions at: i + 1);
@@ -48,9 +48,9 @@ WDSGCascadeDirectionalLightRenderingState >> setupShadowMappingTransforms [
 ]
 
 { #category : #'as yet unclassified' }
-WDSGCascadeDirectionalLightRenderingState >> viewStateForCameraTransform: cameraTransform [
+WDCCascadeDirectionalLightRenderingState >> viewStateForCameraTransform: cameraTransform [
 	| state |
-	state := light viewStateForRenderingState: self cameraTransform: cameraTransform.
+	state := renderingLight lightSource viewStateForRenderingState: self cameraTransform: cameraTransform.
 	state
 		cascadeSplitOffsets: (WMVector4F x: frustumDivisions first y: frustumDivisions second z: frustumDivisions third w: frustumDivisions fourth);
 		cascadeFrustumPlane: (WMVector4F x: 0.0 y: 0.0 z: -1.0 w: 0.0);

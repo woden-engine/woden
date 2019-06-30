@@ -2,8 +2,8 @@
 I represent a directional light rendering state.
 "
 Class {
-	#name : #WDSGDirectionalLightRenderingState,
-	#superclass : #WDSGShadowLightRenderingStateLayer,
+	#name : #WDCDirectionalLightRenderingState,
+	#superclass : #WDCShadowLightRenderingStateLayer,
 	#instVars : [
 		'cameraFrustum',
 		'mainCameraTransform',
@@ -13,33 +13,33 @@ Class {
 		'cameraNearDistance',
 		'cameraFarDistance'
 	],
-	#category : #'WodenEngine-Scene-Rendering'
+	#category : #'WodenEngine-Core-Lighting'
 }
 
 { #category : #accessing }
-WDSGDirectionalLightRenderingState >> cameraFarDistance [
+WDCDirectionalLightRenderingState >> cameraFarDistance [
 	^ cameraFarDistance ifNil: [ mainCamera farDistance ]
 ]
 
 { #category : #accessing }
-WDSGDirectionalLightRenderingState >> cameraFrustum [
+WDCDirectionalLightRenderingState >> cameraFrustum [
 	^ cameraFrustum ifNil: [cameraFrustum := mainCamera frustum ]
 ]
 
 { #category : #accessing }
-WDSGDirectionalLightRenderingState >> cameraNearDistance [
+WDCDirectionalLightRenderingState >> cameraNearDistance [
 	^ cameraNearDistance ifNil: [ mainCamera nearDistance ]
 ]
 
 { #category : #'shadow mapping' }
-WDSGDirectionalLightRenderingState >> computeUpVectorWithViewVector: v lightVector: l [
+WDCDirectionalLightRenderingState >> computeUpVectorWithViewVector: v lightVector: l [
 	| ln |
 	ln := l normalized.
 	^ ((ln cross: v) normalized cross: ln) normalized
 ]
 
 { #category : #'shadow mapping' }
-WDSGDirectionalLightRenderingState >> computeViewVectorWithShadowCastingBody: body [
+WDCDirectionalLightRenderingState >> computeViewVectorWithShadowCastingBody: body [
 	| vector viewPosition |
 	vector := WMVector3F zero.
 	viewPosition := mainCameraTransform translation.
@@ -50,7 +50,7 @@ WDSGDirectionalLightRenderingState >> computeViewVectorWithShadowCastingBody: bo
 ]
 
 { #category : #'shadow mapping' }
-WDSGDirectionalLightRenderingState >> extractShadowCastingBodyPoints [
+WDCDirectionalLightRenderingState >> extractShadowCastingBodyPoints [
 	| points worldCorner |
 	points := OrderedCollection new.
 	"Transcript show: light scene boundingBox; cr."
@@ -67,14 +67,14 @@ WDSGDirectionalLightRenderingState >> extractShadowCastingBodyPoints [
 ]
 
 { #category : #'as yet unclassified' }
-WDSGDirectionalLightRenderingState >> nearDistance: nearDistance farDistance: farDistance [
+WDCDirectionalLightRenderingState >> nearDistance: nearDistance farDistance: farDistance [
 	cameraFrustum := mainCamera frustumForNearDistance: nearDistance farDistance: farDistance.
 	cameraNearDistance := nearDistance.
 	cameraFarDistance := farDistance
 ]
 
 { #category : #'shadow mapping' }
-WDSGDirectionalLightRenderingState >> setupShadowMappingTransforms [
+WDCDirectionalLightRenderingState >> setupShadowMappingTransforms [
 	"
 	Light space perspective shadow mapping:
 	Michael Wimmer, Daniel Scherzer, and Werner Purgathofer. 2004. Light space perspective shadow maps. In Proceedings of the Fifteenth Eurographics conference on Rendering Techniques (EGSR'04). Eurographics Association, Aire-la-Ville, Switzerland, Switzerland, 143-151. DOI=http://dx.doi.org/10.2312/EGWR/EGSR04/143-151
@@ -102,10 +102,10 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
     Date: October 14, 2004
 	"
 	| frustumBox viewVector viewPosition cosGamma sinGamma lightDepth z_n z_f nearDistance farDistance upVector perspectivePoint perspectiveTransform falloff bodyNearDistance alpha paperNearDistance shortRangeNearDistance |
-	mainCameraTransform := "self roundCameraTransform:" mainCamera renderTransform.
-	extraShadowDistanceFactor := light extraShadowDistanceFactor.
+	mainCameraTransform := "self roundCameraTransform:" mainCamera globalTransform.
+	extraShadowDistanceFactor := renderingLight lightSource extraShadowDistanceFactor.
 	
-	lightVector := light renderTransform matrix transformVector3: (WMVector3F z: -1.0).
+	lightVector := renderingLight transform matrix transformVector3: (WMVector3F z: -1.0).
 	viewPosition := mainCameraTransform translation.
 	viewVector := (mainCameraTransform transformVector3: (WMVector3F z: -1.0)) normalized.
 	shadowCastingBody := self extractShadowCastingBodyPoints.
@@ -113,7 +113,7 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 	"Compute an initial render transform."	
 	upVector := self computeUpVectorWithViewVector: viewVector lightVector: lightVector.
 	"self computeUpVectorWithShadowCastingBody: shadowCastingBody."
-	
+
 	"When the up vector and the lightvector are close to parallel, fallback to uniform shadow mapping."
 	(viewVector dot: lightVector) abs > 0.999 ifTrue: [
 		^ self setupUniformShadowMappingTransforms
@@ -169,16 +169,16 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 ]
 
 { #category : #'shadow mapping' }
-WDSGDirectionalLightRenderingState >> setupUniformShadowMappingTransforms [
+WDCDirectionalLightRenderingState >> setupUniformShadowMappingTransforms [
 	| frustumBox viewVector viewPosition |
-	mainCameraTransform := self roundCameraTransform: mainCamera renderTransform.
-	extraShadowDistanceFactor := light extraShadowDistanceFactor.
+	mainCameraTransform := self roundCameraTransform: mainCamera globalTransform.
+	extraShadowDistanceFactor := renderingLight lightSource extraShadowDistanceFactor.
 	
 	viewPosition := mainCameraTransform translation.
 	viewVector := mainCameraTransform transformVector3: (WMVector3F z: -1.0).
 	
 	"renderTransform := WMReversibleAffineTransformF from: viewPosition lookAtDirection: lightVector up: viewVector."
-	renderTransform := light renderTransform.
+	renderTransform := renderingLight transform.
 	
 	frustumBox := WMBox3DF empty.
 	shadowCastingBody do: [ :point |
@@ -189,7 +189,7 @@ WDSGDirectionalLightRenderingState >> setupUniformShadowMappingTransforms [
 ]
 
 { #category : #'shadow mapping' }
-WDSGDirectionalLightRenderingState >> viewStateForCameraTransform: cameraTransform [
+WDCDirectionalLightRenderingState >> viewStateForCameraTransform: cameraTransform [
 	| state |
 	state := super viewStateForCameraTransform: cameraTransform.
 	state

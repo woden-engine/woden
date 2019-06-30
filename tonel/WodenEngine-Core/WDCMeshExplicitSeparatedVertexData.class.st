@@ -41,8 +41,8 @@ WDCMeshExplicitSeparatedVertexData >> createVertexBindingFor: anEngine [
 ]
 
 { #category : #'as yet unclassified' }
-WDCMeshExplicitSeparatedVertexData >> engineChangedTo: anEngine [
-	channels do: [ :channel | channel engineChangedTo: anEngine ]
+WDCMeshExplicitSeparatedVertexData >> engine: anEngine [
+	channels do: [ :channel | channel engine: anEngine ]
 ]
 
 { #category : #testing }

@@ -52,14 +52,9 @@ WDCResourceWithSessionHandle >> engine [
 	^ engine
 ]
 
-{ #category : #accessing }
-WDCResourceWithSessionHandle >> engine: anObject [
-	engine := anObject
-]
-
 { #category : #'as yet unclassified' }
-WDCResourceWithSessionHandle >> engineChangedTo: anEngine [
-	engine == anEngine ifTrue: [ ^ false ].
+WDCResourceWithSessionHandle >> engine: anEngine [
+	engine == anEngine ifTrue: [ ^ self ].
 	engine := anEngine.
 	handle := nil.
 	session := nil.

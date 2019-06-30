@@ -270,18 +270,47 @@ WDIGLTF2Importer >> getBinaryDataChunkWithIndex: binaryChunkIndex [
 
 { #category : #loading }
 WDIGLTF2Importer >> loadAccessorFrom: accessorDescription [
-	| bufferView componentType type count pixelFormatName byteOffset |
+	| bufferView componentType type count pixelFormatName byteOffset minValues maxValues max min |
 	bufferView := bufferViews at: (accessorDescription at: 'bufferView') + 1.
 	componentType := accessorDescription at: 'componentType'.
 	type := accessorDescription at: 'type'.
 	count := accessorDescription at: 'count'.
 	byteOffset := accessorDescription at: 'byteOffset' ifAbsent: [0].
+	minValues := accessorDescription at: 'min' ifAbsent: [nil].
+	maxValues := accessorDescription at: 'max' ifAbsent: [nil].
+
+	min := max := nil.	
+	(minValues isNotNil and: [ maxValues isNotNil ]) ifTrue: [ 
+		type = 'SCALAR' ifTrue: [
+			min := minValues first.
+			max := maxValues first.
+		].
+
+		type = 'VEC2' ifTrue: [
+			min := WMVector2F x: minValues first y: minValues second.
+			max := WMVector2F x: maxValues first y: maxValues second.
+		].
+
+		type = 'VEC3' ifTrue: [
+			min := WMVector3F x: minValues first y: minValues second z: minValues third.
+			max := WMVector3F x: maxValues first y: maxValues second z: maxValues third.
+		].
+
+		type = 'VEC4' ifTrue: [
+			min := WMVector4F x: minValues first y: minValues second z: minValues third w: minValues fourth.
+			max := WMVector4F x: maxValues first y: maxValues second z: maxValues third w: maxValues fourth.
+		].
+
+	].
+
 	pixelFormatName := FullTypeToPixelName at: { componentType . type }.
 	accessors add: (WDCBufferAccessor new
 		bufferView: bufferView;
 		byteOffset: byteOffset;
 		type: (WDCStructureFieldType typeNamed: pixelFormatName);
 		count: count;
+		min: min;
+		max: max;
 		yourself)
 ]
 
@@ -418,10 +447,12 @@ WDIGLTF2Importer >> loadMeshPrimitives: primitives [
 	
 	submeshes do: [ :submesh |
 		mesh := vertexDataMeshDictionary at: submesh vertexData ifAbsentPut: [
-			| newMesh |
+			| newMesh positionsAccessor |
+			positionsAccessor := submesh vertexData positionsChannel accessor.
 			newMesh := WDCGenericMesh new
 				vertexData: submesh vertexData;
 				submeshes: OrderedCollection new;
+				boundingBox: (WMBox3DF min: positionsAccessor min max: positionsAccessor max);
 				yourself.
 			convertedMeshes add: newMesh.
 			meshesToCleanup add: newMesh.

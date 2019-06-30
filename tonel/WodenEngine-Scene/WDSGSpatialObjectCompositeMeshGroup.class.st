@@ -12,7 +12,8 @@ WDSGSpatialObjectCompositeMeshGroup >> addChild: aChild [
 
 { #category : #rendering }
 WDSGSpatialObjectCompositeMeshGroup >> invalidateRenderable [
-	renderable ifNotNil: #invalidate
+	renderable ifNotNil: #invalidate.
+	renderingRenderables do: #renderableChanged.
 ]
 
 { #category : #testing }
@@ -24,12 +25,6 @@ WDSGSpatialObjectCompositeMeshGroup >> isCompositeGroup [
 WDSGSpatialObjectCompositeMeshGroup >> removeChild: aChild [
 	super removeChild: aChild.
 	self invalidateRenderable
-]
-
-{ #category : #rendering }
-WDSGSpatialObjectCompositeMeshGroup >> renderOn: stateTracker [
-	self validateRenderable.
-	^ super renderOn: stateTracker
 ]
 
 { #category : #changing }

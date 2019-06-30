@@ -199,11 +199,11 @@ WDSSceneRenderer >> renderViewport: renderingViewport index: viewportIndex [
 ]
 
 { #category : #rendering }
-WDSSceneRenderer >> renderViewportVisibleObjects: renderingViewport [
+WDSSceneRenderer >> renderViewportVisibleObjects: renderingViewport [	
 	renderingViewport visibleObjects do: [ :object |
 		object renderOn: stateTracker
 	].
-
+	engine frameRenderingMetrics renderedObjectCount: engine frameRenderingMetrics renderedObjectCount + renderingViewport visibleObjects size.
 ]
 
 { #category : #rendering }
@@ -271,10 +271,10 @@ WDSSceneRenderer >> setupStateTrackerForRenderMode: renderMode [
 		useShaderResources: self shaderSignature defaultSamplers;
 		
 		frontFaceWinding: AGPU_COUNTER_CLOCKWISE;
-		objectCullMode: AGPU_CULL_MODE_BACK;
-		objectDepthEnabled: true;
-		objectDepthWriteMask: true;
-		objectDepthFunction: AGPU_GREATER_EQUAL;
+		sceneCullMode: AGPU_CULL_MODE_BACK;
+		sceneDepthEnabled: true;
+		sceneDepthWriteMask: true;
+		sceneDepthFunction: AGPU_GREATER_EQUAL;
 
 		blendingAllMode: WDCBlendingMode replace.
 
@@ -288,27 +288,6 @@ WDSSceneRenderer >> shaderSignature [
 { #category : #accessing }
 WDSSceneRenderer >> shaderSignatureClass [
 	self subclassResponsibility
-]
-
-{ #category : #'rendering preparations' }
-WDSSceneRenderer >> sortObjects: objectList perViewports: viewports [
-	| viewport forwardDirection translucentSortedPriority |
-	translucentSortedPriority := WDSGNode renderPriorityTranslucentSorted.
-	
-	objectList doWithIndex: [ :objects :index |
-		viewport := viewports at: index.
-		forwardDirection := viewport camera renderTransform matrix thirdColumn negated.
-		objects sort: [ :a :b |
-			a renderPriority = b renderPriority ifFalse: [
-				a renderPriority < b renderPriority
-			] ifTrue: [
-				a renderPriority >= translucentSortedPriority ifTrue: [ 
-					(forwardDirection dot: a renderTransform translation) > (forwardDirection dot: b renderTransform translation)
-				] ifFalse: [ false ]
-			]
-		]
-	].
-
 ]
 
 { #category : #accessing }

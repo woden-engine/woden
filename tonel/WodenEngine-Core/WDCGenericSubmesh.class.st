@@ -24,8 +24,8 @@ WDCGenericSubmesh >> = other [
 ]
 
 { #category : #'as yet unclassified' }
-WDCGenericSubmesh >> engineChangedTo: newEngine [
-	indexBuffer ifNotNil: [ indexBuffer engineChangedTo: newEngine ].
+WDCGenericSubmesh >> engine: newEngine [
+	indexBuffer ifNotNil: [ indexBuffer engine: newEngine ].
 	material ifNotNil: [ material := material engineChangedTo: newEngine ]
 ]
 
@@ -97,13 +97,4 @@ WDCGenericSubmesh >> renderOn: stateTracker instanceCount: instanceCount baseIns
 	stateTracker
 		primitiveType: primitiveType;
 		drawElements: indexCount instance_count: instanceCount first_index: firstIndex base_vertex: baseVertex base_instance: baseInstance
-]
-
-{ #category : #rendering }
-WDCGenericSubmesh >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
-	material ifNil: [ ^ self ].
-	(material activateOn: listBuilder primitiveType: primitiveType mode: renderMode submode: submode) ifFalse: [ ^ self].
-	indexBuffer ifNotNil: [ indexBuffer useIndexBuffer: indexBuffer ].
-
-	listBuilder drawElements: indexCount instance_count: instanceCount first_index: firstIndex base_vertex: baseVertex base_instance: baseInstance
 ]

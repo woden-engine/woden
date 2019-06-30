@@ -17,12 +17,12 @@ RWLight >> castShadows: aBoolean [
 
 { #category : #accessing }
 RWLight >> color [
-	^ sceneNode state intensity
+	^ sceneNode intensity
 ]
 
 { #category : #accessing }
 RWLight >> color: aColor [
-	sceneNode state intensity: aColor asWMVector4F
+	sceneNode intensity: aColor asWMVector4F
 ]
 
 { #category : #accessing }
@@ -32,7 +32,7 @@ RWLight >> diffuse [
 
 { #category : #accessing }
 RWLight >> influenceRadius [
-	^ sceneNode state radius
+	^ sceneNode radius
 ]
 
 { #category : #accessing }

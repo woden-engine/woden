@@ -1,6 +1,6 @@
 Class {
 	#name : #WDPhyDebugDrawingParser,
-	#superclass : #WDCRenderable,
+	#superclass : #WDCAbstractRenderable,
 	#instVars : [
 		'meshBuilder',
 		'in'

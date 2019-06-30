@@ -1,6 +1,6 @@
 Class {
 	#name : #WDPhyDebugDrawingRenderable,
-	#superclass : #WDCRenderable,
+	#superclass : #WDCAbstractRenderable,
 	#instVars : [
 		'physicsWorld',
 		'mutex',
@@ -71,12 +71,6 @@ WDPhyDebugDrawingRenderable >> physicsWorld: anObject [
 WDPhyDebugDrawingRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	self validateDebugMesh.
 	debugRenderable renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex 
-]
-
-{ #category : #rendering }
-WDPhyDebugDrawingRenderable >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
-	self validateDebugMesh.
-	debugRenderable renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex
 ]
 
 { #category : #'as yet unclassified' }

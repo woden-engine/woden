@@ -3,21 +3,16 @@ I am a null renderable.
 "
 Class {
 	#name : #WDCNullRenderable,
-	#superclass : #WDCRenderable,
+	#superclass : #WDCImmutableRenderable,
 	#category : #'WodenEngine-Core-Mesh'
 }
 
-{ #category : #'extra per object rendering data' }
-WDCNullRenderable >> createSceneDependentDataFor: engine into: objectStateBindings [
-	^ nil
+{ #category : #'as yet unclassified' }
+WDCNullRenderable >> createRenderingRenderablesFor: spatialObject [
+	^ #().
 ]
 
 { #category : #rendering }
 WDCNullRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
-	"Do nothing"
-]
-
-{ #category : #'as yet unclassified' }
-WDCNullRenderable >> renderOn: listBuilder mode: renderMode submode: submode instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	"Do nothing"
 ]

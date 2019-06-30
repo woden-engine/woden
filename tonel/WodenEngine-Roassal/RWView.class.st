@@ -83,8 +83,7 @@ RWView >> addAll: someElements [
 { #category : #scene }
 RWView >> addCameraLight: color [
 	cameraLight := WDSGLightSource new directional.
-	cameraLight state
-		intensity: color asWMVector4F.
+	cameraLight intensity: color asWMVector4F.
 	camera sceneNode addChild: cameraLight.
 ]
 
@@ -180,12 +179,12 @@ RWView >> cameraLightColor: aWDColor [
 
 { #category : #scene }
 RWView >> cameraLightIntensity [
-	^ cameraLight state intensity
+	^ cameraLight intensity
 ]
 
 { #category : #scene }
 RWView >> cameraLightIntensity: aColor [
-	cameraLight state intensity: aColor asWMVector4F
+	cameraLight intensity: aColor asWMVector4F
 ]
 
 { #category : #overlays }

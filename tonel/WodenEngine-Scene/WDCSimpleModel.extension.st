@@ -18,10 +18,8 @@ WDCSimpleModel >> createViewer [
 	scene add: node.
 	
 	light := WDSGLightSource new.
-	light point.
-	light state
-		intensity: Color white asWMVector4F.
-	light transform
+	light point;
+		intensity: Color white asWMVector4F;
 		translateByX: -1.5 y: 1.5 z: 1.6.
 	scene add: light.
 	^ sceneModel

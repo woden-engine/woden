@@ -251,7 +251,7 @@ RWElement >> localBoundingBox [
 { #category : #orientation }
 RWElement >> lookDown [
 	sceneNode transform orthonormal: (WMMatrix3F xrot: Float halfPi negated ).
-	sceneNode stateChanged.
+	sceneNode transformChanged.
 	self invalidateBoundingBoxCache.
 ]
 
@@ -290,7 +290,8 @@ RWElement >> orientation [
 RWElement >> orientation: anOrientation [
 	self notifyConnectedEdges.
 	self invalidateBoundingBoxCache.
-	sceneNode transform orthonormal: anOrientation asWMMatrix3F
+	sceneNode transform orthonormal: anOrientation asWMMatrix3F.
+	sceneNode transformChanged.
 ]
 
 { #category : #accessing }
@@ -300,13 +301,13 @@ RWElement >> orientationMatrix [
 
 { #category : #accessing }
 RWElement >> position [
-	^ sceneNode transform translation
+	^ sceneNode position
 ]
 
 { #category : #accessing }
 RWElement >> position: aPosition [
 	self invalidateBoundingBoxCache.
-	^ sceneNode transform translation: aPosition
+	^ sceneNode position: aPosition
 ]
 
 { #category : #'ray casting' }
@@ -346,43 +347,37 @@ RWElement >> rigidBody [
 
 { #category : #orientation }
 RWElement >> rotateByX: angle [
-	sceneNode transform rotateRadiansOnX: angle.
-	sceneNode stateChanged.
+	sceneNode rotateRadiansOnX: angle.
 	self invalidateBoundingBoxCache.
 ]
 
 { #category : #orientation }
 RWElement >> rotateByXDegrees: angle [
-	sceneNode transform rotateDegreesOnX: angle.
-	sceneNode stateChanged.
+	sceneNode rotateDegreesOnX: angle.
 	self invalidateBoundingBoxCache.
 ]
 
 { #category : #orientation }
 RWElement >> rotateByY: angle [
-	sceneNode transform rotateRadiansOnY: angle.
-	sceneNode stateChanged.
+	sceneNode rotateRadiansOnY: angle.
 	self invalidateBoundingBoxCache.
 ]
 
 { #category : #orientation }
 RWElement >> rotateByYDegrees: angle [
-	sceneNode transform rotateDegreesOnY: angle.
-	sceneNode stateChanged.
+	sceneNode rotateDegreesOnY: angle.
 	self invalidateBoundingBoxCache.
 ]
 
 { #category : #orientation }
 RWElement >> rotateByZ: angle [
-	sceneNode transform rotateRadiansOnZ: angle.
-	sceneNode stateChanged.
+	sceneNode rotateRadiansOnZ: angle.
 	self invalidateBoundingBoxCache.
 ]
 
 { #category : #orientation }
 RWElement >> rotateByZDegrees: angle [
-	sceneNode transform rotateDegreesOnZ: angle.
-	sceneNode stateChanged.
+	sceneNode rotateDegreesOnZ: angle.
 	self invalidateBoundingBoxCache.
 ]
 
@@ -435,8 +430,7 @@ RWElement >> transform [
 
 { #category : #translation }
 RWElement >> translateBy: translation [
-	sceneNode transform translateBy: translation.
-	sceneNode stateChanged.
+	sceneNode translateBy: translation.
 	self notifyConnectedEdges.
 	self invalidateBoundingBoxCache.
 ]
@@ -463,8 +457,7 @@ RWElement >> translateByZ: translation [
 
 { #category : #translation }
 RWElement >> translateTo: aWMVector3 [
-	sceneNode transform translation: aWMVector3.
-	sceneNode stateChanged.
+	sceneNode translateTo: aWMVector3.
 	self notifyConnectedEdges.
 	self invalidateBoundingBoxCache.
 ]
@@ -476,8 +469,7 @@ RWElement >> translateToX: newX [
 
 { #category : #translation }
 RWElement >> translateToX: newX y: newY z: newZ [ 
-	sceneNode transform translation: (WMVector3F x: newX asFloat y: newY asFloat z: newZ asFloat).
-	sceneNode stateChanged.
+	sceneNode translateToX: newX y: newY z: newZ .
 	self invalidateBoundingBoxCache.
 ]
 

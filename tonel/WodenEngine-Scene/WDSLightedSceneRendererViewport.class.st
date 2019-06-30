@@ -189,10 +189,10 @@ WDSLightedSceneRendererViewport >> selectedLights: anObject [
 { #category : #sorting }
 WDSLightedSceneRendererViewport >> sortAndSelectLights [
 	| cameraPosition |
-	cameraPosition := self camera renderTransform translation.
+	cameraPosition := self camera globalTransform translation.
 	
 	sortedLights := lights collect: [ :light |
-		{ light . (light renderTransform translation - cameraPosition) length2 }
+		{ light . (light transform translation - cameraPosition) length2 }
 	].
 	sortedLights sort: [ :a :b |
 		a second < b second

@@ -20,8 +20,8 @@ WDCBufferView >> buffer: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-WDCBufferView >> engineChangedTo: anEngine [
-	buffer engineChangedTo: anEngine
+WDCBufferView >> engine: anEngine [
+	buffer engine: anEngine
 ]
 
 { #category : #accessing }
