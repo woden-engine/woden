@@ -12,7 +12,8 @@ WDSGSpatialObjectCompositeMeshGroup >> addChild: aChild [
 
 { #category : #rendering }
 WDSGSpatialObjectCompositeMeshGroup >> invalidateRenderable [
-	renderable ifNotNil: #invalidate
+	renderable ifNotNil: #invalidate.
+	renderingRenderables do: #renderableChanged.
 ]
 
 { #category : #testing }

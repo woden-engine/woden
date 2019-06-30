@@ -12,13 +12,13 @@ Class {
 
 { #category : #accessing }
 WDCRenderingSceneRenderableObject >> computeBoundingBox [
-	"Transcript show: (renderable boundingBox transformedWith: spatialObject transform); cr."
-	^ renderable boundingBox transformedWith: spatialObject transform
+	self validateRenderable.
+	^ spatialObject computeBoundingBoxForRenderable: renderable
 ]
 
 { #category : #accessing }
 WDCRenderingSceneRenderableObject >> renderOn: stateTracker [
-	renderable validateForNode: node.
+	self validateRenderable.
 	spatialObject renderRenderable: renderable with: stateTracker
 
 ]
@@ -42,4 +42,9 @@ WDCRenderingSceneRenderableObject >> renderable: anObject [
 WDCRenderingSceneRenderableObject >> updateCommonGpuStateForFrame: frameIndex [
 	super updateCommonGpuStateForFrame: frameIndex.
 	renderable updateCommonGpuStateForFrame: frameIndex.
+]
+
+{ #category : #accessing }
+WDCRenderingSceneRenderableObject >> validateRenderable [
+	renderable validateForNode: node.
 ]

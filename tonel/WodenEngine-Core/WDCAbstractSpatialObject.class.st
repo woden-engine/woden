@@ -21,6 +21,11 @@ WDCAbstractSpatialObject >> color: aColor [
 	state color: aColor
 ]
 
+{ #category : #'as yet unclassified' }
+WDCAbstractSpatialObject >> computeBoundingBoxForRenderable: renderable [
+	^ renderable boundingBox transformedWith: self transform
+]
+
 { #category : #accessing }
 WDCAbstractSpatialObject >> createEngineDependantData [
 ]

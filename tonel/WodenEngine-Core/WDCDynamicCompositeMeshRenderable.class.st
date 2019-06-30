@@ -62,4 +62,5 @@ WDCDynamicCompositeMeshRenderable >> validateForNode: aNode [
 	].
 	
 	concreteRenderable := builder mesh.
+	self boundingBox: concreteRenderable boundingBox.
 ]

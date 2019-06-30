@@ -42,6 +42,11 @@ WDCAbstractRenderingSceneObject >> node: anObject [
 	node := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDCAbstractRenderingSceneObject >> renderableChanged [
+	boundingBox := nil.
+]
+
 { #category : #accessing }
 WDCAbstractRenderingSceneObject >> spatialObject [
 	^ spatialObject

@@ -38,6 +38,16 @@ WDCInstanceGroupSpatialObject >> childChanged: aChild [
 	self addPendingUpdate: aChild
 ]
 
+{ #category : #'as yet unclassified' }
+WDCInstanceGroupSpatialObject >> computeBoundingBoxForRenderable: renderable [
+	| result |
+	result := WMBox3DF empty.
+	instances do: [ :instance |
+		result insertBox: (instance computeBoundingBoxForRenderable: renderable)
+	].
+	^ result
+]
+
 { #category : #accessing }
 WDCInstanceGroupSpatialObject >> createEngineDependantData [
 	| instanceBuffer shaderSignature |

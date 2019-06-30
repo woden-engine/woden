@@ -573,6 +573,7 @@ WDCGenericMeshBuilder >> clear [
 	submeshes removeAll.
 	baseVertex := 0.
 	currentColor := Color white asWMVector4F.
+	boundingBox := WMBox3DF empty.
 ]
 
 { #category : #accessing }

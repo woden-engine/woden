@@ -35,7 +35,7 @@ WDCSkinnedRenderableMesh >> armature: anObject [
 
 { #category : #accessing }
 WDCSkinnedRenderableMesh >> boundingBox [
-	^ mesh boundingBox
+	^ boundingBox ifNil: [mesh boundingBox].
 ]
 
 { #category : #accessing }
@@ -52,6 +52,12 @@ WDCSkinnedRenderableMesh >> createAnimationState [
 WDCSkinnedRenderableMesh >> engine: newEngine [
 	mesh engine: newEngine.
 	super engine: newEngine
+]
+
+{ #category : #initialization }
+WDCSkinnedRenderableMesh >> initialize [
+	super initialize.
+	boundingBox := nil.
 ]
 
 { #category : #accessing }

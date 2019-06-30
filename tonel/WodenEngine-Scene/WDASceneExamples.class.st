@@ -137,8 +137,7 @@ WDASceneExamples class >> createIslandWaterObjectFor: engine [
 		heightScale: 0.1;
 		createClipMapWithLevels: 3 size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
 		mesh.
-		
-	mesh inspect.
+
 	mesh makeTranslucentSorted.
 		
 	waterObject := WDSGSpatialObject new.

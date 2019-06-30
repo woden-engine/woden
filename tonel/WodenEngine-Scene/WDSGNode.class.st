@@ -232,7 +232,9 @@ WDSGNode >> parent [
 WDSGNode >> parentTransformChanged [
 	self stateChanged.
 	globalTransform := nil.
+	self renderingRenderables do: #transformChanged.
 	children do: [ :child | child parentTransformChanged ].
+
 ]
 
 { #category : #rendering }
