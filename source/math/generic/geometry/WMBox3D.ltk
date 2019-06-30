@@ -363,7 +363,7 @@ WMBox3D category: 'special vertices' methods: {
 ].
 
 :[positiveVertex: <WMVector3> direction -> WMVector3.
-	let vertex := max.
+	let vertex := min.
 	direction x >= 0.0 ifTrue: [ vertex x: max x ].
 	direction y >= 0.0 ifTrue: [ vertex y: max y ].
 	direction z >= 0.0 ifTrue: [ vertex z: max z ].

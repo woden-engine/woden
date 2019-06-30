@@ -3,37 +3,74 @@ WMFrustum category: 'accessing' methods: {
 	^ leftBottomFar
 ].
 
+:[leftBottomFar: aVector3
+	leftBottomFar := aVector3
+].
+
 :[leftBottomNear
 	^ leftBottomNear
+].
+
+:[leftBottomNear: aVector3
+	leftBottomNear := aVector3
 ].
 
 :[leftTopFar
 	^ leftTopFar
 ].
 
+:[leftTopFar: aVector3
+	leftTopFar := aVector3
+].
+
 :[leftTopNear
 	^ leftTopNear
+].
+
+:[leftTopNear: aVector3
+	leftTopNear := aVector3
 ].
 
 :[matrix
 	^ matrix
 ].
 
+:[matrix: aMatrix
+	matrix := aMatrix
+].
+
 :[rightBottomFar
 	^ rightBottomFar
+].
+
+:[rightBottomFar: aVector3
+	rightBottomFar := aVector3
 ].
 
 :[rightBottomNear
 	^ rightBottomNear
 ].
 
+:[rightBottomNear: aVector3
+	rightBottomNear := aVector3
+].
+
 :[rightTopFar
 	^ rightTopFar
+].
+
+:[rightTopFar: aVector3
+	rightTopFar := aVector3
 ].
 
 :[rightTopNear
 	^ rightTopNear
 ].
+
+:[rightTopNear: aVector3
+	rightTopNear := aVector3
+].
+
 }.
 
 WMFrustum category: 'construction' methods: {
@@ -164,4 +201,35 @@ WMFrustum category: 'window points' methods: {
 		yourself
 ].
 
+:[transformedWith: transform
+	^ self copy
+		leftBottomNear: (transform transformPosition3: leftBottomNear);
+		rightBottomNear: (transform transformPosition3: rightBottomNear);
+		leftTopNear: (transform transformPosition3: leftTopNear);
+		rightTopNear: (transform transformPosition3: rightTopNear);
+		leftBottomFar: (transform transformPosition3: leftBottomFar);
+		rightBottomFar: (transform transformPosition3: rightBottomFar);
+		leftTopFar: (transform transformPosition3: leftTopFar);
+		rightTopFar: (transform transformPosition3: rightTopFar);
+		yourself
+].
+
+:[planes
+	^ {
+		"Near plane"
+		WMPlane point: (leftBottomNear castTo: WMVector3) point: (rightBottomNear castTo: WMVector3) point: (leftTopNear castTo: WMVector3).
+		"Far plane"
+		WMPlane point: (rightBottomFar castTo: WMVector3) point: (leftBottomFar castTo: WMVector3) point: (leftTopFar castTo: WMVector3).
+
+		"Left"
+		WMPlane point: (leftBottomNear castTo: WMVector3) point: (leftTopNear castTo: WMVector3) point: (leftTopFar castTo: WMVector3).
+		"Right"
+		WMPlane point: (rightTopNear castTo: WMVector3) point: (rightBottomNear castTo: WMVector3) point: (rightTopFar castTo: WMVector3).
+
+		"Bottom"
+		WMPlane point: (rightBottomNear castTo: WMVector3) point: (leftBottomNear castTo: WMVector3) point: (leftBottomFar castTo: WMVector3).
+		"Top"
+		WMPlane point: (leftTopNear castTo: WMVector3) point: (rightTopNear castTo: WMVector3) point: (leftTopFar castTo: WMVector3).
+	}
+].
 }
