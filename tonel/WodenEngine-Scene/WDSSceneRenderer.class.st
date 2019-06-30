@@ -59,7 +59,7 @@ WDSSceneRenderer >> endPreparingRendering [
 
 { #category : #initialization }
 WDSSceneRenderer >> ensureCameraStatesFor: requiredNumberOfCameras [
-	| pool currentNumberOfCameras missingNumberOfCameras |
+	| currentNumberOfCameras missingNumberOfCameras |
 	cameraStates ifNil: [ 
 		cameraStates := (1 to: self cameraStateFramebufferingCount) collect: [ :f | #() ].
 	].
@@ -67,15 +67,15 @@ WDSSceneRenderer >> ensureCameraStatesFor: requiredNumberOfCameras [
 	currentNumberOfCameras := cameraStates first size.
 	missingNumberOfCameras := requiredNumberOfCameras - currentNumberOfCameras.
 	
-	pool := engine resourceCache streamingUniformBufferPoolFor: WTCameraState.
-	
-	cameraStates := cameraStates collect: [ :oldFrameStates |
-		oldFrameStates , ((pool allocate: missingNumberOfCameras) collect: [ :bufferElement |
-			self shaderSignature newCameraState
-				bind: 0 uniformBufferElement: bufferElement;
-				yourself
-		])
+	missingNumberOfCameras > 0 ifTrue: [ 
+		cameraStates := cameraStates collect: [ :oldFrameStates |
+			oldFrameStates , ((1 to: missingNumberOfCameras) collect: [ :i |
+				WDSSceneRendererCameraLayersStates for: engine
+			])
+		].
 	].
+
+
 ]
 
 { #category : #initialization }
@@ -176,13 +176,10 @@ WDSSceneRenderer >> renderViewport: renderingViewport index: viewportIndex [
 	"Begin rendering into the viewport"
 	stateTracker
 		beginRenderPass: renderPass renderTarget: renderTarget bounds: viewport bounds.
-	self setupRenderingViewportStates: renderingViewport.
+	self
+		setupRenderingViewportStates: renderingViewport;
+		renderViewportVisibleObjects: renderingViewport.
 	
-	"Render the viewport objects"
-	renderingViewport visibleObjects do: [ :object |
-		object renderOn: stateTracker
-	].
-
 	"Render the overlays"
 	viewport overlayRenderer ifNotNil: [ 
 		viewport overlayRenderer renderViewport: viewport overlayWith: stateTracker 
@@ -199,11 +196,26 @@ WDSSceneRenderer >> renderViewport: renderingViewport index: viewportIndex [
 ]
 
 { #category : #rendering }
-WDSSceneRenderer >> renderViewportVisibleObjects: renderingViewport [	
-	renderingViewport visibleObjects do: [ :object |
-		object renderOn: stateTracker
+WDSSceneRenderer >> renderViewportLayer: viewportLayer visibleObjectsWithCameraLayerState: layerCameraState [
+	| count |
+	count := 0.
+	stateTracker useShaderResources: layerCameraState shaderBindings.
+	viewportLayer visibleObjects do: [ :object |
+		object renderOn: stateTracker.
+		count := count + 1.
 	].
-	engine frameRenderingMetrics renderedObjectCount: engine frameRenderingMetrics renderedObjectCount + renderingViewport visibleObjects size.
+	^ count
+]
+
+{ #category : #rendering }
+WDSSceneRenderer >> renderViewportVisibleObjects: renderingViewport [	
+	| count cameraLayersStates |
+	count := 0.
+	cameraLayersStates := renderingViewport cameraLayersStates.
+	count := self renderViewportLayer: renderingViewport backgroundLayer visibleObjectsWithCameraLayerState: cameraLayersStates backgroundLayerState.
+	count := count + (self renderViewportLayer: renderingViewport normalLayer visibleObjectsWithCameraLayerState: cameraLayersStates 	normalLayerState).
+	count := count + (self renderViewportLayer: renderingViewport foregroundLayer visibleObjectsWithCameraLayerState: cameraLayersStates foregroundLayerState).
+	engine frameRenderingMetrics renderedObjectCount: engine frameRenderingMetrics renderedObjectCount + count.
 ]
 
 { #category : #rendering }
@@ -222,8 +234,6 @@ WDSSceneRenderer >> setupRenderingViewportStates: renderingViewport [
 	stateTracker
 		submode: renderingViewport submode;
 		editorViewType: renderingViewport editorViewType.
-	stateTracker
-		useShaderResources: renderingViewport cameraStateShaderBindings
 ]
 
 { #category : #'rendering preparations' }
@@ -297,28 +307,14 @@ WDSSceneRenderer >> stateTracker [
 
 { #category : #'rendering preparations' }
 WDSSceneRenderer >> submitCurrentCameraStates [
-	| cameraState gpuCameraState viewport screenSize inverseScreenSize cameraStateBindings currentCameraStates |
+	| currentCameraStates |
 	currentCameraStates := useLateLatching
 		ifTrue: [ cameraStates first ]
 		ifFalse: [ cameraStates at: engine bufferingFrameIndex ].
 
 	renderingViewports doWithIndex: [ :renderingViewport :index |
-		viewport := renderingViewport viewport.
-		cameraState := viewport cameraState.
-		screenSize := renderingViewport extent asWMVector2F.
-		inverseScreenSize := WMVector2F x: screenSize x reciprocalFloatQuiet y: screenSize y reciprocalFloatQuiet.
-		
-		cameraState
-			transform: viewport cameraTransform;
-			screenSize: screenSize;
-			inverseScreenSize: inverseScreenSize;
-			currentTime: currentTime.
-				
-		cameraStateBindings := currentCameraStates at: index.
-		renderingViewport cameraStateShaderBindings: cameraStateBindings.
-		
-		gpuCameraState := cameraStateBindings slotValueAt: 0.
-		gpuCameraState atomicSetValue: cameraState.
+		(currentCameraStates at: index)
+			updateForRenderingViewport: renderingViewport currentTime: currentTime
 	].
 
 ]

@@ -30,6 +30,11 @@ WDSGCamera >> aspectRatio: anObject [
 	aspectRatio := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDSGCamera >> countedForBoundingBox [
+	^ false
+]
+
 { #category : #'tone mapping' }
 WDSGCamera >> exponentialToneMapping [
 	self toneMappingOperator: #exponential

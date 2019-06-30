@@ -20,6 +20,7 @@ Class {
 		'RenderPriorityEditorTranslucentAfter',
 		'RenderPriorityEditorTranslucentSortedAfter',
 		'RenderPriorityOpaque',
+		'RenderPriorityOpaqueBackground',
 		'RenderPriorityOpaqueStatic',
 		'RenderPriorityTranslucent',
 		'RenderPriorityTranslucentSorted'
@@ -33,6 +34,8 @@ Class {
 { #category : #'class initialization' }
 WDCAbstractRenderable class >> initialize [
 	RenderPriorityEditorOpaqueBefore := 0.
+
+	RenderPriorityOpaqueBackground := 100.
 
 	RenderPriorityOpaque := 200.
 	RenderPriorityOpaqueStatic := RenderPriorityOpaque.
@@ -76,6 +79,11 @@ WDCAbstractRenderable class >> renderPriorityOpaque [
 ]
 
 { #category : #accessing }
+WDCAbstractRenderable class >> renderPriorityOpaqueBackground [
+	^ RenderPriorityOpaqueBackground
+]
+
+{ #category : #accessing }
 WDCAbstractRenderable class >> renderPriorityOpaqueStatic [
 	^ RenderPriorityOpaqueStatic
 ]
@@ -88,6 +96,11 @@ WDCAbstractRenderable class >> renderPriorityTranslucent [
 { #category : #accessing }
 WDCAbstractRenderable class >> renderPriorityTranslucentSorted [
 	^ RenderPriorityTranslucentSorted
+]
+
+{ #category : #accessing }
+WDCAbstractRenderable >> backgroundRenderPriority [
+	self renderPriority: RenderPriorityOpaqueBackground
 ]
 
 { #category : #accessing }
@@ -176,6 +189,14 @@ WDCAbstractRenderable >> isOpaqueShadowCaster [
 { #category : #accessing }
 WDCAbstractRenderable >> isOpaqueShadowCaster: anObject [
 	isOpaqueShadowCaster := anObject
+]
+
+{ #category : #accessing }
+WDCAbstractRenderable >> makeBackgroundRenderable [
+	self
+		depthWriteMask: false;
+		isOpaqueShadowCaster: false;
+		backgroundRenderPriority
 ]
 
 { #category : #accessing }

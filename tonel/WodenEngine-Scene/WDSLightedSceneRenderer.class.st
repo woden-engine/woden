@@ -62,6 +62,7 @@ WDSLightedSceneRenderer >> applyDebugRenderShadowMapViewport [
 		transform: shadowLight globalTransform;
 		projectionMatrix: shadowLight shadowProjectionMatrix.
 			
+	self halt.
 	gpuCameraState := renderingViewports first cameraStateShaderBindings slotValueAt: 0.
 	gpuCameraState atomicSetValue: cameraState.
 ]
@@ -75,7 +76,7 @@ WDSLightedSceneRenderer >> computeScreenSpaceAmbientOcclusionFor: renderingViewp
 		"Ambient occlusion main compuation."
 		shaderSignature: aoShaderShaderSignature;
 		useShaderResources: aoShaderShaderSignature defaultSamplers;
-		useShaderResources: renderingViewport cameraStateShaderBindings;
+		useShaderResources: renderingViewport cameraLayersStates normal;
 		applyFullScreenPass: renderingViewport ambientOcclusionComputationArguments;
 		
 		"Horizontal blur pass"

@@ -3,11 +3,31 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'viewport',
-		'visibleObjects',
-		'cameraStateShaderBindings'
+		'cameraLayersStates',
+		'backgroundLayer',
+		'normalLayer',
+		'foregroundLayer'
 	],
 	#category : #'WodenEngine-Scene-Rendering'
 }
+
+{ #category : #adding }
+WDSAbstractSceneRendererViewport >> addBackgroundLight: aLight [
+]
+
+{ #category : #adding }
+WDSAbstractSceneRendererViewport >> addBackgroundVisibleObject: aNode [
+	backgroundLayer addVisibleObject: aNode.
+]
+
+{ #category : #adding }
+WDSAbstractSceneRendererViewport >> addForegroundLight: aLight [
+]
+
+{ #category : #adding }
+WDSAbstractSceneRendererViewport >> addForegroundVisibleObject: aNode [
+	self addVisibleObject: aNode
+]
 
 { #category : #adding }
 WDSAbstractSceneRendererViewport >> addLight: aLight [
@@ -15,8 +35,13 @@ WDSAbstractSceneRendererViewport >> addLight: aLight [
 
 { #category : #adding }
 WDSAbstractSceneRendererViewport >> addVisibleObject: aNode [
-	visibleObjects add: aNode.
-	aNode updateGpuStateForFrame: self engine frameBufferingDriver frameIndex camera: viewport camera
+	normalLayer addVisibleObject: aNode.
+	aNode updateGpuStateForFrame: self engine frameBufferingDriver frameIndex camera: viewport camera.
+]
+
+{ #category : #accessing }
+WDSAbstractSceneRendererViewport >> backgroundLayer [
+	^ backgroundLayer
 ]
 
 { #category : #accessing }
@@ -25,13 +50,13 @@ WDSAbstractSceneRendererViewport >> camera [
 ]
 
 { #category : #accessing }
-WDSAbstractSceneRendererViewport >> cameraStateShaderBindings [
-	^ cameraStateShaderBindings
+WDSAbstractSceneRendererViewport >> cameraLayersStates [
+	^ cameraLayersStates
 ]
 
 { #category : #accessing }
-WDSAbstractSceneRendererViewport >> cameraStateShaderBindings: anObject [
-	cameraStateShaderBindings := anObject
+WDSAbstractSceneRendererViewport >> cameraLayersStates: anObject [
+	cameraLayersStates := anObject
 ]
 
 { #category : #accessing }
@@ -49,6 +74,11 @@ WDSAbstractSceneRendererViewport >> extent [
 	^ viewport extent
 ]
 
+{ #category : #accessing }
+WDSAbstractSceneRendererViewport >> foregroundLayer [
+	^ foregroundLayer
+]
+
 { #category : #'as yet unclassified' }
 WDSAbstractSceneRendererViewport >> globalFrustumConvexHull [
 	^ viewport globalFrustumConvexHull
@@ -57,7 +87,14 @@ WDSAbstractSceneRendererViewport >> globalFrustumConvexHull [
 { #category : #initialization }
 WDSAbstractSceneRendererViewport >> initialize [
 	super initialize.
-	visibleObjects := OrderedCollection new.
+	backgroundLayer := WDSSceneRendererViewportLayer new.
+	normalLayer := WDSSceneRendererViewportLayer new.
+	foregroundLayer := WDSSceneRendererViewportLayer new.
+]
+
+{ #category : #accessing }
+WDSAbstractSceneRendererViewport >> normalLayer [
+	^ normalLayer
 ]
 
 { #category : #accessing }
@@ -82,19 +119,12 @@ WDSAbstractSceneRendererViewport >> shouldRenderObject: aNode [
 
 { #category : #sorting }
 WDSAbstractSceneRendererViewport >> sortVisibleObjects [
-	| translucentSortedPriority forwardDirection |
-	translucentSortedPriority := WDCAbstractRenderable renderPriorityTranslucentSorted.
-	
-	forwardDirection := self camera globalTransform matrix thirdColumn negated.
-	visibleObjects sort: [ :a :b |
-		a renderPriority = b renderPriority ifFalse: [
-			a renderPriority < b renderPriority
-		] ifTrue: [
-			a renderPriority >= translucentSortedPriority ifTrue: [ 
-				(forwardDirection dot: a transform translation) > (forwardDirection dot: b transform translation)
-			] ifFalse: [ false ]
-		]
-	]
+	| sortBlock |
+	sortBlock := self visibleObjectSortBlock.
+	backgroundLayer sortVisibleObjectsWithBlock: sortBlock.	
+	normalLayer sortVisibleObjectsWithBlock: sortBlock.	
+	foregroundLayer sortVisibleObjectsWithBlock: sortBlock.	
+
 ]
 
 { #category : #accessing }
@@ -112,7 +142,18 @@ WDSAbstractSceneRendererViewport >> viewport: anObject [
 	viewport := anObject
 ]
 
-{ #category : #accessing }
-WDSAbstractSceneRendererViewport >> visibleObjects [
-	^ visibleObjects
+{ #category : #sorting }
+WDSAbstractSceneRendererViewport >> visibleObjectSortBlock [
+	| translucentSortedPriority forwardDirection |
+	translucentSortedPriority := WDCAbstractRenderable renderPriorityTranslucentSorted.
+	forwardDirection := self camera globalTransform matrix thirdColumn negated.
+	^ [ :a :b |
+		a renderPriority = b renderPriority ifFalse: [
+			a renderPriority < b renderPriority
+		] ifTrue: [
+			a renderPriority >= translucentSortedPriority ifTrue: [ 
+				(forwardDirection dot: a transform translation) > (forwardDirection dot: b transform translation)
+			] ifFalse: [ false ]
+		]
+	]
 ]

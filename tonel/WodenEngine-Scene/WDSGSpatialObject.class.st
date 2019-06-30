@@ -37,6 +37,11 @@ WDSGSpatialObject >> initialize [
 	renderingRenderables := #().
 ]
 
+{ #category : #'as yet unclassified' }
+WDSGSpatialObject >> localBoundingBox [
+	^ renderable boundingBox
+]
+
 { #category : #accessing }
 WDSGSpatialObject >> renderable [
 	^ renderable
@@ -44,11 +49,16 @@ WDSGSpatialObject >> renderable [
 
 { #category : #accessing }
 WDSGSpatialObject >> renderable: aRenderable [
-	scene ifNotNil: [ scene removeRenderingRenderables: self renderingRenderables ].
+	self sceneLayer ifNotNil: [ :sceneLayer |
+		sceneLayer removeRenderingRenderables: self renderingRenderables
+	].
+
 	renderable := aRenderable.
 	renderingRenderables := renderable createRenderingRenderablesFor: objectState.
 	renderingRenderables do: [ :rr | rr node: self ].
-	scene ifNotNil: [ scene addRenderingRenderables: self renderingRenderables ].
+	self sceneLayer ifNotNil: [ :sceneLayer |
+		sceneLayer addRenderingRenderables: self renderingRenderables
+	].
 
 ]
 

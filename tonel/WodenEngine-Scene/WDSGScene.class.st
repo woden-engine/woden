@@ -8,7 +8,9 @@ Class {
 		'name',
 		'engine',
 		'backgroundColor',
-		'roots',
+		'backgroundLayer',
+		'normalLayer',
+		'foregroundLayer',
 		'shaderSignature',
 		'genericObjectStatePool',
 		'commonGPUStateRenderingComponent',
@@ -16,7 +18,6 @@ Class {
 		'groundLighting',
 		'sunDirection',
 		'lightingProbe',
-		'renderingRenderables',
 		'nodesWithPendingStates'
 	],
 	#category : #'WodenEngine-Scene-Graph'
@@ -29,8 +30,17 @@ WDSGScene class >> for: anEngine [
 
 { #category : #adding }
 WDSGScene >> add: aNode [
-	roots add: aNode.
-	aNode addedToScene: self
+	normalLayer addChild: aNode.
+]
+
+{ #category : #adding }
+WDSGScene >> addBackground: aNode [
+	backgroundLayer addChild: aNode.
+]
+
+{ #category : #adding }
+WDSGScene >> addForeground: aNode [
+	foregroundLayer addChild: aNode.
 ]
 
 { #category : #adding }
@@ -43,19 +53,14 @@ WDSGScene >> addRenderingElementsToGraph: renderingDependencyGraph [
 	self renderingGraphDependencies.
 ]
 
-{ #category : #adding }
-WDSGScene >> addRenderingRenderables: aCollection [
-	renderingRenderables addAll: aCollection
-]
-
 { #category : #enumerating }
 WDSGScene >> allChildrenDo: aBlock [
-	roots do: [ :root | root withAllChildrenDo: aBlock ]
+	self rootsDo: [ :root | root withAllChildrenDo: aBlock ]
 ]
 
 { #category : #enumerating }
 WDSGScene >> allVisibleRenderingChildrenDo: aBlock [
-	roots do: [ :root | root withAllVisibleRenderingChildrenDo: aBlock ]
+	self rootsDo: [ :root | root withAllVisibleRenderingChildrenDo: aBlock ]
 ]
 
 { #category : #accessing }
@@ -75,17 +80,30 @@ WDSGScene >> backgroundColor: anObject [
 	backgroundColor := anObject
 ]
 
+{ #category : #accessing }
+WDSGScene >> backgroundLayer [
+	^ backgroundLayer
+]
+
 { #category : #'rendering phases' }
 WDSGScene >> bakeLazyObjectStates [
 	nodesWithPendingStates do: [ :node | node bakeLazyObjectStates ].
 	nodesWithPendingStates removeAll.
 ]
 
-{ #category : #enumerating }
+{ #category : #'rendering phases' }
 WDSGScene >> collectVisibleObjectsAndLightIntoViewport: renderingViewport [
 	| frustumConvexHull boundingBox |
+	backgroundLayer renderingRenderables do: [ :rr |
+		rr isLightSource ifTrue: [
+			renderingViewport addBackgroundLight: rr
+		] ifFalse: [ 
+			renderingViewport addBackgroundVisibleObject: rr.
+		]
+	].
+
 	frustumConvexHull := renderingViewport globalFrustumConvexHull.
-	renderingRenderables do: [ :rr |
+	normalLayer renderingRenderables do: [ :rr |
 		boundingBox := rr boundingBox.
 		(renderingViewport shouldRenderObject: rr) ifTrue: [
 			rr isLightSource ifTrue: [
@@ -104,11 +122,52 @@ WDSGScene >> collectVisibleObjectsAndLightIntoViewport: renderingViewport [
 		].
 	].
 
+	foregroundLayer renderingRenderables do: [ :rr |
+		rr isLightSource ifTrue: [
+			renderingViewport addForegroundLight: rr
+		] ifFalse: [ 
+			renderingViewport addForegroundVisibleObject: rr.
+		]
+	].
+
 ]
 
 { #category : #'rendering graph' }
 WDSGScene >> commonGPUStateRenderingComponent [
 	^ commonGPUStateRenderingComponent ifNil: [commonGPUStateRenderingComponent := WDSGSceneCommonGPUStateRenderingComponent for: self]
+]
+
+{ #category : #building }
+WDSGScene >> createSkyBoxWithMaterial: skyMaterial [
+	| meshBuilder skyBox |
+	meshBuilder := WDCGenericMeshBuilder for: engine.
+	meshBuilder
+		currentMaterial: skyMaterial;
+		addInteriorCubeWithWidth: 2.0 height: 2.0 depth: 2.0.
+	skyBox := WDSGSpatialObject new.
+	skyBox 
+		renderable: (meshBuilder mesh
+			makeBackgroundRenderable;
+			yourself
+		).
+	self addBackground: skyBox.
+
+	^ skyBox
+]
+
+{ #category : #building }
+WDSGScene >> createSkyBoxWithTexture: skyTexture [
+	^ self createSkyBoxWithMaterial: ((WDCSkyMaterial for: engine)
+		skyTexture: skyTexture;
+		yourself)
+]
+
+{ #category : #building }
+WDSGScene >> createSkyWithCubeTexture: skyTexture [
+	| skyBox |
+	skyBox := self createSkyBoxWithTexture: skyTexture.
+	self lightingProbe: (engine resourceCache computeEnvironmentLightProbeFromCubeTexture: skyTexture).
+	^ skyBox
 ]
 
 { #category : #'as yet unclassified' }
@@ -117,12 +176,17 @@ WDSGScene >> detachFromEngine [
 	shaderSignature := nil.
 	genericObjectStatePool := nil.
 	commonGPUStateRenderingComponent := nil.
-	roots engineChanged.
+	self rootsDo: #engineChanged.
 ]
 
 { #category : #accessing }
 WDSGScene >> engine [
 	^ engine
+]
+
+{ #category : #accessing }
+WDSGScene >> foregroundLayer [
+	^ foregroundLayer
 ]
 
 { #category : #accessing }
@@ -153,9 +217,12 @@ WDSGScene >> initialize [
 	groundLighting := skyLighting*0.5.
 	sunDirection := (WMVector3F y: 1.0).
 
-	roots := OrderedCollection new.
-	renderingRenderables := OrderedCollection new.
 	nodesWithPendingStates := IdentitySet new.
+	
+	backgroundLayer := WDSGSceneLayer new addedToScene: self.
+	normalLayer := WDSGSceneLayer new addedToScene: self.
+	foregroundLayer := WDSGSceneLayer new addedToScene: self.
+
 ]
 
 { #category : #accessing }
@@ -167,7 +234,7 @@ WDSGScene >> initializeWithEngine: anEngine [
 WDSGScene >> initializeWithEngine: anEngine shaderSignatureClass: shaderSignatureClass [
 	engine := anEngine.
 	shaderSignature := shaderSignatureClass for: anEngine.
-	roots do: #engineChanged.
+	self rootsDo: #engineChanged.
 ]
 
 { #category : #accessing }
@@ -201,14 +268,13 @@ WDSGScene >> nodesWithPendingStates [
 ]
 
 { #category : #accessing }
-WDSGScene >> numberOfRoots [
-	^ roots size
+WDSGScene >> normalLayer [
+	^ normalLayer
 ]
 
 { #category : #adding }
 WDSGScene >> remove: aNode [
-	roots remove: aNode.
-	aNode removedFromScene: self
+	normalLayer removeChild: aNode
 ]
 
 { #category : #adding }
@@ -216,24 +282,21 @@ WDSGScene >> removeNodeWithPendingState: aNode [
 	nodesWithPendingStates remove: aNode
 ]
 
-{ #category : #adding }
-WDSGScene >> removeRenderingRenderables: aCollection [
-	renderingRenderables removeAll: aCollection
-]
-
 { #category : #'rendering graph' }
 WDSGScene >> renderingGraphDependencies [
 	^ self modelRenderingGraphDependencies
 ]
 
-{ #category : #accessing }
-WDSGScene >> renderingRenderables [
-	^ renderingRenderables
+{ #category : #adding }
+WDSGScene >> roots [
+	^ { backgroundLayer . normalLayer . foregroundLayer }
 ]
 
-{ #category : #accessing }
-WDSGScene >> roots [
-	^ roots
+{ #category : #adding }
+WDSGScene >> rootsDo: aBlock [
+	aBlock value: backgroundLayer.
+	aBlock value: normalLayer.
+	aBlock value: foregroundLayer
 ]
 
 { #category : #accessing }
@@ -266,7 +329,7 @@ WDSGScene >> updateCommonGPUState [
 	| fullFrameIndex |
 	fullFrameIndex := engine frameBufferingDriver frameIndex.
 	self bakeLazyObjectStates.
-	renderingRenderables do: [ :renderingRenderable |
-		renderingRenderable updateCommonGpuStateForFrame: fullFrameIndex
+	self rootsDo: [ :root |
+		root updateCommonGpuStateForFrame: fullFrameIndex
 	]
 ]

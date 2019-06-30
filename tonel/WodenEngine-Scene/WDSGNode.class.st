@@ -28,8 +28,9 @@ WDSGNode >> addChild: aChild [
 
 { #category : #adding }
 WDSGNode >> addedToNode: newParentNode [
-	newParentNode scene ifNotNil: [ self addedToScene: newParentNode scene ].
 	parent := newParentNode.
+	newParentNode scene ifNotNil: [ self addedToScene: newParentNode scene ].
+
 ]
 
 { #category : #adding }
@@ -40,7 +41,7 @@ WDSGNode >> addedToScene: aScene [
 	scene := aScene.
 	newEngine := self engine.
 	oldEngine ~~ newEngine ifTrue: [ self engineChanged ].
-	scene addRenderingRenderables: self renderingRenderables.
+	self sceneLayer addRenderingRenderables: self renderingRenderables.
 	children do: [ :child | child addedToScene: scene ].
 ]
 
@@ -60,6 +61,11 @@ WDSGNode >> canBeRendered [
 
 { #category : #caching }
 WDSGNode >> childTransformChanged: aChild [
+	aChild countedForBoundingBox ifFalse: [ ^ self ].
+	
+	globalBoundingBox := nil.
+	globalOrientedBoundingBox := nil.
+	parent ifNotNil: [ parent childTransformChanged: self ].
 ]
 
 { #category : #accessing }
@@ -77,7 +83,9 @@ WDSGNode >> computeGlobalOrientedBoundingBox [
 	| result |
 	result := self localBoundingBox copy.
 	self childrenDo: [ :child |
-		result insertBox: child globalBoundingBox
+		child countedForBoundingBox ifTrue: [ 
+			result insertBox: child globalBoundingBox
+		].
 	].
 
 	^ result
@@ -93,6 +101,11 @@ WDSGNode >> computeGlobalTransform [
 { #category : #copying }
 WDSGNode >> copyForResourceCacheInstancing [
 	^ self copy
+]
+
+{ #category : #'as yet unclassified' }
+WDSGNode >> countedForBoundingBox [
+	^ true
 ]
 
 { #category : #accessing }
@@ -232,6 +245,7 @@ WDSGNode >> parent [
 WDSGNode >> parentTransformChanged [
 	self stateChanged.
 	globalTransform := nil.
+	globalBoundingBox := nil.
 	self renderingRenderables do: #transformChanged.
 	children do: [ :child | child parentTransformChanged ].
 
@@ -326,6 +340,11 @@ WDSGNode >> scene [
 	^ scene
 ]
 
+{ #category : #accessing }
+WDSGNode >> sceneLayer [
+	^ parent ifNotNil: [ parent sceneLayer ]
+]
+
 { #category : #changing }
 WDSGNode >> stateChanged [
 	stateChangeListeners ifNotNil: [ stateChangeListeners do: [ :handler | handler value: self ] ].
@@ -351,7 +370,7 @@ WDSGNode >> transform: aTransform [
 WDSGNode >> transformChanged [
 	self renderingRenderables do: #transformChanged.
 	parent ifNotNil: [ parent childTransformChanged: self ].
-	self parentTransformChanged
+	self parentTransformChanged.
 ]
 
 { #category : #transforming }

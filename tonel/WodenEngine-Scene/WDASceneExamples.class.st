@@ -145,21 +145,6 @@ WDASceneExamples class >> createIslandWaterObjectFor: engine [
 	^ waterObject
 ]
 
-{ #category : #'examples procedural' }
-WDASceneExamples class >> createSkybox: extent for: engine material: skyMaterial [
-	| meshBuilder skyBox |
-	meshBuilder := WDCGenericMeshBuilder for: engine.
-	meshBuilder
-		currentMaterial: skyMaterial;
-		addInteriorCubeWithWidth: extent x height: extent y depth: extent z.
-
-	skyBox := WDSGSpatialObject new.
-	skyBox
-		renderable: (meshBuilder mesh
-			isOpaqueShadowCaster: false).
-	^ skyBox
-]
-
 { #category : #examples }
 WDASceneExamples class >> example01Cube [
 	| model meshBuilder mesh cube light scene camera |
@@ -296,7 +281,7 @@ WDASceneExamples class >> example04PoolHDR [
 
 { #category : #examples }
 WDASceneExamples class >> example04PoolLDR [
-	| model scene camera engine sunLight view  meshBuilder skyMaterial skyBox skyTexture |
+	| model scene camera engine sunLight view skyTexture |
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	engine := model engine.
@@ -321,25 +306,10 @@ WDASceneExamples class >> example04PoolLDR [
 
 	scene ambientLighting: WMVector4F ones.
 
+	"Create the sky."
 	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector3: (WMVector3F z: 1.0)).
 	skyTexture := skyTexture asSRGBTextureFor: engine.
-	skyMaterial := (WDCSkyMaterial for: engine)
-		skyTexture: skyTexture;
-		yourself.
-
-	"Add the sky box"
-	"skyMaterial := engine resourceCache loadMaterial: 'materials/demos/skybox.json'."
-	meshBuilder := WDCGenericMeshBuilder for: engine.
-	meshBuilder
-		currentMaterial: skyMaterial;
-		addInteriorCubeWithWidth: 40.0 height: 40.0 depth: 40.0.
-
-	skyBox := WDSGSpatialObject new.
-	skyBox 
-		renderable: (meshBuilder mesh
-			isOpaqueShadowCaster: false; yourself).
-	scene add: skyBox.
-	scene lightingProbe: (engine resourceCache computeEnvironmentLightProbeFromCubeTexture: skyTexture).
+	scene createSkyWithCubeTexture: skyTexture.
 
 	view := WDAFPSSceneView allowingVR.
 	model openWith: view.
@@ -381,7 +351,7 @@ material
 
 { #category : #examples }
 WDASceneExamples class >> example05DangerousPool [
-	| model meshBuilder scene camera engine skyMaterial sunLight skyBox view magnumMesh pickedGun animationState gunAction gunActionFrame gunActionRepeated |
+	| model scene camera engine skyMaterial sunLight view magnumMesh pickedGun animationState gunAction gunActionFrame gunActionRepeated |
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
@@ -404,17 +374,8 @@ WDASceneExamples class >> example05DangerousPool [
 		
 	"Add the sky box"
 	skyMaterial := engine resourceCache loadMaterial: 'materials/demos/skybox.json'.
-	meshBuilder := WDCGenericMeshBuilder for: engine.
-	meshBuilder
-		currentMaterial: skyMaterial;
-		addInteriorCubeWithWidth: 40.0 height: 40.0 depth: 40.0.
-
-	skyBox := WDSGSpatialObject new.
-	skyBox
-		renderable: (meshBuilder mesh isOpaqueShadowCaster: false).
+	scene createSkyWithCubeTexture: skyMaterial skyTexture.
 		
-	scene add: skyBox.
-	
 	magnumMesh := engine resourceCache loadMesh: 'models/demos/magnum_fps.fmdl'.
 	
 	pickedGun := WDSGSpatialObject new.
@@ -582,7 +543,7 @@ WDASceneExamples class >> example08MediumTerrain [
 
 { #category : #examples }
 WDASceneExamples class >> example09DragonIsland [
-	| model terrain scene camera water view skyMaterial skyBox dragonMesh dragon dragonAction dragonActionRepeated dragonActionFrame sunLight skyTexture dragonAnimationState |
+	| model terrain scene camera water dragonMesh dragon dragonAction dragonActionRepeated dragonActionFrame sunLight skyTexture dragonAnimationState |
 	
 	model := WDASampleSceneModel new.
 	scene := model newScene.
@@ -602,16 +563,7 @@ WDASceneExamples class >> example09DragonIsland [
 	
 	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector3: (WMVector3F z: 1.0)).
 	skyTexture := skyTexture asSRGBTextureFor: model engine.
-	skyMaterial := (WDCSkyMaterial for: model engine)
-		skyTexture: skyTexture;
-		yourself.
-		
-	"skyMaterial := scene engine resourceCache loadMaterial: 'materials/demos/skybox.json'."
-	skyBox := self createSkybox: (WMVector3F x: 200.0 y: 200.0 z: 200.0) for: scene engine material: skyMaterial.
-	scene add: skyBox.
-	scene
-		ambientLighting: WMVector4F ones*1.2;
-		lightingProbe: (model engine resourceCache computeEnvironmentLightProbeFromCubeTexture: skyTexture).
+	scene createSkyWithCubeTexture: skyTexture.
 
 	terrain := self createIslandTerrainObjectFor: scene engine.
 	scene add: terrain.
@@ -641,7 +593,7 @@ WDASceneExamples class >> example09DragonIsland [
 			computePoseMatrices.
 	].
 
-	view := model openWith: WDAFPSSceneView allowingVR
+	model openWith: WDAFPSSceneView allowingVR
 ]
 
 { #category : #examples }

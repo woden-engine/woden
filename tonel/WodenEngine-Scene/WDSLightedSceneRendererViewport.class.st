@@ -2,7 +2,6 @@ Class {
 	#name : #WDSLightedSceneRendererViewport,
 	#superclass : #WDSAbstractSceneRendererViewport,
 	#instVars : [
-		'lights',
 		'sortedLights',
 		'selectedLights',
 		'lightRenderingStates',
@@ -26,8 +25,18 @@ Class {
 }
 
 { #category : #adding }
+WDSLightedSceneRendererViewport >> addBackgroundLight: aLight [
+	backgroundLayer addLight: aLight
+]
+
+{ #category : #adding }
+WDSLightedSceneRendererViewport >> addForegroundLight: aLight [
+	foregroundLayer addLight: aLight
+]
+
+{ #category : #adding }
 WDSLightedSceneRendererViewport >> addLight: aLight [
-	lights add: aLight
+	normalLayer addLight: aLight
 ]
 
 { #category : #accessing }
@@ -110,12 +119,6 @@ WDSLightedSceneRendererViewport >> hdrToneMappingFullscreenPass: anObject [
 	hdrToneMappingFullscreenPass := anObject
 ]
 
-{ #category : #initialization }
-WDSLightedSceneRendererViewport >> initialize [
-	super initialize.
-	lights := OrderedCollection new.
-]
-
 { #category : #accessing }
 WDSLightedSceneRendererViewport >> lightRenderingStates [
 	^ lightRenderingStates
@@ -188,12 +191,16 @@ WDSLightedSceneRendererViewport >> selectedLights: anObject [
 
 { #category : #sorting }
 WDSLightedSceneRendererViewport >> sortAndSelectLights [
-	| cameraPosition |
+	| cameraPosition lightCollectBlock |
 	cameraPosition := self camera globalTransform translation.
 	
-	sortedLights := lights collect: [ :light |
+	lightCollectBlock := [ :light |
 		{ light . (light transform translation - cameraPosition) length2 }
 	].
+
+	sortedLights := (backgroundLayer lights collect: lightCollectBlock) ,
+		(normalLayer lights collect: lightCollectBlock) ,
+		(foregroundLayer lights collect: lightCollectBlock).
 	sortedLights sort: [ :a :b |
 		a second < b second
 	].
