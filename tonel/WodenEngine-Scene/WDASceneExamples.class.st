@@ -375,6 +375,7 @@ WDASceneExamples class >> example05DangerousPool [
 	"Add the sky box"
 	skyMaterial := engine resourceCache loadMaterial: 'materials/demos/skybox.json'.
 	scene createSkyWithCubeTexture: skyMaterial skyTexture.
+	scene ambientLighting: WMVector4F ones.
 		
 	magnumMesh := engine resourceCache loadMesh: 'models/demos/magnum_fps.fmdl'.
 	
@@ -563,6 +564,7 @@ WDASceneExamples class >> example09DragonIsland [
 	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector3: (WMVector3F z: 1.0)).
 	skyTexture := skyTexture asSRGBTextureFor: model engine.
 	scene createSkyWithCubeTexture: skyTexture.
+	scene ambientLighting: WMVector4F ones.
 
 	terrain := self createIslandTerrainObjectFor: scene engine.
 	scene add: terrain.

@@ -54,7 +54,8 @@ WDSSceneAssetModel >> createViewer [
 				transformVector3:(WMVector3F z: 1.0)
 			).
 		skyTexture := skyTexture asSRGBTextureFor: sceneModel engine.
-		mainScene lightingProbe: (sceneModel engine resourceCache computeEnvironmentLightProbeFromCubeTexture: skyTexture).
+		mainScene createSkyWithCubeTexture: skyTexture.
+		"mainScene lightingProbe: (sceneModel engine resourceCache computeEnvironmentLightProbeFromCubeTexture: skyTexture)."
 				
 	].
 
