@@ -390,6 +390,12 @@ WMBox3D category: 'testing' methods: {
 	[ other min z > max z ]]]]]
 ].
 
+:[includesPoint: <WMVector3> point -> BooleanBit.
+	^ (min x <= point x and: [point x <= max x]) or: [
+	  (min y <= point y and: [point y <= max y]) or: [
+	  (min z <= point z and: [point z <= max z])]]
+].
+
 :[isEmpty -> BooleanBit.
     <inline>
 	^ min x > max x
@@ -477,7 +483,7 @@ WMBox3D category: 'volume insertion' methods: {
 
     ^ WMMatrix4 reverseDepthOrthoLeft: min x right: max x
     	bottom: min y top: max y
-    	near: min z far: max z
-        invertedY: invertedY
+    	near: max z negated far: min z negated
+	invertedY: invertedY
 ].
 }.

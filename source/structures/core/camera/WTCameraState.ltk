@@ -6,7 +6,9 @@ Structure <<< #WTCameraState
 		#screenSize => WMVector2F.
 		#inverseScreenSize => WMVector2F.
 		#currentTime => Float32.
-		#exposure => Float32
+		#exposure => Float32.
+		#clipMapCameraPosition => WMCompactVector3F.
+		#padding => Float32
 	};
 	package: 'WodenEngine-Structures-Core-Camera';
 	yourself.

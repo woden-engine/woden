@@ -32,6 +32,8 @@ uniform(binding=CameraState.ObjectState) CameraState
 
     currentTime: float;
 	exposure: float;
+	clipMapCameraPosition: float3;
+	padding: float;
 }
 
 uniform(binding=LightingState.GlobalLightingState) GlobalLightingState
@@ -109,7 +111,7 @@ function offsetWithRoundingPeriod(offset: float3, period: float3) -> float3
 
 function clipMapOffsetWithPeriod(clipMapPeriod: float3) -> float3
 {
-    return offsetWithRoundingPeriod(cameraObjectPosition(), clipMapPeriod);
+    return offsetWithRoundingPeriod(CameraState.clipMapCameraPosition, clipMapPeriod);
 }
 
 function clipMapOffsetWithPeriod(clipMapPeriod: float2) -> float3
