@@ -50,17 +50,15 @@ WDCDirectionalLightRenderingState >> computeViewVectorWithShadowCastingBody: bod
 
 { #category : #'shadow mapping' }
 WDCDirectionalLightRenderingState >> extractShadowCastingBodyPoints [
-	| points worldCorner sceneBoundingBox shadowCastingVector shadowCastingMinExtent shadowCastingMaxExtent flattenedWorldCorner |
+	| points worldCorner sceneBoundingBox shadowCastingVector shadowCastingMaxExtent flattenedWorldCorner |
 	points := OrderedCollection new.
-	shadowCastingVector := lightVector.
-	shadowCastingMinExtent := Float infinity.
+	shadowCastingVector := lightVector negated.
 	shadowCastingMaxExtent := Float negativeInfinity.
 	sceneBoundingBox := renderingLight node scene normalLayer globalBoundingBox.
 	
 	sceneBoundingBox cornersDo: [ :corner |
 		| extent |
 		extent := corner dot: shadowCastingVector.
-		shadowCastingMinExtent := shadowCastingMinExtent min: extent.
 		shadowCastingMaxExtent := shadowCastingMaxExtent max: extent.
 	].
 	
@@ -69,7 +67,7 @@ WDCDirectionalLightRenderingState >> extractShadowCastingBodyPoints [
 		flattenedWorldCorner := worldCorner - (shadowCastingVector* (shadowCastingVector dot: worldCorner)).
 		
 		points
-			add: flattenedWorldCorner + (shadowCastingVector * shadowCastingMinExtent);
+			add: worldCorner;
 			add: flattenedWorldCorner + (shadowCastingVector * shadowCastingMaxExtent).
 	].
 
