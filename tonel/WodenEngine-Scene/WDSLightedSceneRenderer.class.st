@@ -76,7 +76,7 @@ WDSLightedSceneRenderer >> computeScreenSpaceAmbientOcclusionFor: renderingViewp
 		"Ambient occlusion main compuation."
 		shaderSignature: aoShaderShaderSignature;
 		useShaderResources: aoShaderShaderSignature defaultSamplers;
-		useShaderResources: renderingViewport cameraLayersStates normal;
+		useShaderResources: renderingViewport cameraLayersStates normalLayerState shaderBindings;
 		applyFullScreenPass: renderingViewport ambientOcclusionComputationArguments;
 		
 		"Horizontal blur pass"
