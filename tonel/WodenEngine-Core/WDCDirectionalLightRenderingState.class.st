@@ -151,7 +151,7 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 	shortRangeNearDistance := lightDepth * falloff.
 
 	"Mix the near distance distributions"
-	nearDistance := shortRangeNearDistance max: paperNearDistance.
+	nearDistance := (shortRangeNearDistance * paperNearDistance) sqrt.
 	farDistance := nearDistance + lightDepth.
 
 	"Compute the perspective point and the new render transform"
