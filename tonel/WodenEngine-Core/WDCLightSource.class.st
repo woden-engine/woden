@@ -6,7 +6,6 @@ Class {
 		'castShadows',
 		'outerSpotCutoff',
 		'innerSpotCutoff',
-		'extraShadowDistanceFactor',
 		'shadowMapDepthBiasConstant',
 		'shadowMapDepthBiasSlope',
 		'lightState'
@@ -28,7 +27,6 @@ Class {
 WDCLightSource class >> initialize [	
 	DefaultSpotOuterCutoff := 45.
 	DefaultSpotInnerCutoff := 40.
-	DefaultExtraShadowDistanceFactor := 50.0.
 	DefaultShadowMapDepthBiasConstant := 4.0.
 	DefaultShadowMapDepthBiasSlope := 1.5.
 ]
@@ -51,16 +49,6 @@ WDCLightSource >> directional [
 		innerCosCutoff: -1.0
 ]
 
-{ #category : #accessing }
-WDCLightSource >> extraShadowDistanceFactor [
-	^ extraShadowDistanceFactor
-]
-
-{ #category : #accessing }
-WDCLightSource >> extraShadowDistanceFactor: aNumber [
-	extraShadowDistanceFactor := aNumber
-]
-
 { #category : #initialization }
 WDCLightSource >> initialize [
 	super initialize.
@@ -68,7 +56,6 @@ WDCLightSource >> initialize [
 	castShadows := false.
 	outerSpotCutoff := DefaultSpotOuterCutoff.
 	innerSpotCutoff := DefaultSpotInnerCutoff.
-	extraShadowDistanceFactor := DefaultExtraShadowDistanceFactor.
 	shadowMapDepthBiasConstant := DefaultShadowMapDepthBiasConstant.
 	shadowMapDepthBiasSlope := DefaultShadowMapDepthBiasSlope.
 	lightState := WTLightSourceData new.

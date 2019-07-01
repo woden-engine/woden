@@ -116,6 +116,7 @@ WDASceneViewStereoDisplayMode >> leftViewportForCamera: camera [
 	cameraState
 		projectionMatrix: leftProjectionMatrix;
 		inverseProjectionMatrix: leftProjectionMatrix inverted;
+		clipMapCameraPosition: camera globalTransform translation;
 		exposure: camera exposure.
 	
 	^ WDSGViewport new
@@ -178,6 +179,7 @@ WDASceneViewStereoDisplayMode >> rightViewportForCamera: camera [
 	cameraState
 		projectionMatrix: rightProjectionMatrix;
 		inverseProjectionMatrix: rightProjectionMatrix inverted;
+		clipMapCameraPosition: camera globalTransform translation;
 		exposure: camera exposure.
 	
 	^ WDSGViewport new

@@ -8,7 +8,6 @@ Class {
 		'cameraFrustum',
 		'mainCameraTransform',
 		'lightVector',
-		'extraShadowDistanceFactor',
 		'shadowCastingBody',
 		'cameraNearDistance',
 		'cameraFarDistance'
@@ -51,16 +50,27 @@ WDCDirectionalLightRenderingState >> computeViewVectorWithShadowCastingBody: bod
 
 { #category : #'shadow mapping' }
 WDCDirectionalLightRenderingState >> extractShadowCastingBodyPoints [
-	| points worldCorner |
+	| points worldCorner sceneBoundingBox shadowCastingVector shadowCastingMinExtent shadowCastingMaxExtent flattenedWorldCorner |
 	points := OrderedCollection new.
-	"Transcript show: light scene boundingBox; cr."
+	shadowCastingVector := lightVector.
+	shadowCastingMinExtent := Float infinity.
+	shadowCastingMaxExtent := Float negativeInfinity.
+	sceneBoundingBox := renderingLight node scene normalLayer globalBoundingBox.
+	
+	sceneBoundingBox cornersDo: [ :corner |
+		| extent |
+		extent := corner dot: shadowCastingVector.
+		shadowCastingMinExtent := shadowCastingMinExtent min: extent.
+		shadowCastingMaxExtent := shadowCastingMaxExtent max: extent.
+	].
+	
 	self cameraFrustum corners do: [ :corner |
 		worldCorner := mainCameraTransform transformPosition3: corner.
+		flattenedWorldCorner := worldCorner - (shadowCastingVector* (shadowCastingVector dot: worldCorner)).
 		
 		points
-			add: worldCorner;
-			add: worldCorner + (lightVector * extraShadowDistanceFactor);
-			add: worldCorner - (lightVector * extraShadowDistanceFactor)
+			add: flattenedWorldCorner + (shadowCastingVector * shadowCastingMinExtent);
+			add: flattenedWorldCorner + (shadowCastingVector * shadowCastingMaxExtent).
 	].
 
 	^ points
@@ -103,7 +113,6 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 	"
 	| frustumBox viewVector viewPosition cosGamma sinGamma lightDepth z_n z_f nearDistance farDistance upVector perspectivePoint perspectiveTransform falloff bodyNearDistance alpha paperNearDistance shortRangeNearDistance |
 	mainCameraTransform := "self roundCameraTransform:" mainCamera globalTransform.
-	extraShadowDistanceFactor := renderingLight lightSource extraShadowDistanceFactor.
 	
 	lightVector := renderingLight transform matrix transformVector3: (WMVector3F z: -1.0).
 	viewPosition := mainCameraTransform translation.
@@ -172,7 +181,6 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 WDCDirectionalLightRenderingState >> setupUniformShadowMappingTransforms [
 	| frustumBox viewVector viewPosition |
 	mainCameraTransform := self roundCameraTransform: mainCamera globalTransform.
-	extraShadowDistanceFactor := renderingLight lightSource extraShadowDistanceFactor.
 	
 	viewPosition := mainCameraTransform translation.
 	viewVector := mainCameraTransform transformVector3: (WMVector3F z: -1.0).

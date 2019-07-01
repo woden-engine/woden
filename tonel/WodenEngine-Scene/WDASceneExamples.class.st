@@ -553,7 +553,6 @@ WDASceneExamples class >> example09DragonIsland [
 	
 	sunLight := WDSGLightSource new.
 	sunLight directional; castShadows: true;
-		extraShadowDistanceFactor: 100;
 		shadowMapDepthBiasConstant: 20.0;
 		shadowMapDepthBiasSlope: 5.0;
 		intensity: (Color fromHexString: 'f1efd7') asWMVector4F*0.6;

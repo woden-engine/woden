@@ -5,7 +5,8 @@ WDCShadowLightRenderingStateLayer >> viewportForShadowMap: renderTarget camera: 
 	| cameraState |
 	cameraState := WTCameraState new.
 	cameraState
-		projectionMatrix: shadowProjectionMatrix.
+		projectionMatrix: shadowProjectionMatrix;
+		clipMapCameraPosition: camera globalTransform translation.
 
 	^ WDSGViewport new
 		camera: self;

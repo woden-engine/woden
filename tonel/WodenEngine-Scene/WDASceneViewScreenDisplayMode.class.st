@@ -113,6 +113,7 @@ WDASceneViewScreenDisplayMode >> viewportForCamera: camera renderTarget: renderT
 	cameraState
 		projectionMatrix: projectionMatrix;
 		inverseProjectionMatrix: projectionMatrix inverted;
+		clipMapCameraPosition: camera globalTransform translation;
 		exposure: camera exposure.
 	^ WDSGViewport new
 		camera: camera;
