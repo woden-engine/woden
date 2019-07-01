@@ -30,10 +30,12 @@ uniform(binding=CameraState.ObjectState) CameraState
     screenSize: float2;
     inverseScreenSize: float2;
 
-    currentTime: float;
-	exposure: float;
 	clipMapCameraPosition: float3;
+    currentTime: float;
+
+	exposure: float;
 	padding: float;
+	padding2: float2;
 }
 
 uniform(binding=LightingState.GlobalLightingState) GlobalLightingState
