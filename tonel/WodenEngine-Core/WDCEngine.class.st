@@ -359,6 +359,14 @@ WDCEngine >> createResourceCache [
 ]
 
 { #category : #'resource building' }
+WDCEngine >> createSampler: description [
+	^ (WDCSampler for: self)
+			description: description;
+			checkSession;
+			yourself
+]
+
+{ #category : #'resource building' }
 WDCEngine >> createShaderSignature: shaderSignature resourceBinding: binding elements: elements [
 	^ (WDCShaderResourceBinding for: self)
 			elements: elements;

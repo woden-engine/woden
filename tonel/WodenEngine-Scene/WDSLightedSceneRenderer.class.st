@@ -319,7 +319,7 @@ WDSLightedSceneRenderer >> shaderSignatureClass [
 
 { #category : #'shadow mapping' }
 WDSLightedSceneRenderer >> shadowMapBuffer [
-	| shadowMapExtent description shadowMapFormat view subresourceRange |
+	| shadowMapExtent description shadowMapFormat |
 	shadowMapBuffer ifNotNil: [ ^ shadowMapBuffer ].
 	shadowMapExtent := self shadowMapExtent.
 	
@@ -344,18 +344,12 @@ WDSLightedSceneRenderer >> shadowMapBuffer [
 			checkSession;
 			yourself.
 
-	view := shadowMapBuffer fullTextureView.
-	
-	subresourceRange := view subresource_range.
-	subresourceRange layer_count: 1.
-	
 	shadowMapRenderTargets := (1 to: self maxShadowCastingLightCount) collect: [ :i |
-		subresourceRange base_arraylayer: i - 1.
 		(WDCRenderTarget for: engine extent: shadowMapExtent)
 			colorAttachmentFormats: #();
 			depthStencilFormat: shadowMapFormat;
 			hasDepth: true;
-			createFramebuffersWithColorAttachments: #() views: #() depthStencilAttachment: shadowMapBuffer view: view;
+			createFramebuffersWithColorAttachments: #() views: #() depthStencilAttachment: shadowMapBuffer view: (shadowMapBuffer createViewForSingleLayer: i - 1);
 			yourself
 	].
 	

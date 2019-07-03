@@ -42,6 +42,11 @@ WDCTexture >> asTextureFor: anEngine [
 ]
 
 { #category : #converting }
+WDCTexture >> asValidTextureViewHandle [
+	^ self validHandle getOrCreateFullView
+]
+
+{ #category : #converting }
 WDCTexture >> asWodenNormalTexture [
 	^ self
 ]
@@ -94,6 +99,21 @@ WDCTexture >> concretizeWodenTextureWithResourceCache: aResourceCache [
 	^ self
 ]
 
+{ #category : #'as yet unclassified' }
+WDCTexture >> createViewForSingleLayer: layerIndex [
+	| viewDescription |
+	viewDescription := AGPUTextureViewDescription new.
+	self validHandle getFullViewDescription: viewDescription.
+	viewDescription subresource_range
+		base_arraylayer: layerIndex;
+		layer_count: 1.
+	
+	^ (WDCTextureView for: engine)
+		texture: self;
+		description: viewDescription;
+		yourself
+]
+
 { #category : #accessing }
 WDCTexture >> data [
 	^ data
@@ -132,11 +152,7 @@ WDCTexture >> extent [
 
 { #category : #'as yet unclassified' }
 WDCTexture >> fullTextureView [
-	| view |
-	view := AGPUTextureViewDescription new.
-	self validHandle getFullViewDescription: view.
-	^ view
-
+	^ self validHandle getOrCreateFullView
 ]
 
 { #category : #testing }

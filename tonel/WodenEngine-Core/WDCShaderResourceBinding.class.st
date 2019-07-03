@@ -11,17 +11,24 @@ Class {
 }
 
 { #category : #binding }
-WDCShaderResourceBinding >> bind: slot renderTarget: renderTarget startMiplevel: startMipLevel miplevels: mipLevels lodclamp: lodClamp [
-	self slotAt: slot + 1 put: renderTarget action: [
-		self validHandle bindTexture: slot texture: renderTarget currentFramebuffer colorAttachments first validHandle startMiplevel: startMipLevel miplevels: mipLevels lodclamp: lodClamp
-	].
-]
-
-{ #category : #binding }
 WDCShaderResourceBinding >> bind: slot renderTargetTexture: renderTarget [
 	self assert: renderTarget gpuOnly.
 	self assert: renderTarget colorAttachmentFormats size = 1.
 	^ self bind: slot texture: renderTarget currentFramebuffer colorAttachments first
+]
+
+{ #category : #binding }
+WDCShaderResourceBinding >> bind: slot sampledTexture: sampledTexture [
+	self slotAt: slot + 1 put: sampledTexture action: [
+		self validHandle bindSampledTextureView: slot view: sampledTexture asValidTextureViewHandle
+	].
+]
+
+{ #category : #binding }
+WDCShaderResourceBinding >> bind: slot sampler: sampler [
+	self slotAt: slot + 1 put: sampler action: [
+		self validHandle bindSampler: slot sampler: sampler validHandle
+	].
 ]
 
 { #category : #binding }
@@ -49,39 +56,41 @@ WDCShaderResourceBinding >> bind: slot storageBufferElement: bufferElement [
 ]
 
 { #category : #binding }
-WDCShaderResourceBinding >> bind: slot storageImage: texture [
-	^ self bind: slot storageImage: texture level: 0 layer: 0
+WDCShaderResourceBinding >> bind: slot storageImage: storageImage [
+	self slotAt: slot + 1 put: storageImage action: [
+		self validHandle bindSampledTextureView: slot view: storageImage asValidTextureViewHandle
+	].
 ]
 
 { #category : #binding }
 WDCShaderResourceBinding >> bind: slot storageImage: texture level: level layer: layer [
-	self bind: slot storageImage: texture validHandle level: level layer: layer access: AGPU_READ_WRITE format: texture description format
+	self bind: slot storageImage: texture validHandle level: level layer: layer format: texture description format
 ]
 
 { #category : #binding }
-WDCShaderResourceBinding >> bind: slot storageImage: texture level: level layer: layer access: access format: format [
-	self slotAt: slot + 1 put: texture action: [
-		self validHandle bindImage: slot texture: texture level: level layer: layer access: access format: format
-	].
+WDCShaderResourceBinding >> bind: slot storageImage: texture level: level layer: layer format: format [
+	self halt.
 ]
 
 { #category : #binding }
 WDCShaderResourceBinding >> bind: slot texture: texture [
-	^ self bind: slot texture: texture startMiplevel: 0 miplevels: -1 lodclamp: 100000.0
+	^ self bind: slot sampledTexture: texture
 ]
 
 { #category : #binding }
 WDCShaderResourceBinding >> bind: slot texture: texture startMiplevel: startMipLevel miplevels: mipLevels lodclamp: lodClamp [
-	self slotAt: slot + 1 put: texture action: [
+	self halt.
+	"self slotAt: slot + 1 put: texture action: [
 		self validHandle bindTexture: slot texture: texture validHandle startMiplevel: startMipLevel miplevels: mipLevels lodclamp: lodClamp
-	].
+	]."
 ]
 
 { #category : #binding }
 WDCShaderResourceBinding >> bind: slot textureArray: texture startMiplevel: startMipLevel miplevels: mipLevels firstElement: firstElement numberOfElements: numberOfElements lodclamp: lodClamp [
-	self slotAt: slot + 1 put: texture action: [
+	self halt
+	"self slotAt: slot + 1 put: texture action: [
 		self validHandle bindTextureArrayRange: slot texture: texture validHandle startMiplevel: startMipLevel miplevels: mipLevels firstElement: firstElement numberOfElements: numberOfElements lodclamp: lodClamp
-	].
+	]."
 ]
 
 { #category : #binding }
@@ -126,9 +135,7 @@ WDCShaderResourceBinding >> buildHandle [
 
 { #category : #binding }
 WDCShaderResourceBinding >> createSampler: slot description: description [
-	self slotAt: slot + 1 put: description action: [
-		self validHandle createSampler: slot description: description
-	].
+	self bind: slot sampler: (engine createSampler: description)
 ]
 
 { #category : #accessing }

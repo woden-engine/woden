@@ -3,7 +3,9 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'colorAttachments',
+		'colorAttachmentViews',
 		'depthStencilAttachment',
+		'depthStencilAttachmentView',
 		'engine',
 		'handle',
 		'commandAllocator',
@@ -19,6 +21,16 @@ Class {
 	],
 	#category : #'WodenEngine-Core-Window'
 }
+
+{ #category : #accessing }
+WDCRenderTargetFramebuffer >> colorAttachmentViews [
+	^ colorAttachmentViews
+]
+
+{ #category : #accessing }
+WDCRenderTargetFramebuffer >> colorAttachmentViews: anObject [
+	colorAttachmentViews := anObject
+]
 
 { #category : #accessing }
 WDCRenderTargetFramebuffer >> colorAttachments [
@@ -58,6 +70,16 @@ WDCRenderTargetFramebuffer >> depthStencilAttachment [
 { #category : #accessing }
 WDCRenderTargetFramebuffer >> depthStencilAttachment: anObject [
 	depthStencilAttachment := anObject
+]
+
+{ #category : #accessing }
+WDCRenderTargetFramebuffer >> depthStencilAttachmentView [
+	^ depthStencilAttachmentView
+]
+
+{ #category : #accessing }
+WDCRenderTargetFramebuffer >> depthStencilAttachmentView: anObject [
+	depthStencilAttachmentView := anObject
 ]
 
 { #category : #accessing }

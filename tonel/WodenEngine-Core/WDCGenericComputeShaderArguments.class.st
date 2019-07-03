@@ -38,7 +38,8 @@ WDCGenericComputeShaderArguments >> engine: anObject [
 
 { #category : #'as yet unclassified' }
 WDCGenericComputeShaderArguments >> sampledTexture: texture slot: slotIndex [
-	^ self sampledTexture: texture slot: slotIndex startMiplevel: 0 miplevels: -1 lodclamp: 100000.0
+	self sampledTexturesShaderResourceBindings
+		bind: slotIndex texture: texture
 ]
 
 { #category : #'as yet unclassified' }
@@ -75,7 +76,8 @@ WDCGenericComputeShaderArguments >> storageBuffersShaderResourceBindings [
 
 { #category : #'as yet unclassified' }
 WDCGenericComputeShaderArguments >> storageImage: texture slot: slotIndex [
-	^ self storageImage: texture slot: slotIndex level: 0 layer: 0
+	self storageImageShaderResourceBindings
+		bind: slotIndex storageImage: texture
 ]
 
 { #category : #'as yet unclassified' }

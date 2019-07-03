@@ -36,8 +36,8 @@ WDASceneViewStereoScreenDisplayMode >> checkRenderTargets [
 			sourceRenderTargetsBinding := self shaderSignature newSources
 		].
 		sourceRenderTargetsBinding
-			bind: 0 renderTarget: leftResolveRenderTarget startMiplevel: 0 miplevels: -1 lodclamp: 100000.0;
-			bind: 1 renderTarget: rightResolveRenderTarget startMiplevel: 0 miplevels: -1 lodclamp: 100000.0.
+			bind: 0 renderTargetTexture: leftResolveRenderTarget;
+			bind: 1 renderTargetTexture: rightResolveRenderTarget.
 	]
 
 ]
