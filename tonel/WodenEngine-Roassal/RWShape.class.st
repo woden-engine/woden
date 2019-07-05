@@ -3,7 +3,8 @@ Class {
 	#superclass : #RWObject,
 	#instVars : [
 		'color',
-		'transparencyMode'
+		'transparencyMode',
+		'id'
 	],
 	#classVars : [
 		'AdditiveAlphaTransparencyMode',
@@ -11,7 +12,7 @@ Class {
 		'AlphaOverTransparencyMode',
 		'OpaqueTransparencyMode'
 	],
-	#category : 'WodenEngine-Roassal-Core'
+	#category : #'WodenEngine-Roassal-Core'
 }
 
 { #category : #accessing }
@@ -184,6 +185,16 @@ RWShape >> fillColorElement: arg [
 	^ self colorElement: arg
 ]
 
+{ #category : #accessing }
+RWShape >> id [
+	^ id
+]
+
+{ #category : #accessing }
+RWShape >> id: anObject [
+	id := anObject
+]
+
 { #category : #initialization }
 RWShape >> initialize [
 	super initialize.
@@ -236,4 +247,10 @@ RWShape >> transparencyMode [
 { #category : #accessing }
 RWShape >> transparencyMode: aTransparencyMode [
 	transparencyMode := aTransparencyMode
+]
+
+{ #category : #'as yet unclassified' }
+RWShape >> validIdForView: aView [
+	id ifNil: [ aView generateIdForShape: self ].
+	^ id
 ]

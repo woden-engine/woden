@@ -4,6 +4,16 @@ Class {
 	#category : #'WodenEngine-Roassal-Serialization'
 }
 
+{ #category : #'as yet unclassified' }
+RWJSONSerializeVisitor >> encodeColor: arg1 [
+	| t |
+	t := arg1 asWMVector4F.
+	^ {t x.
+	t y.
+	t z.
+ t w}
+]
+
 { #category : #visiting }
 RWJSONSerializeVisitor >> encodeElementInteractions: anElement [
 	| interactions |
@@ -15,7 +25,9 @@ RWJSONSerializeVisitor >> encodeElementInteractions: anElement [
 RWJSONSerializeVisitor >> encodeElementShape: anElement [ 
 	^ Dictionary newFromPairs: {
 		#extent . self encodeVector3: anElement extent.
-		#shapeDescription . self visitObject: anElement shape
+		#shapeDescription . self visitObject: anElement shape.
+		#color. self encodeColor: (anElement color).
+		#id. (anElement shape validIdForView: anElement view).
 	}
 ]
 
@@ -57,9 +69,10 @@ RWJSONSerializeVisitor >> visitCylinderShape: aCubeShape [
 RWJSONSerializeVisitor >> visitEdge: anElement [
 	^ Dictionary newFromPairs: {
 		#id . anElement validId.
-		#from_id . anElement from isRWElement ifTrue: #validId ifFalse: nil.
+		#type. #edge.
+		#from_id . anElement from id. "isRWElement ifTrue: #validId ifFalse: nil."
 		#from_position . self encodeVector3: anElement fromPosition.
-		#to_id . anElement to isRWElement ifTrue: #validId ifFalse: nil.
+		#to_id . anElement to id. "isRWElement ifTrue: #validId ifFalse: nil."
 		#to_position . self encodeVector3: anElement toPosition.
 		#color . self encodeVector4: anElement colorUsedForRendering.
 		#shape . self encodeElementShape: anElement .

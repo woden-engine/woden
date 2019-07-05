@@ -248,6 +248,13 @@ RWView >> encodeAllElementsInSceneAsJSON [
 ]
 
 { #category : #serialization }
+RWView >> encodeAllElementsInSceneAsJSONPretty [
+	^ NeoJSONWriter toStringPretty: (Dictionary newFromPairs: {
+		#elements . RWJSONSerializeVisitor new visitAndCollectObjects: self allElementsInScene
+	})
+]
+
+{ #category : #serialization }
 RWView >> encodeAsJSON [
 	^ NeoJSONWriter toString: (Dictionary newFromPairs: {
 		#elements . RWJSONSerializeVisitor new visitAndCollectObjects: elements
@@ -266,6 +273,15 @@ RWView >> generateIdForElement: anElement [
 	genidCount := genidCount + 1.
 	
 	anElement id: ('<genid:' , id asString, '>') asSymbol.
+]
+
+{ #category : #'as yet unclassified' }
+RWView >> generateIdForShape: aShape [
+	| id |
+	id := genidCount.
+	genidCount := genidCount + 1.
+	
+	aShape id: ('<genid_shape:' , id asString, '>') asSymbol.
 ]
 
 { #category : #accessing }

@@ -42,7 +42,7 @@ RWGrapherExample >> example02 [
 
 { #category : #examples }
 RWGrapherExample >> example03 [
-	<script: 'self new example03'>
+	<script: 'self new example03 open'>
 	| g d |
 	g := RWGrapher new.
 	d := RWData new.
@@ -53,7 +53,7 @@ RWGrapherExample >> example03 [
 	g add: d.
 	g build.
 	g view addInteraction: RWOrbitController.
-	g view open
+	^ g view
 
 ]
 
@@ -62,7 +62,7 @@ RWGrapherExample >> example04 [
 	"
 	self new sampleData
 	"
-	<script: 'self new example04'>
+	<script: 'self new example04 open'>
 	| points g ds  colors view  |
 	points := self sampleData.
 	g := RWGrapher new.
@@ -81,7 +81,7 @@ RWGrapherExample >> example04 [
 	g build.
 	view := g view.
 	view addInteraction: RWOrbitController.
-	view open.
+	^ view
 ]
 
 { #category : #data }

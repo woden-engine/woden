@@ -55,6 +55,11 @@ RWAbstractVisitor >> visitLight: element [
 ]
 
 { #category : #visiting }
+RWAbstractVisitor >> visitLineShape: shape [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
 RWAbstractVisitor >> visitMenuActivableInteraction: shape [
 	self subclassResponsibility
 ]
