@@ -266,7 +266,13 @@ code_block(fragment) depthNormal_fragment
 	if(FragmentInput.color.a < MaterialState.alphaCutoff)
 		discard;
 
-    encodeViewNormalOutput(normalize(FragmentInput.normal));
+	let N = normalize(FragmentInput.normal);
+
+	// For double sided material.
+	if(isInBackFace())
+		N = -N;
+		
+    encodeViewNormalOutput(N);
 }
 
 code_block(fragment) depthNormalMask_fragment
@@ -275,7 +281,13 @@ code_block(fragment) depthNormalMask_fragment
 	if(alpha < MaterialState.alphaCutoff)
 		discard;
 
-    encodeViewNormalOutput(normalize(FragmentInput.normal));
+	let N = normalize(FragmentInput.normal);
+
+	// For double sided material.
+	if(isInBackFace())
+		N = -N;
+		
+    encodeViewNormalOutput(N);
 }
 
 //==============================================================================
@@ -291,7 +303,7 @@ code_block(fragment) forward_color
 		discard;
 
 	// For double sided material.
-	if(dot(V, N) < 0.0f)
+	if(isInBackFace())
 		N = -N;
 
 	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
@@ -311,7 +323,7 @@ code_block(fragment) forward_albedo
 		discard;
 
 	// For double sided material.
-	if(dot(V, N) < 0.0f)
+	if(isInBackFace())
 		N = -N;
 
 	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
@@ -333,13 +345,13 @@ code_block(fragment) forward_albedoNormal
 	if(albedo.a < MaterialState.alphaCutoff)
 		discard;
 
-	// For double sided material.
-	if(dot(V, n) < 0.0f)
-		n = -n;
-		
 	let tangentNormal = decodeNormalTexel(normalSampler.sample(normalTexture, FragmentInput.texcoord));
     let TBN = float3x3(t, b, n);
     let N = normalize(TBN*tangentNormal);
+
+	// For double sided material.
+	if(isInBackFace())
+		N = -N;
 
 	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
     forwardMetallicRoughnessLightingOutput
@@ -358,7 +370,7 @@ code_block(fragment) forward_albedoMetallicRoughness
 		discard;
 
 	// For double sided material.
-	if(dot(V, N) < 0.0f)
+	if(isInBackFace())
 		N = -N;
 
 	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
@@ -381,16 +393,16 @@ code_block(fragment) forward_albedoNormalMetallicRoughness
 	if(albedo.a < MaterialState.alphaCutoff)
 		discard;
 
-	// For double sided material.
-	if(dot(V, n) < 0.0f)
-		n = -n;
-
 	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
     let aoRoughnessMetallic = albedoSampler.sample(metallicRoughnessTexture, FragmentInput.texcoord);
     let tangentNormal = decodeNormalTexel(normalSampler.sample(normalTexture, FragmentInput.texcoord));
     let TBN = float3x3(t, b, n);
     let N = normalize(TBN*tangentNormal);
 
+	// For double sided material.
+	if(isInBackFace())
+		N = -N;
+		
     forwardMetallicRoughnessLightingOutput
         emission: emission albedo: albedo occlusion: aoRoughnessMetallic.r
         metallic: aoRoughnessMetallic.b*MaterialState.metallicFactor
