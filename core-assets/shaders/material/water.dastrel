@@ -198,7 +198,7 @@ code_block(fragment) forward_color
     let V = normalize(-WaterFragmentInput.position);
 
 	// For double sided material.
-	if(dot(V, N) < 0.0f)
+	if(isInBackFace())
 		N = -N;
 
     forwardLightingOutput

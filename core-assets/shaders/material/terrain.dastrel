@@ -255,6 +255,11 @@ code_block(fragment) depthNormal_fragment
     // Compute the object space normal.
     let on = normalize(float3(-dx*MaterialState.heightScale, 1.0f, dy*MaterialState.heightScale));
     let SN = transformNormalToView(on);
+
+	// For double sided material.
+	if(isInBackFace())
+		SN = -SN;
+
     encodeViewNormalOutput(normalize(SN));
 }
 
@@ -291,6 +296,10 @@ code_block(fragment) forward_splatting
 	//on = float3(-1.0f, 0.0f, 0.0f);
     let rawNormal = fetchNormal(objectPosition, on, splatting);
     let N = normalize(transformNormalToView(rawNormal));
+
+	// For double sided material.
+	if(isInBackFace())
+		N = -N;
 
     let SN = transformNormalToView(on);
 
@@ -338,6 +347,9 @@ code_block(fragment) forward_solid
     let N = transformNormalToView(on);
 
 	// For double sided material.
+	if(isInBackFace())
+		N = -N;
+
     let V = normalize(-FragmentInput.position);
 		
     // Compute the smoothness and the fresnel factor.
