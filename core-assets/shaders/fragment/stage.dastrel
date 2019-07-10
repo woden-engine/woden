@@ -11,12 +11,13 @@ semantic FragmentStage
     out(3) colorOutput3: float4;
 }
 
+// On metal this is not working. I am disabling this for now...
 function isInFrontFace() -> bool
 {
-	return FragmentStage.frontFacing;
+	return true;//FragmentStage.frontFacing;
 }
 
 function isInBackFace() -> bool
 {
-	return !FragmentStage.frontFacing;
+	return false;//!FragmentStage.frontFacing;
 }
