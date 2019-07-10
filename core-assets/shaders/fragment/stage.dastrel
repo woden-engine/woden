@@ -14,10 +14,10 @@ semantic FragmentStage
 // On metal this is not working. I am disabling this for now...
 function isInFrontFace() -> bool
 {
-	return true;//FragmentStage.frontFacing;
+	return FragmentStage.frontFacing;
 }
 
 function isInBackFace() -> bool
 {
-	return false;//!FragmentStage.frontFacing;
+	return !FragmentStage.frontFacing;
 }
