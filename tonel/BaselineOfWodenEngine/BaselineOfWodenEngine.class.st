@@ -58,10 +58,12 @@ BaselineOfWodenEngine >> baseline: spec [
 				spec requires: #('WodenEngine-Core' 'AbstractPhysics')].
 		spec package: #'WodenEngine-OpenAL' with: [
 				spec requires: #('WodenEngine-Core' 'OpenAL')].
-		spec package: #'WodenEngine-GameSystem' with: [
+		spec package: #'WodenEngine-EntitySystem' with: [
 				spec requires: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL')].
-		spec package: #'WodenEngine-LevelEditor' with: [
-				spec requires: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL' 'WodenEngine-GameSystem')].
+		spec package: #'WodenEngine-OldGameSystem' with: [
+				spec requires: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL')].
+		spec package: #'WodenEngine-OldLevelEditor' with: [
+				spec requires: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL' 'WodenEngine-OldGameSystem')].
 		spec package: #'WodenEngine-Roassal' with: [
 				spec requires: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Scene' 'WodenEngine-Physics')].
 
