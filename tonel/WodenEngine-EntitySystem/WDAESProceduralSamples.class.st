@@ -21,7 +21,13 @@ WDAESProceduralSamples class >> example01SimpleLevel [
 				addCollisionBox
 		].
 
-		sector addPlayerStartPointAt: (WMVector3F x: 0.0 y: 2.0 z: 2.0)
+		sector
+			addPointLightAt: (WMVector3F x: 0.5 y: 1.0 z: 0.0) with: [ :light |
+				light
+					radius: 12.0;
+					intensity: WMVector4F ones * 3.0
+			];
+			addPlayerStartPointAt: (WMVector3F x: 0.0 y: 2.0 z: 2.0)
 	].
 
 	universe createSimulationModel

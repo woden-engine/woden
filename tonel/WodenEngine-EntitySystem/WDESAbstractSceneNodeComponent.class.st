@@ -2,14 +2,16 @@ Class {
 	#name : #WDESAbstractSceneNodeComponent,
 	#superclass : #WDESComponentWithShape,
 	#instVars : [
-		'sceneNode'
+		'sceneNode',
+		'localTransform'
 	],
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
 
 { #category : #accessing }
 WDESAbstractSceneNodeComponent >> addedToScene: scene [
-	ownerEntity validSceneNode addChild: self validSceneNode
+	ownerEntity validSceneNode addChild: self validSceneNode.
+	sceneNode transform: localTransform.
 ]
 
 { #category : #accessing }
@@ -18,6 +20,34 @@ WDESAbstractSceneNodeComponent >> createSceneNode [
 	node := WDSGSpatialObject new.
 	node renderable: self renderable.
 	^ node
+]
+
+{ #category : #initialization }
+WDESAbstractSceneNodeComponent >> initialize [
+	super initialize.
+	localTransform := WMReversibleAffineTransformF identity.
+]
+
+{ #category : #accessing }
+WDESAbstractSceneNodeComponent >> localTransform [
+	^ localTransform
+]
+
+{ #category : #accessing }
+WDESAbstractSceneNodeComponent >> localTransform: anObject [
+	localTransform := anObject asWMReversibleAffineTransformF copy.
+	self localTransformChanged.
+]
+
+{ #category : #initialization }
+WDESAbstractSceneNodeComponent >> localTransformChanged [
+	sceneNode ifNotNil: [ sceneNode localTransform: localTransform ]
+]
+
+{ #category : #initialization }
+WDESAbstractSceneNodeComponent >> position: aPosition [
+	localTransform translation: aPosition.
+	self localTransformChanged.
 ]
 
 { #category : #accessing }

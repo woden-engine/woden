@@ -1,6 +1,9 @@
 Class {
 	#name : #WDESPointEntity,
 	#superclass : #WDESGenericEntity,
+	#instVars : [
+		'radius'
+	],
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
 

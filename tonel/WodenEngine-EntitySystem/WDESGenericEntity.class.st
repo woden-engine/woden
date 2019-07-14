@@ -26,6 +26,16 @@ WDESGenericEntity >> addPointEntityWithType: pointEntityTypeName at: position [
 ]
 
 { #category : #building }
+WDESGenericEntity >> addPointLightAt: position with: aBlock [
+	| lightComponent |
+	lightComponent := WDESPointLightSourceSceneNodeComponent new.
+	lightComponent position: position.
+	aBlock value: lightComponent.
+	self addComponent: lightComponent.
+	^ lightComponent
+]
+
+{ #category : #building }
 WDESGenericEntity >> buildGenericMeshWith: aBlock [
 	| builder renderable component |
 	builder := WDCComplexGenericMeshBuilder for: self engine.
