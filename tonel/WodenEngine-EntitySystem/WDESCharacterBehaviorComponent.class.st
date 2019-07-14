@@ -8,7 +8,11 @@ Class {
 		'linearViscosity',
 		'collisionShape',
 		'ghostObject',
-		'physicsCharacterController'
+		'physicsCharacterController',
+		'headOrientation',
+		'bodyOrientation',
+		'headAngularVelocity',
+		'walkingInGround'
 	],
 	#category : #'WodenEngine-EntitySystem-Behaviors'
 }
@@ -60,13 +64,24 @@ WDESCharacterBehaviorComponent >> halfExtent [
 	^ self class halfExtent
 ]
 
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> headPosition [
+	^ self class headPosition
+]
+
 { #category : #initialization }
 WDESCharacterBehaviorComponent >> initialize [
 	super initialize.
 	headAngle := WMVector3F zero.
+	headAngularVelocity := WMVector3F zero.
+	
+	bodyOrientation := WMMatrix3F identity.
+	headOrientation := WMMatrix3F identity.
+	
 	linearViscosity := 10.0.
 	linearVelocity := WMVector3F zero.
 	linearAcceleration := WMVector3F zero.
+	walkingInGround := true.
 ]
 
 { #category : #testing }
@@ -86,12 +101,37 @@ WDESCharacterBehaviorComponent >> jump [
 
 { #category : #'map events' }
 WDESCharacterBehaviorComponent >> postPhysicsTick: delta [
-	ownerEntity transform: (WMReversibleAffineTransformF identity translation: ghostObject position)
+	ownerEntity transform: (WMReversibleAffineTransformF identity
+		orthonormal: bodyOrientation translation: ghostObject position).
+	
+	ownerEntity findCameraSceneNodeComponentOrNil ifNotNil: [ :cameraNodeComponent |
+		cameraNodeComponent validSceneNode
+			transform: (WMReversibleAffineTransformF identity
+				orthonormal: headOrientation translation: self headPosition)
+	].
 ]
 
 { #category : #'map events' }
 WDESCharacterBehaviorComponent >> prePhysicsTick: delta [
+	| accel |
+	headAngle := headAngle + (headAngularVelocity * delta).
+		
+	walkingInGround ifTrue: [ 
+		bodyOrientation := WMMatrix3F yrot: headAngle y.
+		headOrientation := WMMatrix3F xrot: headAngle x.
+	] ifFalse: [ 
+		bodyOrientation := (WMMatrix3F yrot: headAngle y) * WMMatrix3F xrot: headAngle x.
+		headOrientation := WMMatrix3F identity.
+	].
+
+	accel := (bodyOrientation transformVector3: linearAcceleration*linearViscosity).
+	accel := accel - (linearVelocity*linearViscosity).
+	
+	linearVelocity := linearVelocity + (accel*delta).
+
 	ghostObject position: ownerEntity transform translation.
+	physicsCharacterController linearVelocity: linearVelocity.
+
 ]
 
 { #category : #notifications }
@@ -102,13 +142,6 @@ WDESCharacterBehaviorComponent >> removedFromPhysicsWorld: physicsWorld [
 
 { #category : #simulation }
 WDESCharacterBehaviorComponent >> tick: delta [
-	"| accel sourcePosition newPosition newTransform |
-	accel := (linearAcceleration*linearViscosity) - (linearVelocity*linearViscosity).
-	linearVelocity := linearVelocity + (accel * delta).
-	sourcePosition := ownerEntity transform translation.
-	newPosition := sourcePosition + (linearVelocity * delta).
-	newTransform := WMReversibleAffineTransformF identity translation: newPosition.
-	ownerEntity transform: newTransform."
 
 ]
 

@@ -31,7 +31,7 @@ TInputControllerBehavior >> onMouseLeave: event [
 TInputControllerBehavior >> onMouseMotion: event [
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'actor messages' }
 TInputControllerBehavior >> sendInputEvent: inputEventSelector with: anEvent [
 	^ self perform: inputEventSelector with: anEvent
 ]
