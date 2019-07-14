@@ -3,7 +3,7 @@ I am a sample scene view that uses first person shooter game style controls for 
 "
 Class {
 	#name : #WDAFPSSceneView,
-	#superclass : #WDASceneViewWithPompeii,
+	#superclass : #WDASceneViewWithBabylon,
 	#instVars : [
 		'cameraVelocity',
 		'cameraSpeed',
@@ -65,36 +65,6 @@ WDAFPSSceneView >> cameraVelocity [
 { #category : #accessing }
 WDAFPSSceneView >> cameraVelocity: anObject [
 	cameraVelocity := anObject
-]
-
-{ #category : #'drawing 2d' }
-WDAFPSSceneView >> drawFrameRateOn: canvas [
-	| deltaTime builder mesh |
-	deltaTime := engine frameBufferingDriver currentFrameCPUDeltaTime.
-	
-	builder := canvas driver mesh2DBuilder.
-	builder text
-		color: Color green;
-		font: self babylonDefaultFont;
-			position: (0 @ self babylonDefaultFont getPreciseAscent);
-			draw: ('CPU Frame Rate {1} ms / {2} FPS' format: {
-				(deltaTime*1000.0) printShowingDecimalPlaces: 3 .
-				1.0 / (deltaTime max: 0.01) printShowingDecimalPlaces: 3.
-				engine frameBufferingDriver lastFrameCPUConsumption * 1000.0 printShowingDecimalPlaces: 3});
-			newline;
-			draw: ('CPU Consumption {1} ms' format: {
-				engine frameBufferingDriver lastFrameCPUConsumption * 1000.0 printShowingDecimalPlaces: 3});
-			newline;
-			draw: ('Rendered object count {1}' format: {engine frameRenderingMetrics renderedObjectCount asString}).
-				
-	mesh := builder mesh.
-	
-	canvas draw: mesh.
-]
-
-{ #category : #rendering }
-WDAFPSSceneView >> drawOnBabylonCanvas: canvas [
-	self drawFrameRateOn: canvas
 ]
 
 { #category : #vr }

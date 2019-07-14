@@ -4,12 +4,12 @@ Class {
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
 
-{ #category : #'as yet unclassified' }
-WDESBehaviorComponent >> attachToEntity: anEntity [
-	anEntity behaviorComponent: self
+{ #category : #testing }
+WDESBehaviorComponent >> isBehaviorComponent [
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
-WDESBehaviorComponent >> detachFromEntity: anEntity [
-	anEntity behaviorComponent: nil
+WDESBehaviorComponent >> sendInputEvent: inputEventSelector with: anEvent [
+	"By default, we ignore these messages."
 ]

@@ -6,7 +6,9 @@ Class {
 		'handle',
 		'rigidBodies',
 		'onSimulation',
-		'kinematicObjects'
+		'kinematicObjects',
+		'characterControllers',
+		'simulatedKinematicObjects'
 	],
 	#pools : [
 		'APHYConstants'
@@ -16,7 +18,8 @@ Class {
 
 { #category : #adding }
 WDAPhyDynamicsWorld >> addCharacterController: characterController [
-	handle addCharacterController: (physicsEngine validateCharacterControllerHandle: characterController)
+	handle addCharacterController: (physicsEngine validateCharacterControllerHandle: characterController).
+	characterControllers add: characterController.
 ]
 
 { #category : #adding }
@@ -31,6 +34,9 @@ WDAPhyDynamicsWorld >> addRigidBody: rigidBody [
 	handle addRigidBody: rigidBodyHandle first.
 	rigidBody mass = 0.0 ifTrue: [
 		kinematicObjects add: rigidBody.
+		rigidBody hasKinematicSimulation ifTrue: [ 
+			simulatedKinematicObjects add: rigidBody
+		].
 	] ifFalse: [
 		rigidBodies add: rigidBody.
 	].
@@ -48,6 +54,7 @@ WDAPhyDynamicsWorld >> addRigidBody: rigidBody [
 { #category : #'as yet unclassified' }
 WDAPhyDynamicsWorld >> debugDrawOnDynamicMesh: meshBuilder [
 	| bufferSize buffer |
+
 	bufferSize := handle encodeDebugDrawing.
 	bufferSize = 0 ifTrue: [ ^ self ].
 	
@@ -79,6 +86,8 @@ WDAPhyDynamicsWorld >> initialize [
 	super initialize.
 	rigidBodies := OrderedCollection new.
 	kinematicObjects := OrderedCollection new.
+	simulatedKinematicObjects := OrderedCollection new.
+	characterControllers := OrderedCollection new.
 	onSimulation := false.
 ]
 
@@ -92,6 +101,35 @@ WDAPhyDynamicsWorld >> physicsEngine: anObject [
 	physicsEngine := anObject
 ]
 
+{ #category : #rendering }
+WDAPhyDynamicsWorld >> postSimulateTime: delta [
+	characterControllers do: [ :controller | controller postSimulateTime: delta ].
+	simulatedKinematicObjects do: [ :controller | controller postSimulateTime: delta ].
+]
+
+{ #category : #rendering }
+WDAPhyDynamicsWorld >> preSimulateTime: delta [
+	simulatedKinematicObjects do: [ :controller | controller preSimulateTime: delta ].
+	characterControllers do: [ :controller | controller preSimulateTime: delta ].
+]
+
+{ #category : #adding }
+WDAPhyDynamicsWorld >> removeCharacterController: characterController [
+	characterController handle ifNotNil: [ 
+		handle removeCharacterController: characterController handle
+	].
+	characterControllers remove: characterController ifAbsent: [].
+
+]
+
+{ #category : #adding }
+WDAPhyDynamicsWorld >> removeGhostObject: ghostObject [
+	ghostObject handle ifNotNil: [ 
+		handle removeCollisionObject: ghostObject handle
+	].
+
+]
+
 { #category : #adding }
 WDAPhyDynamicsWorld >> removeRigidBody: rigidBody [
 	rigidBody handle ifNotNil: [ handle removeRigidBody: rigidBody handle first ]
@@ -100,11 +138,13 @@ WDAPhyDynamicsWorld >> removeRigidBody: rigidBody [
 
 { #category : #rendering }
 WDAPhyDynamicsWorld >> simulateTime: delta [
+	self preSimulateTime: delta.
 	onSimulation := true.
 	[
 		handle stepSimulation: delta max_sub_steps: 2 fixed_time_step: 1.0/120.0.
 		rigidBodies do: [ :body | self updateSceneNodeFromRigidBody: body ]
-	] ensure: [ onSimulation := false ]
+	] ensure: [ onSimulation := false ].
+	self postSimulateTime: delta.
 ]
 
 { #category : #rendering }

@@ -34,6 +34,16 @@ WDPhyDynamicsWorld >> gravity: aWMVector3 [
 ]
 
 { #category : #adding }
+WDPhyDynamicsWorld >> removeCharacterController: ghostObject [
+	self subclassResponsibility
+]
+
+{ #category : #adding }
+WDPhyDynamicsWorld >> removeGhostObject: ghostObject [
+	self subclassResponsibility
+]
+
+{ #category : #adding }
 WDPhyDynamicsWorld >> removeRigidBody: rigidBody [
 	self subclassResponsibility
 ]

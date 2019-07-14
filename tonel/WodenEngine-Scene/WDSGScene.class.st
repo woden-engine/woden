@@ -94,7 +94,7 @@ WDSGScene >> bakeLazyObjectStates [
 { #category : #'rendering phases' }
 WDSGScene >> collectVisibleObjectsAndLightIntoViewport: renderingViewport [
 	| frustumConvexHull boundingBox |
-	backgroundLayer renderingRenderables do: [ :rr |
+	backgroundLayer renderingRenderables select: #visible thenDo: [ :rr |
 		rr isLightSource ifTrue: [
 			renderingViewport addBackgroundLight: rr
 		] ifFalse: [ 
@@ -103,7 +103,7 @@ WDSGScene >> collectVisibleObjectsAndLightIntoViewport: renderingViewport [
 	].
 
 	frustumConvexHull := renderingViewport globalFrustumConvexHull.
-	normalLayer renderingRenderables do: [ :rr |
+	normalLayer renderingRenderables select: #visible thenDo: [ :rr |
 		boundingBox := rr boundingBox.
 		(renderingViewport shouldRenderObject: rr) ifTrue: [
 			rr isLightSource ifTrue: [
@@ -122,7 +122,7 @@ WDSGScene >> collectVisibleObjectsAndLightIntoViewport: renderingViewport [
 		].
 	].
 
-	foregroundLayer renderingRenderables do: [ :rr |
+	foregroundLayer renderingRenderables select: #visible thenDo: [ :rr |
 		rr isLightSource ifTrue: [
 			renderingViewport addForegroundLight: rr
 		] ifFalse: [ 
@@ -279,7 +279,7 @@ WDSGScene >> remove: aNode [
 
 { #category : #adding }
 WDSGScene >> removeNodeWithPendingState: aNode [
-	nodesWithPendingStates remove: aNode
+	nodesWithPendingStates remove: aNode ifAbsent: []
 ]
 
 { #category : #'rendering graph' }

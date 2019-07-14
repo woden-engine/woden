@@ -13,7 +13,9 @@ Class {
 		'baseVertex',
 		'boundingBox',
 		'vertexData',
-		'vertexClass'
+		'vertexClass',
+		'lastUsedVertexForCollision',
+		'collisionShapes'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -43,6 +45,18 @@ WDCGenericMeshBuilder >> addCircleCenter: center radius: radius slices: slices i
 				self addI1: secondSlice i2: 1 i3: firstSlice .
 			]
 	].
+]
+
+{ #category : #collisions }
+WDCGenericMeshBuilder >> addCollisionBox [
+	| box |
+	box := WMBox3DF empty.
+	lastUsedVertexForCollision + 1 to: vertices size do: [ :i |
+		box insertPoint: (vertices at: i) position asWMVector3F
+	].
+
+	lastUsedVertexForCollision := vertices size.
+	collisionShapes add: (self createAABoxCollisionShape: box)
 ]
 
 { #category : #adding }
@@ -79,6 +93,18 @@ WDCGenericMeshBuilder >> addConeRadius: baseRadius height: height segments: segm
 	"Add the caps"
 	self addCircleCenter: (WMVector3F x: 0.0 y: height * -0.5 z: 0.0) radius: radius slices: slices isTop: false.
 
+]
+
+{ #category : #collisions }
+WDCGenericMeshBuilder >> addConvexHull [
+	| points |
+	points := OrderedCollection new.
+	lastUsedVertexForCollision + 1 to: vertices size do: [ :i |
+		points add: (vertices at: i) position asWMVector3F
+	].
+
+	lastUsedVertexForCollision := vertices size.
+	collisionShapes add: (self createConvexHullCollisionShape: points)
 ]
 
 { #category : #adding }
@@ -574,6 +600,14 @@ WDCGenericMeshBuilder >> clear [
 	baseVertex := 0.
 	currentColor := Color white asWMVector4F.
 	boundingBox := WMBox3DF empty.
+	lastUsedVertexForCollision := 0.
+	collisionShapes removeAll.
+]
+
+{ #category : #collisions }
+WDCGenericMeshBuilder >> collisionShape [
+	collisionShapes ifEmpty: [ ^ nil ].
+	^ self createCompoundCollisionShape: collisionShapes
 ]
 
 { #category : #accessing }
@@ -768,6 +802,8 @@ WDCGenericMeshBuilder >> initialize [
 	submeshes := OrderedCollection new.
 	baseVertex := 0.
 	currentColor := Color white asWMVector4F.
+	collisionShapes := OrderedCollection new.
+	lastUsedVertexForCollision := 0.
 
 ]
 

@@ -9,7 +9,9 @@ Class {
 		'maxJumpHeight',
 		'linearVelocity',
 		'gravity',
-		'jumpSpeed'
+		'jumpSpeed',
+		'preSimulationAction',
+		'postSimulationAction'
 	],
 	#category : #'WodenEngine-Physics-Interface'
 }
@@ -96,6 +98,36 @@ WDPhyCharacterController >> maxJumpHeight: anObject [
 { #category : #accessing }
 WDPhyCharacterController >> position [
 	^ ghostObject position
+]
+
+{ #category : #rendering }
+WDPhyCharacterController >> postSimulateTime: delta [
+	postSimulationAction ifNotNil: [ postSimulationAction cull: delta cull: self ]
+]
+
+{ #category : #accessing }
+WDPhyCharacterController >> postSimulationAction [
+	^ postSimulationAction
+]
+
+{ #category : #accessing }
+WDPhyCharacterController >> postSimulationAction: anObject [
+	postSimulationAction := anObject
+]
+
+{ #category : #rendering }
+WDPhyCharacterController >> preSimulateTime: delta [
+	preSimulationAction ifNotNil: [ preSimulationAction cull: delta cull: self ]
+]
+
+{ #category : #accessing }
+WDPhyCharacterController >> preSimulationAction [
+	^ preSimulationAction
+]
+
+{ #category : #accessing }
+WDPhyCharacterController >> preSimulationAction: anObject [
+	preSimulationAction := anObject
 ]
 
 { #category : #accessing }

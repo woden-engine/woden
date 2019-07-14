@@ -3,7 +3,9 @@ Class {
 	#superclass : #WDPhyObject,
 	#instVars : [
 		'shape',
-		'position'
+		'position',
+		'preSimulationAction',
+		'postSimulationAction'
 	],
 	#category : #'WodenEngine-Physics-Interface'
 }
@@ -11,6 +13,11 @@ Class {
 { #category : #accessing }
 WDPhyCollisionObject >> applyTransformInHandle [
 	physicsEngine ifNotNil: [ physicsEngine setCollisionObject: self position: position ]
+]
+
+{ #category : #testing }
+WDPhyCollisionObject >> hasKinematicSimulation [
+	^ preSimulationAction isNotNil or: [ postSimulationAction isNotNil ]
 ]
 
 { #category : #accessing }
@@ -48,6 +55,36 @@ WDPhyCollisionObject >> position [
 WDPhyCollisionObject >> position: aPosition [
 	position := aPosition.
 	self applyTransformInHandle
+]
+
+{ #category : #rendering }
+WDPhyCollisionObject >> postSimulateTime: delta [
+	postSimulationAction ifNotNil: [ postSimulationAction cull: delta cull: self ]
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> postSimulationAction [
+	^ postSimulationAction
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> postSimulationAction: anObject [
+	postSimulationAction := anObject
+]
+
+{ #category : #rendering }
+WDPhyCollisionObject >> preSimulateTime: delta [
+	preSimulationAction ifNotNil: [ preSimulationAction cull: delta cull: self ]
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> preSimulationAction [
+	^ preSimulationAction
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> preSimulationAction: anObject [
+	preSimulationAction := anObject
 ]
 
 { #category : #accessing }

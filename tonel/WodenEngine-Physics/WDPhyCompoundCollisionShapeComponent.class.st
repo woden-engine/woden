@@ -8,6 +8,16 @@ Class {
 	#category : #'WodenEngine-Physics-Interface'
 }
 
+{ #category : #converting }
+WDPhyCompoundCollisionShapeComponent >> asCompoundCollisionShapeComponent [
+	^ self
+]
+
+{ #category : #testing }
+WDPhyCompoundCollisionShapeComponent >> isCompoundCollisionShapeComponent [
+	^ true
+]
+
 { #category : #printing }
 WDPhyCompoundCollisionShapeComponent >> printOn: aStream [
 	aStream nextPutAll: self class name; space; print: shape; space; print: transform

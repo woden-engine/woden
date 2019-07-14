@@ -1,6 +1,6 @@
 Class {
 	#name : #WDCAbstractMeshBuilder,
-	#superclass : #Object,
+	#superclass : #WDCAbstractGeometryBuilder,
 	#instVars : [
 		'engine'
 	],
