@@ -53,7 +53,7 @@ BaselineOfWodenEngine >> baseline: spec [
 		spec package: #'WodenEngine-Importers' with: [
 				spec requires: #('WodenEngine-Core' #'WodenEngine-Scene')].
 		spec package: #'WodenEngine-Samples' with: [
-				spec requires: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Scene' 'WodenEngine-GameSystem' #'WodenEngine-Importers')].
+				spec requires: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Scene' 'WodenEngine-EntitySystem' 'WodenEngine-OldGameSystem' #'WodenEngine-Importers')].
 		spec package: #'WodenEngine-Physics' with: [
 				spec requires: #('WodenEngine-Core' 'AbstractPhysics')].
 		spec package: #'WodenEngine-OpenAL' with: [
@@ -67,7 +67,7 @@ BaselineOfWodenEngine >> baseline: spec [
 		spec package: #'WodenEngine-Roassal' with: [
 				spec requires: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Scene' 'WodenEngine-Physics')].
 
-		spec group: 'default' with: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Samples' 'WodenEngine-GameSystem' 'WodenEngine-LevelEditor' 'WodenEngine-Roassal')
+		spec group: 'default' with: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Samples' 'WodenEngine-EntitySystem' 'WodenEngine-OldGameSystem' 'WodenEngine-OldLevelEditor' 'WodenEngine-Roassal')
 	]
 
 ]
