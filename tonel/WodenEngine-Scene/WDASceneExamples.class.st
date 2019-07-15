@@ -109,8 +109,8 @@ WDASceneExamples class >> constructPoolSceneInto: scene [
 
 	"Setup the water material"
 	waterMaterial
-		harmonicAt: 1 amplitude: 0.05 frequency: 1.1 center: WMVector2F new;
-		harmonicAt: 2 amplitude: 0.02 frequency: 2.23 direction: (WMVector2F y: 1.0);
+		harmonicAt: 1 amplitude: 0.05 frequency: -1.1 center: WMVector2F new;
+		harmonicAt: 2 amplitude: 0.02 frequency: 2.23 direction: (WMVector2F y: -1.0);
 		harmonicAt: 3 amplitude: 0.015 frequency: 1.80 direction: (WMVector2F x: 1.0).
 
 	"Add the water"

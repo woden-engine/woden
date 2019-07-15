@@ -276,3 +276,23 @@ WDAPhyEngine >> visitConvexHullShape: convexHullShape [
 	^ handle createConvexHullShape: points rawData num_points: points size stride: points elementSize
 
 ]
+
+{ #category : #'collision shape convertion' }
+WDAPhyEngine >> visitHeightFieldCollisionShape: heightFieldShape [
+	| heightFieldHandle texture textureLevel heightScale |
+	texture := heightFieldShape heightTexture.
+	textureLevel := texture data layers first levels first.
+	heightScale := heightFieldShape heightScale.
+
+	textureLevel data pinInMemory.
+	heightFieldHandle := handle createHeightfieldTerrainShape: textureLevel width height_stick_length: textureLevel height heightfield_data: textureLevel data
+		height_scale: heightScale / ( ((1<<15) - 1) asFloat)
+		min_height: heightFieldShape minHeight max_height: heightFieldShape maxHeight
+		up_axis: APHY_AXIS_Y
+		height_data_type: APHY_SCALAR_TYPE_SHORT flip_quad_edges: false
+		local_scale_x: 2.0*heightFieldShape scale x reciprocal / textureLevel width
+		local_scale_y: 1.0
+		local_scale_z: 2.0*heightFieldShape scale y reciprocal / textureLevel height.
+
+	^ heightFieldHandle
+]

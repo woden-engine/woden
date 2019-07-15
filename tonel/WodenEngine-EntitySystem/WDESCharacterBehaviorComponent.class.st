@@ -12,7 +12,8 @@ Class {
 		'headOrientation',
 		'bodyOrientation',
 		'headAngularVelocity',
-		'walkingInGround'
+		'walkingInGround',
+		'running'
 	],
 	#category : #'WodenEngine-EntitySystem-Behaviors'
 }
@@ -34,18 +35,18 @@ WDESCharacterBehaviorComponent >> addedToPhysicsWorld: physicsWorld [
 	
 ]
 
-{ #category : #'map events' }
+{ #category : #initialization }
 WDESCharacterBehaviorComponent >> createCollisionShape [
 	collisionShape := WDPhyCapsuleYCollisionShape new halfExtent: self halfExtent; yourself
 ]
 
-{ #category : #'map events' }
+{ #category : #initialization }
 WDESCharacterBehaviorComponent >> createGhostObject [
 	ghostObject := WDPhyGhostObjectWithPairCache new.
 	ghostObject shape: self validCollisionShape
 ]
 
-{ #category : #'map events' }
+{ #category : #initialization }
 WDESCharacterBehaviorComponent >> createPhysicsCharacterController [
 	physicsCharacterController := WDPhyCharacterController new
 		ghostObject: ghostObject;
@@ -59,7 +60,7 @@ WDESCharacterBehaviorComponent >> createPhysicsCharacterController [
 		yourself.
 ]
 
-{ #category : #'map events' }
+{ #category : #accessing }
 WDESCharacterBehaviorComponent >> halfExtent [
 	^ self class halfExtent
 ]
@@ -82,6 +83,7 @@ WDESCharacterBehaviorComponent >> initialize [
 	linearVelocity := WMVector3F zero.
 	linearAcceleration := WMVector3F zero.
 	walkingInGround := true.
+	running := false.
 ]
 
 { #category : #testing }
@@ -99,7 +101,7 @@ WDESCharacterBehaviorComponent >> jump [
 	physicsCharacterController jump
 ]
 
-{ #category : #'map events' }
+{ #category : #simulation }
 WDESCharacterBehaviorComponent >> postPhysicsTick: delta [
 	ownerEntity transform: (WMReversibleAffineTransformF identity
 		orthonormal: bodyOrientation translation: ghostObject position).
@@ -111,9 +113,9 @@ WDESCharacterBehaviorComponent >> postPhysicsTick: delta [
 	].
 ]
 
-{ #category : #'map events' }
+{ #category : #simulation }
 WDESCharacterBehaviorComponent >> prePhysicsTick: delta [
-	| accel |
+	| accel speedMultiplier |
 	headAngle := headAngle + (headAngularVelocity * delta).
 		
 	walkingInGround ifTrue: [ 
@@ -124,7 +126,8 @@ WDESCharacterBehaviorComponent >> prePhysicsTick: delta [
 		headOrientation := WMMatrix3F identity.
 	].
 
-	accel := (bodyOrientation transformVector3: linearAcceleration*linearViscosity).
+	speedMultiplier := running ifTrue: [ 3.0 ] ifFalse: [ 1.0 ].
+	accel := (bodyOrientation transformVector3: linearAcceleration*linearViscosity*speedMultiplier).
 	accel := accel - (linearVelocity*linearViscosity).
 	
 	linearVelocity := linearVelocity + (accel*delta).
@@ -140,24 +143,34 @@ WDESCharacterBehaviorComponent >> removedFromPhysicsWorld: physicsWorld [
 	physicsCharacterController ifNotNil: [ physicsWorld removeCharacterController: physicsCharacterController ].
 ]
 
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> running [
+	^ running
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> running: anObject [
+	running := anObject
+]
+
 { #category : #simulation }
 WDESCharacterBehaviorComponent >> tick: delta [
 
 ]
 
-{ #category : #'map events' }
+{ #category : #accessing }
 WDESCharacterBehaviorComponent >> validCollisionShape [
 	collisionShape ifNil: [self createCollisionShape].
 	^ collisionShape
 ]
 
-{ #category : #'map events' }
+{ #category : #accessing }
 WDESCharacterBehaviorComponent >> validGhostObject [
 	ghostObject ifNil: [ self createGhostObject ].
 	^ ghostObject
 ]
 
-{ #category : #'map events' }
+{ #category : #accessing }
 WDESCharacterBehaviorComponent >> validPhysicsCharacterController [
 	physicsCharacterController ifNil: [self createPhysicsCharacterController].
 	^ physicsCharacterController

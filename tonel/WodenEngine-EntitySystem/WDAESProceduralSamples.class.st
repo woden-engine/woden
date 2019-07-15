@@ -66,10 +66,10 @@ WDAESProceduralSamples class >> example02PoolLevel [
 				
 					waterMaterial := engine resourceCache loadMaterial: 'materials/demos/water.json'.
 					waterMaterial
-						harmonicAt: 1 amplitude: 0.05 frequency: 1.1 center: WMVector2F new;
-						harmonicAt: 2 amplitude: 0.02 frequency: 2.23 direction: (WMVector2F y: 1.0);
+						harmonicAt: 1 amplitude: 0.05 frequency: -1.1 center: WMVector2F new;
+						harmonicAt: 2 amplitude: 0.02 frequency: 2.23 direction: (WMVector2F y: -1.0);
 						harmonicAt: 3 amplitude: 0.015 frequency: 1.80 direction: (WMVector2F x: 1.0).
-
+		
 					meshBuilder
 						material: waterMaterial;
 						heightScale: 0.1;
@@ -97,13 +97,66 @@ WDAESProceduralSamples class >> example02PoolLevel [
 				].
 			];
 		
-			addPlayerStartPointAt: (WMVector3F x: 0.0 y: 2.0 z: 4.0)
+			addPlayerStartPointAt: (WMVector3F x: -2.0 y: 2.0 z: 4.0)
 	].
 
 	universe createSimulationModel
 		open
 		spawnPlayer.
 
+]
+
+{ #category : #'as yet unclassified' }
+WDAESProceduralSamples class >> example03Island [
+	| engine universe terrainMaterial waterMaterial |
+	engine := WDCEngine default.
+	terrainMaterial := engine resourceCache loadMaterial: 'materials/demos/island.json'.
+		
+	universe := WDESSimpleUniverse for: engine.
+	universe defaultCameraFarDistance: 250.0.
+	universe buildSector: [ :sector |
+		sector buildTerrainMeshWith: [ :meshBuilder |
+			terrainMaterial buildTerrainMeshWith: meshBuilder.
+		].
+		
+		sector addWaterVolumeAt: WMVector3F zero with: [ :waterVolume |
+			(waterVolume buildTerrainMeshWith: [ :meshBuilder |
+				waterMaterial := engine resourceCache loadMaterial: 'materials/demos/ocean.json'.
+				waterMaterial
+					harmonicAt: 1 amplitude: 0.015 frequency: 2.23 center: (WMVector2F zero);
+					harmonicAt: 2 amplitude: 0.03 frequency: 0.50 center: (WMVector2F zero).
+		
+				meshBuilder
+					material: waterMaterial;
+					heightScale: 0.1;
+					createClipMapWithLevels: 3 size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
+					addBoxCollisionShape: (WMBox3DF
+						halfExtent: (WMVector3F x: 200.0 y: 200.0 z: 200.0)
+						center: (WMVector3F y: -200.0))
+			])
+				makeTranslucentSorted.
+		].
+
+		sector
+			addDirectionalLightWith: [ :light |
+				| skyTexture |
+				light
+					castShadows: true;
+					intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.7;
+					rotateDegreesOnX: -35;
+					translateToX: 0.0 y: 1.5 z: 2.5.
+					
+				skyTexture := WDASceneExamples proceduralSkySunDirection: light forwardDirection.
+				skyTexture := skyTexture asSRGBTextureFor: engine.
+				sector addSkyBoxWithTexture: skyTexture
+			];
+		
+			addPlayerStartPointAt: (WMVector3F x: 0.0 y: 2.0 z: 85.0)
+	].
+
+	universe createSimulationModel
+		open
+		spawnPlayer.
 ]
 
 { #category : #'see class side' }

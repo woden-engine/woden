@@ -144,6 +144,16 @@ WDCTerrainMaterial >> bindResources [
 
 ]
 
+{ #category : #'terrain mesh building' }
+WDCTerrainMaterial >> buildTerrainMeshWith: builder [
+	builder
+		material: self;
+		heightScale: materialState heightScale;
+		createClipMapWithLevels: 3 size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
+		addHeightMapCollision: heightMapTexture
+		heightScale: materialState heightScale scale: self heightMapScale offset: self heightMapOffset
+]
+
 { #category : #accessing }
 WDCTerrainMaterial >> clipMapPeriod: aVector2 [
 	materialState clipMapPeriod: aVector2
@@ -151,12 +161,12 @@ WDCTerrainMaterial >> clipMapPeriod: aVector2 [
 
 { #category : #'terrain mesh building' }
 WDCTerrainMaterial >> createTerrainMeshForSceneNode: sceneNode [
+	| builder |
 	self flag: 'TODO: Support parameterizing this.'.
-	^ (WDCTerrainMeshBuilder for: engine)
-		material: self;
-		heightScale: materialState heightScale;
-		createClipMapWithLevels: 3 size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
-		mesh
+	builder := WDCTerrainMeshBuilder for: engine.
+	self buildTerrainMeshWith: builder.
+	
+	^ builder mesh
 ]
 
 { #category : #shaders }
@@ -170,8 +180,18 @@ WDCTerrainMaterial >> fragmentShader [
 ]
 
 { #category : #accessing }
+WDCTerrainMaterial >> heightMapOffset [
+	^ materialState heightMapOffset
+]
+
+{ #category : #accessing }
 WDCTerrainMaterial >> heightMapOffset: aVector2 [
 	materialState heightMapOffset: aVector2
+]
+
+{ #category : #accessing }
+WDCTerrainMaterial >> heightMapScale [
+	^ materialState heightMapScale
 ]
 
 { #category : #accessing }

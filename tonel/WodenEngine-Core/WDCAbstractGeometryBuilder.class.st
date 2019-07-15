@@ -20,6 +20,11 @@ WDCAbstractGeometryBuilder >> addCollisionShape: aCollisionShape [
 	collisionShapes add: aCollisionShape
 ]
 
+{ #category : #collisions }
+WDCAbstractGeometryBuilder >> addHeightMapCollision: heightMapTexture heightScale: heightScale scale: heightMapScale offset: heightMapOffset [
+	self addCollisionShape: (self createHeightMapCollision: heightMapTexture heightScale: heightScale scale: heightMapScale offset: heightMapOffset)
+]
+
 { #category : #accessing }
 WDCAbstractGeometryBuilder >> clear [
 	collisionShapes removeAll.

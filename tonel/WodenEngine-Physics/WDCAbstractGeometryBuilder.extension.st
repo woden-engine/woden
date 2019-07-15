@@ -28,3 +28,25 @@ WDCAbstractGeometryBuilder >> createCompoundCollisionShape: shapes [
 WDCAbstractGeometryBuilder >> createConvexHullCollisionShape: points [
 	^ WDPhyConvexHullCollisionShape new points: points
 ]
+
+{ #category : #'*WodenEngine-Physics' }
+WDCAbstractGeometryBuilder >> createHeightMapCollision: heightMapTexture heightScale: heightScale scale: heightMapScale offset: heightMapOffset [
+	| heightCollisionShape translatedOrigin |
+	heightCollisionShape := WDPhyHeightFieldCollisionShape new
+		heightTexture: heightMapTexture;
+		heightScale: heightScale;
+		scale: heightMapScale;
+		offset: heightMapOffset;
+		yourself.
+	translatedOrigin := heightCollisionShape physicsTranslatedOrigin.
+	(translatedOrigin closeTo: WMVector3F zero) ifFalse: [
+		^ WDPhyCompoundCollisionShape new
+		 components: { WDPhyCompoundCollisionShapeComponent new
+			shape: heightCollisionShape;
+			transform: (WMReversibleAffineTransformF identity translation:
+				translatedOrigin negated);
+			yourself
+		}
+	].
+	^ heightCollisionShape
+]
