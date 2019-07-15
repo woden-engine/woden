@@ -38,6 +38,16 @@ WDESSector >> addedToScene: anScene [
 	
 ]
 
+{ #category : #accessing }
+WDESSector >> defaultCameraFarDistance [
+	^ self universe ifNotNil: [ :universe | universe defaultCameraFarDistance ]
+]
+
+{ #category : #accessing }
+WDESSector >> defaultCameraNearDistance [
+	^ self universe ifNotNil: [ :universe | universe defaultCameraNearDistance ]
+]
+
 { #category : #initialization }
 WDESSector >> initialize [
 	super initialize.

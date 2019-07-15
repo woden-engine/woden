@@ -14,8 +14,7 @@ Class {
 		'boundingBox',
 		'vertexData',
 		'vertexClass',
-		'lastUsedVertexForCollision',
-		'collisionShapes'
+		'lastUsedVertexForCollision'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -594,6 +593,7 @@ WDCGenericMeshBuilder >> beginWithNewBaseVertex [
 
 { #category : #accessing }
 WDCGenericMeshBuilder >> clear [
+	super clear.
 	vertices removeAll.
 	indices removeAll.
 	submeshes removeAll.
@@ -601,13 +601,6 @@ WDCGenericMeshBuilder >> clear [
 	currentColor := Color white asWMVector4F.
 	boundingBox := WMBox3DF empty.
 	lastUsedVertexForCollision := 0.
-	collisionShapes removeAll.
-]
-
-{ #category : #collisions }
-WDCGenericMeshBuilder >> collisionShape [
-	collisionShapes ifEmpty: [ ^ nil ].
-	^ self createCompoundCollisionShape: collisionShapes
 ]
 
 { #category : #accessing }
@@ -802,7 +795,6 @@ WDCGenericMeshBuilder >> initialize [
 	submeshes := OrderedCollection new.
 	baseVertex := 0.
 	currentColor := Color white asWMVector4F.
-	collisionShapes := OrderedCollection new.
 	lastUsedVertexForCollision := 0.
 
 ]

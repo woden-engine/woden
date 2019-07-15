@@ -182,8 +182,26 @@ WDAPhyEngine >> initialize [
 ]
 
 { #category : #initialization }
+WDAPhyEngine >> setCollisionObject: collisionObject orientation: orientation [
+	| collisionObjectHandle |
+	collisionObjectHandle := collisionObject handle.
+	collisionObjectHandle isArray ifTrue: [ 
+		collisionObjectHandle first setMatrixFrom: (self convertWMMatrix3: orientation).
+	] ifFalse: [ 
+		collisionObjectHandle setMatrixFrom: (self convertWMMatrix3: orientation).
+	]
+
+]
+
+{ #category : #initialization }
 WDAPhyEngine >> setCollisionObject: collisionObject position: position [
-	collisionObject handle setTranslationFrom: (self convertWMVector3: position).
+	| collisionObjectHandle |
+	collisionObjectHandle := collisionObject handle.
+	collisionObjectHandle isArray ifTrue: [ 
+		collisionObjectHandle first setTranslationFrom: (self convertWMVector3: position).
+	] ifFalse: [ 
+		collisionObjectHandle setTranslationFrom: (self convertWMVector3: position).
+	]
 
 ]
 

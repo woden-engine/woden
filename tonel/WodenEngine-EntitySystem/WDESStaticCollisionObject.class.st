@@ -11,7 +11,8 @@ Class {
 { #category : #notifications }
 WDESStaticCollisionObject >> addedToPhysicsWorld: physicsWorld [
 	physicsWorld addRigidBody: self validCollisionObject.
-	self validCollisionObject sceneNode: ownerEntity.
+	self validCollisionObject
+		sceneNode: ownerEntity.
 ]
 
 { #category : #accessing }

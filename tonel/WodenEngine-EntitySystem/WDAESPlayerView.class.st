@@ -50,6 +50,12 @@ WDAESPlayerView >> playerEntity: anObject [
 	playerEntity ifNotNil: [ self attachCameraToPlayerEntity ].
 ]
 
+{ #category : #'rendering process stages' }
+WDAESPlayerView >> prepareRendering [
+	cameraComponent ifNotNil: [ cameraComponent applyActiveNearFarDistance ].
+	super prepareRendering
+]
+
 { #category : #'as yet unclassified' }
 WDAESPlayerView >> spawnPlayer [
 	self playerEntity: model gameLogic spawnPlayer

@@ -27,52 +27,71 @@ WDASceneExamples class >> cloudTexture [
 ]
 
 { #category : #examples }
-WDASceneExamples class >> constructPoolSceneInto: scene [
-	| engine tilesMaterial concreteMaterial waterMaterial meshBuilder floor mesh cube waterMesh waterSurface borderThickness |
-	engine := scene engine.
+WDASceneExamples class >> constructPoolMeshWith: meshBuilder [
+	| engine tilesMaterial concreteMaterial borderThickness |
+	engine := meshBuilder engine.
 	tilesMaterial := engine resourceCache loadMaterial: 'materials/demos/tile.json'.
 	concreteMaterial := engine resourceCache loadMaterial: 'materials/demos/esug-floor.json'.
-	waterMaterial := engine resourceCache loadMaterial: 'materials/demos/water.json'.
 	
 	"Add the floor"
-	meshBuilder := WDCComplexGenericMeshBuilder for: engine.
 	borderThickness := 0.5.
 	meshBuilder
 		currentMaterial: tilesMaterial;
 
 		translateToX: (borderThickness*0.5) negated - 4.5 y: -1.0 z: 0.0;
 		addCubeWithWidth: 4.0 - borderThickness height: 2.0 depth: 5.0 + (borderThickness*2.0);
+		addCollisionBox;
 		
 		translateToX: (borderThickness*0.5)+ 4.5 y: -1.0 z: 0.0;
 		addCubeWithWidth: 4.0 - borderThickness height: 2.0 depth: 5.0 + (borderThickness*2.0);
+		addCollisionBox;
 		
 		translateToX: 0.0 y: -1.0 z: borderThickness + 4.5;
 		addCubeWithWidth: 13.0 height: 2.0 depth: 4.0;
+		addCollisionBox;
 		
 		translateToX: 0.0 y: -1.0 z: borderThickness negated - 4.5;
 		addCubeWithWidth: 13.0 height: 2.0 depth: 4.0;
+		addCollisionBox;
 
 		"Bottom"
 		currentMaterial: concreteMaterial;
 		translateToX: 0.0 y: -2.05 z: 0.0;
 		addCubeWithWidth: 5.0 height: 0.1 depth: 5.0;
+		addCollisionBox;
 
 		"Border"
 		translateToX: -2.5 - (borderThickness*0.5) y: -1.0 z: 0.0;
 		addCubeWithWidth: borderThickness height: 2.2 depth: 5.0 + (borderThickness*2.0);
+		addCollisionBox;
 		
 		translateToX: 2.5 + (borderThickness*0.5) y: -1.0 z: 0.0;
 		addCubeWithWidth: borderThickness height: 2.2 depth: 5.0 + (borderThickness*2.0);
+		addCollisionBox;
 		
 		translateToX: 0.0 y: -1.0 z: 2.5 + (borderThickness*0.5);
 		addCubeWithWidth: 5.0 height: 2.2 depth: borderThickness;
+		addCollisionBox;
 		
 		translateToX: 0.0 y: -1.0 z: -2.5 - (borderThickness*0.5);
 		addCubeWithWidth: 5.0 height: 2.2 depth: borderThickness;
+		addCollisionBox;
 
 		"Use a planar texture coordinates"
 		planeTextureScale: (WMVector2F x: 2.0 y: 2.0) offset: (WMVector2F x: 0.0 y: 0.0);
 		computeTangentsBitangents.
+
+]
+
+{ #category : #examples }
+WDASceneExamples class >> constructPoolSceneInto: scene [
+	| engine waterMaterial meshBuilder floor mesh cube waterMesh waterSurface |
+	engine := scene engine.
+	waterMaterial := engine resourceCache loadMaterial: 'materials/demos/water.json'.
+	
+	"Add the floor"
+	meshBuilder := WDCComplexGenericMeshBuilder for: engine.
+	self constructPoolMeshWith: meshBuilder.
 	floor := WDSGSpatialObject new.
 	floor renderable: meshBuilder mesh.
 	scene add: floor.

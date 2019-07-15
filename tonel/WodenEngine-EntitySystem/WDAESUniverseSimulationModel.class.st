@@ -28,6 +28,7 @@ WDAESUniverseSimulationModel >> initializePhysicsWorld [
 
 { #category : #'rendering process stages' }
 WDAESUniverseSimulationModel >> updateForFrameDelta: delta [
+	super updateForFrameDelta: delta.
 	universe tick: delta.
 	physicsWorldDebugDrawingSceneNode renderable ifNotNil: #invalidate
 ]

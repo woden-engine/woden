@@ -124,6 +124,11 @@ WDESAbstractEntity >> isTicking [
 	^ tickingComponents isNotEmpty
 ]
 
+{ #category : #testing }
+WDESAbstractEntity >> isVolumeEntity [
+	^ false
+]
+
 { #category : #accessing }
 WDESAbstractEntity >> parent [
 	^ parent

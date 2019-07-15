@@ -8,6 +8,11 @@ Class {
 	#category : #'WodenEngine-Physics-Interface'
 }
 
+{ #category : #removing }
+WDPhyRigidBody >> addToPhysicsWorld: physicsWorld [
+	physicsWorld addRigidBody: self
+]
+
 { #category : #accessing }
 WDPhyRigidBody >> initialize [
 	mass := 0.0.
@@ -31,6 +36,11 @@ WDPhyRigidBody >> mass: anObject [
 ]
 
 { #category : #removing }
+WDPhyRigidBody >> removeFromPhysicsWorld: physicsWorld [
+	physicsWorld removeRigidBody: self
+]
+
+{ #category : #removing }
 WDPhyRigidBody >> removeFromWorld: world [
 	^ world removeRigidBody: self
 ]
@@ -42,7 +52,8 @@ WDPhyRigidBody >> sceneNode [
 
 { #category : #accessing }
 WDPhyRigidBody >> sceneNode: anObject [
-	sceneNode := anObject
+	sceneNode := anObject.
+	self transform: sceneNode transform
 ]
 
 { #category : #accessing }

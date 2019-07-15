@@ -5,14 +5,24 @@ Class {
 		'shape',
 		'position',
 		'preSimulationAction',
-		'postSimulationAction'
+		'postSimulationAction',
+		'orientation'
 	],
 	#category : #'WodenEngine-Physics-Interface'
 }
 
+{ #category : #removing }
+WDPhyCollisionObject >> addToPhysicsWorld: physicsWorld [
+	physicsWorld addCollisionObject: self
+]
+
 { #category : #accessing }
 WDPhyCollisionObject >> applyTransformInHandle [
-	physicsEngine ifNotNil: [ physicsEngine setCollisionObject: self position: position ]
+	physicsEngine ifNotNil: [
+		physicsEngine
+			setCollisionObject: self position: position;
+			setCollisionObject: self orientation: orientation
+	]
 ]
 
 { #category : #testing }
@@ -29,6 +39,7 @@ WDPhyCollisionObject >> hasValidHandle [
 WDPhyCollisionObject >> initialize [
 	super initialize.
 	position := WMVector3F zero.
+	orientation := WMMatrix3F identity.
 ]
 
 { #category : #testing }
@@ -87,6 +98,11 @@ WDPhyCollisionObject >> preSimulationAction: anObject [
 	preSimulationAction := anObject
 ]
 
+{ #category : #removing }
+WDPhyCollisionObject >> removeFromPhysicsWorld: physicsWorld [
+	physicsWorld removeCollisionObject: self
+]
+
 { #category : #accessing }
 WDPhyCollisionObject >> shape [
 	
@@ -97,4 +113,11 @@ WDPhyCollisionObject >> shape [
 WDPhyCollisionObject >> shape: anObject [
 	
 	shape := anObject
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> transform: aTransform [
+	position := aTransform translation.
+	orientation := aTransform matrix.
+	self applyTransformInHandle.
 ]

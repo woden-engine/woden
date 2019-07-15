@@ -5,7 +5,9 @@ Class {
 		'engine',
 		'scene',
 		'physicsWorld',
-		'gameLogic'
+		'gameLogic',
+		'defaultCameraNearDistance',
+		'defaultCameraFarDistance'
 	],
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
@@ -52,6 +54,26 @@ WDESAbstractUniverse >> createSimulationModel [
 		yourself
 ]
 
+{ #category : #accessing }
+WDESAbstractUniverse >> defaultCameraFarDistance [
+	^ defaultCameraFarDistance
+]
+
+{ #category : #accessing }
+WDESAbstractUniverse >> defaultCameraFarDistance: anObject [
+	defaultCameraFarDistance := anObject
+]
+
+{ #category : #accessing }
+WDESAbstractUniverse >> defaultCameraNearDistance [
+	^ defaultCameraNearDistance
+]
+
+{ #category : #accessing }
+WDESAbstractUniverse >> defaultCameraNearDistance: anObject [
+	defaultCameraNearDistance := anObject
+]
+
 { #category : #accesing }
 WDESAbstractUniverse >> engine [
 	^ engine
@@ -96,6 +118,13 @@ WDESAbstractUniverse >> gameLogic: anObject [
 { #category : #'as yet unclassified' }
 WDESAbstractUniverse >> globalTransform [
 	^ WMReversibleAffineTransformF identity
+]
+
+{ #category : #initialization }
+WDESAbstractUniverse >> initialize [
+	super initialize.
+	defaultCameraNearDistance := 0.01.
+	defaultCameraFarDistance := 1000.0.
 ]
 
 { #category : #initialization }

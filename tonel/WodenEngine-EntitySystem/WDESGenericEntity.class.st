@@ -5,10 +5,33 @@ Class {
 		'typeName',
 		'transform',
 		'sceneNode',
-		'physicsWorldObject'
+		'physicsWorldObject',
+		'mass'
 	],
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
+
+{ #category : #building }
+WDESGenericEntity >> addComponentWithCollisionShape: collisionShape [
+	mass ~= 0.0 ifTrue: [ 
+		self addComponent: (WDESRigidBodyCollisionShape new
+			collisionShape: collisionShape)
+	] ifFalse: [ 
+		self addComponent: (WDESStaticCollisionObject new
+			collisionShape: collisionShape)
+	].
+
+
+]
+
+{ #category : #building }
+WDESGenericEntity >> addDirectionalLightWith: aBlock [
+	| lightComponent |
+	lightComponent := WDESDirectionalLightSourceSceneNodeComponent new.
+	aBlock value: lightComponent.
+	self addComponent: lightComponent.
+	^ lightComponent
+]
 
 { #category : #building }
 WDESGenericEntity >> addPlayerStartPointAt: position [
@@ -36,6 +59,55 @@ WDESGenericEntity >> addPointLightAt: position with: aBlock [
 ]
 
 { #category : #building }
+WDESGenericEntity >> addRigidBodyAt: position with: aBlock [
+	| entity |
+	entity := WDESGenericEntity new
+		mass: 1.0;
+		transform: (WMReversibleAffineTransformF identity translation: position).
+	self addChild: entity.
+	aBlock value: entity.
+	^ entity
+]
+
+{ #category : #building }
+WDESGenericEntity >> addSkyBoxWithTexture: aTexture [
+	| component |
+	component := WDESTexturedSkyboxComponent new texture: aTexture.
+	self addComponent: component.
+	^ component
+]
+
+{ #category : #building }
+WDESGenericEntity >> addWaterVolumeAt: position with: aBlock [
+	| entity |
+	entity := WDESWaterVolumeEntity new
+		transform: (WMReversibleAffineTransformF identity translation: position).
+	self addChild: entity.
+	aBlock value: entity.
+	^ entity
+]
+
+{ #category : #physics }
+WDESGenericEntity >> addedToPhysicsWorld: physicsWorld [
+	super addedToPhysicsWorld: physicsWorld.
+	physicsWorldObject ifNotNil: [ physicsWorldObject addToPhysicsWorld: physicsWorld ]
+]
+
+{ #category : #physics }
+WDESGenericEntity >> applyCollisionShapeToRigidBody: collisionShapeComponent [
+	physicsWorldObject ifNotNil: [ 
+		self physicsWorld ifNotNil: [ :physicsWorld | physicsWorldObject removeFromPhysicsWorld: physicsWorld ]
+	].
+
+	physicsWorldObject := WDPhyRigidBody new
+		mass: mass;
+		sceneNode: self;
+		shape: collisionShapeComponent collisionShape;
+		yourself.
+	self physicsWorld ifNotNil: [ :physicsWorld | physicsWorldObject addToPhysicsWorld: physicsWorld ]
+]
+
+{ #category : #building }
 WDESGenericEntity >> buildGenericMeshWith: aBlock [
 	| builder renderable component |
 	builder := WDCComplexGenericMeshBuilder for: self engine.
@@ -46,18 +118,56 @@ WDESGenericEntity >> buildGenericMeshWith: aBlock [
 	self addComponent: component.
 	
 	builder collisionShape ifNotNil: [ :collisionShape |
-		self addComponent: (WDESStaticCollisionObject new
-			collisionShape: collisionShape)
+		self addComponentWithCollisionShape: collisionShape
 	].
 	
 	^ component
 	
 ]
 
+{ #category : #building }
+WDESGenericEntity >> buildTerrainMeshWith: aBlock [
+	| builder renderable component |
+	builder := WDCTerrainMeshBuilder for: self engine.
+	aBlock value: builder.
+	renderable := builder mesh.
+	
+	component := WDESStaticRenderableSceneNodeComponent new renderable: renderable.
+	self addComponent: component.
+	
+	builder collisionShape ifNotNil: [ :collisionShape |
+		self addComponentWithCollisionShape: collisionShape
+	].
+	
+	^ component
+	
+]
+
+{ #category : #directions }
+WDESGenericEntity >> forwardDirection [
+	^ transform transformVector3: (WMVector3F z: 1.0)
+]
+
 { #category : #initialization }
 WDESGenericEntity >> initialize [
 	super initialize.
 	transform := WMReversibleAffineTransformF identity.
+	mass := 0.0.
+]
+
+{ #category : #accessing }
+WDESGenericEntity >> mass [
+	^ mass
+]
+
+{ #category : #accessing }
+WDESGenericEntity >> mass: anObject [
+	mass := anObject
+]
+
+{ #category : #physics }
+WDESGenericEntity >> onStateChangeDo: aBlock [
+	"This is ignored."
 ]
 
 { #category : #accessing }
@@ -68,6 +178,13 @@ WDESGenericEntity >> physicsWorldObject [
 { #category : #accessing }
 WDESGenericEntity >> physicsWorldObject: anObject [
 	physicsWorldObject := anObject
+]
+
+{ #category : #physics }
+WDESGenericEntity >> removedFromPhysicsWorld: physicsWorld [
+	physicsWorldObject ifNotNil: [ physicsWorldObject removeFromPhysicsWorld: physicsWorld ].
+	super removedFromPhysicsWorld: physicsWorld.
+
 ]
 
 { #category : #accessing }

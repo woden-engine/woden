@@ -15,6 +15,11 @@ WDESComponent >> addedToPhysicsWorld: physicsWorld [
 WDESComponent >> addedToScene: scene [
 ]
 
+{ #category : #accessing }
+WDESComponent >> engine [
+	^ ownerEntity engine
+]
+
 { #category : #testing }
 WDESComponent >> isBehaviorComponent [
 	^ false

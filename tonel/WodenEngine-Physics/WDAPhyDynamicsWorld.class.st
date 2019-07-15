@@ -30,6 +30,7 @@ WDAPhyDynamicsWorld >> addGhostObject: ghostObject [
 { #category : #adding }
 WDAPhyDynamicsWorld >> addRigidBody: rigidBody [
 	| rigidBodyHandle |
+	(rigidBodies includes: rigidBody) ifTrue: [ ^ self ].
 	rigidBodyHandle := physicsEngine validateRigidBodyHandle: rigidBody.
 	handle addRigidBody: rigidBodyHandle first.
 	rigidBody mass = 0.0 ifTrue: [
