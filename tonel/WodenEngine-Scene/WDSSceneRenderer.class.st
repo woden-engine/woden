@@ -59,7 +59,7 @@ WDSSceneRenderer >> endPreparingRendering [
 
 { #category : #initialization }
 WDSSceneRenderer >> ensureCameraStatesFor: requiredNumberOfCameras [
-	| currentNumberOfCameras missingNumberOfCameras |
+	| currentNumberOfCameras missingNumberOfCameras postProcessingStates postProcessingStatePool |
 	cameraStates ifNil: [ 
 		cameraStates := (1 to: self cameraStateFramebufferingCount) collect: [ :f | #() ].
 	].
@@ -67,10 +67,17 @@ WDSSceneRenderer >> ensureCameraStatesFor: requiredNumberOfCameras [
 	currentNumberOfCameras := cameraStates first size.
 	missingNumberOfCameras := requiredNumberOfCameras - currentNumberOfCameras.
 	
-	missingNumberOfCameras > 0 ifTrue: [ 
+	missingNumberOfCameras > 0 ifTrue: [
+		postProcessingStatePool := engine resourceCache streamingStorageBufferPoolFor: WTCameraPostProcessingState.
+		postProcessingStates := (1 to: missingNumberOfCameras) collect: [ :i |
+			postProcessingStatePool allocate.
+		].
+	
 		cameraStates := cameraStates collect: [ :oldFrameStates |
 			oldFrameStates , ((1 to: missingNumberOfCameras) collect: [ :i |
-				WDSSceneRendererCameraLayersStates for: engine
+				(WDSSceneRendererCameraLayersStates for: engine)
+					postProcessingState: (postProcessingStates at: i);
+					yourself
 			])
 		].
 	].

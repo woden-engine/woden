@@ -67,6 +67,21 @@ WDSLightedSceneRenderer >> applyDebugRenderShadowMapViewport [
 	gpuCameraState atomicSetValue: cameraState.
 ]
 
+{ #category : #rendering }
+WDSLightedSceneRenderer >> computeSceneAutoExposureFor: renderingViewport [
+	stateTracker reset.
+	renderingViewport sceneLuminanceComputationPasses do: [ :pass |
+		stateTracker applyFullScreenPass: pass
+	].
+
+	stateTracker 
+		shaderSignature: self shaderSignature;
+		useComputeShaderResources: self shaderSignature defaultSamplers;
+		useComputeShaderResources: renderingViewport cameraLayersStates foregroundLayerState shaderBindings.
+	renderingViewport hdrToneMappingFullscreenPass computeAutoExposureWith: stateTracker.
+
+]
+
 { #category : #'ambient occlusion' }
 WDSLightedSceneRenderer >> computeScreenSpaceAmbientOcclusionFor: renderingViewport [
 	| aoShaderShaderSignature |
@@ -274,12 +289,22 @@ WDSLightedSceneRenderer >> renderViewport: renderingViewport index: viewportInde
 	camera isLdrToneMapping ifFalse: [ 
 		stateTracker
 			endRenderPass.
+
+		renderingViewport hdrToneMappingFullscreenPass
+			toneMappingOperator: camera toneMappingOperatorShaderName.
+
+		"Compute the scene auto exposure parameters."
+		camera hasAutoExposure ifTrue: [
+			self computeSceneAutoExposureFor: renderingViewport.
+		].
 		
 		"Third Pass: HDR -> LDR tone mapping. And LDR overlay rendering."
-		renderingViewport hdrToneMappingFullscreenPass toneMappingOperator: camera toneMappingOperator.
-		
 		stateTracker
 			beginRenderPass: renderingViewport validSceneLDRRenderPass renderTarget: renderingViewport sceneLDRRenderTarget bounds: viewport bounds;
+			shaderSignature: self shaderSignature;
+			useShaderResources: self shaderSignature defaultSamplers;
+			useShaderResources: renderingViewport globalLightingStateShaderBindings;
+			useShaderResources: renderingViewport cameraLayersStates foregroundLayerState shaderBindings;
 			depthEnabled: false;
 			depthWriteMask: false;
 			applyFullScreenPass: renderingViewport hdrToneMappingFullscreenPass.

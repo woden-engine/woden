@@ -112,6 +112,11 @@ WDSAbstractSceneRendererViewport >> scene [
 	^ viewport camera scene
 ]
 
+{ #category : #'as yet unclassified' }
+WDSAbstractSceneRendererViewport >> sceneLuminanceComputationPasses [
+	^ #()
+]
+
 { #category : #asserting }
 WDSAbstractSceneRendererViewport >> shouldRenderObject: aNode [
 	^ viewport filter value: aNode

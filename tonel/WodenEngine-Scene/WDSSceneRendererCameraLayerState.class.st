@@ -25,6 +25,11 @@ WDSSceneRendererCameraLayerState >> initializeWithEngine: anEngine [
 	shaderBindings bind: 0 uniformBufferElement: shaderBindingsBufferElement
 ]
 
+{ #category : #initialization }
+WDSSceneRendererCameraLayerState >> postProcessingState: postProcessingState [
+	shaderBindings bind: 1 storageBufferElement: postProcessingState
+]
+
 { #category : #accessing }
 WDSSceneRendererCameraLayerState >> shaderBindings [
 	^ shaderBindings

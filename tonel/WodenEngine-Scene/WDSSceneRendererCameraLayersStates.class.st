@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'backgroundLayerState',
 		'foregroundLayerState',
-		'normalLayerState'
+		'normalLayerState',
+		'postProcessingState'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -37,6 +38,14 @@ WDSSceneRendererCameraLayersStates >> initializeWithEngine: anEngine [
 { #category : #accessing }
 WDSSceneRendererCameraLayersStates >> normalLayerState [
 	^ normalLayerState
+]
+
+{ #category : #initialization }
+WDSSceneRendererCameraLayersStates >> postProcessingState: aPostProcessingState [
+	postProcessingState := aPostProcessingState.
+	backgroundLayerState postProcessingState: postProcessingState.
+	normalLayerState postProcessingState: postProcessingState.
+	foregroundLayerState postProcessingState: postProcessingState.
 ]
 
 { #category : #'as yet unclassified' }

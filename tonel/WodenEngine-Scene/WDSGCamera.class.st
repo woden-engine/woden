@@ -15,7 +15,8 @@ Class {
 		'projectionInvertedY',
 		'isNotControlledByTheUser',
 		'exposure',
-		'toneMappingOperator'
+		'toneMappingOperator',
+		'hasAutoExposure'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
@@ -114,6 +115,16 @@ WDSGCamera >> globalFrustum [
 	^ frustum transformedWith: self globalTransform
 ]
 
+{ #category : #accessing }
+WDSGCamera >> hasAutoExposure [
+	^ hasAutoExposure
+]
+
+{ #category : #accessing }
+WDSGCamera >> hasAutoExposure: anObject [
+	hasAutoExposure := anObject
+]
+
 { #category : #initialization }
 WDSGCamera >> initialize [
 	super initialize.
@@ -125,6 +136,7 @@ WDSGCamera >> initialize [
 	isNotControlledByTheUser := false.
 	frustum := WMFrustumF new.
 	exposure := 1.0.
+	hasAutoExposure := true.
 	toneMappingOperator := #linear.
 ]
 
@@ -135,6 +147,7 @@ WDSGCamera >> isCamera [
 
 { #category : #testing }
 WDSGCamera >> isLdrToneMapping [
+	hasAutoExposure ifTrue: [ ^ false ].
 	^ exposure == 1.0 and: [ toneMappingOperator == #linear ]
 ]
 
@@ -186,6 +199,12 @@ WDSGCamera >> toneMappingOperator [
 { #category : #accessing }
 WDSGCamera >> toneMappingOperator: anObject [
 	toneMappingOperator := anObject
+]
+
+{ #category : #accessing }
+WDSGCamera >> toneMappingOperatorShaderName [
+	hasAutoExposure ifTrue: [ ^ 'auto_' , toneMappingOperator ].
+	^ toneMappingOperator
 ]
 
 { #category : #'as yet unclassified' }

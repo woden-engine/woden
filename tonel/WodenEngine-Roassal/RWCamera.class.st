@@ -15,6 +15,8 @@ RWCamera >> accept: aVisitor [
 { #category : #initialization }
 RWCamera >> createSceneNode [
 	^ WDSGCamera new
+		hasAutoExposure: false;
+		yourself
 ]
 
 { #category : #accessing }

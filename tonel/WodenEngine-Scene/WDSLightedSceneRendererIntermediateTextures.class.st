@@ -17,7 +17,9 @@ Class {
 		'sceneHDRRenderTarget',
 		'sceneLDRColorTexture',
 		'sceneLDRRenderPass',
-		'sceneLDRRenderTarget'
+		'sceneLDRRenderTarget',
+		'sceneLuminanceComputationTextures',
+		'sceneLuminanceComputationPasses'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -48,6 +50,8 @@ WDSLightedSceneRendererIntermediateTextures >> applyToRenderingViewport: renderi
 		renderingViewport
 			ambientOcclusionTexture: engine resourceCache whiteTexture
 	].
+
+	renderingViewport sceneLuminanceComputationPasses: sceneLuminanceComputationPasses.
 
 	renderingViewport
 		sceneHDRRenderTarget: sceneHDRRenderTarget;
@@ -101,7 +105,8 @@ WDSLightedSceneRendererIntermediateTextures >> createMainRenderTargets [
 WDSLightedSceneRendererIntermediateTextures >> createRenderTargets [
 	self
 		createMainRenderTargets;
-		createSSAORenderTargets
+		createSSAORenderTargets;
+		createSceneLuminanceRenderTargets
 ]
 
 { #category : #'multi eye rendering' }
@@ -135,5 +140,31 @@ WDSLightedSceneRendererIntermediateTextures >> createSSAORenderTargets [
 		destinationRenderTarget: ambientOcclusionRenderTarget;
 		fragmentShader: (blurLibrary getFragmentStage: #vertical5);
 		yourself.
+
+]
+
+{ #category : #'multi eye rendering' }
+WDSLightedSceneRendererIntermediateTextures >> createSceneLuminanceRenderTargets [
+	| logLuminaceShader downsampleShader |
+	sceneLuminanceComputationTextures := #(256 128 64 32 16 8 4 2 1) collect: [ :size |
+		engine createRenderTargetColorTextureWithExtent: size@size sampleCount: 1 format: AGPU_TEXTURE_FORMAT_R16_FLOAT.
+	].
+
+	logLuminaceShader := engine resourceCache loadFragmentShader: 'shaders/composition/log-luminance.dastrel'.
+	downsampleShader := engine resourceCache loadFragmentShader: 'shaders/composition/downsample.dastrel'.
+	sceneLuminanceComputationPasses := sceneLuminanceComputationTextures collectWithIndex: [ :targetTexture :index |
+		engine newCompositionFullScreenPass
+			sourceTexture: 	(index = 1
+					ifTrue: [sceneHDRColorTexture]
+					ifFalse: [sceneLuminanceComputationTextures at: index - 1]);
+			destinationTexture: targetTexture;
+			fragmentShader: (index = 1
+					ifTrue: [logLuminaceShader]
+					ifFalse: [downsampleShader]);
+			yourself.
+	].
+
+	hdrToneMappingFullscreenPass sceneLuminanceTexture: sceneLuminanceComputationTextures last
+		
 
 ]

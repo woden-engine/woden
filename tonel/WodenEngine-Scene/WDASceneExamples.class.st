@@ -254,52 +254,7 @@ WDASceneExamples class >> example03Floor [
 ]
 
 { #category : #examples }
-WDASceneExamples class >> example04PoolHDR [
-	| model scene camera sunLight view  |
-	model := WDASampleSceneModel new.
-	scene := model newScene.
-	camera := model camera.
-	camera
-		farDistance: 100.0;
-		exponentialToneMapping;
-		exposure: 0.0006.
-	camera translateToX: 0.0 y: 1.0 z: -4.0.
-	scene backgroundColor: (Color cyan asWMVector4F * 1000.0).
-	camera inspect.
-	
-	self constructPoolSceneInto: scene.
-
-	"Add a light"
-	sunLight := WDSGLightSource new.
-	sunLight
-		directional;
-		castShadows: true;
-		intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 10000;
-		rotateDegreesOnX: -45;
-		translateToX: 0.0 y: 1.5 z: 2.5.
-
-	scene add: sunLight.
-
-	scene ambientLighting: sunLight intensity * 0.01.
-
-	"Add the sky box"
-	"meshBuilder := WDCGenericMeshBuilder for: engine.
-	meshBuilder
-		currentMaterial: skyMaterial;
-		addInteriorCubeWithWidth: 40.0 height: 40.0 depth: 40.0.
-
-	skyBox := WDSGSpatialObject new.
-	skyBox isOpaqueShadowCaster: false;
-		renderable: meshBuilder mesh.
-	scene add: skyBox."
-
-	view := WDAFPSSceneView allowingVR.
-	view cameraAngle: (WMVector3F y: Float pi).
-	model openWith: view.
-]
-
-{ #category : #examples }
-WDASceneExamples class >> example04PoolLDR [
+WDASceneExamples class >> example04Pool [
 	| model scene camera engine sunLight view skyTexture |
 	model := WDASampleSceneModel new.
 	scene := model newScene.

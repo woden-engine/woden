@@ -23,7 +23,8 @@ WDCSceneRenderingShaderSignature class >> signatureSpec: spec [
 		bank: #CameraState with: [ :bank |
 			bank
 				maxBindings: 1000;
-				uniform: #ObjectState
+				uniform: #ObjectState;
+				storage: #PostProcessingState
 		];
 		bank: #LightingState with: [ :bank |
 			bank
@@ -74,6 +75,7 @@ WDCSceneRenderingShaderSignature >> createHandleForDevice: device [
 		"CameraState"
 		beginBindingBank: 1000;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "ObjectState"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_STORAGE_BUFFER bindingPointCount: 1; "PostProcessingState"
 
 		"LightingState"
 		beginBindingBank: 1000;
@@ -176,7 +178,7 @@ WDCSceneRenderingShaderSignature >> defaultSamplers [
 
 { #category : #'generated shader signature methods' }
 WDCSceneRenderingShaderSignature >> newCameraState [
-	^ engine createShaderSignature: self resourceBinding: 1 elements: 1
+	^ engine createShaderSignature: self resourceBinding: 1 elements: 2
 ]
 
 { #category : #'generated shader signature methods' }

@@ -19,7 +19,8 @@ Class {
 		'ambientOcclusionVerticalBlurArguments',
 		'skyLighting',
 		'groundLighting',
-		'sunDirection'
+		'sunDirection',
+		'sceneLuminanceComputationPasses'
 	],
 	#category : #'WodenEngine-Scene-Rendering'
 }
@@ -130,16 +131,6 @@ WDSLightedSceneRendererViewport >> lightRenderingStates: anObject [
 ]
 
 { #category : #accessing }
-WDSLightedSceneRendererViewport >> lights [
-	^ lights
-]
-
-{ #category : #accessing }
-WDSLightedSceneRendererViewport >> lights: anObject [
-	lights := anObject
-]
-
-{ #category : #accessing }
 WDSLightedSceneRendererViewport >> sceneHDRRenderPass [
 	^ hdrSceneRenderPass
 ]
@@ -177,6 +168,16 @@ WDSLightedSceneRendererViewport >> sceneLDRRenderTarget [
 { #category : #accessing }
 WDSLightedSceneRendererViewport >> sceneLDRRenderTarget: anObject [
 	ldrSceneRenderTarget := anObject
+]
+
+{ #category : #'as yet unclassified' }
+WDSLightedSceneRendererViewport >> sceneLuminanceComputationPasses [
+	^ sceneLuminanceComputationPasses
+]
+
+{ #category : #'as yet unclassified' }
+WDSLightedSceneRendererViewport >> sceneLuminanceComputationPasses: anArray [
+	sceneLuminanceComputationPasses := anArray
 ]
 
 { #category : #accessing }
