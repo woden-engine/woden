@@ -23,7 +23,8 @@ WDCAmbientOcclusionShaderSignature class >> signatureSpec: spec [
 		bank: #CameraState with: [ :bank |
 			bank
 				maxBindings: 1000;
-				uniform: #ObjectState count: 1
+				uniform: #ObjectState count: 1;
+				storage: #PostProcessingState count: 1
 		];
 		bank: #ComputeSources with: [ :bank |
 			bank
@@ -51,6 +52,7 @@ WDCAmbientOcclusionShaderSignature >> createHandleForDevice: device [
 		"CameraState"
 		beginBindingBank: 1000;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_UNIFORM_BUFFER bindingPointCount: 1; "ObjectState"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_STORAGE_BUFFER bindingPointCount: 1; "PostProcessingState"
 
 		"ComputeSources"
 		beginBindingBank: 1000;
@@ -97,7 +99,7 @@ WDCAmbientOcclusionShaderSignature >> defaultSamplers [
 
 { #category : #'generated shader signature methods' }
 WDCAmbientOcclusionShaderSignature >> newCameraState [
-	^ engine createShaderSignature: self resourceBinding: 1 elements: 1
+	^ engine createShaderSignature: self resourceBinding: 1 elements: 2
 ]
 
 { #category : #'generated shader signature methods' }
