@@ -391,8 +391,8 @@ WMBox3D category: 'testing' methods: {
 ].
 
 :[includesPoint: <WMVector3> point -> BooleanBit.
-	^ (min x <= point x and: [point x <= max x]) or: [
-	  (min y <= point y and: [point y <= max y]) or: [
+	^ (min x <= point x and: [point x <= max x]) and: [
+	  (min y <= point y and: [point y <= max y]) and: [
 	  (min z <= point z and: [point z <= max z])]]
 ].
 

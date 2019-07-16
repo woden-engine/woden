@@ -12,6 +12,7 @@ shader_signature AmbientOcclusion
     descriptor_set(max_bindings = 1000) CameraState
     {
         ObjectState : uniform;
+		PostProcessingState : buffer;
     }
 
     descriptor_set(max_bindings = 1000) ComputeBuffers
