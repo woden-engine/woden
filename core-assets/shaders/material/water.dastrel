@@ -10,6 +10,7 @@ import lighting.functions;
 
 import vertex.genericLayout;
 import texture.functions;
+import math.constants;
 
 struct WaterHarmonic
 {
@@ -59,13 +60,12 @@ function evalWaterWaves(position: float2, lod: float) -> float3
     // Add the harmonics.
     let height = 0.0f;
     let tangentialContributions = float2(0.0f, 0.0f);
-	let lodAttenuation = 1.0f;//max(0.0f, 1.0f - fabs(lod)/20.0f);
     for(let i = 0; i < 5; i += 1)
     {
         // Fetch the harmonic parameters
         // Fetch the fields manually as a work-around for a metal bug.
         let centerOrDirection = harmonics[i].centerOrDirection;
-        let amplitude = harmonics[i].amplitude*lodAttenuation;
+        let amplitude = harmonics[i].amplitude;
         let frequency = harmonics[i].frequency;
         let isRadial = harmonics[i].isRadial;
 
@@ -84,16 +84,18 @@ function evalWaterWaves(position: float2, lod: float) -> float3
         }
 
         // Compute the propagation speed factor.
-        let omega = 6.283185307179586f * frequency;
+        let omega = TwoPi * frequency;
         let kappa = omega / propagationSpeed;
-		//let wavelength = omega * propagationSpeed;
+		let wavelength = fabs(propagationSpeed / frequency);
+		
+		let lodAttenuation = 1.0f - smoothstep(wavelength*0.125f, wavelength*0.5f, lod);
 
         // Compute the contribution by the harmonic.
         let phase = kappa*distance + omega*currentTime;
-        height += amplitude * sin(phase);
+        height += lodAttenuation*amplitude * sin(phase);
 
         // Add the tangential factor
-        tangentialContributions += amplitude*kappa*cos(phase)*distanceDerivatives;
+        tangentialContributions += lodAttenuation*amplitude*kappa*cos(phase)*distanceDerivatives;
     }
 
     return float3(height, tangentialContributions);
@@ -136,7 +138,6 @@ semantic WaterVertexOutput {
     out(1) surfaceCoordinate: float2;
     out(2) texcoord: float2;
     out(3) color: float4;
-    out(4) lod: float;
 }
 
 semantic WaterFragmentInput {
@@ -144,7 +145,6 @@ semantic WaterFragmentInput {
     in(1) surfaceCoordinate: float2;
     in(2) texcoord: float2;
     in(3) color: float4;
-    in(4) lod: float;
 }
 
 //==============================================================================
@@ -159,8 +159,7 @@ code_block(vertex) vertex
     let position = float3(GenericVertexLayout.position.x, 0.0f, GenericVertexLayout.position.y)
 					 + clipMapOffsetWithPeriod(clipMapPeriod);
     let surfacePosition = float2(position.x, position.z);
-
-    let lod = transformPositionToView(position).z;
+	let lod = 0.0f;
     let texcoord = surfacePosition;
 
     // Eval the water waves.
@@ -174,7 +173,6 @@ code_block(vertex) vertex
     WaterVertexOutput.color = currentObjectInstanceColor();
     WaterVertexOutput.surfaceCoordinate = surfacePosition;
     WaterVertexOutput.texcoord = surfacePosition*textureScale + textureOffset;
-    WaterVertexOutput.lod = lod;
     let position4 = transformPositionToView(position);
 
     WaterVertexOutput.position =  position4.xyz;
@@ -193,8 +191,10 @@ code_block(fragment) forward_color
     let normalMapValue = decodeNormalTexel(normalSampler.sample(normalTexture, texcoord));
 
     let surfacePosition = WaterFragmentInput.surfaceCoordinate;
-    let N = transformNormalToView(evalWaterNormalMapValue(surfacePosition, normalMapValue, WaterFragmentInput.lod));
-	let ON = evalWaterNormalValue(surfacePosition, WaterFragmentInput.lod);
+	let surfaceDelta = fwidth(surfacePosition);
+	let lod = surfaceDelta.x + surfaceDelta.y;
+    let N = transformNormalToView(evalWaterNormalMapValue(surfacePosition, normalMapValue, lod));
+	//let ON = evalWaterNormalValue(surfacePosition, lod);
     //let N = transformNormalToView(ON);
     let V = normalize(-WaterFragmentInput.position);
 
@@ -207,4 +207,5 @@ code_block(fragment) forward_color
         fresnel: MaterialState.fresnel smoothness: MaterialState.smoothness
         normal: N surfaceNormal: N viewVector: V position: WaterFragmentInput.position;
 	//FragmentStage.colorOutput0 = float4(N, 1.0f);
+	//FragmentStage.colorOutput0 = float4(lod*0.04f, 0.0f, 0.0f, 1.0f);
 }
