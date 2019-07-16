@@ -15,3 +15,11 @@ Structure <<< #WTCameraState
 	};
 	package: 'WodenEngine-Structures-Core-Camera';
 	yourself.
+
+
+Structure <<< #WTCameraPostProcessingState
+	slots: {
+		#currentSceneLuminance => Float32.
+	};
+	package: 'WodenEngine-Structures-Core-Camera';
+	yourself.

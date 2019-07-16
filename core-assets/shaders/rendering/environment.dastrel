@@ -38,6 +38,11 @@ uniform(binding=CameraState.ObjectState) CameraState
 	padding2: float2;
 }
 
+buffer(binding=CameraState.PostProcessingState) PostProcessingState
+{
+	currentAverageLuminance: float;
+}
+
 uniform(binding=LightingState.GlobalLightingState) GlobalLightingState
 {
     // Hemisphere lighting

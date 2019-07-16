@@ -8,6 +8,7 @@ shader_signature SceneRendering
     descriptor_set(max_bindings = 1000000) CameraState
     {
         ObjectState : uniform;
+		PostProcessingState: buffer;
     }
 
     descriptor_set(max_bindings = 100) LightingState

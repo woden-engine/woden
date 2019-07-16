@@ -5,6 +5,29 @@ import rendering.environment;
 import fragment.screenQuad;
 
 uniform(binding = MaterialState.Textures) hdrColorTexture : texture2D;
+uniform(binding = MaterialState.Textures + 1) sceneAverageLuminanceTexture : texture2D;
+
+code_block(compute) autoLuminanceFilter
+{
+	let sceneAverageLuminance = albedoSampler.sampleLod(sceneAverageLuminanceTexture, float2(0.5f, 0.5f), 0.0f).r;
+	let currentAverageLuminance = PostProcessingState.currentAverageLuminance;
+
+	// https://placeholderart.wordpress.com/2014/12/15/implementing-a-physically-based-camera-automatic-exposure/
+	let newAverageLuminance = currentAverageLuminance + (sceneAverageLuminance - currentAverageLuminance)*(1.0f - exp(-1.0f/60.0f));
+	PostProcessingState.currentAverageLuminance = newAverageLuminance;
+}
+
+code_block(fragment) auto_linear
+{
+	let hdrTexel = albedoSampler.sample(hdrColorTexture, FragmentInput.texcoord);
+
+	let luma = exp2(PostProcessingState.currentAverageLuminance) - 1.0f;
+	let exposure = 0.5f / (max(0.0001f, luma));
+	let hdrColor = hdrTexel.rgb;
+	let ldrColor = exposure*hdrColor;
+	
+	FragmentStage.colorOutput0 = float4(ldrColor, hdrTexel.a);
+}
 
 code_block(fragment) linear
 {

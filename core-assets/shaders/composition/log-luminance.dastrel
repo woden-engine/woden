@@ -1,0 +1,18 @@
+import composition.shaderSignature;
+import composition.environment;
+import fragment.stage;
+import fragment.screenQuad;
+
+function colorToLuminance(color: float3) -> float
+{
+	// https://en.wikipedia.org/wiki/Relative_luminance
+	return dot(color, float3(0.2126f, 0.7152f, 0.0722f));
+}
+
+code_block(fragment) main
+{
+    let texel = mainSampler.sample(sourceTexture, FragmentInput.texcoord).rgb;
+	let luma = colorToLuminance(texel);
+
+    FragmentStage.colorOutput0 = float4(log2(1.0f + luma), 0.0f, 0.0f, 1.0f);
+}

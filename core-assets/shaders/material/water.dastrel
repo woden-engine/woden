@@ -115,7 +115,7 @@ function evalWaterNormalValue(position: float2, lod: float) -> float3
     let dx = derivatives.x;
     let dy = derivatives.y;
 
-	return normalize(float3(-dx, 1.0f, dy));
+	return normalize(float3(-dx, 1.0f, -dy));
 }
 
 function evalWaterNormalMapValue(position: float2, tangentNormal: float3, lod: float) -> float3
@@ -123,7 +123,7 @@ function evalWaterNormalMapValue(position: float2, tangentNormal: float3, lod: f
 	let upVector = float3(0.0f, 0.0f, -1.0f);
 	let N = evalWaterNormalValue(position, lod);
 	let T = cross(upVector, N);
-	let B = cross(N, T);
+	let B = -cross(N, T);
 	
 	return normalize(T*tangentNormal.x + B*tangentNormal.y + N*tangentNormal.z);
 }
@@ -158,7 +158,7 @@ code_block(vertex) vertex
     // Fetch the position and texcoord.
     let position = float3(GenericVertexLayout.position.x, 0.0f, GenericVertexLayout.position.y)
 					 + clipMapOffsetWithPeriod(clipMapPeriod);
-    let surfacePosition = float2(position.x, -position.z);
+    let surfacePosition = float2(position.x, position.z);
 
     let lod = transformPositionToView(position).z;
     let texcoord = surfacePosition;
@@ -189,11 +189,12 @@ code_block(fragment) forward_color
 {
     let texcoord = WaterFragmentInput.texcoord;
     let albedo = WaterFragmentInput.color*MaterialState.albedo*albedoSampler.sample(albedoTexture, texcoord);
+	//albedo = float4(albedo.xyz, 1.0f);
     let normalMapValue = decodeNormalTexel(normalSampler.sample(normalTexture, texcoord));
 
     let surfacePosition = WaterFragmentInput.surfaceCoordinate;
     let N = transformNormalToView(evalWaterNormalMapValue(surfacePosition, normalMapValue, WaterFragmentInput.lod));
-	//let ON = evalWaterNormalValue(surfacePosition, WaterFragmentInput.lod);
+	let ON = evalWaterNormalValue(surfacePosition, WaterFragmentInput.lod);
     //let N = transformNormalToView(ON);
     let V = normalize(-WaterFragmentInput.position);
 
@@ -205,5 +206,5 @@ code_block(fragment) forward_color
         emission: 0.0f albedo: albedo occlusion: 1.0f
         fresnel: MaterialState.fresnel smoothness: MaterialState.smoothness
         normal: N surfaceNormal: N viewVector: V position: WaterFragmentInput.position;
-	//FragmentStage.colorOutput0 = float4(ON, 1.0f);
+	//FragmentStage.colorOutput0 = float4(N, 1.0f);
 }

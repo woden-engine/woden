@@ -1,0 +1,9 @@
+import composition.shaderSignature;
+import composition.environment;
+import fragment.stage;
+import fragment.screenQuad;
+
+code_block(fragment) main
+{
+    FragmentStage.colorOutput0 = mainSampler.sample(sourceTexture, FragmentInput.texcoord);
+}
