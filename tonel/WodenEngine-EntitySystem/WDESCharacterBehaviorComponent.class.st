@@ -159,6 +159,7 @@ WDESCharacterBehaviorComponent >> prePhysicsTick: delta [
 	self isCurrentlyWalking ifTrue: [ 
 		bodyOrientation := WMMatrix3F yrot: headAngle y.
 		headOrientation := WMMatrix3F xrot: headAngle x.
+		linearAcceleration y: 0.0.
 	] ifFalse: [ 
 		bodyOrientation := (WMMatrix3F yrot: headAngle y) * (WMMatrix3F xrot: headAngle x).
 		headOrientation := WMMatrix3F identity.
