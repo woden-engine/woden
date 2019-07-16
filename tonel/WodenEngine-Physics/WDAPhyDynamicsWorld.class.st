@@ -8,7 +8,8 @@ Class {
 		'onSimulation',
 		'kinematicObjects',
 		'characterControllers',
-		'simulatedKinematicObjects'
+		'simulatedKinematicObjects',
+		'sensorTriggerGhosts'
 	],
 	#pools : [
 		'APHYConstants'
@@ -24,7 +25,12 @@ WDAPhyDynamicsWorld >> addCharacterController: characterController [
 
 { #category : #adding }
 WDAPhyDynamicsWorld >> addGhostObject: ghostObject [
-	handle addCollisionObject: (physicsEngine validateGhostObjectHandle: ghostObject) collision_filter_group: 1 collision_filter_mask: -1
+	handle addCollisionObject: (physicsEngine validateGhostObjectHandle: ghostObject) collision_filter_group: ghostObject collisionFilterGroup collision_filter_mask: ghostObject collisionFilterMask.
+	
+	ghostObject isSensorOrTrigger ifTrue: [
+		sensorTriggerGhosts add: ghostObject
+	].
+
 ]
 
 { #category : #adding }
@@ -32,7 +38,8 @@ WDAPhyDynamicsWorld >> addRigidBody: rigidBody [
 	| rigidBodyHandle |
 	(rigidBodies includes: rigidBody) ifTrue: [ ^ self ].
 	rigidBodyHandle := physicsEngine validateRigidBodyHandle: rigidBody.
-	handle addRigidBody: rigidBodyHandle first.
+	handle addRigidBodyWithFilter: rigidBodyHandle
+		first collision_filter_group: rigidBody collisionFilterGroup collision_filter_mask: rigidBody collisionFilterMask.
 	rigidBody mass = 0.0 ifTrue: [
 		kinematicObjects add: rigidBody.
 		rigidBody hasKinematicSimulation ifTrue: [ 
@@ -89,6 +96,7 @@ WDAPhyDynamicsWorld >> initialize [
 	kinematicObjects := OrderedCollection new.
 	simulatedKinematicObjects := OrderedCollection new.
 	characterControllers := OrderedCollection new.
+	sensorTriggerGhosts := OrderedCollection new.
 	onSimulation := false.
 ]
 
@@ -104,6 +112,10 @@ WDAPhyDynamicsWorld >> physicsEngine: anObject [
 
 { #category : #rendering }
 WDAPhyDynamicsWorld >> postSimulateTime: delta [
+	sensorTriggerGhosts do: [ :sensor |
+		self processSensorGhost: sensor
+	].
+
 	characterControllers do: [ :controller | controller postSimulateTime: delta ].
 	simulatedKinematicObjects do: [ :controller | controller postSimulateTime: delta ].
 ]
@@ -112,6 +124,23 @@ WDAPhyDynamicsWorld >> postSimulateTime: delta [
 WDAPhyDynamicsWorld >> preSimulateTime: delta [
 	simulatedKinematicObjects do: [ :controller | controller preSimulateTime: delta ].
 	characterControllers do: [ :controller | controller preSimulateTime: delta ].
+]
+
+{ #category : #rendering }
+WDAPhyDynamicsWorld >> processSensorGhost: sensor [
+	| overlappingObjectCount overlappingObjectHandle overlappingObject sensorSceneNode |
+	overlappingObjectCount := sensor handle getOverlappingObjectCount.
+	sensorSceneNode := sensor sceneNode.
+	sensorSceneNode ifNil: [ ^ self ].
+	
+	0 to: overlappingObjectCount - 1 do: [ :i |
+		overlappingObjectHandle := sensor handle getOverlappingObject: i.
+		overlappingObject := physicsEngine getObjectFromHandle: overlappingObjectHandle.
+		overlappingObject ifNotNil: [ 
+			sensorSceneNode onOverlapWithCollisionObject: overlappingObject
+		].
+	].
+
 ]
 
 { #category : #adding }

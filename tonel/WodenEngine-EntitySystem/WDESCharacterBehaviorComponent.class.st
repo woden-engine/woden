@@ -1,6 +1,8 @@
 Class {
 	#name : #WDESCharacterBehaviorComponent,
 	#superclass : #WDESBehaviorComponent,
+	#traits : 'TEnvironmentSensitiveBehavior',
+	#classTraits : 'TEnvironmentSensitiveBehavior classTrait',
 	#instVars : [
 		'headAngle',
 		'linearVelocity',
@@ -13,7 +15,8 @@ Class {
 		'bodyOrientation',
 		'headAngularVelocity',
 		'walkingInGround',
-		'running'
+		'running',
+		'isUnderwater'
 	],
 	#category : #'WodenEngine-EntitySystem-Behaviors'
 }
@@ -32,7 +35,18 @@ WDESCharacterBehaviorComponent class >> headPosition [
 WDESCharacterBehaviorComponent >> addedToPhysicsWorld: physicsWorld [
 	physicsWorld addGhostObject: self validGhostObject.
 	physicsWorld addCharacterController: self validPhysicsCharacterController.
+	ghostObject sceneNode: ownerEntity.
 	
+]
+
+{ #category : #testing }
+WDESCharacterBehaviorComponent >> canFly [
+	^ false
+]
+
+{ #category : #testing }
+WDESCharacterBehaviorComponent >> canSwim [
+	^ true
 ]
 
 { #category : #initialization }
@@ -43,7 +57,9 @@ WDESCharacterBehaviorComponent >> createCollisionShape [
 { #category : #initialization }
 WDESCharacterBehaviorComponent >> createGhostObject [
 	ghostObject := WDPhyGhostObjectWithPairCache new.
-	ghostObject shape: self validCollisionShape
+	ghostObject
+		makeCharacterCollisionObject;
+		shape: self validCollisionShape
 ]
 
 { #category : #initialization }
@@ -84,11 +100,19 @@ WDESCharacterBehaviorComponent >> initialize [
 	linearAcceleration := WMVector3F zero.
 	walkingInGround := true.
 	running := false.
+	isUnderwater := false.
 ]
 
 { #category : #testing }
 WDESCharacterBehaviorComponent >> isCharacterBehaviorComponent [
 	^ true
+]
+
+{ #category : #simulation }
+WDESCharacterBehaviorComponent >> isCurrentlyWalking [
+	(self canSwim and: [isUnderwater]) ifTrue: [ ^ false ].
+	
+	^ walkingInGround
 ]
 
 { #category : #testing }
@@ -99,6 +123,11 @@ WDESCharacterBehaviorComponent >> isTickingComponent [
 { #category : #actions }
 WDESCharacterBehaviorComponent >> jump [
 	physicsCharacterController jump
+]
+
+{ #category : #events }
+WDESCharacterBehaviorComponent >> onUnderwaterVolume: underwaterVolumeComponent [
+	isUnderwater := true.
 ]
 
 { #category : #simulation }
@@ -117,12 +146,12 @@ WDESCharacterBehaviorComponent >> postPhysicsTick: delta [
 WDESCharacterBehaviorComponent >> prePhysicsTick: delta [
 	| accel speedMultiplier |
 	headAngle := headAngle + (headAngularVelocity * delta).
-		
-	walkingInGround ifTrue: [ 
+	
+	self isCurrentlyWalking ifTrue: [ 
 		bodyOrientation := WMMatrix3F yrot: headAngle y.
 		headOrientation := WMMatrix3F xrot: headAngle x.
 	] ifFalse: [ 
-		bodyOrientation := (WMMatrix3F yrot: headAngle y) * WMMatrix3F xrot: headAngle x.
+		bodyOrientation := (WMMatrix3F yrot: headAngle y) * (WMMatrix3F xrot: headAngle x).
 		headOrientation := WMMatrix3F identity.
 	].
 
@@ -135,6 +164,8 @@ WDESCharacterBehaviorComponent >> prePhysicsTick: delta [
 	ghostObject position: ownerEntity transform translation.
 	physicsCharacterController linearVelocity: linearVelocity.
 
+	"If we are underwater, then before the postPhysicsTick, this will be set to true."
+	isUnderwater := false
 ]
 
 { #category : #notifications }

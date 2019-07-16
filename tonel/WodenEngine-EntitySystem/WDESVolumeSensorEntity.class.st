@@ -1,10 +1,10 @@
 Class {
-	#name : #WDESVolumeEntity,
+	#name : #WDESVolumeSensorEntity,
 	#superclass : #WDESGenericEntity,
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
 
 { #category : #testing }
-WDESVolumeEntity >> isVolumeEntity [
+WDESVolumeSensorEntity >> isVolumeSensorEntity [
 	^ true
 ]

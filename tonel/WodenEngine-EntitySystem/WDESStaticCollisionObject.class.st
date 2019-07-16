@@ -10,8 +10,8 @@ Class {
 
 { #category : #notifications }
 WDESStaticCollisionObject >> addedToPhysicsWorld: physicsWorld [
-	physicsWorld addRigidBody: self validCollisionObject.
 	self validCollisionObject
+		addToPhysicsWorld: physicsWorld;
 		sceneNode: ownerEntity.
 ]
 
@@ -37,16 +37,24 @@ WDESStaticCollisionObject >> collisionShape: anObject [
 
 { #category : #notifications }
 WDESStaticCollisionObject >> createCollisionObject [
-	collisionObject := WDPhyRigidBody new
-		mass: 0.0;
-		shape: collisionShape;
-		yourself.
+	ownerEntity isVolumeSensorEntity ifTrue: [
+		collisionObject := WDPhyGhostObject new
+			shape: collisionShape;
+			makeSensorTriggerCollisionObject;
+			yourself.
+	] ifFalse: [ 
+		collisionObject := WDPhyRigidBody new
+			mass: 0.0;
+			shape: collisionShape;
+			makeStaticCollisionObject;
+			yourself.
+	]
 ]
 
 { #category : #notifications }
 WDESStaticCollisionObject >> removedFromPhysicsWorld: physicsWorld [
 	collisionObject ifNotNil: [ 
-		physicsWorld removeRigidBody: collisionObject
+		collisionObject removeFromPhysicsWorld: physicsWorld
 	].
 
 ]

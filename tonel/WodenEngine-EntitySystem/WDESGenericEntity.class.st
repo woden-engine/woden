@@ -80,9 +80,10 @@ WDESGenericEntity >> addSkyBoxWithTexture: aTexture [
 { #category : #building }
 WDESGenericEntity >> addWaterVolumeAt: position with: aBlock [
 	| entity |
-	entity := WDESWaterVolumeEntity new
+	entity := WDESVolumeSensorEntity new
 		transform: (WMReversibleAffineTransformF identity translation: position).
 	self addChild: entity.
+	entity addComponent: (WDESWaterVolumeSensorBehaviorComponent new).
 	aBlock value: entity.
 	^ entity
 ]
@@ -104,6 +105,7 @@ WDESGenericEntity >> applyCollisionShapeToRigidBody: collisionShapeComponent [
 		sceneNode: self;
 		shape: collisionShapeComponent collisionShape;
 		yourself.
+	mass > 0 ifTrue: [ physicsWorldObject useDefaultCollisionGroup ].
 	self physicsWorld ifNotNil: [ :physicsWorld | physicsWorldObject addToPhysicsWorld: physicsWorld ]
 ]
 

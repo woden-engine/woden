@@ -2,7 +2,8 @@ Class {
 	#name : #WDAPhyEngine,
 	#superclass : #WDPhyPhysicsEngine,
 	#instVars : [
-		'handle'
+		'handle',
+		'handleToObjectDictionary'
 	],
 	#pools : [
 		'APHYConstants'
@@ -13,6 +14,16 @@ Class {
 { #category : #'as yet unclassified' }
 WDAPhyEngine class >> isSupported [
 	^ true
+]
+
+{ #category : #rendering }
+WDAPhyEngine >> applyCollisionObjectFlags: collisionObject to: collisionObjectHandle [
+	collisionObjectHandle
+		setHasContactResponse: collisionObject hasCollisionResponse;
+		setIsStaticObject: collisionObject isStaticObject;
+		setIsKinematicObject: collisionObject isKinematicObject;
+		setIsCharacterObject: collisionObject isCharacterObject;
+		setDebugDrawingEnabled: collisionObject hasDebugDrawing.
 ]
 
 { #category : #'as yet unclassified' }
@@ -30,7 +41,8 @@ WDAPhyEngine >> buildCharacterController: characterController [
 		setWalkDirectionFrom: (self convertWMVector3: characterController linearVelocity / 120.0).
 	characterController
 		handle: controllerHandle;
-		physicsEngine: self
+		physicsEngine: self.
+	handleToObjectDictionary at: controllerHandle put: characterController
 
 ]
 
@@ -38,7 +50,8 @@ WDAPhyEngine >> buildCharacterController: characterController [
 WDAPhyEngine >> buildCollisionShape: collisionShape [
 	collisionShape
 		handle: (collisionShape accept: self);
-		physicsEngine: self
+		physicsEngine: self.
+	handleToObjectDictionary at: collisionShape handle put: collisionShape
 ]
 
 { #category : #'as yet unclassified' }
@@ -48,11 +61,13 @@ WDAPhyEngine >> buildGhostObject: ghostObject [
 	] ifFalse: [
 		ghostObject handle: handle createGhostObject
 	].
+	handleToObjectDictionary at: ghostObject handle put: ghostObject.
 	ghostObject physicsEngine: self.
 	ghostObject shape ifNotNil: [
 		ghostObject handle setCollisionShape: (self validateCollisionShapeHandle: ghostObject shape)
 	].
 	ghostObject applyTransformInHandle.
+	self applyCollisionObjectFlags: ghostObject to: ghostObject handle
 	
 
 ]
@@ -66,10 +81,12 @@ WDAPhyEngine >> buildRigidBody: rigidBody [
 	
 	motionState := handle createDefaultMotionState.
 	rigidBodyHandle := handle createSimpleRigidBodyFrom: rigidBody mass motion_state: motionState collision_shape: collisionShape local_inertia: localInertia.
+	handleToObjectDictionary at: rigidBodyHandle put: rigidBody.
 	
 	rigidBody
 		handle: { rigidBodyHandle . motionState };
-		physicsEngine: self
+		physicsEngine: self.
+	self applyCollisionObjectFlags: rigidBody to: rigidBodyHandle
 ]
 
 { #category : #'character controller' }
@@ -169,16 +186,22 @@ WDAPhyEngine >> getCollisionObjectPosition: collisionObject [
 	^ self convertVector3: result
 ]
 
+{ #category : #'as yet unclassified' }
+WDAPhyEngine >> getObjectFromHandle: objectHandle [
+	^ handleToObjectDictionary at: objectHandle ifAbsent: [ nil ]
+
+]
+
 { #category : #accessing }
 WDAPhyEngine >> handle [
 	^ handle
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 WDAPhyEngine >> initialize [
 	super initialize.
 	handle := APHY firstEngine.
-	
+	handleToObjectDictionary := WeakKeyDictionary new.
 ]
 
 { #category : #initialization }
@@ -231,7 +254,7 @@ WDAPhyEngine >> validateGhostObjectHandle: ghostObject [
 
 { #category : #rendering }
 WDAPhyEngine >> validateRigidBodyHandle: rigidBody [
-	(rigidBody handle isNil or: [ rigidBody handle isNull ]) ifTrue: [
+	(rigidBody handle isNil or: [ rigidBody handle first isNull ]) ifTrue: [
 		self buildRigidBody: rigidBody
 	].
 	^ rigidBody handle

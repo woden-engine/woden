@@ -6,10 +6,52 @@ Class {
 		'position',
 		'preSimulationAction',
 		'postSimulationAction',
-		'orientation'
+		'orientation',
+		'collisionFilterGroup',
+		'collisionFilterMask',
+		'sceneNode',
+		'hasCollisionResponse',
+		'isStaticObject',
+		'isCharacterObject',
+		'isKinematicObject',
+		'hasDebugDrawing'
+	],
+	#classVars : [
+		'AllCollisionsGroupMask',
+		'CharacterCollisionGroup',
+		'CharacterCollisionGroupFilterMask',
+		'DebrisCollisionGroup',
+		'DebrisCollisionGroupFilterMask',
+		'DefaultCollisionGroup',
+		'DefaultCollisionGroupFilterMask',
+		'KinematicCollisionGroup',
+		'KinematicCollisionGroupFilterMask',
+		'SensorTriggerCollisionGroup',
+		'SensorTriggerCollisionGroupFilterMask',
+		'StaticCollisionGroup',
+		'StaticCollisionGroupFilterMask'
 	],
 	#category : #'WodenEngine-Physics-Interface'
 }
+
+{ #category : #'class initialization' }
+WDPhyCollisionObject class >> initialize [
+	DefaultCollisionGroup := 1.
+	StaticCollisionGroup := 2.
+	KinematicCollisionGroup := 4.
+	DebrisCollisionGroup := 8.
+	SensorTriggerCollisionGroup := 16.
+	CharacterCollisionGroup := 32.
+	
+	AllCollisionsGroupMask := -1.
+	DefaultCollisionGroupFilterMask := AllCollisionsGroupMask.
+	StaticCollisionGroupFilterMask := AllCollisionsGroupMask bitClear: StaticCollisionGroup | SensorTriggerCollisionGroup.
+	KinematicCollisionGroupFilterMask := AllCollisionsGroupMask.
+	DebrisCollisionGroupFilterMask := AllCollisionsGroupMask.
+	SensorTriggerCollisionGroupFilterMask := AllCollisionsGroupMask.
+	CharacterCollisionGroupFilterMask := AllCollisionsGroupMask.
+	
+]
 
 { #category : #removing }
 WDPhyCollisionObject >> addToPhysicsWorld: physicsWorld [
@@ -23,6 +65,46 @@ WDPhyCollisionObject >> applyTransformInHandle [
 			setCollisionObject: self position: position;
 			setCollisionObject: self orientation: orientation
 	]
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> collisionFilterGroup [
+	^ collisionFilterGroup
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> collisionFilterGroup: anObject [
+	collisionFilterGroup := anObject
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> collisionFilterMask [
+	^ collisionFilterMask
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> collisionFilterMask: anObject [
+	collisionFilterMask := anObject
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> hasCollisionResponse [
+	^ hasCollisionResponse
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> hasCollisionResponse: anObject [
+	hasCollisionResponse := anObject
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> hasDebugDrawing [
+	^ hasDebugDrawing
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> hasDebugDrawing: anObject [
+	hasDebugDrawing := anObject
 ]
 
 { #category : #testing }
@@ -40,6 +122,23 @@ WDPhyCollisionObject >> initialize [
 	super initialize.
 	position := WMVector3F zero.
 	orientation := WMMatrix3F identity.
+	
+	hasCollisionResponse := true.
+	isStaticObject := false.
+	isCharacterObject := false.
+	isKinematicObject := false.
+	hasDebugDrawing := true.
+	self useDefaultCollisionGroup
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> isCharacterObject [
+	^ isCharacterObject
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> isCharacterObject: anObject [
+	isCharacterObject := anObject
 ]
 
 { #category : #testing }
@@ -52,9 +151,62 @@ WDPhyCollisionObject >> isGhostObjectWithPairCache [
 	^ false
 ]
 
+{ #category : #accessing }
+WDPhyCollisionObject >> isKinematicObject [
+	^ isKinematicObject
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> isKinematicObject: anObject [
+	isKinematicObject := anObject
+]
+
 { #category : #testing }
 WDPhyCollisionObject >> isRigidBody [
 	^ false
+]
+
+{ #category : #testing }
+WDPhyCollisionObject >> isSensorOrTrigger [
+	^ collisionFilterGroup == SensorTriggerCollisionGroup
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> isStaticObject [
+	^ isStaticObject
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> isStaticObject: anObject [
+	isStaticObject := anObject
+]
+
+{ #category : #'collision groups' }
+WDPhyCollisionObject >> makeCharacterCollisionObject [
+	self
+		useCharacterCollisionGroup;
+		isCharacterObject: true
+]
+
+{ #category : #'collision groups' }
+WDPhyCollisionObject >> makeKinematicCollisionObject [
+	self
+		useKinematicCollisionGroup;
+		isCharacterObject: true
+]
+
+{ #category : #'collision groups' }
+WDPhyCollisionObject >> makeSensorTriggerCollisionObject [
+	self
+		hasCollisionResponse: false;
+		useSensorTriggerCollisionGroup
+]
+
+{ #category : #'collision groups' }
+WDPhyCollisionObject >> makeStaticCollisionObject [
+	self
+		isStaticObject: true;
+		useStaticCollisionGroup
 ]
 
 { #category : #accessing }
@@ -104,6 +256,17 @@ WDPhyCollisionObject >> removeFromPhysicsWorld: physicsWorld [
 ]
 
 { #category : #accessing }
+WDPhyCollisionObject >> sceneNode [
+	^ sceneNode
+]
+
+{ #category : #accessing }
+WDPhyCollisionObject >> sceneNode: anObject [
+	sceneNode := anObject.
+	self transform: sceneNode transform
+]
+
+{ #category : #accessing }
 WDPhyCollisionObject >> shape [
 	
 	^ shape
@@ -120,4 +283,40 @@ WDPhyCollisionObject >> transform: aTransform [
 	position := aTransform translation.
 	orientation := aTransform matrix.
 	self applyTransformInHandle.
+]
+
+{ #category : #'collision groups' }
+WDPhyCollisionObject >> useCharacterCollisionGroup [
+	collisionFilterGroup := CharacterCollisionGroup.
+	collisionFilterMask := CharacterCollisionGroupFilterMask.
+]
+
+{ #category : #'collision groups' }
+WDPhyCollisionObject >> useDebrisCollisionGroup [
+	collisionFilterGroup := DebrisCollisionGroup.
+	collisionFilterMask := DebrisCollisionGroupFilterMask.
+]
+
+{ #category : #'collision groups' }
+WDPhyCollisionObject >> useDefaultCollisionGroup [
+	collisionFilterGroup := DefaultCollisionGroup.
+	collisionFilterMask := DefaultCollisionGroupFilterMask.
+]
+
+{ #category : #'collision groups' }
+WDPhyCollisionObject >> useKinematicCollisionGroup [
+	collisionFilterGroup := KinematicCollisionGroup.
+	collisionFilterMask := KinematicCollisionGroupFilterMask.
+]
+
+{ #category : #'collision groups' }
+WDPhyCollisionObject >> useSensorTriggerCollisionGroup [
+	collisionFilterGroup := SensorTriggerCollisionGroup.
+	collisionFilterMask := SensorTriggerCollisionGroupFilterMask.
+]
+
+{ #category : #'collision groups' }
+WDPhyCollisionObject >> useStaticCollisionGroup [
+	collisionFilterGroup := StaticCollisionGroup.
+	collisionFilterMask := StaticCollisionGroupFilterMask.
 ]

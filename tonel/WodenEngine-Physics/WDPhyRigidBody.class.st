@@ -2,7 +2,6 @@ Class {
 	#name : #WDPhyRigidBody,
 	#superclass : #WDPhyCollisionObject,
 	#instVars : [
-		'sceneNode',
 		'mass'
 	],
 	#category : #'WodenEngine-Physics-Interface'
@@ -15,7 +14,9 @@ WDPhyRigidBody >> addToPhysicsWorld: physicsWorld [
 
 { #category : #accessing }
 WDPhyRigidBody >> initialize [
+	super initialize.
 	mass := 0.0.
+	self useDefaultCollisionGroup.
 ]
 
 { #category : #'as yet unclassified' }
@@ -43,17 +44,6 @@ WDPhyRigidBody >> removeFromPhysicsWorld: physicsWorld [
 { #category : #removing }
 WDPhyRigidBody >> removeFromWorld: world [
 	^ world removeRigidBody: self
-]
-
-{ #category : #accessing }
-WDPhyRigidBody >> sceneNode [
-	^ sceneNode
-]
-
-{ #category : #accessing }
-WDPhyRigidBody >> sceneNode: anObject [
-	sceneNode := anObject.
-	self transform: sceneNode transform
 ]
 
 { #category : #accessing }

@@ -55,6 +55,15 @@ WDESAbstractEntity >> addedToScene: anScene [
 	children do: [ :child | child addedToScene: anScene ].
 ]
 
+{ #category : #messages }
+WDESAbstractEntity >> behaviorsDo: aBlock [
+	components do: [ :comp |
+		comp isBehaviorComponent ifTrue: [
+			aBlock value: comp
+		].
+	]
+]
+
 { #category : #accessing }
 WDESAbstractEntity >> children [
 	^ children
@@ -125,8 +134,27 @@ WDESAbstractEntity >> isTicking [
 ]
 
 { #category : #testing }
-WDESAbstractEntity >> isVolumeEntity [
+WDESAbstractEntity >> isVolumeSensorEntity [
 	^ false
+]
+
+{ #category : #events }
+WDESAbstractEntity >> onOverlapWithCollisionObject: collisionObject [
+	collisionObject sceneNode ifNotNil: [ :collisionObjectEntity |
+		self onOverlapWithEntity: collisionObjectEntity atCollisionObject: collisionObject
+	].
+]
+
+{ #category : #messages }
+WDESAbstractEntity >> onOverlapWithEntity: collisionObjectEntity atCollisionObject: collisionObject [
+	self behaviorsDo: [ :component |
+		component onTouchWithEntity: collisionObjectEntity atCollisionObject: collisionObject
+	]
+]
+
+{ #category : #events }
+WDESAbstractEntity >> onTouchWithCharacter: characterEntity [
+
 ]
 
 { #category : #accessing }
@@ -219,11 +247,16 @@ WDESAbstractEntity >> sectorTransform [
 ]
 
 { #category : #messages }
+WDESAbstractEntity >> sendEnvironmentSensorEvent: environmentEventSelector from: senderComponent [
+	self behaviorsDo: [ :comp |
+		comp sendEnvironmentSensorEvent: environmentEventSelector from: senderComponent
+	]
+]
+
+{ #category : #messages }
 WDESAbstractEntity >> sendInputEvent: inputEventSelector with: anEvent [
-	components do: [ :comp |
-		comp isBehaviorComponent ifTrue: [
-			comp sendInputEvent: inputEventSelector with: anEvent
-		].
+	self behaviorsDo: [ :comp |
+		comp sendInputEvent: inputEventSelector with: anEvent
 	]
 ]
 
