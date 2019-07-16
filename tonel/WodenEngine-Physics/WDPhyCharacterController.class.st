@@ -11,10 +11,30 @@ Class {
 		'gravity',
 		'jumpSpeed',
 		'preSimulationAction',
-		'postSimulationAction'
+		'postSimulationAction',
+		'buoyancy'
 	],
 	#category : #'WodenEngine-Physics-Interface'
 }
+
+{ #category : #accessing }
+WDPhyCharacterController >> applyEffectiveGravity [
+	physicsEngine ifNotNil: [
+		physicsEngine characterController: self setGravity: gravity + buoyancy jumpSpeed: jumpSpeed
+	].
+
+]
+
+{ #category : #accessing }
+WDPhyCharacterController >> buoyancy [
+	^ buoyancy
+]
+
+{ #category : #accessing }
+WDPhyCharacterController >> buoyancy: anObject [
+	buoyancy := anObject.
+	self applyEffectiveGravity
+]
 
 { #category : #actions }
 WDPhyCharacterController >> canJump [
@@ -46,10 +66,7 @@ WDPhyCharacterController >> gravity [
 WDPhyCharacterController >> gravity: newGravity [
 	gravity := newGravity.
 	self computeJumpSpeed.
-	physicsEngine ifNotNil: [
-		physicsEngine characterController: self setGravity: gravity jumpSpeed: jumpSpeed
-	].
-
+	self applyEffectiveGravity
 ]
 
 { #category : #initialization }
@@ -59,6 +76,7 @@ WDPhyCharacterController >> initialize [
 	stepHeight := 0.40.
 	maxJumpHeight := 0.6.
 	gravity := -9.8.
+	buoyancy := 0.0.
 	linearVelocity := WMVector3F zero.
 	self computeJumpSpeed.
 ]

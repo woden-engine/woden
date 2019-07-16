@@ -16,7 +16,8 @@ Class {
 		'headAngularVelocity',
 		'walkingInGround',
 		'running',
-		'isUnderwater'
+		'isUnderwater',
+		'isHeadUnderwater'
 	],
 	#category : #'WodenEngine-EntitySystem-Behaviors'
 }
@@ -77,6 +78,11 @@ WDESCharacterBehaviorComponent >> createPhysicsCharacterController [
 ]
 
 { #category : #accessing }
+WDESCharacterBehaviorComponent >> globalHeadPosition [
+	^ ownerEntity globalTransform transformPosition3: self headPosition
+]
+
+{ #category : #accessing }
 WDESCharacterBehaviorComponent >> halfExtent [
 	^ self class halfExtent
 ]
@@ -101,6 +107,7 @@ WDESCharacterBehaviorComponent >> initialize [
 	walkingInGround := true.
 	running := false.
 	isUnderwater := false.
+	isHeadUnderwater := false.
 ]
 
 { #category : #testing }
@@ -128,6 +135,7 @@ WDESCharacterBehaviorComponent >> jump [
 { #category : #events }
 WDESCharacterBehaviorComponent >> onUnderwaterVolume: underwaterVolumeComponent [
 	isUnderwater := true.
+	isHeadUnderwater := isHeadUnderwater or: [underwaterVolumeComponent ownerEntity sceneNode globalBoundingBox includesPoint: self globalHeadPosition].
 ]
 
 { #category : #simulation }
@@ -146,6 +154,7 @@ WDESCharacterBehaviorComponent >> postPhysicsTick: delta [
 WDESCharacterBehaviorComponent >> prePhysicsTick: delta [
 	| accel speedMultiplier |
 	headAngle := headAngle + (headAngularVelocity * delta).
+	headAngle x: (headAngle x min: Float halfPi max: Float halfPi negated).
 	
 	self isCurrentlyWalking ifTrue: [ 
 		bodyOrientation := WMMatrix3F yrot: headAngle y.
@@ -155,17 +164,22 @@ WDESCharacterBehaviorComponent >> prePhysicsTick: delta [
 		headOrientation := WMMatrix3F identity.
 	].
 
-	speedMultiplier := running ifTrue: [ 3.0 ] ifFalse: [ 1.0 ].
+	speedMultiplier := running ifTrue: [ 4.0 ] ifFalse: [ 2.0 ].
 	accel := (bodyOrientation transformVector3: linearAcceleration*linearViscosity*speedMultiplier).
 	accel := accel - (linearVelocity*linearViscosity).
 	
 	linearVelocity := linearVelocity + (accel*delta).
 
-	ghostObject position: ownerEntity transform translation.
-	physicsCharacterController linearVelocity: linearVelocity.
+	ghostObject
+		orientation: bodyOrientation;
+		position: ownerEntity transform translation.
+	physicsCharacterController
+		buoyancy: (isUnderwater ifTrue: [ 8.8 ] ifFalse: [0.0]);
+		linearVelocity: linearVelocity.
 
 	"If we are underwater, then before the postPhysicsTick, this will be set to true."
-	isUnderwater := false
+	isUnderwater := false.
+	isHeadUnderwater := false.
 ]
 
 { #category : #notifications }

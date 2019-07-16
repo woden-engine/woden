@@ -210,6 +210,12 @@ WDPhyCollisionObject >> makeStaticCollisionObject [
 ]
 
 { #category : #accessing }
+WDPhyCollisionObject >> orientation: aMatrix [
+	orientation := aMatrix.
+	self applyTransformInHandle.
+]
+
+{ #category : #accessing }
 WDPhyCollisionObject >> position [
 	^ physicsEngine ifNotNil: [ physicsEngine getCollisionObjectPosition: self ] ifNil: [ position ]
 ]
