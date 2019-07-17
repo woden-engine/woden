@@ -12,7 +12,7 @@ function colorToLuminance(color: float3) -> float
 code_block(fragment) main
 {
     let texel = mainSampler.sample(sourceTexture, FragmentInput.texcoord).rgb;
-	let luma = colorToLuminance(texel);
+	let luma = max(0.0f, colorToLuminance(texel)); // The max is to prevent nans.
 
     FragmentStage.colorOutput0 = float4(log2(1.0f + luma), 0.0f, 0.0f, 1.0f);
 }

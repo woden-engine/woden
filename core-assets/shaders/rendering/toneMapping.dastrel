@@ -14,7 +14,7 @@ code_block(compute) autoLuminanceFilter
 
 	// https://placeholderart.wordpress.com/2014/12/15/implementing-a-physically-based-camera-automatic-exposure/
 	let newAverageLuminance = currentAverageLuminance + (sceneAverageLuminance - currentAverageLuminance)*(1.0f - exp(-1.0f/60.0f));
-	PostProcessingState.currentAverageLuminance = newAverageLuminance;
+	PostProcessingState.currentAverageLuminance = max(0.04f, min(200.0f, newAverageLuminance));
 }
 
 code_block(fragment) auto_linear
