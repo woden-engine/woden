@@ -58,6 +58,7 @@ WDCQuadTree >> createRootNodeWithBoundingBox: boundingBox [
 	root := self nodeClass new
 			maxDepth: self maxNodeDepth;
 			boundingBox: boundingBox;
+			tree: self;
 			yourself
 ]
 

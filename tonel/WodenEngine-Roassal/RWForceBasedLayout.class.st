@@ -1,8 +1,5 @@
-"
-A basic force layout for 3d elements
-"
 Class {
-	#name : #RWForceBasedLayout2D,
+	#name : #RWForceBasedLayout,
 	#superclass : #RWEdgeDrivenLayout,
 	#instVars : [
 		'alpha',
@@ -23,13 +20,15 @@ Class {
 		'center',
 		'shouldUseProgressBar',
 		'weights',
-		'oldPositions'
+		'oldPositions',
+		'random',
+		'axisConstraints'
 	],
 	#category : #'WodenEngine-Roassal-Layout'
 }
 
 { #category : #algorithm }
-RWForceBasedLayout2D >> accumulate: aQuad [
+RWForceBasedLayout >> accumulate: aQuad [
 	| cx cy k random |
 	cx := 0.
 	cy := 0.
@@ -60,24 +59,61 @@ RWForceBasedLayout2D >> accumulate: aQuad [
 	aQuad cy: cy / aQuad charge
 ]
 
+{ #category : #algorithm }
+RWForceBasedLayout >> accumulateChargeOnTree: treeNode [
+	| nodeCharge nodeCenter k |
+	nodeCharge := 0.0.
+	nodeCenter := WMVector3F zero.
+	treeNode children do: [ :childNode |
+		self accumulateChargeOnTree: childNode.
+		nodeCharge := nodeCharge + childNode charge.
+		nodeCenter := nodeCenter + (childNode chargeCenter * axisConstraints * nodeCharge)
+	].
+
+	treeNode elements do: [ :spatialElement |
+		| element |
+		element := spatialElement node.
+		treeNode isLeaf ifFalse: [
+			self halt
+		].
+	
+		k := alpha * (self chargeOf: element).
+		nodeCharge := nodeCharge + k.
+		nodeCenter := nodeCenter + (element position * axisConstraints * k)
+	].
+
+	(nodeCharge closeTo: 0.0) ifFalse: [
+		nodeCenter := nodeCenter / nodeCharge
+	].
+
+	treeNode
+		charge: nodeCharge;
+		chargeCenter: nodeCenter.
+]
+
+{ #category : #hook }
+RWForceBasedLayout >> axisConstraints [
+	^ WMVector3F ones
+]
+
 { #category : #accessing }
-RWForceBasedLayout2D >> charge: aFloat [
+RWForceBasedLayout >> charge: aFloat [
 	"Typically a negative value. E.g., -300"
 	charge := aFloat
 ]
 
 { #category : #algorithm }
-RWForceBasedLayout2D >> chargeOf: aNode [ 
+RWForceBasedLayout >> chargeOf: aNode [ 
 	^ charges at: aNode ifAbsent: [ ^ charge ] 
 ]
 
 { #category : #initialization }
-RWForceBasedLayout2D >> defaultInitialLayout [
-	^ RWXYGridLayout new
+RWForceBasedLayout >> defaultInitialLayout [
+	^ RWCubeLayout new
 ]
 
 { #category : #hook }
-RWForceBasedLayout2D >> doExecute: nodeElements [
+RWForceBasedLayout >> doExecute: nodeElements [
 	self start: nodeElements.
 	self shouldRunLayoutWithProgressBar
 		ifTrue: [ self runLayoutInJob ]
@@ -87,23 +123,23 @@ RWForceBasedLayout2D >> doExecute: nodeElements [
 ]
 
 { #category : #configuration }
-RWForceBasedLayout2D >> doNotUseProgressBar [
+RWForceBasedLayout >> doNotUseProgressBar [
 	shouldUseProgressBar := false
 ]
 
 { #category : #public }
-RWForceBasedLayout2D >> executeOnElements: elements [ 
+RWForceBasedLayout >> executeOnElements: elements [ 
 	self setEdgesFromElements: elements.
 	super executeOnElements: elements
 ]
 
 { #category : #accessing }
-RWForceBasedLayout2D >> initialPositionOfNodes: nodeElements [
+RWForceBasedLayout >> initialPositionOfNodes: nodeElements [
 	initialLayout on: nodeElements
 ]
 
 { #category : #initialization }
-RWForceBasedLayout2D >> initialize [
+RWForceBasedLayout >> initialize [
 	super initialize.
 	nbIterations := 0.
 	edges := #().
@@ -113,41 +149,43 @@ RWForceBasedLayout2D >> initialize [
 	strengths := Dictionary new.
 	lengths := Dictionary new.
 	charges := Dictionary new.
-	strength := 1.
-	length := 20.
-	charge := -30.
+	strength := 1.0.
+	length := 20.0.
+	charge := -30.0.
 	gravity := 0.1.
 	friction := 0.9.
 	theta := 0.8.
 	center := WMVector3F zero.
 	alpha := 0.1.
+	random := Random new.
+	axisConstraints := self axisConstraints.
 	self useProgressBar
 ]
 
 { #category : #testing }
-RWForceBasedLayout2D >> isFixed: aNode [
+RWForceBasedLayout >> isFixed: aNode [
 
 	^ fixedNodes includesKey: aNode 
 ]
 
 { #category : #testing }
-RWForceBasedLayout2D >> isJobInstalled [
+RWForceBasedLayout >> isJobInstalled [
 	"Return true if the class Job exist. This is mainly useful to make a distinction between Pharo and VisualWorks"
 	^ Smalltalk globals includesKey: #Job
 ]
 
 { #category : #accessing }
-RWForceBasedLayout2D >> length: aFloat [
+RWForceBasedLayout >> length: aFloat [
 	^ length
 ]
 
 { #category : #algorithm }
-RWForceBasedLayout2D >> lengthOf: anEdge [
+RWForceBasedLayout >> lengthOf: anEdge [
 	^ lengths at: anEdge ifAbsent: [ ^ length ] 
 ]
 
 { #category : #initialization }
-RWForceBasedLayout2D >> prepareNodes: nodeElements [
+RWForceBasedLayout >> prepareNodes: nodeElements [
 	"Initialize the meta data associated to the nodes. At that stage, position of nodes is not modified"
 	weights := Dictionary new.
 	oldPositions := Dictionary new.
@@ -167,7 +205,7 @@ RWForceBasedLayout2D >> prepareNodes: nodeElements [
 ]
 
 { #category : #algorithm }
-RWForceBasedLayout2D >> repulse: aNode from: aQuad [
+RWForceBasedLayout >> repulse: aNode from: aQuad [
 	| dx dy dn k p |
 	dx := aQuad cx - aNode position x.
 	dy := aQuad cy - aNode position y.
@@ -187,8 +225,42 @@ RWForceBasedLayout2D >> repulse: aNode from: aQuad [
 			e isNil ifFalse: [ self repulse: aNode from: e ] ] ]
 ]
 
+{ #category : #algorithm }
+RWForceBasedLayout >> repulseNode: node fromTree: treeNode [
+	| delta deltaLength p k treeNodeElement invDeltaLength invDeltaLength2 |
+	delta := (treeNode chargeCenter - node position) * axisConstraints.
+	deltaLength := delta length.
+	(deltaLength closeTo: 0.0) ifFalse: [
+		invDeltaLength := deltaLength reciprocal.
+		invDeltaLength2 := invDeltaLength*invDeltaLength.
+		p := oldPositions at: node.
+		self assert: treeNode elements size <= 1. 
+		treeNodeElement := treeNode elements
+			ifEmpty: [ nil ]
+			ifNotEmpty: [ treeNode elements first node ].
+
+		(treeNodeElement ~~ node) ifTrue: [
+			(treeNode boundingBox extent * axisConstraints) length * invDeltaLength *2.0 < theta ifTrue: [
+				k := treeNode charge * invDeltaLength2.
+				oldPositions at: node put: p - (delta *k).
+				^ self
+			].
+			(treeNodeElement isNotNil and: [ invDeltaLength < 1e9 ]) ifTrue: [ 
+				k := (self chargeOf: treeNodeElement) * invDeltaLength2 * alpha.
+				oldPositions at: node put: p - (delta *k).
+			].
+		]
+	].
+
+	(treeNode charge closeTo: 0.0) ifFalse: [ 
+		treeNode children do: [ :child |
+			self repulseNode: node fromTree: child
+		]
+	]
+]
+
 { #category : #hook }
-RWForceBasedLayout2D >> runLayoutInJob [
+RWForceBasedLayout >> runLayoutInJob [
 	[ :job | 
 	job
 		title: 'Laying out elements';
@@ -211,7 +283,7 @@ RWForceBasedLayout2D >> runLayoutInJob [
 ]
 
 { #category : #hook }
-RWForceBasedLayout2D >> runLayoutSimply [
+RWForceBasedLayout >> runLayoutSimply [
 	nbIterations = 0
 		ifTrue: [ 
 			[ 
@@ -225,129 +297,120 @@ RWForceBasedLayout2D >> runLayoutSimply [
 ]
 
 { #category : #configuration }
-RWForceBasedLayout2D >> set: aNode charge: aFloat [ 
+RWForceBasedLayout >> set: aNode charge: aFloat [ 
 	charges at: aNode put: aFloat
 ]
 
 { #category : #configuration }
-RWForceBasedLayout2D >> set: anEdge length: aFloat [ 
+RWForceBasedLayout >> set: anEdge length: aFloat [ 
 
 	lengths at: anEdge put: aFloat
 ]
 
 { #category : #configuration }
-RWForceBasedLayout2D >> set: anEdge strength: aFloat [ 
+RWForceBasedLayout >> set: anEdge strength: aFloat [ 
 
 	strengths at: anEdge put: aFloat
 ]
 
 { #category : #testing }
-RWForceBasedLayout2D >> shouldRunLayoutWithProgressBar [
+RWForceBasedLayout >> shouldRunLayoutWithProgressBar [
 	^ self isJobInstalled and: [ self shouldUseProgressBar ]
 ]
 
 { #category : #accessing }
-RWForceBasedLayout2D >> shouldUseProgressBar [
+RWForceBasedLayout >> shouldUseProgressBar [
 	^ shouldUseProgressBar
 ]
 
 { #category : #accessing }
-RWForceBasedLayout2D >> start: nodeElements [
+RWForceBasedLayout >> start: nodeElements [
 	self initialPositionOfNodes: nodeElements.
 	self prepareNodes: nodeElements
 ]
 
 { #category : #'update cycle' }
-RWForceBasedLayout2D >> step [
+RWForceBasedLayout >> step [
 	"run a step of the force layout algorithm"
 	"If there is no nodes, then there is not much to do"
 	nodes ifEmpty: [ ^ self ].
 	self stepWeightsStrengths.
 	self stepGravity.
-	self stepQuadTree.
-	
+	self stepRepulsion.
 ]
 
 { #category : #'update cycle' }
-RWForceBasedLayout2D >> stepGravity [
-	| k x y z |
+RWForceBasedLayout >> stepGravity [
+	| k |
 	k := alpha * gravity.
-	(k closeTo: 0) ifTrue: [ ^ self ].
-	x := center x.
-	y := center y.
-	z := center z.
+	(k closeTo: 0.0) ifTrue: [ ^ self ].
 	nodes do: [ :ea | 
-		| pos |
-		pos := ea position.
-		ea translateTo: (WMVector3F
-			x: pos x + ((x - pos x) * k)
-			y: pos y + ((y - pos y) * k) 
-			z: pos z + ((z - pos z) * k) ) ]
+		| position |
+		position := ea position.
+		ea translateTo: position + ((center - position) * axisConstraints * k)
+	]
 ]
 
 { #category : #'update cycle' }
-RWForceBasedLayout2D >> stepQuadTree [
-	| quad old |
-	quad := RWQuadTree withAll: nodes.
-	self accumulate: quad.
-	nodes do: [ :e | 
-		(self isFixed: e) ifFalse: [ self repulse: e from: quad ]
-		ifTrue: [ 
-			translator translateTopLeftOf: e to: (fixedNodes at: e) ] ].
+RWForceBasedLayout >> stepRepulsion [
+	| tree |
+	tree := RWForceBasedLayoutOctTree forAll: (nodes collect: [:node | RWForceBasedLayoutOctTreeElement new node: node]).
+	self accumulateChargeOnTree: tree root.
 
 	nodes do: [ :e | 
-		old := e position.
-		e translateTo: (WMVector3F 
-			x: (old x - (( (oldPositions at: e) x - old x ) * friction))
-			y: (old y - (( (oldPositions at: e) y - old y ) * friction))
-			z: 0 ).
-		oldPositions at: e put: old.].
+		(self isFixed: e) ifFalse: [
+			self repulseNode: e fromTree: tree root
+		] ifTrue: [ 
+			translator translateTopLeftOf: e to: (fixedNodes at: e) ]
+	].
+
+	nodes do: [ :e | 
+		| newPosition |
+		newPosition := e position.
+		e translateTo: newPosition - (((oldPositions at: e) - newPosition) * friction).
+		oldPositions at: e put: newPosition
+	].
 	
 ]
 
 { #category : #'update cycle' }
-RWForceBasedLayout2D >> stepWeightsStrengths [
+RWForceBasedLayout >> stepWeightsStrengths [
 	edges do: [ :e |
-		| from fp to tp x y z len k | 
+		| from fromPosition to toPosition vector newLength k vectorLength | 
 		from := e from. 
-		fp := from position.
+		fromPosition := from position.
+		
 		to := e to. 
-		tp := to position.
-		x := tp x - fp x.
-		y := tp y - fp y.
-		z := tp z - fp z. 
-		len := ((x * x) + (y * y) + (z * z)) sqrt.
-		(len closeTo: 0) ifFalse: [ 
-			len :=  alpha * (self strengthOf: e) * ( len - (self lengthOf: e) ) / len.
-			x := x * len.
-			y := y * len.
-			z := z * len.
+		toPosition := to position.
+		
+		vector := (toPosition - fromPosition) * axisConstraints.
+		vectorLength := vector length.
+		(vectorLength closeTo: 0.0) ifFalse: [ 
+			newLength :=  alpha * (self strengthOf: e) * ( vectorLength - (self lengthOf: e) ).
+			vector := vector normalized * newLength.
+			
 			k := (weights at: from) / (( weights at: from) +( weights at: to )).
-			to translateTo: (WMVector3F 
-				x: tp x - (x * k) 
-				y: tp y - (y * k) 
-				z: tp z - (z * k)).
+			to translateTo: toPosition - (vector*k).
+
 			k := 1 -  k.
-			from translateTo: (WMVector3F 
-				x: fp x + (x * k) 
-				y: fp y + (y * k) 
-				z: tp z + (z * k) )  ] 
+			from translateTo: fromPosition + (vector*k)
+		] 
 	].
 ]
 
 { #category : #accessing }
-RWForceBasedLayout2D >> strength: aFloat [
+RWForceBasedLayout >> strength: aFloat [
 	"Set the force of attraction for the edges. A high value results in having nodes together.
 	The default value is 1.0"
 	strength := aFloat
 ]
 
 { #category : #algorithm }
-RWForceBasedLayout2D >> strengthOf: anEdge [
+RWForceBasedLayout >> strengthOf: anEdge [
 	^ strengths at: anEdge ifAbsent: [ ^ strength ] 
 ]
 
 { #category : #configuration }
-RWForceBasedLayout2D >> useProgressBar [
+RWForceBasedLayout >> useProgressBar [
 	shouldUseProgressBar := true
 ]

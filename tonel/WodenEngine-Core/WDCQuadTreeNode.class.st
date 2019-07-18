@@ -20,14 +20,14 @@ WDCQuadTreeNode >> addElement: anElement [
 
 { #category : #adding }
 WDCQuadTreeNode >> addPointElement: anElement [
-	self assert: (anElement isSpatialElementStrictlyInsideOfBox: boundingBox).
+	self assert: (anElement isSpatialElementInsideOfBox: boundingBox).
 	self isLeaf ifTrue: [
 		self validElementsOrderedCollection add: anElement.
 		^ self checkSplitCondition
 	].
 
 	children do: [ :child |
-		(anElement isSpatialElementStrictlyInsideOfBox: child boundingBox) ifTrue: [
+		(anElement isSpatialElementInsideOfBox: child boundingBox) ifTrue: [
 			^ child addPointElement: anElement
 		]
 	].
@@ -115,7 +115,7 @@ WDCQuadTreeNode >> checkSplitCondition [
 	self assert: self isLeaf.
 	elements ifNil: [ ^ self ].
 	maxDepth <= 0 ifTrue: [ ^ self ].
-	elements size < self nodeSplitCountThreshold ifTrue: [ ^ self ].
+	elements size <= self nodeSplitCountThreshold ifTrue: [ ^ self ].
 	self splitNode
 ]
 
@@ -126,10 +126,11 @@ WDCQuadTreeNode >> children [
 
 { #category : #'as yet unclassified' }
 WDCQuadTreeNode >> createChildrenNodes [
-	^ boundingBox quadrants collect: [ :octant |
+	^ boundingBox quadrants collect: [ :quadrant |
 		self class new
-			boundingBox: octant;
+			boundingBox: quadrant;
 			maxDepth: maxDepth - 1;
+			tree: tree;
 			yourself.
 	].
 ]

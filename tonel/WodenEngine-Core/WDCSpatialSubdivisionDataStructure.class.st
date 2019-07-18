@@ -4,6 +4,21 @@ Class {
 	#category : #'WodenEngine-Core-DataStructures'
 }
 
+{ #category : #'instance creation' }
+WDCSpatialSubdivisionDataStructure class >> forAll: aCollection [
+	| spatialObjects boundingBox |
+	spatialObjects := aCollection collect: #asSpatialSubdivisionDataStructureElement.
+	boundingBox := WMBox3DF empty.
+	spatialObjects do: [ :el |
+		boundingBox insertBox: el spatialElementBoundingBox
+	].
+
+	^ self new
+		createRootNodeWithBoundingBox: boundingBox;
+		addAll: spatialObjects;
+		yourself
+]
+
 { #category : #adding }
 WDCSpatialSubdivisionDataStructure >> add: anElement [
 	^ self addSpatialSubdivisionDataStructureElement: anElement asSpatialSubdivisionDataStructureElement

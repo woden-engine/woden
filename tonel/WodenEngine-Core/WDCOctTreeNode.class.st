@@ -10,6 +10,7 @@ WDCOctTreeNode >> createChildrenNodes [
 		self class new
 			boundingBox: octant;
 			maxDepth: maxDepth - 1;
+			tree: tree;
 			yourself.
 	].
 ]
