@@ -117,7 +117,7 @@ RWRoassal3dLayoutExample >> exampleForceBasedLayout [
 		elements: boxes;
 		connectFrom: [ :value | value // 2 ] to: #yourself.
 	v addAll: boxes.
-	RWForceBasedLayout on: boxes.
+	RWForceBasedLayout2D on: boxes.
 	v addInteraction: RWOrbitController.
 	v open.
 ]

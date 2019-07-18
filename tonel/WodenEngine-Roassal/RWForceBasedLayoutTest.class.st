@@ -19,5 +19,5 @@ RWForceBasedLayoutTest >> testBasic [
 		elements: boxes;
 		connectFrom: [ :value | value // 2 ] to: #yourself.
 	v addAll: boxes.
-	RWForceBasedLayout on: boxes.
+	RWForceBasedLayout2D on: boxes.
 ]

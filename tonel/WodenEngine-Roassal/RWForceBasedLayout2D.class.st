@@ -2,7 +2,7 @@
 A basic force layout for 3d elements
 "
 Class {
-	#name : #RWForceBasedLayout,
+	#name : #RWForceBasedLayout2D,
 	#superclass : #RWEdgeDrivenLayout,
 	#instVars : [
 		'alpha',
@@ -29,7 +29,7 @@ Class {
 }
 
 { #category : #algorithm }
-RWForceBasedLayout >> accumulate: aQuad [
+RWForceBasedLayout2D >> accumulate: aQuad [
 	| cx cy k random |
 	cx := 0.
 	cy := 0.
@@ -61,23 +61,23 @@ RWForceBasedLayout >> accumulate: aQuad [
 ]
 
 { #category : #accessing }
-RWForceBasedLayout >> charge: aFloat [
+RWForceBasedLayout2D >> charge: aFloat [
 	"Typically a negative value. E.g., -300"
 	charge := aFloat
 ]
 
 { #category : #algorithm }
-RWForceBasedLayout >> chargeOf: aNode [ 
+RWForceBasedLayout2D >> chargeOf: aNode [ 
 	^ charges at: aNode ifAbsent: [ ^ charge ] 
 ]
 
 { #category : #initialization }
-RWForceBasedLayout >> defaultInitialLayout [
+RWForceBasedLayout2D >> defaultInitialLayout [
 	^ RWXYGridLayout new
 ]
 
 { #category : #hook }
-RWForceBasedLayout >> doExecute: nodeElements [
+RWForceBasedLayout2D >> doExecute: nodeElements [
 	self start: nodeElements.
 	self shouldRunLayoutWithProgressBar
 		ifTrue: [ self runLayoutInJob ]
@@ -87,23 +87,23 @@ RWForceBasedLayout >> doExecute: nodeElements [
 ]
 
 { #category : #configuration }
-RWForceBasedLayout >> doNotUseProgressBar [
+RWForceBasedLayout2D >> doNotUseProgressBar [
 	shouldUseProgressBar := false
 ]
 
 { #category : #public }
-RWForceBasedLayout >> executeOnElements: elements [ 
+RWForceBasedLayout2D >> executeOnElements: elements [ 
 	self setEdgesFromElements: elements.
 	super executeOnElements: elements
 ]
 
 { #category : #accessing }
-RWForceBasedLayout >> initialPositionOfNodes: nodeElements [
+RWForceBasedLayout2D >> initialPositionOfNodes: nodeElements [
 	initialLayout on: nodeElements
 ]
 
 { #category : #initialization }
-RWForceBasedLayout >> initialize [
+RWForceBasedLayout2D >> initialize [
 	super initialize.
 	nbIterations := 0.
 	edges := #().
@@ -125,29 +125,29 @@ RWForceBasedLayout >> initialize [
 ]
 
 { #category : #testing }
-RWForceBasedLayout >> isFixed: aNode [
+RWForceBasedLayout2D >> isFixed: aNode [
 
 	^ fixedNodes includesKey: aNode 
 ]
 
 { #category : #testing }
-RWForceBasedLayout >> isJobInstalled [
+RWForceBasedLayout2D >> isJobInstalled [
 	"Return true if the class Job exist. This is mainly useful to make a distinction between Pharo and VisualWorks"
 	^ Smalltalk globals includesKey: #Job
 ]
 
 { #category : #accessing }
-RWForceBasedLayout >> length: aFloat [
+RWForceBasedLayout2D >> length: aFloat [
 	^ length
 ]
 
 { #category : #algorithm }
-RWForceBasedLayout >> lengthOf: anEdge [
+RWForceBasedLayout2D >> lengthOf: anEdge [
 	^ lengths at: anEdge ifAbsent: [ ^ length ] 
 ]
 
 { #category : #initialization }
-RWForceBasedLayout >> prepareNodes: nodeElements [
+RWForceBasedLayout2D >> prepareNodes: nodeElements [
 	"Initialize the meta data associated to the nodes. At that stage, position of nodes is not modified"
 	weights := Dictionary new.
 	oldPositions := Dictionary new.
@@ -167,7 +167,7 @@ RWForceBasedLayout >> prepareNodes: nodeElements [
 ]
 
 { #category : #algorithm }
-RWForceBasedLayout >> repulse: aNode from: aQuad [
+RWForceBasedLayout2D >> repulse: aNode from: aQuad [
 	| dx dy dn k p |
 	dx := aQuad cx - aNode position x.
 	dy := aQuad cy - aNode position y.
@@ -188,7 +188,7 @@ RWForceBasedLayout >> repulse: aNode from: aQuad [
 ]
 
 { #category : #hook }
-RWForceBasedLayout >> runLayoutInJob [
+RWForceBasedLayout2D >> runLayoutInJob [
 	[ :job | 
 	job
 		title: 'Laying out elements';
@@ -211,7 +211,7 @@ RWForceBasedLayout >> runLayoutInJob [
 ]
 
 { #category : #hook }
-RWForceBasedLayout >> runLayoutSimply [
+RWForceBasedLayout2D >> runLayoutSimply [
 	nbIterations = 0
 		ifTrue: [ 
 			[ 
@@ -225,40 +225,40 @@ RWForceBasedLayout >> runLayoutSimply [
 ]
 
 { #category : #configuration }
-RWForceBasedLayout >> set: aNode charge: aFloat [ 
+RWForceBasedLayout2D >> set: aNode charge: aFloat [ 
 	charges at: aNode put: aFloat
 ]
 
 { #category : #configuration }
-RWForceBasedLayout >> set: anEdge length: aFloat [ 
+RWForceBasedLayout2D >> set: anEdge length: aFloat [ 
 
 	lengths at: anEdge put: aFloat
 ]
 
 { #category : #configuration }
-RWForceBasedLayout >> set: anEdge strength: aFloat [ 
+RWForceBasedLayout2D >> set: anEdge strength: aFloat [ 
 
 	strengths at: anEdge put: aFloat
 ]
 
 { #category : #testing }
-RWForceBasedLayout >> shouldRunLayoutWithProgressBar [
+RWForceBasedLayout2D >> shouldRunLayoutWithProgressBar [
 	^ self isJobInstalled and: [ self shouldUseProgressBar ]
 ]
 
 { #category : #accessing }
-RWForceBasedLayout >> shouldUseProgressBar [
+RWForceBasedLayout2D >> shouldUseProgressBar [
 	^ shouldUseProgressBar
 ]
 
 { #category : #accessing }
-RWForceBasedLayout >> start: nodeElements [
+RWForceBasedLayout2D >> start: nodeElements [
 	self initialPositionOfNodes: nodeElements.
 	self prepareNodes: nodeElements
 ]
 
 { #category : #'update cycle' }
-RWForceBasedLayout >> step [
+RWForceBasedLayout2D >> step [
 	"run a step of the force layout algorithm"
 	"If there is no nodes, then there is not much to do"
 	nodes ifEmpty: [ ^ self ].
@@ -269,7 +269,7 @@ RWForceBasedLayout >> step [
 ]
 
 { #category : #'update cycle' }
-RWForceBasedLayout >> stepGravity [
+RWForceBasedLayout2D >> stepGravity [
 	| k x y z |
 	k := alpha * gravity.
 	(k closeTo: 0) ifTrue: [ ^ self ].
@@ -286,7 +286,7 @@ RWForceBasedLayout >> stepGravity [
 ]
 
 { #category : #'update cycle' }
-RWForceBasedLayout >> stepQuadTree [
+RWForceBasedLayout2D >> stepQuadTree [
 	| quad old |
 	quad := RWQuadTree withAll: nodes.
 	self accumulate: quad.
@@ -306,7 +306,7 @@ RWForceBasedLayout >> stepQuadTree [
 ]
 
 { #category : #'update cycle' }
-RWForceBasedLayout >> stepWeightsStrengths [
+RWForceBasedLayout2D >> stepWeightsStrengths [
 	edges do: [ :e |
 		| from fp to tp x y z len k | 
 		from := e from. 
@@ -336,18 +336,18 @@ RWForceBasedLayout >> stepWeightsStrengths [
 ]
 
 { #category : #accessing }
-RWForceBasedLayout >> strength: aFloat [
+RWForceBasedLayout2D >> strength: aFloat [
 	"Set the force of attraction for the edges. A high value results in having nodes together.
 	The default value is 1.0"
 	strength := aFloat
 ]
 
 { #category : #algorithm }
-RWForceBasedLayout >> strengthOf: anEdge [
+RWForceBasedLayout2D >> strengthOf: anEdge [
 	^ strengths at: anEdge ifAbsent: [ ^ strength ] 
 ]
 
 { #category : #configuration }
-RWForceBasedLayout >> useProgressBar [
+RWForceBasedLayout2D >> useProgressBar [
 	shouldUseProgressBar := true
 ]
