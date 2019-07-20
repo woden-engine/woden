@@ -303,6 +303,48 @@ WMBox3D category: 'accessing' methods: {
 	^ max x - min x
 ].
 
+:[quadrants -> _DynamicObject.
+	let center := self center.
+	
+	^ {
+		"Left near"
+		WMBox3D min: (WMVector3 x: min x y: min y z: min z) max: (WMVector3 x: center x y: max y z: center z).
+		"Right near"
+		WMBox3D min: (WMVector3 x: center x y: min y z: min z) max: (WMVector3 x: max x y: max y z: center z).
+		"Left far"
+		WMBox3D min: (WMVector3 x: min x y: min y z: center z) max: (WMVector3 x: center x y: max y z: max z).
+		"Right far"
+		WMBox3D min: (WMVector3 x: center x y: min y z: center z) max: (WMVector3 x: max x y: max y z: max z).
+	}
+].
+
+:[octants -> _DynamicObject.
+	let center := self center.
+	
+	^ {
+		"Bottom quadrant"
+
+		"Left near"
+		WMBox3D min: (WMVector3 x: min x y: min y z: min z) max: (WMVector3 x: center x y: center y z: center z).
+		"Right near"
+		WMBox3D min: (WMVector3 x: center x y: min y z: min z) max: (WMVector3 x: max x y: center y z: center z).
+		"Left far"
+		WMBox3D min: (WMVector3 x: min x y: min y z: center z) max: (WMVector3 x: center x y: center y z: max z).
+		"Right far"
+		WMBox3D min: (WMVector3 x: center x y: min y z: center z) max: (WMVector3 x: max x y: center y z: max z).
+
+		"Top quadrant"
+		"Left near"
+		WMBox3D min: (WMVector3 x: min x y: center y z: min z) max: (WMVector3 x: center x y: max y z: center z).
+		"Right near"
+		WMBox3D min: (WMVector3 x: center x y: center y z: min z) max: (WMVector3 x: max x y: max y z: center z).
+		"Left far"
+		WMBox3D min: (WMVector3 x: min x y: center y z: center z) max: (WMVector3 x: center x y: max y z: max z).
+		"Right far"
+		WMBox3D min: (WMVector3 x: center x y: center y z: center z) max: (WMVector3 x: max x y: max y z: max z).
+	}
+].
+
 }.
 
 WMBox3D category: 'content manipulation' methods: {
@@ -394,6 +436,19 @@ WMBox3D category: 'testing' methods: {
 	^ (min x <= point x and: [point x <= max x]) and: [
 	  (min y <= point y and: [point y <= max y]) and: [
 	  (min z <= point z and: [point z <= max z])]]
+].
+
+:[includesBox: <WMBox3D> box -> BooleanBit.
+	^ (min x <= box min x and: [box max x <= max x]) and: [
+	  (min y <= box min y and: [box max y <= max y]) and: [
+	  (min z <= box min z and: [box max z <= max z])]]
+].
+
+
+:[includesPointStrict: <WMVector3> point -> BooleanBit.
+	^ (min x <= point x and: [point x < max x]) and: [
+	  (min y <= point y and: [point y < max y]) and: [
+	  (min z <= point z and: [point z < max z])]]
 ].
 
 :[isEmpty -> BooleanBit.
