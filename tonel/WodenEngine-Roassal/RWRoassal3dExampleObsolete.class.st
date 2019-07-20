@@ -18,13 +18,13 @@ es when: RWMouseButtonDown do: [ :evt |
 	
 "
 Class {
-	#name : #RWRoassal3dExample,
+	#name : #RWRoassal3dExampleObsolete,
 	#superclass : #RWAbstractExample,
-	#category : 'WodenEngine-Roassal-Examples'
+	#category : #'WodenEngine-Roassal-Examples'
 }
 
 { #category : #sources }
-RWRoassal3dExample >> exampleClickAddAbove [
+RWRoassal3dExampleObsolete >> exampleClickAddAbove [
 
 	| v e cube position action |
 	cube := RWCube new.
@@ -51,7 +51,7 @@ RWRoassal3dExample >> exampleClickAddAbove [
 ]
 
 { #category : #sources }
-RWRoassal3dExample >> exampleClickLeds [
+RWRoassal3dExampleObsolete >> exampleClickLeds [
 
 	| v e colors cube |
 	colors := {  Color gray . Color red . Color green . Color blue . Color yellow . Color white}.
@@ -83,7 +83,7 @@ RWRoassal3dExample >> exampleClickLeds [
 ]
 
 { #category : #sources }
-RWRoassal3dExample >> exampleClickToGetGreen [
+RWRoassal3dExampleObsolete >> exampleClickToGetGreen [
 
 	| v e |
 	v := RWView new.
@@ -104,7 +104,7 @@ RWRoassal3dExample >> exampleClickToGetGreen [
 ]
 
 { #category : #sources }
-RWRoassal3dExample >> exampleCone [
+RWRoassal3dExampleObsolete >> exampleCone [
 
 	| v |
 	v := RWView new.
@@ -116,7 +116,7 @@ RWRoassal3dExample >> exampleCone [
 ]
 
 { #category : #sources }
-RWRoassal3dExample >> exampleCylinder [
+RWRoassal3dExampleObsolete >> exampleCylinder [
 
 	| v |
 	v := RWView new.
@@ -128,7 +128,7 @@ RWRoassal3dExample >> exampleCylinder [
 ]
 
 { #category : #sources }
-RWRoassal3dExample >> exampleHighlighting [
+RWRoassal3dExampleObsolete >> exampleHighlighting [
 	| v es |
 	v := RWView new.
 	es := ((RWCube new size: 1)) elementsOn: (1 to: 16).
@@ -149,7 +149,7 @@ RWRoassal3dExample >> exampleHighlighting [
 ]
 
 { #category : #sources }
-RWRoassal3dExample >> exampleIncreasingCubeSize [
+RWRoassal3dExampleObsolete >> exampleIncreasingCubeSize [
 
 | e v |
 v := RWView new.
@@ -169,7 +169,7 @@ e when: RWMouseButtonDown do: [ :evt |
 ]
 
 { #category : #sources }
-RWRoassal3dExample >> exampleLine [
+RWRoassal3dExampleObsolete >> exampleLine [
 
 | es v |
 
@@ -187,7 +187,7 @@ es @ RWPopup.
 ]
 
 { #category : #sources }
-RWRoassal3dExample >> exampleManyCubes [
+RWRoassal3dExampleObsolete >> exampleManyCubes [
 
 | v cubes |
 v := RWView new.
@@ -199,7 +199,7 @@ RWCubeLayout on: cubes.
 ]
 
 { #category : #sources }
-RWRoassal3dExample >> exampleMatrixHandling [
+RWRoassal3dExampleObsolete >> exampleMatrixHandling [
 
 | v es |
 v := RWView new.
@@ -217,8 +217,8 @@ es when: RWMouseButtonDown do: [ :evt |
 ]
 
 { #category : #sources }
-RWRoassal3dExample >> exampleMenu [
-
+RWRoassal3dExampleObsolete >> exampleMenu [
+"
 | classes v n shape es |
 
 classes := RTObject withAllSubclasses.
@@ -230,11 +230,11 @@ es @ (RWMenuActivable new action: #inspect; item: 'browse class' action: [ :e | 
 v addAll: es.
 RWCubeLayout on: es.
 
-^	 v
+^	 v"
 ]
 
 { #category : #sources }
-RWRoassal3dExample >> examplePopup [
+RWRoassal3dExampleObsolete >> examplePopup [
 
 | v es shape |
 v := RWView new.
@@ -250,7 +250,7 @@ es do: [ :e | e addInteraction: RWPopup ].
 ]
 
 { #category : #sources }
-RWRoassal3dExample >> exampleRedLight [
+RWRoassal3dExampleObsolete >> exampleRedLight [
 
 	| v |
 	v := RWView new.
@@ -265,7 +265,7 @@ RWRoassal3dExample >> exampleRedLight [
 ]
 
 { #category : #sources }
-RWRoassal3dExample >> exampleSimpleCube [
+RWRoassal3dExampleObsolete >> exampleSimpleCube [
 
 | v c |
 v := RWView new.
@@ -275,8 +275,8 @@ v add: c element.
 ]
 
 { #category : #sources }
-RWRoassal3dExample >> exampleSpheres [
-
+RWRoassal3dExampleObsolete >> exampleSpheres [
+"
 	| view shape |
 	view := RWView new.
 	shape := RWUVSphere new .
@@ -289,11 +289,11 @@ RWRoassal3dExample >> exampleSpheres [
 	RWCubeLayout on: view elements.
 	view @ RWMouseKeyControl .
 
-^	 v
+^	 v"
 ]
 
 { #category : #icons }
-RWRoassal3dExample >> exampleSpheresIcon [
+RWRoassal3dExampleObsolete >> exampleSpheresIcon [
 	^ 'iVBORw0KGgoAAAANSUhEUgAAAGQAAAA8CAYAAACQPx/OAAAXgElEQVR4XuXcVa80VdoG4Pof
 aJCg4RR3d5khBIIFSYDg7jY4gw4wuLu7u7u7uwwOAwQOqMlV+e6dtdfu6u79vidfwkGlu6ur
 1iP3Y0ubCy+8sL3gggva888/vz3vvPPac889d+I655xz2rPPPrs966yz2jPPPLP997//3V1n
@@ -410,7 +410,7 @@ EDkm9n/fnHqnAjVgugAAAABJRU5ErkJggg=='
 ]
 
 { #category : #sources }
-RWRoassal3dExample >> exampleThreeCubesAndLightWithShadows [
+RWRoassal3dExampleObsolete >> exampleThreeCubesAndLightWithShadows [
 
 	
 	| v floor light|
@@ -437,7 +437,7 @@ RWRoassal3dExample >> exampleThreeCubesAndLightWithShadows [
 ]
 
 { #category : #sources }
-RWRoassal3dExample >> exampleTransparencAlphay [
+RWRoassal3dExampleObsolete >> exampleTransparencAlphay [
 
 | v els shape |
 "Alpha over transparency"
@@ -452,7 +452,7 @@ v addInteraction: RWMouseKeyControl.
 ]
 
 { #category : #sources }
-RWRoassal3dExample >> exampleTransparency [
+RWRoassal3dExampleObsolete >> exampleTransparency [
 
 | v els shape |
 "Additive blending"
@@ -471,6 +471,6 @@ v addInteraction: RWMouseKeyControl.
 ]
 
 { #category : #accessing }
-RWRoassal3dExample >> label [
+RWRoassal3dExampleObsolete >> label [
 	^ 'Roassal 3d'
 ]

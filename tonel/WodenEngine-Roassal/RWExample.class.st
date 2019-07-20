@@ -250,6 +250,78 @@ RWExample >> eventHandling [
 	^ v
 ]
 
+{ #category : #layout }
+RWExample >> exampleForceBasedLayout [
+	<script: 'self new exampleForceBasedLayout open'>
+	| v boxes |
+	v := RWView new.
+	boxes := RWCube new
+		size: 10;
+		elementsOn: (1 to: 20).
+	RWEdgeBuilder new
+		view: v;
+		elements: boxes;
+		connectFrom: [ :value | value // 2 ] to: #yourself.
+	v addAll: boxes.
+	RWForceBasedLayout on: boxes.
+	v addInteraction: RWOrbitController.
+	^ v
+]
+
+{ #category : #layout }
+RWExample >> exampleForceBasedLayoutXY [
+	<script: 'self new exampleForceBasedLayoutXY open'>
+	| v boxes |
+	v := RWView new.
+	boxes := RWCube new
+		size: 10;
+		elementsOn: (1 to: 20).
+	RWEdgeBuilder new
+		view: v;
+		elements: boxes;
+		connectFrom: [ :value | value // 2 ] to: #yourself.
+	v addAll: boxes.
+	RWForceBasedLayoutXY on: boxes.
+	v addInteraction: RWOrbitController.
+	^ v
+]
+
+{ #category : #layout }
+RWExample >> exampleForceBasedLayoutXZ [
+	<script: 'self new exampleForceBasedLayoutXZ open'>
+	| v boxes |
+	v := RWView new.
+	boxes := RWCube new
+		size: 10;
+		elementsOn: (1 to: 20).
+	RWEdgeBuilder new
+		view: v;
+		elements: boxes;
+		connectFrom: [ :value | value // 2 ] to: #yourself.
+	v addAll: boxes.
+	RWForceBasedLayoutXZ on: boxes.
+	v addInteraction: RWOrbitController.
+	^ v
+]
+
+{ #category : #layout }
+RWExample >> exampleForceBasedLayoutYZ [
+	<script: 'self new exampleForceBasedLayoutYZ open'>
+	| v boxes |
+	v := RWView new.
+	boxes := RWCube new
+		size: 10;
+		elementsOn: (1 to: 20).
+	RWEdgeBuilder new
+		view: v;
+		elements: boxes;
+		connectFrom: [ :value | value // 2 ] to: #yourself.
+	v addAll: boxes.
+	RWForceBasedLayoutYZ on: boxes.
+	v addInteraction: RWOrbitController.
+	^ v
+]
+
 { #category : #'as yet unclassified' }
 RWExample >> fallingCubeLayout [
 	<script: 'self new fallingCubeLayout open'>

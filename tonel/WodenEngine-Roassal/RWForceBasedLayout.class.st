@@ -1,6 +1,3 @@
-"
-A basic force layout for 3d elements
-"
 Class {
 	#name : #RWForceBasedLayout,
 	#superclass : #RWEdgeDrivenLayout,
@@ -23,7 +20,9 @@ Class {
 		'center',
 		'shouldUseProgressBar',
 		'weights',
-		'oldPositions'
+		'oldPositions',
+		'random',
+		'axisConstraints'
 	],
 	#category : #'WodenEngine-Roassal-Layout'
 }
@@ -60,6 +59,43 @@ RWForceBasedLayout >> accumulate: aQuad [
 	aQuad cy: cy / aQuad charge
 ]
 
+{ #category : #algorithm }
+RWForceBasedLayout >> accumulateChargeOnTree: treeNode [
+	| nodeCharge nodeCenter k |
+	nodeCharge := 0.0.
+	nodeCenter := WMVector3F zero.
+	treeNode children do: [ :childNode |
+		self accumulateChargeOnTree: childNode.
+		nodeCharge := nodeCharge + childNode charge.
+		nodeCenter := nodeCenter + (childNode chargeCenter * axisConstraints * nodeCharge)
+	].
+
+	treeNode elements do: [ :spatialElement |
+		| element |
+		element := spatialElement node.
+		treeNode isLeaf ifFalse: [
+			self halt
+		].
+	
+		k := alpha * (self chargeOf: element).
+		nodeCharge := nodeCharge + k.
+		nodeCenter := nodeCenter + (element position * axisConstraints * k)
+	].
+
+	(nodeCharge closeTo: 0.0) ifFalse: [
+		nodeCenter := nodeCenter / nodeCharge
+	].
+
+	treeNode
+		charge: nodeCharge;
+		chargeCenter: nodeCenter.
+]
+
+{ #category : #hook }
+RWForceBasedLayout >> axisConstraints [
+	^ WMVector3F ones
+]
+
 { #category : #accessing }
 RWForceBasedLayout >> charge: aFloat [
 	"Typically a negative value. E.g., -300"
@@ -73,7 +109,7 @@ RWForceBasedLayout >> chargeOf: aNode [
 
 { #category : #initialization }
 RWForceBasedLayout >> defaultInitialLayout [
-	^ RWXYGridLayout new
+	^ RWCubeLayout new
 ]
 
 { #category : #hook }
@@ -113,14 +149,16 @@ RWForceBasedLayout >> initialize [
 	strengths := Dictionary new.
 	lengths := Dictionary new.
 	charges := Dictionary new.
-	strength := 1.
-	length := 20.
-	charge := -30.
+	strength := 1.0.
+	length := 20.0.
+	charge := -30.0.
 	gravity := 0.1.
 	friction := 0.9.
 	theta := 0.8.
 	center := WMVector3F zero.
 	alpha := 0.1.
+	random := Random new.
+	axisConstraints := self axisConstraints.
 	self useProgressBar
 ]
 
@@ -185,6 +223,40 @@ RWForceBasedLayout >> repulse: aNode from: aQuad [
 	(aQuad charge closeTo: 0) ifFalse: [ 
 		aQuad nodes do: [ :e | 
 			e isNil ifFalse: [ self repulse: aNode from: e ] ] ]
+]
+
+{ #category : #algorithm }
+RWForceBasedLayout >> repulseNode: node fromTree: treeNode [
+	| delta deltaLength p k treeNodeElement invDeltaLength invDeltaLength2 |
+	delta := (treeNode chargeCenter - node position) * axisConstraints.
+	deltaLength := delta length.
+	(deltaLength closeTo: 0.0) ifFalse: [
+		invDeltaLength := deltaLength reciprocal.
+		invDeltaLength2 := invDeltaLength*invDeltaLength.
+		p := oldPositions at: node.
+		self assert: treeNode elements size <= 1. 
+		treeNodeElement := treeNode elements
+			ifEmpty: [ nil ]
+			ifNotEmpty: [ treeNode elements first node ].
+
+		(treeNodeElement ~~ node) ifTrue: [
+			(treeNode boundingBox extent * axisConstraints) length * invDeltaLength *2.0 < theta ifTrue: [
+				k := treeNode charge * invDeltaLength2.
+				oldPositions at: node put: p - (delta *k).
+				^ self
+			].
+			(treeNodeElement isNotNil and: [ invDeltaLength < 1e9 ]) ifTrue: [ 
+				k := (self chargeOf: treeNodeElement) * invDeltaLength2 * alpha.
+				oldPositions at: node put: p - (delta *k).
+			].
+		]
+	].
+
+	(treeNode charge closeTo: 0.0) ifFalse: [ 
+		treeNode children do: [ :child |
+			self repulseNode: node fromTree: child
+		]
+	]
 ]
 
 { #category : #hook }
@@ -264,74 +336,65 @@ RWForceBasedLayout >> step [
 	nodes ifEmpty: [ ^ self ].
 	self stepWeightsStrengths.
 	self stepGravity.
-	self stepQuadTree.
-	
+	self stepRepulsion.
 ]
 
 { #category : #'update cycle' }
 RWForceBasedLayout >> stepGravity [
-	| k x y z |
+	| k |
 	k := alpha * gravity.
-	(k closeTo: 0) ifTrue: [ ^ self ].
-	x := center x.
-	y := center y.
-	z := center z.
+	(k closeTo: 0.0) ifTrue: [ ^ self ].
 	nodes do: [ :ea | 
-		| pos |
-		pos := ea position.
-		ea translateTo: (WMVector3F
-			x: pos x + ((x - pos x) * k)
-			y: pos y + ((y - pos y) * k) 
-			z: pos z + ((z - pos z) * k) ) ]
+		| position |
+		position := ea position.
+		ea translateTo: position + ((center - position) * axisConstraints * k)
+	]
 ]
 
 { #category : #'update cycle' }
-RWForceBasedLayout >> stepQuadTree [
-	| quad old |
-	quad := RWQuadTree withAll: nodes.
-	self accumulate: quad.
-	nodes do: [ :e | 
-		(self isFixed: e) ifFalse: [ self repulse: e from: quad ]
-		ifTrue: [ 
-			translator translateTopLeftOf: e to: (fixedNodes at: e) ] ].
+RWForceBasedLayout >> stepRepulsion [
+	| tree |
+	tree := RWForceBasedLayoutOctTree forAll: (nodes collect: [:node | RWForceBasedLayoutOctTreeElement new node: node]).
+	self accumulateChargeOnTree: tree root.
 
 	nodes do: [ :e | 
-		old := e position.
-		e translateTo: (WMVector3F 
-			x: (old x - (( (oldPositions at: e) x - old x ) * friction))
-			y: (old y - (( (oldPositions at: e) y - old y ) * friction))
-			z: 0 ).
-		oldPositions at: e put: old.].
+		(self isFixed: e) ifFalse: [
+			self repulseNode: e fromTree: tree root
+		] ifTrue: [ 
+			translator translateTopLeftOf: e to: (fixedNodes at: e) ]
+	].
+
+	nodes do: [ :e | 
+		| newPosition |
+		newPosition := e position.
+		e translateTo: newPosition - (((oldPositions at: e) - newPosition) * friction).
+		oldPositions at: e put: newPosition
+	].
 	
 ]
 
 { #category : #'update cycle' }
 RWForceBasedLayout >> stepWeightsStrengths [
 	edges do: [ :e |
-		| from fp to tp x y z len k | 
+		| from fromPosition to toPosition vector newLength k vectorLength | 
 		from := e from. 
-		fp := from position.
+		fromPosition := from position.
+		
 		to := e to. 
-		tp := to position.
-		x := tp x - fp x.
-		y := tp y - fp y.
-		z := tp z - fp z. 
-		len := ((x * x) + (y * y) + (z * z)) sqrt.
-		(len closeTo: 0) ifFalse: [ 
-			len :=  alpha * (self strengthOf: e) * ( len - (self lengthOf: e) ) / len.
-			x := x * len.
-			y := y * len.
-			z := z * len.
+		toPosition := to position.
+		
+		vector := (toPosition - fromPosition) * axisConstraints.
+		vectorLength := vector length.
+		(vectorLength closeTo: 0.0) ifFalse: [ 
+			newLength :=  alpha * (self strengthOf: e) * ( vectorLength - (self lengthOf: e) ).
+			vector := vector normalized * newLength.
+			
 			k := (weights at: from) / (( weights at: from) +( weights at: to )).
-			to translateTo: (WMVector3F 
-				x: tp x - (x * k) 
-				y: tp y - (y * k) 
-				z: tp z - (z * k)).
+			to translateTo: toPosition - (vector*k).
+
 			k := 1 -  k.
-			from translateTo: (WMVector3F 
-				x: fp x + (x * k) 
-				y: fp y + (y * k) 
-				z: tp z + (z * k) )  ] 
+			from translateTo: fromPosition + (vector*k)
+		] 
 	].
 ]
 

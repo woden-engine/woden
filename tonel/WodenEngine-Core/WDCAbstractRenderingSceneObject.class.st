@@ -1,6 +1,8 @@
 Class {
 	#name : #WDCAbstractRenderingSceneObject,
 	#superclass : #Object,
+	#traits : 'TWDCSpatialSubdivisionDataStructureElement',
+	#classTraits : 'TWDCSpatialSubdivisionDataStructureElement classTrait',
 	#instVars : [
 		'spatialObject',
 		'boundingBox',
@@ -32,6 +34,11 @@ WDCAbstractRenderingSceneObject >> isLightSource [
 	^ false
 ]
 
+{ #category : #testing }
+WDCAbstractRenderingSceneObject >> isSpatialVolumeElement [
+	^ true
+]
+
 { #category : #accessing }
 WDCAbstractRenderingSceneObject >> node [
 	^ node
@@ -45,6 +52,11 @@ WDCAbstractRenderingSceneObject >> node: anObject [
 { #category : #'as yet unclassified' }
 WDCAbstractRenderingSceneObject >> renderableChanged [
 	boundingBox := nil.
+]
+
+{ #category : #testing }
+WDCAbstractRenderingSceneObject >> spatialElementBoundingBox [
+	^ boundingBox
 ]
 
 { #category : #accessing }
