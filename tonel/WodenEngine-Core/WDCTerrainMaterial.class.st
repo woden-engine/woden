@@ -146,16 +146,6 @@ WDCTerrainMaterial >> bindResources [
 ]
 
 { #category : #'terrain mesh building' }
-WDCTerrainMaterial >> buildTerrainMeshWith: builder [
-	builder
-		material: self;
-		heightScale: materialState heightScale;
-		createClipMapWithLevels: 3 size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
-		addHeightMapCollision: heightMapTexture
-		heightScale: materialState heightScale scale: self heightMapScale offset: self heightMapOffset
-]
-
-{ #category : #'terrain mesh building' }
 WDCTerrainMaterial >> createTerrainMeshForSceneNode: sceneNode [
 	| builder |
 	self flag: 'TODO: Support parameterizing this.'.
@@ -240,9 +230,6 @@ WDCTerrainMaterial >> parse: materialFileReference data: data [
 	metallicRoughnessTextures := self parse: data at: materialFileReference texture: 'metallic-roughness-textures' arrayOfSize: 5.
 
 	materialState
-		heightMapOffset: (self parse: data at: materialFileReference vector2: 'height-map-offset' ifAbsent: [ WMVector2F zero ]);
-		heightScale: (self parse: data at: materialFileReference scalar: 'height-scale' ifAbsent: [ 1.0 ]);
-		
 		albedo: (self parse: data at: materialFileReference srgbColor: 'albedo-color' ifAbsent: [ Color white ]);
 		roughnessFactor: (data at: 'roughness-factor' ifAbsent: [
 			metallicRoughnessTextures first

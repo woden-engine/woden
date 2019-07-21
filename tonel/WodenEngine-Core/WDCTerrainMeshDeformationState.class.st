@@ -2,13 +2,21 @@ Class {
 	#name : #WDCTerrainMeshDeformationState,
 	#superclass : #WDCRenderableDeformationState,
 	#instVars : [
+		'terrainData',
 		'terrainStateData',
-		'heightMapTexture',
-		'splattingTexture',
 		'gpuTerrainState'
 	],
 	#category : #'WodenEngine-Core-Mesh'
 }
+
+{ #category : #accessing }
+WDCTerrainMeshDeformationState >> applyTerrainDataState [
+	terrainStateData
+		heightMapOffset: terrainData heightMapOffset;
+		heightMapScale: terrainData heightMapScale;
+		heightOffset: terrainData heightOffset;
+		heightScale: terrainData heightScale
+]
 
 { #category : #accessing }
 WDCTerrainMeshDeformationState >> clipMapPeriod: clipMapPeriod [
@@ -24,39 +32,9 @@ WDCTerrainMeshDeformationState >> createEngineDependantData [
 	renderableStateBindings do: [ :bindings |
 		bindings
 			bind: 0 storageBufferElement: gpuTerrainState;
-			bind: 1 texture: (heightMapTexture ifNil: [engine resourceCache blackTexture]);
-			bind: 2 texture: (splattingTexture ifNil: [engine resourceCache blackTexture])
+			bind: 1 texture: (terrainData heightMap ifNil: [engine resourceCache blackTexture]);
+			bind: 2 texture: (terrainData splatterMap ifNil: [engine resourceCache blackTexture])
 	]
-]
-
-{ #category : #initialization }
-WDCTerrainMeshDeformationState >> heightMapOffset: anOffset [
-	terrainStateData heightMapScale: anOffset
-]
-
-{ #category : #initialization }
-WDCTerrainMeshDeformationState >> heightMapScale: aScale [
-	terrainStateData heightMapScale: aScale
-]
-
-{ #category : #accessing }
-WDCTerrainMeshDeformationState >> heightMapTexture [
-	^ heightMapTexture
-]
-
-{ #category : #accessing }
-WDCTerrainMeshDeformationState >> heightMapTexture: anObject [
-	heightMapTexture := anObject
-]
-
-{ #category : #initialization }
-WDCTerrainMeshDeformationState >> heightOffset: anOffset [
-	terrainStateData heightOffset: anOffset
-]
-
-{ #category : #initialization }
-WDCTerrainMeshDeformationState >> heightScale: aScale [
-	terrainStateData heightScale: aScale
 ]
 
 { #category : #initialization }
@@ -66,7 +44,8 @@ WDCTerrainMeshDeformationState >> initialize [
 		heightMapScale: (WMVector2F x: 1.0 y: 1.0);
 		heightMapOffset: WMVector2F zero;
 		heightScale: 1.0;
-		yourself
+		yourself.
+	terrainData := WDCTerrainData new.
 
 ]
 
@@ -81,13 +60,14 @@ WDCTerrainMeshDeformationState >> requiresAccessFromTheCPU [
 ]
 
 { #category : #accessing }
-WDCTerrainMeshDeformationState >> splattingTexture [
-	^ splattingTexture
+WDCTerrainMeshDeformationState >> terrainData [
+	^ terrainData
 ]
 
 { #category : #accessing }
-WDCTerrainMeshDeformationState >> splattingTexture: anObject [
-	splattingTexture := anObject
+WDCTerrainMeshDeformationState >> terrainData: anObject [
+	terrainData := anObject.
+	self applyTerrainDataState
 ]
 
 { #category : #accessing }

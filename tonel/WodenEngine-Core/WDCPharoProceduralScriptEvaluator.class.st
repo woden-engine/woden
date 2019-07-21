@@ -17,7 +17,8 @@ Class {
 		'ambientOcclusionRadius',
 		'ambientOcclusionHeightThreshold',
 		'ambientOcclusionSampleCount',
-		'terrainFunction'
+		'terrainFunction',
+		'terrainData'
 	],
 	#category : #'WodenEngine-Core-Texture'
 }
@@ -228,8 +229,15 @@ WDCPharoProceduralScriptEvaluator >> evaluateScriptFromFile: scriptFileReference
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralScriptEvaluator >> evaluateTerrainHeightMapTextureWithExtent: anExtent [
-	^ WDCTextureData extent: anExtent signedHeightRenderWith: [ :s :t |
-		(terrainFunction value: s value: t) first
+	| minHeight maxHeight invRange |
+	minHeight := self terrainData minHeight.
+	maxHeight := self terrainData maxHeight.
+	invRange := (maxHeight closeTo: minHeight)
+		ifTrue: [ 0.0 ]
+		ifFalse: [ (maxHeight - minHeight) reciprocal ].
+	
+	^ WDCTextureData extent: anExtent heightRenderWith: [ :s :t |
+		(((terrainFunction value: s value: t) first min: maxHeight max: minHeight) - minHeight) * invRange
 	].
 ]
 
@@ -246,7 +254,19 @@ WDCPharoProceduralScriptEvaluator >> evaluateTerrainMap [
 		^ self evaluateTerrainSplatterMapTextureWithExtent: textureExtent
 	].
 
+	self isHeightMapRequested ifTrue: [
+		^ self evaluateTerrainHeightMapTextureWithExtent: textureExtent
+	].
+
+	self isTerrainDataRequested ifTrue: [ 
+		^ self terrainData copy
+			heightMap: (self evaluateTerrainHeightMapTextureWithExtent: textureExtent);
+			splatterMap: (self evaluateTerrainSplatterMapTextureWithExtent: textureExtent);
+			yourself
+	].
+
 	^ self evaluateTerrainHeightMapTextureWithExtent: textureExtent
+
 ]
 
 { #category : #'rendering helpers' }
@@ -331,6 +351,11 @@ WDCPharoProceduralScriptEvaluator >> isSplatterMapRequested [
 	^ self requestedTexture = #splatter
 ]
 
+{ #category : #testing }
+WDCPharoProceduralScriptEvaluator >> isTerrainDataRequested [
+	^ self requestedTexture = #terrainData
+]
+
 { #category : #accessing }
 WDCPharoProceduralScriptEvaluator >> metallicFunction [
 	^ metallicFunction
@@ -380,6 +405,11 @@ WDCPharoProceduralScriptEvaluator >> roughnessFunction [
 { #category : #accessing }
 WDCPharoProceduralScriptEvaluator >> roughnessFunction: anObject [
 	roughnessFunction := anObject
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> terrainData [
+	^ terrainData ifNil: [ terrainData := WDCTerrainData new ]
 ]
 
 { #category : #accessing }

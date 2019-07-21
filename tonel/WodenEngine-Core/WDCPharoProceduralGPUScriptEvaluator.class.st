@@ -257,7 +257,7 @@ WDCPharoProceduralGPUScriptEvaluator >> renderSRGBWithExtent: anExtent heightFun
 WDCPharoProceduralGPUScriptEvaluator >> renderTerrainHeightMapWithExtent: anExtent [
 	| colorShader |
 	colorShader := self terrainHeightFieldShaderFor: terrainFunction.
-	^ self shader: colorShader toTextureDataExtent: anExtent bpp: 16 format: AGPU_TEXTURE_FORMAT_R16_SNORM encodeFunctionName: #encode_sr16
+	^ self shader: colorShader toTextureDataExtent: anExtent bpp: 16 format: AGPU_TEXTURE_FORMAT_R16_UNORM encodeFunctionName: #encode_r16
 ]
 
 { #category : #'rendering helpers' }
@@ -367,10 +367,28 @@ WDCPharoProceduralGPUScriptEvaluator >> shadersDirectory [
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> terrainHeightFieldShaderFor: heightFunctionObject [
+	| minHeight maxHeight invRange builder constantNodes |
 	codeConverter := DASLPharoCodeConverter new.
 	codeConverter convertFunction: heightFunctionObject name: #terrainGenerationFunction argumentTypes: #(float float) returnType: #(float (tuple float float float float float)).
 
-	^ self compileShader: 'procedural/terrainHeightMapTextureInterface.dastrel' injectingNodes: codeConverter generatedNodes.
+	minHeight := self terrainData minHeight.
+	maxHeight := self terrainData maxHeight.
+	invRange := (maxHeight closeTo: minHeight)
+		ifTrue: [ 0.0 ]
+		ifFalse: [ (maxHeight - minHeight) reciprocal ].
+		
+	builder := DASLAstBuilder new.
+	constantNodes := { 
+	 builder constantGlobalNamed: #HeightScaleMinValue typeNamed: #float value: 
+		(builder literalFloat: minHeight asFloat).
+	 builder constantGlobalNamed: #HeightScaleMaxValue typeNamed: #float value: 
+		(builder literalFloat: maxHeight asFloat).
+	 builder constantGlobalNamed: #HeightScaleInvRange typeNamed: #float value: 
+		(builder literalFloat: invRange asFloat).
+	}.
+
+
+	^ self compileShader: 'procedural/terrainHeightMapTextureInterface.dastrel' injectingNodes:  constantNodes , codeConverter generatedNodes.
 
 
 ]

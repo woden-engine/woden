@@ -136,6 +136,11 @@ WDCTexture >> dependencyChange: dependency [
 ]
 
 { #category : #accessing }
+WDCTexture >> depth [
+	^ description depth
+]
+
+{ #category : #accessing }
 WDCTexture >> description [
 	^ description
 ]
@@ -162,9 +167,19 @@ WDCTexture >> hasDepthAspect [
 ]
 
 { #category : #testing }
+WDCTexture >> hasSignedHeightFieldFormat [
+	^ { AGPU_TEXTURE_FORMAT_R8_SNORM . AGPU_TEXTURE_FORMAT_R16_SNORM } includes: description format
+]
+
+{ #category : #testing }
 WDCTexture >> hasStencilAspect [
 	^ FormatsWithStencilAspect includes: description format
 	
+]
+
+{ #category : #accessing }
+WDCTexture >> height [
+	^ description height
 ]
 
 { #category : #testing }
@@ -233,4 +248,9 @@ WDCTexture >> valueRange [
 	data ifNil: [ ^ nil ].
 	data isForm ifTrue: [ ^ { 0.0 . 1.0 } ].
 	^ data valueRange
+]
+
+{ #category : #accessing }
+WDCTexture >> width [
+	^ description width
 ]

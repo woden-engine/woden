@@ -127,11 +127,12 @@ WDASceneExamples class >> constructPoolSceneInto: scene [
 
 { #category : #'examples procedural' }
 WDASceneExamples class >> createIslandTerrainObjectFor: engine [
-	| material mesh terrain |
+	| material mesh terrain terrainData |
 	material := engine resourceCache loadMaterial: 'materials/demos/island.json'.
+	terrainData := engine resourceCache loadTerrain: 'terrains/demos/procedural/island.stterrain'.
 	
 	terrain := WDSGSpatialObject new.
-	mesh := material createTerrainMeshForSceneNode: terrain.		
+	mesh := terrainData createTerrainMeshWithMaterial: material.
 	terrain renderable: mesh.
 	
 	^ terrain
@@ -407,38 +408,34 @@ WDASceneExamples class >> example06MeshGrid [
 
 { #category : #examples }
 WDASceneExamples class >> example07SmallTerrain [
-	| model material mesh terrain light scene camera heightMap cube |
-	
+	| model material terrain light scene camera terrainData cube |
+
 	"Some procedural textures used by the demo"
-	heightMap := WDCTextureData extent: 128@128 signedHeightRenderWith: [ :s :t |
+	terrainData := WDCTerrainData textureExtent: 128@128 heightRenderWith: [ :s :t |
 		|st|
 		st := s@t.
 		st*3.0 fractionalBrownianMotionOctaves: 5 lacunarity: 1.45 with: [ :c : a|
 			(c signedGradientNoise *a) abs
 		]
 	].
-	
+
 	model := WDASampleSceneModel new.
+	terrainData
+		engine: model engine;
+		terrainExtent: 20@20;
+		minHeight: 0;
+		maxHeight: 8.0.
+	
 	scene := model newScene.
 	camera := model camera.
 	camera farDistance: 100.0.
 	camera translateByZ: 3.0; translateByY: 1.0.
 
 	material := WDCTerrainMaterial for: scene engine.
-	mesh := (WDCTerrainMeshBuilder for: scene engine)
-		material: material;
-		minHeight: 0.0;
-		maxHeight: 8.0;
-		createGridWithSize: (WMVector2F x: 20.0 y: 20.0) subdivisions: 128;
-		terrainMesh.
-	mesh deformationState
-		heightMapScale: (WMVector2F x: 1.0 y: 1.0)/10.0;
-		heightScale: 8.0;
-		heightMapTexture: (heightMap asTextureFor: scene engine).
-		
+
 	terrain := WDSGSpatialObject new.
 	terrain translateByY: -1.0.
-	terrain renderable: mesh.
+	terrain renderable: (terrainData createTerrainMeshWithMaterial: material).
 	
 	cube := WDSGSpatialObject new.
 	cube renderable: ((WDCGenericMeshBuilder for: scene engine)
@@ -463,10 +460,10 @@ WDASceneExamples class >> example07SmallTerrain [
 
 { #category : #examples }
 WDASceneExamples class >> example08MediumTerrain [
-	| model material mesh terrain light scene camera heightMap |
+	| model material terrain light scene camera terrainData |
 	
 	"Some procedural textures used by the demo"
-	heightMap := [WDCTextureData extent: 256@256 signedHeightRenderWith: [ :s :t |
+	terrainData := [WDCTerrainData textureExtent: 256@256 heightRenderWith: [ :s :t |
 		|st|
 		st := s@t.
 		st*10.0 fractionalBrownianMotionOctaves: 8 lacunarity: 1.45 with: [ :c : a|
@@ -474,26 +471,24 @@ WDASceneExamples class >> example08MediumTerrain [
 		]
 	]] valueCachedInDisk.
 	
+	
 	model := WDASampleSceneModel new.
+	terrainData
+		clipMapLevels: 3;
+		engine: model engine;
+		terrainExtent: 200@200;
+		minHeight: 0;
+		maxHeight: 8.0.
+
 	scene := model newScene.
 	camera := model camera.
 	camera farDistance: 200.0.
 	camera translateByZ: 3.0; translateByY: 1.0.
 
 	material := WDCTerrainMaterial for: scene engine.
-	mesh := (WDCTerrainMeshBuilder for: scene engine)
-		material: material;
-		maxHeight: 8.0;
-		createClipMapWithLevels: 3 size: (WMVector2F x: 20.0 y: 20.0) subdivisions: 128;
-		terrainMesh.
-	mesh deformationState
-		heightMapScale: (WMVector2F x: 1.0 y: 1.0)/100.0;
-		heightScale: 8.0;
-		heightMapTexture: (heightMap asTextureFor: scene engine).
-		
 	terrain := WDSGSpatialObject new.
 	terrain transform translateByY: -1.0.
-	terrain renderable: mesh.
+	terrain renderable: (terrainData createTerrainMeshWithMaterial: material).
 	scene add: terrain.
 	
 	light := WDSGLightSource new.

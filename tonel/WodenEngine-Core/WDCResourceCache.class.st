@@ -596,6 +596,16 @@ WDCResourceCache >> loadSoundSampleData: aFileNameOrReference [
 ]
 
 { #category : #'resource loading' }
+WDCResourceCache >> loadTerrain: aFileNameOrReference [
+	| terrainFile |
+	terrainFile := self resolveResourceFileReference: aFileNameOrReference.
+	^ self resourceAt: terrainFile -> #texture ifAbsentPut: [
+		self performLoadTerrainDataFile: terrainFile
+	].
+
+]
+
+{ #category : #'resource loading' }
 WDCResourceCache >> loadTexture: aFileNameOrReference [
 	| textureFile |
 	textureFile := self resolveResourceFileReferenceWithQuery: aFileNameOrReference.
@@ -699,6 +709,28 @@ WDCResourceCache >> parseQueryTerm: in [
 			]
 		]
 	]
+]
+
+{ #category : #'resource loading' }
+WDCResourceCache >> performLoadTerrainDataFile: terrainFile [
+	| script scriptEvaluatorClass terrainData |
+	script := terrainFile contents.
+	scriptEvaluatorClass := WDCPharoProceduralScriptEvaluator.
+	(script beginsWith: '"!GPU') ifTrue: [ 
+		scriptEvaluatorClass := WDCPharoProceduralGPUScriptEvaluator
+	].
+
+	terrainData := Smalltalk compiler
+		receiver: (WDCPharoProceduralScriptContext new
+			textureGenerator: (scriptEvaluatorClass new
+				parameters: (Dictionary newFromPairs: #(texture terrainData));
+				yourself)
+			);
+		evaluate: script.
+		
+	terrainData engine: engine.	
+	^ terrainData
+
 ]
 
 { #category : #'resource loading' }

@@ -826,6 +826,11 @@ WDCTextureData >> gtInspectorFormIn: composite [
 		display: [ self asMorph ]
 ]
 
+{ #category : #testing }
+WDCTextureData >> hasSignedHeightFieldFormat [
+	^ { AGPU_TEXTURE_FORMAT_R8_SNORM . AGPU_TEXTURE_FORMAT_R16_SNORM } includes: pixelFormat
+]
+
 { #category : #accessing }
 WDCTextureData >> height [
 	^ height
