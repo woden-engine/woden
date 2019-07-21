@@ -1,0 +1,43 @@
+function fuzzyNot(v: float) -> float
+{
+	return 1.0f - v;
+}
+
+function fuzzyAnd(a: float, b: float) -> float
+{
+	return min(a, b);
+}
+
+function fuzzyOr(a: float, b: float) -> float
+{
+	return max(a, b);
+}
+
+function fuzzyXor(a: float, b: float) -> float
+{
+	return fuzzyOr(
+		fuzzyAnd(fuzzyNot(a), b),
+		fuzzyAnd(a, fuzzyNot(b)));
+}
+
+function productFuzzyNot(v: float) -> float
+{
+	return 1.0f - v;
+}
+
+function productFuzzyAnd(a: float, b: float) -> float
+{
+	return a*b;
+}
+
+function productFuzzyOr(a: float, b: float) -> float
+{
+	return a + b - a*b;
+}
+
+function productFuzzyXor(a: float, b: float) -> float
+{
+	return productFuzzyOr(
+		productFuzzyAnd(productFuzzyNot(a), b),
+		productFuzzyAnd(a, productFuzzyNot(b)));
+}

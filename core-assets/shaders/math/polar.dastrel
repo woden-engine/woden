@@ -1,0 +1,9 @@
+function vector2Radius(v: float2) -> float
+{
+	return length(v);
+}
+
+function vector2Angle(v: float2) -> float
+{
+	return atan2(v.y, v.x);
+}

@@ -1,4 +1,5 @@
-| islandOuterRadius islandInnerRadius maximumHeight seabedLevel heightScale islandBaseLevel snowStartHeight textureData |
+"!GPU"
+| islandOuterRadius islandInnerRadius maximumHeight seabedLevel heightScale islandBaseLevel snowStartHeight terrainFunction |
 islandOuterRadius := 100.0.
 islandInnerRadius := islandOuterRadius - 50.0.
 maximumHeight := 100.0.
@@ -8,7 +9,7 @@ heightScale := 120.0.
 
 snowStartHeight := 15.0.
 
-textureData := WDCTextureData extent: 256@256 terrainMap: (self at: #texture) renderWith: [ :s :t |
+terrainFunction := [ :s :t |
 	| st p r theta innerRadius
 	 boundaries heightAttenuation
 	 islandInterior mountainHeight
@@ -18,7 +19,7 @@ textureData := WDCTextureData extent: 256@256 terrainMap: (self at: #texture) re
 	st := s@t.
 	p := (st*2.0 - 1.0) * islandOuterRadius.
 
-	r := p distanceTo: 0@0.
+	r := p radius.
 	theta := p theta.
 
 	"Generate the island boundaries"
@@ -28,8 +29,9 @@ textureData := WDCTextureData extent: 256@256 terrainMap: (self at: #texture) re
 	heightAttenuation := (r smoothStepFrom: 0.0 to: innerRadius) fuzzyNot.
 
 	"Generate the mountains"
-	mountainHeight := (st*10.0 fractionalBrownianMotionOctaves: 5 lacunarity: 2.167245 with: [:c | c signedGradientNoise abs ])*0.5 + 0.5 * (maximumHeight * heightAttenuation).
-	"Generate the stuff in the island interior"
+	mountainHeight := (st*10.0 fbmSignedGradientNoiseAbsOctaves: 5 lacunarity: 2.167245)*0.5 + 0.5 * (maximumHeight * heightAttenuation).
+
+	"Generate the stuff in the island interior"
 	islandInterior := islandBaseLevel + mountainHeight.
 
 	heightValue := seabedLevel interpolateTo: islandInterior at: boundaries.
@@ -40,4 +42,9 @@ textureData := WDCTextureData extent: 256@256 terrainMap: (self at: #texture) re
 	rock := (snow fuzzyNot productFuzzyAnd: sand fuzzyNot) productFuzzyAnd: grass fuzzyNot.
 
 	{heightValue / heightScale . {sand . grass . rock . snow . 0.0}}.
-]
+].
+
+^ textureGenerator
+	textureExtent: 256@256;
+	terrainFunction: terrainFunction;
+	evaluate

@@ -1,0 +1,19 @@
+import fragment.stage;
+import fragment.screenQuad;
+import procedural.noise;
+import math.fuzzyLogic;
+import math.polar;
+
+code_block(fragment) main
+{
+	let uv = FragmentInput.texcoord;
+	let s = terrainGenerationFunction(uv.x, uv.y)[1];
+
+    let a = s[0];
+    let b = s[1];
+    let c = s[2];
+    let d = s[3];
+    let e = s[4];
+    let sum = a + b + c + d + e;
+	FragmentStage.colorOutput0 = float4(b, c, d, e) / max(0.000001f, sum);
+}

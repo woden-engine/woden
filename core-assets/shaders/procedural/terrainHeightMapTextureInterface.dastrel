@@ -1,0 +1,12 @@
+import fragment.stage;
+import fragment.screenQuad;
+import procedural.noise;
+import math.fuzzyLogic;
+import math.polar;
+
+code_block(fragment) main
+{
+	let uv = FragmentInput.texcoord;
+	let height = terrainGenerationFunction(uv.x, uv.y)[0];
+	FragmentStage.colorOutput0 = float4(height, height, height, 1.0f);
+}

@@ -126,6 +126,11 @@ function encodeUnorm16(value: float) -> uint
 	return uint(max(min(value, 1.0f), 0.0f)*65535.0f);
 }
 
+function encodeSnorm16(value: float) -> uint
+{
+	return uint(int(max(min(value, 1.0f), -1.0f)*32767.0f)) & 65535u;
+}
+
 function encodeSRGBChannel(value: float) -> float
 {
 	let a = 0.055f;
@@ -279,6 +284,36 @@ code_block(compute, localSizeX = 8, localSizeY = 8) encode_r8
 			(encodeUnorm8(c2) << 8u) |
 			(encodeUnorm8(c3) << 16u) |
 			(encodeUnorm8(c4) << 24u);
+	}
+}
+
+code_block(compute, localSizeX = 8, localSizeY = 8) encode_r16
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let sourceIndex = (width*globalInvocationID.y + globalInvocationID.x)*2u;
+	let destIndex = width*globalInvocationID.y + globalInvocationID.x;
+	if(sourceIndex < bufferSize)
+	{
+		let c1 = DecodedBuffer.data[sourceIndex].r;
+		let c2 = DecodedBuffer.data[sourceIndex + 1u].r;
+		EncodedBuffer.data[destIndex] = encodeUnorm16(c1) | (encodeUnorm16(c2) << 16u);
+	}
+}
+
+code_block(compute, localSizeX = 8, localSizeY = 8) encode_sr16
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let sourceIndex = (width*globalInvocationID.y + globalInvocationID.x)*2u;
+	let destIndex = width*globalInvocationID.y + globalInvocationID.x;
+	if(sourceIndex < bufferSize)
+	{
+		let c1 = DecodedBuffer.data[sourceIndex].r;
+		let c2 = DecodedBuffer.data[sourceIndex + 1u].r;
+		EncodedBuffer.data[destIndex] = encodeSnorm16(c1) | (encodeSnorm16(c2) << 16u);
 	}
 }
 
