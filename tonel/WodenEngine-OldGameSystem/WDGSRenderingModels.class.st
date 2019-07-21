@@ -51,11 +51,6 @@ WDGSRenderingModels >> bucket [
 	^ #renderingModels
 ]
 
-{ #category : #'extra per object rendering data' }
-WDGSRenderingModels >> createSceneDependentDataFor: engine into: bindings [
-	^ nil
-]
-
 { #category : #rendering }
 WDGSRenderingModels >> createSolidModel [
 	solidModelBuilder

@@ -98,6 +98,18 @@ WDCAbstractRenderable class >> renderPriorityTranslucentSorted [
 	^ RenderPriorityTranslucentSorted
 ]
 
+{ #category : #converting }
+WDCAbstractRenderable >> asTerrainRenderable [
+	^ WDCTerrainRenderableMesh new
+		mesh: self
+]
+
+{ #category : #converting }
+WDCAbstractRenderable >> asWaterRenderable [
+	^ WDCWaterRenderableMesh new
+		mesh: self
+]
+
 { #category : #accessing }
 WDCAbstractRenderable >> backgroundRenderPriority [
 	self renderPriority: RenderPriorityOpaqueBackground
@@ -135,11 +147,6 @@ WDCAbstractRenderable >> createRenderingRenderablesFor: spatialObject [
 		renderable: self;
 		yourself 
 	}
-]
-
-{ #category : #'extra per object rendering data' }
-WDCAbstractRenderable >> createSceneDependentDataFor: engine into: bindings [
-	self subclassResponsibility
 ]
 
 { #category : #accessing }

@@ -36,6 +36,7 @@ WDCTerrainMaterial class >> defaultRoughnessFactor [
 { #category : #rendering }
 WDCTerrainMaterial >> activateDepthNormalOn: stateTracker [
 	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
+	stateTracker hasTerrainDeformationState ifFalse: [ ^ false ].
 	
 	self validateCache.
 	stateTracker
@@ -53,6 +54,7 @@ WDCTerrainMaterial >> activateDepthNormalOn: stateTracker [
 { #category : #rendering }
 WDCTerrainMaterial >> activateDepthOnlyOn: stateTracker [
 	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
+	stateTracker hasTerrainDeformationState ifFalse: [ ^ false ].
 	
 	self validateCache.
 	stateTracker
@@ -70,6 +72,7 @@ WDCTerrainMaterial >> activateDepthOnlyOn: stateTracker [
 { #category : #rendering }
 WDCTerrainMaterial >> activateForwardOn: stateTracker [
 	"Do not draw the terrain in editor top views."
+	stateTracker hasTerrainDeformationState ifFalse: [ ^ false ].
 
 	self validateCache.
 	
@@ -127,19 +130,17 @@ WDCTerrainMaterial >> bindResources [
 
 	resourceCache := engine resourceCache.
 	resourceBinding bind: 0 uniformBuffer: stateUniformBuffer.
-	resourceBinding bind: 2 texture: (heightMapTexture ifNil: [resourceCache blackTexture]).
-	resourceBinding bind: 3 texture: (splattingTexture ifNil: [resourceCache blackTexture]).
 	
 	0 to: 4 do: [ :i |
-		resourceBinding bind: 4 + i texture: (self validAlbedoTexture: i + 1).
+		resourceBinding bind: 2 + i texture: (self validAlbedoTexture: i + 1).
 	].
 
 	0 to: 4 do: [ :i |
-		resourceBinding bind: 9 + i texture: (self validNormalTexture: i + 1).
+		resourceBinding bind: 7 + i texture: (self validNormalTexture: i + 1).
 	].
 	
 	0 to: 4 do: [ :i |
-		resourceBinding bind:  14 + i texture: (self validMetallicRoughnessTexture: i + 1).
+		resourceBinding bind: 12 + i texture: (self validMetallicRoughnessTexture: i + 1).
 	].
 
 ]
@@ -152,11 +153,6 @@ WDCTerrainMaterial >> buildTerrainMeshWith: builder [
 		createClipMapWithLevels: 3 size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
 		addHeightMapCollision: heightMapTexture
 		heightScale: materialState heightScale scale: self heightMapScale offset: self heightMapOffset
-]
-
-{ #category : #accessing }
-WDCTerrainMaterial >> clipMapPeriod: aVector2 [
-	materialState clipMapPeriod: aVector2
 ]
 
 { #category : #'terrain mesh building' }
@@ -179,82 +175,10 @@ WDCTerrainMaterial >> fragmentShader [
 	^ fragmentShader ifNil: [ fragmentShader := self shaderLibrary getFragmentStage: #forward_splatting ]
 ]
 
-{ #category : #accessing }
-WDCTerrainMaterial >> heightMapOffset [
-	^ materialState heightMapOffset
-]
-
-{ #category : #accessing }
-WDCTerrainMaterial >> heightMapOffset: aVector2 [
-	materialState heightMapOffset: aVector2
-]
-
-{ #category : #accessing }
-WDCTerrainMaterial >> heightMapScale [
-	^ materialState heightMapScale
-]
-
-{ #category : #accessing }
-WDCTerrainMaterial >> heightMapScale: aVector2 [
-	materialState heightMapScale: aVector2
-]
-
-{ #category : #'as yet unclassified' }
-WDCTerrainMaterial >> heightMapSize [
-	^ heightMapSize
-]
-
-{ #category : #accessing }
-WDCTerrainMaterial >> heightMapSize: aVector2 [
-	heightMapSize := aVector2.
-	materialState heightMapScale: (WMVector2F x: 2.0 / aVector2 x y: 2.0 / aVector2 y)
-]
-
-{ #category : #accessing }
-WDCTerrainMaterial >> heightMapTexture [
-	^ heightMapTexture
-]
-
-{ #category : #accessing }
-WDCTerrainMaterial >> heightMapTexture: anObject [
-	heightMapTexture := anObject
-]
-
-{ #category : #accessing }
-WDCTerrainMaterial >> heightOffset: aFloat [
-	materialState heightOffset: aFloat
-]
-
-{ #category : #accessing }
-WDCTerrainMaterial >> heightRange [
-	| heightScale minHeightValue maxHeightValue |
-	heightScale := materialState heightScale.
-	minHeightValue := -1.0.
-	maxHeightValue := 1.0.
-	
-	heightMapTexture ifNotNil: [ 
-		heightMapTexture valueRange ifNotNil: [ :range |
-			minHeightValue := range first.
-			maxHeightValue := range second.
-		].
-	].
-	
-	^ { minHeightValue * heightScale . maxHeightValue * heightScale}
-]
-
-{ #category : #accessing }
-WDCTerrainMaterial >> heightScale: aFloat [
-	materialState heightScale: aFloat
-]
-
 { #category : #initialization }
 WDCTerrainMaterial >> initialize [
 	heightMapSize := WMVector2F x: 2.0 y: 2.0.
 	materialState := WDCTerrainMaterialState new
-		heightMapScale: (WMVector2F x: 1.0 y: 1.0);
-		heightMapOffset: WMVector2F zero;
-		heightScale: 1.0;
-
 		albedo: Color white asWMVector4F;
 		metallicFactor: self class defaultMetallicFactor;
 		roughnessFactor: self class defaultRoughnessFactor;
@@ -311,13 +235,6 @@ WDCTerrainMaterial >> normalTextures: anArray [
 
 { #category : #parsing }
 WDCTerrainMaterial >> parse: materialFileReference data: data [
-
-	self
-		heightMapSize: (self parse: data at: materialFileReference vector2: 'height-map-size' ifAbsent: [ (WMVector2F x: 2.0 y: 2.0) ]);
-		yourself.
-
-	heightMapTexture := self parse: data at: materialFileReference optionalTexture: 'height-map'.
-	splattingTexture := self parse: data at: materialFileReference optionalTexture: 'splatter'.
 	albedoTextures := self parse: data at: materialFileReference srgbTexture: 'albedo-textures' arrayOfSize: 5.
 	normalTextures := self parse: data at: materialFileReference texture: 'normal-textures' arrayOfSize: 5.
 	metallicRoughnessTextures := self parse: data at: materialFileReference texture: 'metallic-roughness-textures' arrayOfSize: 5.

@@ -132,7 +132,25 @@ WDESGenericEntity >> buildTerrainMeshWith: aBlock [
 	| builder renderable component |
 	builder := WDCTerrainMeshBuilder for: self engine.
 	aBlock value: builder.
-	renderable := builder mesh.
+	renderable := builder terrainMesh.
+	
+	component := WDESStaticRenderableSceneNodeComponent new renderable: renderable.
+	self addComponent: component.
+	
+	builder collisionShape ifNotNil: [ :collisionShape |
+		self addComponentWithCollisionShape: collisionShape
+	].
+	
+	^ component
+	
+]
+
+{ #category : #building }
+WDESGenericEntity >> buildWaterMeshWith: aBlock [
+	| builder renderable component |
+	builder := WDCTerrainMeshBuilder for: self engine.
+	aBlock value: builder.
+	renderable := builder waterMesh.
 	
 	component := WDESStaticRenderableSceneNodeComponent new renderable: renderable.
 	self addComponent: component.

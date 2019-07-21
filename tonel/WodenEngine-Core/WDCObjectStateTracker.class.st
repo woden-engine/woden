@@ -19,7 +19,8 @@ Class {
 		'objectDepthFunction',
 		'materialDepthEnabled',
 		'materialDepthWriteMask',
-		'materialDepthFunction'
+		'materialDepthFunction',
+		'deformationState'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -132,6 +133,21 @@ WDCObjectStateTracker >> applyPolygonMode [
 
 ]
 
+{ #category : #accessing }
+WDCObjectStateTracker >> deformationState [
+	^ deformationState
+]
+
+{ #category : #testing }
+WDCObjectStateTracker >> hasSkinning [
+	^ deformationState isNotNil and: [ deformationState isSkinningState ]
+]
+
+{ #category : #testing }
+WDCObjectStateTracker >> hasTerrainDeformationState [
+	^ deformationState isNotNil and: [ deformationState isTerrainDeformationState ]
+]
+
 { #category : #testing }
 WDCObjectStateTracker >> hasVertexColors [
 	^ activeVertexData isNotNil and: [ activeVertexData hasVertexColors ]
@@ -140,6 +156,11 @@ WDCObjectStateTracker >> hasVertexColors [
 { #category : #testing }
 WDCObjectStateTracker >> hasVertexTangents [
 	^ activeVertexData isNotNil and: [ activeVertexData hasVertexTangents ]
+]
+
+{ #category : #testing }
+WDCObjectStateTracker >> hasWaterDeformationState [
+	^ deformationState isNotNil and: [ deformationState isWaterDeformationState ]
 ]
 
 { #category : #'per object per material states' }
@@ -272,6 +293,7 @@ WDCObjectStateTracker >> reset [
 	materialDepthEnabled := nil.
 	materialDepthWriteMask := nil.
 	materialDepthFunction := nil.
+	deformationState := nil
 ]
 
 { #category : #'per object per material states' }
@@ -306,6 +328,16 @@ WDCObjectStateTracker >> sceneDepthFunction: anObject [
 WDCObjectStateTracker >> sceneDepthWriteMask: anObject [
 	sceneDepthWriteMask := anObject.
 	self applyDepthWriteMask
+]
+
+{ #category : #'as yet unclassified' }
+WDCObjectStateTracker >> withDeformationState: newDeformationState do: aBlock [
+	| oldActiveDeformationState |
+	oldActiveDeformationState := deformationState.
+	deformationState := newDeformationState.
+	aBlock ensure: [
+		deformationState := oldActiveDeformationState
+	]
 ]
 
 { #category : #'as yet unclassified' }

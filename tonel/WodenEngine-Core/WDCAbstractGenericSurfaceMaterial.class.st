@@ -9,7 +9,6 @@ Class {
 		'resourceBinding',
 		'materialState',
 		'stateUniformBuffer',
-		'isSkinned',
 		'depthNormalFragmentShader',
 		'forwardFragmentShader',
 		'shaderLibrary',
@@ -64,7 +63,7 @@ WDCAbstractGenericSurfaceMaterial >> activateDepthOnlyOn: stateTracker [
 
 	self validateCache.
 	stateTracker
-		vertexShader: self depthVertexShader;
+		vertexShader: (self depthVertexShaderFor: stateTracker);
 		fragmentShader: nil.
 		
 	resourceBinding ifNotNil: [ 
@@ -184,12 +183,12 @@ WDCAbstractGenericSurfaceMaterial >> depthNormalFragmentShader [
 
 { #category : #shaders }
 WDCAbstractGenericSurfaceMaterial >> depthNormalVertexShaderFor: stateTracker [
-	^ self depthVertexShader
+	^ self depthVertexShaderFor: stateTracker
 ]
 
 { #category : #shaders }
-WDCAbstractGenericSurfaceMaterial >> depthVertexShader [
-	^ isSkinned
+WDCAbstractGenericSurfaceMaterial >> depthVertexShaderFor: stateTracker [
+	^ stateTracker hasSkinning
 			ifTrue: [ self shaderLibrary getVertexStage: #depthSkinned_vertex ]
 			ifFalse: [ self shaderLibrary getVertexStage: #depth_vertex ]
 ]
@@ -235,7 +234,6 @@ WDCAbstractGenericSurfaceMaterial >> initialize [
 	materialState := self materialStateClass new
 		albedo: Color white asWMVector4F;
 		yourself.
-	isSkinned := false.
 	doubleSided := false.
 	self invalidateCache.
 ]
@@ -245,16 +243,6 @@ WDCAbstractGenericSurfaceMaterial >> invalidateCache [
 	resourceBindingsAreUpdated := false.
 	forwardFragmentShader := nil.
 	depthNormalFragmentShader := nil.
-]
-
-{ #category : #accessing }
-WDCAbstractGenericSurfaceMaterial >> isSkinned [
-	^ isSkinned
-]
-
-{ #category : #accessing }
-WDCAbstractGenericSurfaceMaterial >> isSkinned: anObject [
-	isSkinned := anObject.
 ]
 
 { #category : #'state binding' }
@@ -281,8 +269,6 @@ WDCAbstractGenericSurfaceMaterial >> parse: materialFileReference data: data [
 	normalTexture := self parse: data at: materialFileReference optionalTexture: 'normal-texture'.
 	materialState
 		alphaCutoff: (data at: 'alpha-cutoff' ifAbsent: [ materialState alphaCutoff ]).
-
-	isSkinned := data at: 'skinned' ifAbsent: [ false ].
 ]
 
 { #category : #testing }
@@ -328,7 +314,6 @@ WDCAbstractGenericSurfaceMaterial >> thumbnail [
 
 { #category : #preview }
 WDCAbstractGenericSurfaceMaterial >> thumbnailType [
-	isSkinned ifTrue: [ ^ #skinned ].
 	^ #generic
 ]
 
@@ -348,7 +333,7 @@ WDCAbstractGenericSurfaceMaterial >> validateCache [
 
 { #category : #shaders }
 WDCAbstractGenericSurfaceMaterial >> vertexShaderFor: stateTracker [
-	^ shaderLibrary getVertexStage: (VertexShaderVariantTable at: { isSkinned . stateTracker hasVertexColors . stateTracker hasVertexTangents })
+	^ shaderLibrary getVertexStage: (VertexShaderVariantTable at: { stateTracker hasSkinning . stateTracker hasVertexColors . stateTracker hasVertexTangents })
 ]
 
 { #category : #shaders }

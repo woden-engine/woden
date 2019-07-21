@@ -3,9 +3,8 @@ I am a generic mesh that is also deformed by an armature.
 "
 Class {
 	#name : #WDCSkinnedRenderableMesh,
-	#superclass : #WDCAnimatedRenderable,
+	#superclass : #WDCMeshWithExtraDeformationRenderable,
 	#instVars : [
-		'mesh',
 		'armature',
 		'actions',
 		'pose'
@@ -34,12 +33,7 @@ WDCSkinnedRenderableMesh >> armature: anObject [
 ]
 
 { #category : #accessing }
-WDCSkinnedRenderableMesh >> boundingBox [
-	^ boundingBox ifNil: [mesh boundingBox].
-]
-
-{ #category : #accessing }
-WDCSkinnedRenderableMesh >> createAnimationState [
+WDCSkinnedRenderableMesh >> createDeformationState [
 	^ WDCSkinnedMeshAnimationState new
 		mesh: self;
 		pose: armature bones copy;
@@ -60,29 +54,7 @@ WDCSkinnedRenderableMesh >> initialize [
 	boundingBox := nil.
 ]
 
-{ #category : #accessing }
-WDCSkinnedRenderableMesh >> mesh [
-	^ mesh
-]
-
-{ #category : #accessing }
-WDCSkinnedRenderableMesh >> mesh: anObject [
-	mesh := anObject
-]
-
 { #category : #'extra per object rendering data' }
 WDCSkinnedRenderableMesh >> poseStateSize [
 	^ WMMatrix4F structureSize * armature bones size alignedTo: 256.
-]
-
-{ #category : #copying }
-WDCSkinnedRenderableMesh >> postCopy [
-	super postCopy.
-	mesh := mesh copyForResourceCacheInstancing.
-]
-
-{ #category : #rendering }
-WDCSkinnedRenderableMesh >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [
-	stateTracker useShaderResources: animationState currentRenderableStateBinding.
-	mesh renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex
 ]

@@ -62,7 +62,7 @@ WDAESProceduralSamples class >> example02PoolLevel [
 				sector addSkyBoxWithTexture: skyTexture
 			];
 			addWaterVolumeAt: (WMVector3F y: -0.3) with: [ :waterVolume |
-				(waterVolume buildTerrainMeshWith: [ :meshBuilder |
+				(waterVolume buildWaterMeshWith: [ :meshBuilder |
 				
 					waterMaterial := engine resourceCache loadMaterial: 'materials/demos/water.json'.
 					waterMaterial
@@ -78,7 +78,6 @@ WDAESProceduralSamples class >> example02PoolLevel [
 							halfExtent: (WMVector3F x: 2.5 y: 1.0 z: 2.5)
 							center: (WMVector3F y: -1.0))
 				])
-					makeTranslucentSorted
 			];
 		
 			addRigidBodyAt: (WMVector3F x: -4.5 y: 0.6 z: 0.0) with: [ :rigidBody |
@@ -134,7 +133,6 @@ WDAESProceduralSamples class >> example03Island [
 						halfExtent: (WMVector3F x: 200.0 y: 200.0 z: 200.0)
 						center: (WMVector3F y: -200.0))
 			])
-				makeTranslucentSorted.
 		].
 
 		sector

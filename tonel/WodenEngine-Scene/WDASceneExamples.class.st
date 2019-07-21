@@ -107,20 +107,16 @@ WDASceneExamples class >> constructPoolSceneInto: scene [
 		translateByX: 4.5 y: 0.5 z: 0.0.
 	scene add: cube.
 
-	"Setup the water material"
-	waterMaterial
-		harmonicAt: 1 amplitude: 0.05 frequency: -1.1 center: WMVector2F new;
-		harmonicAt: 2 amplitude: 0.02 frequency: 2.23 direction: (WMVector2F y: -1.0);
-		harmonicAt: 3 amplitude: 0.015 frequency: 1.80 direction: (WMVector2F x: 1.0).
-
 	"Add the water"
 	waterMesh := (WDCTerrainMeshBuilder for: scene engine)
 		material: waterMaterial;
 		heightScale: 0.1;
 		createGridWithSize: (WMVector2F x: 5.0 y: 5.0) subdivisions: 64;
-		mesh.
-	waterMesh
-		makeTranslucentSorted.
+		waterMesh.
+	waterMesh deformationState
+		harmonicAt: 1 amplitude: 0.05 frequency: -1.1 center: WMVector2F new;
+		harmonicAt: 2 amplitude: 0.02 frequency: 2.23 direction: (WMVector2F y: -1.0);
+		harmonicAt: 3 amplitude: 0.015 frequency: 1.80 direction: (WMVector2F x: 1.0).
 		
 	waterSurface := WDSGSpatialObject new.
 	waterSurface
@@ -146,19 +142,18 @@ WDASceneExamples class >> createIslandWaterObjectFor: engine [
 	"Setup the water material"
 	| material mesh waterObject |
 	material := (engine resourceCache loadMaterial: 'materials/demos/ocean.json').
-	material
-		harmonicAt: 1 amplitude: 0.015 frequency: 2.23 center: (WMVector2F zero);
-		harmonicAt: 2 amplitude: 0.03 frequency: 0.50 center: (WMVector2F zero).
 
 	"Add the water"
 	mesh := (WDCTerrainMeshBuilder for: engine)
 		material: material;
 		heightScale: 0.1;
 		createClipMapWithLevels: 3 size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
-		mesh.
+		waterMesh.
 
-	mesh makeTranslucentSorted.
-		
+	mesh deformationState
+		harmonicAt: 1 amplitude: 0.015 frequency: 2.23 center: (WMVector2F zero);
+		harmonicAt: 2 amplitude: 0.03 frequency: 0.50 center: (WMVector2F zero).
+
 	waterObject := WDSGSpatialObject new.
 	waterObject renderable: mesh.
 	^ waterObject
@@ -357,7 +352,7 @@ WDASceneExamples class >> example05DangerousPool [
 	pickedGun renderable: magnumMesh.
 	camera addChild: pickedGun.
 
-	animationState := magnumMesh animationState.
+	animationState := magnumMesh deformationState.
 	gunAction := animationState actionNamed: 'Draw'.
 	gunActionFrame := 0.0.
 	gunActionRepeated := false.
@@ -430,17 +425,16 @@ WDASceneExamples class >> example07SmallTerrain [
 	camera translateByZ: 3.0; translateByY: 1.0.
 
 	material := WDCTerrainMaterial for: scene engine.
-	material
-		heightMapScale: (WMVector2F x: 1.0 y: 1.0)/10.0;
-		heightScale: 8.0;
-		heightMapTexture: (heightMap asTextureFor: scene engine).
-	
 	mesh := (WDCTerrainMeshBuilder for: scene engine)
 		material: material;
 		minHeight: 0.0;
 		maxHeight: 8.0;
 		createGridWithSize: (WMVector2F x: 20.0 y: 20.0) subdivisions: 128;
-		mesh.
+		terrainMesh.
+	mesh deformationState
+		heightMapScale: (WMVector2F x: 1.0 y: 1.0)/10.0;
+		heightScale: 8.0;
+		heightMapTexture: (heightMap asTextureFor: scene engine).
 		
 	terrain := WDSGSpatialObject new.
 	terrain translateByY: -1.0.
@@ -487,16 +481,15 @@ WDASceneExamples class >> example08MediumTerrain [
 	camera translateByZ: 3.0; translateByY: 1.0.
 
 	material := WDCTerrainMaterial for: scene engine.
-	material
-		heightMapScale: (WMVector2F x: 1.0 y: 1.0)/100.0;
-		heightScale: 8.0;
-		heightMapTexture: (heightMap asTextureFor: scene engine).
-	
 	mesh := (WDCTerrainMeshBuilder for: scene engine)
 		material: material;
 		maxHeight: 8.0;
 		createClipMapWithLevels: 3 size: (WMVector2F x: 20.0 y: 20.0) subdivisions: 128;
-		mesh.
+		terrainMesh.
+	mesh deformationState
+		heightMapScale: (WMVector2F x: 1.0 y: 1.0)/100.0;
+		heightScale: 8.0;
+		heightMapTexture: (heightMap asTextureFor: scene engine).
 		
 	terrain := WDSGSpatialObject new.
 	terrain transform translateByY: -1.0.
@@ -556,7 +549,7 @@ WDASceneExamples class >> example09DragonIsland [
 
 	scene add: dragon.
 	
-	dragonAnimationState := dragonMesh animationState.
+	dragonAnimationState := dragonMesh deformationState.
 	dragonAction := dragonAnimationState actionNamed: 'Idle'.
 	dragonActionRepeated := true.
 	dragonActionFrame := 0.0.

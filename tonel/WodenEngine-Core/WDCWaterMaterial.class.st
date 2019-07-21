@@ -19,6 +19,8 @@ Class {
 { #category : #rendering }
 WDCWaterMaterial >> activateForwardOn: stateTracker [
 	self validateCache.
+	stateTracker hasWaterDeformationState ifFalse: [ ^ false ].
+	
 	resourceBinding ifNotNil: [ stateTracker useShaderResources: resourceBinding ].
 	stateTracker
 		vertexShader: self vertexShader;
@@ -62,11 +64,6 @@ WDCWaterMaterial >> bindResources [
 		bind: 3 texture: (normalTexture ifNil: [resourceCache defaultNormalTexture]).
 ]
 
-{ #category : #accessing }
-WDCWaterMaterial >> clipMapPeriod: aVector2 [
-	materialState clipMapPeriod: aVector2
-]
-
 { #category : #'terrain mesh building' }
 WDCWaterMaterial >> createTerrainMeshForSceneNode: sceneNode boundingBox: boundingBox [
 	self flag: 'TODO: Support parameterizing this.'.
@@ -82,30 +79,6 @@ WDCWaterMaterial >> fragmentShader [
 	^ fragmentShader ifNil: [
 		fragmentShader := self shaderLibrary getFragmentStage: #forward_color
 	]
-]
-
-{ #category : #accessing }
-WDCWaterMaterial >> harmonicAt: index amplitude: amplitude frequency: frequency center: center [
-	materialState harmonicAt: index put: (
-		WTWaterHarmonic new
-		amplitude: amplitude;
-		frequency: frequency;
-		center: center;
-		radial: true asBit
-	).
-	self uploadMaterialStateData.
-]
-
-{ #category : #accessing }
-WDCWaterMaterial >> harmonicAt: index amplitude: amplitude frequency: frequency direction: direction [
-	materialState harmonicAt: index put: (
-		WTWaterHarmonic new
-		amplitude: amplitude;
-		frequency: frequency;
-		center: direction;
-		radial: false asBit
-	).
-	self uploadMaterialStateData.
 ]
 
 { #category : #initialization }

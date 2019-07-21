@@ -1,5 +1,5 @@
 Class {
-	#name : #WDCRenderableAnimationState,
+	#name : #WDCRenderableDeformationState,
 	#superclass : #Object,
 	#instVars : [
 		'engine',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #accessing }
-WDCRenderableAnimationState >> createEngineDependantData [
+WDCRenderableDeformationState >> createEngineDependantData [
 	| shaderSignature |
 	shaderSignature := WDCSceneRenderingShaderSignature for: engine.
 	renderableStateBindings := self requiresAccessFromTheCPU ifTrue: [
@@ -21,29 +21,44 @@ WDCRenderableAnimationState >> createEngineDependantData [
 ]
 
 { #category : #accessing }
-WDCRenderableAnimationState >> currentRenderableStateBinding [
+WDCRenderableDeformationState >> currentRenderableStateBinding [
 	^ self requiresAccessFromTheCPU
 		ifTrue: [ renderableStateBindings at: engine bufferingFrameIndex ]
 		ifFalse: [ renderableStateBindings first ]
 ]
 
 { #category : #accessing }
-WDCRenderableAnimationState >> destroyEngineDependantData [
+WDCRenderableDeformationState >> destroyEngineDependantData [
 ]
 
 { #category : #accessing }
-WDCRenderableAnimationState >> engine: newEngine [
+WDCRenderableDeformationState >> engine: newEngine [
 	engine == newEngine ifTrue: [ ^ self ].
 	engine ifNotNil: [ self destroyEngineDependantData ].
 	engine := newEngine.
 	engine ifNotNil: [ self createEngineDependantData ].
 ]
 
+{ #category : #testing }
+WDCRenderableDeformationState >> isSkinningState [
+	^ false
+]
+
+{ #category : #testing }
+WDCRenderableDeformationState >> isTerrainDeformationState [
+	^ false
+]
+
+{ #category : #testing }
+WDCRenderableDeformationState >> isWaterDeformationState [
+	^ false
+]
+
 { #category : #accessing }
-WDCRenderableAnimationState >> requiresAccessFromTheCPU [
+WDCRenderableDeformationState >> requiresAccessFromTheCPU [
 	^ self subclassResponsibility
 ]
 
 { #category : #'renderable state' }
-WDCRenderableAnimationState >> updateCommonGpuStateForFrame: frameIndex [
+WDCRenderableDeformationState >> updateCommonGpuStateForFrame: frameIndex [
 ]

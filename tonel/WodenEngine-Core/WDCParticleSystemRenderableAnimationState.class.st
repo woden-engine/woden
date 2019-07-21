@@ -1,6 +1,6 @@
 Class {
 	#name : #WDCParticleSystemRenderableAnimationState,
-	#superclass : #WDCRenderableAnimationState,
+	#superclass : #WDCRenderableDeformationState,
 	#instVars : [
 		'particleSystem',
 		'particleStateBuffer',

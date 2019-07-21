@@ -13,11 +13,6 @@ Class {
 	#category : #'WodenEngine-Physics-Interface'
 }
 
-{ #category : #'extra per object rendering data' }
-WDPhyDebugDrawingRenderable >> createSceneDependentDataFor: engine into: objectStateBindings [
-	^ nil
-]
-
 { #category : #accessing }
 WDPhyDebugDrawingRenderable >> engine [
 	^ engine

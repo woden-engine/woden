@@ -1,6 +1,6 @@
 Class {
 	#name : #WDCParticleSystemRenderable,
-	#superclass : #WDCAnimatedRenderable,
+	#superclass : #WDCDeformableRenderable,
 	#instVars : [
 		'particleMaterial',
 		'particleCount',
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #'extra per object rendering data' }
-WDCParticleSystemRenderable >> createAnimationState [
+WDCParticleSystemRenderable >> createDeformationState [
 	^ WDCParticleSystemRenderableAnimationState new
 		particleSystem: self;
 		engine: engine;
@@ -39,9 +39,9 @@ WDCParticleSystemRenderable >> particleCount: anObject [
 
 { #category : #'extra per object rendering data' }
 WDCParticleSystemRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [
-	(animationState activateParticleMaterialOn: stateTracker) ifTrue: [ 
+	(deformationState activateParticleMaterialOn: stateTracker) ifTrue: [ 
 		stateTracker
-			useShaderResources: animationState currentRenderableStateBinding;
+			useShaderResources: deformationState currentRenderableStateBinding;
 			primitiveType: AGPU_TRIANGLE_STRIP;
 			drawArrays: 4 instance_count: particleCount first_vertex: baseInstance base_instance: baseVertex
 	].

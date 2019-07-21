@@ -28,7 +28,6 @@ WDCTerrainMeshBuilder >> addVertex: aVertex [
 WDCTerrainMeshBuilder >> clipMapPeriodForGridSize: size subdivisions: subdivisions [
 	material ifNil: [ ^ self ].
 	usedClipMapPeriod := size / (subdivisions + 1).
-	material clipMapPeriod: usedClipMapPeriod
 ]
 
 { #category : #'terrain mesh building' }
@@ -41,7 +40,7 @@ WDCTerrainMeshBuilder >> createClipMapWithLevels: levelCount size: size subdivis
 				boundingBox := cachedGeometry third.
 				vertexData := cachedGeometry fifth.
 				cachedGeometry fourth ifNotNil: [ :period |
-					material ifNotNil: [ material clipMapPeriod: period ]
+					usedClipMapPeriod := period
 				]
 		] ifAbsentPut: [
 			self doCreateClipMapWithLevels: levelCount size: size subdivisions: subdivisions.
@@ -303,6 +302,16 @@ WDCTerrainMeshBuilder >> stitchInnerEdge: innerEdge withOuterEdge: outerEdge fli
 	]
 ]
 
+{ #category : #'mesh building' }
+WDCTerrainMeshBuilder >> terrainMesh [
+	| result |
+	result := self mesh asTerrainRenderable.
+	usedClipMapPeriod ifNotNil: [
+		result clipMapPeriod: usedClipMapPeriod
+	].
+	^ result
+]
+
 { #category : #initialization }
 WDCTerrainMeshBuilder >> vertexClass [
 	^ WDCTerrainMeshVertexF
@@ -316,4 +325,14 @@ WDCTerrainMeshBuilder >> vertices [
 { #category : #accessing }
 WDCTerrainMeshBuilder >> vertices: anObject [
 	vertices := anObject
+]
+
+{ #category : #'mesh building' }
+WDCTerrainMeshBuilder >> waterMesh [
+	| result |
+	result := self mesh asWaterRenderable.
+	usedClipMapPeriod ifNotNil: [
+		result clipMapPeriod: usedClipMapPeriod
+	].
+	^ result
 ]

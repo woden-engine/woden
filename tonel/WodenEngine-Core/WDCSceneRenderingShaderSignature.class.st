@@ -46,7 +46,8 @@ WDCSceneRenderingShaderSignature class >> signatureSpec: spec [
 		bank: #RenderableState with: [ :bank |
 			bank
 				maxBindings: 10000;
-				storage: #AnimationState
+				storage: #AnimationState;
+				texture: #Textures count: 2
 		];
 		bank: #MaterialState with: [ :bank |
 			bank
@@ -95,6 +96,7 @@ WDCSceneRenderingShaderSignature >> createHandleForDevice: device [
 		"RenderableState"
 		beginBindingBank: 10000;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_STORAGE_BUFFER bindingPointCount: 1; "AnimationState"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 2; "Textures"
 
 		"MaterialState"
 		beginBindingBank: 10000;
@@ -198,7 +200,7 @@ WDCSceneRenderingShaderSignature >> newObjectState [
 
 { #category : #'generated shader signature methods' }
 WDCSceneRenderingShaderSignature >> newRenderableState [
-	^ engine createShaderSignature: self resourceBinding: 4 elements: 1
+	^ engine createShaderSignature: self resourceBinding: 4 elements: 3
 ]
 
 { #category : #'generated shader signature methods' }
