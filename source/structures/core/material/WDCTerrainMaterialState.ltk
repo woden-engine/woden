@@ -1,17 +1,22 @@
 Structure <<< #WDCTerrainMaterialState
 	slots: {
+		#albedo => WMVector4F.
+		#metallicFactor => Float32.
+		#roughnessFactor => Float32.
+
+        #textureScaleAndOffset => (WMVector4F array: 5).
+	};
+	package: 'WodenEngine-Structures-Core-Material';
+	yourself.
+
+Structure <<< #WDCTerrainDeformationStateStructure
+	slots: {
         #clipMapPeriod => WMVector2F.
 
         #heightMapScale => WMVector2F.
         #heightMapOffset => WMVector2F.
         #heightScale => Float32.
         #heightOffset => Float32.
-
-		#albedo => WMVector4F.
-		#metallicFactor => Float32.
-		#roughnessFactor => Float32.
-
-        #textureScaleAndOffset => (WMVector4F array: 5).
 	};
 	package: 'WodenEngine-Structures-Core-Material';
 	yourself.

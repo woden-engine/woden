@@ -128,7 +128,7 @@ function clipMapOffsetWithPeriod(clipMapPeriod: float2) -> float3
 
 //==============================================================================
 // Skinning
-buffer(binding=RenderableState.AnimationState) PoseState
+buffer(binding=RenderableState.DeformationState) PoseState
 {
     matrices: float4x4[];
 }

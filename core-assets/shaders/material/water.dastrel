@@ -24,7 +24,6 @@ struct WaterHarmonic
 
 uniform(binding=MaterialState.Attributes) MaterialState
 {
-    clipMapPeriod: float2;
     albedo: float4;
 
     fresnel: float3;
@@ -35,6 +34,12 @@ uniform(binding=MaterialState.Attributes) MaterialState
 
     padding: float3;
     propagationSpeed: float;
+}
+
+buffer(binding=RenderableState.DeformationState) WaterState
+{
+    clipMapPeriod: float2;
+	padding: float2;
 
     harmonics: WaterHarmonic[5];
 }
@@ -56,6 +61,7 @@ function evalWaterWaves(position: float2, lod: float) -> float3
 {
     using CameraState;
     using MaterialState;
+	using WaterState;
 
     // Add the harmonics.
     let height = 0.0f;
@@ -154,6 +160,7 @@ code_block(vertex) vertex
 {
     using CameraState;
     using MaterialState;
+	using WaterState;
 
     // Fetch the position and texcoord.
     let position = float3(GenericVertexLayout.position.x, 0.0f, GenericVertexLayout.position.y)

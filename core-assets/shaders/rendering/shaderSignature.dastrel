@@ -30,7 +30,8 @@ shader_signature SceneRendering
 
     descriptor_set(max_bindings = 10000) RenderableState
     {
-        AnimationState: buffer;
+        DeformationState: buffer;
+        Textures: texture * 2;
     }
 
     descriptor_set(max_bindings = 10000) MaterialState

@@ -1,7 +1,5 @@
 Structure <<< #WTWaterMaterialState
 	slots: {
-        #clipMapPeriod => WMVector2F.
-
 		#albedo => WMVector4F.
 
 		#fresnel => WMCompactVector3F.
@@ -12,13 +10,21 @@ Structure <<< #WTWaterMaterialState
 
 		(#padding => WMCompactVector3F) private.
 		#propagationSpeed => Float32.
-
-		#harmonics => (WTWaterHarmonic array: 5)
 	};
 	package: 'WodenEngine-Structures-Core-Material';
 	yourself.
 
-WTWaterMaterialState category: 'accessing' methods: {
+Structure <<< #WDCWaterDeformationStateStructure
+	slots: {
+        #clipMapPeriod => WMVector2F.
+		#padding => WMVector2F.
+	
+        #harmonics => (WTWaterHarmonic array: 5).
+	};
+	package: 'WodenEngine-Structures-Core-Material';
+	yourself.
+
+WDCWaterDeformationStateStructure category: 'accessing' methods: {
 :[harmonicAt: <Int32> index put: <WTWaterHarmonic>harmonic
 	(harmonics at: index) := harmonic
 ].

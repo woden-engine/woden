@@ -13,14 +13,6 @@ import texture.functions;
 
 uniform(binding=MaterialState.Attributes) MaterialState
 {
-    clipMapPeriod: float2;
-
-    heightMapScale: float2;
-    heightMapOffset: float2;
-
-    heightScale: float;
-    heightOffset: float;
-
     albedo: float4;
     metallicFactor: float;
     roughnessFactor: float;
@@ -28,35 +20,46 @@ uniform(binding=MaterialState.Attributes) MaterialState
     textureScaleAndOffset: float4[5];
 }
 
-uniform(binding = MaterialState.Textures) heightMapTexture : texture2D;
-uniform(binding = MaterialState.Textures + 1) splattingTexture : texture2D;
+buffer(binding=RenderableState.DeformationState) TerrainState
+{
+    clipMapPeriod: float2;
 
-uniform(binding = MaterialState.Textures + 2) albedoTexture0 : texture2D;
-uniform(binding = MaterialState.Textures + 3) albedoTexture1 : texture2D;
-uniform(binding = MaterialState.Textures + 4) albedoTexture2 : texture2D;
-uniform(binding = MaterialState.Textures + 5) albedoTexture3 : texture2D;
-uniform(binding = MaterialState.Textures + 6) albedoTexture4 : texture2D;
+    heightMapScale: float2;
+    heightMapOffset: float2;
 
-uniform(binding = MaterialState.Textures + 7) normalTexture0 : texture2D;
-uniform(binding = MaterialState.Textures + 8) normalTexture1 : texture2D;
-uniform(binding = MaterialState.Textures + 9) normalTexture2 : texture2D;
-uniform(binding = MaterialState.Textures + 10) normalTexture3 : texture2D;
-uniform(binding = MaterialState.Textures + 11) normalTexture4 : texture2D;
+    heightScale: float;
+    heightOffset: float;
+}
 
-uniform(binding = MaterialState.Textures + 12) rmaTexture0 : texture2D;
-uniform(binding = MaterialState.Textures + 13) rmaTexture1 : texture2D;
-uniform(binding = MaterialState.Textures + 14) rmaTexture2 : texture2D;
-uniform(binding = MaterialState.Textures + 15) rmaTexture3 : texture2D;
-uniform(binding = MaterialState.Textures + 16) rmaTexture4 : texture2D;
+uniform(binding = RenderableState.Textures) heightMapTexture : texture2D;
+uniform(binding = RenderableState.Textures + 1) splattingTexture : texture2D;
+
+uniform(binding = MaterialState.Textures) albedoTexture0 : texture2D;
+uniform(binding = MaterialState.Textures + 1) albedoTexture1 : texture2D;
+uniform(binding = MaterialState.Textures + 2) albedoTexture2 : texture2D;
+uniform(binding = MaterialState.Textures + 3) albedoTexture3 : texture2D;
+uniform(binding = MaterialState.Textures + 4) albedoTexture4 : texture2D;
+
+uniform(binding = MaterialState.Textures + 5) normalTexture0 : texture2D;
+uniform(binding = MaterialState.Textures + 6) normalTexture1 : texture2D;
+uniform(binding = MaterialState.Textures + 7) normalTexture2 : texture2D;
+uniform(binding = MaterialState.Textures + 8) normalTexture3 : texture2D;
+uniform(binding = MaterialState.Textures + 9) normalTexture4 : texture2D;
+
+uniform(binding = MaterialState.Textures + 10) rmaTexture0 : texture2D;
+uniform(binding = MaterialState.Textures + 11) rmaTexture1 : texture2D;
+uniform(binding = MaterialState.Textures + 12) rmaTexture2 : texture2D;
+uniform(binding = MaterialState.Textures + 13) rmaTexture3 : texture2D;
+uniform(binding = MaterialState.Textures + 14) rmaTexture4 : texture2D;
 
 function surfacePositionIntoTexcoord(position: float3) -> float2
 {
-    return float2(position.x, position.z)*0.5f*MaterialState.heightMapScale + 0.5f + MaterialState.heightMapOffset;
+    return float2(position.x, position.z)*0.5f*TerrainState.heightMapScale + 0.5f + TerrainState.heightMapOffset;
 }
 
 function surfaceTexcoordIntoPosition(texcoord: float2) -> float3
 {
-    let result = (texcoord - MaterialState.heightMapOffset - 0.5f)*2.0f/MaterialState.heightMapScale;
+    let result = (texcoord - TerrainState.heightMapOffset - 0.5f)*2.0f/TerrainState.heightMapScale;
     return float3(result.x, 0.0f, result.y);
 }
 
@@ -202,6 +205,7 @@ code_block(vertex) vertex
 {
     using CameraState;
     using MaterialState;
+	using TerrainState;
 
     let position = float3(GenericVertexLayout.position.x, 0.0f, GenericVertexLayout.position.y) + clipMapOffsetWithPeriod(clipMapPeriod);
     let lod = GenericVertexLayout.position.z;
@@ -240,7 +244,7 @@ code_block(vertex) vertex
 
 code_block(fragment) depthNormal_fragment
 {
-    let dh = 0.5f*MaterialState.heightMapScale;
+    let dh = 0.5f*TerrainState.heightMapScale;
 
     let surfaceTexcoord = FragmentInput.surfaceTexcoord;
     let objectPosition = FragmentInput.objectPosition;
@@ -253,7 +257,7 @@ code_block(fragment) depthNormal_fragment
     let dy = displacementSampler.sample(heightMapTexture, surfaceTexcoord + float2(0.0f, dh.y)).r - displacementSampler.sample(heightMapTexture, surfaceTexcoord - float2(0.0f, dh.y)).r;
 
     // Compute the object space normal.
-    let on = normalize(float3(-dx*MaterialState.heightScale, 1.0f, -dy*MaterialState.heightScale));
+    let on = normalize(float3(-dx*TerrainState.heightScale, 1.0f, -dy*TerrainState.heightScale));
     let SN = transformNormalToView(on);
 
 	// For double sided material.
@@ -268,7 +272,7 @@ code_block(fragment) depthNormal_fragment
 
 code_block(fragment) forward_splatting
 {
-    let dh = 0.5f*MaterialState.heightMapScale;
+    let dh = 0.5f*TerrainState.heightMapScale;
 
     let surfaceTexcoord = FragmentInput.surfaceTexcoord;
     let objectPosition = FragmentInput.objectPosition;
@@ -284,7 +288,7 @@ code_block(fragment) forward_splatting
     let dy = displacementSampler.sample(heightMapTexture, surfaceTexcoord + float2(0.0f, dh.y)).r - displacementSampler.sample(heightMapTexture, surfaceTexcoord - float2(0.0f, dh.y)).r;
 
     // Compute the object space normal.
-    let on = normalize(float3(-dx*MaterialState.heightScale, 1.0f, -dy*MaterialState.heightScale));
+    let on = normalize(float3(-dx*TerrainState.heightScale, 1.0f, -dy*TerrainState.heightScale));
 
     // Fetch the albedo.
     let rawAlbedo = fetchAlbedo(objectPosition, on, splatting);
@@ -322,7 +326,7 @@ code_block(fragment) forward_splatting
 
 code_block(fragment) forward_solid
 {
-    let dh = 0.5f*MaterialState.heightMapScale;
+    let dh = 0.5f*TerrainState.heightMapScale;
 
     let surfaceTexcoord = FragmentInput.surfaceTexcoord;
     let objectPosition = FragmentInput.objectPosition;
@@ -338,7 +342,7 @@ code_block(fragment) forward_solid
     let dy = displacementSampler.sample(heightMapTexture, surfaceTexcoord + float2(0.0f, dh.y)).r - displacementSampler.sample(heightMapTexture, surfaceTexcoord - float2(0.0f, dh.y)).r;
 
     // Compute the object space normal
-    let on = normalize(float3(-dx*MaterialState.heightScale, 1.0f, dy*MaterialState.heightScale));
+    let on = normalize(float3(-dx*TerrainState.heightScale, 1.0f, dy*TerrainState.heightScale));
 
     // Fetch the albedo.
     let albedo = FragmentInput.color*MaterialState.albedo;
@@ -378,7 +382,7 @@ code_block(fragment) forward_isolines
         discard;
 
     // Fetch the height
-    let height = displacementSampler.sample(heightMapTexture, surfaceTexcoord).r*MaterialState.heightScale;
+    let height = displacementSampler.sample(heightMapTexture, surfaceTexcoord).r*TerrainState.heightScale;
     // TODO: Use derivatives here.
     let isolinePeriod = 1.0f - smoothstep(0.0f, 0.06f, fract(height *0.25f));
 
