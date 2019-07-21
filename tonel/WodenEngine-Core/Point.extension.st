@@ -23,6 +23,26 @@ Point >> fbmGradientNoiseOctaves: octaves lacunarity: lacunarity tiledWith: tili
 ]
 
 { #category : #'*WodenEngine-Core' }
+Point >> fbmSignedGradientNoiseAbsOctaves: octaves lacunarity: lacunarity [
+	^ self fbmSignedGradientNoiseAbsOctaves: octaves lacunarity: lacunarity gain: lacunarity reciprocal
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> fbmSignedGradientNoiseAbsOctaves: octaves lacunarity: lacunarity gain: gain [
+	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain with: [:p | p signedGradientNoise abs]
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> fbmSignedGradientNoiseOctaves: octaves lacunarity: lacunarity [
+	^ self fbmSignedGradientNoiseOctaves: octaves lacunarity: lacunarity gain: lacunarity reciprocal
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> fbmSignedGradientNoiseOctaves: octaves lacunarity: lacunarity gain: gain [
+	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain with: #signedGradientNoise
+]
+
+{ #category : #'*WodenEngine-Core' }
 Point >> fbmSignedGradientNoiseOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod [
 	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod with: #signedGradientNoiseTiledWith:
 
@@ -113,6 +133,11 @@ Point >> gradientNoise [
 { #category : #'*WodenEngine-Core' }
 Point >> gradientNoiseTiledWith: tilingPeriod [
 	^ (self signedGradientNoiseTiledWith: tilingPeriod) * 0.5 + 0.5
+]
+
+{ #category : #'*WodenEngine-Core' }
+Point >> radius [
+	^ ((x*x) + (y*y)) sqrt
 ]
 
 { #category : #'*WodenEngine-Core' }

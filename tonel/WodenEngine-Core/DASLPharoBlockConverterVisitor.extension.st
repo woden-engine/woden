@@ -1,6 +1,24 @@
 Extension { #name : #DASLPharoBlockConverterVisitor }
 
 { #category : #'*WodenEngine-Core' }
+DASLPharoBlockConverterVisitor class >> fuzzyLogic [
+	<messageMaps>
+	self
+		mapMessage: #fuzzyAnd: toFunction: #fuzzyAnd returnType: #float;
+		mapMessage: #fuzzyNot toFunction: #fuzzyNot returnType: #float;
+		mapMessage: #fuzzyOr: toFunction: #fuzzyOr returnType: #float;
+		mapMessage: #fuzzyXor: toFunction: #fuzzyXor returnType: #float;
+
+		mapMessage: #productFuzzyAnd: toFunction: #productFuzzyAnd returnType: #float;
+		mapMessage: #productFuzzyNot toFunction: #productFuzzyNot returnType: #float;
+		mapMessage: #productFuzzyOr: toFunction: #productFuzzyOr returnType: #float;
+		mapMessage: #productFuzzyXor: toFunction: #productFuzzyXor returnType: #float;
+
+		yourself
+
+]
+
+{ #category : #'*WodenEngine-Core' }
 DASLPharoBlockConverterVisitor class >> noise [
 	<messageMaps>
 	self
@@ -26,6 +44,7 @@ DASLPharoBlockConverterVisitor class >> noise [
 
 		mapMessage: #fbmGradientNoiseOctaves:lacunarity: toFunction: #fbmGradientNoiseOctaves returnType: #float;
 		mapMessage: #fbmSignedGradientNoiseOctaves:lacunarity: toFunction: #fbmSignedGradientNoiseOctaves returnType: #float;
+		mapMessage: #fbmSignedGradientNoiseAbsOctaves:lacunarity: toFunction: #fbmSignedGradientNoiseAbsOctaves returnType: #float;
 		mapMessage: #fbmGradientNoiseOctaves:lacunarity:tiledWith: toFunction: #fbmTiledGradientNoiseOctaves returnType: #float;
 		mapMessage: #fbmSignedGradientNoiseOctaves:lacunarity:tiledWith: toFunction: #fbmTiledSignedGradientNoiseOctaves returnType: #float;
 
@@ -38,6 +57,9 @@ DASLPharoBlockConverterVisitor class >> noise [
 		mapMessage: #fbmSignedWorleyNoiseOctaves:lacunarity: toFunction: #fbmSignedWorleyNoiseOctaves returnType: #float;
 		mapMessage: #fbmWorleyNoiseOctaves:lacunarity:tiledWith: toFunction: #fbmTiledWorleyNoiseOctaves returnType: #float;
 		mapMessage: #fbmSignedWorleyNoiseOctaves:lacunarity:tiledWith: toFunction: #fbmTiledSignedWorleyNoiseOctaves returnType: #float;
+
+		mapMessage: #turbulence toFunction: #turbulence returnType: #float;
+		mapMessage: #turbulenceScales: toFunction: #turbulenceScales returnType: #float;
 
 		yourself
 

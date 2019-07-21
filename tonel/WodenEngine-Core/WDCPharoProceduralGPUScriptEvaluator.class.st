@@ -62,9 +62,9 @@ WDCPharoProceduralGPUScriptEvaluator >> compileShader: shaderFileName injectingN
 		compile;
 		generatedCode.
 		
-	"compiler ssaModule globalNamed: #main.
+	compiler ssaModule globalNamed: #main.
 	spirv saveTo: 'test.spv'.
-	self halt."
+	"self halt."
 	
 	^ spirv
 
@@ -98,8 +98,7 @@ WDCPharoProceduralGPUScriptEvaluator >> evaluateCubeMap [
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> evaluateHeightMapTextureWithExtent: anExtent [
-	heightFunction ifNil: [ ^ nil ].
-	^ self renderHeightMapWithExtent: self extentForInspector heightFunction: heightFunction
+	^ self renderTerrainHeightMapWithExtent: anExtent
 ]
 
 { #category : #'rendering helpers' }
@@ -129,6 +128,16 @@ WDCPharoProceduralGPUScriptEvaluator >> evaluateRoughnessMetallicAOTextureWithEx
 WDCPharoProceduralGPUScriptEvaluator >> evaluateRoughnessTextureWithExtent: anExtent [
 	roughnessFunction ifNil: [ ^ nil ].
 	^ self renderHeightMapWithExtent: self extentForInspector heightFunction: roughnessFunction
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> evaluateTerrainHeightMapTextureWithExtent: anExtent [
+	^ self renderTerrainHeightMapWithExtent: anExtent
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> evaluateTerrainSplatterMapTextureWithExtent: anExtent [
+	^ self renderTerrainSplatterMapWithExtent: anExtent
 ]
 
 { #category : #'as yet unclassified' }
@@ -245,6 +254,20 @@ WDCPharoProceduralGPUScriptEvaluator >> renderSRGBWithExtent: anExtent heightFun
 ]
 
 { #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> renderTerrainHeightMapWithExtent: anExtent [
+	| colorShader |
+	colorShader := self terrainHeightFieldShaderFor: terrainFunction.
+	^ self shader: colorShader toTextureDataExtent: anExtent bpp: 16 format: AGPU_TEXTURE_FORMAT_R16_SNORM encodeFunctionName: #encode_sr16
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> renderTerrainSplatterMapWithExtent: anExtent [
+	| colorShader |
+	colorShader := self terrainSplatterMapShaderFor: terrainFunction.
+	^ self shader: colorShader toTextureDataExtent: anExtent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM encodeFunctionName: #encode_bgra8
+]
+
+{ #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> rmaShaderFor: heightFunctionObject
 roughnessFunction: roughnessFunctionObject metallicFunction: metallicFunctionObject
 aoRadius: aoRadius aoHeightThreshold: heightThreshold aoSampleCount: sampleCount [
@@ -310,17 +333,22 @@ WDCPharoProceduralGPUScriptEvaluator >> shader: spirvShader toTextureDataExtent:
 
 { #category : #'as yet unclassified' }
 WDCPharoProceduralGPUScriptEvaluator >> shader: spirvShader toTextureDataExtent: extent bpp: bitsPerPixel format: pixelFormat textureFetchFunctionName: textureFetchFunctionName mipmapComputationFunctionName: mipmapComputationFunctionName encodeFunctionName: encodeFunctionName [
-	| shader resultTextureData resultLayer renderer |
+	| shader resultTextureData resultLayer renderer renderPixelFormat |
 	
 	shader := self getMainFragmentStageFrom: spirvShader.
 	renderer := engine resourceCache mainProceduralOfflineTextureRendererForExtent: extent.
 	resultTextureData := WDCTextureData extent: extent bpp: bitsPerPixel format: pixelFormat.
+	renderPixelFormat := pixelFormat.
+	"renderPixelFormat == AGPU_TEXTURE_FORMAT_R16_SNORM ifTrue: [
+		renderPixelFormat := AGPU_TEXTURE_FORMAT_R32_FLOAT
+	]."
+
 	resultLayer := resultTextureData layers first.
 
 	renderer critical: [
 		renderer renderWith: [
 			renderer
-				renderProceduralTextureWithFragmentShader: shader extent: extent format: pixelFormat;
+				renderProceduralTextureWithFragmentShader: shader extent: extent format: renderPixelFormat;
 				generateProceduralTextureWithExtent: extent fetchWith: textureFetchFunctionName mipmapWith: mipmapComputationFunctionName encodeWith: encodeFunctionName for: resultLayer
 			];
 			submit;
@@ -335,6 +363,26 @@ WDCPharoProceduralGPUScriptEvaluator >> shader: spirvShader toTextureDataExtent:
 { #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> shadersDirectory [
 	^ WodenCoreAssets location / #shaders
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> terrainHeightFieldShaderFor: heightFunctionObject [
+	codeConverter := DASLPharoCodeConverter new.
+	codeConverter convertFunction: heightFunctionObject name: #terrainGenerationFunction argumentTypes: #(float float) returnType: #(float (tuple float float float float float)).
+
+	^ self compileShader: 'procedural/terrainHeightMapTextureInterface.dastrel' injectingNodes: codeConverter generatedNodes.
+
+
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralGPUScriptEvaluator >> terrainSplatterMapShaderFor: heightFunctionObject [
+	codeConverter := DASLPharoCodeConverter new.
+	codeConverter convertFunction: heightFunctionObject name: #terrainGenerationFunction argumentTypes: #(float float) returnType: #(float (tuple float float float float float)).
+
+	^ self compileShader: 'procedural/terrainSplatterMapTextureInterface.dastrel' injectingNodes: codeConverter generatedNodes.
+
+
 ]
 
 { #category : #'rendering helpers' }

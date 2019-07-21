@@ -16,7 +16,8 @@ Class {
 		'colorFunction',
 		'ambientOcclusionRadius',
 		'ambientOcclusionHeightThreshold',
-		'ambientOcclusionSampleCount'
+		'ambientOcclusionSampleCount',
+		'terrainFunction'
 	],
 	#category : #'WodenEngine-Core-Texture'
 }
@@ -124,6 +125,7 @@ WDCPharoProceduralScriptEvaluator >> engine: anObject [
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralScriptEvaluator >> evaluate [
+	terrainFunction ifNotNil: [ ^ self evaluateTerrainMap. ].
 	self cubeMap ifTrue: [ ^ self evaluateCubeMap ].
 	^ self evaluate2DTexture
 
@@ -224,6 +226,36 @@ WDCPharoProceduralScriptEvaluator >> evaluateScriptFromFile: scriptFileReference
 
 ]
 
+{ #category : #'rendering helpers' }
+WDCPharoProceduralScriptEvaluator >> evaluateTerrainHeightMapTextureWithExtent: anExtent [
+	^ WDCTextureData extent: anExtent signedHeightRenderWith: [ :s :t |
+		(terrainFunction value: s value: t) first
+	].
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralScriptEvaluator >> evaluateTerrainMap [
+	self isInInspector ifTrue: [
+		^ WDCMultiTextureView new textures: {
+			'Height Map' -> (self evaluateTerrainHeightMapTextureWithExtent: self extentForInspector).
+			'Splatter Map' -> (self evaluateTerrainSplatterMapTextureWithExtent: self extentForInspector).
+		}
+	].
+
+	self isSplatterMapRequested ifTrue: [
+		^ self evaluateTerrainSplatterMapTextureWithExtent: textureExtent
+	].
+
+	^ self evaluateTerrainHeightMapTextureWithExtent: textureExtent
+]
+
+{ #category : #'rendering helpers' }
+WDCPharoProceduralScriptEvaluator >> evaluateTerrainSplatterMapTextureWithExtent: anExtent [
+	^ WDCTextureData extent: anExtent colorRenderWith: [ :s :t |
+		Color forSplattingElements: (terrainFunction value: s value: t) second
+	].
+]
+
 { #category : #accessing }
 WDCPharoProceduralScriptEvaluator >> extentForInspector [
 	^ extentForInspector ifNil: [ extentForInspector := self textureExtent ]
@@ -294,6 +326,11 @@ WDCPharoProceduralScriptEvaluator >> isRoughnessRequested [
 	^ self requestedTexture = #roughness
 ]
 
+{ #category : #testing }
+WDCPharoProceduralScriptEvaluator >> isSplatterMapRequested [
+	^ self requestedTexture = #splatter
+]
+
 { #category : #accessing }
 WDCPharoProceduralScriptEvaluator >> metallicFunction [
 	^ metallicFunction
@@ -343,6 +380,16 @@ WDCPharoProceduralScriptEvaluator >> roughnessFunction [
 { #category : #accessing }
 WDCPharoProceduralScriptEvaluator >> roughnessFunction: anObject [
 	roughnessFunction := anObject
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> terrainFunction [
+	^ terrainFunction
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> terrainFunction: aFunction [
+	terrainFunction := aFunction
 ]
 
 { #category : #accessing }
