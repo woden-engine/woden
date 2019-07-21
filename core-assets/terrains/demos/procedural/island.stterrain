@@ -41,9 +41,15 @@ terrainFunction := [ :s :t |
 	grass := ((((st*10.0) turbulence - ((heightValue max: 0.0)/maximumHeight*1.0) + 0.1 max: 0.0) productFuzzyAnd: sand fuzzyNot)* 10.0 * notInSnow).
 	rock := (snow fuzzyNot productFuzzyAnd: sand fuzzyNot) productFuzzyAnd: grass fuzzyNot.
 
-	{heightValue / heightScale . {sand . grass . rock . snow . 0.0}}.
+	{heightValue . {sand . grass . rock . snow . 0.0}}.
 ].
 
+textureGenerator terrainData
+	clipMapLevels: 3;
+	terrainExtent: 200@200;
+	minHeight: heightScale negated;
+	maxHeight: heightScale;
+	yourself.
 ^ textureGenerator
 	textureExtent: 256@256;
 	terrainFunction: terrainFunction;

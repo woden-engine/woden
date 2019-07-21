@@ -8,5 +8,7 @@ code_block(fragment) main
 {
 	let uv = FragmentInput.texcoord;
 	let height = terrainGenerationFunction(uv.x, uv.y)[0];
-	FragmentStage.colorOutput0 = float4(height, height, height, 1.0f);
+	let clampedHeight = min(max(height, HeightScaleMinValue), HeightScaleMaxValue);
+	let mappedHeight = (clampedHeight - HeightScaleMinValue) * HeightScaleInvRange;
+	FragmentStage.colorOutput0 = float4(mappedHeight, mappedHeight, mappedHeight, 1.0f);
 }
