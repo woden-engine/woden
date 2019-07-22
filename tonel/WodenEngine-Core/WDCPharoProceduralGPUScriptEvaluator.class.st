@@ -367,7 +367,11 @@ WDCPharoProceduralGPUScriptEvaluator >> shadersDirectory [
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> terrainHeightFieldShaderFor: heightFunctionObject [
-	| minHeight maxHeight invRange builder constantNodes centerHeight |
+	| minHeight maxHeight invRange builder constantNodes centerHeight coordinateTransform coordinateScale coordinateOffset |
+	coordinateTransform := self terrainCoordinateTransform.
+	coordinateScale := coordinateTransform first.
+	coordinateOffset := coordinateTransform second.
+
 	codeConverter := DASLPharoCodeConverter new.
 	codeConverter convertFunction: heightFunctionObject name: #terrainGenerationFunction argumentTypes: #(float float) returnType: #(float (tuple float float float float float)).
 
@@ -379,7 +383,15 @@ WDCPharoProceduralGPUScriptEvaluator >> terrainHeightFieldShaderFor: heightFunct
 		ifFalse: [ (maxHeight - centerHeight) reciprocal ].
 		
 	builder := DASLAstBuilder new.
-	constantNodes := { 
+	constantNodes := {
+	 builder constantGlobalNamed: #HeightMapScale typeNamed: #float2 value:
+		(builder listLiteralWith: {
+			builder literalFloat: coordinateScale x . builder literalFloat: coordinateScale y
+			}).
+	 builder constantGlobalNamed: #HeightMapOffset typeNamed: #float2 value:
+		(builder listLiteralWith: {
+			builder literalFloat: coordinateOffset y . builder literalFloat: coordinateOffset y
+			}).
 	 builder constantGlobalNamed: #HeightScaleMinValue typeNamed: #float value: 
 		(builder literalFloat: minHeight asFloat).
 	 builder constantGlobalNamed: #HeightScaleMaxValue typeNamed: #float value: 
@@ -398,10 +410,27 @@ WDCPharoProceduralGPUScriptEvaluator >> terrainHeightFieldShaderFor: heightFunct
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> terrainSplatterMapShaderFor: heightFunctionObject [
+	| coordinateTransform coordinateScale coordinateOffset builder constantNodes |
+	coordinateTransform := self terrainCoordinateTransform.
+	coordinateScale := coordinateTransform first.
+	coordinateOffset := coordinateTransform second.
+	
 	codeConverter := DASLPharoCodeConverter new.
 	codeConverter convertFunction: heightFunctionObject name: #terrainGenerationFunction argumentTypes: #(float float) returnType: #(float (tuple float float float float float)).
 
-	^ self compileShader: 'procedural/terrainSplatterMapTextureInterface.dastrel' injectingNodes: codeConverter generatedNodes.
+	builder := DASLAstBuilder new.
+	constantNodes := {
+	 builder constantGlobalNamed: #HeightMapScale typeNamed: #float2 value:
+		(builder listLiteralWith: {
+			builder literalFloat: coordinateScale x . builder literalFloat: coordinateScale y
+			}).
+	 builder constantGlobalNamed: #HeightMapOffset typeNamed: #float2 value:
+		(builder listLiteralWith: {
+			builder literalFloat: coordinateOffset y . builder literalFloat: coordinateOffset y
+			}).
+	}.
+	
+	^ self compileShader: 'procedural/terrainSplatterMapTextureInterface.dastrel' injectingNodes: codeConverter generatedNodes , constantNodes.
 
 
 ]

@@ -720,14 +720,14 @@ WDCResourceCache >> performLoadTerrainDataFile: terrainFile [
 		scriptEvaluatorClass := WDCPharoProceduralGPUScriptEvaluator
 	].
 
-	terrainData := self class cachedValueFor: { #stterrainEval . terrainFile fullName. '|' . script } ifAbsentPut: [Smalltalk compiler
+	terrainData := "self class cachedValueFor: { #stterrainEval . terrainFile fullName. '|' . script } ifAbsentPut: "[Smalltalk compiler
 		receiver: (WDCPharoProceduralScriptContext new
 			textureGenerator: (scriptEvaluatorClass new
 				parameters: (Dictionary newFromPairs: #(texture terrainData));
 				yourself)
 			);
 		evaluate: script
-	].
+	] value.
 		
 	terrainData engine: engine.	
 	^ terrainData

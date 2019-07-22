@@ -18,7 +18,8 @@ Class {
 		'ambientOcclusionHeightThreshold',
 		'ambientOcclusionSampleCount',
 		'terrainFunction',
-		'terrainData'
+		'terrainData',
+		'terrainCellSize'
 	],
 	#category : #'WodenEngine-Core-Texture'
 }
@@ -229,7 +230,10 @@ WDCPharoProceduralScriptEvaluator >> evaluateScriptFromFile: scriptFileReference
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralScriptEvaluator >> evaluateTerrainHeightMapTextureWithExtent: anExtent [
-	| minHeight maxHeight invRange center |
+	| minHeight maxHeight invRange center coordinateTransform coordinateScale coordinateOffset |
+	coordinateTransform := self terrainCoordinateTransform.
+	coordinateScale := coordinateTransform first.
+	coordinateOffset := coordinateTransform second.
 	minHeight := self terrainData minHeight.
 	maxHeight := self terrainData maxHeight.
 	center := (maxHeight + minHeight) * 0.5.
@@ -238,7 +242,10 @@ WDCPharoProceduralScriptEvaluator >> evaluateTerrainHeightMapTextureWithExtent: 
 		ifFalse: [ (maxHeight - center) reciprocal ].
 	
 	^ WDCTextureData extent: anExtent signedHeightRenderWith: [ :s :t |
-		(((terrainFunction value: s value: t) first min: maxHeight max: minHeight) - center) * invRange
+		| x y|
+		x := s*coordinateScale x + coordinateOffset x.
+		y := t*coordinateScale y + coordinateOffset y.
+		(((terrainFunction value: x value: y) first min: maxHeight max: minHeight) - center) * invRange
 	].
 ]
 
@@ -272,8 +279,17 @@ WDCPharoProceduralScriptEvaluator >> evaluateTerrainMap [
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralScriptEvaluator >> evaluateTerrainSplatterMapTextureWithExtent: anExtent [
+	| coordinateTransform coordinateScale coordinateOffset |
+	coordinateTransform := self terrainCoordinateTransform.
+	coordinateScale := coordinateTransform first.
+	coordinateOffset := coordinateTransform second.
+
 	^ WDCTextureData extent: anExtent colorRenderWith: [ :s :t |
-		Color forSplattingElements: (terrainFunction value: s value: t) second
+		| x y|
+		x := s*coordinateScale x + coordinateOffset x.
+		y := t*coordinateScale y + coordinateOffset y.
+
+		Color forSplattingElements: (terrainFunction value: x value: y) second
 	].
 ]
 
@@ -408,6 +424,17 @@ WDCPharoProceduralScriptEvaluator >> roughnessFunction: anObject [
 	roughnessFunction := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDCPharoProceduralScriptEvaluator >> terrainCoordinateTransform [
+	^ terrainCellSize
+		ifNil: [ { WMVector2F ones . WMVector2F zero } ]
+		ifNotNil: [
+			| scale |
+			scale := WMVector2F ones * 2.0 / self terrainData heightMapScale.
+			{scale . self terrainData heightMapOffset*scale - (scale*0.5)}
+		]
+]
+
 { #category : #accessing }
 WDCPharoProceduralScriptEvaluator >> terrainData [
 	^ terrainData ifNil: [ terrainData := WDCTerrainData new ]
@@ -431,6 +458,14 @@ WDCPharoProceduralScriptEvaluator >> textureExtent [
 { #category : #accessing }
 WDCPharoProceduralScriptEvaluator >> textureExtent: anObject [
 	textureExtent := anObject
+]
+
+{ #category : #'as yet unclassified' }
+WDCPharoProceduralScriptEvaluator >> textureExtent: newTextureExtent terrainCellSize: newTerrainCellSize [
+	self textureExtent: newTextureExtent.
+	terrainCellSize := newTerrainCellSize asWMVector2F.
+	self terrainData 
+		terrainExtent: newTextureExtent*newTerrainCellSize.
 ]
 
 { #category : #'as yet unclassified' }
