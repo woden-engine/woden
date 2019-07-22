@@ -257,7 +257,7 @@ WDCPharoProceduralGPUScriptEvaluator >> renderSRGBWithExtent: anExtent heightFun
 WDCPharoProceduralGPUScriptEvaluator >> renderTerrainHeightMapWithExtent: anExtent [
 	| colorShader |
 	colorShader := self terrainHeightFieldShaderFor: terrainFunction.
-	^ self shader: colorShader toTextureDataExtent: anExtent bpp: 16 format: AGPU_TEXTURE_FORMAT_R16_UNORM encodeFunctionName: #encode_r16
+	^ self shader: colorShader toTextureDataExtent: anExtent bpp: 16 format: AGPU_TEXTURE_FORMAT_R16_SNORM encodeFunctionName: #encode_sr16
 ]
 
 { #category : #'rendering helpers' }
@@ -367,15 +367,16 @@ WDCPharoProceduralGPUScriptEvaluator >> shadersDirectory [
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> terrainHeightFieldShaderFor: heightFunctionObject [
-	| minHeight maxHeight invRange builder constantNodes |
+	| minHeight maxHeight invRange builder constantNodes centerHeight |
 	codeConverter := DASLPharoCodeConverter new.
 	codeConverter convertFunction: heightFunctionObject name: #terrainGenerationFunction argumentTypes: #(float float) returnType: #(float (tuple float float float float float)).
 
 	minHeight := self terrainData minHeight.
 	maxHeight := self terrainData maxHeight.
+	centerHeight := (minHeight + maxHeight) * 0.5.
 	invRange := (maxHeight closeTo: minHeight)
 		ifTrue: [ 0.0 ]
-		ifFalse: [ (maxHeight - minHeight) reciprocal ].
+		ifFalse: [ (maxHeight - centerHeight) reciprocal ].
 		
 	builder := DASLAstBuilder new.
 	constantNodes := { 
@@ -383,6 +384,8 @@ WDCPharoProceduralGPUScriptEvaluator >> terrainHeightFieldShaderFor: heightFunct
 		(builder literalFloat: minHeight asFloat).
 	 builder constantGlobalNamed: #HeightScaleMaxValue typeNamed: #float value: 
 		(builder literalFloat: maxHeight asFloat).
+	 builder constantGlobalNamed: #HeightScaleCenterValue typeNamed: #float value: 
+		(builder literalFloat: centerHeight asFloat).
 	 builder constantGlobalNamed: #HeightScaleInvRange typeNamed: #float value: 
 		(builder literalFloat: invRange asFloat).
 	}.

@@ -65,11 +65,6 @@ WDAESProceduralSamples class >> example02PoolLevel [
 				(waterVolume buildWaterMeshWith: [ :meshBuilder |
 				
 					waterMaterial := engine resourceCache loadMaterial: 'materials/demos/water.json'.
-					waterMaterial
-						harmonicAt: 1 amplitude: 0.05 frequency: -1.1 center: WMVector2F new;
-						harmonicAt: 2 amplitude: 0.02 frequency: 2.23 direction: (WMVector2F y: -1.0);
-						harmonicAt: 3 amplitude: 0.015 frequency: 1.80 direction: (WMVector2F x: 1.0).
-		
 					meshBuilder
 						material: waterMaterial;
 						heightScale: 0.1;
@@ -77,7 +72,10 @@ WDAESProceduralSamples class >> example02PoolLevel [
 						addBoxCollisionShape: (WMBox3DF
 							halfExtent: (WMVector3F x: 2.5 y: 1.0 z: 2.5)
 							center: (WMVector3F y: -1.0))
-				])
+				]) renderable deformationState
+					harmonicAt: 1 amplitude: 0.05 frequency: -1.1 center: WMVector2F new;
+					harmonicAt: 2 amplitude: 0.02 frequency: 2.23 direction: (WMVector2F y: -1.0);
+					harmonicAt: 3 amplitude: 0.015 frequency: 1.80 direction: (WMVector2F x: 1.0).
 			];
 		
 			addRigidBodyAt: (WMVector3F x: -4.5 y: 0.6 z: 0.0) with: [ :rigidBody |
@@ -107,24 +105,19 @@ WDAESProceduralSamples class >> example02PoolLevel [
 
 { #category : #'as yet unclassified' }
 WDAESProceduralSamples class >> example03Island [
-	| engine universe terrainMaterial waterMaterial |
+	| engine universe terrainMaterial waterMaterial terrainData |
 	engine := WDCEngine default.
 	terrainMaterial := engine resourceCache loadMaterial: 'materials/demos/island.json'.
-		
+	terrainData := engine resourceCache loadTerrain: 'terrains/demos/procedural/island.stterrain'.
+
 	universe := WDESSimpleUniverse for: engine.
 	universe defaultCameraFarDistance: 250.0.
 	universe buildSector: [ :sector |
-		sector buildTerrainMeshWith: [ :meshBuilder |
-			terrainMaterial buildTerrainMeshWith: meshBuilder.
-		].
+		sector buildTerrainMeshWithData: terrainData withMaterial: terrainMaterial.
 		
 		sector addWaterVolumeAt: WMVector3F zero with: [ :waterVolume |
-			(waterVolume buildTerrainMeshWith: [ :meshBuilder |
+			(waterVolume buildWaterMeshWith: [ :meshBuilder |
 				waterMaterial := engine resourceCache loadMaterial: 'materials/demos/ocean.json'.
-				waterMaterial
-					harmonicAt: 1 amplitude: 0.015 frequency: 2.23 center: (WMVector2F zero);
-					harmonicAt: 2 amplitude: 0.03 frequency: 0.50 center: (WMVector2F zero).
-		
 				meshBuilder
 					material: waterMaterial;
 					heightScale: 0.1;
@@ -132,7 +125,9 @@ WDAESProceduralSamples class >> example03Island [
 					addBoxCollisionShape: (WMBox3DF
 						halfExtent: (WMVector3F x: 200.0 y: 200.0 z: 200.0)
 						center: (WMVector3F y: -200.0))
-			])
+			]) renderable deformationState
+				harmonicAt: 1 amplitude: 0.015 frequency: 2.23 center: (WMVector2F zero);
+				harmonicAt: 2 amplitude: 0.03 frequency: 0.50 center: (WMVector2F zero).
 		].
 
 		sector

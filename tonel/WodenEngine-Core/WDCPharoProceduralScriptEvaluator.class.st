@@ -229,15 +229,16 @@ WDCPharoProceduralScriptEvaluator >> evaluateScriptFromFile: scriptFileReference
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralScriptEvaluator >> evaluateTerrainHeightMapTextureWithExtent: anExtent [
-	| minHeight maxHeight invRange |
+	| minHeight maxHeight invRange center |
 	minHeight := self terrainData minHeight.
 	maxHeight := self terrainData maxHeight.
+	center := (maxHeight + minHeight) * 0.5.
 	invRange := (maxHeight closeTo: minHeight)
 		ifTrue: [ 0.0 ]
-		ifFalse: [ (maxHeight - minHeight) reciprocal ].
+		ifFalse: [ (maxHeight - center) reciprocal ].
 	
-	^ WDCTextureData extent: anExtent heightRenderWith: [ :s :t |
-		(((terrainFunction value: s value: t) first min: maxHeight max: minHeight) - minHeight) * invRange
+	^ WDCTextureData extent: anExtent signedHeightRenderWith: [ :s :t |
+		(((terrainFunction value: s value: t) first min: maxHeight max: minHeight) - center) * invRange
 	].
 ]
 

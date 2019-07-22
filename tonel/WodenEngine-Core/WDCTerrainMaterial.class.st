@@ -11,14 +11,14 @@ Class {
 		'resourceBinding',
 		'stateUniformBuffer',
 		'vertexShader',
-		'fragmentShader',
 		'heightMapSize',
 		'solidFragmentShader',
 		'wireFragmentShader',
 		'isolinesFragmentShader',
 		'depthNormalFragmentShader',
 		'shaderLibrary',
-		'metallicRoughnessTextures'
+		'metallicRoughnessTextures',
+		'triplanar'
 	],
 	#category : #'WodenEngine-Core-Material'
 }
@@ -162,7 +162,9 @@ WDCTerrainMaterial >> depthNormalFragmentShader [
 
 { #category : #shaders }
 WDCTerrainMaterial >> fragmentShader [
-	^ fragmentShader ifNil: [ fragmentShader := self shaderLibrary getFragmentStage: #forward_splatting ]
+	^ triplanar
+		ifTrue: [ self shaderLibrary getFragmentStage: #forward_triplanarSplatting ]
+		ifFalse: [ self shaderLibrary getFragmentStage: #forward_splatting ]
 ]
 
 { #category : #initialization }
@@ -228,6 +230,7 @@ WDCTerrainMaterial >> parse: materialFileReference data: data [
 	albedoTextures := self parse: data at: materialFileReference srgbTexture: 'albedo-textures' arrayOfSize: 5.
 	normalTextures := self parse: data at: materialFileReference texture: 'normal-textures' arrayOfSize: 5.
 	metallicRoughnessTextures := self parse: data at: materialFileReference texture: 'metallic-roughness-textures' arrayOfSize: 5.
+	triplanar := data at: 'triplanar' ifAbsent: [ false ].
 
 	materialState
 		albedo: (self parse: data at: materialFileReference srgbColor: 'albedo-color' ifAbsent: [ Color white ]);

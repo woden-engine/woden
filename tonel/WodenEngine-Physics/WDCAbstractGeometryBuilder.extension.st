@@ -30,11 +30,13 @@ WDCAbstractGeometryBuilder >> createConvexHullCollisionShape: points [
 ]
 
 { #category : #'*WodenEngine-Physics' }
-WDCAbstractGeometryBuilder >> createHeightMapCollision: heightMapTexture heightScale: heightScale scale: heightMapScale offset: heightMapOffset [
+WDCAbstractGeometryBuilder >> createHeightMapCollision: heightMapTexture heightScale: heightScale minHeight: minHeight maxHeight: maxHeight scale: heightMapScale offset: heightMapOffset [
 	| heightCollisionShape translatedOrigin |
 	heightCollisionShape := WDPhyHeightFieldCollisionShape new
 		heightTexture: heightMapTexture;
 		heightScale: heightScale;
+		minHeight: minHeight;
+		maxHeight: maxHeight;
 		scale: heightMapScale;
 		offset: heightMapOffset;
 		yourself.
@@ -49,4 +51,9 @@ WDCAbstractGeometryBuilder >> createHeightMapCollision: heightMapTexture heightS
 		}
 	].
 	^ heightCollisionShape
+]
+
+{ #category : #'*WodenEngine-Physics' }
+WDCAbstractGeometryBuilder >> createHeightMapCollision: heightMapTexture heightScale: heightScale scale: heightMapScale offset: heightMapOffset [
+	^ self createHeightMapCollision: heightMapTexture heightScale: heightScale minHeight: nil maxHeight: nil scale: heightMapScale offset: heightMapOffset
 ]

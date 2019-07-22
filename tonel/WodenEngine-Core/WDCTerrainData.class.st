@@ -12,7 +12,8 @@ Class {
 		'terrainExtent',
 		'minHeight',
 		'maxHeight',
-		'clipMapLevels'
+		'clipMapLevels',
+		'collisionShape'
 	],
 	#category : #'WodenEngine-Core-Mesh'
 }
@@ -47,6 +48,18 @@ WDCTerrainData >> clipMapLevels [
 { #category : #accessing }
 WDCTerrainData >> clipMapLevels: anObject [
 	clipMapLevels := anObject
+]
+
+{ #category : #accessing }
+WDCTerrainData >> collisionShape [
+	heightMap ifNil: [ ^ nil ].
+	engine ifNil: [ ^ nil ].
+	
+	collisionShape ifNil: [ 
+		collisionShape := WDCAbstractGeometryBuilder new createHeightMapCollision: heightMap heightScale: heightScale minHeight: minHeight maxHeight: maxHeight scale: self heightMapScale offset: self heightMapOffset.
+	].
+
+	^ collisionShape
 ]
 
 { #category : #'mesh building' }

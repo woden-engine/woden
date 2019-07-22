@@ -53,9 +53,19 @@ WDPhyHeightFieldCollisionShape >> maxHeight [
 ]
 
 { #category : #accessing }
+WDPhyHeightFieldCollisionShape >> maxHeight: aHeight [
+	maxHeight := aHeight
+]
+
+{ #category : #accessing }
 WDPhyHeightFieldCollisionShape >> minHeight [
 	minHeight ifNil: [ self computeHeightRange ].
 	^ minHeight
+]
+
+{ #category : #accessing }
+WDPhyHeightFieldCollisionShape >> minHeight: aHeight [
+	minHeight := aHeight
 ]
 
 { #category : #accessing }
