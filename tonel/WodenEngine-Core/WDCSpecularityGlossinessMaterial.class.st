@@ -64,11 +64,16 @@ WDCSpecularityGlossinessMaterial >> materialStateClass [
 { #category : #parsing }
 WDCSpecularityGlossinessMaterial >> parse: materialFileReference data: data [
 	super parse: materialFileReference data: data.
+	specularityGlossinessTexture := self parse: data at: materialFileReference optionalTexture: 'specularity-glossiness-texture'.
 	materialState
-		specularFactor: (self parse: data at: materialFileReference vector3: 'specular-factor' ifAbsent: [ WMVector3F x: 1.0 y: 1.0 z: 1.0 ]);
+		specularFactor: (self parse: data at: materialFileReference vector3: 'specular-factor'
+			ifAbsent: [
+				specularityGlossinessTexture
+					ifNil: [ WMVector3F ones * 0.04 ]
+					ifNotNil: [ WMVector3F ones ]
+		]);
 		glossinessFactor: (data at: 'glossiness-factor' ifAbsent: [ materialState smoothness ]).
 	self flag: 'CHECK ME: Is this a linear or a sRGB texture?'.
-	specularityGlossinessTexture := self parse: data at: materialFileReference optionalTexture: 'specularity-glossiness-texture'.
 	self invalidateCache.
 ]
 
