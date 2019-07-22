@@ -1,11 +1,7 @@
 {
     "type" : "Terrain",
 
-    "height-map-size" : [200.0, 200.0],
-    "height-scale" : 110.0,
-
-    "height-map" : "textures/procedural/terrain/island.sttex?texture=height",
-    "splatter" : "textures/procedural/terrain/island.sttex?texture=splatter",
+	"triplanar" : false,
 
     "albedo-textures" : [
         "textures/procedural/terrain/sand.sttex",
