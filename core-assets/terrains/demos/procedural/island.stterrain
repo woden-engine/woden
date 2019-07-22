@@ -1,35 +1,36 @@
 "!GPU"
-| islandOuterRadius islandInnerRadius maximumHeight seabedLevel heightScale islandBaseLevel snowStartHeight terrainFunction |
+| islandOuterRadius islandInnerRadius maximumHeight heightScale islandBaseLevel snowStartHeight terrainFunction |
 islandOuterRadius := 100.0.
 islandInnerRadius := islandOuterRadius - 50.0.
 maximumHeight := 100.0.
-seabedLevel := -3.0.
 islandBaseLevel := 1.0.
 heightScale := 120.0.
 
 snowStartHeight := 15.0.
 
-terrainFunction := [ :s :t |
-	| st p r theta innerRadius
+terrainFunction := [ :x :y |
+	| p islandPoint r theta innerRadius
 	 boundaries heightAttenuation
 	 islandInterior mountainHeight
 	 sand rock grass snow notInSnow
-	 heightValue|
+	 heightValue seabedLevel|
 	"Compute the coordinates"
-	st := s@t.
-	p := (st*2.0 - 1.0) * islandOuterRadius.
+	p := x @ y.
 
 	r := p radius.
 	theta := p theta.
+	
+	"Generate the seabed"
+	seabedLevel := (p * 0.07 fbmSignedGradientNoiseAbsOctaves: 4 lacunarity: 1.5) * 20.0 - 8.0.
 
 	"Generate the island boundaries"
 	innerRadius := islandOuterRadius - 20.0 - (((theta*1.5 + 12.0) turbulence)*35.0) min: islandOuterRadius.
 	sand := r smoothStepFrom: innerRadius to: islandOuterRadius.
-	boundaries := (r smoothStepFrom: innerRadius to: islandOuterRadius ) fuzzyNot.
+	boundaries := (r smoothStepFrom: innerRadius to: islandOuterRadius) fuzzyNot.
 	heightAttenuation := (r smoothStepFrom: 0.0 to: innerRadius) fuzzyNot.
 
 	"Generate the mountains"
-	mountainHeight := (st*10.0 fbmSignedGradientNoiseAbsOctaves: 5 lacunarity: 2.167245)*0.5 + 0.5 * (maximumHeight * heightAttenuation).
+	mountainHeight := (p*0.05 fbmSignedGradientNoiseAbsOctaves: 5 lacunarity: 2.167245)*0.5 + 0.5 * (maximumHeight * heightAttenuation).
 
 	"Generate the stuff in the island interior"
 	islandInterior := islandBaseLevel + mountainHeight.
@@ -38,7 +39,7 @@ terrainFunction := [ :s :t |
 
 	snow := heightValue smoothStepFrom: snowStartHeight to: snowStartHeight + 5.0.
 	notInSnow := snow fuzzyNot.
-	grass := ((((st*10.0) turbulence - ((heightValue max: 0.0)/maximumHeight*1.0) + 0.1 max: 0.0) productFuzzyAnd: sand fuzzyNot)* 10.0 * notInSnow).
+	grass := ((((p*0.05) turbulence - ((heightValue max: 0.0)/maximumHeight*1.0) + 0.1 max: 0.0) productFuzzyAnd: sand fuzzyNot)* 10.0 * notInSnow).
 	rock := (snow fuzzyNot productFuzzyAnd: sand fuzzyNot) productFuzzyAnd: grass fuzzyNot.
 
 	{heightValue . {sand . grass . rock . snow . 0.0}}.
@@ -46,11 +47,10 @@ terrainFunction := [ :s :t |
 
 textureGenerator terrainData
 	clipMapLevels: 3;
-	terrainExtent: 200@200;
 	minHeight: heightScale negated;
 	maxHeight: heightScale;
 	yourself.
 ^ textureGenerator
-	textureExtent: 256@256;
+	textureExtent: 1024@1024 terrainCellSize: 0.5@0.5;
 	terrainFunction: terrainFunction;
 	evaluate

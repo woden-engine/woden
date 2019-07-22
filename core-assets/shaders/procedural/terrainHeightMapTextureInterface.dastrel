@@ -6,7 +6,7 @@ import math.polar;
 
 code_block(fragment) main
 {
-	let uv = FragmentInput.texcoord;
+	let uv = HeightMapScale*FragmentInput.texcoord + HeightMapOffset;
 	let height = terrainGenerationFunction(uv.x, uv.y)[0];
 	let clampedHeight = min(max(height, HeightScaleMinValue), HeightScaleMaxValue);
 	let mappedHeight = (clampedHeight - HeightScaleCenterValue) * HeightScaleInvRange;
