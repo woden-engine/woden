@@ -12,7 +12,8 @@ Class {
 		'views',
 		'engine',
 		'started',
-		'session'
+		'session',
+		'renderingDependencies'
 	],
 	#category : #'WodenEngine-Core-Application'
 }
@@ -20,6 +21,16 @@ Class {
 { #category : #'instance creation' }
 WDAModel class >> for: aWDCEngine [
 	^ self basicNew initializeWithEngine: aWDCEngine
+]
+
+{ #category : #adding }
+WDAModel >> addDependencyToWodenModel: renderingDependency [
+	renderingDependencies add: renderingDependency
+]
+
+{ #category : #adding }
+WDAModel >> addRenderingDependency: wodenModel [
+	renderingDependencies add: wodenModel
 ]
 
 { #category : #adding }
@@ -61,6 +72,7 @@ WDAModel >> initialize [
 	engine ifNil: [ engine := WDCEngine default. ].
 	
 	views := OrderedCollection new.
+	renderingDependencies := OrderedCollection new.
 	started := false.
 	self initializeModel.
 	self initializeForNewSession.
@@ -124,6 +136,16 @@ WDAModel >> openInOSWindowWith: aView [
 ]
 
 { #category : #opening }
+WDAModel >> openOnRenderTargetTexture: screenTexture with: aView [
+	| view |
+	view := aView engine: engine model: self.
+	view openOnRenderTargetTexture: screenTexture.
+	self addView: view.
+	self start.
+	^ view
+]
+
+{ #category : #opening }
 WDAModel >> openWith: aView [
 	(Smalltalk os isMacOSX or: [ Smalltalk os isWindows ]) ifTrue: [
 		^ self openInMorphicWith: aView
@@ -141,11 +163,21 @@ WDAModel >> processEvents [
 ]
 
 { #category : #adding }
+WDAModel >> removeRenderingDependency: renderingDependency [
+	renderingDependencies remove: renderingDependency ifAbsent: []
+]
+
+{ #category : #adding }
 WDAModel >> removeView: aView [
 	engine renderingProcessCritical: [
 		views remove: aView.
 		views ifEmpty: [ self allViewsAreClosed ]
 	]
+]
+
+{ #category : #'rendering graph' }
+WDAModel >> renderingGraphDependencies [
+	^ renderingDependencies
 ]
 
 { #category : #initialization }

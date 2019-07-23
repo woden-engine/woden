@@ -618,6 +618,7 @@ WDCEngine >> initialize [
 	assetSearchPaths ifNil: [ 
 		assetSearchPaths := OrderedCollection new.
 		assetSearchPaths add: WodenCoreAssets location.
+		assetSearchPaths add: Smalltalk imageDirectory / #assets.
 	].
 	self initializeForNewSession.
 ]

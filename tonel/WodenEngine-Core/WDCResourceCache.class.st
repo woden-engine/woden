@@ -427,6 +427,12 @@ WDCResourceCache >> genericObjectStatePool [
 ]
 
 { #category : #'resource loading' }
+WDCResourceCache >> getNamedRenderTargetTexture: name ifAbsent: aBlock [
+
+	^ self resourceAt: name -> #renderTargetTexture ifAbsent: aBlock.
+]
+
+{ #category : #'resource loading' }
 WDCResourceCache >> getOrCreateColorCubeMap: aColor [
 	^ self resourceAt: aColor -> #colorCubeTexture ifAbsentPut: [ self createCubeTextureWithColor: aColor ].
 ]
@@ -434,6 +440,12 @@ WDCResourceCache >> getOrCreateColorCubeMap: aColor [
 { #category : #'resource loading' }
 WDCResourceCache >> getOrCreateColorTexture: aColor [
 	^ self resourceAt: aColor -> #colorTexture ifAbsentPut: [ self createTextureWithColor: aColor ].
+]
+
+{ #category : #'resource loading' }
+WDCResourceCache >> getOrCreateNamedRenderTargetTexture: name withExtent: extent pixelFormat: pixelFormat [
+
+	^ self resourceAt: name -> #renderTargetTexture ifAbsentPut: [ engine createRenderTargetColorTextureWithExtent: extent format: pixelFormat ].
 ]
 
 { #category : #'resource loading' }
@@ -872,6 +884,15 @@ WDCResourceCache >> resolveResourceFileReferenceWithQuery: aFileName [
 	pathPart := aFileName copyFrom: 1 to: questionMarkIndex - 1.
 	query := self parseQuery: (aFileName copyFrom: questionMarkIndex + 1 to: aFileName size).
 	^ { self resolveResourceFileReference: pathPart . query }
+]
+
+{ #category : #'resource loading' }
+WDCResourceCache >> resourceAt: name ifAbsent: aBlock [
+	| result |
+	"Weak GC can also return nil."
+	result := resources at: name ifAbsent: [ nil ].
+	result ifNotNil: [ ^ result ].
+	^ aBlock value
 ]
 
 { #category : #'resource loading' }

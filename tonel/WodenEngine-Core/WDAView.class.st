@@ -152,6 +152,17 @@ WDAView >> openInVirtualWindow [
 ]
 
 { #category : #opening }
+WDAView >> openOnRenderTargetTexture: screenTexture [ 
+	window := (WDAVirtualWindowViewWindow for: self)
+		engine: engine;
+		screenTargetTexture: screenTexture;
+		yourself.
+	window open.
+	self openedWithWindow: window.
+	^ window
+]
+
+{ #category : #opening }
 WDAView >> openedWithWindow: aWindow [
 ]
 

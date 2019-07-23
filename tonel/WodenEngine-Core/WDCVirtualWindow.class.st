@@ -4,10 +4,14 @@ Class {
 	#instVars : [
 		'engine',
 		'extent',
+		'screenTargetTexture',
 		'renderTarget',
 		'resolveRenderTarget',
 		'session',
 		'eventQueue'
+	],
+	#pools : [
+		'AGPUConstants'
 	],
 	#category : #'WodenEngine-Core-Window'
 }
@@ -49,6 +53,10 @@ WDCVirtualWindow >> commitSurface [
 
 { #category : #'instance creation' }
 WDCVirtualWindow >> createRenderTarget [
+	(screenTargetTexture isNil or: [screenTargetTexture extent ~= self drawingSurfaceExtent]) ifTrue: [
+		screenTargetTexture := engine createRenderTargetColorTextureWithExtent: self drawingSurfaceExtent format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB.
+	].
+
 	renderTarget := WDCRenderTarget for: engine extent: self drawingSurfaceExtent.
 	renderTarget
 		hasDepth: self hasDepth;
@@ -63,9 +71,9 @@ WDCVirtualWindow >> createRenderTarget [
 			hasDepth: false;
 			hasStencil: false;
 			sampleCount: 1;
-			createFramebuffers.
+			constructWithColorAttachments: {screenTargetTexture}.
 	] ifFalse: [
-		renderTarget createFramebuffers.
+		renderTarget constructWithColorAttachments: {screenTargetTexture}.
 		resolveRenderTarget := renderTarget
 	].
 ]
@@ -163,6 +171,17 @@ WDCVirtualWindow >> releaseMouse [
 { #category : #'framebuffer description' }
 WDCVirtualWindow >> sampleCount [
 	^ 1
+]
+
+{ #category : #accessing }
+WDCVirtualWindow >> screenTargetTexture [
+	^ screenTargetTexture
+]
+
+{ #category : #accessing }
+WDCVirtualWindow >> screenTargetTexture: anObject [
+	screenTargetTexture := anObject.
+	self extent: screenTargetTexture extent
 ]
 
 { #category : #accessing }

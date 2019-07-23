@@ -18,28 +18,17 @@ WDCRenderTarget class >> for: engine colorAttachments: colorAttachments [
 
 { #category : #'instance creation' }
 WDCRenderTarget class >> for: engine colorAttachments: colorAttachments depthStencilAttachment: depthStencilAttachment [
-	| sampleCount extent |
-	sampleCount := nil.
+	| extent |
 	extent := nil.
 	depthStencilAttachment ifNotNil: [
 		extent := depthStencilAttachment extent.
-		sampleCount := depthStencilAttachment description sample_count
 	].
-	sampleCount ifNil: [
+	extent ifNil: [
 		extent := colorAttachments first extent.
-		sampleCount := colorAttachments first description sample_count
 	].
 	
 	^ (self for: engine extent: extent)
-		colorAttachmentFormats: (colorAttachments collect: [ :attachment | attachment description format ]);
-		depthStencilFormat: (depthStencilAttachment
-			ifNil: [AGPU_TEXTURE_FORMAT_UNKNOWN]
-			ifNotNil: [depthStencilAttachment description format]);
-		hasDepth: (depthStencilAttachment ifNil: [false] ifNotNil: #hasDepthAspect);
-		hasStencil: (depthStencilAttachment ifNil: [false] ifNotNil: #hasStencilAspect);
-		isDepthReaded: (depthStencilAttachment ifNil: [false] ifNotNil: #isDepthReaded);
-		sampleCount: sampleCount;
-		createFramebuffersWithColorAttachments: colorAttachments depthStencilAttachment: depthStencilAttachment
+		constructWithColorAttachments: colorAttachments depthStencilAttachment: depthStencilAttachment
 ]
 
 { #category : #'instance creation' }
@@ -47,9 +36,37 @@ WDCRenderTarget class >> for: anEngine extent: anExtent [
 	^ self new engine: anEngine; extent: anExtent; yourself
 ]
 
+{ #category : #'as yet unclassified' }
+WDCRenderTarget >> constructWithColorAttachments: colorAttachments [
+	^ self constructWithColorAttachments: colorAttachments depthStencilAttachment: (self createImplicitDepthStencilAttachment)
+]
+
+{ #category : #'as yet unclassified' }
+WDCRenderTarget >> constructWithColorAttachments: colorAttachments depthStencilAttachment: depthStencilAttachment [
+	| newSampleCount |
+	newSampleCount := nil.
+	depthStencilAttachment ifNotNil: [
+		newSampleCount := depthStencilAttachment description sample_count
+	].
+	newSampleCount ifNil: [
+		newSampleCount := colorAttachments first description sample_count
+	].
+	
+	^ self
+		colorAttachmentFormats: (colorAttachments collect: [ :attachment | attachment description format ]);
+		depthStencilFormat: (depthStencilAttachment
+			ifNil: [AGPU_TEXTURE_FORMAT_UNKNOWN]
+			ifNotNil: [depthStencilAttachment description format]);
+		hasDepth: (depthStencilAttachment ifNil: [false] ifNotNil: #hasDepthAspect);
+		hasStencil: (depthStencilAttachment ifNil: [false] ifNotNil: #hasStencilAspect);
+		isDepthReaded: (depthStencilAttachment ifNil: [false] ifNotNil: #isDepthReaded);
+		sampleCount: newSampleCount;
+		createFramebuffersWithColorAttachments: colorAttachments depthStencilAttachment: depthStencilAttachment
+]
+
 { #category : #initialization }
 WDCRenderTarget >> createFramebuffer [
-	| colorBufferUsages description colorAttachments depthStencilAttachment depthStencilFlags depthStencilDesc mainUsageMode |
+	| colorBufferUsages description colorAttachments depthStencilAttachment |
 	colorBufferUsages := AGPU_TEXTURE_USAGE_COLOR_ATTACHMENT | AGPU_TEXTURE_USAGE_SAMPLED.
 	self gpuOnly ifFalse: [
 		colorBufferUsages := colorBufferUsages | AGPU_TEXTURE_USAGE_READED_BACK
@@ -72,34 +89,7 @@ WDCRenderTarget >> createFramebuffer [
 		engine createTexture: description
 	].
 
-	depthStencilAttachment := nil.
-	(hasDepth or: [ hasStencil ]) ifTrue: [
-		depthStencilFlags := AGPU_TEXTURE_USAGE_DEPTH_ATTACHMENT.
-		hasStencil ifTrue: [ depthStencilFlags := depthStencilFlags | AGPU_TEXTURE_USAGE_STENCIL_ATTACHMENT ].
-		mainUsageMode := depthStencilFlags.
-		isDepthReaded ifTrue: [
-			depthStencilFlags := depthStencilFlags | AGPU_TEXTURE_USAGE_SAMPLED.
-			mainUsageMode := AGPU_TEXTURE_USAGE_SAMPLED
-		].
-		
-		depthStencilDesc := AGPUTextureDescription new
-			type: AGPU_TEXTURE_2D;
-			width: width;
-			height: height;
-			depth: 1;
-			layers: 1;
-			miplevels: 1;
-			format: self depthStencilFormat;
-			heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
-			usage_modes: depthStencilFlags;
-			main_usage_mode: mainUsageMode;
-			sample_count: sampleCount.
-			
-		depthStencilAttachment := (engine createTexture: depthStencilDesc)
-			checkSession;
-			yourself.
-	].
-
+	depthStencilAttachment := self createImplicitDepthStencilAttachment.
 	^ self createFramebufferWithColorAttachments: colorAttachments views: colorAttachments depthStencilAttachment: depthStencilAttachment view: depthStencilAttachment
 ]
 
@@ -150,6 +140,39 @@ WDCRenderTarget >> createFramebuffersWithColorAttachments: colorAttachments dept
 WDCRenderTarget >> createFramebuffersWithColorAttachments: colorAttachments views: colorViews depthStencilAttachment: depthStencilAttachment view: depthStencilView [
 	self assert: gpuOnly.
 	framebuffers := {self createFramebufferWithColorAttachments: colorAttachments views: colorViews depthStencilAttachment: depthStencilAttachment view: depthStencilView}
+]
+
+{ #category : #initialization }
+WDCRenderTarget >> createImplicitDepthStencilAttachment [
+	| depthStencilFlags mainUsageMode depthStencilDesc |
+	(hasDepth or: [ hasStencil ]) ifTrue: [
+		depthStencilFlags := AGPU_TEXTURE_USAGE_DEPTH_ATTACHMENT.
+		hasStencil ifTrue: [ depthStencilFlags := depthStencilFlags | AGPU_TEXTURE_USAGE_STENCIL_ATTACHMENT ].
+		mainUsageMode := depthStencilFlags.
+		isDepthReaded ifTrue: [
+			depthStencilFlags := depthStencilFlags | AGPU_TEXTURE_USAGE_SAMPLED.
+			mainUsageMode := AGPU_TEXTURE_USAGE_SAMPLED
+		].
+		
+		depthStencilDesc := AGPUTextureDescription new
+			type: AGPU_TEXTURE_2D;
+			width: width;
+			height: height;
+			depth: 1;
+			layers: 1;
+			miplevels: 1;
+			format: self depthStencilFormat;
+			heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
+			usage_modes: depthStencilFlags;
+			main_usage_mode: mainUsageMode;
+			sample_count: sampleCount.
+			
+		^ (engine createTexture: depthStencilDesc)
+			checkSession;
+			yourself.
+	].
+
+	^ nil
 ]
 
 { #category : #accessing }

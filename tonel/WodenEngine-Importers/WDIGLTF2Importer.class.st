@@ -369,10 +369,11 @@ WDIGLTF2Importer >> loadBuffersFrom: elements [
 
 { #category : #loading }
 WDIGLTF2Importer >> loadImageFrom: imageDescription [
-	| imageData imageReader image |
+	| imageData imageReader imageName image |
 	imageData := nil.
 	imageReader := nil.
-	
+	imageName := imageDescription at: 'name' ifAbsent: [  ].
+
 	imageDescription at: 'uri' ifPresent: [ :uri |
 		imageData := self loadBinaryDataFromURI: uri.
 		imageReader := imageDescription at: 'mimeType' ifPresent: [ :mimeType |
@@ -387,7 +388,11 @@ WDIGLTF2Importer >> loadImageFrom: imageDescription [
 		imageReader := WDCTextureReader loaderForMimeType: (imageDescription at: 'mimeType')
 	].
 
-	image := WDIGLTF2Image new imageData: imageData; imageReader: imageReader; yourself.
+	image := WDIGLTF2Image new
+		name: imageName;
+		imageData: imageData;
+		imageReader: imageReader;
+		yourself.
 	images add: image
 ]
 
