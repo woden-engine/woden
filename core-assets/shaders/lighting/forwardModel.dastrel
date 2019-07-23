@@ -84,7 +84,7 @@ code_block forwardLightingModel
     using GlobalLightingState;
 
 	let diff = Cdiff*PiReciprocal;
-    let accumulatedColor = emission.rgb;
+    let accumulatedColor = float3(0.0f, 0.0f, 0.0f);
 
 	let alpha = roughness*roughness;
 
@@ -116,6 +116,8 @@ code_block forwardLightingModel
 
 	// Apply ambient occlusion.
 	accumulatedColor *= occlusion*sampleScreenSpaceAmbientOcclusion();
+	
+	accumulatedColor += emission.rgb;
 
     // Add the indirect lighting.
     for(let i = 0; i < numberOfLights; i += 1)
