@@ -9,13 +9,20 @@ Class {
 	#category : #'WodenEngine-Core-Mesh'
 }
 
-{ #category : #accessing }
+{ #category : #private }
 WDCTerrainMeshDeformationState >> applyTerrainDataState [
 	terrainStateData
 		heightMapOffset: terrainData heightMapOffset;
 		heightMapScale: terrainData heightMapScale;
 		heightOffset: terrainData heightOffset;
-		heightScale: terrainData heightScale
+		heightScale: terrainData heightScale.
+	renderableStateBindings ifNotNil: [ 
+		renderableStateBindings do: [ :bindings |
+			bindings
+				bind: 1 texture: (terrainData heightMap ifNil: [engine resourceCache blackTexture]);
+				bind: 2 texture: (terrainData splatterMap ifNil: [engine resourceCache blackTexture])
+		]
+	].
 ]
 
 { #category : #accessing }
@@ -23,7 +30,7 @@ WDCTerrainMeshDeformationState >> clipMapPeriod: clipMapPeriod [
 	terrainStateData clipMapPeriod: (clipMapPeriod ifNil: [WMVector2F zero])
 ]
 
-{ #category : #accessing }
+{ #category : #resources }
 WDCTerrainMeshDeformationState >> createEngineDependantData [
 	super createEngineDependantData.
 	gpuTerrainState := (engine resourceCache streamingStorageBufferPoolFor: WDCTerrainDeformationStateStructure) allocate.
@@ -37,6 +44,11 @@ WDCTerrainMeshDeformationState >> createEngineDependantData [
 	]
 ]
 
+{ #category : #dependencies }
+WDCTerrainMeshDeformationState >> dependencyChange: dependency [
+	dependency == terrainData ifTrue: [ self applyTerrainDataState ].
+]
+
 { #category : #initialization }
 WDCTerrainMeshDeformationState >> initialize [
 	super initialize.
@@ -45,7 +57,7 @@ WDCTerrainMeshDeformationState >> initialize [
 		heightMapOffset: WMVector2F zero;
 		heightScale: 1.0;
 		yourself.
-	terrainData := WDCTerrainData new.
+	self terrainData: WDCTerrainData new.
 
 ]
 
@@ -54,7 +66,7 @@ WDCTerrainMeshDeformationState >> isTerrainDeformationState [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : #resources }
 WDCTerrainMeshDeformationState >> requiresAccessFromTheCPU [
 	^ false
 ]
@@ -66,7 +78,9 @@ WDCTerrainMeshDeformationState >> terrainData [
 
 { #category : #accessing }
 WDCTerrainMeshDeformationState >> terrainData: anObject [
+	terrainData ifNotNil: [ terrainData removeWodenResourceDependant: self ].
 	terrainData := anObject.
+	terrainData ifNotNil: [ terrainData addWodenResourceDependant: self ].
 	self applyTerrainDataState
 ]
 

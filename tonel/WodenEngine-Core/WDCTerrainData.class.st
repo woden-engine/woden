@@ -1,6 +1,6 @@
 Class {
 	#name : #WDCTerrainData,
-	#superclass : #Object,
+	#superclass : #WDCResourceWithDependants,
 	#instVars : [
 		'engine',
 		'heightMap',

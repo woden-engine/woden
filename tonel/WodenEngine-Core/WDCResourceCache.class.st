@@ -600,7 +600,19 @@ WDCResourceCache >> loadTerrain: aFileNameOrReference [
 	| terrainFile |
 	terrainFile := self resolveResourceFileReference: aFileNameOrReference.
 	^ self resourceAt: terrainFile -> #texture ifAbsentPut: [
-		self performLoadTerrainDataFile: terrainFile
+		| terrainData |
+		terrainData := self performLoadTerrainDataFile: terrainFile.
+		engine autoReloadChanges ifTrue: [
+			PhanideFileSystemMonitor on: terrainFile when: PhanideFileEventCloseWrite do: [ :event |
+				self enqueueResourceReloadAction: [
+					| reloadedTerrain |
+					reloadedTerrain := self performLoadTerrainDataFile: terrainFile.
+					terrainData reloadReplacement: reloadedTerrain
+				]
+			].
+		].
+		
+		terrainData
 	].
 
 ]
@@ -720,14 +732,14 @@ WDCResourceCache >> performLoadTerrainDataFile: terrainFile [
 		scriptEvaluatorClass := WDCPharoProceduralGPUScriptEvaluator
 	].
 
-	terrainData := "self class cachedValueFor: { #stterrainEval . terrainFile fullName. '|' . script } ifAbsentPut: "[Smalltalk compiler
+	terrainData := self class cachedValueFor: { #stterrainEval . terrainFile fullName. '|' . script } ifAbsentPut: [Smalltalk compiler
 		receiver: (WDCPharoProceduralScriptContext new
 			textureGenerator: (scriptEvaluatorClass new
 				parameters: (Dictionary newFromPairs: #(texture terrainData));
 				yourself)
 			);
 		evaluate: script
-	] value.
+	].
 		
 	terrainData engine: engine.	
 	^ terrainData
