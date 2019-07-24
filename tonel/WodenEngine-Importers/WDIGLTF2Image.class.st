@@ -82,7 +82,7 @@ WDIGLTF2Image >> initialize [
 
 { #category : #testing }
 WDIGLTF2Image >> isRenderTargetImage [
-	^ name beginsWith: '$'
+	^ name isNotNil and: [ name beginsWith: '$' ]
 ]
 
 { #category : #accessing }

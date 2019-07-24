@@ -42,6 +42,15 @@ WDSGSpatialObject >> localBoundingBox [
 	^ renderable boundingBox
 ]
 
+{ #category : #copying }
+WDSGSpatialObject >> postCopy [
+	| oldRenderable |
+	oldRenderable := renderable.
+	renderingRenderables := #().
+	super postCopy.
+	self renderable: oldRenderable copyForResourceCacheInstancing.
+]
+
 { #category : #accessing }
 WDSGSpatialObject >> renderable [
 	^ renderable

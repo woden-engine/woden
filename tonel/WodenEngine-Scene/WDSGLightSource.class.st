@@ -28,6 +28,14 @@ WDSGLightSource >> castShadows: aBoolean [
 ]
 
 { #category : #initialization }
+WDSGLightSource >> createRenderingRenderable [
+	renderingRenderable := WDCRenderingSceneLightSourceObject new
+		node: self;
+		spatialObject: objectState;
+		yourself.
+]
+
+{ #category : #initialization }
 WDSGLightSource >> createSpatialObjectState [
 	objectState := WDCLightSource new
 ]
@@ -50,10 +58,7 @@ WDSGLightSource >> extraShadowDistanceFactor: aNumber [
 { #category : #initialization }
 WDSGLightSource >> initialize [
 	super initialize.
-	renderingRenderable := WDCRenderingSceneLightSourceObject new
-		node: self;
-		spatialObject: objectState;
-		yourself.
+	self createRenderingRenderable.
 ]
 
 { #category : #accessing }
@@ -114,6 +119,12 @@ WDSGLightSource >> outerSpotCutoff: aNumber [
 { #category : #'light type' }
 WDSGLightSource >> point [
 	objectState point
+]
+
+{ #category : #copying }
+WDSGLightSource >> postCopy [
+	super postCopy.
+	self createRenderingRenderable
 ]
 
 { #category : #accessing }

@@ -270,6 +270,21 @@ WDSGNode >> position: aPosition [
 	self transformChanged
 ]
 
+{ #category : #copying }
+WDSGNode >> postCopy [
+	| oldChildren |
+	super postCopy.
+	scene := nil.
+	parent := nil.
+	stateChangeListeners := nil.
+	oldChildren := children.
+	globalTransform := nil.
+	children := OrderedCollection new.
+	oldChildren do: [ :child |
+		self addChild: child copy
+	]
+]
+
 { #category : #adding }
 WDSGNode >> removeChild: node [
 	children remove: node.

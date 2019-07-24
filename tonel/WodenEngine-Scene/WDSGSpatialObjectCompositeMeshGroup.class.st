@@ -21,6 +21,12 @@ WDSGSpatialObjectCompositeMeshGroup >> isCompositeGroup [
 	^ true
 ]
 
+{ #category : #copying }
+WDSGSpatialObjectCompositeMeshGroup >> postCopy [
+	super postCopy.
+	self invalidateRenderable.
+]
+
 { #category : #adding }
 WDSGSpatialObjectCompositeMeshGroup >> removeChild: aChild [
 	super removeChild: aChild.

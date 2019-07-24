@@ -272,6 +272,17 @@ WDSGScene >> normalLayer [
 	^ normalLayer
 ]
 
+{ #category : #copying }
+WDSGScene >> postCopy [
+	super postCopy.
+	nodesWithPendingStates := IdentitySet new.
+
+	backgroundLayer := backgroundLayer copy addedToScene: self.
+	normalLayer := 	normalLayer copy addedToScene: self.
+	foregroundLayer := foregroundLayer copy addedToScene: self.
+	commonGPUStateRenderingComponent := nil.
+]
+
 { #category : #adding }
 WDSGScene >> remove: aNode [
 	normalLayer removeChild: aNode

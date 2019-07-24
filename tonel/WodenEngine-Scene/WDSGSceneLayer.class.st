@@ -19,6 +19,13 @@ WDSGSceneLayer >> initialize [
 	
 ]
 
+{ #category : #initialization }
+WDSGSceneLayer >> postCopy [
+	renderingRenderables := OrderedCollection new.
+	super postCopy.
+
+]
+
 { #category : #adding }
 WDSGSceneLayer >> removeRenderingRenderables: aCollection [
 	renderingRenderables removeAll: aCollection

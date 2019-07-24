@@ -658,8 +658,8 @@ WDASceneExamples class >> exampleModelSponza [
 	| sceneModel sponzaModel scene camera light moonLight |
 	sceneModel := WDASampleSceneModel new.
 
-	sponzaModel := WDCAbstractModelLoader loadFromFile: (WodenCoreAssets location resolve: 'models/glTF-Samples/Sponza/glTF/Sponza.gltf').
-	scene := sponzaModel mainScene.
+	sponzaModel :=(WDCEngine default resourceCache load3DModel: 'models/glTF-Samples/Sponza/glTF/Sponza.gltf').
+	scene := sponzaModel mainScene copy.
 	sceneModel scene: scene.
 	
 	scene backgroundColor: Color black.

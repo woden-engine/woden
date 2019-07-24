@@ -24,3 +24,12 @@ WDSGLocalSpatialComponentObject >> meshComponent [
 WDSGLocalSpatialComponentObject >> meshComponent: anObject [
 	meshComponent := anObject
 ]
+
+{ #category : #drawing }
+WDSGLocalSpatialComponentObject >> postCopy [
+	| oldMeshComponent |
+	oldMeshComponent := meshComponent.
+	meshComponent := nil.
+	super postCopy.
+	self meshComponent: oldMeshComponent copy
+]

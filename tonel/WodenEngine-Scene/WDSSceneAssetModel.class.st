@@ -13,16 +13,17 @@ Class {
 
 { #category : #'as yet unclassified' }
 WDSSceneAssetModel >> createViewer [
-	| sceneModel camera hasLights sunLight skyTexture |
+	| sceneModel camera hasLights sunLight skyTexture viewScene |
 	sceneModel := WDASampleSceneModel new.
+	viewScene := mainScene copy.
 	sceneModel
-		scene: mainScene.
-	mainScene backgroundColor: Color darkGray.
-	mainScene initializeWithEngine: sceneModel engine.
+		scene: viewScene.
+	viewScene backgroundColor: Color darkGray.
+	viewScene initializeWithEngine: sceneModel engine.
 	
 	"Try to find a camera."
 	hasLights := false.
-	mainScene allChildrenDo: [ :node |
+	viewScene allChildrenDo: [ :node |
 		hasLights := hasLights or: [node isLightSource].
 		node isCamera ifTrue: [
 			node isNotControlledByTheUser: true.
@@ -34,7 +35,7 @@ WDSSceneAssetModel >> createViewer [
 	sceneModel camera ifNil: [ 
 		camera := WDSGCamera new.
 		
-		mainScene add: camera.
+		viewScene add: camera.
 		sceneModel camera: camera.
 	].
 
@@ -46,17 +47,15 @@ WDSSceneAssetModel >> createViewer [
 			intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.6;
 			rotateDegreesOnX: -35.
 		
-		mainScene add: sunLight.
+		viewScene add: sunLight.
 
-		mainScene ambientLighting: WMVector4F ones*0.6.
+		viewScene ambientLighting: WMVector4F ones*0.6.
 		
 		skyTexture := WDASceneExamples proceduralSkySunDirection: (sunLight transform
 				transformVector3:(WMVector3F z: 1.0)
 			).
 		skyTexture := skyTexture asSRGBTextureFor: sceneModel engine.
-		mainScene createSkyWithCubeTexture: skyTexture.
-		"mainScene lightingProbe: (sceneModel engine resourceCache computeEnvironmentLightProbeFromCubeTexture: skyTexture)."
-				
+		viewScene createSkyWithCubeTexture: skyTexture.
 	].
 
 	^ sceneModel

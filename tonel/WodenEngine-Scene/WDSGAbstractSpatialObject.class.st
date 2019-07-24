@@ -68,6 +68,12 @@ WDSGAbstractSpatialObject >> objectState [
 	^ objectState
 ]
 
+{ #category : #copying }
+WDSGAbstractSpatialObject >> postCopy [
+	objectState := objectState copy.
+	super postCopy.
+]
+
 { #category : #accessing }
 WDSGAbstractSpatialObject >> renderable: ignored [
 ]
