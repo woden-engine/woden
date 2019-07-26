@@ -24,7 +24,7 @@ Class {
 
 { #category : #accessing }
 WDESCharacterBehaviorComponent class >> halfExtent [
-	^ WMVector3D x: 0.3 y: 0.9 z: 0.3
+	^ WMVector3D x: 0.3 y: 0.8 z: 0.3
 ]
 
 { #category : #accessing }

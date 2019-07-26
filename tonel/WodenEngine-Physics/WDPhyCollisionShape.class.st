@@ -10,6 +10,11 @@ WDPhyCollisionShape >> accept: aVisitor [
 ]
 
 { #category : #converting }
+WDPhyCollisionShape >> asCollisionShape [
+	^ self
+]
+
+{ #category : #converting }
 WDPhyCollisionShape >> asCompoundCollisionShapeComponent [
 	^ WDPhyCompoundCollisionShapeComponent new
 		transform: WMReversibleAffineTransformF identity;

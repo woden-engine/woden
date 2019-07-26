@@ -34,6 +34,27 @@ WDESGenericEntity >> addDirectionalLightWith: aBlock [
 ]
 
 { #category : #building }
+WDESGenericEntity >> addModelLibraryNamed: modelLibraryName nodeNamed: modelNodeName [
+	^ self addModelLibraryNamed: modelLibraryName nodeNamed: modelNodeName with: []
+]
+
+{ #category : #building }
+WDESGenericEntity >> addModelLibraryNamed: modelLibraryName nodeNamed: modelNodeName with: aBlock [
+	| component |
+	component := WDESModelLibraryNodeInstanceComponent new
+		modelLibraryName: modelLibraryName;
+		modelNodeName: modelNodeName;
+		yourself.
+	self addComponent: component.
+	aBlock value: component.
+	component collisionShape ifNotNil: [ :collsionShape |
+		self addComponentWithCollisionShape: collsionShape
+	].
+	
+	^ component
+]
+
+{ #category : #building }
 WDESGenericEntity >> addPlayerStartPointAt: position [
 	^ self addPointEntityWithType: EntityTypeName_InfoPlayerStart at: position
 ]

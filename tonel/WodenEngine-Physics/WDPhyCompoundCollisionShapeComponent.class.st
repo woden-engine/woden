@@ -9,6 +9,13 @@ Class {
 }
 
 { #category : #converting }
+WDPhyCompoundCollisionShapeComponent >> asCollisionShape [
+	^ WDPhyCompoundCollisionShape new
+		components: { self };
+		yourself
+]
+
+{ #category : #converting }
 WDPhyCompoundCollisionShapeComponent >> asCompoundCollisionShapeComponent [
 	^ self
 ]

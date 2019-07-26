@@ -88,6 +88,8 @@ WDSSceneAssetModel >> instanceSceneNodeNamed: sceneNodeName [
 WDSSceneAssetModel >> instanceSceneNodeNamed: sceneNodeName ifAbsent: aBlock [
 	self ensureValidNameDictionaries.
 	^ (sceneNodeNameDictionary at: sceneNodeName ifAbsent: [ aBlock ]) copy
+		transform: WMReversibleAffineTransformF identity;
+		yourself
 ]
 
 { #category : #accessing }

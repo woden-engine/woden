@@ -119,8 +119,11 @@ WDSGNode >> engine [
 
 { #category : #adding }
 WDSGNode >> engineChanged [
-	children do: #engineChanged
-	
+	children do: [:child |
+		child scene == scene ifTrue: [
+			child engineChanged
+		]
+	]
 ]
 
 { #category : #accessing }
