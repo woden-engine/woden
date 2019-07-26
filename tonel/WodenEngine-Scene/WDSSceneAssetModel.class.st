@@ -6,14 +6,15 @@ Class {
 	#superclass : #WDCAbstractModel,
 	#instVars : [
 		'mainScene',
-		'scenes'
+		'scenes',
+		'sceneNodeNameDictionary'
 	],
 	#category : #'WodenEngine-Scene-Asset'
 }
 
 { #category : #'as yet unclassified' }
 WDSSceneAssetModel >> createViewer [
-	| sceneModel camera hasLights sunLight skyTexture viewScene |
+	| sceneModel camera hasLights sunLight skyTexture viewScene sceneBBox |
 	sceneModel := WDASampleSceneModel new.
 	viewScene := mainScene copy.
 	sceneModel
@@ -34,6 +35,8 @@ WDSSceneAssetModel >> createViewer [
 	"If not camera is found, then we have to create a camera for the scene."
 	sceneModel camera ifNil: [ 
 		camera := WDSGCamera new.
+		sceneBBox := mainScene normalLayer globalBoundingBox.
+		camera position: (sceneBBox center + (WMVector3F z: sceneBBox depth)).
 		
 		viewScene add: camera.
 		sceneModel camera: camera.
@@ -59,6 +62,32 @@ WDSSceneAssetModel >> createViewer [
 	].
 
 	^ sceneModel
+]
+
+{ #category : #'as yet unclassified' }
+WDSSceneAssetModel >> ensureValidNameDictionaries [
+	sceneNodeNameDictionary ifNotNil: [ ^ self ].
+
+	sceneNodeNameDictionary := Dictionary new.
+	scenes do: [ :scene |
+		scene allChildrenDo: [ :node |
+			node name ifNotNil: [
+				sceneNodeNameDictionary at: node name put: node
+			].
+		]
+	].
+
+]
+
+{ #category : #'as yet unclassified' }
+WDSSceneAssetModel >> instanceSceneNodeNamed: sceneNodeName [
+	^ self instanceSceneNodeNamed: sceneNodeName ifAbsent: [self error: 'Requested scene node is not available in the model.']
+]
+
+{ #category : #'as yet unclassified' }
+WDSSceneAssetModel >> instanceSceneNodeNamed: sceneNodeName ifAbsent: aBlock [
+	self ensureValidNameDictionaries.
+	^ (sceneNodeNameDictionary at: sceneNodeName ifAbsent: [ aBlock ]) copy
 ]
 
 { #category : #accessing }
