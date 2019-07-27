@@ -31,6 +31,11 @@ WDCTextureView >> description: anObject [
 ]
 
 { #category : #accessing }
+WDCTextureView >> extent [
+	^ texture extent
+]
+
+{ #category : #accessing }
 WDCTextureView >> texture [
 	^ texture
 ]

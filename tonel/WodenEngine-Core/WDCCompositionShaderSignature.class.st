@@ -24,7 +24,8 @@ WDCCompositionShaderSignature class >> signatureSpec: spec [
 		bank: #Sources with: [ :bank |
 			bank
 				maxBindings: 1000;
-				texture: #Textures count: 5
+				texture: #Textures count: 5;
+				storage: #Data
 		];
 		bank: #Parameters with: [ :bank |
 			bank
@@ -63,6 +64,7 @@ WDCCompositionShaderSignature >> createHandleForDevice: device [
 		"Sources"
 		beginBindingBank: 1000;
 			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_SAMPLED_IMAGE bindingPointCount: 5; "Textures"
+			addBindingBankElement: AGPU_SHADER_BINDING_TYPE_STORAGE_BUFFER bindingPointCount: 1; "Data"
 
 		"Parameters"
 		beginBindingBank: 1000;
@@ -149,5 +151,5 @@ WDCCompositionShaderSignature >> newSamplers [
 
 { #category : #'generated shader signature methods' }
 WDCCompositionShaderSignature >> newSources [
-	^ engine createShaderSignature: self resourceBinding: 1 elements: 5
+	^ engine createShaderSignature: self resourceBinding: 1 elements: 6
 ]

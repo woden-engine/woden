@@ -7,12 +7,9 @@ model openInMorphicWith: WDASolidColorViewSample.
 "
 Class {
 	#name : #WDASolidColorViewSample,
-	#superclass : #WDAView,
+	#superclass : #WDAViewWithStateTracker,
 	#instVars : [
-		'color',
-		'commandList',
-		'renderPass',
-		'perFrameCommandLists'
+		'color'
 	],
 	#category : #'WodenEngine-Core-Application'
 }
@@ -27,35 +24,6 @@ WDASolidColorViewSample >> color: anObject [
 	color := anObject
 ]
 
-{ #category : #'rendering process stages' }
-WDASolidColorViewSample >> constructRenderingCommandLists [
-	| resolveFramebuffer renderTarget resolveTarget renderFramebuffer currentCommandLists |
-	super constructRenderingCommandLists.
-	perFrameCommandLists ifNil: [ perFrameCommandLists := WDCPerFrameSimpleCommandList for: engine ].
-	currentCommandLists := perFrameCommandLists currentList.
-	
-	renderTarget :=  window validRenderTarget.
-	resolveTarget := window validResolveRenderTarget.
-	
-	renderFramebuffer := renderTarget currentFramebuffer.
-	
-	resolveFramebuffer := resolveTarget currentFramebuffer.
-	currentCommandLists validCommandAllocator reset.
-	
-	renderPass ifNil: [ renderPass := renderTarget createRenderPassWithColor: Color white ].
-	renderPass setColorClearValue: 0 value: color asWMVector4F asAGPUColor4f.
-	
-	commandList := currentCommandLists validCommandList.
-	commandList withPipelineState: nil rebuild: [ :builder |
-		builder
-			beginRenderPass: renderPass validHandle framebuffer: renderFramebuffer validHandle bundle_content: false asBit;
-			endRenderPass.
-		renderTarget ~~ resolveTarget ifTrue: [ 
-			builder resolveFramebuffer: resolveFramebuffer validHandle sourceFramebuffer: renderFramebuffer validHandle
-		]
-	].
-]
-
 { #category : #initialization }
 WDASolidColorViewSample >> initialize [
 	super initialize.
@@ -63,9 +31,7 @@ WDASolidColorViewSample >> initialize [
 ]
 
 { #category : #'rendering process stages' }
-WDASolidColorViewSample >> sendRenderingCommands [
-	super sendRenderingCommands.
-	commandList ifNil: [ ^ self ].
-	engine graphicsQueue
-		addCommandList: commandList validHandle
+WDASolidColorViewSample >> setupMainRenderpass [
+	super setupMainRenderpass.
+	renderPass setColorClearValue: 0 value: color asWMVector4F asAGPUColor4f.
 ]

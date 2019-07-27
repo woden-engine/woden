@@ -100,6 +100,19 @@ WDCTexture >> concretizeWodenTextureWithResourceCache: aResourceCache [
 ]
 
 { #category : #'as yet unclassified' }
+WDCTexture >> createTextureViewWithFormat: viewFormat [
+	| viewDescription |
+	viewDescription := AGPUTextureViewDescription new.
+	self validHandle getFullViewDescription: viewDescription.
+	viewDescription format: viewFormat.
+	
+	^ (WDCTextureView for: engine)
+		texture: self;
+		description: viewDescription;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
 WDCTexture >> createViewForSingleLayer: layerIndex [
 	| viewDescription |
 	viewDescription := AGPUTextureViewDescription new.

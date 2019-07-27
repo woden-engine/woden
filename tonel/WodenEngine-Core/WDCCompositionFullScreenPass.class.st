@@ -6,7 +6,8 @@ Class {
 		'sourceBindings',
 		'destinationTexture',
 		'destinationRenderTarget',
-		'fragmentShader'
+		'fragmentShader',
+		'parametersBindings'
 	],
 	#category : #'WodenEngine-Core-Shaders'
 }
@@ -18,6 +19,7 @@ WDCCompositionFullScreenPass >> applyWithStateTracker: stateTracker [
 		shaderSignature: self shaderSignature;
 		useShaderResources: self shaderSignature defaultSamplers;
 		useShaderResources: self sourceBindings;
+		useShaderResources: parametersBindings;
 		vertexShader: self vertexShader;
 		fragmentShader: fragmentShader;
 		dispatchScreenQuadRender;
@@ -52,6 +54,17 @@ WDCCompositionFullScreenPass >> fragmentShader: anObject [
 ]
 
 { #category : #accessing }
+WDCCompositionFullScreenPass >> parametersBindings [
+	^ parametersBindings ifNil: [parametersBindings := self shaderSignature newParameters]
+]
+
+{ #category : #accessing }
+WDCCompositionFullScreenPass >> parametersUniformBuffer: uniformBuffer [
+	self parametersBindings
+		bind: 0 uniformBuffer: uniformBuffer
+]
+
+{ #category : #accessing }
 WDCCompositionFullScreenPass >> shaderSignature [
 	^ shaderSignature ifNil: [ shaderSignature := WDCCompositionShaderSignature for: engine ]
 ]
@@ -59,6 +72,12 @@ WDCCompositionFullScreenPass >> shaderSignature [
 { #category : #'as yet unclassified' }
 WDCCompositionFullScreenPass >> sourceBindings [
 	^ sourceBindings ifNil: [ sourceBindings := self shaderSignature newSources ]
+]
+
+{ #category : #'as yet unclassified' }
+WDCCompositionFullScreenPass >> sourceDataStorageBuffer: aSourceBuffer [
+	self sourceBindings
+		bind: 5 storageBuffer: aSourceBuffer
 ]
 
 { #category : #'as yet unclassified' }

@@ -136,6 +136,11 @@ WDAModel >> openInOSWindowWith: aView [
 ]
 
 { #category : #opening }
+WDAModel >> openOnRenderTargetTexture: screenTexture [
+	^ self openOnRenderTargetTexture: screenTexture with: self defaultViewClass
+]
+
+{ #category : #opening }
 WDAModel >> openOnRenderTargetTexture: screenTexture with: aView [
 	| view |
 	view := aView engine: engine model: self.
