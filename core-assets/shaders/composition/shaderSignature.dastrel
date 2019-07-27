@@ -9,6 +9,7 @@ shader_signature Composition
     descriptor_set(max_bindings=1000) Sources
     {
         Textures: texture*5;
+		Data: buffer;
     }
 
     descriptor_set(max_bindings=1000) Parameters

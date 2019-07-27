@@ -1,0 +1,40 @@
+function decodeSRGBChannel(value: float) -> float
+{
+	let a = 0.055f;
+	return (value <= 0.04045f)
+		? value / 12.92f
+		: pow((value + a) / (1.0f + a), 2.4f);
+
+}
+
+function decodeSRGB(color: float3) -> float3
+{
+	return float3(decodeSRGBChannel(color.r),
+		decodeSRGBChannel(color.g),
+		decodeSRGBChannel(color.b));
+}
+
+function encodeSRGBChannel(value: float) -> float
+{
+	let a = 0.055f;
+	return (value <= 0.0031308f)
+		? value * 12.92f
+		: ((1.0f + a) * pow(value, 1.0f / 2.4f)) - a;
+}
+
+function encodeSRGB(color: float3) -> float3
+{
+	return float3(encodeSRGBChannel(color.r),
+		encodeSRGBChannel(color.g),
+		encodeSRGBChannel(color.b));
+}
+
+function decodeSRGB(color: float4) -> float4
+{
+	return float4(decodeSRGB(color.rgb), color.a);
+}
+
+function encodeSRGB(color: float4) -> float4
+{
+	return float4(encodeSRGB(color.rgb), color.a);
+}

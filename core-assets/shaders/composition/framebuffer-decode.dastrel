@@ -1,0 +1,47 @@
+import composition.shaderSignature;
+import composition.environment;
+import fragment.stage;
+import fragment.screenQuad;
+import math.gamma;
+
+uniform(binding=Parameters.Parameters) Parameters
+{
+	width: uint;
+	height: uint;
+}
+
+buffer(binding=Sources.Data) SourceDataBuffer32
+{
+    data: uint[];
+}
+
+code_block(fragment) decode_bitmap
+{
+	using Parameters;
+	using SourceDataBuffer32;
+	
+	let pixelCoord = uint2(FragmentInput.texcoord * float2(float(width), float(height)) + float2(0.5f, 0.5f));
+	let pixelIndex = width*pixelCoord.y + pixelCoord.x;
+	let pixelWordIndex = pixelIndex >> 5u;
+	let pixelBitIndex = pixelIndex & 31u;
+	
+	let pixelBits = data[pixelWordIndex];
+	let pixelBit = (pixelBits >> (31u - pixelBitIndex)) & 1u;
+
+	let color = pixelBit != 0u ?
+		float4(0.0f, 0.0f, 0.0f, 1.0f) :
+		float4(1.0f, 1.0f, 1.0f, 1.0f);
+	
+    FragmentStage.colorOutput0 = color;
+}
+
+code_block(fragment) decode_bgra32
+{
+	using Parameters;
+	using SourceDataBuffer32;
+	
+	let pixelCoord = uint2(FragmentInput.texcoord * float2(float(width), float(height)));
+	let pixelIndex = width*pixelCoord.y + pixelCoord.x;
+	
+    FragmentStage.colorOutput0 = decodeSRGB(unpackUnorm4x8(data[pixelIndex]).bgra);
+}
