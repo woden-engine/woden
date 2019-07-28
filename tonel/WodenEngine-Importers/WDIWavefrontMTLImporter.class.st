@@ -91,7 +91,7 @@ WDIWavefrontMTLImporter >> parseLine: line [
 	line ifEmpty: [ ^ self ].
 	line first = $# ifTrue: [ ^ self ].
 	
-	components := line splitOn: ' '.
+	components := line substrings.
 	command := components first.
 	(CommandDictionary at: command ifAbsent: [ ^ self ]) value: self value: components
 ]

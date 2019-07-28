@@ -15,7 +15,7 @@ WDCLineReader >> asSpaceTokenReader [
 { #category : #accessing }
 WDCLineReader >> next [
 	^ ByteString streamContents: [ :out |
-		[decoratedStream peek ~= Character cr and: [decoratedStream peek ~= Character lf]] whileTrue: [ 
+		[ decoratedStream atEnd not and: [ decoratedStream peek ~= Character cr and: [decoratedStream peek ~= Character lf]]] whileTrue: [ 
 			out nextPut: decoratedStream next
 		].
 	
