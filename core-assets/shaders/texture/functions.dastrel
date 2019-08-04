@@ -8,3 +8,21 @@ function encodeNormalTexel(normal: float3) -> float4
 	let n = normal*0.5f + 0.5f;
 	return float4(0.0f, n.gbr);
 }
+
+// RGBM Encoding and decoding formulas from:
+// http://iwasbeingirony.blogspot.com/2010/06/difference-between-rgbm-and-rgbd.html
+//constant MaxRGBM : float = 65025.0f;
+constant MaxRGBM : float = 255.0f;
+
+function encodeRGBM(rgb: float3) -> float4
+{
+	let maxC = max(rgb.r, max(rgb.g, rgb.b));
+	let M = maxC / MaxRGBM;
+	M = max(1.0f, ceil(M * 255.0f)) / 255.0f;
+	return float4(rgb / (M * MaxRGBM), M);
+}
+
+function decodeRGBM(rgbm: float4) -> float3
+{
+	return rgbm.rgb*(rgbm.a*MaxRGBM);
+}

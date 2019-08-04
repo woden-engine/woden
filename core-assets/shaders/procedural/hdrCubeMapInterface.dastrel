@@ -1,0 +1,11 @@
+import fragment.stage;
+import fragment.cubeScreenQuad;
+import procedural.noise;
+import texture.functions;
+
+code_block(fragment) main
+{
+	let direction = CubeFragmentInput.direction;
+	let color = colorFunction(direction.x, direction.y, direction.z);
+	FragmentStage.colorOutput0 = encodeRGBM(color.rgb);
+}

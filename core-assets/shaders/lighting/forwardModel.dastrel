@@ -1,6 +1,7 @@
 import rendering.shaderSignature;
 import rendering.environment;
 import lighting.functions;
+import texture.functions;
 
 import fragment.stage; // For SSAO
 import math.constants;
@@ -105,9 +106,11 @@ code_block forwardLightingModel
 
 	let reflectionF0 = fresnelSchlickRoughness(F0, NdotV, roughness);
 	
-    let diffuseLightProbeSample = cubeMapSampler.sampleLod(diffuseIrradianceMap, worldN, 0.0f).rgb;
+    let diffuseLightProbeSample = decodeRGBM(cubeMapSampler.sampleLod(diffuseIrradianceMap, worldN, 0.0f));
+
 	let specularLightProbeLevel = float(getTextureLevelCount(specularIrradianceMap)) * roughness;
-    let specularLightProbeSample = cubeMapSampler.sampleLod(specularIrradianceMap, worldR, specularLightProbeLevel).rgb;
+    let specularLightProbeSample = decodeRGBM(cubeMapSampler.sampleLod(specularIrradianceMap, worldR, specularLightProbeLevel));
+
 	let ambientReflectionFactors = brdfLutSampler.sample(imageBasedLightingBRDFLut, float2(NdotV, roughness));
 	let translucencyWithFresnel = fresnelSchlick(translucencyFactor, NdotV);
 

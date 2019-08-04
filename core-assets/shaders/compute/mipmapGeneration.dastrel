@@ -36,6 +36,19 @@ code_block(compute, localSizeX = 8, localSizeY = 8) fetch_texture
 	}
 }
 
+code_block(compute, localSizeX = 8, localSizeY = 8) fetch_textureRGBM
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let texelIndex = globalInvocationID.y*width + globalInvocationID.x;
+	if(texelIndex < bufferSize)
+	{
+		DecodedBuffer.data[bufferBaseIndex + texelIndex]
+			= float4(decodeRGBM(texelFetch(sourceTexture, globalInvocationID.xy)), 1.0f);
+	}
+}
+
 code_block(compute, localSizeX = 8, localSizeY = 8) fetch_normalTexture
 {
 	using ComputeStage;
@@ -97,6 +110,19 @@ code_block(compute, localSizeX = 8, localSizeY = 8) mipmap_normal
 	}
 }
 
+code_block(compute, localSizeX = 8, localSizeY = 8) decode_bgrm8
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let index = width*globalInvocationID.y + globalInvocationID.x;
+	if(index < bufferSize)
+	{
+		let encodedTexel = EncodedBuffer.data[index];
+		DecodedBuffer.data[index] = float4(decodeRGBM(unpackUnorm4x8(encodedTexel).bgra), 1.0f);
+	}
+}
+
 code_block(compute, localSizeX = 8, localSizeY = 8) decode_bgra8
 {
 	using ComputeStage;
@@ -150,6 +176,18 @@ code_block(compute, localSizeX = 8, localSizeY = 8) encode_bgra8
 	}
 }
 
+code_block(compute, localSizeX = 8, localSizeY = 8) encode_bgrm8
+{
+	using ComputeStage;
+	using EncodingArguments;
+	
+	let index = width*globalInvocationID.y + globalInvocationID.x;
+	if(index < bufferSize)
+	{
+		let color = DecodedBuffer.data[index];
+		EncodedBuffer.data[index] = packUnorm4x8(encodeRGBM(color.bgr));
+	}
+}
 code_block(compute, localSizeX = 8, localSizeY = 8) encode_bgra_normal
 {
 	using ComputeStage;

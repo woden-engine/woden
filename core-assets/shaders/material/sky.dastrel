@@ -6,6 +6,7 @@ import rendering.environment;
 import rendering.lightingOutputs;
 
 import vertex.genericLayout;
+import texture.functions;
 
 //==============================================================================
 // Vertex and fragment shader interface
@@ -44,6 +45,6 @@ uniform(binding = MaterialState.Textures) skyTexture : textureCube;
 
 code_block(fragment) forward_cubeMap
 {
-    let skyColor = cubeMapSampler.sample(skyTexture, FragmentInput.position);
-    forwardFlatOutput color: skyColor;
+    let skyColor = decodeRGBM(cubeMapSampler.sample(skyTexture, FragmentInput.position));
+    forwardFlatOutput color: float4(skyColor, 1.0f);
 }
