@@ -92,8 +92,14 @@ WDCPharoProceduralGPUScriptEvaluator >> evaluateCubeMap [
 	codeConverter := DASLPharoCodeConverter new.
 	codeConverter convertFunction: colorFunction name: #colorFunction argumentTypes: #(float float float) returnType: #float4.
 
-	shader := self compileShader: 'procedural/coloredCubeMapInterface.dastrel' injectingNodes: codeConverter generatedNodes.
-	^ self shader: shader toCubeTextureDataExtent: textureExtent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB textureFetchFunctionName: #fetch_texture mipmapComputationFunctionName: #mipmap encodeFunctionName: #encode_bgra8_srgb
+	hdr ifTrue: [ 
+		shader := self compileShader: 'procedural/hdrCubeMapInterface.dastrel' injectingNodes: codeConverter generatedNodes.
+		^ self shader: shader toCubeTextureDataExtent: textureExtent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM textureFetchFunctionName: #fetch_textureRGBM mipmapComputationFunctionName: #mipmap encodeFunctionName: #encode_bgrm8
+	] ifFalse: [ 
+		shader := self compileShader: 'procedural/coloredCubeMapInterface.dastrel' injectingNodes: codeConverter generatedNodes.
+		^ self shader: shader toCubeTextureDataExtent: textureExtent bpp: 32 format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB textureFetchFunctionName: #fetch_texture mipmapComputationFunctionName: #mipmap encodeFunctionName: #encode_bgra8_srgb
+	].
+
 ]
 
 { #category : #'rendering helpers' }

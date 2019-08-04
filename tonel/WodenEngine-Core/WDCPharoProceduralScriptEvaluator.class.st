@@ -13,6 +13,7 @@ Class {
 		'roughnessFunction',
 		'extentForInspector',
 		'cubeMap',
+		'hdr',
 		'colorFunction',
 		'ambientOcclusionRadius',
 		'ambientOcclusionHeightThreshold',
@@ -299,6 +300,16 @@ WDCPharoProceduralScriptEvaluator >> extentForInspector [
 ]
 
 { #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> hdr [
+	^ hdr
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> hdr: anObject [
+	hdr := anObject
+]
+
+{ #category : #accessing }
 WDCPharoProceduralScriptEvaluator >> heightFunction [
 	^ heightFunction
 ]
@@ -316,6 +327,7 @@ WDCPharoProceduralScriptEvaluator >> initialize [
 	ambientOcclusionHeightThreshold := nil.
 	ambientOcclusionSampleCount := 512.
 	cubeMap := false.
+	hdr := false.
 ]
 
 { #category : #testing }
@@ -422,6 +434,13 @@ WDCPharoProceduralScriptEvaluator >> roughnessFunction [
 { #category : #accessing }
 WDCPharoProceduralScriptEvaluator >> roughnessFunction: anObject [
 	roughnessFunction := anObject
+]
+
+{ #category : #accessing }
+WDCPharoProceduralScriptEvaluator >> skyCubeMap: aBoolean [
+	self
+		cubeMap: aBoolean;
+		hdr: aBoolean
 ]
 
 { #category : #'as yet unclassified' }

@@ -733,7 +733,7 @@ WDASceneExamples class >> proceduralSkySunDirection: sunDirection [
 
 	^ WDCPharoProceduralGPUScriptEvaluator new
 		textureExtent: 512@512;
-		cubeMap: true;
+		skyCubeMap: true;
 		colorFunction: shader;
 		evaluate.
 ]
