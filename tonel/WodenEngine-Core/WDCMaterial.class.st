@@ -91,6 +91,11 @@ WDCMaterial >> isMaterialDescription [
 	^ engine isNil
 ]
 
+{ #category : #testing }
+WDCMaterial >> isTranslucentMaterial [
+	^ false
+]
+
 { #category : #parsing }
 WDCMaterial >> parse: data at: materialFileReference array: name size: size nativeType: nativeType ifAbsent: ifAbsentBlock [
 	| result |
@@ -254,6 +259,10 @@ WDCMaterial >> parseError: errorMessage at: fileReference [
 { #category : #testing }
 WDCMaterial >> requiresTangentSpaceData [
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+WDCMaterial >> setupRenderableTranslucency: renderable [
 ]
 
 { #category : #preview }

@@ -20,6 +20,17 @@ WDESModelLibraryNodeInstanceComponent >> collisionShape: aCollisionShape [
 	collisionShape := aCollisionShape
 ]
 
+{ #category : #'as yet unclassified' }
+WDESModelLibraryNodeInstanceComponent >> createCollisionShapeWithAllMeshes [
+	| collisionMeshCollection |
+	collisionMeshCollection := WDPhyCollisionMeshCollection new.
+	collisionMeshCollection addMeshesFromSceneNode: self validSceneNode.
+	
+	collisionShape := WDPhyTriangleMeshCollisionShape new
+		collisionMeshCollection: collisionMeshCollection;
+		yourself
+]
+
 { #category : #accessing }
 WDESModelLibraryNodeInstanceComponent >> createSceneNode [
 	^ self validModelLibrary instanceSceneNodeNamed: modelNodeName

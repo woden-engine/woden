@@ -15,7 +15,8 @@ Class {
 		'currentGLTFJson',
 		'images',
 		'samplers',
-		'textures'
+		'textures',
+		'defaultMaterial'
 	],
 	#classVars : [
 		'FullTypeToPixelName',
@@ -465,7 +466,8 @@ WDIGLTF2Importer >> loadMeshPrimitives: primitives [
 			newMesh
 		].
 	
-		mesh submeshes add: submesh
+		mesh submeshes add: submesh.
+		submesh material setupRenderableTranslucency: mesh
 	].
 	
 	^ convertedMeshes
@@ -526,7 +528,7 @@ WDIGLTF2Importer >> loadMetallicRoughnessMaterial: description commonDescription
 			material alphaCutoff: (commonDescription at: 'alphaCutoff' ifAbsent: [0.5])
 		].
 		alphaMode = 'BLEND' ifTrue: [
-			self flag: 'TODO: Support this transparency mode.'
+			material translucent: true
 		].
 	].
 
@@ -641,7 +643,11 @@ WDIGLTF2Importer >> loadSubMeshFrom: submeshDescription [
 	| vertexChannels attributes channel vertexData indexBufferAccessor material |
 	attributes := submeshDescription at: 'attributes'.
 	indexBufferAccessor := accessors at: (submeshDescription at: 'indices') + 1.
-	material := materials at: (submeshDescription at: 'material') + 1.
+	submeshDescription at: 'material' ifPresent: [ :materialIndex |
+		material := materials at: materialIndex + 1.
+	] ifAbsent: [ 
+		material := self validDefaultMaterial
+	].
 
 	vertexChannels := OrderedCollection new.
 	attributes keysAndValuesDo: [ :attributeName :attributeBinding |
@@ -733,4 +739,9 @@ WDIGLTF2Importer >> processGLTFJson: json [
 		asset mainScene: (scenes at: mainSceneIndex + 1)
 	].
 	^ asset
+]
+
+{ #category : #'as yet unclassified' }
+WDIGLTF2Importer >> validDefaultMaterial [
+	^ defaultMaterial ifNil: [ defaultMaterial := WDCMetallicRoughnessMaterial new  ]
 ]

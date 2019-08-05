@@ -73,7 +73,7 @@ WDPhyCharacterController >> gravity: newGravity [
 WDPhyCharacterController >> initialize [
 	super initialize.
 	upAxis := #y.
-	stepHeight := 0.40.
+	stepHeight := 0.50.
 	maxJumpHeight := 0.6.
 	gravity := -9.8.
 	buoyancy := 0.0.

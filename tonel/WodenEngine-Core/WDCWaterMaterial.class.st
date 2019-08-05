@@ -99,6 +99,11 @@ WDCWaterMaterial >> invalidateCache [
 	resourceBindingsAreUpdated := false.
 ]
 
+{ #category : #testing }
+WDCWaterMaterial >> isTranslucentMaterial [
+	^ true
+]
+
 { #category : #'resource reloading' }
 WDCWaterMaterial >> loadStateFromOldVersion: oldVersion [
 	| oldMaterialState |

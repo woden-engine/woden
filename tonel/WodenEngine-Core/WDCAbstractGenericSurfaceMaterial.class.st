@@ -12,7 +12,8 @@ Class {
 		'depthNormalFragmentShader',
 		'forwardFragmentShader',
 		'shaderLibrary',
-		'doubleSided'
+		'doubleSided',
+		'translucent'
 	],
 	#classVars : [
 		'VertexShaderVariantTable'
@@ -40,6 +41,7 @@ WDCAbstractGenericSurfaceMaterial class >> initialize [
 { #category : #rendering }
 WDCAbstractGenericSurfaceMaterial >> activateDepthNormalOn: stateTracker [
 	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
+	translucent ifTrue: [ ^ false ].
 
 	self validateCache.
 	stateTracker
@@ -60,6 +62,7 @@ WDCAbstractGenericSurfaceMaterial >> activateDepthNormalOn: stateTracker [
 { #category : #rendering }
 WDCAbstractGenericSurfaceMaterial >> activateDepthOnlyOn: stateTracker [
 	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
+	translucent ifTrue: [ ^ false ].
 
 	self validateCache.
 	stateTracker
@@ -86,7 +89,7 @@ WDCAbstractGenericSurfaceMaterial >> activateForwardOn: stateTracker [
 		fragmentShader: self forwardFragmentShader.
 	
 	stateTracker submode == #solid ifTrue: [
-		stateTracker fragmentShader: self solidFragmentShader
+		stateTracker fragmentShader: self solidFragmentShader.
 	].
 	stateTracker submode == #wire ifTrue: [
 		stateTracker
@@ -235,6 +238,7 @@ WDCAbstractGenericSurfaceMaterial >> initialize [
 		albedo: Color white asWMVector4F;
 		yourself.
 	doubleSided := false.
+	translucent := false.
 	self invalidateCache.
 ]
 
@@ -243,6 +247,11 @@ WDCAbstractGenericSurfaceMaterial >> invalidateCache [
 	resourceBindingsAreUpdated := false.
 	forwardFragmentShader := nil.
 	depthNormalFragmentShader := nil.
+]
+
+{ #category : #testing }
+WDCAbstractGenericSurfaceMaterial >> isTranslucentMaterial [
+	^ translucent
 ]
 
 { #category : #'state binding' }
@@ -286,6 +295,15 @@ WDCAbstractGenericSurfaceMaterial >> resourceBinding: anObject [
 	resourceBinding := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDCAbstractGenericSurfaceMaterial >> setupRenderableTranslucency: renderable [
+	translucent ifTrue: [
+		renderable
+			makeTranslucentSorted;
+			blendingMode: WDCBlendingMode alphaOver
+	]
+]
+
 { #category : #rendering }
 WDCAbstractGenericSurfaceMaterial >> shaderLibrary [
 	self subclassResponsibility
@@ -317,6 +335,16 @@ WDCAbstractGenericSurfaceMaterial >> thumbnailType [
 	^ #generic
 ]
 
+{ #category : #accessing }
+WDCAbstractGenericSurfaceMaterial >> translucent [
+	^ translucent
+]
+
+{ #category : #accessing }
+WDCAbstractGenericSurfaceMaterial >> translucent: anObject [
+	translucent := anObject
+]
+
 { #category : #'state binding' }
 WDCAbstractGenericSurfaceMaterial >> uploadMaterialStateData [
 	stateUniformBuffer ifNotNil: [ 
@@ -333,7 +361,7 @@ WDCAbstractGenericSurfaceMaterial >> validateCache [
 
 { #category : #shaders }
 WDCAbstractGenericSurfaceMaterial >> vertexShaderFor: stateTracker [
-	^ shaderLibrary getVertexStage: (VertexShaderVariantTable at: { stateTracker hasSkinning . stateTracker hasVertexColors . stateTracker hasVertexTangents })
+	^ self shaderLibrary getVertexStage: (VertexShaderVariantTable at: { stateTracker hasSkinning . stateTracker hasVertexColors . stateTracker hasVertexTangents })
 ]
 
 { #category : #shaders }

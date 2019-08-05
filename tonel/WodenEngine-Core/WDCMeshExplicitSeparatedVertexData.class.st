@@ -78,6 +78,11 @@ WDCMeshExplicitSeparatedVertexData >> positionsChannel [
 	^ self getChannelWithVertexBindingLocation: PositionsVertexBindingLocation
 ]
 
+{ #category : #'as yet unclassified' }
+WDCMeshExplicitSeparatedVertexData >> storePositionsPointerInCollisionMeshAccessor: collisionMeshAccessor [
+	self positionsChannel storePositionsPointerInCollisionMeshAccessor: collisionMeshAccessor
+]
+
 { #category : #testing }
 WDCMeshExplicitSeparatedVertexData >> texcoordsChannel [
 	^ self getChannelWithVertexBindingLocation: TexcoordsVertexBindingLocation

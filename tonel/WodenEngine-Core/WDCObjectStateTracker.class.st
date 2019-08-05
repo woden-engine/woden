@@ -20,7 +20,8 @@ Class {
 		'materialDepthEnabled',
 		'materialDepthWriteMask',
 		'materialDepthFunction',
-		'deformationState'
+		'deformationState',
+		'sceneBlendingMode'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -56,7 +57,11 @@ WDCObjectStateTracker >> applyBlendingModel [
 
 	objectBlendingMode ifNotNil: [
 		^ self blendingAllMode: objectBlendingMode.
-	]
+	].
+
+	sceneBlendingMode ifNotNil: [ 
+		^ self blendingAllMode: sceneBlendingMode.
+	].
 
 ]
 
@@ -131,6 +136,14 @@ WDCObjectStateTracker >> applyPolygonMode [
 		^ self polygonMode: objectPolygonMode.
 	]
 
+]
+
+{ #category : #commands }
+WDCObjectStateTracker >> clearObjectRenderingStates [
+	self
+		objectDepthWriteMask: nil;
+		objectDepthEnabled: nil;
+		objectBlendingMode: nil
 ]
 
 { #category : #accessing }
@@ -294,6 +307,16 @@ WDCObjectStateTracker >> reset [
 	materialDepthWriteMask := nil.
 	materialDepthFunction := nil.
 	deformationState := nil
+]
+
+{ #category : #accessing }
+WDCObjectStateTracker >> sceneBlendingMode [
+	^ sceneBlendingMode
+]
+
+{ #category : #accessing }
+WDCObjectStateTracker >> sceneBlendingMode: anObject [
+	sceneBlendingMode := anObject
 ]
 
 { #category : #'per object per material states' }

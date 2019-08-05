@@ -8,6 +8,11 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+WDCCompositeRenderable >> createCollisionTriangleMeshAccessors [
+	^ (renderables collect: #createCollisionTriangleMeshAccessors) flattened
+]
+
+{ #category : #'as yet unclassified' }
 WDCCompositeRenderable >> createRenderingRenderablesFor: spatialObject [
 	^ Array streamContents: [:out |
 		renderables do: [ :renderable |

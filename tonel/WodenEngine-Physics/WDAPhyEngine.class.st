@@ -3,7 +3,8 @@ Class {
 	#superclass : #WDPhyPhysicsEngine,
 	#instVars : [
 		'handle',
-		'handleToObjectDictionary'
+		'handleToObjectDictionary',
+		'externalObjectCopies'
 	],
 	#pools : [
 		'APHYConstants'
@@ -114,6 +115,23 @@ WDAPhyEngine >> characterJump: characterController [
 ]
 
 { #category : #rendering }
+WDAPhyEngine >> collisionMesh: mesh addedToCollection: collection [
+	collection handle addCollisionMeshAccessor: (APHYCollisionMeshAccessor new
+		vertices: (self externalCopyOf: mesh vertexBufferData);
+		vertex_offset: mesh vertexBufferOffset;
+		vertex_stride: mesh vertexBufferStride;
+		vertex_count: mesh vertexCount;
+		indices: (self externalCopyOf: mesh indexBufferData);
+		index_offset: mesh indexBufferOffset;
+		index_stride: mesh indexBufferStride;
+		index_count: mesh indexCount;
+		yourself
+	)
+	transform: (mesh transform ifNotNil: [self convertWMTransform: mesh transform])
+
+]
+
+{ #category : #rendering }
 WDAPhyEngine >> convertMatrix3: matrix3 [
 	| firstRow secondRow thirdRow |
 	firstRow := matrix3 firstRow.
@@ -178,6 +196,16 @@ WDAPhyEngine >> createDynamicsWorld [
 	^ WDAPhyDynamicsWorld new physicsEngine: self; handle: world; yourself
 ]
 
+{ #category : #'as yet unclassified' }
+WDAPhyEngine >> externalCopyOf: byteArray [
+	^ externalObjectCopies at: byteArray ifAbsentPut: [
+		| externalBuffer |
+		externalBuffer := ExternalAddress gcallocate: byteArray size.
+		LibC memCopy: byteArray to: externalBuffer size: byteArray size.
+		ExternalData fromHandle: externalBuffer type: ExternalType void
+	]
+]
+
 { #category : #'collision object' }
 WDAPhyEngine >> getCollisionObjectPosition: collisionObject [
 	| result |
@@ -202,6 +230,7 @@ WDAPhyEngine >> initialize [
 	super initialize.
 	handle := APHY firstEngine.
 	handleToObjectDictionary := WeakKeyDictionary new.
+	externalObjectCopies := WeakKeyDictionary new.
 ]
 
 { #category : #initialization }
@@ -234,6 +263,18 @@ WDAPhyEngine >> validateCharacterControllerHandle: characterController [
 		self buildCharacterController: characterController
 	].
 	^ characterController handle
+]
+
+{ #category : #rendering }
+WDAPhyEngine >> validateCollisionMeshCollection: collection [
+	(collection handle isNil or: [ collection handle isNull ]) ifTrue: [
+		collection physicsEngine: self;
+			handle: handle createCollisionMeshCollection.
+		collection collisionMeshes do: [ :mesh |
+			self collisionMesh: mesh addedToCollection: collection
+		].
+	].
+	^ collection handle
 ]
 
 { #category : #rendering }
@@ -318,4 +359,11 @@ WDAPhyEngine >> visitHeightFieldCollisionShape: heightFieldShape [
 		local_scale_z: 2.0*heightFieldShape scale y reciprocal / textureLevel height.
 
 	^ heightFieldHandle
+]
+
+{ #category : #'collision shape convertion' }
+WDAPhyEngine >> visitTriangleMeshShape: triangleMeshShape [
+	| collisionMeshCollectionHandle |
+	collisionMeshCollectionHandle := self validateCollisionMeshCollection: triangleMeshShape collisionMeshCollection.
+	^ handle createTriangleMeshCollisionShape: collisionMeshCollectionHandle
 ]

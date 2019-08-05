@@ -11,6 +11,9 @@ Class {
 		'primitiveType',
 		'material'
 	],
+	#pools : [
+		'AGPUConstants'
+	],
 	#category : #'WodenEngine-Core-Mesh'
 }
 

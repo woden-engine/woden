@@ -34,6 +34,16 @@ WDESGenericEntity >> addDirectionalLightWith: aBlock [
 ]
 
 { #category : #building }
+WDESGenericEntity >> addGenericObjectAt: position with: aBlock [
+	| entity |
+	entity := WDESGenericEntity new
+		transform: (WMReversibleAffineTransformF identity translation: position).
+	self addChild: entity.
+	aBlock value: entity.
+	^ entity
+]
+
+{ #category : #building }
 WDESGenericEntity >> addModelLibraryNamed: modelLibraryName nodeNamed: modelNodeName [
 	^ self addModelLibraryNamed: modelLibraryName nodeNamed: modelNodeName with: []
 ]

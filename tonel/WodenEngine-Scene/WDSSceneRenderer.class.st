@@ -223,6 +223,7 @@ WDSSceneRenderer >> renderViewportVisibleObjects: renderingViewport [
 	count := count + (self renderViewportLayer: renderingViewport normalLayer visibleObjectsWithCameraLayerState: cameraLayersStates 	normalLayerState).
 	count := count + (self renderViewportLayer: renderingViewport foregroundLayer visibleObjectsWithCameraLayerState: cameraLayersStates foregroundLayerState).
 	engine frameRenderingMetrics renderedObjectCount: engine frameRenderingMetrics renderedObjectCount + count.
+	stateTracker clearObjectRenderingStates.
 ]
 
 { #category : #rendering }
@@ -293,7 +294,7 @@ WDSSceneRenderer >> setupStateTrackerForRenderMode: renderMode [
 		sceneDepthWriteMask: true;
 		sceneDepthFunction: AGPU_GREATER_EQUAL;
 
-		blendingAllMode: WDCBlendingMode replace.
+		sceneBlendingMode: WDCBlendingMode replace.
 
 ]
 
