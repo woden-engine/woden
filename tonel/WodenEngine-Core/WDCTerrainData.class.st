@@ -33,7 +33,9 @@ WDCTerrainData >> buildTerrainMeshWith: builder [
 		maxHeight: maxHeight.
 
 	clipMapLevels > 0 ifTrue: [ 
-		builder createClipMapWithLevels: clipMapLevels size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128
+		builder
+			createClipMapWithLevels: clipMapLevels size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
+			terrainExtent: terrainExtent
 	] ifFalse: [
 		builder createGridWithSize: terrainExtent subdivisions: (heightMap width max: heightMap height)
 	].

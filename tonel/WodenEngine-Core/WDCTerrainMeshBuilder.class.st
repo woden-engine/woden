@@ -302,6 +302,11 @@ WDCTerrainMeshBuilder >> stitchInnerEdge: innerEdge withOuterEdge: outerEdge fli
 	]
 ]
 
+{ #category : #'terrain mesh building' }
+WDCTerrainMeshBuilder >> terrainExtent: terrainExtent [
+	boundingBox := WMBox3DF halfExtent: (WMVector3F x: terrainExtent x * 0.5 y: 0.0 z: terrainExtent y *0.5)
+]
+
 { #category : #'mesh building' }
 WDCTerrainMeshBuilder >> terrainMesh [
 	| result |
