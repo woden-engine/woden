@@ -40,10 +40,11 @@ WDAESPlayerView >> detachCameraToPlayerEntity [
 
 { #category : #rendering }
 WDAESPlayerView >> drawOnBabylonCanvas: canvas [
-	super drawOnBabylonCanvas: canvas.
-
 	"Allow the game logic to draw an overlay."
 	model gameLogic drawOnBabylonCanvas: canvas.
+	
+	super drawOnBabylonCanvas: canvas.
+
 ]
 
 { #category : #accessing }
@@ -71,7 +72,13 @@ WDAESPlayerView >> spawnPlayer [
 
 { #category : #visiting }
 WDAESPlayerView >> visitKeyDownEvent: anEvent [
-	anEvent symbol = OSK_1 ifTrue: [ self model togglePhysicsDebugging ].
+	anEvent repeat > 0 ifTrue: [ ^ 0 ].
+	anEvent symbol = OSK_F1 ifTrue: [ self toggleMouseCapture ].
+	anEvent symbol = OSK_F2 ifTrue: [ self model togglePhysicsDebugging ].
+	anEvent symbol = OSK_F3 ifTrue: [ sceneRenderer debugNextRenderTarget ].
+	anEvent symbol = OSK_F4 ifTrue: [ sceneRenderer debugRenderNextShadowMapViewport ].
+
+	anEvent symbol = OSK_F11 ifTrue: [ self toggleFullscreen ].
 	
 	playerEntity ifNotNil: [ 
 		playerEntity sendInputEvent: #onKeyDown: with: anEvent.

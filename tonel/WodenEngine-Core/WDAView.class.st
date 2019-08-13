@@ -11,7 +11,8 @@ Class {
 		'model',
 		'window',
 		'fullscreen',
-		'subViews'
+		'subViews',
+		'hasMouseCapture'
 	],
 	#pools : [
 		'AGPUConstants',
@@ -37,7 +38,8 @@ WDAView >> addSubView: aSubView [
 
 { #category : #'mouse capture' }
 WDAView >> captureMouse [
-	window captureMouse
+	window captureMouse.
+	hasMouseCapture := true.
 ]
 
 { #category : #opening }
@@ -109,6 +111,7 @@ WDAView >> initialize [
 	super initialize.
 	
 	fullscreen := false.
+	hasMouseCapture := false.
 	subViews := #().
 ]
 
@@ -173,7 +176,8 @@ WDAView >> processEvents [
 
 { #category : #'mouse capture' }
 WDAView >> releaseMouse [
-	window releaseMouse
+	window releaseMouse.
+	hasMouseCapture := false.
 ]
 
 { #category : #adding }
@@ -194,6 +198,15 @@ WDAView >> sampleCount [
 { #category : #'window handling' }
 WDAView >> toggleFullscreen [
 	self fullscreen: self fullscreen not
+]
+
+{ #category : #'mouse capture' }
+WDAView >> toggleMouseCapture [
+	hasMouseCapture ifTrue: [ 
+		self releaseMouse
+	] ifFalse: [
+		self captureMouse
+	]
 ]
 
 { #category : #'rendering process stages' }
