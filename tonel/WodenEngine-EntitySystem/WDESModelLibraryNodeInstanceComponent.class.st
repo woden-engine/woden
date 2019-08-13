@@ -34,15 +34,7 @@ WDESModelLibraryNodeInstanceComponent >> createCollisionShapeWithAllMeshes [
 { #category : #'as yet unclassified' }
 WDESModelLibraryNodeInstanceComponent >> createCollisionShapeWithConvexCollisionTreeNamed: convexCollisionTreeNodeName [
 	collisionShape := self validModelLibrary 
-		getCollisionShapeForConvexCollisionTreeNamed: convexCollisionTreeNodeName.
-
-"	| collisionMeshCollection |
-	collisionMeshCollection := WDPhyCollisionMeshCollection new.
-	collisionMeshCollection addMeshesFromSceneNode: self validSceneNode.
-	
-	collisionShape := WDPhyTriangleMeshCollisionShape new
-		collisionMeshCollection: collisionMeshCollection;
-		yourself"
+		getCollisionShapeForConvexCollisionTreeNamed: convexCollisionTreeNodeName
 ]
 
 { #category : #accessing }
@@ -56,6 +48,16 @@ WDESModelLibraryNodeInstanceComponent >> ensureValidCollisionShape [
 		createAABoxCollisionShape: self validSceneNode localBoundingBox)
 		asCollisionShape
 
+]
+
+{ #category : #accessing }
+WDESModelLibraryNodeInstanceComponent >> getChildNodeBoundingBox: childNodeName [
+	^ self validModelLibrary getNodeBoundingBox: childNodeName relativeToNode: modelNodeName
+]
+
+{ #category : #accessing }
+WDESModelLibraryNodeInstanceComponent >> getChildNodePosition: childNodeName [
+	^ self validModelLibrary getNodePosition: childNodeName relativeToNode: modelNodeName
 ]
 
 { #category : #accessing }

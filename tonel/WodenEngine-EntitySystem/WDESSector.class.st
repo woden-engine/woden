@@ -2,7 +2,9 @@ Class {
 	#name : #WDESSector,
 	#superclass : #WDESGenericEntity,
 	#instVars : [
-		'tickingEntities'
+		'tickingEntities',
+		'usableVolumeRayCastingSet',
+		'interactiveScreenVolumeRayCastingSet'
 	],
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
@@ -57,6 +59,13 @@ WDESSector >> defaultCameraNearDistance [
 WDESSector >> initialize [
 	super initialize.
 	tickingEntities := IdentitySet new.
+	usableVolumeRayCastingSet := WDESSectorRayCastingSet new.
+	interactiveScreenVolumeRayCastingSet := WDESSectorRayCastingSet new.
+]
+
+{ #category : #accessing }
+WDESSector >> interactiveScreenVolumeRayCastingSet [
+	^ interactiveScreenVolumeRayCastingSet
 ]
 
 { #category : #simulation }
@@ -89,4 +98,9 @@ WDESSector >> sectorTransform [
 WDESSector >> tick: delta [
 	super tick: delta.
 	tickingEntities do: [ :entity | entity tick: delta ]
+]
+
+{ #category : #accessing }
+WDESSector >> usableVolumeRayCastingSet [
+	^ usableVolumeRayCastingSet
 ]

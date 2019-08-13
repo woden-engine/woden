@@ -31,16 +31,15 @@ WDESAbstractEntity >> addComponent: aComponent [
 		tickingComponents := tickingComponents copyWith: aComponent.
 		self sector ifNotNil: [ :sector | sector addTickingEntity: self ]
 	].
-
+	self sector ifNotNil: [ :sector | aComponent addedToSector: sector ].
+	
 ]
 
 { #category : #adding }
 WDESAbstractEntity >> addedToEntity: parentEntity [
 	self scene ifNotNil: [ :scene | self addedToScene: scene ].
 	self physicsWorld ifNotNil: [ :physicsWorld | self addedToPhysicsWorld: physicsWorld ].
-	self sector ifNotNil: [ :sector |
-		self isTicking ifTrue: [ sector addTickingEntity: self ]
-	]
+	self sector ifNotNil: [ :sector | self addedToSector: sector ].
 ]
 
 { #category : #scene }
@@ -53,6 +52,13 @@ WDESAbstractEntity >> addedToPhysicsWorld: aPhysicsWorld [
 WDESAbstractEntity >> addedToScene: anScene [
 	components do: [ :comp | comp addedToScene: anScene ].
 	children do: [ :child | child addedToScene: anScene ].
+]
+
+{ #category : #adding }
+WDESAbstractEntity >> addedToSector: aSector [
+	self isTicking ifTrue: [ aSector addTickingEntity: self ].
+	components do: [ :comp | comp addedToSector: aSector ].
+	children do: [ :child | child addedToSector: aSector ].
 ]
 
 { #category : #messages }
@@ -198,6 +204,7 @@ WDESAbstractEntity >> removeComponent: aComponent [
 		].
 	].
 
+	self sector ifNotNil: [ :sector | aComponent removedFromSector: sector ].
 	self scene ifNotNil: [ :scene | aComponent removedFromScene: scene ].
 	self physicsWorld ifNotNil: [ :physicsWorld | aComponent removedFromPhysicsWorld: physicsWorld ].
 
@@ -205,11 +212,10 @@ WDESAbstractEntity >> removeComponent: aComponent [
 
 { #category : #adding }
 WDESAbstractEntity >> removedFromEntity: parentEntity [
+	self flag: 'TODO: Check the correctness of this.'.
 	self scene ifNotNil: [ :scene | self removedFromScene: scene ].
 	self physicsWorld ifNotNil: [ :physicsWorld | self removedFromPhysicsWorld: physicsWorld ].
-	self sector ifNotNil: [ :sector |
-		self isTicking ifTrue: [ sector removeTickingEntity: self ]
-	]
+	self sector ifNotNil: [ :sector | self removedFromSector: sector ]
 ]
 
 { #category : #scene }
@@ -222,6 +228,14 @@ WDESAbstractEntity >> removedFromPhysicsWorld: aPhysicsWorld [
 WDESAbstractEntity >> removedFromScene: anScene [
 	components do: [ :comp | comp removedFromScene: anScene ].
 	children do: [ :child | child removedFromScene: anScene ].
+]
+
+{ #category : #adding }
+WDESAbstractEntity >> removedFromSector: aSector [
+	self isTicking ifTrue: [ aSector removeTickingEntity: self ].
+	components do: [ :comp | comp removedFromSector: aSector ].
+	children do: [ :child | child removedFromSector: aSector ].
+	
 ]
 
 { #category : #accessing }

@@ -23,6 +23,10 @@ WDESNode >> addedToPhysicsWorld: aPhysicsWorld [
 WDESNode >> addedToScene: aScene [
 ]
 
+{ #category : #notifications }
+WDESNode >> addedToSector: aSector [
+]
+
 { #category : #accessing }
 WDESNode >> name [
 	^ name
@@ -48,6 +52,10 @@ WDESNode >> removedFromPhysicsWorld: aPhysicsWorld [
 
 { #category : #notifications }
 WDESNode >> removedFromScene: aScene [
+]
+
+{ #category : #notifications }
+WDESNode >> removedFromSector: aSector [
 ]
 
 { #category : #accessing }

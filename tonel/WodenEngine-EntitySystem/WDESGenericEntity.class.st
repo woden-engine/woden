@@ -109,6 +109,14 @@ WDESGenericEntity >> addSkyBoxWithTexture: aTexture [
 ]
 
 { #category : #building }
+WDESGenericEntity >> addUseActuationBoxVolume: boxVolume withAction: actionBlock [
+	^ self addComponent: (WDESUseActuationBoxVolumeComponent new
+		boxVolume: boxVolume;
+		actionBlock: actionBlock;
+		yourself)
+]
+
+{ #category : #building }
 WDESGenericEntity >> addWaterVolumeAt: position with: aBlock [
 	| entity |
 	entity := WDESVolumeSensorEntity new
@@ -154,6 +162,19 @@ WDESGenericEntity >> buildGenericMeshWith: aBlock [
 		self addComponentWithCollisionShape: collisionShape
 	].
 	
+	^ component
+	
+]
+
+{ #category : #building }
+WDESGenericEntity >> buildParticleSystemWith: aBlock [
+	| renderable component |
+	renderable := WDCParticleSystemRenderable new.
+	aBlock value: renderable.
+	
+	component := WDESStaticRenderableSceneNodeComponent new renderable: renderable.
+	self addComponent: component.
+
 	^ component
 	
 ]

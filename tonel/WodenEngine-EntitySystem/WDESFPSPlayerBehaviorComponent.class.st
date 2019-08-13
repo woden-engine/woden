@@ -20,6 +20,7 @@ WDESFPSPlayerBehaviorComponent >> onKeyDown: event [
 	event symbol = OSK_LEFT ifTrue: [ headAngularVelocity y: 1.0 ].
 	event symbol = OSK_RIGHT ifTrue: [ headAngularVelocity y: -1.0 ].
 
+	event symbol = OSK_e ifTrue: [ self activateUseActuator ].
 	event symbol = OSK_LSHIFT ifTrue: [ self running: true ].
 	event symbol = OSK_SPACE ifTrue: [
 		self isCurrentlyWalking

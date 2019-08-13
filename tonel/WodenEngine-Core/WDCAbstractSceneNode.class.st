@@ -23,5 +23,5 @@ WDCAbstractSceneNode >> childrenDo: aBlock [
 { #category : #enumerating }
 WDCAbstractSceneNode >> withAllChildrenDo: aBlock [
 	aBlock value: self.
-	self childrenDo: aBlock.
+	self allChildrenDo: aBlock.
 ]

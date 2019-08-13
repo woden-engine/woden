@@ -107,6 +107,24 @@ WDSSceneAssetModel >> getCollisionShapeForConvexCollisionTreeNamed: collisionTre
 ]
 
 { #category : #'as yet unclassified' }
+WDSSceneAssetModel >> getNodeBoundingBox: childNodeName relativeToNode: parentNodeName [
+	| childNode parentNode |
+	self ensureValidNameDictionaries.
+	childNode := sceneNodeNameDictionary at: childNodeName.
+	parentNode := sceneNodeNameDictionary at: parentNodeName.
+	^ childNode globalOrientedBoundingBox transformedWith: (parentNode globalTransform inverseTransformTransform: childNode globalTransform)
+]
+
+{ #category : #'as yet unclassified' }
+WDSSceneAssetModel >> getNodePosition: childNodeName relativeToNode: parentNodeName [
+	| childNode parentNode |
+	self ensureValidNameDictionaries.
+	childNode := sceneNodeNameDictionary at: childNodeName.
+	parentNode := sceneNodeNameDictionary at: parentNodeName.
+	^ childNode globalTransform translation - parentNode globalTransform translation
+]
+
+{ #category : #'as yet unclassified' }
 WDSSceneAssetModel >> instanceSceneNodeNamed: sceneNodeName [
 	^ self instanceSceneNodeNamed: sceneNodeName ifAbsent: [self error: 'Requested scene node is not available in the model.']
 ]

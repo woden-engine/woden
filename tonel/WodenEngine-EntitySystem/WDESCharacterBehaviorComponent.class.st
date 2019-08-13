@@ -32,6 +32,13 @@ WDESCharacterBehaviorComponent class >> headPosition [
 	^ WMVector3F y: self halfExtent y * 0.9
 ]
 
+{ #category : #'as yet unclassified' }
+WDESCharacterBehaviorComponent >> activateUseActuator [
+	| ray |
+	ray := self sectorHeadRay.
+	self sector usableVolumeRayCastingSet send: #use from: self toFirstHitOf: ray withMaxDistance: 2.0
+]
+
 { #category : #notifications }
 WDESCharacterBehaviorComponent >> addedToPhysicsWorld: physicsWorld [
 	physicsWorld addGhostObject: self validGhostObject.
@@ -197,6 +204,21 @@ WDESCharacterBehaviorComponent >> running [
 { #category : #accessing }
 WDESCharacterBehaviorComponent >> running: anObject [
 	running := anObject
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> sectorHeadDirection [
+	^ ownerEntity sectorTransform transformVector3: (headOrientation transformVector3: (WMVector3F z: -1.0))
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> sectorHeadPosition [
+	^ ownerEntity sectorTransform transformPosition3: self headPosition
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> sectorHeadRay [
+	^ WMRayF origin: self sectorHeadPosition direction: self sectorHeadDirection
 ]
 
 { #category : #simulation }
