@@ -706,14 +706,14 @@ WDASceneExamples class >> proceduralSkySunDirection: sunDirection [
 	}.
 		
 	sunColor := (Color fromHexString: 'f3f3e8') asWMVector4F.
+	sunAngleSizeCos := 0.5 degreesToRadians cos.
+	sunAngleSizeOuterCos := 20.0 degreesToRadians cos.
 		
 	shader := [ :x :y :z |
 		| direction background atmosphere clouds sunCos sunFactor |
 		direction := (WMVector3F x: x y: y z: z) normalized.
 		sunCos := direction dot: sunDirection.
-		"sunAngleSizeCos := 0.5 degreesToRadians cos.
-		sunAngleSizeOuterCos := 20.0 degreesToRadians cos."
-		sunFactor := sunCos smoothStepFrom: 0.9396926207859084 to: 0.9999619230641713.
+		sunFactor := sunCos smoothStepFrom: sunAngleSizeOuterCos to: sunAngleSizeCos.
 
 		atmosphere := horizonRamp value: direction y.
 

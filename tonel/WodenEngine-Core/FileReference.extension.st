@@ -23,7 +23,7 @@ FileReference >> gtInspectorStTerrainScriptIn: composite [
 						ifFalse: [ WDCPharoProceduralScriptEvaluator forInspector ]
 				)
 			];
-			display: [ self readStreamDo: [ :s | s contents ] ];
+			display: [ self readStreamDo: [ :s | s contents copy withSqueakLineEndings ] ];
 			act: [ :text |
 					text selectionInterval: (1 to: text text size).
 					text highlightEvaluateAndDo: [ :result | text selection: result ] ]
@@ -52,7 +52,7 @@ FileReference >> gtInspectorStTextScriptIn: composite [
 						ifFalse: [ WDCPharoProceduralScriptEvaluator forInspector ]
 				)
 			];
-			display: [ self readStreamDo: [ :s | s contents ] ];
+			display: [ self readStreamDo: [ :s | s contents copy withSqueakLineEndings ] ];
 			act: [ :text |
 					text selectionInterval: (1 to: text text size).
 					text highlightEvaluateAndDo: [ :result | text selection: result ] ]

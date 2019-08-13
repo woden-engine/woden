@@ -483,7 +483,7 @@ WDCPharoProceduralScriptEvaluator >> textureExtent: anObject [
 WDCPharoProceduralScriptEvaluator >> textureExtent: newTextureExtent terrainCellSize: newTerrainCellSize [
 	self textureExtent: newTextureExtent.
 	terrainCellSize := newTerrainCellSize asWMVector2F.
-	self terrainData 
+	self terrainData
 		terrainExtent: newTextureExtent*newTerrainCellSize.
 ]
 

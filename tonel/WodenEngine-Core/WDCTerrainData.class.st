@@ -28,18 +28,12 @@ WDCTerrainData class >> textureExtent: textureExtent heightRenderWith: aBlock [
 
 { #category : #'mesh building' }
 WDCTerrainData >> buildTerrainMeshWith: builder [
-	builder
-		minHeight: minHeight;
-		maxHeight: maxHeight.
+	self doBuildTerrainMeshWith: builder cellSize: self terrainCellSize
+]
 
-	clipMapLevels > 0 ifTrue: [ 
-		builder
-			createClipMapWithLevels: clipMapLevels size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
-			terrainExtent: terrainExtent
-	] ifFalse: [
-		builder createGridWithSize: terrainExtent subdivisions: (heightMap width max: heightMap height)
-	].
-
+{ #category : #'mesh building' }
+WDCTerrainData >> buildWaterMeshWith: builder [
+	self doBuildTerrainMeshWith: builder cellSize: (WMVector3F x: 0.1 y: 0.1)
 ]
 
 { #category : #accessing }
@@ -64,6 +58,26 @@ WDCTerrainData >> collisionShape [
 	^ collisionShape
 ]
 
+{ #category : #accessing }
+WDCTerrainData >> computeTerrainClipMapMagnificationFactors [
+	
+	| r1 s1 s2 r2 sn rn |
+	r1 := 1.0.
+	s1 := r1*2.0.
+	clipMapLevels = 1 ifTrue: [ ^ { r1 . s1 } ].
+	
+	r2 := r1 + s1.
+	s2 := s1.
+	
+	sn := s2.
+	rn := r2.
+	3 to: clipMapLevels  do: [ :i |
+		rn := rn + sn.
+		sn := 3*sn.
+	].
+	^ { rn . sn }
+]
+
 { #category : #'mesh building' }
 WDCTerrainData >> createTerrainMeshWithMaterial: material [
 	| builder terrainMesh |
@@ -76,6 +90,28 @@ WDCTerrainData >> createTerrainMeshWithMaterial: material [
 		yourself.
 	^ terrainMesh
 		
+]
+
+{ #category : #'mesh building' }
+WDCTerrainData >> doBuildTerrainMeshWith: builder cellSize: cellSize [
+	| magnificationFactors firstLevelExtent firstLevelSubdivisions firstLevelSubdivisionsPower |
+	builder
+		minHeight: minHeight;
+		maxHeight: maxHeight.
+
+	clipMapLevels > 0 ifTrue: [ 
+		magnificationFactors := self computeTerrainClipMapMagnificationFactors.
+		firstLevelExtent := terrainExtent / (magnificationFactors first * 2.0).
+		firstLevelSubdivisions := firstLevelExtent / cellSize.
+		firstLevelSubdivisionsPower := ((firstLevelSubdivisions x max: firstLevelSubdivisions y) ceiling asLargerPowerOfTwo max: (1 << (clipMapLevels + 1))) min: 256.
+		
+		builder
+			createClipMapWithLevels: clipMapLevels size: firstLevelExtent subdivisions: firstLevelSubdivisionsPower;
+			terrainExtent: terrainExtent
+	] ifFalse: [
+		builder createGridWithSize: terrainExtent subdivisions: (heightMap width max: heightMap height)
+	].
+
 ]
 
 { #category : #accessing }
@@ -182,6 +218,11 @@ WDCTerrainData >> splatterMap [
 { #category : #accessing }
 WDCTerrainData >> splatterMap: anObject [
 	splatterMap := anObject
+]
+
+{ #category : #accessing }
+WDCTerrainData >> terrainCellSize [
+	^ terrainExtent / heightMap extent asWMVector2F
 ]
 
 { #category : #accessing }
