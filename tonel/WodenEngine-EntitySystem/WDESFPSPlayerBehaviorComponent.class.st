@@ -27,6 +27,7 @@ WDESFPSPlayerBehaviorComponent >> onKeyDown: event [
 			ifFalse: [ linearAcceleration y: 2.0]
 	].
 
+	(event symbol = OSK_i and: [ event modifiers ctrl ]) ifTrue: [ self inspect ].
 ]
 
 { #category : #'event handling' }

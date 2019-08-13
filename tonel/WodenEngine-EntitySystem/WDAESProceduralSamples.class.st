@@ -69,9 +69,7 @@ WDAESProceduralSamples class >> example02PoolLevel [
 						material: waterMaterial;
 						heightScale: 0.1;
 						createGridWithSize: (WMVector2F x: 5.0 y: 5.0) subdivisions: 64;
-						addBoxCollisionShape: (WMBox3DF
-							halfExtent: (WMVector3F x: 2.5 y: 1.0 z: 2.5)
-							center: (WMVector3F y: -1.0))
+						addCollisionBoxWithMinHeight: -2.0 maxHeight: 0.0
 				]) renderable deformationState
 					harmonicAt: 1 amplitude: 0.05 frequency: -1.1 center: WMVector2F new;
 					harmonicAt: 2 amplitude: 0.02 frequency: 2.23 direction: (WMVector2F y: -1.0);

@@ -18,6 +18,16 @@ Class {
 	#category : #'WodenEngine-Core-Mesh'
 }
 
+{ #category : #'mesh building' }
+WDCTerrainMeshBuilder >> addCollisionBoxWithMinHeight: minCollisionHeight maxHeight: maxCollisionHeight [
+	| collisionBBox |
+	collisionBBox := WMBox3DF
+		min: (boundingBox min copy y: minCollisionHeight)
+		max: (boundingBox max copy y: maxCollisionHeight).
+	self addBoxCollisionShape: collisionBBox
+
+]
+
 { #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> addVertex: aVertex [
 	vertices add: aVertex.
