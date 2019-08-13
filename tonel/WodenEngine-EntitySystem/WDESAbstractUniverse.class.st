@@ -7,7 +7,8 @@ Class {
 		'physicsWorld',
 		'gameLogic',
 		'defaultCameraNearDistance',
-		'defaultCameraFarDistance'
+		'defaultCameraFarDistance',
+		'defaultCameraCascadeSplitDistributionLambda'
 	],
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
@@ -52,6 +53,16 @@ WDESAbstractUniverse >> createSimulationModel [
 	^ (WDAESUniverseSimulationModel for: engine)
 		universe: self;
 		yourself
+]
+
+{ #category : #accessing }
+WDESAbstractUniverse >> defaultCameraCascadeSplitDistributionLambda [
+	^ defaultCameraCascadeSplitDistributionLambda
+]
+
+{ #category : #accessing }
+WDESAbstractUniverse >> defaultCameraCascadeSplitDistributionLambda: anObject [
+	defaultCameraCascadeSplitDistributionLambda := anObject
 ]
 
 { #category : #accessing }
@@ -125,6 +136,7 @@ WDESAbstractUniverse >> initialize [
 	super initialize.
 	defaultCameraNearDistance := 0.01.
 	defaultCameraFarDistance := 1000.0.
+	defaultCameraCascadeSplitDistributionLambda := 0.5.
 ]
 
 { #category : #initialization }

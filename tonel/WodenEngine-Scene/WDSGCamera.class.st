@@ -16,7 +16,8 @@ Class {
 		'isNotControlledByTheUser',
 		'exposure',
 		'toneMappingOperator',
-		'hasAutoExposure'
+		'hasAutoExposure',
+		'cascadeSplitDistributionLambda'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
@@ -29,6 +30,16 @@ WDSGCamera >> aspectRatio [
 { #category : #accessing }
 WDSGCamera >> aspectRatio: anObject [
 	aspectRatio := anObject
+]
+
+{ #category : #accessing }
+WDSGCamera >> cascadeSplitDistributionLambda [
+	^ cascadeSplitDistributionLambda
+]
+
+{ #category : #accessing }
+WDSGCamera >> cascadeSplitDistributionLambda: anObject [
+	cascadeSplitDistributionLambda := anObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -138,6 +149,7 @@ WDSGCamera >> initialize [
 	exposure := 1.0.
 	hasAutoExposure := true.
 	toneMappingOperator := #linear.
+	cascadeSplitDistributionLambda := 0.5.
 ]
 
 { #category : #testing }

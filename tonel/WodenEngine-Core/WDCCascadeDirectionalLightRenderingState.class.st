@@ -23,7 +23,7 @@ WDCCascadeDirectionalLightRenderingState >> computeFrustumDivisions [
 	| n f lambda m uniformSplit logarithmicSplit |
 	n := mainCamera nearDistance.
 	f := mainCamera farDistance.
-	lambda := 0.5.
+	lambda := mainCamera cascadeSplitDistributionLambda.
 	m := 3.
 	^ (0 to: m) collect: [ :i |
 		uniformSplit := n + ((f - n)*(i/m)).
