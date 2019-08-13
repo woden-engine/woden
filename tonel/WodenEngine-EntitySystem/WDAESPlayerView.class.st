@@ -38,6 +38,14 @@ WDAESPlayerView >> detachCameraToPlayerEntity [
 
 ]
 
+{ #category : #rendering }
+WDAESPlayerView >> drawOnBabylonCanvas: canvas [
+	super drawOnBabylonCanvas: canvas.
+
+	"Allow the game logic to draw an overlay."
+	model gameLogic drawOnBabylonCanvas: canvas.
+]
+
 { #category : #accessing }
 WDAESPlayerView >> playerEntity [
 	^ playerEntity

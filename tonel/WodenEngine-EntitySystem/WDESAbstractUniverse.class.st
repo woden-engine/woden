@@ -126,6 +126,11 @@ WDESAbstractUniverse >> gameLogic: anObject [
 	gameLogic := anObject
 ]
 
+{ #category : #accessing }
+WDESAbstractUniverse >> gameLogicClass: aClass [
+	self gameLogic: (aClass new universe: self; yourself)
+]
+
 { #category : #'as yet unclassified' }
 WDESAbstractUniverse >> globalTransform [
 	^ WMReversibleAffineTransformF identity
