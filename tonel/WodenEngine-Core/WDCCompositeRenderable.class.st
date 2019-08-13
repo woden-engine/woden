@@ -28,6 +28,11 @@ WDCCompositeRenderable >> engine: newEngine [
 	]
 ]
 
+{ #category : #'as yet unclassified' }
+WDCCompositeRenderable >> extractConvexCollisionShapesWithTransform: nodeGlobalTransform into: convexComponents [
+	renderables do: [ :renderable | renderable extractConvexCollisionShapesWithTransform: nodeGlobalTransform into: convexComponents ]
+]
+
 { #category : #copying }
 WDCCompositeRenderable >> postCopy [
 	super postCopy.

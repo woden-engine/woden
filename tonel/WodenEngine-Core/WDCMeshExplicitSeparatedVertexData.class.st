@@ -73,6 +73,11 @@ WDCMeshExplicitSeparatedVertexData >> normalsChannel [
 	^ self getChannelWithVertexBindingLocation: NormalsVertexBindingLocation
 ]
 
+{ #category : #'vertex data channels' }
+WDCMeshExplicitSeparatedVertexData >> positions [
+	^ self positionsChannel accessor asNativeArrayReference
+]
+
 { #category : #testing }
 WDCMeshExplicitSeparatedVertexData >> positionsChannel [
 	^ self getChannelWithVertexBindingLocation: PositionsVertexBindingLocation

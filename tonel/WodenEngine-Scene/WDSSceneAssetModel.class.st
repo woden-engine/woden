@@ -80,6 +80,33 @@ WDSSceneAssetModel >> ensureValidNameDictionaries [
 ]
 
 { #category : #'as yet unclassified' }
+WDSSceneAssetModel >> extractConvexCollisionShapesFrom: node withTransform: nodeGlobalTransform into: convexComponents [
+	node canBeRendered ifTrue: [ 
+		node renderable extractConvexCollisionShapesWithTransform: nodeGlobalTransform into: convexComponents
+	].
+
+	node childrenDo: [ :child |
+		self extractConvexCollisionShapesFrom: child
+			withTransform: (nodeGlobalTransform transformTransform: child transform)
+			into: convexComponents
+	].
+
+]
+
+{ #category : #'as yet unclassified' }
+WDSSceneAssetModel >> getCollisionShapeForConvexCollisionTreeNamed: collisionTreeNodeName [
+	| treeRoot convexComponents |
+	self ensureValidNameDictionaries.
+	treeRoot := sceneNodeNameDictionary at: collisionTreeNodeName.
+	convexComponents := OrderedCollection new.
+	self extractConvexCollisionShapesFrom: treeRoot withTransform: WMReversibleAffineTransformF identity into: convexComponents.
+	convexComponents ifEmpty: [ ^ nil ].
+	
+	self flag: 'TODO: Add a cache for this collision shapes.'.
+	^ WDPhyCompoundCollisionShape new components: convexComponents
+]
+
+{ #category : #'as yet unclassified' }
 WDSSceneAssetModel >> instanceSceneNodeNamed: sceneNodeName [
 	^ self instanceSceneNodeNamed: sceneNodeName ifAbsent: [self error: 'Requested scene node is not available in the model.']
 ]

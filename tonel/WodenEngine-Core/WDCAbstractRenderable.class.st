@@ -173,6 +173,11 @@ WDCAbstractRenderable >> depthWriteMask: anObject [
 WDCAbstractRenderable >> engine: newEngine [
 ]
 
+{ #category : #'as yet unclassified' }
+WDCAbstractRenderable >> extractConvexCollisionShapesWithTransform: nodeGlobalTransform into: convexComponents [
+	"By default, do nothing."
+]
+
 { #category : #initialization }
 WDCAbstractRenderable >> initialize [
 	super initialize.
