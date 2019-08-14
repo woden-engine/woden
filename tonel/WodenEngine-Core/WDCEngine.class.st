@@ -659,6 +659,18 @@ WDCEngine >> maxAnisotropy [
 	^ 1
 ]
 
+{ #category : #'as yet unclassified' }
+WDCEngine >> minimalAlignmentForStorageBufferElement [
+	self flag: 'FIXME: Ask this to the graphics backend'.
+	^ 32
+]
+
+{ #category : #'as yet unclassified' }
+WDCEngine >> minimalAlignmentForUniformBufferElement [
+	self flag: 'FIXME: Ask this to the graphics backend'.
+	^ 256
+]
+
 { #category : #'resource building' }
 WDCEngine >> newCompositionFullScreenPass [
 	^ WDCCompositionFullScreenPass for: self

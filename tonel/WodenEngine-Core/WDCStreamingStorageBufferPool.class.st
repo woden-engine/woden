@@ -1,7 +1,10 @@
 Class {
 	#name : #WDCStreamingStorageBufferPool,
 	#superclass : #WDCStreamingBufferPool,
-	#category : 'WodenEngine-Core-Pool'
+	#instVars : [
+		'minimalAlignment'
+	],
+	#category : #'WodenEngine-Core-Pool'
 }
 
 { #category : #'as yet unclassified' }
@@ -11,5 +14,5 @@ WDCStreamingStorageBufferPool >> createBuffer: capacity [
 
 { #category : #'as yet unclassified' }
 WDCStreamingStorageBufferPool >> minimalAlignment [
-	^ 4
+	^ minimalAlignment ifNil: [ minimalAlignment := engine minimalAlignmentForStorageBufferElement ]
 ]

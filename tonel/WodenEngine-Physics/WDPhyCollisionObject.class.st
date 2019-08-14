@@ -14,7 +14,8 @@ Class {
 		'isStaticObject',
 		'isCharacterObject',
 		'isKinematicObject',
-		'hasDebugDrawing'
+		'hasDebugDrawing',
+		'ownerPhysicsWorld'
 	],
 	#classVars : [
 		'AllCollisionsGroupMask',
@@ -55,13 +56,22 @@ WDPhyCollisionObject class >> initialize [
 
 { #category : #removing }
 WDPhyCollisionObject >> addToPhysicsWorld: physicsWorld [
-	physicsWorld addCollisionObject: self
+	self assert: ownerPhysicsWorld isNil.
+	ownerPhysicsWorld := physicsWorld.
+	physicsWorld addCollisionObject: self.
+
+]
+
+{ #category : #'collision groups' }
+WDPhyCollisionObject >> angularVelocity: velocity [
+	physicsEngine setCollisionObject: self angularVelocity: velocity
 ]
 
 { #category : #accessing }
 WDPhyCollisionObject >> applyTransformInHandle [
 	physicsEngine ifNotNil: [
 		physicsEngine
+			activateCollisionObject: self;
 			setCollisionObject: self position: position;
 			setCollisionObject: self orientation: orientation
 	]
@@ -162,6 +172,11 @@ WDPhyCollisionObject >> isKinematicObject: anObject [
 ]
 
 { #category : #testing }
+WDPhyCollisionObject >> isOnPhysicsEngineSimulation [
+	^ ownerPhysicsWorld isNotNil and: [ ownerPhysicsWorld isOnPhysicsEngineSimulation ]
+]
+
+{ #category : #testing }
 WDPhyCollisionObject >> isRigidBody [
 	^ false
 ]
@@ -182,6 +197,11 @@ WDPhyCollisionObject >> isStaticObject: anObject [
 ]
 
 { #category : #'collision groups' }
+WDPhyCollisionObject >> linearVelocity: velocity [
+	physicsEngine setCollisionObject: self linearVelocity: velocity
+]
+
+{ #category : #'collision groups' }
 WDPhyCollisionObject >> makeCharacterCollisionObject [
 	self
 		useCharacterCollisionGroup;
@@ -192,7 +212,7 @@ WDPhyCollisionObject >> makeCharacterCollisionObject [
 WDPhyCollisionObject >> makeKinematicCollisionObject [
 	self
 		useKinematicCollisionGroup;
-		isCharacterObject: true
+		isKinematicObject: true
 ]
 
 { #category : #'collision groups' }
@@ -213,6 +233,15 @@ WDPhyCollisionObject >> makeStaticCollisionObject [
 WDPhyCollisionObject >> orientation: aMatrix [
 	orientation := aMatrix.
 	self applyTransformInHandle.
+]
+
+{ #category : #'transform updating' }
+WDPhyCollisionObject >> physicsEngineTransformChangedTo: aTransform [
+	position := aTransform translation.
+	orientation := aTransform matrix.
+
+	sceneNode ifNil: [ ^ self ].
+	sceneNode transform: aTransform
 ]
 
 { #category : #accessing }
@@ -261,6 +290,10 @@ WDPhyCollisionObject >> removeFromPhysicsWorld: physicsWorld [
 	physicsWorld removeCollisionObject: self
 ]
 
+{ #category : #'as yet unclassified' }
+WDPhyCollisionObject >> retrieveTransformFromPhysicsEngine [
+]
+
 { #category : #accessing }
 WDPhyCollisionObject >> sceneNode [
 	^ sceneNode
@@ -269,6 +302,13 @@ WDPhyCollisionObject >> sceneNode [
 { #category : #accessing }
 WDPhyCollisionObject >> sceneNode: anObject [
 	sceneNode := anObject.
+	self transform: sceneNode transform
+]
+
+{ #category : #'transform updating' }
+WDPhyCollisionObject >> sceneNodeTransformChanged [
+	sceneNode ifNil: [ ^ self ].
+	self isOnPhysicsEngineSimulation ifTrue: [ ^ self ].
 	self transform: sceneNode transform
 ]
 

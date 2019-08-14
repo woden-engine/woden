@@ -1,6 +1,8 @@
 Class {
 	#name : #WDESAbstractSceneNodeComponent,
 	#superclass : #WDESComponentWithShape,
+	#traits : 'TWDCTransformationManipulationMethods',
+	#classTraits : 'TWDCTransformationManipulationMethods classTrait',
 	#instVars : [
 		'sceneNode',
 		'localTransform'
@@ -57,6 +59,11 @@ WDESAbstractSceneNodeComponent >> makeTranslucent [
 { #category : #accessing }
 WDESAbstractSceneNodeComponent >> makeTranslucentSorted [
 	self renderable makeTranslucentSorted
+]
+
+{ #category : #accessing }
+WDESAbstractSceneNodeComponent >> position [
+	^ localTransform position
 ]
 
 { #category : #initialization }
@@ -118,49 +125,9 @@ WDESAbstractSceneNodeComponent >> translateBy: translation [
 ]
 
 { #category : #transforming }
-WDESAbstractSceneNodeComponent >> translateByX: translation [
-	self translateBy: (WMVector3F x: translation)
-]
-
-{ #category : #transforming }
-WDESAbstractSceneNodeComponent >> translateByX: x y: y z: z [
-	self translateBy: (WMVector3F x: x y: y z: z)
-]
-
-{ #category : #transforming }
-WDESAbstractSceneNodeComponent >> translateByY: translation [
-	self translateBy: (WMVector3F y: translation)
-]
-
-{ #category : #transforming }
-WDESAbstractSceneNodeComponent >> translateByZ: translation [
-	self translateBy: (WMVector3F new z: translation)
-]
-
-{ #category : #transforming }
 WDESAbstractSceneNodeComponent >> translateTo: translation [
 	localTransform translation: translation.
 	self localTransformChanged
-]
-
-{ #category : #transforming }
-WDESAbstractSceneNodeComponent >> translateToX: newX [
-	self translateTo: (self position x: newX)
-]
-
-{ #category : #transforming }
-WDESAbstractSceneNodeComponent >> translateToX: newX y: newY z: newZ [ 
-	self translateTo: (WMVector3F x: newX y: newY z: newZ)
-]
-
-{ #category : #transforming }
-WDESAbstractSceneNodeComponent >> translateToY: newY [
-	self translateTo: (self position y: newY)
-]
-
-{ #category : #transforming }
-WDESAbstractSceneNodeComponent >> translateToZ: newZ [
-	self translateTo: (self position z: newZ)
 ]
 
 { #category : #accessing }

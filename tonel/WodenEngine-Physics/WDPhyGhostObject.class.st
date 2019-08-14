@@ -6,7 +6,9 @@ Class {
 
 { #category : #removing }
 WDPhyGhostObject >> addToPhysicsWorld: physicsWorld [
-	physicsWorld addGhostObject: self
+	self assert: ownerPhysicsWorld isNil.
+	physicsWorld addGhostObject: self.
+	ownerPhysicsWorld := physicsWorld
 ]
 
 { #category : #testing }

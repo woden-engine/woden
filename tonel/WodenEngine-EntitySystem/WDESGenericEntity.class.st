@@ -1,26 +1,32 @@
 Class {
 	#name : #WDESGenericEntity,
 	#superclass : #WDESAbstractEntity,
+	#traits : 'TWDCTransformationManipulationMethods',
+	#classTraits : 'TWDCTransformationManipulationMethods classTrait',
 	#instVars : [
 		'typeName',
 		'transform',
 		'sceneNode',
 		'physicsWorldObject',
-		'mass'
+		'physicsType'
 	],
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
 
 { #category : #building }
 WDESGenericEntity >> addComponentWithCollisionShape: collisionShape [
-	mass ~= 0.0 ifTrue: [ 
-		self addComponent: (WDESRigidBodyCollisionShape new
-			collisionShape: collisionShape)
-	] ifFalse: [ 
-		self addComponent: (WDESStaticCollisionObject new
-			collisionShape: collisionShape)
+	self isStaticPhysicsObject ifTrue: [
+		^ self addComponent: (WDESStaticCollisionObject new
+			collisionShape: collisionShape)		
 	].
+	self isKinematicPhysicsObject ifTrue: [
+		^ self addComponent: (WDESKinematicObjectCollisionShape new
+			collisionShape: collisionShape)		
+	].
+	self assert: self isRigidBodyPhysicsObject.
 
+	^ self addComponent: (WDESRigidBodyCollisionShape new
+		collisionShape: collisionShape).
 
 ]
 
@@ -93,7 +99,7 @@ WDESGenericEntity >> addPointLightAt: position with: aBlock [
 WDESGenericEntity >> addRigidBodyAt: position with: aBlock [
 	| entity |
 	entity := WDESGenericEntity new
-		mass: 1.0;
+		makeRigidBodyWithMass: 1.0;
 		transform: (WMReversibleAffineTransformF identity translation: position).
 	self addChild: entity.
 	aBlock value: entity.
@@ -129,8 +135,9 @@ WDESGenericEntity >> addWaterVolumeAt: position with: aBlock [
 
 { #category : #physics }
 WDESGenericEntity >> addedToPhysicsWorld: physicsWorld [
+	physicsWorldObject ifNotNil: [ physicsWorldObject addToPhysicsWorld: physicsWorld ].
 	super addedToPhysicsWorld: physicsWorld.
-	physicsWorldObject ifNotNil: [ physicsWorldObject addToPhysicsWorld: physicsWorld ]
+
 ]
 
 { #category : #physics }
@@ -140,11 +147,22 @@ WDESGenericEntity >> applyCollisionShapeToRigidBody: collisionShapeComponent [
 	].
 
 	physicsWorldObject := WDPhyRigidBody new
-		mass: mass;
+		mass: (self isRigidBodyPhysicsObject ifTrue: [ self rigidBodyMass ] ifFalse: [ 0.0 ]);
 		sceneNode: self;
 		shape: collisionShapeComponent collisionShape;
 		yourself.
-	mass > 0 ifTrue: [ physicsWorldObject useDefaultCollisionGroup ].
+	
+	self isStaticPhysicsObject ifTrue: [ physicsWorldObject makeStaticCollisionObject ].
+	self isKinematicPhysicsObject ifTrue: [ physicsWorldObject
+		makeKinematicCollisionObject;
+		preSimulationAction: [ :delta |
+			self prePhysicsTick: delta
+		];
+		postSimulationAction: [ :delta :body |
+			self postPhysicsTick: delta
+		]
+	].
+	self isRigidBodyPhysicsObject ifTrue: [ physicsWorldObject useDefaultCollisionGroup ].
 	self physicsWorld ifNotNil: [ :physicsWorld | physicsWorldObject addToPhysicsWorld: physicsWorld ]
 ]
 
@@ -241,17 +259,37 @@ WDESGenericEntity >> forwardDirection [
 WDESGenericEntity >> initialize [
 	super initialize.
 	transform := WMReversibleAffineTransformF identity.
-	mass := 0.0.
+	self makeStaticPhysicsObject
 ]
 
 { #category : #accessing }
-WDESGenericEntity >> mass [
-	^ mass
+WDESGenericEntity >> isKinematicPhysicsObject [
+	^ physicsType == #kinematic
 ]
 
 { #category : #accessing }
-WDESGenericEntity >> mass: anObject [
-	mass := anObject
+WDESGenericEntity >> isRigidBodyPhysicsObject [
+	^ physicsType isArray and: [ physicsType first == #rigidBody]
+]
+
+{ #category : #accessing }
+WDESGenericEntity >> isStaticPhysicsObject [
+	^ physicsType == #static
+]
+
+{ #category : #accessing }
+WDESGenericEntity >> makeKinematicPhysicsObject [
+	^ physicsType := #kinematic
+]
+
+{ #category : #accessing }
+WDESGenericEntity >> makeRigidBodyWithMass: mass [
+	physicsType := {#rigidBody . mass}
+]
+
+{ #category : #accessing }
+WDESGenericEntity >> makeStaticPhysicsObject [
+	^ physicsType := #static
 ]
 
 { #category : #physics }
@@ -269,11 +307,31 @@ WDESGenericEntity >> physicsWorldObject: anObject [
 	physicsWorldObject := anObject
 ]
 
+{ #category : #accessing }
+WDESGenericEntity >> position [
+	^ transform translation
+]
+
+{ #category : #physics }
+WDESGenericEntity >> postPhysicsTick: delta [
+	components do: [ :comp | comp postPhysicsTick: delta ]
+]
+
+{ #category : #physics }
+WDESGenericEntity >> prePhysicsTick: delta [
+	components do: [ :comp | comp prePhysicsTick: delta ]
+]
+
 { #category : #physics }
 WDESGenericEntity >> removedFromPhysicsWorld: physicsWorld [
 	physicsWorldObject ifNotNil: [ physicsWorldObject removeFromPhysicsWorld: physicsWorld ].
 	super removedFromPhysicsWorld: physicsWorld.
 
+]
+
+{ #category : #accessing }
+WDESGenericEntity >> rigidBodyMass [
+	^ physicsType second
 ]
 
 { #category : #accessing }
@@ -294,14 +352,26 @@ WDESGenericEntity >> sceneNode: newSceneNode [
 
 { #category : #accessing }
 WDESGenericEntity >> transform [
-	^ transform
+	^ transform copy
 ]
 
 { #category : #accessing }
 WDESGenericEntity >> transform: newTransform [
 	transform := newTransform.
-	
-	sceneNode ifNotNil: [ sceneNode transform: newTransform copy ].
+	self transformChanged
+]
+
+{ #category : #accessing }
+WDESGenericEntity >> transformChanged [
+	sceneNode ifNotNil: [ sceneNode transform: transform copy ].
+	components do: [ :comp | comp entityTransformChanged ].
+	physicsWorldObject ifNotNil: [ physicsWorldObject sceneNodeTransformChanged ].
+]
+
+{ #category : #transforming }
+WDESGenericEntity >> translateTo: translation [
+	transform translation: translation.
+	self transformChanged
 ]
 
 { #category : #accessing }

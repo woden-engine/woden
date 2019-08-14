@@ -1,7 +1,10 @@
 Class {
 	#name : #WDCStreamingUniformBufferPool,
 	#superclass : #WDCStreamingBufferPool,
-	#category : 'WodenEngine-Core-Pool'
+	#instVars : [
+		'minimalAlignment'
+	],
+	#category : #'WodenEngine-Core-Pool'
 }
 
 { #category : #'as yet unclassified' }
@@ -9,7 +12,7 @@ WDCStreamingUniformBufferPool >> createBuffer: capacity [
 	^ engine createStreamingUniformBuffer: capacity * elementSize
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 WDCStreamingUniformBufferPool >> minimalAlignment [
-	^ 256
+	^ minimalAlignment ifNil: [ minimalAlignment := engine minimalAlignmentForUniformBufferElement ]
 ]

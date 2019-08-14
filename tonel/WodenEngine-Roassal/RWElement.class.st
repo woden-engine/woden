@@ -1,6 +1,8 @@
 Class {
 	#name : #RWElement,
 	#superclass : #RWAnnounceableObject,
+	#traits : 'TWDCTransformationManipulationMethods',
+	#classTraits : 'TWDCTransformationManipulationMethods classTrait',
 	#instVars : [
 		'shape',
 		'model',
@@ -436,51 +438,10 @@ RWElement >> translateBy: translation [
 ]
 
 { #category : #translation }
-RWElement >> translateByX: translation [
-	self translateBy: (WMVector3F new x: translation)
-]
-
-{ #category : #translation }
-RWElement >> translateByX: x y: y z: z [
-	self translateBy: (WMVector3F x: x y: y z: z)
-]
-
-{ #category : #translation }
-RWElement >> translateByY: translation [
-	self translateBy: (WMVector3F new y: translation)
-]
-
-{ #category : #translation }
-RWElement >> translateByZ: translation [
-	self translateBy: (WMVector3F new z: translation)
-]
-
-{ #category : #translation }
 RWElement >> translateTo: aWMVector3 [
 	sceneNode translateTo: aWMVector3.
 	self notifyConnectedEdges.
 	self invalidateBoundingBoxCache.
-]
-
-{ #category : #translation }
-RWElement >> translateToX: newX [
-	self translateTo: (self position x: newX)
-]
-
-{ #category : #translation }
-RWElement >> translateToX: newX y: newY z: newZ [ 
-	sceneNode translateToX: newX y: newY z: newZ .
-	self invalidateBoundingBoxCache.
-]
-
-{ #category : #translation }
-RWElement >> translateToY: newY [
-	self translateTo: (self position y: newY)
-]
-
-{ #category : #translation }
-RWElement >> translateToZ: newZ [
-	self translateTo: (self position z: newZ)
 ]
 
 { #category : #accessing }

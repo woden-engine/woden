@@ -20,6 +20,10 @@ WDESComponent >> engine [
 	^ ownerEntity engine
 ]
 
+{ #category : #notifications }
+WDESComponent >> entityTransformChanged [
+]
+
 { #category : #testing }
 WDESComponent >> isBehaviorComponent [
 	^ false

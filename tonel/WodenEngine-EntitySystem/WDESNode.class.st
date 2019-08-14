@@ -42,6 +42,14 @@ WDESNode >> physicsWorld [
 	^ self subclassResponsibility
 ]
 
+{ #category : #simulation }
+WDESNode >> postPhysicsTick: delta [
+]
+
+{ #category : #simulation }
+WDESNode >> prePhysicsTick: delta [
+]
+
 { #category : #adding }
 WDESNode >> removedFromEntity: anEntity [
 ]

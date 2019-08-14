@@ -17,6 +17,11 @@ WDAPhyEngine class >> isSupported [
 	^ true
 ]
 
+{ #category : #initialization }
+WDAPhyEngine >> activateCollisionObject: collisionObject [
+	(self getCollisionObjectHandle: collisionObject) activate
+]
+
 { #category : #rendering }
 WDAPhyEngine >> applyCollisionObjectFlags: collisionObject to: collisionObjectHandle [
 	collisionObjectHandle
@@ -207,10 +212,20 @@ WDAPhyEngine >> externalCopyOf: byteArray [
 ]
 
 { #category : #'collision object' }
+WDAPhyEngine >> getCollisionObjectHandle: collisionObject [
+	^ collisionObject handle isArray ifTrue: [ 
+		collisionObject handle first
+	] ifFalse: [
+		collisionObject handle
+	].
+
+]
+
+{ #category : #'collision object' }
 WDAPhyEngine >> getCollisionObjectPosition: collisionObject [
 	| result |
 	result := APHYVector3 new.
-	collisionObject handle getTranslationInto: result.
+	(self getCollisionObjectHandle: collisionObject) getTranslationInto: result.
 	^ self convertVector3: result
 ]
 
@@ -233,12 +248,22 @@ WDAPhyEngine >> initialize [
 	externalObjectCopies := WeakKeyDictionary new.
 ]
 
+{ #category : #'collision object' }
+WDAPhyEngine >> setCollisionObject: collisionObject linearVelocity: velocity [
+	(self getCollisionObjectHandle: collisionObject)
+		setLinearVelocityFrom: (self convertWMVector3: velocity)
+]
+
 { #category : #initialization }
 WDAPhyEngine >> setCollisionObject: collisionObject orientation: orientation [
 	| collisionObjectHandle |
 	collisionObjectHandle := collisionObject handle.
-	collisionObjectHandle isArray ifTrue: [ 
-		collisionObjectHandle first setMatrixFrom: (self convertWMMatrix3: orientation).
+	collisionObjectHandle isArray ifTrue: [
+		collisionObject isKinematicObject ifTrue: [ 
+			collisionObjectHandle second setMatrixFrom: (self convertWMMatrix3: orientation).
+		] ifFalse: [ 
+			collisionObjectHandle first setMatrixFrom: (self convertWMMatrix3: orientation).
+		].
 	] ifFalse: [ 
 		collisionObjectHandle setMatrixFrom: (self convertWMMatrix3: orientation).
 	]
@@ -249,8 +274,12 @@ WDAPhyEngine >> setCollisionObject: collisionObject orientation: orientation [
 WDAPhyEngine >> setCollisionObject: collisionObject position: position [
 	| collisionObjectHandle |
 	collisionObjectHandle := collisionObject handle.
-	collisionObjectHandle isArray ifTrue: [ 
-		collisionObjectHandle first setTranslationFrom: (self convertWMVector3: position).
+	collisionObjectHandle isArray ifTrue: [
+		collisionObject isKinematicObject ifTrue: [ 
+			collisionObjectHandle second setTranslationFrom: (self convertWMVector3: position).
+		] ifFalse: [ 
+			collisionObjectHandle first setTranslationFrom: (self convertWMVector3: position).
+		]
 	] ifFalse: [ 
 		collisionObjectHandle setTranslationFrom: (self convertWMVector3: position).
 	]

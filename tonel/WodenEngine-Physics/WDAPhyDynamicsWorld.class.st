@@ -49,13 +49,7 @@ WDAPhyDynamicsWorld >> addRigidBody: rigidBody [
 		rigidBodies add: rigidBody.
 	].
 	
-	rigidBody sceneNode ifNotNil: [
-		rigidBody sceneNode onStateChangeDo: [ :body |
-			onSimulation ifFalse: [ self updateRigidBodyFromSceneNode: rigidBody ]
-		].
-	
-		self updateRigidBodyFromSceneNode: rigidBody
-	].
+	rigidBody sceneNodeTransformChanged
 
 ]
 
@@ -98,6 +92,11 @@ WDAPhyDynamicsWorld >> initialize [
 	characterControllers := OrderedCollection new.
 	sensorTriggerGhosts := OrderedCollection new.
 	onSimulation := false.
+]
+
+{ #category : #testing }
+WDAPhyDynamicsWorld >> isOnPhysicsEngineSimulation [
+	^ onSimulation
 ]
 
 { #category : #accessing }
@@ -172,19 +171,18 @@ WDAPhyDynamicsWorld >> simulateTime: delta [
 	onSimulation := true.
 	[
 		handle stepSimulation: delta max_sub_steps: 2 fixed_time_step: 1.0/120.0.
-		rigidBodies do: [ :body | self updateSceneNodeFromRigidBody: body ]
+		rigidBodies do: [ :body | self updateRigidBodyFromSimulation: body ]
 	] ensure: [ onSimulation := false ].
 	self postSimulateTime: delta.
 ]
 
 { #category : #rendering }
-WDAPhyDynamicsWorld >> updateRigidBodyFromSceneNode: rigidBody [
-	| transform |
-	rigidBody sceneNode ifNil: [ ^ self ].
-	
-	transform := physicsEngine convertWMTransform: rigidBody sceneNode transform.
-	rigidBody handle first setTransformFrom: transform.
-	rigidBody handle second setTransformFrom: transform.
+WDAPhyDynamicsWorld >> updateRigidBodyFromSimulation: rigidBody [
+	| motionState rawTransform |
+	motionState := rigidBody handle second.
+	rawTransform := APHYTransform new.
+	motionState getTransformInto: rawTransform.
+	rigidBody physicsEngineTransformChangedTo: (physicsEngine convertTransform: rawTransform)
 ]
 
 { #category : #rendering }

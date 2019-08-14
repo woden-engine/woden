@@ -32,7 +32,7 @@ WDESAbstractEntity >> addComponent: aComponent [
 		self sector ifNotNil: [ :sector | sector addTickingEntity: self ]
 	].
 	self sector ifNotNil: [ :sector | aComponent addedToSector: sector ].
-	
+	^ aComponent
 ]
 
 { #category : #adding }

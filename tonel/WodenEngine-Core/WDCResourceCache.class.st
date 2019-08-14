@@ -125,6 +125,11 @@ WDCResourceCache >> blackCubeMap [
 ]
 
 { #category : #textures }
+WDCResourceCache >> blackRGBMCubeMap [
+	^ self blackCubeMap
+]
+
+{ #category : #textures }
 WDCResourceCache >> blackTexture [
 	^ self getOrCreateColorTexture: Color black
 ]
@@ -963,6 +968,11 @@ WDCResourceCache >> vertexLayoutForVertexChannelDescriptions: channelDescription
 { #category : #textures }
 WDCResourceCache >> whiteCubeMap [
 	^ self getOrCreateColorCubeMap: Color white
+]
+
+{ #category : #textures }
+WDCResourceCache >> whiteRGBMCubeMap [
+	^ self getOrCreateColorCubeMap: (Color white alpha: 1/255.0)
 ]
 
 { #category : #textures }

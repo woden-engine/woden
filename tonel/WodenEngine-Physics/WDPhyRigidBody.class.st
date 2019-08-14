@@ -9,7 +9,10 @@ Class {
 
 { #category : #removing }
 WDPhyRigidBody >> addToPhysicsWorld: physicsWorld [
-	physicsWorld addRigidBody: self
+	self assert: ownerPhysicsWorld isNil.
+	ownerPhysicsWorld := physicsWorld.
+	physicsWorld addRigidBody: self.
+
 ]
 
 { #category : #accessing }
@@ -44,6 +47,11 @@ WDPhyRigidBody >> removeFromPhysicsWorld: physicsWorld [
 { #category : #removing }
 WDPhyRigidBody >> removeFromWorld: world [
 	^ world removeRigidBody: self
+]
+
+{ #category : #accessing }
+WDPhyRigidBody >> retrieveTransformFromPhysicsEngine [
+	ownerPhysicsWorld ifNotNil: [ ownerPhysicsWorld updateRigidBodyFromSimulation: self ]
 ]
 
 { #category : #accessing }

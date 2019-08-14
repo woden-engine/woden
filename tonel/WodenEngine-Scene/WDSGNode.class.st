@@ -4,6 +4,8 @@ I represent a node in the Woden scene graph.
 Class {
 	#name : #WDSGNode,
 	#superclass : #WDCAbstractSceneNode,
+	#traits : 'TWDCTransformationManipulationMethods',
+	#classTraits : 'TWDCTransformationManipulationMethods classTrait',
 	#instVars : [
 		'name',
 		'scene',
@@ -398,49 +400,9 @@ WDSGNode >> translateBy: translation [
 ]
 
 { #category : #transforming }
-WDSGNode >> translateByX: translation [
-	self translateBy: (WMVector3F x: translation)
-]
-
-{ #category : #transforming }
-WDSGNode >> translateByX: x y: y z: z [
-	self translateBy: (WMVector3F x: x y: y z: z)
-]
-
-{ #category : #transforming }
-WDSGNode >> translateByY: translation [
-	self translateBy: (WMVector3F y: translation)
-]
-
-{ #category : #transforming }
-WDSGNode >> translateByZ: translation [
-	self translateBy: (WMVector3F new z: translation)
-]
-
-{ #category : #transforming }
 WDSGNode >> translateTo: translation [
 	transform translation: translation.
 	self transformChanged
-]
-
-{ #category : #transforming }
-WDSGNode >> translateToX: newX [
-	self translateTo: (self position x: newX)
-]
-
-{ #category : #transforming }
-WDSGNode >> translateToX: newX y: newY z: newZ [ 
-	self translateTo: (WMVector3F x: newX y: newY z: newZ)
-]
-
-{ #category : #transforming }
-WDSGNode >> translateToY: newY [
-	self translateTo: (self position y: newY)
-]
-
-{ #category : #transforming }
-WDSGNode >> translateToZ: newZ [
-	self translateTo: (self position z: newZ)
 ]
 
 { #category : #accessing }

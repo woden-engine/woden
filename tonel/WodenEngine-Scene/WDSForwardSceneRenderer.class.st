@@ -26,8 +26,8 @@ WDSForwardSceneRenderer >> ensureLightingStatesFor: requiredNumberOfCameras [
 				bind: 0 uniformBufferElement: bufferElement;
 				bind: 1 texture: self shadowMapBuffer;
 				bind: 4 texture: engine resourceCache imageBasedLightingBRDFLut;
-				bind: 5 texture: engine resourceCache whiteCubeMap;
-				bind: 6 texture: engine resourceCache blackCubeMap;
+				bind: 5 texture: engine resourceCache whiteRGBMCubeMap;
+				bind: 6 texture: engine resourceCache blackRGBMCubeMap;
 				yourself
 		])
 	].

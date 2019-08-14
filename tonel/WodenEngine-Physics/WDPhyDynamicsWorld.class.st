@@ -33,6 +33,11 @@ WDPhyDynamicsWorld >> gravity: aWMVector3 [
 	self subclassResponsibility
 ]
 
+{ #category : #testing }
+WDPhyDynamicsWorld >> isOnPhysicsEngineSimulation [
+	^ false
+]
+
 { #category : #adding }
 WDPhyDynamicsWorld >> removeCharacterController: ghostObject [
 	self subclassResponsibility
