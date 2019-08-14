@@ -16,8 +16,11 @@ Class {
 		'headAngularVelocity',
 		'walkingInGround',
 		'running',
+		'displacementStrategy',
 		'isUnderwater',
-		'isHeadUnderwater'
+		'isHeadUnderwater',
+		'walkingDisplacementStrategy',
+		'swimmingDisplacementStrategy'
 	],
 	#category : #'WodenEngine-EntitySystem-Behaviors'
 }
@@ -45,6 +48,16 @@ WDESCharacterBehaviorComponent >> addedToPhysicsWorld: physicsWorld [
 	physicsWorld addCharacterController: self validPhysicsCharacterController.
 	ghostObject sceneNode: ownerEntity.
 	
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> bodyOrientation [
+	^ bodyOrientation
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> bodyOrientation: anObject [
+	bodyOrientation := anObject
 ]
 
 { #category : #testing }
@@ -85,6 +98,21 @@ WDESCharacterBehaviorComponent >> createPhysicsCharacterController [
 ]
 
 { #category : #accessing }
+WDESCharacterBehaviorComponent >> displacementStrategy [
+	^ displacementStrategy
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> displacementStrategy: anObject [
+	^ displacementStrategy := anObject
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> ghostObject [
+	^ ghostObject
+]
+
+{ #category : #accessing }
 WDESCharacterBehaviorComponent >> globalHeadPosition [
 	^ ownerEntity globalTransform transformPosition3: self headPosition
 ]
@@ -92,6 +120,36 @@ WDESCharacterBehaviorComponent >> globalHeadPosition [
 { #category : #accessing }
 WDESCharacterBehaviorComponent >> halfExtent [
 	^ self class halfExtent
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> headAngle [
+	^ headAngle copy
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> headAngle: anObject [
+	headAngle := anObject
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> headAngularVelocity [
+	^ headAngularVelocity copy
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> headAngularVelocity: anObject [
+	headAngularVelocity := anObject
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> headOrientation [
+	^ headOrientation copy
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> headOrientation: anObject [
+	headOrientation := anObject
 ]
 
 { #category : #accessing }
@@ -115,6 +173,7 @@ WDESCharacterBehaviorComponent >> initialize [
 	running := false.
 	isUnderwater := false.
 	isHeadUnderwater := false.
+	displacementStrategy := self walkingDisplacementStrategy.
 ]
 
 { #category : #testing }
@@ -129,14 +188,60 @@ WDESCharacterBehaviorComponent >> isCurrentlyWalking [
 	^ walkingInGround
 ]
 
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> isHeadUnderwater [
+	^ isHeadUnderwater
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> isHeadUnderwater: anObject [
+	isHeadUnderwater := anObject
+]
+
 { #category : #testing }
 WDESCharacterBehaviorComponent >> isTickingComponent [
 	^ true
 ]
 
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> isUnderwater [
+	^ isUnderwater
+]
+
 { #category : #actions }
 WDESCharacterBehaviorComponent >> jump [
-	physicsCharacterController jump
+	displacementStrategy jump
+
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> linearAcceleration [
+	^ linearAcceleration copy
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> linearAcceleration: anObject [
+	linearAcceleration := anObject
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> linearVelocity [
+	^ linearVelocity copy
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> linearVelocity: anObject [
+	linearVelocity := anObject
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> linearViscosity [
+	^ linearViscosity
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> linearViscosity: anObject [
+	linearViscosity := anObject
 ]
 
 { #category : #events }
@@ -145,10 +250,14 @@ WDESCharacterBehaviorComponent >> onUnderwaterVolume: underwaterVolumeComponent 
 	isHeadUnderwater := isHeadUnderwater or: [underwaterVolumeComponent ownerEntity sceneNode globalBoundingBox includesPoint: self globalHeadPosition].
 ]
 
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> physicsCharacterController [
+	^ physicsCharacterController
+]
+
 { #category : #simulation }
 WDESCharacterBehaviorComponent >> postPhysicsTick: delta [
-	ownerEntity transform: (WMReversibleAffineTransformF identity
-		orthonormal: bodyOrientation translation: ghostObject position).
+	displacementStrategy postPhysicsTick: delta.
 	
 	ownerEntity findCameraSceneNodeComponentOrNil ifNotNil: [ :cameraNodeComponent |
 		cameraNodeComponent validSceneNode
@@ -159,30 +268,16 @@ WDESCharacterBehaviorComponent >> postPhysicsTick: delta [
 
 { #category : #simulation }
 WDESCharacterBehaviorComponent >> prePhysicsTick: delta [
-	| accel speedMultiplier |
 	headAngle := headAngle + (headAngularVelocity * delta).
 	headAngle x: (headAngle x min: Float halfPi max: Float halfPi negated).
 	
-	self isCurrentlyWalking ifTrue: [ 
-		bodyOrientation := WMMatrix3F yrot: headAngle y.
-		headOrientation := WMMatrix3F xrot: headAngle x.
-		linearAcceleration y: 0.0.
-	] ifFalse: [ 
-		bodyOrientation := (WMMatrix3F yrot: headAngle y) * (WMMatrix3F xrot: headAngle x).
-		headOrientation := WMMatrix3F identity.
-	].
-
-	speedMultiplier := running ifTrue: [ 4.0 ] ifFalse: [ 2.0 ].
-	accel := (bodyOrientation transformVector3: linearAcceleration*linearViscosity*speedMultiplier).
-	accel := accel - (linearVelocity*linearViscosity).
-	
-	linearVelocity := linearVelocity + (accel*delta).
+	displacementStrategy prePhysicsTick: delta.
 
 	ghostObject
 		orientation: bodyOrientation;
 		position: ownerEntity transform translation.
 	physicsCharacterController
-		buoyancy: (isUnderwater ifTrue: [ 8.8 ] ifFalse: [0.0]);
+		buoyancy: displacementStrategy buoyancy;
 		linearVelocity: linearVelocity.
 
 	"If we are underwater, then before the postPhysicsTick, this will be set to true."
@@ -221,9 +316,24 @@ WDESCharacterBehaviorComponent >> sectorHeadRay [
 	^ WMRayF origin: self sectorHeadPosition direction: self sectorHeadDirection
 ]
 
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> swimmingDisplacementStrategy [
+	^ swimmingDisplacementStrategy ifNil: [swimmingDisplacementStrategy := WDESCharacterSwimmingDisplacementStrategy for: self]
+]
+
 { #category : #simulation }
 WDESCharacterBehaviorComponent >> tick: delta [
+	displacementStrategy tick: delta
+]
 
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> useSwimmingDisplacementStrategy [
+	^ self displacementStrategy: self swimmingDisplacementStrategy
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> useWalkingDisplacementStrategy [
+	^ self displacementStrategy: self walkingDisplacementStrategy
 ]
 
 { #category : #accessing }
@@ -242,4 +352,19 @@ WDESCharacterBehaviorComponent >> validGhostObject [
 WDESCharacterBehaviorComponent >> validPhysicsCharacterController [
 	physicsCharacterController ifNil: [self createPhysicsCharacterController].
 	^ physicsCharacterController
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> walkingDisplacementStrategy [
+	^ walkingDisplacementStrategy ifNil: [walkingDisplacementStrategy := WDESCharacterWalkingDisplacementStrategy for: self]
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> walkingInGround [
+	^ walkingInGround
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> walkingInGround: anObject [
+	walkingInGround := anObject
 ]
