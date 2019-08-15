@@ -14,3 +14,14 @@ WDESCharacterWalkingDisplacementStrategy >> adjustHeadAndBodyOrientations [
 		headOrientation: (WMMatrix3F xrot: headAngle x);
 		linearAcceleration: (character linearAcceleration y: 0.0).
 ]
+
+{ #category : #testing }
+WDESCharacterWalkingDisplacementStrategy >> isRotatingFullBody [
+	^ false
+]
+
+{ #category : #simulation }
+WDESCharacterWalkingDisplacementStrategy >> tickLinearMovement: delta [
+	character linearAcceleration: (character linearAcceleration y: 0.0).
+	super tickLinearMovement: delta
+]

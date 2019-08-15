@@ -45,7 +45,7 @@ WDASceneViewWithBabylon >> drawOnBabylonCanvas: canvas [
 
 { #category : #rendering }
 WDASceneViewWithBabylon >> renderViewport: viewport overlayWith: stateTracker [
-	pompeiiSurface := viewport resolveRenderTarget validPompeiiSurface.
+	pompeiiSurface := viewport resolveRenderTarget validBabylonSurface.
 	pompeiiSurface withStateTracker: stateTracker drawDuring: [ :canvas |
 		viewport applyBabylonCanvasSafeZoneTransform: canvas transform.
 		self drawOnBabylonCanvas: canvas.

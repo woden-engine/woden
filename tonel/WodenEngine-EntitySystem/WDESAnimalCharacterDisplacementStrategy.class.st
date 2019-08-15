@@ -4,17 +4,6 @@ Class {
 	#category : #'WodenEngine-EntitySystem-Behaviors'
 }
 
-{ #category : #simulation }
-WDESAnimalCharacterDisplacementStrategy >> adjustHeadAndBodyOrientations [
-	| headAngle |
-	headAngle := character headAngle.
-	
-	character
-		bodyOrientation: (WMMatrix3F yrot: headAngle y) * (WMMatrix3F xrot: headAngle x);
-		headOrientation: WMMatrix3F identity.
-
-]
-
 { #category : #actions }
 WDESAnimalCharacterDisplacementStrategy >> jump [
 	^ character physicsCharacterController jump
@@ -22,6 +11,11 @@ WDESAnimalCharacterDisplacementStrategy >> jump [
 
 { #category : #simulation }
 WDESAnimalCharacterDisplacementStrategy >> prePhysicsTick: delta [
+	| movementDirection |
+	movementDirection := character leftStickDirection.
+	
+	character linearAcceleration: (WMVector3F x: movementDirection x y: 0.0 z: movementDirection y negated) normalized.
+	
 	character isUnderwater ifTrue: [
 		self isUnderwaterDisplacementStrategy ifFalse: [ 
 			^ character useSwimmingDisplacementStrategy

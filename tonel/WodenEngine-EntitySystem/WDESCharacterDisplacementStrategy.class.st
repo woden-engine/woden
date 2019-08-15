@@ -7,14 +7,26 @@ Class {
 	#category : #'WodenEngine-EntitySystem-Behaviors'
 }
 
-{ #category : #'instance creation' }
-WDESCharacterDisplacementStrategy class >> for: aCharacter [
-	^ self new character: aCharacter
-]
-
 { #category : #'as yet unclassified' }
 WDESCharacterDisplacementStrategy >> activateUseCommand [
 	^ character activateUseActuator
+]
+
+{ #category : #simulation }
+WDESCharacterDisplacementStrategy >> adjustHeadAndBodyOrientations [
+	| headAngle |
+	headAngle := character headAngle.
+	
+	self isRotatingFullBody ifTrue: [ 
+		character
+			bodyOrientation: (WMMatrix3F yrot: headAngle y) * (WMMatrix3F xrot: headAngle x);
+			headOrientation: WMMatrix3F identity.
+	] ifFalse: [ 
+		character
+			bodyOrientation: (WMMatrix3F yrot: headAngle y);
+			headOrientation: (WMMatrix3F xrot: headAngle x)
+	].
+
 ]
 
 { #category : #accessing }
@@ -30,6 +42,11 @@ WDESCharacterDisplacementStrategy >> character [
 { #category : #accessing }
 WDESCharacterDisplacementStrategy >> character: anObject [
 	character := anObject
+]
+
+{ #category : #testing }
+WDESCharacterDisplacementStrategy >> isRotatingFullBody [
+	^ true
 ]
 
 { #category : #testing }

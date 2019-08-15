@@ -20,7 +20,9 @@ Class {
 		'isUnderwater',
 		'isHeadUnderwater',
 		'walkingDisplacementStrategy',
-		'swimmingDisplacementStrategy'
+		'swimmingDisplacementStrategy',
+		'leftStickDirection',
+		'rightStickDirection'
 	],
 	#category : #'WodenEngine-EntitySystem-Behaviors'
 }
@@ -103,8 +105,8 @@ WDESCharacterBehaviorComponent >> displacementStrategy [
 ]
 
 { #category : #accessing }
-WDESCharacterBehaviorComponent >> displacementStrategy: anObject [
-	^ displacementStrategy := anObject
+WDESCharacterBehaviorComponent >> displacementStrategy: aDisplacementStrategy [
+	^ displacementStrategy := (aDisplacementStrategy character: self; yourself)
 ]
 
 { #category : #accessing }
@@ -166,6 +168,9 @@ WDESCharacterBehaviorComponent >> initialize [
 	bodyOrientation := WMMatrix3F identity.
 	headOrientation := WMMatrix3F identity.
 	
+	leftStickDirection := WMVector3F zero.
+	rightStickDirection := WMVector3F zero.
+	
 	linearViscosity := 10.0.
 	linearVelocity := WMVector3F zero.
 	linearAcceleration := WMVector3F zero.
@@ -173,7 +178,7 @@ WDESCharacterBehaviorComponent >> initialize [
 	running := false.
 	isUnderwater := false.
 	isHeadUnderwater := false.
-	displacementStrategy := self walkingDisplacementStrategy.
+	self useWalkingDisplacementStrategy.
 ]
 
 { #category : #testing }
@@ -212,6 +217,16 @@ WDESCharacterBehaviorComponent >> isUnderwater [
 WDESCharacterBehaviorComponent >> jump [
 	displacementStrategy jump
 
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> leftStickDirection [
+	^ leftStickDirection
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> leftStickDirection: anObject [
+	leftStickDirection := anObject
 ]
 
 { #category : #accessing }
@@ -268,6 +283,8 @@ WDESCharacterBehaviorComponent >> postPhysicsTick: delta [
 
 { #category : #simulation }
 WDESCharacterBehaviorComponent >> prePhysicsTick: delta [
+	headAngularVelocity := WMVector3F x: rightStickDirection y y: rightStickDirection x negated z: 0.0.
+	
 	headAngle := headAngle + (headAngularVelocity * delta).
 	headAngle x: (headAngle x min: Float halfPi max: Float halfPi negated).
 	
@@ -289,6 +306,16 @@ WDESCharacterBehaviorComponent >> prePhysicsTick: delta [
 WDESCharacterBehaviorComponent >> removedFromPhysicsWorld: physicsWorld [
 	ghostObject ifNotNil: [ physicsWorld removeGhostObject: ghostObject ].
 	physicsCharacterController ifNotNil: [ physicsWorld removeCharacterController: physicsCharacterController ].
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> rightStickDirection [
+	^ rightStickDirection
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> rightStickDirection: anObject [
+	rightStickDirection := anObject
 ]
 
 { #category : #accessing }
@@ -318,7 +345,7 @@ WDESCharacterBehaviorComponent >> sectorHeadRay [
 
 { #category : #accessing }
 WDESCharacterBehaviorComponent >> swimmingDisplacementStrategy [
-	^ swimmingDisplacementStrategy ifNil: [swimmingDisplacementStrategy := WDESCharacterSwimmingDisplacementStrategy for: self]
+	^ swimmingDisplacementStrategy ifNil: [swimmingDisplacementStrategy := WDESCharacterSwimmingDisplacementStrategy new]
 ]
 
 { #category : #simulation }
@@ -356,7 +383,7 @@ WDESCharacterBehaviorComponent >> validPhysicsCharacterController [
 
 { #category : #accessing }
 WDESCharacterBehaviorComponent >> walkingDisplacementStrategy [
-	^ walkingDisplacementStrategy ifNil: [walkingDisplacementStrategy := WDESCharacterWalkingDisplacementStrategy for: self]
+	^ walkingDisplacementStrategy ifNil: [walkingDisplacementStrategy := WDESCharacterWalkingDisplacementStrategy new]
 ]
 
 { #category : #accessing }

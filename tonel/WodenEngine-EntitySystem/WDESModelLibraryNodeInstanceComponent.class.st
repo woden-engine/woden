@@ -61,6 +61,11 @@ WDESModelLibraryNodeInstanceComponent >> getChildNodePosition: childNodeName [
 ]
 
 { #category : #accessing }
+WDESModelLibraryNodeInstanceComponent >> getChildNodeTransform: childNodeName [
+	^ self validModelLibrary getNodeTransform: childNodeName relativeToNode: modelNodeName
+]
+
+{ #category : #accessing }
 WDESModelLibraryNodeInstanceComponent >> modelLibraryName [
 	^ modelLibraryName
 ]

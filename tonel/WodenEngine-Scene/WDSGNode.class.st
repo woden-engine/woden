@@ -128,6 +128,15 @@ WDSGNode >> engineChanged [
 	]
 ]
 
+{ #category : #'as yet unclassified' }
+WDSGNode >> findChildNodeNamed: childName ifAbsent: aBlock [
+	self allChildrenDo: [ :child |
+		child name = childName ifTrue: [ ^ child ]
+	].
+
+	^ aBlock value
+]
+
 { #category : #accessing }
 WDSGNode >> globalBoundingBox [
 	globalBoundingBox ifNil: [ globalBoundingBox := (self globalOrientedBoundingBox transformedWith: self globalTransform) ].

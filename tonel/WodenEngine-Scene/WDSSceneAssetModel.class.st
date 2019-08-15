@@ -125,6 +125,15 @@ WDSSceneAssetModel >> getNodePosition: childNodeName relativeToNode: parentNodeN
 ]
 
 { #category : #'as yet unclassified' }
+WDSSceneAssetModel >> getNodeTransform: childNodeName relativeToNode: parentNodeName [
+	| childNode parentNode |
+	self ensureValidNameDictionaries.
+	childNode := sceneNodeNameDictionary at: childNodeName.
+	parentNode := sceneNodeNameDictionary at: parentNodeName.
+	^ parentNode globalTransform inverseTransformTransform: childNode globalTransform
+]
+
+{ #category : #'as yet unclassified' }
 WDSSceneAssetModel >> instanceSceneNodeNamed: sceneNodeName [
 	^ self instanceSceneNodeNamed: sceneNodeName ifAbsent: [self error: 'Requested scene node is not available in the model.']
 ]

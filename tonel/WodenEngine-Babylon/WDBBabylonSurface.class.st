@@ -773,3 +773,18 @@ WDBBabylonSurface >> withStateTracker: aStateTracker drawDuring: aBlock [
 			doDrawBlock: aBlock.
 	]
 ]
+
+{ #category : #drawing }
+WDBBabylonSurface >> withStateTracker: aStateTracker drawToRenderTarget: theRenderTarget during: aBlock [
+	destroyed ifTrue: [ ^ self ].
+	stateTracker := aStateTracker.
+	driver critical: [
+		extent := theRenderTarget extent.
+		renderTarget := theRenderTarget.
+		resolveRenderTarget := theRenderTarget.
+		isInRenderPass := false.
+	
+		self doDrawBlock: aBlock
+	].
+
+]
