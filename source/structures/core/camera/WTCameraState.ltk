@@ -10,8 +10,11 @@ Structure <<< #WTCameraState
 		#currentTime => Float32.
 
 		#exposure => Float32.
-		#padding => Float32.
-		#padding2 => WMVector2F.
+		#fogMode => UInt32.
+		#fogFactor1 => Float32.
+		#fogFactor2 => Float32.
+	
+		#fogColor => WMVector4F.
 	};
 	package: 'WodenEngine-Structures-Core-Camera';
 	yourself.

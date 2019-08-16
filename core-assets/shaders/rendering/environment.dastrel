@@ -34,8 +34,11 @@ uniform(binding=CameraState.ObjectState) CameraState
     currentTime: float;
 
 	exposure: float;
-	padding: float;
-	padding2: float2;
+	fogMode: uint;
+	fogFactor1: float;
+	fogFactor2: float;
+	
+	fogColor: float4;
 }
 
 buffer(binding=CameraState.PostProcessingState) PostProcessingState

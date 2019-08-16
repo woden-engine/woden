@@ -1,6 +1,7 @@
 import rendering.shaderSignature;
 import rendering.environment;
 import lighting.functions;
+import lighting.fog;
 import texture.functions;
 
 import fragment.stage; // For SSAO
@@ -35,12 +36,6 @@ function projectShadowPosition(shadowPoint: float4, shadowMapLayer: float) -> fl
     return float4(shadowCoord, projectedShadowPoint.z);
 }
 
-function sampleShadowMapWithDisplacement(shadowPoint: float3, depthReference: float, displacement: float2) -> float
-{
-    return shadowSampler.sampleWithDepthReference(spotShadowMaps,
-        shadowPoint + float3(displacement*GlobalLightingState.shadowMapInverseExtent, 0.0f),
-        depthReference);
-}
 
 function sampleScreenSpaceAmbientOcclusion() -> float
 {
@@ -48,14 +43,45 @@ function sampleScreenSpaceAmbientOcclusion() -> float
     return albedoSampler.sample(screenSpaceAmbientOcclusion, uv).x;
 }
 
+// Poisson sampling disk from http://www.opengl-tutorial.org/es/intermediate-tutorials/tutorial-16-shadow-mapping/#pcf
+constant shadowPCFSampleCount : int = 4; 
+constant shadowDisplacementRadius : float = 0.75f;
+constant shadowDisplacementOffsets : float2[4] = {
+	{ -0.94201624f,  -0.39906216f },
+	{  0.94558609f,  -0.76890725f },
+	{ -0.094184101f, -0.92938870f },
+	{  0.34495938f,   0.29387760f }
+};
+
+function shadowMapRandomRotation(shadowPoint: float2) -> float2x2
+{
+	let randomFloat = fract(sin(dot(shadowPoint.xy, float2(12.9898f,78.233f))) * 43758.5453f);
+	let s = randomFloat*2.0f -1.0f;
+	let c = sqrt(1.0f - s*s);
+	
+	return float2x2(
+		float2(c, s),
+		float2(-s, c));
+}
+
+function sampleShadowMapWithDisplacement(shadowPoint: float3, depthReference: float, rotation: float2x2, displacementIndex: int) -> float
+{
+	let displacement = (rotation*shadowDisplacementOffsets[displacementIndex])*shadowDisplacementRadius;
+    return shadowSampler.sampleWithDepthReference(spotShadowMaps,
+        shadowPoint + float3(displacement*GlobalLightingState.shadowMapInverseExtent, 0.0f),
+        depthReference);
+}
+
 function computeShadowFactorFor(shadowPoint: float3, depthReference: float) -> float
 {
-    return
-        (sampleShadowMapWithDisplacement(shadowPoint, depthReference, float2(-0.5f, -0.5f)) +
-        sampleShadowMapWithDisplacement(shadowPoint, depthReference, float2(-0.5f, 0.5f)) +
-        sampleShadowMapWithDisplacement(shadowPoint, depthReference, float2(0.5f, -0.5f)) +
-        sampleShadowMapWithDisplacement(shadowPoint, depthReference, float2(0.5f, 0.5f))
-        ) * 0.25f;
+	if(shadowPCFSampleCount <= 1)
+		return shadowSampler.sampleWithDepthReference(spotShadowMaps, shadowPoint, depthReference);
+
+	let rotation = shadowMapRandomRotation(shadowPoint.xy);
+    return (sampleShadowMapWithDisplacement(shadowPoint, depthReference, rotation, 0) +
+        sampleShadowMapWithDisplacement(shadowPoint, depthReference, rotation, 1) +
+        sampleShadowMapWithDisplacement(shadowPoint, depthReference, rotation, 2) +
+        sampleShadowMapWithDisplacement(shadowPoint, depthReference, rotation, 3)) * 0.25f;
 }
 
 function computeLightFalloff(distance: float, radius: float) -> float
@@ -199,7 +225,7 @@ code_block forwardLightingModel
     }
 
     // Return the final lighted color.
-    color = float4(accumulatedColor, translucencyWithFresnel);
+    color = applyFogToColorWithViewPosition(float4(accumulatedColor, translucencyWithFresnel), position);
 }
 
 code_block forwardMetallicRoughnessLightingModel

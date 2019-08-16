@@ -1,0 +1,37 @@
+import rendering.environment;
+import math.functions;
+
+constant FogModeNone : uint = 0u;
+constant FogModeLinear : uint = 1u;
+constant FogModeExp : uint = 2u;
+constant FogModeExpSquared : uint = 3u;
+
+function computeFogFactor(fogMode: uint, distance: float, fogFactor1: float, fogFactor2: float) -> float
+{
+	if(fogMode == FogModeLinear)
+	{
+		let startDistance = fogFactor1;
+		let endDistance = fogFactor2;
+		return saturate((distance - startDistance) / (endDistance - startDistance));
+	}
+	else if(fogMode == FogModeExp)
+	{
+		return saturate(1.0f - exp(-distance*fogFactor1));
+	}
+	else if(fogMode == FogModeExpSquared)
+	{
+		let df = distance*fogFactor1;
+		return saturate(1.0f - exp(-df*df));
+	}
+	
+	return 0.0f;
+}
+
+function applyFogToColorWithViewPosition(cleanColor: float4, viewPosition: float3) -> float4
+{
+	if(CameraState.fogMode == FogModeNone)
+		return cleanColor;
+
+	let fogFactor = computeFogFactor(CameraState.fogMode, length(viewPosition), CameraState.fogFactor1, CameraState.fogFactor2);
+	return mix(cleanColor, CameraState.fogColor, fogFactor);
+}
