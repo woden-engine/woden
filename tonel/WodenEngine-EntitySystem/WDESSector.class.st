@@ -55,6 +55,11 @@ WDESSector >> defaultCameraNearDistance [
 	^ self universe ifNotNil: [ :universe | universe defaultCameraNearDistance ]
 ]
 
+{ #category : #accessing }
+WDESSector >> defaultFogSettings [
+	^ self universe ifNotNil: [ :universe | universe defaultFogSettings ]
+]
+
 { #category : #initialization }
 WDESSector >> initialize [
 	super initialize.

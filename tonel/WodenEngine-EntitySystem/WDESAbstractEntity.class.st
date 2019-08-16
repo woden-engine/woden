@@ -75,6 +75,11 @@ WDESAbstractEntity >> children [
 	^ children
 ]
 
+{ #category : #environment }
+WDESAbstractEntity >> currentFogSettings [
+	^ self sector defaultFogSettings
+]
+
 { #category : #accessing }
 WDESAbstractEntity >> engine [
 	^ parent ifNotNil: [parent engine]
@@ -127,6 +132,11 @@ WDESAbstractEntity >> initialize [
 	children := OrderedCollection new.
 	components := OrderedCollection new.
 	tickingComponents := #().
+]
+
+{ #category : #testing }
+WDESAbstractEntity >> isPlayerEntity [
+	^ false
 ]
 
 { #category : #testing }

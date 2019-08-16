@@ -141,7 +141,7 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 	bodyNearDistance := frustumBox min y.
 	shadowMapWarpNearDistance := 1.0.
 	
-	lightDepth := frustumBox height.
+	lightDepth := frustumBox height max: 0.001.
 	z_n := shadowMapWarpNearDistance *falloff.
 	z_f := z_n + (lightDepth/falloff).
 	nearDistance := (z_n + (z_n*z_f) sqrt)*falloff.

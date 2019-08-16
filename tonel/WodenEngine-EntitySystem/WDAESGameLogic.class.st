@@ -32,7 +32,7 @@ WDAESGameLogic >> initialize [
 { #category : #'as yet unclassified' }
 WDAESGameLogic >> spawnPlayer [
 	| playerEntity |
-	playerEntity := WDESGenericEntity new.
+	playerEntity := WDESPlayerEntity new.
 	playerEntity addComponent: WDESFPSPlayerBehaviorComponent new.
 	universe activeSector addEntity: playerEntity toSpawnPoint: universe findAnyPlayerStartPoint.
 	

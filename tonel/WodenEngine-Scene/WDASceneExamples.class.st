@@ -701,7 +701,7 @@ WDASceneExamples class >> exampleModelSponza [
 { #category : #'as yet unclassified' }
 WDASceneExamples class >> proceduralSkySunDirection: sunDirection [
 	| horizonRamp sunColor sunAngleSizeCos sunAngleSizeOuterCos shader |
-	horizonRamp := WDCLinearRamp with: { 
+	horizonRamp := WDCLinearRamp with: {
 		0.0 -> (Color fromHexString: '83b4dd').
 		1.0 -> (Color fromHexString: '001c6f').
 	}.

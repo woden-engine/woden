@@ -118,6 +118,16 @@ WDSAbstractSceneRendererViewport >> sceneLuminanceComputationPasses [
 ]
 
 { #category : #asserting }
+WDSAbstractSceneRendererViewport >> shouldRenderBackgroundLayer [
+	^ false
+]
+
+{ #category : #asserting }
+WDSAbstractSceneRendererViewport >> shouldRenderForegroundLayer [
+	^ false
+]
+
+{ #category : #asserting }
 WDSAbstractSceneRendererViewport >> shouldRenderObject: aNode [
 	^ viewport filter value: aNode
 ]

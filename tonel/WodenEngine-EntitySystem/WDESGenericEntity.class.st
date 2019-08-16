@@ -124,12 +124,12 @@ WDESGenericEntity >> addUseActuationBoxVolume: boxVolume withAction: actionBlock
 
 { #category : #building }
 WDESGenericEntity >> addWaterVolumeAt: position with: aBlock [
-	| entity |
+	| entity waterComponent |
 	entity := WDESVolumeSensorEntity new
 		transform: (WMReversibleAffineTransformF identity translation: position).
 	self addChild: entity.
-	entity addComponent: (WDESWaterVolumeSensorBehaviorComponent new).
-	aBlock value: entity.
+	waterComponent := entity addComponent: (WDESWaterVolumeSensorBehaviorComponent new).
+	aBlock cull: entity cull: waterComponent.
 	^ entity
 ]
 

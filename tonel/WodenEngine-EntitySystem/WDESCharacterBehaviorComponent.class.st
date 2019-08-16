@@ -198,11 +198,6 @@ WDESCharacterBehaviorComponent >> isHeadUnderwater [
 	^ isHeadUnderwater
 ]
 
-{ #category : #accessing }
-WDESCharacterBehaviorComponent >> isHeadUnderwater: anObject [
-	isHeadUnderwater := anObject
-]
-
 { #category : #testing }
 WDESCharacterBehaviorComponent >> isTickingComponent [
 	^ true
@@ -262,7 +257,13 @@ WDESCharacterBehaviorComponent >> linearViscosity: anObject [
 { #category : #events }
 WDESCharacterBehaviorComponent >> onUnderwaterVolume: underwaterVolumeComponent [
 	isUnderwater := true.
-	isHeadUnderwater := isHeadUnderwater or: [underwaterVolumeComponent ownerEntity sceneNode globalBoundingBox includesPoint: self globalHeadPosition].
+	isHeadUnderwater ifFalse: [
+		isHeadUnderwater := underwaterVolumeComponent ownerEntity sceneNode globalBoundingBox includesPoint: self globalHeadPosition.
+		(isHeadUnderwater and: [ ownerEntity isPlayerEntity ]) ifTrue: [
+			ownerEntity currentEnvironmentFog: underwaterVolumeComponent environmentFogSettings
+		].
+	].
+
 ]
 
 { #category : #accessing }
@@ -298,6 +299,7 @@ WDESCharacterBehaviorComponent >> prePhysicsTick: delta [
 		linearVelocity: linearVelocity.
 
 	"If we are underwater, then before the postPhysicsTick, this will be set to true."
+	ownerEntity isPlayerEntity ifTrue: [ ownerEntity currentEnvironmentFog: nil ].
 	isUnderwater := false.
 	isHeadUnderwater := false.
 ]

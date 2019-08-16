@@ -21,6 +21,8 @@ Class {
 { #category : #'mesh building' }
 WDCTerrainMeshBuilder >> addCollisionBoxWithMinHeight: minCollisionHeight maxHeight: maxCollisionHeight [
 	| collisionBBox |
+	self minHeight: minCollisionHeight;
+		maxHeight: maxCollisionHeight.
 	collisionBBox := WMBox3DF
 		min: (boundingBox min copy y: minCollisionHeight)
 		max: (boundingBox max copy y: maxCollisionHeight).

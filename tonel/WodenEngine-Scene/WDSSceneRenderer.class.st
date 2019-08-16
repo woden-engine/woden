@@ -219,9 +219,14 @@ WDSSceneRenderer >> renderViewportVisibleObjects: renderingViewport [
 	| count cameraLayersStates |
 	count := 0.
 	cameraLayersStates := renderingViewport cameraLayersStates.
-	count := self renderViewportLayer: renderingViewport backgroundLayer visibleObjectsWithCameraLayerState: cameraLayersStates backgroundLayerState.
+	renderingViewport shouldRenderBackgroundLayer ifTrue: [ 
+		count := self renderViewportLayer: renderingViewport backgroundLayer visibleObjectsWithCameraLayerState: cameraLayersStates backgroundLayerState.
+	].
+
 	count := count + (self renderViewportLayer: renderingViewport normalLayer visibleObjectsWithCameraLayerState: cameraLayersStates 	normalLayerState).
-	count := count + (self renderViewportLayer: renderingViewport foregroundLayer visibleObjectsWithCameraLayerState: cameraLayersStates foregroundLayerState).
+	renderingViewport shouldRenderForegroundLayer ifTrue: [ 
+		count := count + (self renderViewportLayer: renderingViewport foregroundLayer visibleObjectsWithCameraLayerState: cameraLayersStates foregroundLayerState).
+	].
 	engine frameRenderingMetrics renderedObjectCount: engine frameRenderingMetrics renderedObjectCount + count.
 	stateTracker clearObjectRenderingStates.
 ]

@@ -22,7 +22,10 @@ Class {
 		'fogStartDistance',
 		'fogEndDistance',
 		'fogColor',
-		'fogDensity'
+		'fogDensity',
+		'usesSceneBackgroundLayer',
+		'usesSceneForegroundLayer',
+		'backgroundColor'
 	],
 	#classVars : [
 		'FogModeExponential',
@@ -70,6 +73,16 @@ WDSGCamera >> aspectRatio [
 { #category : #accessing }
 WDSGCamera >> aspectRatio: anObject [
 	aspectRatio := anObject
+]
+
+{ #category : #accessing }
+WDSGCamera >> backgroundColor [
+	^ backgroundColor
+]
+
+{ #category : #accessing }
+WDSGCamera >> backgroundColor: anObject [
+	backgroundColor := anObject
 ]
 
 { #category : #accessing }
@@ -250,6 +263,8 @@ WDSGCamera >> initialize [
 	fogEndDistance := 1.0.
 	fogDensity := 0.0.
 	fogColor := WMVector4F zero.
+	usesSceneBackgroundLayer := true.
+	usesSceneForegroundLayer := true.
 ]
 
 { #category : #testing }
@@ -375,6 +390,26 @@ WDSGCamera >> useLinearFog [
 	self fogMode: FogModeLinear
 ]
 
+{ #category : #accessing }
+WDSGCamera >> usesSceneBackgroundLayer [
+	^ usesSceneBackgroundLayer
+]
+
+{ #category : #accessing }
+WDSGCamera >> usesSceneBackgroundLayer: anObject [
+	usesSceneBackgroundLayer := anObject
+]
+
+{ #category : #accessing }
+WDSGCamera >> usesSceneForegroundLayer [
+	^ usesSceneForegroundLayer
+]
+
+{ #category : #accessing }
+WDSGCamera >> usesSceneForegroundLayer: anObject [
+	usesSceneForegroundLayer := anObject
+]
+
 { #category : #'viewport construction' }
 WDSGCamera >> viewportForRenderTarget: aRenderTarget resolveRenderTarget: aResolveRenderTarget bounds: bounds submode: submode [
 	^ WDSGViewport new
@@ -393,4 +428,9 @@ WDSGCamera >> viewportForRenderTarget: aRenderTarget resolveRenderTarget: aResol
 { #category : #'viewport construction' }
 WDSGCamera >> viewportsForRenderTarget: aRenderTarget resolveRenderTarget: aResolveRenderTarget submode: submode [
 	^ { self viewportForRenderTarget: aRenderTarget resolveRenderTarget: aResolveRenderTarget submode: submode }
+]
+
+{ #category : #fog }
+WDSGCamera >> withoutFog [
+	fogMode := FogModeNone.
 ]

@@ -8,7 +8,8 @@ Class {
 		'gameLogic',
 		'defaultCameraNearDistance',
 		'defaultCameraFarDistance',
-		'defaultCameraCascadeSplitDistributionLambda'
+		'defaultCameraCascadeSplitDistributionLambda',
+		'defaultFogSettings'
 	],
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
@@ -85,6 +86,16 @@ WDESAbstractUniverse >> defaultCameraNearDistance: anObject [
 	defaultCameraNearDistance := anObject
 ]
 
+{ #category : #accessing }
+WDESAbstractUniverse >> defaultFogSettings [
+	^ defaultFogSettings
+]
+
+{ #category : #accessing }
+WDESAbstractUniverse >> defaultFogSettings: fogSettings [
+	defaultFogSettings := fogSettings
+]
+
 { #category : #accesing }
 WDESAbstractUniverse >> engine [
 	^ engine
@@ -142,6 +153,7 @@ WDESAbstractUniverse >> initialize [
 	defaultCameraNearDistance := 0.01.
 	defaultCameraFarDistance := 1000.0.
 	defaultCameraCascadeSplitDistributionLambda := 0.5.
+	defaultFogSettings := WDESFogSettings new.
 ]
 
 { #category : #initialization }

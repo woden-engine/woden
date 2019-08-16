@@ -41,7 +41,7 @@ WDAESProceduralSamples class >> example02PoolLevel [
 	| engine universe waterMaterial |
 	engine := WDCEngine default.
 	universe := WDESSimpleUniverse for: engine.
-	universe defaultCameraFarDistance: 250.0; cascadeSplitDistributionLambda: 0.7.
+	universe defaultCameraFarDistance: 100.0.
 	universe buildSector: [ :sector |
 		sector buildGenericMeshWith: [ :meshBuilder |
 			WDASceneExamples constructPoolMeshWith: meshBuilder.
@@ -116,13 +116,10 @@ WDAESProceduralSamples class >> example03Island [
 		sector addWaterVolumeAt: WMVector3F zero with: [ :waterVolume |
 			(waterVolume buildWaterMeshWith: [ :meshBuilder |
 				waterMaterial := engine resourceCache loadMaterial: 'materials/demos/ocean.json'.
+				meshBuilder material: waterMaterial.
+				terrainData buildWaterMeshWith: meshBuilder.
 				meshBuilder
-					material: waterMaterial;
-					heightScale: 0.1;
-					createClipMapWithLevels: 3 size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
-					addBoxCollisionShape: (WMBox3DF
-						halfExtent: (WMVector3F x: 200.0 y: 200.0 z: 200.0)
-						center: (WMVector3F y: -200.0))
+					addCollisionBoxWithMinHeight: -200.0 maxHeight: 0.0 
 			]) renderable deformationState
 				harmonicAt: 1 amplitude: 0.015 frequency: 2.23 center: (WMVector2F zero);
 				harmonicAt: 2 amplitude: 0.03 frequency: 0.50 center: (WMVector2F zero).
