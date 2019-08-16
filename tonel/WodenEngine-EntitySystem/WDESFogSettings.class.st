@@ -7,7 +7,8 @@ Class {
 		'fogColor',
 		'fogStartDistance',
 		'fogEndDistance',
-		'farDistanceOverride'
+		'farDistanceOverride',
+		'cameraCascadeSplitDistribution'
 	],
 	#pools : [
 		'OSKeySymbols',
@@ -34,6 +35,10 @@ WDESFogSettings >> applyToNode: cameraNode [
 		fogStartDistance: fogStartDistance;
 		fogEndDistance: fogEndDistance.
 		
+	cameraCascadeSplitDistribution ifNotNil: [ 
+		cameraNode cascadeSplitDistribution: cameraCascadeSplitDistribution
+	].
+
 	farDistanceOverride ifNil: [
 		"Disable the skybox rendering."
 		cameraNode
@@ -45,6 +50,16 @@ WDESFogSettings >> applyToNode: cameraNode [
 			usesSceneBackgroundLayer: false;
 			backgroundColor: fogColor
 	]
+]
+
+{ #category : #accessing }
+WDESFogSettings >> cameraCascadeSplitDistribution [
+	^ cameraCascadeSplitDistribution
+]
+
+{ #category : #accessing }
+WDESFogSettings >> cameraCascadeSplitDistribution: anObject [
+	cameraCascadeSplitDistribution := anObject
 ]
 
 { #category : #accessing }

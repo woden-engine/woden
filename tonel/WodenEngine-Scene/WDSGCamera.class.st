@@ -17,7 +17,6 @@ Class {
 		'exposure',
 		'toneMappingOperator',
 		'hasAutoExposure',
-		'cascadeSplitDistributionLambda',
 		'fogMode',
 		'fogStartDistance',
 		'fogEndDistance',
@@ -25,7 +24,8 @@ Class {
 		'fogDensity',
 		'usesSceneBackgroundLayer',
 		'usesSceneForegroundLayer',
-		'backgroundColor'
+		'backgroundColor',
+		'cascadeSplitDistribution'
 	],
 	#classVars : [
 		'FogModeExponential',
@@ -86,13 +86,13 @@ WDSGCamera >> backgroundColor: anObject [
 ]
 
 { #category : #accessing }
-WDSGCamera >> cascadeSplitDistributionLambda [
-	^ cascadeSplitDistributionLambda
+WDSGCamera >> cascadeSplitDistribution [
+	^ cascadeSplitDistribution
 ]
 
 { #category : #accessing }
-WDSGCamera >> cascadeSplitDistributionLambda: anObject [
-	cascadeSplitDistributionLambda := anObject
+WDSGCamera >> cascadeSplitDistribution: anObject [
+	cascadeSplitDistribution := anObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -257,7 +257,7 @@ WDSGCamera >> initialize [
 	exposure := 1.0.
 	hasAutoExposure := true.
 	toneMappingOperator := #linear.
-	cascadeSplitDistributionLambda := 0.5.
+	cascadeSplitDistribution := 0.5.
 	fogMode := FogModeNone.
 	fogStartDistance := 0.0.
 	fogEndDistance := 1.0.

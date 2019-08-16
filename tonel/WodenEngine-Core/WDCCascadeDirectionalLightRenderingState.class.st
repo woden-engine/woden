@@ -20,11 +20,22 @@ WDCCascadeDirectionalLightRenderingState >> cascades [
 WDCCascadeDirectionalLightRenderingState >> computeFrustumDivisions [
 	"Parallel split shadow mapping split schema from GPU Gems chapter 3: 	https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch10.html
 	"
-	| n f lambda m uniformSplit logarithmicSplit |
+	| n f lambda m uniformSplit logarithmicSplit distribution |
 	n := mainCamera nearDistance.
 	f := mainCamera farDistance.
-	lambda := mainCamera cascadeSplitDistributionLambda.
+	distribution := mainCamera cascadeSplitDistribution.
 	m := 3.
+
+	distribution isArray ifTrue: [
+		^ { 
+			mainCamera nearDistance.
+			distribution first.
+			distribution second.
+			mainCamera farDistance
+		}
+	].
+	lambda := distribution asFloat.
+
 	^ (0 to: m) collect: [ :i |
 		uniformSplit := n + ((f - n)*(i/m)).
 		logarithmicSplit := n*(f/n raisedTo: (i/m) asFloat).

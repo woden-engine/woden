@@ -512,7 +512,7 @@ WDASceneExamples class >> example09DragonIsland [
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
-	camera farDistance: 250.0; cascadeSplitDistributionLambda: 0.7.
+	camera farDistance: 250.0; cascadeSplitDistribution: 0.75.
 	camera translateByZ: 85.0; translateByY: 1.5.
 	
 	sunLight := WDSGLightSource new.

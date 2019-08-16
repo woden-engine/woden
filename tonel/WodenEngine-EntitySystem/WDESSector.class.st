@@ -41,8 +41,8 @@ WDESSector >> addedToScene: anScene [
 ]
 
 { #category : #accessing }
-WDESSector >> defaultCameraCascadeSplitDistributionLambda [
-	^ self universe ifNotNil: [ :universe | universe defaultCameraCascadeSplitDistributionLambda ]
+WDESSector >> defaultCameraCascadeSplitDistribution [
+	^ self universe ifNotNil: [ :universe | universe defaultCameraCascadeSplitDistribution ]
 ]
 
 { #category : #accessing }

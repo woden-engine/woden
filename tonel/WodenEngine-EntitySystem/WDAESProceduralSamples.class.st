@@ -109,7 +109,7 @@ WDAESProceduralSamples class >> example03Island [
 	terrainData := engine resourceCache loadTerrain: 'terrains/demos/procedural/island.stterrain'.
 
 	universe := WDESSimpleUniverse for: engine.
-	universe defaultCameraFarDistance: 250.0; defaultCameraCascadeSplitDistributionLambda: 0.7.
+	universe defaultCameraFarDistance: 250.0; defaultCameraCascadeSplitDistribution: 0.7.
 	universe buildSector: [ :sector |
 		sector buildTerrainMeshWithData: terrainData withMaterial: terrainMaterial.
 		

@@ -8,8 +8,8 @@ Class {
 		'gameLogic',
 		'defaultCameraNearDistance',
 		'defaultCameraFarDistance',
-		'defaultCameraCascadeSplitDistributionLambda',
-		'defaultFogSettings'
+		'defaultFogSettings',
+		'defaultCameraCascadeSplitDistribution'
 	],
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
@@ -57,13 +57,13 @@ WDESAbstractUniverse >> createSimulationModel [
 ]
 
 { #category : #accessing }
-WDESAbstractUniverse >> defaultCameraCascadeSplitDistributionLambda [
-	^ defaultCameraCascadeSplitDistributionLambda
+WDESAbstractUniverse >> defaultCameraCascadeSplitDistribution [
+	^ defaultCameraCascadeSplitDistribution
 ]
 
 { #category : #accessing }
-WDESAbstractUniverse >> defaultCameraCascadeSplitDistributionLambda: anObject [
-	defaultCameraCascadeSplitDistributionLambda := anObject
+WDESAbstractUniverse >> defaultCameraCascadeSplitDistribution: anObject [
+	defaultCameraCascadeSplitDistribution := anObject
 ]
 
 { #category : #accessing }
@@ -152,7 +152,7 @@ WDESAbstractUniverse >> initialize [
 	super initialize.
 	defaultCameraNearDistance := 0.01.
 	defaultCameraFarDistance := 1000.0.
-	defaultCameraCascadeSplitDistributionLambda := 0.5.
+	defaultCameraCascadeSplitDistribution := 0.5.
 	defaultFogSettings := WDESFogSettings new.
 ]
 

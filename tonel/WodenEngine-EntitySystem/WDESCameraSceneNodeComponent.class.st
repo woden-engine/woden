@@ -10,7 +10,7 @@ WDESCameraSceneNodeComponent >> applyActiveNearFarDistance [
 		sceneNode
 			nearDistance: self currentNearDistance;
 			farDistance: self currentFarDistance;
-			cascadeSplitDistributionLambda: self currentCascadeSplitDistributionLambda.
+			cascadeSplitDistribution: self currentCascadeSplitDistribution.
 		self currentFogSettings ifNotNil: [ :settings | settings applyToNode: sceneNode  ]
 	]
 ]
@@ -21,8 +21,8 @@ WDESCameraSceneNodeComponent >> createSceneNode [
 ]
 
 { #category : #'as yet unclassified' }
-WDESCameraSceneNodeComponent >> currentCascadeSplitDistributionLambda [
-	^ (ownerEntity ifNotNil: [ownerEntity sector defaultCameraCascadeSplitDistributionLambda]) ifNil: [0.5]
+WDESCameraSceneNodeComponent >> currentCascadeSplitDistribution [
+	^ (ownerEntity ifNotNil: [ownerEntity sector defaultCameraCascadeSplitDistribution]) ifNil: [0.5]
 ]
 
 { #category : #'as yet unclassified' }
