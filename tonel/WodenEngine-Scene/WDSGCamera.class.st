@@ -17,10 +17,50 @@ Class {
 		'exposure',
 		'toneMappingOperator',
 		'hasAutoExposure',
-		'cascadeSplitDistributionLambda'
+		'cascadeSplitDistributionLambda',
+		'fogMode',
+		'fogStartDistance',
+		'fogEndDistance',
+		'fogColor',
+		'fogDensity'
+	],
+	#classVars : [
+		'FogModeExponential',
+		'FogModeExponentialSquared',
+		'FogModeLinear',
+		'FogModeNone'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
+
+{ #category : #'class initialization' }
+WDSGCamera class >> fogModeExponential [
+	^ FogModeExponential
+]
+
+{ #category : #'class initialization' }
+WDSGCamera class >> fogModeExponentialSquared [
+	^ FogModeExponentialSquared
+]
+
+{ #category : #'class initialization' }
+WDSGCamera class >> fogModeLinear [
+	^ FogModeLinear
+]
+
+{ #category : #'class initialization' }
+WDSGCamera class >> fogModeNone [
+	^ FogModeNone
+]
+
+{ #category : #'class initialization' }
+WDSGCamera class >> initialize [
+	super initialize.
+	FogModeNone := 0.
+	FogModeLinear := 1.
+	FogModeExponential := 2.
+	FogModeExponentialSquared := 3.
+]
 
 { #category : #accessing }
 WDSGCamera >> aspectRatio [
@@ -93,6 +133,56 @@ WDSGCamera >> focalDistance: anObject [
 ]
 
 { #category : #accessing }
+WDSGCamera >> fogColor [
+	^ fogColor
+]
+
+{ #category : #accessing }
+WDSGCamera >> fogColor: anObject [
+	fogColor := anObject
+]
+
+{ #category : #accessing }
+WDSGCamera >> fogDensity [
+	^ fogDensity
+]
+
+{ #category : #accessing }
+WDSGCamera >> fogDensity: anObject [
+	fogDensity := anObject
+]
+
+{ #category : #accessing }
+WDSGCamera >> fogEndDistance [
+	^ fogEndDistance
+]
+
+{ #category : #accessing }
+WDSGCamera >> fogEndDistance: anObject [
+	fogEndDistance := anObject
+]
+
+{ #category : #accessing }
+WDSGCamera >> fogMode [
+	^ fogMode
+]
+
+{ #category : #accessing }
+WDSGCamera >> fogMode: anObject [
+	fogMode := anObject
+]
+
+{ #category : #accessing }
+WDSGCamera >> fogStartDistance [
+	^ fogStartDistance
+]
+
+{ #category : #accessing }
+WDSGCamera >> fogStartDistance: anObject [
+	fogStartDistance := anObject
+]
+
+{ #category : #accessing }
 WDSGCamera >> frustum [
 	^ frustum
 ]
@@ -136,6 +226,11 @@ WDSGCamera >> hasAutoExposure: anObject [
 	hasAutoExposure := anObject
 ]
 
+{ #category : #testing }
+WDSGCamera >> hasLinearFog [
+	^ fogMode = FogModeLinear
+]
+
 { #category : #initialization }
 WDSGCamera >> initialize [
 	super initialize.
@@ -150,6 +245,11 @@ WDSGCamera >> initialize [
 	hasAutoExposure := true.
 	toneMappingOperator := #linear.
 	cascadeSplitDistributionLambda := 0.5.
+	fogMode := FogModeNone.
+	fogStartDistance := 0.0.
+	fogEndDistance := 1.0.
+	fogDensity := 0.0.
+	fogColor := WMVector4F zero.
 ]
 
 { #category : #testing }
@@ -203,6 +303,26 @@ WDSGCamera >> reinhardToneMapping [
 	self toneMappingOperator: #reinhard
 ]
 
+{ #category : #'as yet unclassified' }
+WDSGCamera >> storeGlobalStatesForGPUIn: cameraState [
+	cameraState
+		clipMapCameraPosition: self globalTransform translation;
+		exposure: exposure;
+		fogMode: fogMode;
+		fogColor: fogColor asWMVector4F.		
+
+	self hasLinearFog ifTrue: [ 
+		cameraState
+			fogFactor1: fogStartDistance;
+			fogFactor2: fogEndDistance
+	] ifFalse: [ 
+		cameraState
+			fogFactor1: fogDensity.
+	]
+
+
+]
+
 { #category : #accessing }
 WDSGCamera >> toneMappingOperator [
 	^ toneMappingOperator
@@ -238,6 +358,21 @@ WDSGCamera >> updateSymmetricalFrustum [
 			bottom: hh negated top: hh
 			near: nearDistance far: farDistance invertedY: projectionInvertedY
 	]
+]
+
+{ #category : #fog }
+WDSGCamera >> useExponentialFog [
+	self fogMode: FogModeExponential
+]
+
+{ #category : #fog }
+WDSGCamera >> useExponentialSquaredFog [
+	self fogMode: FogModeExponentialSquared
+]
+
+{ #category : #fog }
+WDSGCamera >> useLinearFog [
+	self fogMode: FogModeLinear
 ]
 
 { #category : #'viewport construction' }

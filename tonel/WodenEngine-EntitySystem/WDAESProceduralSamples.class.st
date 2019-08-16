@@ -41,7 +41,7 @@ WDAESProceduralSamples class >> example02PoolLevel [
 	| engine universe waterMaterial |
 	engine := WDCEngine default.
 	universe := WDESSimpleUniverse for: engine.
-	universe defaultCameraFarDistance: 100.0.
+	universe defaultCameraFarDistance: 250.0; cascadeSplitDistributionLambda: 0.7.
 	universe buildSector: [ :sector |
 		sector buildGenericMeshWith: [ :meshBuilder |
 			WDASceneExamples constructPoolMeshWith: meshBuilder.
@@ -109,7 +109,7 @@ WDAESProceduralSamples class >> example03Island [
 	terrainData := engine resourceCache loadTerrain: 'terrains/demos/procedural/island.stterrain'.
 
 	universe := WDESSimpleUniverse for: engine.
-	universe defaultCameraFarDistance: 250.0.
+	universe defaultCameraFarDistance: 250.0; defaultCameraCascadeSplitDistributionLambda: 0.7.
 	universe buildSector: [ :sector |
 		sector buildTerrainMeshWithData: terrainData withMaterial: terrainMaterial.
 		

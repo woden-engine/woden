@@ -109,7 +109,7 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 
     Date: October 14, 2004
 	"
-	| frustumBox viewVector viewPosition cosGamma sinGamma lightDepth z_n z_f nearDistance farDistance upVector perspectivePoint perspectiveTransform falloff bodyNearDistance alpha paperNearDistance shortRangeNearDistance |
+	| frustumBox viewVector viewPosition cosGamma sinGamma lightDepth z_n z_f nearDistance farDistance upVector perspectivePoint perspectiveTransform falloff bodyNearDistance shadowMapWarpNearDistance |
 	mainCameraTransform := "self roundCameraTransform:" mainCamera globalTransform.
 	
 	lightVector := renderingLight transform matrix transformVector3: (WMVector3F z: -1.0).
@@ -122,9 +122,9 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 	"self computeUpVectorWithShadowCastingBody: shadowCastingBody."
 
 	"When the up vector and the lightvector are close to parallel, fallback to uniform shadow mapping."
-	(viewVector dot: lightVector) abs > 0.999 ifTrue: [
+	"(viewVector dot: lightVector) abs > 0.999 ifTrue: [
 		^ self setupUniformShadowMappingTransforms
-	].
+	]."
 	
 	renderTransform := WMReversibleAffineTransformF from: viewPosition lookAtDirection: lightVector up: upVector.
 	
@@ -139,19 +139,14 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 	falloff := 1.0 / sinGamma.
 
 	bodyNearDistance := frustumBox min y.
-	lightDepth := frustumBox height.
-
-	z_n := bodyNearDistance abs *falloff.
-	z_f := z_n + (lightDepth/falloff).
-	paperNearDistance := (z_n + (z_n*z_f) sqrt)*falloff.
+	shadowMapWarpNearDistance := 1.0.
 	
-	"For short ranges, the warping effect is so strong, that we spend all of the
-	resolution on objects very very far to the camera. This is specially notable
-	with cascaded shadow mapping."
-	shortRangeNearDistance := lightDepth * falloff.
-
+	lightDepth := frustumBox height.
+	z_n := shadowMapWarpNearDistance *falloff.
+	z_f := z_n + (lightDepth/falloff).
+	nearDistance := (z_n + (z_n*z_f) sqrt)*falloff.
+	
 	"Mix the near distance distributions"
-	nearDistance := (shortRangeNearDistance * paperNearDistance) sqrt.
 	farDistance := nearDistance + lightDepth.
 
 	"Compute the perspective point and the new render transform"

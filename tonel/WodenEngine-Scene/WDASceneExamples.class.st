@@ -258,6 +258,7 @@ WDASceneExamples class >> example04Pool [
 	camera := model camera.
 	camera
 		farDistance: 100.0.
+	camera inspect.
 	camera translateToX: 0.0 y: 1.0 z: -4.0.
 	
 	self constructPoolSceneInto: scene.
@@ -511,7 +512,7 @@ WDASceneExamples class >> example09DragonIsland [
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
-	camera farDistance: 250.0.
+	camera farDistance: 250.0; cascadeSplitDistributionLambda: 0.7.
 	camera translateByZ: 85.0; translateByY: 1.5.
 	
 	sunLight := WDSGLightSource new.
