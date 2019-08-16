@@ -7,14 +7,12 @@ Class {
 		'headAngle',
 		'linearVelocity',
 		'linearAcceleration',
-		'linearViscosity',
 		'collisionShape',
 		'ghostObject',
 		'physicsCharacterController',
 		'headOrientation',
 		'bodyOrientation',
 		'headAngularVelocity',
-		'walkingInGround',
 		'running',
 		'displacementStrategy',
 		'isUnderwater',
@@ -22,7 +20,8 @@ Class {
 		'walkingDisplacementStrategy',
 		'swimmingDisplacementStrategy',
 		'leftStickDirection',
-		'rightStickDirection'
+		'rightStickDirection',
+		'linearDamping'
 	],
 	#category : #'WodenEngine-EntitySystem-Behaviors'
 }
@@ -171,10 +170,9 @@ WDESCharacterBehaviorComponent >> initialize [
 	leftStickDirection := WMVector3F zero.
 	rightStickDirection := WMVector3F zero.
 	
-	linearViscosity := 10.0.
+	linearDamping := 10.0.
 	linearVelocity := WMVector3F zero.
 	linearAcceleration := WMVector3F zero.
-	walkingInGround := true.
 	running := false.
 	isUnderwater := false.
 	isHeadUnderwater := false.
@@ -184,13 +182,6 @@ WDESCharacterBehaviorComponent >> initialize [
 { #category : #testing }
 WDESCharacterBehaviorComponent >> isCharacterBehaviorComponent [
 	^ true
-]
-
-{ #category : #simulation }
-WDESCharacterBehaviorComponent >> isCurrentlyWalking [
-	(self canSwim and: [isUnderwater]) ifTrue: [ ^ false ].
-	
-	^ walkingInGround
 ]
 
 { #category : #accessing }
@@ -235,6 +226,16 @@ WDESCharacterBehaviorComponent >> linearAcceleration: anObject [
 ]
 
 { #category : #accessing }
+WDESCharacterBehaviorComponent >> linearDamping [
+	^ linearDamping
+]
+
+{ #category : #accessing }
+WDESCharacterBehaviorComponent >> linearDamping: anObject [
+	linearDamping := anObject
+]
+
+{ #category : #accessing }
 WDESCharacterBehaviorComponent >> linearVelocity [
 	^ linearVelocity copy
 ]
@@ -242,16 +243,6 @@ WDESCharacterBehaviorComponent >> linearVelocity [
 { #category : #accessing }
 WDESCharacterBehaviorComponent >> linearVelocity: anObject [
 	linearVelocity := anObject
-]
-
-{ #category : #accessing }
-WDESCharacterBehaviorComponent >> linearViscosity [
-	^ linearViscosity
-]
-
-{ #category : #accessing }
-WDESCharacterBehaviorComponent >> linearViscosity: anObject [
-	linearViscosity := anObject
 ]
 
 { #category : #events }
@@ -386,14 +377,4 @@ WDESCharacterBehaviorComponent >> validPhysicsCharacterController [
 { #category : #accessing }
 WDESCharacterBehaviorComponent >> walkingDisplacementStrategy [
 	^ walkingDisplacementStrategy ifNil: [walkingDisplacementStrategy := WDESCharacterWalkingDisplacementStrategy new]
-]
-
-{ #category : #accessing }
-WDESCharacterBehaviorComponent >> walkingInGround [
-	^ walkingInGround
-]
-
-{ #category : #accessing }
-WDESCharacterBehaviorComponent >> walkingInGround: anObject [
-	walkingInGround := anObject
 ]

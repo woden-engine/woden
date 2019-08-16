@@ -4,17 +4,32 @@ Class {
 	#category : #'WodenEngine-EntitySystem-Behaviors'
 }
 
+{ #category : #simulation }
+WDESAnimalCharacterDisplacementStrategy >> accelerationMagnitude [
+	^ self movementSpeed * character linearDamping
+]
+
 { #category : #actions }
 WDESAnimalCharacterDisplacementStrategy >> jump [
 	^ character physicsCharacterController jump
 ]
 
 { #category : #simulation }
+WDESAnimalCharacterDisplacementStrategy >> movementAxes [
+	^ WMVector3F ones
+]
+
+{ #category : #simulation }
+WDESAnimalCharacterDisplacementStrategy >> movementSpeed [
+	^ character running ifTrue: [ 6.0 ] ifFalse: [ 2.0 ]
+]
+
+{ #category : #simulation }
 WDESAnimalCharacterDisplacementStrategy >> prePhysicsTick: delta [
 	| movementDirection |
 	movementDirection := character leftStickDirection.
-	
-	character linearAcceleration: (WMVector3F x: movementDirection x y: 0.0 z: movementDirection y negated) normalized.
+	character
+		linearAcceleration: (WMVector3F x: movementDirection x y: movementDirection z z: movementDirection y negated) normalized * self movementAxes * self accelerationMagnitude.
 	
 	character isUnderwater ifTrue: [
 		self isUnderwaterDisplacementStrategy ifFalse: [ 
@@ -35,16 +50,16 @@ WDESAnimalCharacterDisplacementStrategy >> prePhysicsTick: delta [
 ]
 
 { #category : #simulation }
-WDESAnimalCharacterDisplacementStrategy >> speedMultiplier [
-	^ character running ifTrue: [ 4.0 ] ifFalse: [ 2.0 ].
+WDESAnimalCharacterDisplacementStrategy >> terminalSpeed [
+	^ 1.4 * self speedMultiplier
 ]
 
 { #category : #simulation }
 WDESAnimalCharacterDisplacementStrategy >> tickLinearMovement: delta [
 
 	| accel |
-	accel := (character bodyOrientation transformVector3: character linearAcceleration*character linearViscosity * self speedMultiplier).
-	accel := accel - (character linearVelocity * character linearViscosity).
+	accel := (character bodyOrientation transformVector3: character linearAcceleration).
+	accel := accel - (character linearVelocity * character linearDamping).
 	
 	character linearVelocity: character linearVelocity + (accel*delta).
 ]

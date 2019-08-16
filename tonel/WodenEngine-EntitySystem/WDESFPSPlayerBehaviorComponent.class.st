@@ -14,6 +14,8 @@ WDESFPSPlayerBehaviorComponent >> onKeyDown: event [
 	event symbol = OSK_d ifTrue: [ leftStickDirection x: 1.0 ].
 	event symbol = OSK_s ifTrue: [ leftStickDirection y: -1.0 ].
 	event symbol = OSK_w ifTrue: [ leftStickDirection y: 1.0 ].
+	event symbol = OSK_LCTRL ifTrue: [ leftStickDirection z: -1.0 ].
+	event symbol = OSK_SPACE ifTrue: [ leftStickDirection z: 1.0 ].
 
 	event symbol = OSK_UP ifTrue: [ rightStickDirection y: 1.0 ].
 	event symbol = OSK_DOWN ifTrue: [ rightStickDirection y: -1.0 ].
@@ -22,11 +24,8 @@ WDESFPSPlayerBehaviorComponent >> onKeyDown: event [
 
 	event symbol = OSK_e ifTrue: [ displacementStrategy activateUseCommand ].
 	event symbol = OSK_LSHIFT ifTrue: [ self running: true ].
-	event symbol = OSK_SPACE ifTrue: [
-		self isCurrentlyWalking
-			ifTrue: [ self jump ]
-			ifFalse: [ linearAcceleration y: 2.0]
-	].
+
+
 
 	(event symbol = OSK_i and: [ event modifiers ctrl ]) ifTrue: [ self inspect ].
 ]
@@ -37,6 +36,8 @@ WDESFPSPlayerBehaviorComponent >> onKeyUp: event [
 	event symbol = OSK_d ifTrue: [ leftStickDirection x > 0 ifTrue: [ leftStickDirection x: 0.0 ] ].
 	event symbol = OSK_s ifTrue: [ leftStickDirection y < 0 ifTrue: [ leftStickDirection y: 0.0 ] ].
 	event symbol = OSK_w ifTrue: [ leftStickDirection y > 0 ifTrue: [ leftStickDirection y: 0.0 ] ].
+	event symbol = OSK_LCTRL ifTrue: [ leftStickDirection z < 0 ifTrue: [ leftStickDirection z: 0.0 ] ].
+	event symbol = OSK_SPACE ifTrue: [ leftStickDirection z > 0 ifTrue: [ leftStickDirection z: 0.0 ] ].
 
 	event symbol = OSK_LEFT ifTrue: [ rightStickDirection x < 0 ifTrue: [ rightStickDirection x: 0.0 ] ].
 	event symbol = OSK_RIGHT ifTrue: [ rightStickDirection x > 0 ifTrue: [ rightStickDirection x: 0.0 ] ].
@@ -44,9 +45,6 @@ WDESFPSPlayerBehaviorComponent >> onKeyUp: event [
 	event symbol = OSK_DOWN ifTrue: [ rightStickDirection y < 0 ifTrue: [ rightStickDirection y: 0.0 ] ].
 
 	event symbol = OSK_LSHIFT ifTrue: [ self running: false ].
-	event symbol = OSK_SPACE ifTrue: [
-		self isCurrentlyWalking ifFalse: [ linearAcceleration y: 0.0]
-	].
 
 
 ]
