@@ -45,7 +45,7 @@ function sampleScreenSpaceAmbientOcclusion() -> float
 
 // Poisson sampling disk from http://www.opengl-tutorial.org/es/intermediate-tutorials/tutorial-16-shadow-mapping/#pcf
 constant shadowPCFSampleCount : int = 4; 
-constant shadowDisplacementRadius : float = 0.75f;
+constant shadowDisplacementRadius : float = 1.5f;
 constant shadowDisplacementOffsets : float2[4] = {
 	{ -0.94201624f,  -0.39906216f },
 	{  0.94558609f,  -0.76890725f },

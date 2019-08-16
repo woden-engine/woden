@@ -22,7 +22,7 @@ code_block(fragment) auto_linear
 	let hdrTexel = albedoSampler.sample(hdrColorTexture, FragmentInput.texcoord);
 
 	let luma = exp2(PostProcessingState.currentAverageLuminance) - 1.0f;
-	let exposure = 0.5f / (max(0.0001f, luma));
+	let exposure = CameraState.exposure * 0.5f / (max(0.00001f, luma));
 	let hdrColor = hdrTexel.rgb;
 	let ldrColor = exposure*hdrColor;
 	
@@ -44,7 +44,7 @@ code_block(fragment) reinhard
 	let hdrTexel = albedoSampler.sample(hdrColorTexture, FragmentInput.texcoord);
 	
 	// Tone mapping operator from: https://learnopengl.com/Advanced-Lighting/HDR
-	let hdrColor = hdrTexel.rgb;
+	let hdrColor = CameraState.exposure*hdrTexel.rgb;
 	let ldrColor = hdrColor / (hdrColor + 1.0f);
 	
 	FragmentStage.colorOutput0 = float4(ldrColor, hdrTexel.a);
