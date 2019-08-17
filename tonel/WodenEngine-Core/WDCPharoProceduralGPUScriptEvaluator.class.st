@@ -104,7 +104,7 @@ WDCPharoProceduralGPUScriptEvaluator >> evaluateCubeMap [
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> evaluateHeightMapTextureWithExtent: anExtent [
-	^ self renderTerrainHeightMapWithExtent: anExtent
+	^ self renderHeightMapWithExtent: anExtent heightFunction: heightFunction
 ]
 
 { #category : #'rendering helpers' }

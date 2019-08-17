@@ -47,6 +47,7 @@ DASLPharoBlockConverterVisitor class >> noise [
 		mapMessage: #fbmSignedGradientNoiseAbsOctaves:lacunarity: toFunction: #fbmSignedGradientNoiseAbsOctaves returnType: #float;
 		mapMessage: #fbmGradientNoiseOctaves:lacunarity:tiledWith: toFunction: #fbmTiledGradientNoiseOctaves returnType: #float;
 		mapMessage: #fbmSignedGradientNoiseOctaves:lacunarity:tiledWith: toFunction: #fbmTiledSignedGradientNoiseOctaves returnType: #float;
+		mapMessage: #fbmSignedGradientNoiseAbsOctaves:lacunarity:tiledWith: toFunction: #fbmTiledSignedGradientNoiseAbsOctaves returnType: #float;
 
 		mapMessage: #fbmVoronoiNoiseOctaves:lacunarity: toFunction: #fbmVoronoiNoiseOctaves returnType: #float;
 		mapMessage: #fbmSignedVoronoiNoiseOctaves:lacunarity: toFunction: #fbmSignedVoronoiNoiseOctaves returnType: #float;
