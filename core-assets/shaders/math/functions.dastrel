@@ -2,3 +2,18 @@ function saturate(x: float) -> float
 {
 	return max(0.0f, min(1.0f, x));
 }
+
+function saturate(x: float2) -> float2
+{
+	return max(0.0f, min(1.0f, x));
+}
+
+function saturate(x: float3) -> float3
+{
+	return max(0.0f, min(1.0f, x));
+}
+
+function saturate(x: float4) -> float4
+{
+	return max(0.0f, min(1.0f, x));
+}

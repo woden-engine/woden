@@ -1,11 +1,28 @@
 import fragment.stage;
 import rendering.shaderSignature;
 import rendering.environment;
+import math.functions;
 
 import fragment.screenQuad;
 
 uniform(binding = MaterialState.Textures) hdrColorTexture : texture2D;
 uniform(binding = MaterialState.Textures + 1) sceneAverageLuminanceTexture : texture2D;
+
+function currentAverageLuminance() -> float
+{
+	return max(0.00001f, exp2(PostProcessingState.currentAverageLuminance) - 1.0f);
+}
+
+function filmicCuve(x: float3) -> float3
+{
+	// Filmic tone mapping curve from: https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
+	let a = 2.51f;
+    let b = 0.03f;
+    let c = 2.43f;
+    let d = 0.59f;
+    let e = 0.14f;
+    return saturate((x*(a*x+b))/(x*(c*x+d)+e));
+}
 
 code_block(compute) autoLuminanceFilter
 {
@@ -21,10 +38,48 @@ code_block(fragment) auto_linear
 {
 	let hdrTexel = albedoSampler.sample(hdrColorTexture, FragmentInput.texcoord);
 
-	let luma = exp2(PostProcessingState.currentAverageLuminance) - 1.0f;
-	let exposure = CameraState.exposure * 0.5f / (max(0.00001f, luma));
+	let luma = currentAverageLuminance();
+	let exposure = CameraState.exposure * 0.5f / luma;
 	let hdrColor = hdrTexel.rgb;
 	let ldrColor = exposure*hdrColor;
+	
+	FragmentStage.colorOutput0 = float4(ldrColor, hdrTexel.a);
+}
+
+code_block(fragment) auto_filmic
+{
+	let hdrTexel = albedoSampler.sample(hdrColorTexture, FragmentInput.texcoord);
+
+	let luma = currentAverageLuminance();
+	let exposure = CameraState.exposure * 0.5f / luma;
+	let hdrColor = hdrTexel.rgb;
+	let ldrColor = filmicCuve(exposure*hdrColor);
+	
+	FragmentStage.colorOutput0 = float4(ldrColor, hdrTexel.a);
+}
+
+code_block(fragment) auto_reinhard
+{
+	let hdrTexel = albedoSampler.sample(hdrColorTexture, FragmentInput.texcoord);
+	
+	// Tone mapping operator from: https://learnopengl.com/Advanced-Lighting/HDR
+	let luma = currentAverageLuminance();
+	let exposure = CameraState.exposure / (2.0f * luma - 1.0f);
+	let hdrColor = exposure*hdrTexel.rgb;
+	let ldrColor = hdrColor / (hdrColor + 1.0f);
+	
+	FragmentStage.colorOutput0 = float4(ldrColor, hdrTexel.a);
+}
+
+code_block(fragment) auto_exponential
+{
+	let hdrTexel = albedoSampler.sample(hdrColorTexture, FragmentInput.texcoord);
+	
+	// Tone mapping operator from: https://learnopengl.com/Advanced-Lighting/HDR
+	let luma = currentAverageLuminance();
+	let exposure = CameraState.exposure * 0.693147f / luma;
+	let hdrColor = hdrTexel.rgb;
+	let ldrColor = 1.0f - exp(-hdrColor * exposure);
 	
 	FragmentStage.colorOutput0 = float4(ldrColor, hdrTexel.a);
 }
@@ -57,6 +112,16 @@ code_block(fragment) exponential
 	// Tone mapping operator from: https://learnopengl.com/Advanced-Lighting/HDR
 	let hdrColor = hdrTexel.rgb;
 	let ldrColor = 1.0f - exp(-hdrColor * CameraState.exposure);
+	
+	FragmentStage.colorOutput0 = float4(ldrColor, hdrTexel.a);
+}
+
+code_block(fragment) filmic
+{
+	let hdrTexel = albedoSampler.sample(hdrColorTexture, FragmentInput.texcoord);
+	
+	let hdrColor = hdrTexel.rgb;
+	let ldrColor = filmicCuve(CameraState.exposure*hdrColor);
 	
 	FragmentStage.colorOutput0 = float4(ldrColor, hdrTexel.a);
 }
