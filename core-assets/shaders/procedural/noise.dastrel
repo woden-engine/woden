@@ -782,3 +782,66 @@ function fbmTiledGradientNoiseOctaves(position: float2, octaves: int, lacunarity
 {
 	return fbmTiledGradientNoiseOctaves(position, octaves, lacunarity, 1.0f/lacunarity, tilingPeriod);
 }
+
+function fbmTiledSignedGradientNoiseAbsOctaves(position: float2, octaves: int, lacunarity: float, gain: float, tilingPeriod: float2) -> float
+{
+	let result = 0.0f;
+	let currentCoord = position;
+	let currentTilingPeriod = tilingPeriod;
+	let amplitude = 0.5f;
+	let amplitudeSum = 0.0f;
+
+/*	for(let i = 0; i < octaves; i += 1)
+	{
+		result += amplitude*tiledSignedGradientNoise(currentCoord, currentTilingPeriod);
+		currentCoord *= lacunarity;
+		currentTilingPeriod *= lacunarity;
+		amplitudeSum += amplitude;
+		amplitude *= gain;
+	}
+*/
+	result += amplitude*fabs(tiledSignedGradientNoise(currentCoord, currentTilingPeriod));
+	currentCoord *= lacunarity;
+	currentTilingPeriod *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+	if(octaves < 2)
+		return result / amplitudeSum;
+
+	result += amplitude*fabs(tiledSignedGradientNoise(currentCoord, currentTilingPeriod));
+	currentCoord *= lacunarity;
+	currentTilingPeriod *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+	if(octaves < 3)
+		return result / amplitudeSum;
+
+	result += amplitude*fabs(tiledSignedGradientNoise(currentCoord, currentTilingPeriod));
+	currentCoord *= lacunarity;
+	currentTilingPeriod *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+	if(octaves < 4)
+		return result / amplitudeSum;
+
+	result += amplitude*fabs(tiledSignedGradientNoise(currentCoord, currentTilingPeriod));
+	currentCoord *= lacunarity;
+	currentTilingPeriod *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+	if(octaves < 5)
+		return result / amplitudeSum;
+
+	result += amplitude*fabs(tiledSignedGradientNoise(currentCoord, currentTilingPeriod));
+	currentCoord *= lacunarity;
+	currentTilingPeriod *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+
+	return result / amplitudeSum;
+}
+
+function fbmTiledSignedGradientNoiseAbsOctaves(position: float2, octaves: int, lacunarity: float, tilingPeriod: float2) -> float
+{
+	return fbmTiledSignedGradientNoiseAbsOctaves(position, octaves, lacunarity, 1.0f/lacunarity, tilingPeriod);
+}
