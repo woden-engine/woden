@@ -56,6 +56,11 @@ WDESSector >> defaultCameraNearDistance [
 ]
 
 { #category : #accessing }
+WDESSector >> defaultCameraToneMappingOperator [
+	^ self universe ifNotNil: [ :universe | universe defaultCameraToneMappingOperator ]
+]
+
+{ #category : #accessing }
 WDESSector >> defaultFogSettings [
 	^ self universe ifNotNil: [ :universe | universe defaultFogSettings ]
 ]

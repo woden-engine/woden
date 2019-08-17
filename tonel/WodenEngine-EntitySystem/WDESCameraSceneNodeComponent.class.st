@@ -10,7 +10,8 @@ WDESCameraSceneNodeComponent >> applyActiveNearFarDistance [
 		sceneNode
 			nearDistance: self currentNearDistance;
 			farDistance: self currentFarDistance;
-			cascadeSplitDistribution: self currentCascadeSplitDistribution.
+			cascadeSplitDistribution: self currentCascadeSplitDistribution;
+			toneMappingOperator: self currentToneMappingOperator.
 		self currentFogSettings ifNotNil: [ :settings | settings applyToNode: sceneNode  ]
 	]
 ]
@@ -38,6 +39,11 @@ WDESCameraSceneNodeComponent >> currentFogSettings [
 { #category : #'as yet unclassified' }
 WDESCameraSceneNodeComponent >> currentNearDistance [
 	^ (ownerEntity ifNotNil: [ownerEntity sector defaultCameraNearDistance]) ifNil: [0.01]
+]
+
+{ #category : #'as yet unclassified' }
+WDESCameraSceneNodeComponent >> currentToneMappingOperator [
+	^ (ownerEntity ifNotNil: [ownerEntity sector defaultCameraToneMappingOperator]) ifNil: [#linear]
 ]
 
 { #category : #testing }
