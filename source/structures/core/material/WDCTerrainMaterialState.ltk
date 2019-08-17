@@ -13,6 +13,9 @@ Structure <<< #WDCTerrainDeformationStateStructure
 	slots: {
         #clipMapPeriod => WMVector2F.
 
+        #cellSize => WMVector2F.
+        #padding => WMVector2F.
+
         #heightMapScale => WMVector2F.
         #heightMapOffset => WMVector2F.
         #heightScale => Float32.

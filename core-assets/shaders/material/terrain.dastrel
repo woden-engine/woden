@@ -24,6 +24,9 @@ buffer(binding=RenderableState.DeformationState) TerrainState
 {
     clipMapPeriod: float2;
 
+	cellSize: float2;
+	padding: float2;
+	
     heightMapScale: float2;
     heightMapOffset: float2;
 
@@ -239,25 +242,34 @@ code_block(vertex) vertex
     VertexStage.screenPosition = projectionMatrix * position4;
 }
 
+function computeObjectNormalInSurfacePosition(surfaceTexcoord: float2) -> float3
+{
+    // Compute the height map derivatives
+    let dh = 0.5f*TerrainState.heightMapScale;
+	let cellSize = TerrainState.cellSize;
+    //let dx = displacementSampler.sampleLod(heightMapTexture, surfaceTexcoord + float2(dh.x, 0.0f), 0.0f).r - displacementSampler.sampleLod(heightMapTexture, surfaceTexcoord - float2(dh.x, 0.0f), 0.0f).r;
+    //let dy = displacementSampler.sampleLod(heightMapTexture, surfaceTexcoord + float2(0.0f, dh.y), 0.0f).r - displacementSampler.sampleLod(heightMapTexture, surfaceTexcoord - float2(0.0f, dh.y), 0.0f).r;
+
+    let dx = displacementSampler.sample(heightMapTexture, surfaceTexcoord + float2(dh.x, 0.0f)).r - displacementSampler.sample(heightMapTexture, surfaceTexcoord - float2(dh.x, 0.0f)).r;
+    let dy = displacementSampler.sample(heightMapTexture, surfaceTexcoord + float2(0.0f, dh.y)).r - displacementSampler.sample(heightMapTexture, surfaceTexcoord - float2(0.0f, dh.y)).r;
+
+	// Compute the normal.
+    return normalize(float3(-dx*TerrainState.heightScale*cellSize.y, cellSize.x*cellSize.y, -dy*TerrainState.heightScale*cellSize.x));
+}
+
 //==============================================================================
 // Depth normal output
 
 code_block(fragment) depthNormal_fragment
 {
-    let dh = 0.5f*TerrainState.heightMapScale;
-
     let surfaceTexcoord = FragmentInput.surfaceTexcoord;
     let objectPosition = FragmentInput.objectPosition;
 
     if(surfaceTexcoord.s < 0.0f || surfaceTexcoord.t < 0.0f || surfaceTexcoord.s > 1.0f || surfaceTexcoord.t > 1.0f)
         discard;
 
-    // Compute the height map derivatives
-    let dx = displacementSampler.sample(heightMapTexture, surfaceTexcoord + float2(dh.x, 0.0f)).r - displacementSampler.sample(heightMapTexture, surfaceTexcoord - float2(dh.x, 0.0f)).r;
-    let dy = displacementSampler.sample(heightMapTexture, surfaceTexcoord + float2(0.0f, dh.y)).r - displacementSampler.sample(heightMapTexture, surfaceTexcoord - float2(0.0f, dh.y)).r;
-
     // Compute the object space normal.
-    let on = normalize(float3(-dx*TerrainState.heightScale, 1.0f, -dy*TerrainState.heightScale));
+    let on = computeObjectNormalInSurfacePosition(surfaceTexcoord);
     let SN = transformNormalToView(on);
 
 	// For double sided material.
@@ -281,23 +293,17 @@ function convertTopTangentNormal(N: float3, tangentNormal: float3) -> float3
 
 code_block(fragment) forward_splatting
 {
-    let dh = 0.5f*TerrainState.heightMapScale;
-
     let surfaceTexcoord = FragmentInput.surfaceTexcoord;
     let objectPosition = FragmentInput.objectPosition;
 
     if(surfaceTexcoord.s < 0.0f || surfaceTexcoord.t < 0.0f || surfaceTexcoord.s > 1.0f || surfaceTexcoord.t > 1.0f)
         discard;
 
+	// Compute the object space normal.
+	let on = computeObjectNormalInSurfacePosition(surfaceTexcoord);
+
     // Fetch the splatting
     let splatting = albedoSampler.sample(splattingTexture, surfaceTexcoord);
-
-    // Compute the height map derivatives
-    let dx = displacementSampler.sample(heightMapTexture, surfaceTexcoord + float2(dh.x, 0.0f)).r - displacementSampler.sample(heightMapTexture, surfaceTexcoord - float2(dh.x, 0.0f)).r;
-    let dy = displacementSampler.sample(heightMapTexture, surfaceTexcoord + float2(0.0f, dh.y)).r - displacementSampler.sample(heightMapTexture, surfaceTexcoord - float2(0.0f, dh.y)).r;
-
-    // Compute the object space normal.
-    let on = normalize(float3(-dx*TerrainState.heightScale, 1.0f, -dy*TerrainState.heightScale));
 
     // Fetch the albedo.
     let rawAlbedo = fetchAlbedoPlane(objectPosition.xz, splatting);
@@ -333,8 +339,6 @@ code_block(fragment) forward_splatting
 
 code_block(fragment) forward_triplanarSplatting
 {
-    let dh = 0.5f*TerrainState.heightMapScale;
-
     let surfaceTexcoord = FragmentInput.surfaceTexcoord;
     let objectPosition = FragmentInput.objectPosition;
 
@@ -344,12 +348,8 @@ code_block(fragment) forward_triplanarSplatting
     // Fetch the splatting
     let splatting = albedoSampler.sample(splattingTexture, surfaceTexcoord);
 
-    // Compute the height map derivatives
-    let dx = displacementSampler.sample(heightMapTexture, surfaceTexcoord + float2(dh.x, 0.0f)).r - displacementSampler.sample(heightMapTexture, surfaceTexcoord - float2(dh.x, 0.0f)).r;
-    let dy = displacementSampler.sample(heightMapTexture, surfaceTexcoord + float2(0.0f, dh.y)).r - displacementSampler.sample(heightMapTexture, surfaceTexcoord - float2(0.0f, dh.y)).r;
-
     // Compute the object space normal.
-    let on = normalize(float3(-dx*TerrainState.heightScale, 1.0f, -dy*TerrainState.heightScale));
+    let on = computeObjectNormalInSurfacePosition(surfaceTexcoord);
 
     // Fetch the albedo.
     let rawAlbedo = fetchAlbedo(objectPosition, on, splatting);
