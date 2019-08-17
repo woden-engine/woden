@@ -10,7 +10,8 @@ Class {
 		'defaultCameraFarDistance',
 		'defaultFogSettings',
 		'defaultCameraCascadeSplitDistribution',
-		'defaultCameraToneMappingOperator'
+		'defaultCameraToneMappingOperator',
+		'defaultCameraExposure'
 	],
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
@@ -65,6 +66,16 @@ WDESAbstractUniverse >> defaultCameraCascadeSplitDistribution [
 { #category : #accessing }
 WDESAbstractUniverse >> defaultCameraCascadeSplitDistribution: anObject [
 	defaultCameraCascadeSplitDistribution := anObject
+]
+
+{ #category : #accessing }
+WDESAbstractUniverse >> defaultCameraExposure [
+	^ defaultCameraExposure
+]
+
+{ #category : #accessing }
+WDESAbstractUniverse >> defaultCameraExposure: anObject [
+	defaultCameraExposure := anObject
 ]
 
 { #category : #accessing }
@@ -165,6 +176,7 @@ WDESAbstractUniverse >> initialize [
 	defaultCameraFarDistance := 1000.0.
 	defaultCameraCascadeSplitDistribution := 0.5.
 	defaultCameraToneMappingOperator := #linear.
+	defaultCameraExposure := 1.0.
 	defaultFogSettings := WDESFogSettings new.
 ]
 

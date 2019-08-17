@@ -176,7 +176,7 @@ WDCFrameBufferingDriver >> mainRenderingProcessIteration [
 	nextFrameTargetTime ifNil: [ nextFrameTargetTime := Time microsecondClockValue ].
 
 	"If the delay is too long."
-	Time microsecondClockValue > (nextFrameTargetTime + (1000000 // self targetFrameRate)) ifTrue: [ 
+	Time microsecondClockValue > (nextFrameTargetTime + (500000 // self targetFrameRate)) ifTrue: [ 
 		nextFrameTargetTime := Time microsecondClockValue
 	].
 
@@ -216,6 +216,7 @@ WDCFrameBufferingDriver >> renderForDeltaMicroseconds: delta [
 	"Always update the simulations"
 	| renderingGraph |
 	frontRenderingProcesses reject: #suspended thenDo: #processEvents.
+
 	currentVRLeftEyeTexture := nil.
 	currentVRRightEyeTexture := nil.
 	

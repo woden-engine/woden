@@ -24,6 +24,16 @@ Class {
 }
 
 { #category : #'class initialization' }
+WDCLightSource class >> defaultShadowMapDepthBiasConstant [
+	^ DefaultShadowMapDepthBiasConstant
+]
+
+{ #category : #'class initialization' }
+WDCLightSource class >> defaultShadowMapDepthBiasSlope [
+	^ DefaultShadowMapDepthBiasSlope
+]
+
+{ #category : #'class initialization' }
 WDCLightSource class >> initialize [	
 	DefaultSpotOuterCutoff := 45.
 	DefaultSpotInnerCutoff := 40.

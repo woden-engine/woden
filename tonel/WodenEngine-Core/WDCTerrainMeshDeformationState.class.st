@@ -15,7 +15,8 @@ WDCTerrainMeshDeformationState >> applyTerrainDataState [
 		heightMapOffset: terrainData heightMapOffset;
 		heightMapScale: terrainData heightMapScale;
 		heightOffset: terrainData heightOffset;
-		heightScale: terrainData heightScale.
+		heightScale: terrainData heightScale;
+		cellSize: terrainData terrainCellSize.
 	renderableStateBindings ifNotNil: [ 
 		renderableStateBindings do: [ :bindings |
 			bindings

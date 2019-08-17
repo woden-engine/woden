@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'intensity',
 		'radius',
-		'castShadows'
+		'castShadows',
+		'shadowMapDepthBiasConstant',
+		'shadowMapDepthBiasSlope'
 	],
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
@@ -26,7 +28,9 @@ WDESLightSourceSceneNodeComponent >> createSceneNode [
 	node := WDSGLightSource new.
 	node radius: radius;
 		castShadows: castShadows;
-		intensity: intensity.
+		intensity: intensity;
+		shadowMapDepthBiasConstant: shadowMapDepthBiasConstant;
+		shadowMapDepthBiasSlope: shadowMapDepthBiasSlope.
 	^ node
 ]
 
@@ -36,6 +40,8 @@ WDESLightSourceSceneNodeComponent >> initialize [
 	intensity := Color white asWMVector4F.
 	radius := 3.0.
 	castShadows := false.
+	shadowMapDepthBiasConstant := WDCLightSource defaultShadowMapDepthBiasConstant.
+	shadowMapDepthBiasSlope := WDCLightSource defaultShadowMapDepthBiasSlope.
 ]
 
 { #category : #accessing }
@@ -58,4 +64,16 @@ WDESLightSourceSceneNodeComponent >> radius [
 WDESLightSourceSceneNodeComponent >> radius: aFloat [
 	radius := aFloat.
 	sceneNode ifNotNil: [ sceneNode radius: aFloat ].
+]
+
+{ #category : #accessing }
+WDESLightSourceSceneNodeComponent >> shadowMapDepthBiasConstant: aNumber [
+	shadowMapDepthBiasConstant := aNumber.
+	sceneNode ifNotNil: [ sceneNode shadowMapDepthBiasConstant: aNumber ].
+]
+
+{ #category : #accessing }
+WDESLightSourceSceneNodeComponent >> shadowMapDepthBiasSlope: aNumber [
+	shadowMapDepthBiasSlope := aNumber.
+	sceneNode ifNotNil: [ sceneNode shadowMapDepthBiasSlope: aNumber ].
 ]

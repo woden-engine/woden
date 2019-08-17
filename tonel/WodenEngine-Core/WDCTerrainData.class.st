@@ -222,6 +222,7 @@ WDCTerrainData >> splatterMap: anObject [
 
 { #category : #accessing }
 WDCTerrainData >> terrainCellSize [
+	heightMap ifNil: [ ^ WMVector2F ones ].
 	^ terrainExtent / heightMap extent asWMVector2F
 ]
 

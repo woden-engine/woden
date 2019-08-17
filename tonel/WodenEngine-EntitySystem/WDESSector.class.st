@@ -46,6 +46,11 @@ WDESSector >> defaultCameraCascadeSplitDistribution [
 ]
 
 { #category : #accessing }
+WDESSector >> defaultCameraExposure [
+	^ self universe ifNotNil: [ :universe | universe defaultCameraExposure ]
+]
+
+{ #category : #accessing }
 WDESSector >> defaultCameraFarDistance [
 	^ self universe ifNotNil: [ :universe | universe defaultCameraFarDistance ]
 ]
