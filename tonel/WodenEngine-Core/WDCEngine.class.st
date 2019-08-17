@@ -23,6 +23,7 @@ Class {
 		'AllowVR',
 		'DebugLayerEnabled',
 		'DefaultEngine',
+		'DisplayFrameRate',
 		'GenerateOfflineMipmapsGPU',
 		'SSAOEnabled',
 		'ShadowMappingEnabled',
@@ -57,6 +58,16 @@ WDCEngine class >> debugLayerEnabled: aBoolean [
 { #category : #accessing }
 WDCEngine class >> default [
 	^ DefaultEngine ifNil: [ DefaultEngine := self new ]
+]
+
+{ #category : #preferences }
+WDCEngine class >> displayFrameRate [
+	^ DisplayFrameRate ifNil: [ DisplayFrameRate := false ]
+]
+
+{ #category : #preferences }
+WDCEngine class >> displayFrameRate: aBoolean [
+	DisplayFrameRate := aBoolean
 ]
 
 { #category : #'as yet unclassified' }
@@ -132,6 +143,9 @@ WDCEngine class >> wodenSettingsOn: aBuilder [
 			(aBuilder setting: #tracingEnabled)
 				label: 'Tracing enabled';
 				description: 'This enables the support for tracing engine logs.'.
+			(aBuilder setting: #displayFrameRate)
+				label: 'Display frame rate enabled';
+				description: 'This enables the display of the frame rate in the woden examples.'.
 			(aBuilder setting: #ssaoEnabled)
 				label: 'SSAO enabled';
 				description: 'This enables the support for screen space ambient occlusion.'.

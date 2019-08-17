@@ -257,8 +257,8 @@ WDASceneExamples class >> example04Pool [
 	engine := model engine.
 	camera := model camera.
 	camera
+		toneMappingOperator: #filmic;
 		farDistance: 100.0.
-	camera inspect.
 	camera translateToX: 0.0 y: 1.0 z: -4.0.
 	
 	self constructPoolSceneInto: scene.
@@ -279,7 +279,7 @@ WDASceneExamples class >> example04Pool [
 
 	"Create the sky."
 	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector3: (WMVector3F z: 1.0)).
-	skyTexture := skyTexture asSRGBTextureFor: engine.
+	skyTexture := skyTexture asTextureFor: engine.
 	scene createSkyWithCubeTexture: skyTexture.
 
 	view := WDAFPSSceneView allowingVR.
@@ -314,7 +314,7 @@ WDASceneExamples class >> example04ProceduralSky [
 		
 	texture := self proceduralSkySunDirection: sunDirection.
 material
-	skyTexture: (texture asSRGBTextureFor: model engine).
+	skyTexture: (texture asTextureFor: model engine).
 		
 	model openWith: WDAFPSSceneView.
 
@@ -512,6 +512,7 @@ WDASceneExamples class >> example09DragonIsland [
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
+	camera toneMappingOperator: #filmic.
 	camera farDistance: 250.0; cascadeSplitDistribution: 0.75.
 	camera translateByZ: 85.0; translateByY: 1.5.
 	
@@ -525,7 +526,7 @@ WDASceneExamples class >> example09DragonIsland [
 	scene add: sunLight.
 	
 	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector3: (WMVector3F z: 1.0)).
-	skyTexture := skyTexture asSRGBTextureFor: model engine.
+	skyTexture := skyTexture asTextureFor: model engine.
 	scene createSkyWithCubeTexture: skyTexture.
 	scene ambientLighting: WMVector4F ones.
 

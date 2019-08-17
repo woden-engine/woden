@@ -41,7 +41,7 @@ WDAESProceduralSamples class >> example02PoolLevel [
 	| engine universe waterMaterial |
 	engine := WDCEngine default.
 	universe := WDESSimpleUniverse for: engine.
-	universe defaultCameraFarDistance: 100.0.
+	universe defaultCameraToneMappingOperator: #filmic; defaultCameraFarDistance: 100.0.
 	universe buildSector: [ :sector |
 		sector buildGenericMeshWith: [ :meshBuilder |
 			WDASceneExamples constructPoolMeshWith: meshBuilder.
@@ -58,7 +58,7 @@ WDAESProceduralSamples class >> example02PoolLevel [
 					translateToX: 0.0 y: 1.5 z: 2.5.
 					
 				skyTexture := WDASceneExamples proceduralSkySunDirection: light forwardDirection.
-				skyTexture := skyTexture asSRGBTextureFor: engine.
+				skyTexture := skyTexture asTextureFor: engine.
 				sector addSkyBoxWithTexture: skyTexture
 			];
 			addWaterVolumeAt: (WMVector3F y: -0.3) with: [ :waterVolume |
@@ -109,7 +109,10 @@ WDAESProceduralSamples class >> example03Island [
 	terrainData := engine resourceCache loadTerrain: 'terrains/demos/procedural/island.stterrain'.
 
 	universe := WDESSimpleUniverse for: engine.
-	universe defaultCameraFarDistance: 250.0; defaultCameraCascadeSplitDistribution: 0.7.
+	universe
+		defaultCameraToneMappingOperator: #filmic;
+		defaultCameraFarDistance: 250.0;
+		defaultCameraCascadeSplitDistribution: 0.7.
 	universe buildSector: [ :sector |
 		sector buildTerrainMeshWithData: terrainData withMaterial: terrainMaterial.
 		
@@ -135,7 +138,7 @@ WDAESProceduralSamples class >> example03Island [
 					translateToX: 0.0 y: 1.5 z: 2.5.
 					
 				skyTexture := WDASceneExamples proceduralSkySunDirection: light forwardDirection.
-				skyTexture := skyTexture asSRGBTextureFor: engine.
+				skyTexture := skyTexture asTextureFor: engine.
 				sector addSkyBoxWithTexture: skyTexture
 			];
 		

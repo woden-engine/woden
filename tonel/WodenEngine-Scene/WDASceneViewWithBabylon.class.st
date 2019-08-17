@@ -40,7 +40,10 @@ WDASceneViewWithBabylon >> drawFrameRateOn: canvas [
 
 { #category : #rendering }
 WDASceneViewWithBabylon >> drawOnBabylonCanvas: canvas [
-	self drawFrameRateOn: canvas
+	WDCEngine displayFrameRate ifTrue: [ 
+		self drawFrameRateOn: canvas
+	].
+
 ]
 
 { #category : #rendering }
