@@ -104,17 +104,6 @@ WDCWaterMaterial >> isTranslucentMaterial [
 	^ true
 ]
 
-{ #category : #'resource reloading' }
-WDCWaterMaterial >> loadStateFromOldVersion: oldVersion [
-	| oldMaterialState |
-	super loadStateFromOldVersion: oldVersion.
-	oldMaterialState := oldVersion materialState.
-	materialState
-		clipMapPeriod: oldMaterialState clipMapPeriod;
-		harmonics: oldMaterialState harmonics;
-		yourself
-]
-
 { #category : #accessing }
 WDCWaterMaterial >> materialState [
 	^ materialState
