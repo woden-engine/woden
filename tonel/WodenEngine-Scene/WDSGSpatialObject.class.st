@@ -51,6 +51,11 @@ WDSGSpatialObject >> postCopy [
 	self renderable: oldRenderable copyForResourceCacheInstancing.
 ]
 
+{ #category : #enumerating }
+WDSGSpatialObject >> precacheResources [
+	renderable precacheResources
+]
+
 { #category : #accessing }
 WDSGSpatialObject >> renderable [
 	^ renderable

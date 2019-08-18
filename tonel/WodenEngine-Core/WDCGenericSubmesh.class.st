@@ -81,6 +81,11 @@ WDCGenericSubmesh >> material: anObject [
 	material := anObject
 ]
 
+{ #category : #enumerating }
+WDCGenericSubmesh >> precacheResources [
+	material ifNotNil: [ material precacheResources ]
+]
+
 { #category : #accessing }
 WDCGenericSubmesh >> primitiveType [
 	^ primitiveType

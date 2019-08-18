@@ -35,6 +35,12 @@ WDCDeformableRenderable >> postCopy [
 	deformationState := deformationState copy.
 ]
 
+{ #category : #enumerating }
+WDCDeformableRenderable >> precacheResources [
+	super precacheResources.
+	deformationState precacheResources.
+]
+
 { #category : #'renderable state' }
 WDCDeformableRenderable >> updateCommonGpuStateForFrame: frameIndex [
 	self deformationState updateCommonGpuStateForFrame: frameIndex

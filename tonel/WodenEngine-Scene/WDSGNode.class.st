@@ -299,6 +299,10 @@ WDSGNode >> postCopy [
 	]
 ]
 
+{ #category : #enumerating }
+WDSGNode >> precacheResources [
+]
+
 { #category : #adding }
 WDSGNode >> removeChild: node [
 	children remove: node.

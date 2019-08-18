@@ -123,6 +123,11 @@ WDCWaterMaterial >> parse: materialFileReference data: data [
 	self invalidateCache.
 ]
 
+{ #category : #enumerating }
+WDCWaterMaterial >> precacheResources [
+	self shaderLibrary
+]
+
 { #category : #shaders }
 WDCWaterMaterial >> shaderLibrary [
 	^ shaderLibrary ifNil: [ shaderLibrary := engine loadShaderLibrary: 'shaders/material/water.dastrel' ].

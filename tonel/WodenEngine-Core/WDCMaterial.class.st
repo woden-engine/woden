@@ -256,6 +256,10 @@ WDCMaterial >> parseError: errorMessage at: fileReference [
 	self error: fileReference printString , ': ' , errorMessage
 ]
 
+{ #category : #enumerating }
+WDCMaterial >> precacheResources [
+]
+
 { #category : #testing }
 WDCMaterial >> requiresTangentSpaceData [
 	^ false

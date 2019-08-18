@@ -280,6 +280,11 @@ WDCAbstractGenericSurfaceMaterial >> parse: materialFileReference data: data [
 		alphaCutoff: (data at: 'alpha-cutoff' ifAbsent: [ materialState alphaCutoff ]).
 ]
 
+{ #category : #enumerating }
+WDCAbstractGenericSurfaceMaterial >> precacheResources [
+	self shaderLibrary
+]
+
 { #category : #testing }
 WDCAbstractGenericSurfaceMaterial >> requiresTangentSpaceData [
 	^ normalTexture isNotNil

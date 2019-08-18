@@ -39,6 +39,7 @@ WDAESAbstractUniverseModel >> newScene [
 
 { #category : #'as yet unclassified' }
 WDAESAbstractUniverseModel >> precacheResources [
+	scene ifNotNil: [ scene precacheResources ].
 	universe ifNotNil: [ universe precacheResources ].
 ]
 

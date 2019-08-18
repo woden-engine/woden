@@ -237,6 +237,10 @@ WDCAbstractRenderable >> name: anObject [
 	name := anObject
 ]
 
+{ #category : #enumerating }
+WDCAbstractRenderable >> precacheResources [
+]
+
 { #category : #rendering }
 WDCAbstractRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	self subclassResponsibility

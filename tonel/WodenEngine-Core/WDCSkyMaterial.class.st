@@ -68,6 +68,11 @@ WDCSkyMaterial >> parse: materialFileReference data: data [
 	self invalidateCache.
 ]
 
+{ #category : #enumerating }
+WDCSkyMaterial >> precacheResources [
+	self shaderLibrary
+]
+
 { #category : #shaders }
 WDCSkyMaterial >> shaderLibrary [
 	^ shaderLibrary ifNil: [ shaderLibrary := engine loadShaderLibrary: 'shaders/material/sky.dastrel' ].

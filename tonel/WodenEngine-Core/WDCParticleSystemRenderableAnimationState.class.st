@@ -103,6 +103,16 @@ WDCParticleSystemRenderableAnimationState >> particleSystem: anObject [
 	particleSystem := anObject
 ]
 
+{ #category : #enumerating }
+WDCParticleSystemRenderableAnimationState >> precacheResources [
+	self validParticleMaterial precacheResources.
+	WDCEngine gpuBasedParticleSimulation ifTrue: [
+		self
+			validParticleSimulationComputeParameters;
+			validParticleSimulationShaderLibrary
+	].
+]
+
 { #category : #accessing }
 WDCParticleSystemRenderableAnimationState >> requiresAccessFromTheCPU [
 	^ WDCEngine gpuBasedParticleSimulation not

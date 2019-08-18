@@ -250,6 +250,11 @@ WDCTerrainMaterial >> parse: materialFileReference data: data [
 	self invalidateCache.
 ]
 
+{ #category : #enumerating }
+WDCTerrainMaterial >> precacheResources [
+	self shaderLibrary
+]
+
 { #category : #shaders }
 WDCTerrainMaterial >> shaderLibrary [
 	^ shaderLibrary ifNil: [ shaderLibrary := engine loadShaderLibrary: 'shaders/material/terrain.dastrel' ].

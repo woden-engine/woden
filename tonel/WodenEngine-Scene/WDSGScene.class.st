@@ -283,6 +283,12 @@ WDSGScene >> postCopy [
 	commonGPUStateRenderingComponent := nil.
 ]
 
+{ #category : #enumerating }
+WDSGScene >> precacheResources [
+	engine ifNil: [ ^ self ].
+	self allChildrenDo: #precacheResources
+]
+
 { #category : #adding }
 WDSGScene >> remove: aNode [
 	normalLayer removeChild: aNode

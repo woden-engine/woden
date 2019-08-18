@@ -28,6 +28,12 @@ WDCMeshWithExtraDeformationRenderable >> postCopy [
 	mesh := mesh copyForResourceCacheInstancing.
 ]
 
+{ #category : #enumerating }
+WDCMeshWithExtraDeformationRenderable >> precacheResources [
+	super precacheResources.
+	mesh precacheResources.
+]
+
 { #category : #rendering }
 WDCMeshWithExtraDeformationRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [
 	stateTracker withDeformationState: self deformationState do: [ 

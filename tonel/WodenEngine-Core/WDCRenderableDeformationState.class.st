@@ -54,6 +54,10 @@ WDCRenderableDeformationState >> isWaterDeformationState [
 	^ false
 ]
 
+{ #category : #enumerating }
+WDCRenderableDeformationState >> precacheResources [
+]
+
 { #category : #accessing }
 WDCRenderableDeformationState >> requiresAccessFromTheCPU [
 	^ self subclassResponsibility

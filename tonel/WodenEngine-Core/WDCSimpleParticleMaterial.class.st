@@ -69,6 +69,13 @@ WDCSimpleParticleMaterial >> fragmentShader [
 	^ fragmentShader
 ]
 
+{ #category : #enumerating }
+WDCSimpleParticleMaterial >> precacheResources [
+	self
+		shaderLibrary;
+		fragmentShader
+]
+
 { #category : #accessing }
 WDCSimpleParticleMaterial >> proceduralRenderingBlock [
 	^ proceduralRenderingBlock

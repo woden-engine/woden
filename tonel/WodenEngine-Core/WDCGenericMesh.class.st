@@ -35,6 +35,12 @@ WDCGenericMesh >> indexBuffer: anObject [
 	indexBuffer := anObject
 ]
 
+{ #category : #enumerating }
+WDCGenericMesh >> precacheResources [
+	super precacheResources.
+	submeshes do: #precacheResources
+]
+
 { #category : #rendering }
 WDCGenericMesh >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	stateTracker withVertexData: vertexData do: [

@@ -39,6 +39,12 @@ WDCCompositeRenderable >> postCopy [
 	renderables := renderables collect: #copyForResourceCacheInstancing
 ]
 
+{ #category : #enumerating }
+WDCCompositeRenderable >> precacheResources [
+	super precacheResources.
+	renderables do: #precacheResources
+]
+
 { #category : #rendering }
 WDCCompositeRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [
 	renderables do: [ :renderable |

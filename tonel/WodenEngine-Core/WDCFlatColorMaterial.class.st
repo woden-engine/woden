@@ -66,6 +66,11 @@ WDCFlatColorMaterial >> parse: materialFileReference data: aDictionary [
 	thumbnailType := (aDictionary at: 'thumbnail-type' ifAbsent: [ #color ]) asSymbol.
 ]
 
+{ #category : #enumerating }
+WDCFlatColorMaterial >> precacheResources [
+	self shaderLibrary
+]
+
 { #category : #accessing }
 WDCFlatColorMaterial >> shaderLibrary [
 	^ shaderLibrary ifNil: [ shaderLibrary := engine loadShaderLibrary: 'shaders/material/flat.dastrel' ].
