@@ -176,7 +176,9 @@ WDCParticleSystemRenderableAnimationState >> updateCommonGpuStateForFrame: frame
 
 { #category : #'as yet unclassified' }
 WDCParticleSystemRenderableAnimationState >> validParticleMaterial [
-	^ particleMaterial ifNil: [ particleMaterial := WDCSimpleParticleMaterial for: engine ]
+	particleMaterial ifNil: [ particleMaterial := WDCSimpleParticleMaterial for: engine ].
+	particleMaterial proceduralRenderingBlock: particleSystem renderingBlock.
+	^ particleMaterial
 ]
 
 { #category : #'as yet unclassified' }

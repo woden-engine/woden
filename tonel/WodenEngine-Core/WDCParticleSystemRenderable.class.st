@@ -2,9 +2,9 @@ Class {
 	#name : #WDCParticleSystemRenderable,
 	#superclass : #WDCDeformableRenderable,
 	#instVars : [
-		'particleMaterial',
 		'particleCount',
 		'simulationBlock',
+		'renderingBlock',
 		'startupTime'
 	],
 	#category : #'WodenEngine-Core-Particle'
@@ -45,6 +45,16 @@ WDCParticleSystemRenderable >> renderOn: stateTracker instanceCount: instanceCou
 			primitiveType: AGPU_TRIANGLE_STRIP;
 			drawArrays: 4 instance_count: particleCount first_vertex: baseInstance base_instance: baseVertex
 	].
+]
+
+{ #category : #accessing }
+WDCParticleSystemRenderable >> renderingBlock [
+	^ renderingBlock
+]
+
+{ #category : #accessing }
+WDCParticleSystemRenderable >> renderingBlock: anObject [
+	renderingBlock := anObject
 ]
 
 { #category : #accessing }
