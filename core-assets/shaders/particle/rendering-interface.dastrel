@@ -1,0 +1,16 @@
+import vertex.stage;
+import fragment.stage;
+import rendering.environment;
+import rendering.lightingOutputs;
+import particle.state;
+import material.simpleParticleCommon;
+import procedural.noise;
+
+code_block(fragment) particleFragment
+{
+	let particleIndex = FragmentInput.particleIndex;
+	let particleState = ParticleState.states[particleIndex];
+	let st = FragmentInput.texcoord;
+	let color = particleRenderingFunction(particleState, particleIndex, st.x, st.y);
+    forwardFlatOutput color: color;
+}

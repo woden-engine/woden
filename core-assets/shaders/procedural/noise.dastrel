@@ -19,6 +19,11 @@ function cubicHermiteCurve(x: float2) -> float2
 	return x*x*(3.0f - 2.0f*x);
 }
 
+function cubicHermiteCurve(x: float3) -> float3
+{
+	return x*x*(3.0f - 2.0f*x);
+}
+
 // Random noise implementation
 function randomNoiseHash(x: uint) -> uint
 {
@@ -66,6 +71,29 @@ function randomNoise2(position: float2) -> float2
 	return float2(randomNoise(position), randomNoise_second(position));
 }
 
+function randomNoise(position: float3) -> float
+{
+	let ip = uint3(int3(floor(position)));
+	return randomNoiseHashNormalized(randomNoiseHash(ip.x) * 27972u + randomNoiseHash(ip.y) * 8516u + randomNoiseHash(ip.z) * 984943u);
+}
+
+function randomNoise_second(position: float3) -> float
+{
+	let ip = uint3(int3(floor(position)));
+	return randomNoiseHashNormalized(randomNoiseHash(ip.x) * 6591u + randomNoiseHash(ip.y) * 21935u + randomNoiseHash(ip.z) * 470211273u);
+}
+
+function randomNoise_third(position: float3) -> float
+{
+	let ip = uint3(int3(floor(position)));
+	return randomNoiseHashNormalized(randomNoiseHash(ip.x) * 823564441u + randomNoiseHash(ip.y) * 158102214u + randomNoiseHash(ip.z) * 175535035u);
+}
+
+function randomNoise3(position: float3) -> float3
+{
+	return float3(randomNoise(position), randomNoise_second(position), randomNoise_third(position));
+}
+
 // Signed random noise
 function signedRandomNoise(position: float) -> float
 {
@@ -85,6 +113,26 @@ function signedRandomNoise_second(position: float2) -> float
 function signedRandomNoise2(position: float2) -> float2
 {
 	return randomNoise2(position)*2.0f - 1.0f;
+}
+
+function signedRandomNoise(position: float3) -> float
+{
+	return randomNoise(position)*2.0f - 1.0f;
+}
+
+function signedRandomNoise_second(position: float3) -> float
+{
+	return randomNoise_second(position)*2.0f - 1.0f;
+}
+
+function signedRandomNoise_third(position: float3) -> float
+{
+	return randomNoise_third(position)*2.0f - 1.0f;
+}
+
+function signedRandomNoise3(position: float3) -> float3
+{
+	return randomNoise3(position)*2.0f - 1.0f;
 }
 
 // Value noise
@@ -107,6 +155,24 @@ function valueNoise(position: float2) -> float
 	return mix(l, t, f.y);
 }
 
+function valueNoise(position: float3) -> float
+{
+	let minValue = floor(position);
+	let maxValue = minValue + 1.0f;
+
+	let f = smoothstep(minValue, maxValue, position);
+
+	let nl = mix(randomNoise(float3(minValue.x, minValue.y, minValue.z)), randomNoise(float3(maxValue.x, minValue.y, minValue.z)), f.x);
+	let nt = mix(randomNoise(float3(minValue.x, maxValue.y, minValue.z)), randomNoise(float3(maxValue.x, maxValue.y, minValue.z)), f.x);
+	let nv = mix(nl, nt, f.y);
+
+	let fl = mix(randomNoise(float3(minValue.x, minValue.y, maxValue.z)), randomNoise(float3(maxValue.x, minValue.y, maxValue.z)), f.x);
+	let ft = mix(randomNoise(float3(minValue.x, maxValue.y, maxValue.z)), randomNoise(float3(maxValue.x, maxValue.y, maxValue.z)), f.x);
+	let fv = mix(fl, ft, f.y);
+
+	return mix(nv, fv, f.z);
+}
+
 function tiledValueNoise(position: float2, period: float2) -> float
 {
 	let minValue = floor(position);
@@ -127,7 +193,12 @@ function signedValueNoise(position: float) -> float
 	return valueNoise(position)*2.0f - 1.0f;
 }
 
-function signedValueNoise(position: float) -> float
+function signedValueNoise(position: float2) -> float
+{
+	return valueNoise(position)*2.0f - 1.0f;
+}
+
+function signedValueNoise(position: float3) -> float
 {
 	return valueNoise(position)*2.0f - 1.0f;
 }
@@ -136,6 +207,11 @@ function signedValueNoise(position: float) -> float
 function randomGradientVector(position: float2) -> float2
 {
 	return float2(signedRandomNoise(position), signedRandomNoise_second(position));
+}
+
+function randomGradientVector(position: float3) -> float3
+{
+	return float3(signedRandomNoise(position), signedRandomNoise_second(position), signedRandomNoise_third(position));
 }
 
 function signedGradientNoise(position: float) -> float
@@ -160,6 +236,29 @@ function signedGradientNoise(position: float2) -> float
 				dot(randomGradientVector(float2(maxValue.x, maxValue.y)), float2(f.x - 1.0f, f.y - 1.0f)), i.x);
 
 	return mix(l, t, i.y);
+}
+
+function signedGradientNoise(position: float3) -> float
+{
+	let minValue = floor(position);
+	let maxValue = minValue + 1.0f;
+
+	let f = position - minValue;
+	let i = cubicHermiteCurve(f);
+
+	let nl = mix(dot(randomGradientVector(float3(minValue.x, minValue.y, minValue.z)), float3(f.x		 , f.y		 , f.z)),
+				dot(randomGradientVector(float3(maxValue.x, minValue.y, minValue.z)), float3(f.x - 1.0f, f.y		 , f.z)), i.x);
+	let nt = mix(dot(randomGradientVector(float3(minValue.x, maxValue.y, minValue.z)), float3(f.x		 , f.y - 1.0f, f.z)),
+				dot(randomGradientVector(float3(maxValue.x, maxValue.y, minValue.z)), float3(f.x - 1.0f, f.y - 1.0f, f.z)), i.x);
+	let nv = mix(nl, nt, i.y);
+
+	let fl = mix(dot(randomGradientVector(float3(minValue.x, minValue.y, maxValue.z)), float3(f.x		 , f.y		 , f.z - 1.0f)),
+				dot(randomGradientVector(float3(maxValue.x, minValue.y, maxValue.z)), float3(f.x - 1.0f, f.y		 , f.z - 1.0f)), i.x);
+	let ft = mix(dot(randomGradientVector(float3(minValue.x, maxValue.y, maxValue.z)), float3(f.x		 , f.y - 1.0f, f.z - 1.0f)),
+				dot(randomGradientVector(float3(maxValue.x, maxValue.y, maxValue.z)), float3(f.x - 1.0f, f.y - 1.0f, f.z - 1.0f)), i.x);
+	let fv = mix(fl, ft, i.y);
+	
+	return mix(nv, fv, i.z);
 }
 
 function tiledSignedGradientNoise(position: float2, period: float2) -> float
@@ -187,6 +286,11 @@ function gradientNoise(position: float) -> float
 }
 
 function gradientNoise(position: float2) -> float
+{
+	return signedGradientNoise(position)*0.5f + 0.5f;
+}
+
+function gradientNoise(position: float3) -> float
 {
 	return signedGradientNoise(position)*0.5f + 0.5f;
 }
@@ -844,4 +948,186 @@ function fbmTiledSignedGradientNoiseAbsOctaves(position: float2, octaves: int, l
 function fbmTiledSignedGradientNoiseAbsOctaves(position: float2, octaves: int, lacunarity: float, tilingPeriod: float2) -> float
 {
 	return fbmTiledSignedGradientNoiseAbsOctaves(position, octaves, lacunarity, 1.0f/lacunarity, tilingPeriod);
+}
+
+// Fractional brownian motion - 3D.
+function fbmGradientNoiseOctaves(position: float3, octaves: int, lacunarity: float, gain: float) -> float
+{
+	let result = 0.0f;
+	let currentCoord = position;
+	let amplitude = 0.5f;
+	let amplitudeSum = 0.0f;
+
+/*	for(let i = 0; i < octaves; i += 1)
+	{
+		result += amplitude*tiledGradientNoise(currentCoord, currentTilingPeriod);
+		currentCoord *= lacunarity;
+		currentTilingPeriod *= lacunarity;
+		amplitudeSum += amplitude;
+		amplitude *= gain;
+	}
+*/
+	result += amplitude*gradientNoise(currentCoord);
+	currentCoord *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+	if(octaves < 2)
+		return result / amplitudeSum;
+
+	result += amplitude*gradientNoise(currentCoord);
+	currentCoord *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+	if(octaves < 3)
+		return result / amplitudeSum;
+
+	result += amplitude*gradientNoise(currentCoord);
+	currentCoord *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+	if(octaves < 4)
+		return result / amplitudeSum;
+
+	result += amplitude*gradientNoise(currentCoord);
+	currentCoord *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+	if(octaves < 5)
+		return result / amplitudeSum;
+
+	result += amplitude*gradientNoise(currentCoord);
+	currentCoord *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+
+	return result / amplitudeSum;
+}
+
+function fbmGradientNoiseOctaves(position: float3, octaves: int, lacunarity: float) -> float
+{
+	return fbmGradientNoiseOctaves(position, octaves, lacunarity, 1.0f/lacunarity);
+}
+
+function fbmSignedGradientNoiseOctaves(position: float3, octaves: int, lacunarity: float, gain: float) -> float
+{
+	let result = 0.0f;
+	let currentCoord = position;
+	let amplitude = 0.5f;
+	let amplitudeSum = 0.0f;
+
+/*	for(let i = 0; i < octaves; i += 1)
+	{
+		result += amplitude*tiledGradientNoise(currentCoord, currentTilingPeriod);
+		currentCoord *= lacunarity;
+		currentTilingPeriod *= lacunarity;
+		amplitudeSum += amplitude;
+		amplitude *= gain;
+	}
+*/
+	result += amplitude*signedGradientNoise(currentCoord);
+	currentCoord *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+	if(octaves < 2)
+		return result / amplitudeSum;
+
+	result += amplitude*signedGradientNoise(currentCoord);
+	currentCoord *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+	if(octaves < 3)
+		return result / amplitudeSum;
+
+	result += amplitude*signedGradientNoise(currentCoord);
+	currentCoord *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+	if(octaves < 4)
+		return result / amplitudeSum;
+
+	result += amplitude*signedGradientNoise(currentCoord);
+	currentCoord *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+	if(octaves < 5)
+		return result / amplitudeSum;
+
+	result += amplitude*signedGradientNoise(currentCoord);
+	currentCoord *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+
+	return result / amplitudeSum;
+}
+
+function fbmSignedGradientNoiseOctaves(position: float3, octaves: int, lacunarity: float) -> float
+{
+	return fbmSignedGradientNoiseOctaves(position, octaves, lacunarity, 1.0f/lacunarity);
+}
+
+function fbmSignedGradientNoiseAbsOctaves(position: float3, octaves: int, lacunarity: float, gain: float) -> float
+{
+	let result = 0.0f;
+	let currentCoord = position;
+	let amplitude = 0.5f;
+	let amplitudeSum = 0.0f;
+
+/*	for(let i = 0; i < octaves; i += 1)
+	{
+		result += amplitude*tiledGradientNoise(currentCoord, currentTilingPeriod);
+		currentCoord *= lacunarity;
+		currentTilingPeriod *= lacunarity;
+		amplitudeSum += amplitude;
+		amplitude *= gain;
+	}
+*/
+	result += amplitude*fabs(signedGradientNoise(currentCoord));
+	currentCoord *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+	if(octaves < 2)
+		return result / amplitudeSum;
+
+	result += amplitude*fabs(signedGradientNoise(currentCoord));
+	currentCoord *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+	if(octaves < 3)
+		return result / amplitudeSum;
+
+	result += amplitude*fabs(signedGradientNoise(currentCoord));
+	currentCoord *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+	if(octaves < 4)
+		return result / amplitudeSum;
+
+	result += amplitude*fabs(signedGradientNoise(currentCoord));
+	currentCoord *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+	if(octaves < 5)
+		return result / amplitudeSum;
+
+	result += amplitude*fabs(signedGradientNoise(currentCoord));
+	currentCoord *= lacunarity;
+	amplitudeSum += amplitude;
+	amplitude *= gain;
+
+	return result / amplitudeSum;
+}
+
+function fbmSignedGradientNoiseAbsOctaves(position: float3, octaves: int, lacunarity: float) -> float
+{
+	return fbmSignedGradientNoiseAbsOctaves(position, octaves, lacunarity, 1.0f/lacunarity);
+}
+
+function turbulenceScales(position: float3, octaves: int) -> float
+{
+	return fbmSignedGradientNoiseOctaves(position, octaves, 2.0f, 0.5f);
+}
+
+function turbulence(position: float2) -> float
+{
+	return turbulenceScales(position, 4);
 }

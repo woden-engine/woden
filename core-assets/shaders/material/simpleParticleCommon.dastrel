@@ -1,0 +1,20 @@
+import particle.state;
+
+semantic VertexOutput
+{
+    out(0) color: float4;
+	out(1) texcoord: float2;
+	out(2) particleIndex: uint;
+}
+
+semantic FragmentInput
+{
+    in(0) color: float4;
+    in(1) texcoord: float2;
+	in(2) particleIndex: uint;
+}
+
+buffer(binding=RenderableState.DeformationState) ParticleState
+{
+    states: ParticleStateData[];
+}

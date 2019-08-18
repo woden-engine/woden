@@ -3,24 +3,7 @@ import fragment.stage;
 import rendering.environment;
 import rendering.lightingOutputs;
 import particle.state;
-
-semantic VertexOutput
-{
-    out(0) color: float4;
-	out(1) texcoord: float2;
-}
-
-semantic FragmentInput
-{
-    in(0) color: float4;
-    in(1) texcoord: float2;
-}
-
-buffer(binding=RenderableState.DeformationState) ParticleState
-{
-    states: ParticleStateData[];
-}
-
+import simpleParticleCommon;
 
 //==============================================================================
 // Color vertex shader
@@ -56,6 +39,7 @@ code_block(vertex) particleVertex
 
     VertexOutput.color = objectState.color*particleState.color;
 	VertexOutput.texcoord = particleTexcoord;
+	VertexOutput.particleIndex = VertexStage.instanceID;
     VertexStage.screenPosition = projectionMatrix * viewParticleVertex;
 }
 
