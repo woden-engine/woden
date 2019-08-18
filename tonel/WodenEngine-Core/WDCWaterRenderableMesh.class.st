@@ -20,5 +20,6 @@ WDCWaterRenderableMesh >> createDeformationState [
 { #category : #initialization }
 WDCWaterRenderableMesh >> initialize [
 	super initialize.
-	self makeTranslucentSorted
+	self makeTranslucentSorted;
+		renderPriority: RenderPriorityTranslucentSortedFirst
 ]

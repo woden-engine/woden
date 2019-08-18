@@ -73,6 +73,12 @@ WDAESPlayerView >> initialize [
 	viewLivingTime := 0.0
 ]
 
+{ #category : #opening }
+WDAESPlayerView >> openedWithWindow: aWindow [
+	super openedWithWindow: aWindow.
+	self captureMouse
+]
+
 { #category : #accessing }
 WDAESPlayerView >> playerEntity [
 	^ playerEntity
@@ -111,6 +117,10 @@ WDAESPlayerView >> updateForFrameDelta: delta [
 { #category : #visiting }
 WDAESPlayerView >> visitKeyDownEvent: anEvent [
 	anEvent repeat > 0 ifTrue: [ ^ 0 ].
+	anEvent modifiers alt  ifTrue: [ 
+		anEvent symbol = OSK_F4 ifTrue: [ ^ self closeRequested ].
+	].
+
 	anEvent symbol = OSK_F1 ifTrue: [ self toggleMouseCapture ].
 	anEvent symbol = OSK_F2 ifTrue: [ self model togglePhysicsDebugging ].
 	anEvent symbol = OSK_F3 ifTrue: [ sceneRenderer debugNextRenderTarget ].

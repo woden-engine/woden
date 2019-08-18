@@ -23,7 +23,9 @@ Class {
 		'RenderPriorityOpaqueBackground',
 		'RenderPriorityOpaqueStatic',
 		'RenderPriorityTranslucent',
-		'RenderPriorityTranslucentSorted'
+		'RenderPriorityTranslucentSorted',
+		'RenderPriorityTranslucentSortedFirst',
+		'RenderPriorityTranslucentSortedNormal'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -48,6 +50,10 @@ WDCAbstractRenderable class >> initialize [
 	RenderPriorityEditorTranslucentAfter := 1500.
 
 	RenderPriorityTranslucentSorted := 2000.
+
+	RenderPriorityTranslucentSortedFirst := 2100.
+
+	RenderPriorityTranslucentSortedNormal := 2300.
 	
 	RenderPriorityEditorTranslucentSortedAfter := 2500.
 	
@@ -96,6 +102,16 @@ WDCAbstractRenderable class >> renderPriorityTranslucent [
 { #category : #accessing }
 WDCAbstractRenderable class >> renderPriorityTranslucentSorted [
 	^ RenderPriorityTranslucentSorted
+]
+
+{ #category : #accessing }
+WDCAbstractRenderable class >> renderPriorityTranslucentSortedFirst [
+	^ RenderPriorityTranslucentSortedFirst
+]
+
+{ #category : #accessing }
+WDCAbstractRenderable class >> renderPriorityTranslucentSortedNormal [
+	^ RenderPriorityTranslucentSortedNormal
 ]
 
 { #category : #converting }
@@ -271,7 +287,7 @@ WDCAbstractRenderable >> translucentRenderPriority [
 
 { #category : #accessing }
 WDCAbstractRenderable >> translucentSortedRenderPriority [
-	self renderPriority: RenderPriorityTranslucentSorted
+	self renderPriority: RenderPriorityTranslucentSortedNormal
 ]
 
 { #category : #'renderable state' }
