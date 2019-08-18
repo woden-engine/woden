@@ -115,6 +115,15 @@ WDESGenericEntity >> addSkyBoxWithTexture: aTexture [
 ]
 
 { #category : #building }
+WDESGenericEntity >> addSoundSourceComponentAt: location with: aBlock [
+	| soundComponent |
+	soundComponent := WDESSoundSourceComponent new position: location.
+	self addComponent: soundComponent.
+	aBlock value: soundComponent.
+	^ soundComponent
+]
+
+{ #category : #building }
 WDESGenericEntity >> addUseActuationBoxVolume: boxVolume withAction: actionBlock [
 	^ self addComponent: (WDESUseActuationBoxVolumeComponent new
 		boxVolume: boxVolume;

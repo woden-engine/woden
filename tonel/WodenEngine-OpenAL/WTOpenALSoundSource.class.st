@@ -7,12 +7,15 @@ Class {
 		'dataSource',
 		'gain',
 		'position',
-		'velocity'
+		'velocity',
+		'looped',
+		'isGlobalSource',
+		'pitch'
 	],
 	#pools : [
 		'OpenALConstants'
 	],
-	#category : 'WodenEngine-OpenAL'
+	#category : #'WodenEngine-OpenAL'
 }
 
 { #category : #accessing }
@@ -69,9 +72,60 @@ WTOpenALSoundSource >> hasValidHandle [
 WTOpenALSoundSource >> initialize [
 	super initialize.
 	gain := 1.0.
+	pitch := 1.0.
 	position := WMVector3F new.
 	velocity := WMVector3F new.
 	handle := 0.
+	looped := false.
+	isGlobalSource := false.
+]
+
+{ #category : #accessing }
+WTOpenALSoundSource >> isGlobalSource [
+	^ isGlobalSource
+]
+
+{ #category : #accessing }
+WTOpenALSoundSource >> isGlobalSource: anObject [
+	isGlobalSource := anObject.
+	
+	(self hasValidHandle) ifTrue: [
+		device asCurrentDo: [
+			OpenAL
+				sourcei: handle param: AL_SOURCE_RELATIVE value: isGlobalSource asBit
+		]
+	]
+]
+
+{ #category : #accessing }
+WTOpenALSoundSource >> looped [
+	^ looped
+]
+
+{ #category : #accessing }
+WTOpenALSoundSource >> looped: anObject [
+	looped := anObject.
+	
+	(self hasValidHandle) ifTrue: [
+		device asCurrentDo: [
+			OpenAL
+				sourcei: handle param: AL_LOOPING value: looped asBit
+		]
+	]
+]
+
+{ #category : #accessing }
+WTOpenALSoundSource >> pitch [
+	^ pitch
+]
+
+{ #category : #accessing }
+WTOpenALSoundSource >> pitch: anObject [
+	pitch := anObject.
+	
+	device asCurrentDo: [
+		OpenAL sourcef: handle param: AL_PITCH value: pitch.
+	]
 ]
 
 { #category : #'as yet unclassified' }

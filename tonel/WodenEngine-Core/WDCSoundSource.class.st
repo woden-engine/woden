@@ -5,9 +5,12 @@ Class {
 		'dataSource',
 		'position',
 		'velocity',
-		'gain'
+		'gain',
+		'looped',
+		'isGlobalSource',
+		'pitch'
 	],
-	#category : 'WodenEngine-Core-Sound'
+	#category : #'WodenEngine-Core-Sound'
 }
 
 { #category : #'as yet unclassified' }
@@ -16,8 +19,11 @@ WDCSoundSource >> buildHandle [
 	handle
 		dataSource: dataSource validHandle;
 		gain: gain;
+		pitch: pitch;
 		velocity: velocity;
-		position: position
+		position: position;
+		looped: looped;
+		isGlobalSource: isGlobalSource.
 ]
 
 { #category : #accessing }
@@ -53,6 +59,48 @@ WDCSoundSource >> initialize [
 	position := WMVector3F new.
 	velocity := WMVector3F new.
 	gain := 1.0.
+	pitch := 1.0.
+	isGlobalSource := false.
+	looped := false.
+]
+
+{ #category : #accessing }
+WDCSoundSource >> isGlobalSource [
+	^ isGlobalSource
+]
+
+{ #category : #accessing }
+WDCSoundSource >> isGlobalSource: anObject [
+	isGlobalSource := anObject.
+	self hasValidHandle ifTrue: [
+		handle isGlobalSource: isGlobalSource
+	]
+]
+
+{ #category : #accessing }
+WDCSoundSource >> looped [
+	^ looped
+]
+
+{ #category : #accessing }
+WDCSoundSource >> looped: anObject [
+	looped := anObject.
+	self hasValidHandle ifTrue: [
+		handle looped: looped
+	]
+]
+
+{ #category : #accessing }
+WDCSoundSource >> pitch [
+	^ pitch
+]
+
+{ #category : #accessing }
+WDCSoundSource >> pitch: anObject [
+	pitch := anObject.
+	self hasValidHandle ifTrue: [
+		handle pitch: pitch
+	]
 ]
 
 { #category : #'as yet unclassified' }

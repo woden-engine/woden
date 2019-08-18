@@ -3,7 +3,8 @@ Class {
 	#superclass : #WDAESUniverseView,
 	#instVars : [
 		'playerEntity',
-		'cameraComponent'
+		'cameraComponent',
+		'soundListener'
 	],
 	#category : #'WodenEngine-EntitySystem-Application'
 }
@@ -47,6 +48,16 @@ WDAESPlayerView >> drawOnBabylonCanvas: canvas [
 
 ]
 
+{ #category : #'as yet unclassified' }
+WDAESPlayerView >> ensureValidSoundListener [
+	soundListener ifNil: [
+		soundListener := self engine createSoundListener.
+		soundListener activate
+	].
+
+
+]
+
 { #category : #accessing }
 WDAESPlayerView >> playerEntity [
 	^ playerEntity
@@ -61,12 +72,23 @@ WDAESPlayerView >> playerEntity: anObject [
 
 { #category : #'rendering process stages' }
 WDAESPlayerView >> prepareRendering [
-	cameraComponent ifNotNil: [ cameraComponent applyActiveNearFarDistance ].
+	| globalTransform |
+	cameraComponent ifNotNil: [
+		cameraComponent applyActiveNearFarDistance.
+		soundListener ifNotNil: [
+			globalTransform := cameraComponent validSceneNode globalTransform.
+			soundListener
+				position: globalTransform translation asWMVector3F;
+				"velocity: linearVelocity asWMVector3F;"
+				orientation: globalTransform matrix asWMMatrix3F.
+		]
+	].
 	super prepareRendering
 ]
 
 { #category : #'as yet unclassified' }
 WDAESPlayerView >> spawnPlayer [
+	self ensureValidSoundListener.
 	self playerEntity: model gameLogic spawnPlayer
 ]
 
