@@ -251,7 +251,9 @@ WDESCharacterBehaviorComponent >> onUnderwaterVolume: underwaterVolumeComponent 
 	isHeadUnderwater ifFalse: [
 		isHeadUnderwater := underwaterVolumeComponent ownerEntity sceneNode globalBoundingBox includesPoint: self globalHeadPosition.
 		(isHeadUnderwater and: [ ownerEntity isPlayerEntity ]) ifTrue: [
-			ownerEntity currentEnvironmentFog: underwaterVolumeComponent environmentFogSettings
+			ownerEntity
+				currentEnvironmentFog: underwaterVolumeComponent environmentFogSettings;
+				currentEnvironmentSoundGainFactor: underwaterVolumeComponent environmentSoundGainFactor
 		].
 	].
 
@@ -290,7 +292,11 @@ WDESCharacterBehaviorComponent >> prePhysicsTick: delta [
 		linearVelocity: linearVelocity.
 
 	"If we are underwater, then before the postPhysicsTick, this will be set to true."
-	ownerEntity isPlayerEntity ifTrue: [ ownerEntity currentEnvironmentFog: nil ].
+	ownerEntity isPlayerEntity ifTrue: [
+		ownerEntity
+			currentEnvironmentFog: nil;
+			currentEnvironmentSoundGainFactor: nil
+	].
 	isUnderwater := false.
 	isHeadUnderwater := false.
 ]

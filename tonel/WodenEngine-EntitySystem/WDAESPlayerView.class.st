@@ -5,7 +5,8 @@ Class {
 		'playerEntity',
 		'cameraComponent',
 		'soundListener',
-		'viewLivingTime'
+		'viewLivingTime',
+		'soundGainFactor'
 	],
 	#category : #'WodenEngine-EntitySystem-Application'
 }
@@ -68,6 +69,7 @@ WDAESPlayerView >> ensureValidSoundListener [
 { #category : #'rendering process stages' }
 WDAESPlayerView >> initialize [
 	super initialize.
+	soundGainFactor := 0.0.
 	viewLivingTime := 0.0
 ]
 
@@ -85,16 +87,9 @@ WDAESPlayerView >> playerEntity: anObject [
 
 { #category : #'rendering process stages' }
 WDAESPlayerView >> prepareRendering [
-	| globalTransform |
 	cameraComponent ifNotNil: [
 		cameraComponent applyActiveNearFarDistance.
-		soundListener ifNotNil: [
-			globalTransform := cameraComponent validSceneNode globalTransform.
-			soundListener
-				position: globalTransform translation asWMVector3F;
-				"velocity: linearVelocity asWMVector3F;"
-				orientation: globalTransform matrix asWMMatrix3F.
-		]
+		soundListener ifNotNil: [ cameraComponent applySoundListenerParameters: soundListener withGainFactor: soundGainFactor ]
 	].
 	super prepareRendering
 ]
@@ -109,9 +104,7 @@ WDAESPlayerView >> spawnPlayer [
 WDAESPlayerView >> updateForFrameDelta: delta [
 	super updateForFrameDelta: delta.
 	viewLivingTime := viewLivingTime + delta.
-	soundListener ifNotNil: [
-		soundListener gain: (viewLivingTime linearStepFrom: 0.0 to: 3.0)
-	]
+	soundGainFactor := viewLivingTime linearStepFrom: 0.0 to: 3.0.
 
 ]
 

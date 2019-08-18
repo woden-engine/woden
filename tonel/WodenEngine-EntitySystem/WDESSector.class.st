@@ -70,6 +70,11 @@ WDESSector >> defaultFogSettings [
 	^ self universe ifNotNil: [ :universe | universe defaultFogSettings ]
 ]
 
+{ #category : #accessing }
+WDESSector >> defaultSoundGainFactor [
+	^ self universe ifNotNil: [ :universe | universe defaultSoundGainFactor ]
+]
+
 { #category : #initialization }
 WDESSector >> initialize [
 	super initialize.

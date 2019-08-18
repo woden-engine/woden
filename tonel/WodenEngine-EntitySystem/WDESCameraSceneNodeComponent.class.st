@@ -17,6 +17,18 @@ WDESCameraSceneNodeComponent >> applyActiveNearFarDistance [
 	]
 ]
 
+{ #category : #'as yet unclassified' }
+WDESCameraSceneNodeComponent >> applySoundListenerParameters: soundListener withGainFactor: soundGainFactor [
+	| globalTransform |
+	globalTransform := self validSceneNode globalTransform.
+	soundListener
+		gain: self currentSoundGainFactor * soundGainFactor;
+		position: globalTransform translation asWMVector3F;
+		"velocity: linearVelocity asWMVector3F;"
+		orientation: globalTransform matrix asWMMatrix3F.
+
+]
+
 { #category : #accessing }
 WDESCameraSceneNodeComponent >> createSceneNode [
 	^ WDSGCamera new
@@ -45,6 +57,11 @@ WDESCameraSceneNodeComponent >> currentFogSettings [
 { #category : #'as yet unclassified' }
 WDESCameraSceneNodeComponent >> currentNearDistance [
 	^ (ownerEntity ifNotNil: [ownerEntity sector defaultCameraNearDistance]) ifNil: [0.01]
+]
+
+{ #category : #'as yet unclassified' }
+WDESCameraSceneNodeComponent >> currentSoundGainFactor [
+	^ (ownerEntity ifNotNil: [ownerEntity currentSoundGainFactor])
 ]
 
 { #category : #'as yet unclassified' }

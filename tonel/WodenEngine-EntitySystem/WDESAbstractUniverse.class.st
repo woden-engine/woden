@@ -11,7 +11,8 @@ Class {
 		'defaultFogSettings',
 		'defaultCameraCascadeSplitDistribution',
 		'defaultCameraToneMappingOperator',
-		'defaultCameraExposure'
+		'defaultCameraExposure',
+		'defaultSoundGainFactor'
 	],
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
@@ -119,6 +120,16 @@ WDESAbstractUniverse >> defaultFogSettings: fogSettings [
 	defaultFogSettings := fogSettings
 ]
 
+{ #category : #accessing }
+WDESAbstractUniverse >> defaultSoundGainFactor [
+	^ defaultSoundGainFactor
+]
+
+{ #category : #accessing }
+WDESAbstractUniverse >> defaultSoundGainFactor: anObject [
+	defaultSoundGainFactor := anObject
+]
+
 { #category : #accesing }
 WDESAbstractUniverse >> engine [
 	^ engine
@@ -179,6 +190,7 @@ WDESAbstractUniverse >> initialize [
 	defaultCameraToneMappingOperator := #linear.
 	defaultCameraExposure := 1.0.
 	defaultFogSettings := WDESFogSettings new.
+	defaultSoundGainFactor := 1.0.
 ]
 
 { #category : #initialization }

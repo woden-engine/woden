@@ -2,7 +2,8 @@ Class {
 	#name : #WDESPlayerEntity,
 	#superclass : #WDESGenericEntity,
 	#instVars : [
-		'currentEnvironmentFog'
+		'currentEnvironmentFog',
+		'currentEnvironmentSoundGainFactor'
 	],
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
@@ -17,9 +18,19 @@ WDESPlayerEntity >> currentEnvironmentFog: anObject [
 	currentEnvironmentFog := anObject
 ]
 
+{ #category : #accessing }
+WDESPlayerEntity >> currentEnvironmentSoundGainFactor: anObject [
+	currentEnvironmentSoundGainFactor := anObject
+]
+
 { #category : #environment }
 WDESPlayerEntity >> currentFogSettings [
 	^ currentEnvironmentFog ifNil: [ super currentFogSettings ]
+]
+
+{ #category : #environment }
+WDESPlayerEntity >> currentSoundGainFactor [
+	^ currentEnvironmentSoundGainFactor ifNil: [ super currentSoundGainFactor ]
 ]
 
 { #category : #testing }

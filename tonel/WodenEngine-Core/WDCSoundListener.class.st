@@ -22,7 +22,7 @@ WDCSoundListener >> buildHandle [
 		velocity: velocity;
 		position: position;
 		orientation: orientation;
-		gain: gain.
+		gain: gain
 ]
 
 { #category : #'as yet unclassified' }

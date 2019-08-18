@@ -40,6 +40,7 @@ WDESSoundSourceComponent >> ensureValidSoundSource [
 		pitch: pitch;
 		looped: looped;
 		isGlobalSource: isGlobalSource.
+	self updateSourcePosition.
 	dataSource ifNotNil: [ 
 		soundSource dataSource: dataSource.
 		playing ifTrue: [ soundSource play ]
@@ -109,7 +110,7 @@ WDESSoundSourceComponent >> pitch [
 { #category : #accessing }
 WDESSoundSourceComponent >> pitch: anObject [
 	pitch := anObject.
-	soundSource ifNotNil: [ soundSource pitch: gain ]
+	soundSource ifNotNil: [ soundSource pitch: pitch ]
 ]
 
 { #category : #accessing }

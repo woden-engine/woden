@@ -80,6 +80,11 @@ WDESAbstractEntity >> currentFogSettings [
 	^ self sector defaultFogSettings
 ]
 
+{ #category : #environment }
+WDESAbstractEntity >> currentSoundGainFactor [
+	^ self sector defaultSoundGainFactor
+]
+
 { #category : #accessing }
 WDESAbstractEntity >> engine [
 	^ parent ifNotNil: [parent engine]
