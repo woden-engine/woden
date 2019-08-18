@@ -242,7 +242,7 @@ WDESAbstractUniverse >> scene: anScene [
 WDESAbstractUniverse >> tick: delta [
 	physicsWorld ifNotNil: [ physicsWorld simulateTime: delta ].
 	self activeSectors do: [ :sector | sector tick: delta ].
-	gameLogic tick: delta.
+	self gameLogic tick: delta.
 ]
 
 { #category : #accessing }
