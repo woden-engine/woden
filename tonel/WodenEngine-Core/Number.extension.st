@@ -91,6 +91,14 @@ Number >> gradientNoise [
 ]
 
 { #category : #'*WodenEngine-Core' }
+Number >> linearStepFrom: leftEdge to: rightEdge [
+	self <= leftEdge ifTrue: [ ^ 0.0 ].
+	self >= rightEdge ifTrue: [ ^ 1.0 ].
+	
+	^ ((self - leftEdge) / (rightEdge - leftEdge))
+]
+
+{ #category : #'*WodenEngine-Core' }
 Number >> productFuzzyAnd: other [
 	^ self * other
 ]

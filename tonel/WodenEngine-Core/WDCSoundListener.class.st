@@ -4,9 +4,10 @@ Class {
 	#instVars : [
 		'position',
 		'velocity',
-		'orientation'
+		'orientation',
+		'gain'
 	],
-	#category : 'WodenEngine-Core-Sound'
+	#category : #'WodenEngine-Core-Sound'
 }
 
 { #category : #'as yet unclassified' }
@@ -20,7 +21,24 @@ WDCSoundListener >> buildHandle [
 	handle
 		velocity: velocity;
 		position: position;
-		orientation: orientation.
+		orientation: orientation;
+		gain: gain.
+]
+
+{ #category : #'as yet unclassified' }
+WDCSoundListener >> deactivate [
+	engine soundDevice useListener: nil
+]
+
+{ #category : #accessing }
+WDCSoundListener >> gain [
+	^ gain
+]
+
+{ #category : #accessing }
+WDCSoundListener >> gain: anObject [
+	gain := anObject.
+	self hasValidHandle ifTrue: [ handle gain: anObject ].
 ]
 
 { #category : #initialization }
@@ -29,6 +47,7 @@ WDCSoundListener >> initialize [
 	position := WMVector3F new.
 	velocity := WMVector3F new.
 	orientation := WMMatrix3F new.
+	gain := 1.0.
 ]
 
 { #category : #accessing }

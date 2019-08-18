@@ -55,6 +55,7 @@ WDESAbstractUniverse >> createSimulationModel [
 	self ensureValidEngine.
 	^ (WDAESUniverseSimulationModel for: engine)
 		universe: self;
+		precacheResources;
 		yourself
 ]
 

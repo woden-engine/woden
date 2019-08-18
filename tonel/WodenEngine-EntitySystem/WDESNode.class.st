@@ -50,6 +50,10 @@ WDESNode >> postPhysicsTick: delta [
 WDESNode >> prePhysicsTick: delta [
 ]
 
+{ #category : #'as yet unclassified' }
+WDESNode >> precacheResources [
+]
+
 { #category : #adding }
 WDESNode >> removedFromEntity: anEntity [
 ]

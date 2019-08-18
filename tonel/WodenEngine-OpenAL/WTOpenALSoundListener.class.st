@@ -5,12 +5,13 @@ Class {
 		'device',
 		'position',
 		'velocity',
-		'orientation'
+		'orientation',
+		'gain'
 	],
 	#pools : [
 		'OpenALConstants'
 	],
-	#category : 'WodenEngine-OpenAL'
+	#category : #'WodenEngine-OpenAL'
 }
 
 { #category : #accessing }
@@ -24,6 +25,20 @@ WTOpenALSoundListener >> device: anObject [
 ]
 
 { #category : #accessing }
+WTOpenALSoundListener >> gain [
+	^ gain
+]
+
+{ #category : #accessing }
+WTOpenALSoundListener >> gain: anObject [
+	gain := anObject.
+	
+	(self hasValidHandle and: [ self isCurrentListener ]) ifTrue: [
+		device asCurrentDo: [ OpenAL listenerf: AL_GAIN value: gain ]
+	]
+]
+
+{ #category : #accessing }
 WTOpenALSoundListener >> hasValidHandle [
 	^ device isNotNil
 ]
@@ -34,6 +49,7 @@ WTOpenALSoundListener >> initialize [
 	position := WMVector3F new.
 	velocity := WMVector3F new.
 	orientation := WMMatrix3F new.
+	gain := 1.0.
 ]
 
 { #category : #testing }
@@ -86,6 +102,7 @@ WTOpenALSoundListener >> sendValues [
 	| forward up orientationData |
 	device asCurrentDo: [
 		OpenAL
+			listenerf: AL_GAIN value: gain;
 			listener3f: AL_POSITION value: position x value: position y value: position z;
 			listener3f: AL_VELOCITY value: velocity x value: velocity y value: velocity z.
 		

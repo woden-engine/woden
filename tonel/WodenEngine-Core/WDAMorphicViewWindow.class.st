@@ -281,3 +281,8 @@ WDAMorphicViewWindow >> view [
 WDAMorphicViewWindow >> view: anObject [
 	view := anObject
 ]
+
+{ #category : #visiting }
+WDAMorphicViewWindow >> visitWindowCloseEvent: anEvent [
+	view ifNil: [ ^ super visitWindowCloseEvent: anEvent ]
+]

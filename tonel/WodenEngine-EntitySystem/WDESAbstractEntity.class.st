@@ -193,6 +193,12 @@ WDESAbstractEntity >> physicsWorldObject [
 	^ nil
 ]
 
+{ #category : #'as yet unclassified' }
+WDESAbstractEntity >> precacheResources [
+	components do: #precacheResources.
+	children do: #precacheResources
+]
+
 { #category : #adding }
 WDESAbstractEntity >> removeChild: aChild [
 	self assert: aChild parent == self.

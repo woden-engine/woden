@@ -38,6 +38,11 @@ WDAESAbstractUniverseModel >> newScene [
 ]
 
 { #category : #'as yet unclassified' }
+WDAESAbstractUniverseModel >> precacheResources [
+	universe ifNotNil: [ universe precacheResources ].
+]
+
+{ #category : #'as yet unclassified' }
 WDAESAbstractUniverseModel >> togglePhysicsDebugging [
 	physicsWorldDebugDrawingSceneNode ifNotNil: [ physicsWorldDebugDrawingSceneNode toggleVisible ]
 ]

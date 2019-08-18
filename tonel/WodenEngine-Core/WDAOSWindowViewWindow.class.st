@@ -66,3 +66,8 @@ WDAOSWindowViewWindow >> view [
 WDAOSWindowViewWindow >> view: anObject [
 	view := anObject
 ]
+
+{ #category : #'event processing' }
+WDAOSWindowViewWindow >> visitWindowCloseEvent: anEvent [
+	view ifNil: [ ^ super visitWindowCloseEvent: anEvent ]
+]

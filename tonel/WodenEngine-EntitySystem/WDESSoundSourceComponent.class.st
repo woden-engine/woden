@@ -130,6 +130,11 @@ WDESSoundSourceComponent >> position: anObject [
 	self updateSourcePosition
 ]
 
+{ #category : #notifications }
+WDESSoundSourceComponent >> precacheResources [
+	self ensureValidSoundSource
+]
+
 { #category : #accessing }
 WDESSoundSourceComponent >> soundSource [
 	^ soundSource

@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'playerEntity',
 		'cameraComponent',
-		'soundListener'
+		'soundListener',
+		'viewLivingTime'
 	],
 	#category : #'WodenEngine-EntitySystem-Application'
 }
@@ -20,6 +21,12 @@ WDAESPlayerView >> attachCameraToPlayerEntity [
 WDAESPlayerView >> camera [
 	camera ifNil: [ self createCamera ].
 	^ camera
+]
+
+{ #category : #'as yet unclassified' }
+WDAESPlayerView >> close [
+	soundListener ifNotNil: [ soundListener deactivate ].
+	^ super close
 ]
 
 { #category : #accessing }
@@ -52,10 +59,16 @@ WDAESPlayerView >> drawOnBabylonCanvas: canvas [
 WDAESPlayerView >> ensureValidSoundListener [
 	soundListener ifNil: [
 		soundListener := self engine createSoundListener.
-		soundListener activate
+		soundListener gain: 0.0; activate
 	].
 
 
+]
+
+{ #category : #'rendering process stages' }
+WDAESPlayerView >> initialize [
+	super initialize.
+	viewLivingTime := 0.0
 ]
 
 { #category : #accessing }
@@ -90,6 +103,16 @@ WDAESPlayerView >> prepareRendering [
 WDAESPlayerView >> spawnPlayer [
 	self ensureValidSoundListener.
 	self playerEntity: model gameLogic spawnPlayer
+]
+
+{ #category : #'rendering process stages' }
+WDAESPlayerView >> updateForFrameDelta: delta [
+	super updateForFrameDelta: delta.
+	viewLivingTime := viewLivingTime + delta.
+	soundListener ifNotNil: [
+		soundListener gain: (viewLivingTime linearStepFrom: 0.0 to: 3.0)
+	]
+
 ]
 
 { #category : #visiting }

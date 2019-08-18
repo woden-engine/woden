@@ -47,6 +47,11 @@ WDAView >> close [
 	window ifNotNil: [ window close ]
 ]
 
+{ #category : #'event processing' }
+WDAView >> closeRequested [
+	self close
+]
+
 { #category : #opening }
 WDAView >> closed [
 	model ifNotNil: [ model removeView: self ]
@@ -212,6 +217,11 @@ WDAView >> toggleMouseCapture [
 { #category : #'rendering process stages' }
 WDAView >> updateForFrameDelta: delta [
 	subViews do: [:sv | sv updateForFrameDelta: delta].
+]
+
+{ #category : #'event processing' }
+WDAView >> visitWindowCloseEvent: event [
+	self closeRequested
 ]
 
 { #category : #accessing }

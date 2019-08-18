@@ -70,5 +70,10 @@ WTOpenALSoundDevice >> device: anObject [
 { #category : #'as yet unclassified' }
 WTOpenALSoundDevice >> useListener: soundListener [
 	currentListener := soundListener.
-	currentListener ifNotNil: [ soundListener sendValues ]
+	currentListener
+		ifNil: [ self asCurrentDo: [
+				OpenAL listenerf: AL_GAIN value: 0.0
+			]
+		]
+		ifNotNil: [ soundListener sendValues ]
 ]
