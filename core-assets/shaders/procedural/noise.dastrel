@@ -1127,7 +1127,7 @@ function turbulenceScales(position: float3, octaves: int) -> float
 	return fbmSignedGradientNoiseOctaves(position, octaves, 2.0f, 0.5f);
 }
 
-function turbulence(position: float2) -> float
+function turbulence(position: float3) -> float
 {
 	return turbulenceScales(position, 4);
 }
