@@ -180,6 +180,7 @@ WDCTerrainMaterial >> initialize [
 	albedoTextures := { nil . nil . nil . nil . nil }.
 	normalTextures := { nil . nil . nil . nil . nil }.
 	metallicRoughnessTextures := { nil . nil . nil . nil . nil }.
+	triplanar := false.
 	self invalidateCache.
 ]
 
