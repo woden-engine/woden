@@ -352,6 +352,106 @@ view addInteraction: RWOrbitController.
 ]
 
 { #category : #layout }
+RWExample >> exampleBalloonSimulation2 [
+	<script: 'self new exampleBalloonSimulation2 open'>
+| view floor weightRadius weight balloonRadius balloon balloonBottomAnchor string balloonMass balloonInertiaDiag balloonInertia balloonInverseInertia balloonLinearDamping balloonAngularDamping stringLength stringRigidity balloonVelocity balloonAngularVelocity balloonOrientation |
+view := RWView new.
+
+floor := RWCube new width: 4.0; depth: 3.0; height: 0.1; element.
+floor
+	translateByX: -1.0;
+	translateToY: -0.05.
+view add: floor.
+
+weightRadius := 0.05.
+weight := (RWUVSphere red size: weightRadius*2.0) element.
+weight translateToY: weightRadius.
+
+balloonRadius := 0.225.
+balloon := (RWModelShape modelNamed: 'models/demos/decoration/foil-balloon.glb' node: 'Balloon') element.
+balloonBottomAnchor := balloon bottomAnchorPoint.
+
+string := RWLine black elementFrom: weight to: balloonBottomAnchor.
+
+view addAll: {balloon . weight . string }.
+
+"Constants"
+balloonMass := 1.00.
+balloonInertiaDiag := 2.0/5.0*balloonMass*balloonRadius*balloonRadius.
+balloonInertia := WMMatrix3F newFrom: {
+	balloonInertiaDiag . 0.0 . 0.0 .
+	0.0 . balloonInertiaDiag . 0.0 .
+	0.0 . 0.0 . balloonInertiaDiag
+}.
+balloonInverseInertia := balloonInertia inverted.
+balloonLinearDamping := 0.8.
+balloonAngularDamping := 0.8.
+stringLength := 1.5.
+stringRigidity := 300.0.
+
+"Initial state"
+balloon translateToY: (weightRadius *2.0) + balloonRadius.
+"balloon translateByZ: 0.8."
+balloon translateByX: 1.2.
+balloonVelocity := WMVector3F zero.
+balloonAngularVelocity := WMVector3F zero.
+balloonOrientation := WMQuaternionF identity.
+
+"Physical simulation"
+balloon setBehavior: [ :delta |
+	|
+		accel linearForce gravity buoyancy
+		currentStringLength springForce stringLengthDelta
+		torque springTorque angularAccel
+	|
+	
+	"Dynamics"
+	gravity := (WMVector3F y: -9.8) * balloonMass.
+	buoyancy := (WMVector3F y: 12.8) * balloonMass.
+	springForce := WMVector3F zero.
+	springTorque := WMVector3F zero.
+	
+	currentStringLength := (balloonBottomAnchor position - weight position) length
+		- balloonRadius - weightRadius.
+	stringLengthDelta := currentStringLength - stringLength.
+	stringLengthDelta > 0.0 ifTrue: [ 
+		springForce := (balloonBottomAnchor position - weight position) normalized negated
+			* (stringLengthDelta * stringRigidity).
+		
+		springTorque := (balloonBottomAnchor position - balloon position) cross: springForce.
+	].
+
+	linearForce := gravity + buoyancy + springForce
+		- (balloonVelocity * balloonLinearDamping).
+	torque := springTorque - (balloonAngularVelocity * balloonAngularDamping).
+		
+	"Linear integration."
+	accel := linearForce / balloonMass.
+		
+	balloonVelocity := balloonVelocity + (accel*delta).
+	
+	"Angular integration"
+	angularAccel := balloonInverseInertia transformVector3: torque.
+	balloonAngularVelocity := balloonAngularVelocity + (angularAccel*delta).
+	
+	"balloonOrientation := balloonOrientation +
+		((WMQuaternionF r: 0.0 xyz: balloonAngularVelocity)*balloonOrientation * (0.5 * delta))."
+	balloonOrientation := balloonOrientation +
+		(balloonOrientation * (WMQuaternionF r: 0.0 xyz: balloonAngularVelocity)* (0.5 * delta)).
+		
+	balloonOrientation := balloonOrientation normalized.
+	
+	"Set the balloon orientation and position"
+	balloon
+		orientation: balloonOrientation asWMMatrix3F;
+		translateBy: balloonVelocity * delta.
+].
+
+view addInteraction: RWOrbitController.
+^ view
+]
+
+{ #category : #layout }
 RWExample >> exampleForceBasedLayout [
 	<script: 'self new exampleForceBasedLayout open'>
 	| v boxes |

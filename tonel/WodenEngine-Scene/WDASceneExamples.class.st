@@ -646,6 +646,11 @@ WDASceneExamples class >> exampleModelBabyDragon [
 ]
 
 { #category : #'example models' }
+WDASceneExamples class >> exampleModelBalloon [
+	(WDCEngine default resourceCache load3DModel: 'models/demos/decoration/foil-balloon.glb') openViewer
+]
+
+{ #category : #'example models' }
 WDASceneExamples class >> exampleModelBunny [
 	(WDCEngine default resourceCache load3DModel: 'models/stanford/bun_zipper.ply') openViewer
 ]

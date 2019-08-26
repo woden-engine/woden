@@ -60,19 +60,7 @@ RWElement >> addInteraction: anInteraction [
 
 { #category : #adding }
 RWElement >> addedIn: aView [
-	renderable := shape buildRenderableFor: self view: aView.
-	sceneNode isLocalSpatialNode ifFalse: [
-		self flag: 'TODO: Refactor this part'.
-		(renderable isNotNil and: [sceneNode isSpatialObject ]) ifTrue: [ 
-			sceneNode renderable: renderable. 
-		].
-		sceneNode isSpatialObject ifTrue: [ 
-			sceneNode color: (shape colorFor: self)
-		].
-	
-		aView validScene add: sceneNode.
-	].
-
+	renderable := shape buildRenderableFor: self view: aView parentSceneNode: sceneNode.
 	self buildRigidBodyForView: aView.
 
 	view := aView.
