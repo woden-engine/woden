@@ -41,4 +41,4 @@ model openWith: (WDASolidColorViewSample new color: Color blue)
 
 ## Bug reporting
 
-For bug reporting, use the GitHub issue tracker at the Woden repository https://github.com/ronsaldo/woden
+For bug reporting, use the GitHub issue tracker at the Woden repository https://github.com/woden-engine/woden
