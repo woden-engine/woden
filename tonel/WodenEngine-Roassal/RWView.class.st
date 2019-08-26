@@ -426,6 +426,8 @@ RWView >> simulatePhysics: delta [
 { #category : #rendering }
 RWView >> updateForFrameDelta: delta [
 	super updateForFrameDelta: delta.
+	self flag: 'TODO: Use a deterministic timestep here!!!'.
+	delta > (1.0 / 10.0) ifTrue: [ ^ self ].
 	self simulatePhysics: delta.
 	elements do: [ :element | element simulateTime: delta ].
 	internalElements do: [ :element | element simulateTime: delta ].

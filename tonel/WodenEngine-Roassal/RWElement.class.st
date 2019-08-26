@@ -41,8 +41,10 @@ RWElement >> accept: aVisitor [
 
 { #category : #adding }
 RWElement >> addBehavior: aBehavior [
-	behaviors add: aBehavior.
-	aBehavior addedInElement: self.
+	| behaviorObject |
+	behaviorObject := aBehavior asRWElementBehavior.
+	behaviors add: behaviorObject.
+	behaviorObject addedInElement: self.
 ]
 
 { #category : #adding }
@@ -386,6 +388,12 @@ RWElement >> rotateByZDegrees: angle [
 { #category : #accessing }
 RWElement >> sceneNode [
 	^ sceneNode
+]
+
+{ #category : #adding }
+RWElement >> setBehavior: aBehavior [
+	behaviors removeAll.
+	self addBehavior: aBehavior
 ]
 
 { #category : #accessing }

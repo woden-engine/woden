@@ -288,10 +288,9 @@ WDASceneExamples class >> example04Pool [
 
 { #category : #examples }
 WDASceneExamples class >> example04ProceduralSky [
-	| texture model scene material camera meshBuilder mesh cube sunDirection |
+	| model scene camera meshBuilder mesh cube sunDirection skyTexture sunLight |
 	model := WDASampleSceneModel new.
 	scene := model newScene.
-	material := WDCSkyMaterial for: model engine.
 
 	camera := model camera.
 	camera translateByY: 1.7.
@@ -299,22 +298,28 @@ WDASceneExamples class >> example04ProceduralSky [
 	meshBuilder := WDCGenericMeshBuilder for: scene engine.
 	meshBuilder
 		defaultMaterial;
-		addCubeWithWidth: 10.0 height: 0.5 depth: 10.0;
-		material: material;
-		addInteriorCubeWithWidth: 10.0 height: 10.0 depth: 10.0.
+		addCubeWithWidth: 10.0 height: 0.5 depth: 10.0.
 	mesh := meshBuilder mesh.
 	
 	cube := WDSGSpatialObject new.
 	cube renderable: mesh.
 	scene add: cube.
 	
-	sunDirection := WMReversibleAffineTransformF identity
+	sunLight := WDSGLightSource new.
+	sunLight
+		directional;
+		castShadows: true;
+		intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.7;
 		rotateDegreesOnX: -45;
-		transformVector3: (WMVector3F z: 1.0).
+		translateToX: 0.0 y: 1.5 z: 2.5.
 		
-	texture := self proceduralSkySunDirection: sunDirection.
-material
-	skyTexture: (texture asTextureFor: model engine).
+	sunDirection := sunLight transform transformVector3: (WMVector3F z: 1.0).
+		
+	"Create the sky."
+	skyTexture := self proceduralSkySunDirection: sunDirection.
+	skyTexture := skyTexture asTextureFor: scene engine.
+	scene createSkyWithCubeTexture: skyTexture.
+	scene ambientLighting: WMVector4F ones.
 		
 	model openWith: WDAFPSSceneView.
 

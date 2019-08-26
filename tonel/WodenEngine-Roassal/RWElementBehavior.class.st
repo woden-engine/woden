@@ -8,6 +8,11 @@ Class {
 RWElementBehavior >> addedInElement: anElement [
 ]
 
+{ #category : #converting }
+RWElementBehavior >> asRWElementBehavior [
+	^ self
+]
+
 { #category : #'time simulation' }
 RWElementBehavior >> simulateTime: delta onElement: anElement [
 ]

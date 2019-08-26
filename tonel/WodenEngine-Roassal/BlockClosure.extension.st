@@ -1,6 +1,11 @@
 Extension { #name : #BlockClosure }
 
 { #category : #'*WodenEngine-Roassal' }
+BlockClosure >> asRWElementBehavior [
+	^ RWBlockBehavior new block: self
+]
+
+{ #category : #'*WodenEngine-Roassal' }
 BlockClosure >> rwValue: valueOrArray [
 	self numArgs = 0 ifTrue: [ ^ self value ].  
 	self numArgs = 1 ifTrue: [ ^ self value: valueOrArray ].
