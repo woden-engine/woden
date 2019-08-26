@@ -5,6 +5,31 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+WDAESProceduralSamples class >> addBalloonVehicleAt: balloonPosition toSector: sector [
+	| balloonControlVolume kinematicBehavior driverPosition |
+	sector addGenericObjectAt: balloonPosition with: [ :balloon |
+		balloon makeKinematicPhysicsObject.
+		kinematicBehavior := balloon addComponent: WDESBalloonVehicleKinematicPhysicsBehavior new.
+		
+		balloon addModelLibraryNamed: 'models/demos/vehicles/balloon.glb' nodeNamed: 'Balloon' with: [ :comp |
+			comp createCollisionShapeWithConvexCollisionTreeNamed: 'BalloonCollisions'.
+			
+			balloonControlVolume := comp getChildNodeBoundingBox: 'Burner'.
+			driverPosition := comp getChildNodePosition: 'DriverLocation'.
+		].
+		
+		balloon addUseActuationBoxVolume: balloonControlVolume withAction: [ :sender :rayCastingTest |
+			sender displacementStrategy: (WDESBalloonDrivingCharacterController new
+				vehicle: balloon;
+				vehicleKinematicBehavior: kinematicBehavior;
+				localDriverPosition: driverPosition;
+				yourself)
+		].
+	].
+
+]
+
+{ #category : #'as yet unclassified' }
 WDAESProceduralSamples class >> example01SimpleLevel [
 	| engine universe |
 	engine := WDCEngine default.
@@ -148,6 +173,50 @@ WDAESProceduralSamples class >> example03Island [
 	universe createSimulationModel
 		open
 		spawnPlayer.
+]
+
+{ #category : #'as yet unclassified' }
+WDAESProceduralSamples class >> example04BalloonVehicle [
+	| engine universe |
+	engine := WDCEngine default.
+	universe := WDESSimpleUniverse for: engine.
+	universe defaultCameraToneMappingOperator: #filmic; defaultCameraFarDistance: 100.0.
+	universe buildSector: [ :sector |
+		sector buildGenericMeshWith: [ :meshBuilder |
+			meshBuilder
+				currentMaterial: (universe engine resourceCache loadMaterial: 'materials/procedural/terrain/sand.json');
+				translateToX: 0.0 y: -1.0 z: 0.0;
+				addCubeWithWidth: 500.0 height: 2.0 depth: 500.0;
+				planeTextureScale: (WMVector2F x: 0.1 y: 0.1) offset: (WMVector2F x: 0.0 y: 0.0);
+				computeTangentsBitangents;
+				addCollisionBox
+		].
+	
+		self addBalloonVehicleAt: WMVector3F zero toSector: sector.
+	
+		sector
+			addDirectionalLightWith: [ :light |
+				| skyTexture |
+				light
+					castShadows: true;
+					intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.7;
+					rotateDegreesOnX: -45;
+					rotateDegreesOnY: -180;
+					translateToX: 0.0 y: 1.5 z: 2.5.
+					
+				skyTexture := WDASceneExamples proceduralSkySunDirection: light forwardDirection.
+				skyTexture := skyTexture asTextureFor: engine.
+				sector addSkyBoxWithTexture: skyTexture
+			].
+		
+		sector
+			addPlayerStartPointAt: (WMVector3F x: 0.0 y: 2.0 z: 10.0)
+	].
+
+	universe createSimulationModel
+		open
+		spawnPlayer.
+
 ]
 
 { #category : #'see class side' }

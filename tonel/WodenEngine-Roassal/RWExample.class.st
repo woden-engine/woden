@@ -303,7 +303,6 @@ balloon setBehavior: [ :delta |
 		accel linearForce gravity buoyancy
 		currentStringLength springForce stringLengthDelta
 		torque springTorque angularAccel
-		stringAttachmentPoint balloonTransform
 	|
 	
 	"Dynamics"
@@ -323,8 +322,8 @@ balloon setBehavior: [ :delta |
 	].
 
 	linearForce := gravity + buoyancy + springForce
-		- (balloonVelocity * (balloonLinearDamping*balloonMass)).
-	torque := springTorque - (balloonInertia transformVector3: balloonAngularVelocity * balloonAngularDamping).
+		- (balloonVelocity * balloonLinearDamping).
+	torque := springTorque - (balloonAngularVelocity * balloonAngularDamping).
 		
 	"Linear integration."
 	accel := linearForce / balloonMass.
@@ -333,7 +332,7 @@ balloon setBehavior: [ :delta |
 	
 	"Angular integration"
 	angularAccel := balloonInverseInertia transformVector3: torque.
-	balloonAngularVelocity := balloonAngularVelocity + (torque*delta).
+	balloonAngularVelocity := balloonAngularVelocity + (angularAccel*delta).
 	
 	"balloonOrientation := balloonOrientation +
 		((WMQuaternionF r: 0.0 xyz: balloonAngularVelocity)*balloonOrientation * (0.5 * delta))."
