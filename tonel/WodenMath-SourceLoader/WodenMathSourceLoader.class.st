@@ -14,6 +14,9 @@ WodenMathSourceLoader class >> loadWodenMathSources [
 	wodenLowtalkSourcePath exists ifFalse: [
 		wodenLowtalkSourcePath := IceLibgitRepository repositoriesLocation / #ronsaldo / #woden resolve: lowtalkSourceRelativePath.
 	].
+	wodenLowtalkSourcePath exists ifFalse: [
+		wodenLowtalkSourcePath := IceLibgitRepository repositoriesLocation / #'woden-engine' / #woden resolve: lowtalkSourceRelativePath.
+	].
 	
 	wodenLowtalkSourcePath exists ifFalse: [ self error: 'Failed to find the Woden Lowtalk sources.' ].
 	

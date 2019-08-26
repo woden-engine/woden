@@ -13,7 +13,11 @@ WodenCoreAssets class >> findCoreAssets [
 	| location |
 	location := Smalltalk imageDirectory / 'core-assets'.
 	location exists ifFalse: [
-		location := IceLibgitRepository repositoriesLocation / #ronsaldo / #woden / #'core-assets'
+		location := IceLibgitRepository repositoriesLocation / #'ronsaldo' / #woden / #'core-assets'
+	].
+
+	location exists ifFalse: [
+		location := IceLibgitRepository repositoriesLocation / #'woden-engine' / #woden / #'core-assets'
 	].
 
 	location exists ifFalse: [
