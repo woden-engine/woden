@@ -14,6 +14,14 @@ WMQuaternion class category: 'construction' methods: {
 		yourself
 ].
 
+:[r: <Scalar> r xyz: <WMVector3> vec3 -> WMQuaternion.
+	^ WMQuaternion newValue
+		r: r;
+		i: vec3 x;
+		j: vec3 y;
+		k: vec3 z;
+		yourself
+].
 
 :[identity -> WMQuaternion.
 	^ WMQuaternion newValue
