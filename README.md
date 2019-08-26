@@ -1,4 +1,4 @@
-# Woden - World Dynamic Engine
+# WODEN Engine - World Dynamic Engine
 ### A 3D graphics engine for Pharo
 
 ## Requirements
@@ -25,7 +25,7 @@ playground:
 ```smalltalk
 Metacello new
    baseline: 'WodenEngine';
-   repository: 'github://ronsaldo/woden/tonel';
+   repository: 'github://woden-engine/woden/tonel';
    load
 ```
 
