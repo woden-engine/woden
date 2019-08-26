@@ -115,6 +115,27 @@ WDAESPlayerView >> updateForFrameDelta: delta [
 ]
 
 { #category : #visiting }
+WDAESPlayerView >> visitJoyAxisEvent: anEvent [
+	playerEntity ifNotNil: [ 
+		playerEntity sendInputEvent: #onJoyAxis: with: anEvent.
+	].
+]
+
+{ #category : #visiting }
+WDAESPlayerView >> visitJoyButtonDownEvent: anEvent [
+	playerEntity ifNotNil: [ 
+		playerEntity sendInputEvent: #onJoyButtonDown: with: anEvent.
+	].
+]
+
+{ #category : #visiting }
+WDAESPlayerView >> visitJoyButtonUpEvent: anEvent [
+	playerEntity ifNotNil: [ 
+		playerEntity sendInputEvent: #onJoyButtonUp: with: anEvent.
+	].
+]
+
+{ #category : #visiting }
 WDAESPlayerView >> visitKeyDownEvent: anEvent [
 	anEvent repeat > 0 ifTrue: [ ^ 0 ].
 	anEvent modifiers alt  ifTrue: [ 

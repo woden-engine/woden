@@ -7,6 +7,48 @@ Class {
 }
 
 { #category : #'event handling' }
+WDESFPSPlayerBehaviorComponent >> onJoyAxis: event [
+	| value |
+	event mapped ifFalse: [ ^ self ].
+	value := self gamepadMapAxis: event value.
+
+	event isLeftX ifTrue: [ 
+		leftStickDirection x: value
+	].
+
+	event isLeftY ifTrue: [
+		leftStickDirection y: value negated
+	].
+
+	event isRightX ifTrue: [ 
+		rightStickDirection x: value
+	].
+
+	event isRightY ifTrue: [
+		rightStickDirection y: value negated
+	].
+
+	event isTriggerRight ifTrue: [
+		self running: (self gamepadMapTriggerBinary: event value) > 0.
+	].
+]
+
+{ #category : #'event handling' }
+WDESFPSPlayerBehaviorComponent >> onJoyButtonDown: event [
+	event mapped ifFalse: [ ^ self ].
+	event isButtonX ifTrue: [ displacementStrategy activateUseCommand ].
+	event isButtonA ifTrue: [ leftStickDirection z: 1.0 ].
+	event isLeftShoulder ifTrue: [ leftStickDirection z: -1.0 ].
+]
+
+{ #category : #'event handling' }
+WDESFPSPlayerBehaviorComponent >> onJoyButtonUp: event [
+	event mapped ifFalse: [ ^ self ].
+	event isButtonA ifTrue: [ leftStickDirection z > 0.0 ifTrue: [ leftStickDirection z: 0.0 ] ].
+	event isLeftShoulder ifTrue: [ leftStickDirection z < 0.0 ifTrue: [ leftStickDirection z: 0.0 ] ].
+]
+
+{ #category : #'event handling' }
 WDESFPSPlayerBehaviorComponent >> onKeyDown: event [
 	event repeat > 0 ifTrue: [ ^ 0 ].
 
