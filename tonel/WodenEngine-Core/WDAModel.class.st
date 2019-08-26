@@ -94,6 +94,12 @@ WDAModel >> initializeWithEngine: anEngine [
 	self initialize
 ]
 
+{ #category : #opening }
+WDAModel >> isOSWindowBlacklisted [
+	(#(null sdl2) includes: Smalltalk os windowSystemName) ifTrue: [ ^ false ].
+	^ Smalltalk os isMacOSX or: [ Smalltalk os isWindows ]
+]
+
 { #category : #testing }
 WDAModel >> needsToRender [
 	^ views isNotEmpty
@@ -152,7 +158,7 @@ WDAModel >> openOnRenderTargetTexture: screenTexture with: aView [
 
 { #category : #opening }
 WDAModel >> openWith: aView [
-	(Smalltalk os isMacOSX or: [ Smalltalk os isWindows ]) ifTrue: [
+	self isOSWindowBlacklisted ifTrue: [
 		^ self openInMorphicWith: aView
 	].
  
