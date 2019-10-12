@@ -179,7 +179,8 @@ WDIGLTF2Importer >> generateMissingVertexTangentSpaceFrames: vertexDataWithSubme
 			description: (AGPUBufferDescription new
 				size: encodedTangent4Data size;
 				heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
-				binding: AGPU_ARRAY_BUFFER;
+				usage_modes: AGPU_ARRAY_BUFFER;
+				main_usage_mode: AGPU_ARRAY_BUFFER;
 				yourself);
 			data: encodedTangent4Data;
 			yourself);
