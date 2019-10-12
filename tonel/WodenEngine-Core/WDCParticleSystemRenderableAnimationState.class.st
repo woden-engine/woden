@@ -170,9 +170,11 @@ WDCParticleSystemRenderableAnimationState >> simulateFrameWithTheGPU [
 			computeShader: shader arguments: simulationParameters;
 			pushConstants: 0 size: pushConstants size values: pushConstants;
 			dispatchComputeGlobalGrid: particleSystem particleCount;
-			memoryBarrier: AGPU_PIPELINE_STAGE_COMPUTE_SHADER
+			bufferMemoryBarrier: particleStateBuffer
+				source_stage: AGPU_PIPELINE_STAGE_COMPUTE_SHADER
 				dest_stage: AGPU_PIPELINE_STAGE_VERTEX_SHADER | AGPU_PIPELINE_STAGE_FRAGMENT_SHADER
-				source_accesses: AGPU_ACCESS_SHADER_WRITE dest_accesses: AGPU_ACCESS_SHADER_READ.
+				source_accesses: AGPU_ACCESS_SHADER_WRITE dest_accesses: AGPU_ACCESS_SHADER_READ
+				offset: 0 size: particleStateBuffer size.
 	].
 
 	engine graphicsQueue addCommandList: currentCommandLists validCommandList validHandle.

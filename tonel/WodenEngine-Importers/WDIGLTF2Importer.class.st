@@ -136,7 +136,8 @@ WDIGLTF2Importer >> convertIndices: indexCountToConvert withAccessors: indexBuff
 		description: (AGPUBufferDescription new
 			size: newIndexDataArray rawData size;
 			heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
-			binding: AGPU_ELEMENT_ARRAY_BUFFER;
+			usage_modes: AGPU_ELEMENT_ARRAY_BUFFER;
+			main_usage_mode: AGPU_ELEMENT_ARRAY_BUFFER;
 			stride: newIndexDataArray elementSize;
 			yourself);
 		data: newIndexDataArray rawData;
@@ -338,7 +339,8 @@ WDIGLTF2Importer >> loadBuffer: bufferIndex from: bufferDescription [
 	description := AGPUBufferDescription new
 		size: byteLength;
 		heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
-		binding: AGPU_ARRAY_BUFFER | AGPU_ELEMENT_ARRAY_BUFFER;
+		usage_modes: AGPU_ARRAY_BUFFER | AGPU_ELEMENT_ARRAY_BUFFER;
+		main_usage_mode: AGPU_ARRAY_BUFFER | AGPU_ELEMENT_ARRAY_BUFFER;
 		yourself.
 	self assert: data size >= byteLength.
 	buffers add: (WDCBufferResource new

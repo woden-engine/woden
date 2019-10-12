@@ -83,6 +83,11 @@ WDCStateTracker >> blendingAllMode: blendingMode [
 	pipelineStateDescription blendingStates: { blendingMode asPipelineStateBlendingState }
 ]
 
+{ #category : #barriers }
+WDCStateTracker >> bufferMemoryBarrier: buffer source_stage: source_stage dest_stage: dest_stage source_accesses: source_accesses dest_accesses: dest_accesses offset: offset size: size [
+	commandListBuilder bufferMemoryBarrier: buffer validHandle source_stage: source_stage dest_stage: dest_stage source_accesses: source_accesses dest_accesses: dest_accesses offset: offset size: size
+]
+
 { #category : #accessing }
 WDCStateTracker >> commandList [
 	^ commandList

@@ -173,7 +173,6 @@ WDCResourceCache >> buildVertexLayout: vertexLayout [
 				buffer: i - 1;
 				binding: field binding;
 				format: fieldType format;
-				rows: fieldType rows;
 				divisor: 0;
 				offset: field offset.
 

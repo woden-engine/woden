@@ -285,7 +285,8 @@ WDCEngine >> createGPUStorageBuffer: size initialData: initialData [
 	desc := AGPUBufferDescription new
 		size: size;
 		heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
-		binding: AGPU_STORAGE_BUFFER;
+		usage_modes: AGPU_STORAGE_BUFFER;
+		main_usage_mode: AGPU_STORAGE_BUFFER;
 		mapping_flags: self streamingMappedBufferMappingFlags;
 		stride: 0.
 	^ (WDCBufferResource for: self) description: desc; data: initialData; checkSession ; yourself
@@ -307,7 +308,8 @@ WDCEngine >> createIndex: indexSize elements: elementCount immutableBuffer: data
 	desc := AGPUBufferDescription new
 		size: indexSize*elementCount;
 		heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
-		binding: AGPU_ELEMENT_ARRAY_BUFFER;
+		usage_modes: AGPU_ELEMENT_ARRAY_BUFFER;
+		main_usage_mode: AGPU_ELEMENT_ARRAY_BUFFER;
 		mapping_flags: 0;
 		stride: indexSize.
 	^ (WDCBufferResource for: self) description: desc; data: data; checkSession; yourself
@@ -319,7 +321,8 @@ WDCEngine >> createIndex: indexSize elements: elementCount streamingData: data [
 	desc := AGPUBufferDescription new
 		size: indexSize*elementCount;
 		heap_type: AGPU_MEMORY_HEAP_TYPE_HOST_TO_DEVICE;
-		binding: AGPU_ELEMENT_ARRAY_BUFFER;
+		usage_modes: AGPU_ELEMENT_ARRAY_BUFFER;
+		main_usage_mode: AGPU_ELEMENT_ARRAY_BUFFER;
 		mapping_flags: self streamingMappedBufferMappingFlags;
 		stride: indexSize.
 	^ (WDCBufferResource for: self) description: desc; data: data; checkSession; yourself
@@ -446,7 +449,8 @@ WDCEngine >> createStreamingStorageBuffer: size initialData: initialData [
 	desc := AGPUBufferDescription new
 		size: size;
 		heap_type: AGPU_MEMORY_HEAP_TYPE_HOST_TO_DEVICE;
-		binding: AGPU_STORAGE_BUFFER;
+		usage_modes: AGPU_STORAGE_BUFFER;
+		main_usage_mode: AGPU_STORAGE_BUFFER;
 		mapping_flags: self streamingMappedBufferMappingFlags;
 		stride: 0.
 	^ (WDCBufferResource for: self) description: desc; data: initialData; checkSession ; yourself
@@ -463,7 +467,8 @@ WDCEngine >> createStreamingUniformBuffer: size initialData: initialData [
 	desc := AGPUBufferDescription new
 		size: size;
 		heap_type: AGPU_MEMORY_HEAP_TYPE_HOST_TO_DEVICE;
-		binding: AGPU_UNIFORM_BUFFER;
+		usage_modes: AGPU_UNIFORM_BUFFER;
+		main_usage_mode: AGPU_UNIFORM_BUFFER;
 		mapping_flags: self streamingMappedBufferMappingFlags;
 		stride: 0.
 	^ (WDCBufferResource for: self) description: desc; data: initialData; checkSession ; yourself
@@ -520,7 +525,8 @@ WDCEngine >> createUniformBuffer: size immutableData: data [
 	desc := AGPUBufferDescription new
 		size: size;
 		heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
-		binding: AGPU_UNIFORM_BUFFER;
+		usage_modes: AGPU_UNIFORM_BUFFER;
+		main_usage_mode: AGPU_UNIFORM_BUFFER;
 		mapping_flags: 0;
 		stride: 0.
 	^ (WDCBufferResource for: self) description: desc; data: data; yourself
@@ -532,7 +538,8 @@ WDCEngine >> createVertex: vertexSize elements: elementCount immutableBuffer: da
 	desc := AGPUBufferDescription new
 		size: vertexSize*elementCount;
 		heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
-		binding: AGPU_ARRAY_BUFFER;
+		usage_modes: AGPU_ARRAY_BUFFER;
+		main_usage_mode: AGPU_ARRAY_BUFFER;
 		mapping_flags: 0;
 		stride: vertexSize.
 	^ (WDCBufferResource for: self) description: desc; data: data; checkSession; yourself
@@ -544,7 +551,8 @@ WDCEngine >> createVertex: vertexSize elements: elementCount streamingData: data
 	desc := AGPUBufferDescription new
 		size: vertexSize*elementCount;
 		heap_type: AGPU_MEMORY_HEAP_TYPE_HOST_TO_DEVICE;
-		binding: AGPU_ARRAY_BUFFER;
+		usage_modes: AGPU_ARRAY_BUFFER;
+		main_usage_mode: AGPU_ARRAY_BUFFER;
 		mapping_flags: self streamingMappedBufferMappingFlags;
 		stride: vertexSize.
 	^ (WDCBufferResource for: self) description: desc; data: data; checkSession; yourself
