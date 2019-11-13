@@ -186,6 +186,36 @@ code_block(vertex) vertex
     VertexStage.screenPosition = projectionMatrix * position4;
 }
 
+code_block(vertex) genericVertex
+{
+    using CameraState;
+    using MaterialState;
+	using WaterState;
+
+    // Fetch the position and texcoord.
+    let position = float3(GenericVertexLayout.position.x, 0.0f, GenericVertexLayout.position.z)
+					 + clipMapOffsetWithPeriod(clipMapPeriod);
+    let surfacePosition = float2(position.x, position.z);
+	let lod = 0.0f;
+    let texcoord = surfacePosition;
+
+    // Eval the water waves.
+    let waterWaveEffect = evalWaterWaves(surfacePosition, lod);
+    let height = waterWaveEffect.x;
+    let tangentialContributions = waterWaveEffect.yz;
+
+    // Apply the water height.
+    position += float3(0.0f, height, 0.0f);
+
+    WaterVertexOutput.color = currentObjectInstanceColor();
+    WaterVertexOutput.surfaceCoordinate = surfacePosition;
+    WaterVertexOutput.texcoord = surfacePosition*textureScale + textureOffset;
+    let position4 = transformPositionToView(position);
+
+    WaterVertexOutput.position =  position4.xyz;
+    VertexStage.screenPosition = projectionMatrix * position4;
+}
+
 
 //==============================================================================
 // Forward lighting model.

@@ -1,24 +1,71 @@
 "!GPU"
-| textureSize colorRamp heightFunction |
+| textureSize soilRamp grassRamp albedoFunction heightFunction roughnessFunction  |
 textureSize := 40.0@40.0.
-colorRamp := WDCLinearRamp with: {
-	0.3 -> Color green muchDarker.
-	1.0 -> Color green.
+soilRamp := WDCLinearRamp with: {
+	0.1 -> (Color fromHexString: '101010').
+	0.6 -> (Color fromHexString: '3f2e1c').
 }.
 
-heightFunction := [ :s :t |
-	| st |
+grassRamp := WDCLinearRamp with: {
+	0.0 -> (Color fromHexString: '396b39').
+	1.0 -> (Color fromHexString: '69c469').
+}.
+
+
+albedoFunction := [ :s :t |
+	| st soilHeight soilColor grassHeight grassColor grassLocation |
+	
 	st := s@t.
-	st*textureSize fbmGradientNoiseOctaves: 4 lacunarity: 2.0 tiledWith: textureSize.
+	soilHeight := st*textureSize fbmGradientNoiseOctaves: 3 lacunarity: 2.456 tiledWith: textureSize.
+	soilColor := soilRamp value: soilHeight.
+
+	grassLocation := (st*textureSize*0.25 fbmGradientNoiseOctaves: 3 lacunarity: 3.0 tiledWith: textureSize*0.25)
+		smoothStepFrom: 0.3 to: 0.65.
+	
+	grassHeight := st*textureSize *(10.0@0.5) fbmGradientNoiseOctaves: 3 lacunarity: 2.457 tiledWith: textureSize *(10.0@0.5).
+	
+	grassColor := grassRamp value: grassHeight.
+	
+	soilColor interpolateTo: grassColor at: grassLocation.
 ].
+
+heightFunction := [ :s :t |
+	| st soilHeight grassHeight grassLocation |
+	st := s@t.
+	soilHeight := st*textureSize fbmGradientNoiseOctaves: 3 lacunarity: 2.456 tiledWith: textureSize.
+
+	grassLocation := (st*textureSize*0.25 fbmGradientNoiseOctaves: 3 lacunarity: 3.0 tiledWith: textureSize*0.25)
+		smoothStepFrom: 0.3 to: 0.65.
+	
+	grassHeight := st*textureSize *(10.0@0.5) fbmGradientNoiseOctaves: 3 lacunarity: 2.457 tiledWith: textureSize *(10.0@0.5).
+	
+	soilHeight interpolateTo: (soilHeight + grassHeight) at: grassLocation
+].
+
+roughnessFunction := [ :s :t |
+	| st soilHeight soilRoughness grassHeight grassRoughness grassLocation |
+	
+	st := s@t.
+	soilHeight := st*textureSize fbmGradientNoiseOctaves: 3 lacunarity: 2.456 tiledWith: textureSize.
+	soilRoughness := 0.7 interpolateTo: 0.8 at: soilHeight.
+
+	grassLocation := (st*textureSize*0.25 fbmGradientNoiseOctaves: 3 lacunarity: 3.0 tiledWith: textureSize*0.25)
+		smoothStepFrom: 0.3 to: 0.65.
+	
+	grassHeight := st*textureSize *(10.0@0.5) fbmGradientNoiseOctaves: 3 lacunarity: 2.457 tiledWith: textureSize *(10.0@0.5).
+	grassRoughness := 0.45 interpolateTo: 0.4 at: grassHeight.
+	
+	soilRoughness interpolateTo: grassRoughness at: grassLocation.
+].
+
 
 ^ textureGenerator
 	textureExtent: 512@512;
 	heightFunction: heightFunction;
-	colorMapFunction: colorRamp;
-	normalHeightScaleFactor: 20.0;
-	roughnessFunction: 0.4;
+	colorFunction: albedoFunction;
+	normalHeightScaleFactor: 6.0;
+	roughnessFunction: roughnessFunction;
 	metallicFunction: 0.0;
-	ambientOcclusionHeightThreshold: 0.05;
+	ambientOcclusionHeightThreshold: 0.2;
 	ambientOcclusionRadius: 0.04;
 	evaluate

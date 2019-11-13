@@ -1,0 +1,24 @@
+"!GPU"
+| textureSize colorRamp heightFunction |
+textureSize := 20.0@20.0.
+colorRamp := WDCLinearRamp with: {
+	0.3 -> (Color fromHexString: '525252').
+	0.7 -> (Color fromHexString: '828282').
+}.
+
+heightFunction := [ :s :t |
+	| st |
+	st := s@t.
+	st*textureSize*8.0 fbmWorleyNoiseOctaves: 4 lacunarity: 2.142 tiledWith: textureSize*8.0.
+].
+
+^ textureGenerator
+	textureExtent: 512@512;
+	heightFunction: heightFunction;
+	colorMapFunction: colorRamp;
+	normalHeightScaleFactor: 2.0;
+	roughnessFunction: 0.8;
+	metallicFunction: 0.0;
+	ambientOcclusionHeightThreshold: 0.3;
+	ambientOcclusionRadius: 0.1;
+	evaluate

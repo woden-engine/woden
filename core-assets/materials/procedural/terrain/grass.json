@@ -1,0 +1,6 @@
+{
+    "type" : "MetallicRoughness",
+    "albedo-texture" : "textures/procedural/terrain/grass.sttex",
+    "normal-texture" : "textures/procedural/terrain/grass.sttex?texture=normal",
+    "metallic-roughness-texture" : "textures/procedural/terrain/grass.sttex?texture=rma"
+}

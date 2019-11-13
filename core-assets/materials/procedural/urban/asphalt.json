@@ -1,0 +1,6 @@
+{
+    "type" : "MetallicRoughness",
+    "albedo-texture" : "textures/procedural/urban/asphalt.sttex",
+    "normal-texture" : "textures/procedural/urban/asphalt.sttex?texture=normal",
+    "metallic-roughness-texture" : "textures/procedural/urban/asphalt.sttex?texture=rma"
+}

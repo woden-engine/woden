@@ -1,0 +1,41 @@
+"!GPU"
+| textureSize colorRamp colorFunction heightFunction roughnessFunction |
+textureSize := 30.0@30.0.
+colorRamp := WDCLinearRamp with: {
+	0.1 -> (Color fromHexString: '101010').
+	0.8 -> (Color fromHexString: '3f2e1c').
+}.
+
+colorFunction := [:s :t |
+	|st|
+    st := s@t.
+    colorRamp value: (st*textureSize*8.0 fbmWorleyNoiseOctaves: 4 lacunarity: 2.142 tiledWith: textureSize*8.0).
+].
+
+heightFunction := [:s :t |
+	|st particleHeight terrainHeight|
+    st := s@t.
+	particleHeight := st*textureSize*8.0 fbmWorleyNoiseOctaves: 4 lacunarity: 2.142 tiledWith: textureSize*8.0.
+	terrainHeight := 1.0 - (st*textureSize*0.15 fbmSignedGradientNoiseAbsOctaves: 4 lacunarity: 1.756 tiledWith: textureSize*0.15).
+	terrainHeight*0.5 + (particleHeight*0.01)
+].
+
+roughnessFunction := [:s :t |
+	|st shiny|
+    st := s@t.
+   shiny := (st*textureSize*8.0 fbmWorleyNoiseOctaves: 4 lacunarity: 2.142 tiledWith: textureSize*8.0)
+	smoothStepFrom: 0.3 to: 0.4.
+	0.8 interpolateTo: 0.7 at: shiny
+].
+
+
+^ textureGenerator
+	textureExtent: 512@512;
+	heightFunction: heightFunction;
+	colorFunction: colorFunction;
+	normalHeightScaleFactor: 200.0;
+	roughnessFunction: roughnessFunction;
+	metallicFunction: 0.0;
+	ambientOcclusionHeightThreshold: 0.05;
+	ambientOcclusionRadius: 0.05;
+	evaluate
