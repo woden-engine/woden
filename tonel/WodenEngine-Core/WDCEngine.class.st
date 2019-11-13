@@ -25,6 +25,7 @@ Class {
 		'DefaultEngine',
 		'DisplayFrameRate',
 		'GenerateOfflineMipmapsGPU',
+		'MaxAnisotropy',
 		'SSAOEnabled',
 		'ShadowMappingEnabled',
 		'TracingEnabled'
@@ -83,6 +84,16 @@ WDCEngine class >> generateOfflineMipmapsGPU: aBoolean [
 { #category : #'as yet unclassified' }
 WDCEngine class >> gpuBasedParticleSimulation [
 	^ true
+]
+
+{ #category : #preferences }
+WDCEngine class >> maxAnisotropy [
+	^ MaxAnisotropy ifNil: [ MaxAnisotropy := 1 ]
+]
+
+{ #category : #preferences }
+WDCEngine class >> maxAnisotropy: anInteger [
+	^ MaxAnisotropy := anInteger
 ]
 
 { #category : #accessing }
@@ -154,7 +165,10 @@ WDCEngine class >> wodenSettingsOn: aBuilder [
 				description: 'This enables the support shadow maps.'.
 			(aBuilder setting: #generateOfflineMipmapsGPU)
 				label: 'Generate mipmaps for offline textures with the GPU';
-				description: 'This enables using compute shaders for mipmap generation..'
+				description: 'This enables using compute shaders for mipmap generation.'.
+			(aBuilder setting: #maxAnisotropy)
+				label: 'Max anisotropic filtering samples.';
+				description: 'This sets the max value for anisotropic filtering. Values <= 1 implies no anisotropic filtering. '
 
 		]
 ]
@@ -170,6 +184,13 @@ WDCEngine >> addAssetSearchPath: aSearchPath [
 { #category : #adding }
 WDCEngine >> addRenderProcess: aRenderProcess [
 	frameBufferingDriver addRenderProcess: aRenderProcess
+]
+
+{ #category : #accessing }
+WDCEngine >> anisotropicFilter [
+	^ self maxAnisotropy > 1
+		ifTrue: [ AGPU_FILTER_ANISOTROPIC  ]
+		ifFalse: [ AGPU_FILTER_MIN_LINEAR_MAG_LINEAR_MIPMAP_LINEAR ]
 ]
 
 { #category : #assets }
@@ -678,7 +699,7 @@ WDCEngine >> loadVertexShader: aFileName [
 
 { #category : #accessing }
 WDCEngine >> maxAnisotropy [
-	^ 1
+	^ MaxAnisotropy
 ]
 
 { #category : #'as yet unclassified' }
@@ -763,6 +784,13 @@ WDCEngine >> renderingProcessCritical: aBlock [
 { #category : #accessing }
 WDCEngine >> resourceCache [
 	^ resourceCache
+]
+
+{ #category : #'as yet unclassified' }
+WDCEngine >> setupAnisotropicSampler: sampler [
+	sampler
+		filter: self anisotropicFilter;
+		maxanisotropy: self maxAnisotropy
 ]
 
 { #category : #accessing }

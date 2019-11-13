@@ -12,7 +12,8 @@ Class {
 		'packedBufferOffsets',
 		'packedDataInSingleBuffer',
 		'hasVertexColors',
-		'hasVertexTangents'
+		'hasVertexTangents',
+		'hasNormals'
 	],
 	#classVars : [
 		'VertexChannelDescriptions'
@@ -177,6 +178,11 @@ WDCMeshImplicitSeparatedVertexData >> generateZeroNormals [
 { #category : #testing }
 WDCMeshImplicitSeparatedVertexData >> hasVertexColors [
 	^ hasVertexColors ifNil: [ hasVertexColors := self colors isNotNil ]
+]
+
+{ #category : #testing }
+WDCMeshImplicitSeparatedVertexData >> hasVertexNormals [
+	^ hasNormals ifNil: [ hasNormals := self normals isNotNil ]
 ]
 
 { #category : #testing }

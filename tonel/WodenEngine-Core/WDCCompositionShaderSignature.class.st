@@ -117,7 +117,6 @@ WDCCompositionShaderSignature >> defaultSamplers [
 		address_v: AGPU_TEXTURE_ADDRESS_MODE_CLAMP;
 		address_w: AGPU_TEXTURE_ADDRESS_MODE_CLAMP;
 		max_lod: 10000.0;
-		maxanisotropy: engine maxAnisotropy;
 		yourself.
 		
 	bindings := self newSamplers.
@@ -130,7 +129,6 @@ WDCCompositionShaderSignature >> defaultSamplers [
 		address_v: AGPU_TEXTURE_ADDRESS_MODE_BORDER;
 		address_w: AGPU_TEXTURE_ADDRESS_MODE_BORDER;
 		max_lod: 10000.0;
-		maxanisotropy: engine maxAnisotropy;
 		yourself.
 	bindings
 		createSampler: 1 description: samplerDesc.

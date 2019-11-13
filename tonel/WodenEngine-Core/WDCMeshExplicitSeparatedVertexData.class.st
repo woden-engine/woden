@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'channels',
 		'vertexCount',
-		'hasVertexTangents'
+		'hasVertexTangents',
+		'hasVertexNormals'
 	],
 	#pools : [
 		'AGPUConstants',
@@ -61,6 +62,11 @@ WDCMeshExplicitSeparatedVertexData >> hasChannelWithVertexBindingLocation: aLoca
 	].
 
 	^ false
+]
+
+{ #category : #testing }
+WDCMeshExplicitSeparatedVertexData >> hasVertexNormals [
+	^ hasVertexNormals ifNil: [hasVertexNormals := self hasChannelWithVertexBindingLocation: NormalsVertexBindingLocation]
 ]
 
 { #category : #testing }

@@ -12,6 +12,12 @@ WDCMeshWithExtraDeformationRenderable >> boundingBox [
 	^ mesh boundingBox.
 ]
 
+{ #category : #'as yet unclassified' }
+WDCMeshWithExtraDeformationRenderable >> engine: anEngine [
+	super engine: anEngine.
+	mesh engine: anEngine
+]
+
 { #category : #accessing }
 WDCMeshWithExtraDeformationRenderable >> mesh [
 	^ mesh

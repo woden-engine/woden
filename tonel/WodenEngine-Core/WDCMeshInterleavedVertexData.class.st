@@ -8,7 +8,8 @@ Class {
 		'data',
 		'vertexClass',
 		'hasVertexColors',
-		'hasVertexTangents'
+		'hasVertexTangents',
+		'hasNormals'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -43,6 +44,11 @@ WDCMeshInterleavedVertexData >> data: anObject [
 { #category : #testing }
 WDCMeshInterleavedVertexData >> hasVertexColors [
 	^ hasVertexColors ifNil: [ hasVertexColors := (vertexClass lookupSelector: #color) isNotNil ]
+]
+
+{ #category : #testing }
+WDCMeshInterleavedVertexData >> hasVertexNormals [
+	^ hasNormals ifNil: [ hasNormals := (vertexClass lookupSelector: #normal) isNotNil ]
 ]
 
 { #category : #testing }

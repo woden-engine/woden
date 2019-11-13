@@ -151,6 +151,11 @@ WDCAbstractMeshVertexData >> hasVertexColors [
 ]
 
 { #category : #testing }
+WDCAbstractMeshVertexData >> hasVertexNormals [
+	^ false
+]
+
+{ #category : #testing }
 WDCAbstractMeshVertexData >> hasVertexTangents [
 	^ false
 ]

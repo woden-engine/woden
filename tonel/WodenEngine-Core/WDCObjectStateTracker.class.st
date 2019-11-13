@@ -167,6 +167,11 @@ WDCObjectStateTracker >> hasVertexColors [
 ]
 
 { #category : #testing }
+WDCObjectStateTracker >> hasVertexNormals [
+	^ activeVertexData isNotNil and: [ activeVertexData hasVertexNormals ]
+]
+
+{ #category : #testing }
 WDCObjectStateTracker >> hasVertexTangents [
 	^ activeVertexData isNotNil and: [ activeVertexData hasVertexTangents ]
 ]

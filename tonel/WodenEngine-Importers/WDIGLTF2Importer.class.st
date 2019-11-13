@@ -408,13 +408,29 @@ WDIGLTF2Importer >> loadImagesFrom: elements [
 
 { #category : #loading }
 WDIGLTF2Importer >> loadMaterialFrom: materialDescription [
-	| material |
+	| material materialReference |
 	material := nil.
-	materialDescription at: 'pbrMetallicRoughness' ifPresent: [ :description |
-		material := self loadMetallicRoughnessMaterial: description commonDescription: materialDescription
+	materialReference := nil.
+	materialDescription at: 'extras' ifPresent: [ :extras |
+		extras at: 'woden.material.override' ifPresent: [ :materialName |
+			materialReference := WDCMaterialReference new name: materialName
+		]
 	].
+
+	material ifNil: [ 
+		materialDescription at: 'pbrMetallicRoughness' ifPresent: [ :description |
+			material := self loadMetallicRoughnessMaterial: description commonDescription: materialDescription
+		].
+	].
+
 	material ifNil: [ material := WDCMetallicRoughnessMaterial new ].
-	materials add: material
+	materialReference ifNotNil: [ 
+		materialReference fallbackMaterial: material.
+		materials add: materialReference
+	] ifNil: [ 
+		materials add: material
+	].
+
 ]
 
 { #category : #loading }
@@ -436,6 +452,12 @@ WDIGLTF2Importer >> loadMeshFrom: meshDescription [
 			renderable := WDCCompositeRenderable new
 				renderables: meshComponents asArray;
 				yourself
+		]
+	].
+
+	meshDescription at: 'extras' ifPresent: [ :extras |
+		extras at: 'woden.renderable.type' ifPresent: [ :type |
+			type = 'water' ifTrue: [ renderable := renderable asWaterRenderable ]
 		]
 	].
 

@@ -3,7 +3,6 @@ Class {
 	#superclass : #WDCMaterial,
 	#instVars : [
 		'resourceBindingsAreUpdated',
-		'vertexShader',
 		'fragmentShader',
 		'resourceBinding',
 		'stateUniformBuffer',
@@ -23,7 +22,7 @@ WDCWaterMaterial >> activateForwardOn: stateTracker [
 	
 	resourceBinding ifNotNil: [ stateTracker useShaderResources: resourceBinding ].
 	stateTracker
-		vertexShader: self vertexShader;
+		vertexShader: (self vertexShaderFor: stateTracker);
 		fragmentShader: self fragmentShader;
 		materialBlendingMode: WDCBlendingMode premultipliedAlphaOver;
 		materialCullMode: AGPU_CULL_MODE_NONE.
@@ -159,8 +158,10 @@ WDCWaterMaterial >> validateCache [
 ]
 
 { #category : #shaders }
-WDCWaterMaterial >> vertexShader [
-	^  vertexShader ifNil: [ vertexShader := self shaderLibrary getVertexStage: #vertex  ]
+WDCWaterMaterial >> vertexShaderFor: stateTracker [
+	^ stateTracker hasVertexNormals
+		ifTrue: [ self shaderLibrary getVertexStage: #genericVertex ]
+		ifFalse: [ self shaderLibrary getVertexStage: #vertex ]
 ]
 
 { #category : #shaders }
