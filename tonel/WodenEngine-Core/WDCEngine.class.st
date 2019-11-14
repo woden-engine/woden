@@ -699,7 +699,7 @@ WDCEngine >> loadVertexShader: aFileName [
 
 { #category : #accessing }
 WDCEngine >> maxAnisotropy [
-	^ MaxAnisotropy
+	^ self class maxAnisotropy
 ]
 
 { #category : #'as yet unclassified' }
