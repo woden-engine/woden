@@ -3,7 +3,8 @@ Class {
 	#superclass : #WDASceneViewWithBabylon,
 	#instVars : [
 		'dragElement',
-		'mouseFocusElement'
+		'mouseFocusElement',
+		'trackedDevicesDisplay'
 	],
 	#category : #'WodenEngine-Roassal-Core'
 }
@@ -64,6 +65,22 @@ RWSceneView >> elementInPositionWithRayPicking: aPoint [
 
 { #category : #'rendering process stages' }
 RWSceneView >> ensureVRTrackedDeviceDisplay: baseCameraTransform [
+	| interestingDevices shape |
+	interestingDevices := engine vrSystem trackedDevices select: [:dev | dev isNotNil and: [dev isHeadMountedDisplay not]].
+	
+	(trackedDevicesDisplay isNil or: [trackedDevicesDisplay size ~= interestingDevices size]) ifTrue: [
+		trackedDevicesDisplay ifNotNil: [ 
+			trackedDevicesDisplay do: #remove
+		].
+	
+		shape := RWCube new size: 0.1.
+		trackedDevicesDisplay := shape elementsOn: interestingDevices.
+		model addAllInternalElements: trackedDevicesDisplay.
+	].
+
+	trackedDevicesDisplay do: [ :deviceDisplay |
+		deviceDisplay transform: (baseCameraTransform transformTransform: deviceDisplay model currentPose deviceToAbsoluteTransform)
+	 ]
 
 ]
 

@@ -80,6 +80,11 @@ RWView >> addAll: someElements [
 	someElements do: [ :e | self add: e ]
 ]
 
+{ #category : #adding }
+RWView >> addAllInternalElements: someElements [
+	someElements do: [ :e | self addInternalElement: e ]
+]
+
 { #category : #scene }
 RWView >> addCameraLight: color [
 	cameraLight := WDSGLightSource new directional.
@@ -384,7 +389,7 @@ RWView >> rayPickNormalizedPosition: aPoint [
 
 { #category : #adding }
 RWView >> removeElement: anElement [
-	elements remove: anElement
+	elements remove: anElement ifAbsent: [ internalElements remove: anElement ifAbsent: [ ] ]
 ]
 
 { #category : #adding }
