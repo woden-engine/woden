@@ -71,7 +71,7 @@ WDAFPSSceneView >> cameraVelocity: anObject [
 WDAFPSSceneView >> ensureVRTrackedDeviceDisplay: cameraTransform [
 
 	| meshBuilder mesh cube interestingDevices |
-	interestingDevices := engine vrSystem trackedDevices reject: #isHeadMountedDisplay.
+	interestingDevices := engine vrSystem trackedDevices select: [:dev | dev isNotNil and: [dev isHeadMountedDisplay not]].
 	
 	(trackedDevicesDisplay isNil or: [trackedDevicesDisplay size ~= interestingDevices size]) ifTrue: [
 		trackedDevicesDisplay ifNotNil: [ 

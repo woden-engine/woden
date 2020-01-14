@@ -87,14 +87,17 @@ WDASceneViewStereoScreenDisplayMode >> computeProjectionMatrices [
 	focalWidth := aspect * focalDistance * fovyRad tan.
  	focalDistanceFactor := near / focalDistance.
 	
-	leftProjectionMatrix := WMMatrix4F
+	leftEyeFrustum := WMFrustumF new
 		reverseDepthFrustumLeft: focalDistanceFactor * (focalWidth - ipd2) negated
 		right: focalDistanceFactor * (focalWidth + ipd2)
 		bottom: top negated top: top near: near far: far invertedY: invertedY.
-	rightProjectionMatrix := WMMatrix4F
+	leftProjectionMatrix := leftEyeFrustum matrix.
+
+	rightEyeFrustum := WMFrustumF new
 	 	reverseDepthFrustumLeft: focalDistanceFactor * (focalWidth + ipd2) negated
 		right: focalDistanceFactor * (focalWidth - ipd2)
 		bottom: top negated top: top near: near far: far invertedY: invertedY.
+	rightProjectionMatrix := rightEyeFrustum matrix.
 
 ]
 

@@ -20,6 +20,13 @@ WDCFrustumTangents >> bottom: anObject [
 	bottom := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDCFrustumTangents >> frustumNear: near far: far invertedY: invertedY [
+	^ WMFrustumF new reverseDepthFrustumLeft: left * near right: right * near
+		bottom: bottom * near top: top * near
+		near: near far: far invertedY: invertedY
+]
+
 { #category : #accessing }
 WDCFrustumTangents >> left [
 	^ left

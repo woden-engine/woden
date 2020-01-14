@@ -210,10 +210,20 @@ WDSGCamera >> frustumConvexHullTransformedWith: aTransform [
 
 { #category : #'as yet unclassified' }
 WDSGCamera >> frustumForNearDistance: newNearDistance farDistance: newFarDistance [
-	| result hh hw |
+	| result hh hw leftBottomNear rightTopNear left right bottom top nearFactor |
 	result := WMFrustumF new.
 	self isPerspective ifTrue: [
-		result reverseDepthPerspectiveFovY: fieldOfView aspect: aspectRatio near: newNearDistance far: newFarDistance invertedY: projectionInvertedY.
+		leftBottomNear := frustum leftBottomNear.
+		rightTopNear := frustum rightTopNear.
+		
+		left := leftBottomNear x.
+		right := rightTopNear x.
+		bottom := leftBottomNear y.
+		top := rightTopNear y.
+		nearFactor := newNearDistance / nearDistance.
+		
+		result reverseDepthFrustumLeft: left * nearFactor right: right * nearFactor
+			bottom: bottom * nearFactor top: top * nearFactor near: newNearDistance far: newFarDistance 			invertedY: projectionInvertedY
 	] ifFalse: [
 		hh := (fieldOfView * 0.5) degreesToRadians tan * focalDistance.
 		hw := hh * aspectRatio.
@@ -316,6 +326,14 @@ WDSGCamera >> nearDistance: anObject [
 { #category : #'tone mapping' }
 WDSGCamera >> reinhardToneMapping [
 	self toneMappingOperator: #reinhard
+]
+
+{ #category : #'as yet unclassified' }
+WDSGCamera >> setExplicitFrustum: newFrustum invertedY: anInvertedY [
+	aspectRatio ifNil: [ aspectRatio := 1.0 ].
+	frustum := newFrustum.
+	projectionInvertedY := anInvertedY.
+	
 ]
 
 { #category : #'as yet unclassified' }

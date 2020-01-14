@@ -8,6 +8,8 @@ Class {
 		'rightRenderTarget',
 		'leftProjectionMatrix',
 		'rightProjectionMatrix',
+		'leftEyeFrustum',
+		'rightEyeFrustum',
 		'fragmentShader'
 	],
 	#category : #'WodenEngine-Scene-Rendering'
@@ -190,4 +192,33 @@ WDASceneViewStereoDisplayMode >> rightViewportForCamera: camera [
 		overlayRenderer: view;
 		cameraTransformFunction: self rightEyeCameraTransformFunction;
 		submode: #full
+]
+
+{ #category : #'rendering process stages' }
+WDASceneViewStereoDisplayMode >> updateCameraFrustum [
+	| localLeftEyeFrustum localRightEyeFrustum left_leftBottomNear right_leftBottomNear left bottom near left_rightTopNear right_rightTopNear right top far combinedFrustum invertedY camera |
+	localLeftEyeFrustum := leftEyeFrustum transformedWith: self leftEyeTransform.
+	localRightEyeFrustum := rightEyeFrustum transformedWith: self rightEyeTransform.
+	
+	left_leftBottomNear := localLeftEyeFrustum leftBottomNear.
+	right_leftBottomNear := localRightEyeFrustum leftBottomNear.
+	
+	left := left_leftBottomNear x min: right_leftBottomNear x.
+	bottom := left_leftBottomNear y min: right_leftBottomNear y.
+
+	left_rightTopNear := localLeftEyeFrustum rightTopNear.
+	right_rightTopNear := localRightEyeFrustum rightTopNear.
+
+	right := left_rightTopNear x max: right_rightTopNear x.
+	top := left_rightTopNear y max: right_rightTopNear y.
+
+	camera := view cameraSceneNode.
+	near := camera nearDistance.
+	far := camera farDistance.
+	
+	invertedY := engine projectionInvertedY.
+	combinedFrustum := WMFrustumF new
+		reverseDepthFrustumLeft: left right: right bottom: bottom top: top near: near far: far invertedY: invertedY.
+	"Transcript show: left; space; show: right; space; show: bottom; space; show: top; space; show: near; space; show: far; cr."
+	camera setExplicitFrustum: combinedFrustum invertedY: invertedY.
 ]

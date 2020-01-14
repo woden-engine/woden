@@ -54,6 +54,11 @@ WDCAbstractVRSystem >> initializeWithEngine: anEngine [
 ]
 
 { #category : #'multi eye rendering' }
+WDCAbstractVRSystem >> leftEyeFrustumNear: near far: far invertedY: invertedY [
+	self subclassResponsibility
+]
+
+{ #category : #'multi eye rendering' }
 WDCAbstractVRSystem >> leftEyeProjectionMatrixNear: near far: far invertedY: invertedY [
 	self subclassResponsibility
 ]
@@ -70,6 +75,11 @@ WDCAbstractVRSystem >> leftEyeTransform [
 
 { #category : #'as yet unclassified' }
 WDCAbstractVRSystem >> pollVREvents [
+]
+
+{ #category : #'multi eye rendering' }
+WDCAbstractVRSystem >> rightEyeFrustumNear: near far: far invertedY: invertedY [
+	self subclassResponsibility
 ]
 
 { #category : #'multi eye rendering' }

@@ -27,6 +27,11 @@ WDCDummyVRSystem >> initialize [
 ]
 
 { #category : #'multi eye rendering' }
+WDCDummyVRSystem >> leftEyeFrustumNear: near far: far invertedY: invertedY [
+	^ WMFrustumF new reverseDepthPerspectiveFovY: 60.0 aspect: 1.0 near: near far: far invertedY: invertedY
+]
+
+{ #category : #'multi eye rendering' }
 WDCDummyVRSystem >> leftEyeProjectionMatrixNear: near far: far invertedY: invertedY [
 	^ WMMatrix4F reverseDepthPerspectiveFovY: 60.0 aspect: 1.0 near: near far: far invertedY: invertedY
 ]
@@ -34,6 +39,11 @@ WDCDummyVRSystem >> leftEyeProjectionMatrixNear: near far: far invertedY: invert
 { #category : #testing }
 WDCDummyVRSystem >> leftEyeRenderTargetExtent [
 	^ 512@512
+]
+
+{ #category : #'multi eye rendering' }
+WDCDummyVRSystem >> rightEyeFrustumNear: near far: far invertedY: invertedY [
+	^ WMFrustumF new reverseDepthPerspectiveFovY: 60.0 aspect: 1.0 near: near far: far invertedY: invertedY
 ]
 
 { #category : #'multi eye rendering' }

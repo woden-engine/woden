@@ -138,6 +138,11 @@ WDCAGPUVRSystem >> initializeWithEngine: anEngine [
 ]
 
 { #category : #'multi eye rendering' }
+WDCAGPUVRSystem >> leftEyeFrustumNear: near far: far invertedY: invertedY [
+	^ leftEyeFrustumTangents frustumNear: near far: far invertedY: invertedY
+]
+
+{ #category : #'multi eye rendering' }
 WDCAGPUVRSystem >> leftEyeProjectionMatrixNear: near far: far invertedY: invertedY [
 	^ leftEyeFrustumTangents projectionMatrixNear: near far: far invertedY: invertedY
 ]
@@ -175,6 +180,11 @@ WDCAGPUVRSystem >> processVREvent: agpuVREvent [
 ]
 
 { #category : #'multi eye rendering' }
+WDCAGPUVRSystem >> rightEyeFrustumNear: near far: far invertedY: invertedY [
+	^ rightEyeFrustumTangents frustumNear: near far: far invertedY: invertedY
+]
+
+{ #category : #'multi eye rendering' }
 WDCAGPUVRSystem >> rightEyeProjectionMatrixNear: near far: far invertedY: invertedY [
 	^ rightEyeFrustumTangents projectionMatrixNear: near far: far invertedY: invertedY
 ]
@@ -202,27 +212,31 @@ WDCAGPUVRSystem >> trackedDevices [
 
 { #category : #wrappers }
 WDCAGPUVRSystem >> waitAndFetchPoses [
-	| trackedDevicePoseCount trackedDevicePose oldTrackedDevices trackedDeviceRenderPose trackedDevice |
+	| trackedDevicePoseCount trackedDevicePose trackedDeviceRenderPose isValidPose trackedDevice |
 	handle waitAndFetchPoses.
 	
-	oldTrackedDevices := Dictionary new.
-	trackedDevices do: [ :device | oldTrackedDevices at: device id put: device ].
+	trackedDevices ifEmpty: [ trackedDevices := Array new: handle getMaxTrackedDevicePoseCount ].
 
-	trackedDevicePoseCount := handle getValidTrackedDevicePoseCount.
+	trackedDevicePoseCount := handle getCurrentTrackedDevicePoseCount.
 	trackedDevicePose := AGPUVrTrackedDevicePose new.
 	trackedDeviceRenderPose := AGPUVrTrackedDevicePose new.
-	trackedDevices := (1 to: trackedDevicePoseCount) collect: [ :i |
-		handle getValidTrackedDevicePoseInto: i - 1 dest: trackedDevicePose.
-		handle getValidRenderTrackedDevicePoseInto: i - 1 dest: trackedDeviceRenderPose.
+	1 to: trackedDevicePoseCount do: [ :i |
+		handle getCurrentTrackedDevicePoseInto: i - 1 dest: trackedDevicePose.
+		handle getCurrentRenderTrackedDevicePoseInto: i - 1 dest: trackedDeviceRenderPose.
 		
-		trackedDevice := oldTrackedDevices at: trackedDevicePose device_id
-			ifPresent: [ :oldDevice | self checkTrackedDevice: oldDevice forPose: trackedDevicePose ]
-			ifAbsent: [ self newTrackedDeviceFor: trackedDevicePose ].
-		
-		trackedDevice
-			currentPose: (self convertTrackedDevicePose: trackedDevicePose);
-			currentRenderPose: (self convertTrackedDevicePose: trackedDeviceRenderPose);
-			yourself
+		isValidPose := trackedDevicePose is_valid ~= 0.
+		isValidPose ifTrue: [ 
+			trackedDevice := (trackedDevices at: i) ifNil: [
+				self newTrackedDeviceFor: trackedDevicePose.
+			] ifNotNil: [ :oldTrackedDevice |
+				self checkTrackedDevice: oldTrackedDevice forPose: trackedDevicePose
+			].
+			trackedDevices at: i put: trackedDevice.
+			trackedDevice
+				currentPose: (self convertTrackedDevicePose: trackedDevicePose);
+				currentRenderPose: (self convertTrackedDevicePose: trackedDeviceRenderPose);
+				yourself
+		].
 	].
 
 	trackedDevices detect: #isHeadMountedDisplay ifFound: [ :device | hmdTrackedDevice := device ].
