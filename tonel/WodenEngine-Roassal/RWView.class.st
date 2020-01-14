@@ -343,6 +343,11 @@ RWView >> on: anEvent do: aBlock [
 	eventHandler when: anEvent do: aBlock.
 ]
 
+{ #category : #'as yet unclassified' }
+RWView >> openInVR [
+	^ self openWith: self defaultViewClass allowingVR
+]
+
 { #category : #accessing }
 RWView >> overlays [
 	^ overlays

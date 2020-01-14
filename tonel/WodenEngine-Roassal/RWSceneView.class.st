@@ -8,6 +8,16 @@ Class {
 	#category : #'WodenEngine-Roassal-Core'
 }
 
+{ #category : #'rendering process stages' }
+RWSceneView >> applyVRCameraTransform [
+	| cameraTransform |
+	cameraTransform := WMReversibleAffineTransformF identity.
+ 	self ensureVRTrackedDeviceDisplay: cameraTransform.
+
+	cameraTransform := cameraTransform transformTransform: engine vrSystem hmdTrackedDevice currentPose deviceToAbsoluteTransform.
+	self camera transform: cameraTransform
+]
+
 { #category : #rendering }
 RWSceneView >> drawOnBabylonCanvas: canvas [
 	model ifNotNil: [
@@ -49,6 +59,11 @@ RWSceneView >> elementInPositionWithRayPicking: aPoint [
 	nx := aPoint x / extent x asFloat.
 	ny := 1.0 - (aPoint y / extent y).
 	^ model rayPickNormalizedPosition: nx @ ny.
+
+]
+
+{ #category : #'rendering process stages' }
+RWSceneView >> ensureVRTrackedDeviceDisplay: baseCameraTransform [
 
 ]
 
@@ -98,6 +113,17 @@ RWSceneView >> onMouseOverElements: event [
 { #category : #visiting }
 RWSceneView >> sendMouseEvent: event [
 	model announce: event
+]
+
+{ #category : #'rendering process stages' }
+RWSceneView >> updateForFrameDelta: delta [
+	super updateForFrameDelta: delta.
+	
+	screenDisplayMode isVR ifTrue: [
+		self applyVRCameraTransform
+	].
+	
+	
 ]
 
 { #category : #visiting }

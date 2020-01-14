@@ -426,6 +426,13 @@ RWElement >> transform [
 	^ sceneNode transform
 ]
 
+{ #category : #accessing }
+RWElement >> transform: aTransform [
+	self notifyConnectedEdges.
+	self invalidateBoundingBoxCache.
+	sceneNode transform: aTransform
+]
+
 { #category : #translation }
 RWElement >> translateBy: translation [
 	sceneNode translateBy: translation.
