@@ -13,7 +13,7 @@ BaselineOfWodenEngine >> baseline: spec [
 			spec 
 				baseline: #'NeoJSON' with: [
 					spec
-					repository: 'github://svenvc/NeoJSON/repository' ].
+					repository: 'github://svenvc/NeoJSON:v17/repository' ].
 			spec 
 				baseline: #'AbstractGPU' with: [
 				spec
