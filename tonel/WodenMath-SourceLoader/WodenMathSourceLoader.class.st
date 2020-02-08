@@ -12,10 +12,10 @@ WodenMathSourceLoader class >> loadWodenMathSources [
 	lowtalkSourceRelativePath := 'source/woden.ltk' asFileReference.
 	wodenLowtalkSourcePath := Smalltalk imageDirectory resolve: lowtalkSourceRelativePath.
 	wodenLowtalkSourcePath exists ifFalse: [
-		wodenLowtalkSourcePath := IceLibgitRepository repositoriesLocation / #ronsaldo / #woden resolve: lowtalkSourceRelativePath.
+		wodenLowtalkSourcePath := IceLibgitRepository repositoriesLocation asFileReference / #ronsaldo / #woden resolve: lowtalkSourceRelativePath.
 	].
 	wodenLowtalkSourcePath exists ifFalse: [
-		wodenLowtalkSourcePath := IceLibgitRepository repositoriesLocation / #'woden-engine' / #woden resolve: lowtalkSourceRelativePath.
+		wodenLowtalkSourcePath := IceLibgitRepository repositoriesLocation asFileReference / #'woden-engine' / #woden resolve: lowtalkSourceRelativePath.
 	].
 	
 	wodenLowtalkSourcePath exists ifFalse: [ self error: 'Failed to find the Woden Lowtalk sources.' ].
