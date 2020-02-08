@@ -60,7 +60,7 @@ WDCLowLevelShaderSource >> compile [
 	
 	engine autoReloadChanges ifTrue: [
 		(newDependencies asSet difference: oldDependencies asSet) do: [ :dep |
-			PhanideFileSystemMonitor on: dep when: PhanideFileEventCloseWrite do: [ :event |
+			OSIOFileSystemMonitor on: dep when: OSIOFileEventCloseWrite do: [ :event |
 				engine resourceCache enqueueResourceReloadAction: [ self reload ]
 			].
 		].

@@ -619,7 +619,7 @@ WDCResourceCache >> loadTerrain: aFileNameOrReference [
 		| terrainData |
 		terrainData := self performLoadTerrainDataFile: terrainFile.
 		engine autoReloadChanges ifTrue: [
-			PhanideFileSystemMonitor on: terrainFile when: PhanideFileEventCloseWrite do: [ :event |
+			OSIOFileSystemMonitor on: terrainFile when: OSIOFileEventCloseWrite do: [ :event |
 				self enqueueResourceReloadAction: [
 					| reloadedTerrain |
 					reloadedTerrain := self performLoadTerrainDataFile: terrainFile.
@@ -767,7 +767,7 @@ WDCResourceCache >> performLoadTextureDataFile: textureFile withQuery: query [
 	| result |
 	result := WDCTextureReader loadFromFile: textureFile withQuery: query.
 	engine autoReloadChanges ifTrue: [
-		PhanideFileSystemMonitor on: textureFile when: PhanideFileEventCloseWrite do: [ :event |
+		OSIOFileSystemMonitor on: textureFile when: OSIOFileEventCloseWrite do: [ :event |
 			self enqueueResourceReloadAction: [
 				| reloadedTexture |
 				reloadedTexture := WDCTextureReader loadFromFile: textureFile withQuery: query.
@@ -797,7 +797,7 @@ WDCResourceCache >> performMaterialLoading: materialFileReference [
 	| material |
 	material := self doActualMaterialLoading: materialFileReference.
 	engine autoReloadChanges ifTrue: [
-		PhanideFileSystemMonitor on: materialFileReference when: PhanideFileEventCloseWrite do: [ :event |
+		OSIOFileSystemMonitor on: materialFileReference when: OSIOFileEventCloseWrite do: [ :event |
 			self enqueueResourceReloadAction: [
 				| reloadedMaterial |
 				reloadedMaterial := self doActualMaterialLoading: materialFileReference.
