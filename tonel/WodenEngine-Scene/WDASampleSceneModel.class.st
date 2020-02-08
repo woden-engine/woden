@@ -13,7 +13,7 @@ WDASampleSceneModel >> onDeltaTimeDo: aBlock [
 ]
 
 { #category : #'rendering process stages' }
-WDASampleSceneModel >> updateForFrameDelta: delta. [
+WDASampleSceneModel >> updateForFrameDelta: delta [.
 	super updateForFrameDelta: delta.
 	deltaTimeBlock ifNotNil: [ deltaTimeBlock value: delta ]
 ]

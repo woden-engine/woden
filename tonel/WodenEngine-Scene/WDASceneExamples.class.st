@@ -1,7 +1,7 @@
 Class {
 	#name : #WDASceneExamples,
 	#superclass : #Object,
-	#category : 'WodenEngine-Scene-Examples'
+	#category : #'WodenEngine-Scene-Examples'
 }
 
 { #category : #'examples procedural' }
@@ -541,7 +541,7 @@ WDASceneExamples class >> example09DragonIsland [
 	water := self createIslandWaterObjectFor: scene engine.
 	scene add: water.
 	
-	dragonMesh := scene engine resourceCache loadMesh: 'models/demos/baby_dragon.fmdl'.
+	"dragonMesh := scene engine resourceCache loadMesh: 'models/demos/baby_dragon.fmdl'.
 	dragon := WDSGSpatialObject new.
 	dragon renderable: dragonMesh.
 	dragon transform
@@ -561,7 +561,7 @@ WDASceneExamples class >> example09DragonIsland [
 			setRestPose;
 			addAction: dragonAction repeated: dragonActionRepeated frame: dragonActionFrame;
 			computePoseMatrices.
-	].
+	]."
 
 	model openWith: WDAFPSSceneView allowingVR
 ]

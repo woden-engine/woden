@@ -213,7 +213,7 @@ WDCParticleSystemRenderableAnimationState >> validParticleSimulationShaderLibrar
 		spirvShader := compiler 
 			target: #'spir-v';
 			withDebugInformation;
-			optimizationLevel: 2;
+			optimizationLevel: 0;
 			addIncludeDirectory: self shadersDirectory;
 			sourceFromFileNamed: (self shadersDirectory resolve: 'particle/simulation-interface.dastrel' asFileReference) injectingNodes: codeConverter generatedNodes;
 			compile;
