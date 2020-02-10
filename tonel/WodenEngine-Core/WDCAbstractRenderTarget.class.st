@@ -177,8 +177,7 @@ WDCAbstractRenderTarget >> extent: anExtent [
 		(extentChanged and: [ framebuffers isNotNil ]) ifTrue: [
 			engine trace: 'Framebuffer extent changed'.
 			frameBufferCount := framebuffers size.
-			self release.
-			self createFramebuffers: frameBufferCount
+			self recreateFramebuffersForNewExtent: frameBufferCount
 		]
 	].
 
@@ -243,11 +242,17 @@ WDCAbstractRenderTarget >> mainRenderPass: anObject [
 	mainRenderPass := anObject
 ]
 
+{ #category : #accessing }
+WDCAbstractRenderTarget >> recreateFramebuffersForNewExtent: bufferCount [
+	self release.
+	self createFramebuffers: bufferCount
+]
+
 { #category : #dependencies }
 WDCAbstractRenderTarget >> release [
 	framebuffers ifNotNil: [
-		engine ifNotNil: [ engine graphicsQueue finishExecution ].
-		framebuffers do: #release
+		engine ifNotNil: [ engine device finishExecution ].
+		framebuffers do: [:each | each release]
 	].
 	framebuffers := nil.
 ]

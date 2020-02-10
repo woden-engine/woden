@@ -8,7 +8,7 @@ Class {
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Core-Window'
+	#category : #'WodenEngine-Core-Window'
 }
 
 { #category : #'as yet unclassified' }
@@ -23,7 +23,7 @@ WDCSwapChainRenderTarget >> createFramebuffers [
 
 { #category : #accessing }
 WDCSwapChainRenderTarget >> createFramebuffers: bufferCount [
-	| swapChainInfo oldFramebuffers |
+	| swapChainInfo oldFramebuffers oldSwapChain |
 	swapChainInfo := AGPUSwapChainCreateInfo new
 		buffer_count: bufferCount;
 		colorbuffer_format: self colorAttachmentFormats first;
@@ -35,8 +35,13 @@ WDCSwapChainRenderTarget >> createFramebuffers: bufferCount [
 	windowHandle window ifNotNil: [ swapChainInfo window: windowHandle window ].
 	windowHandle surface ifNotNil: [ swapChainInfo surface: windowHandle surface ].
 	
-	swapChain ifNotNil: [ swapChain release ].
+	oldSwapChain := swapChain.
+	oldSwapChain ifNotNil: [
+		swapChainInfo old_swap_chain: oldSwapChain
+	].
+
 	swapChain := engine device createSwapChain: engine graphicsQueue swapChainInfo: swapChainInfo.
+	oldSwapChain ifNotNil: [ oldSwapChain release ].
 	
 	oldFramebuffers := framebuffers.
 	framebuffers := (1 to: swapChain getFramebufferCount) collect: [:i |
@@ -68,7 +73,18 @@ WDCSwapChainRenderTarget >> release [
 
 { #category : #accessing }
 WDCSwapChainRenderTarget >> swapBuffers [
-	swapChain swapBuffers
+	[ 
+		swapChain swapBuffers
+	] on: AGPUError do: [ :ex |
+		| errorCode |
+		errorCode := ex errorCode.
+		(errorCode = AGPU_OUT_OF_DATE or: [ errorCode = AGPU_SUBOPTIMAL ]) ifTrue: [
+			
+		] ifFalse: [ 
+			ex signal
+		]
+	]
+
 ]
 
 { #category : #accessing }

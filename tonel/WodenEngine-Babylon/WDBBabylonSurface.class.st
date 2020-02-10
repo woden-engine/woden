@@ -443,7 +443,7 @@ WDBBabylonSurface >> flushTransforms [
 { #category : #'as yet unclassified' }
 WDBBabylonSurface >> forcedSynchronization [
 	fence ifNil: [
-		driver engine graphicsQueue finishExecution
+		driver engine device finishExecution
 	] ifNotNil: [
 		self waitFence
 	]

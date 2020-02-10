@@ -76,7 +76,7 @@ WDCInstanceGroupSpatialObject >> createEngineDependantData [
 
 	updatedPerFrame ifFalse: [
 		instanceBuffer reallocatedAction: [ :newVector |
-			engine graphicsQueue finishExecution.
+			engine device finishExecution.
 			objectStateBindings do: [ :binding | binding bind: 1 storageBufferElement: newVector ]
 		]
 	].

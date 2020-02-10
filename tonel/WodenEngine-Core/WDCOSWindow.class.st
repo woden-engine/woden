@@ -82,7 +82,7 @@ WDCOSWindow >> defaultExtent [
 { #category : #accessing }
 WDCOSWindow >> destroySwapChainSafely [
 	resolveRenderTarget ifNotNil: [
-		engine graphicsQueue finishExecution.
+		engine device finishExecution.
 		resolveRenderTarget release.
 		renderTarget ~~ resolveRenderTarget ifTrue: [ renderTarget release ].
 				
@@ -113,15 +113,7 @@ WDCOSWindow >> enqueueEvent: anEvent [
 
 { #category : #accessing }
 WDCOSWindow >> fullscreen: aBoolean [
-	engine ifNotNil: [ 
-		engine renderingProcessCritical: [ 
-			self destroySwapChainSafely.
-			
-			window fullscreen: aBoolean.
-		]
-	] ifNil: [ 
-		window fullscreen: aBoolean
-	]
+	window fullscreen: aBoolean
 ]
 
 { #category : #'event processing' }

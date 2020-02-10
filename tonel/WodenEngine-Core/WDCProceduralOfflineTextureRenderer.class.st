@@ -200,7 +200,7 @@ WDCProceduralOfflineTextureRenderer >> fetchTextureDataWith: fetchFunctionName e
 
 { #category : #public }
 WDCProceduralOfflineTextureRenderer >> finish [
-	engine graphicsQueue finishExecution.
+	engine device finishExecution.
 
 ]
 

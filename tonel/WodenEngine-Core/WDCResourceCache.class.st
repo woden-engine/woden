@@ -838,7 +838,7 @@ WDCResourceCache >> reloadPendingResources [
 	hasSynchronizedWithGpu := false.
 	[ action := pendingResourceReloadActions nextOrNil ] whileNotNil: [ 
 		hasSynchronizedWithGpu ifFalse: [
-			engine graphicsQueue finishExecution.
+			engine device finishExecution.
 			hasSynchronizedWithGpu := true
 		].
 	
