@@ -21,7 +21,8 @@ Class {
 		'swimmingDisplacementStrategy',
 		'leftStickDirection',
 		'rightStickDirection',
-		'linearDamping'
+		'linearDamping',
+		'headPosition'
 	],
 	#category : #'WodenEngine-EntitySystem-Behaviors'
 }
@@ -49,6 +50,22 @@ WDESCharacterBehaviorComponent >> addedToPhysicsWorld: physicsWorld [
 	physicsWorld addCharacterController: self validPhysicsCharacterController.
 	ghostObject sceneNode: ownerEntity.
 	
+]
+
+{ #category : #'as yet unclassified' }
+WDESCharacterBehaviorComponent >> applyCameraTransform [
+	ownerEntity findCameraSceneNodeComponentOrNil ifNotNil: [ :cameraNodeComponent |
+		cameraNodeComponent validSceneNode
+			transform: (WMReversibleAffineTransformF identity
+				orthonormal: headOrientation translation: self headPosition)
+	].
+]
+
+{ #category : #'as yet unclassified' }
+WDESCharacterBehaviorComponent >> applyVRHeadTransform: newTransform [
+	headOrientation := newTransform matrix.
+	headPosition := newTransform translation + self footPosition.
+	self applyCameraTransform
 ]
 
 { #category : #accessing }
@@ -109,6 +126,11 @@ WDESCharacterBehaviorComponent >> displacementStrategy: aDisplacementStrategy [
 ]
 
 { #category : #accessing }
+WDESCharacterBehaviorComponent >> footPosition [
+	^ WMVector3F y: self halfExtent y negated
+]
+
+{ #category : #accessing }
 WDESCharacterBehaviorComponent >> ghostObject [
 	^ ghostObject
 ]
@@ -155,7 +177,7 @@ WDESCharacterBehaviorComponent >> headOrientation: anObject [
 
 { #category : #accessing }
 WDESCharacterBehaviorComponent >> headPosition [
-	^ self class headPosition
+	^ headPosition
 ]
 
 { #category : #initialization }
@@ -166,6 +188,7 @@ WDESCharacterBehaviorComponent >> initialize [
 	
 	bodyOrientation := WMMatrix3F identity.
 	headOrientation := WMMatrix3F identity.
+	headPosition := self class headPosition.
 	
 	leftStickDirection := WMVector3F zero.
 	rightStickDirection := WMVector3F zero.
@@ -187,6 +210,13 @@ WDESCharacterBehaviorComponent >> isCharacterBehaviorComponent [
 { #category : #accessing }
 WDESCharacterBehaviorComponent >> isHeadUnderwater [
 	^ isHeadUnderwater
+]
+
+{ #category : #testing }
+WDESCharacterBehaviorComponent >> isInVirtualReality [
+	^ ownerEntity
+		ifNil: [ false ]
+		ifNotNil: [ ownerEntity isInVirtualReality ]
 ]
 
 { #category : #testing }
@@ -268,11 +298,10 @@ WDESCharacterBehaviorComponent >> physicsCharacterController [
 WDESCharacterBehaviorComponent >> postPhysicsTick: delta [
 	displacementStrategy postPhysicsTick: delta.
 	
-	ownerEntity findCameraSceneNodeComponentOrNil ifNotNil: [ :cameraNodeComponent |
-		cameraNodeComponent validSceneNode
-			transform: (WMReversibleAffineTransformF identity
-				orthonormal: headOrientation translation: self headPosition)
+	self isInVirtualReality ifFalse: [ 
+		self applyCameraTransform
 	].
+
 ]
 
 { #category : #simulation }

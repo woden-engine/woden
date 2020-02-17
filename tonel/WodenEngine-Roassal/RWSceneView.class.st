@@ -136,11 +136,16 @@ RWSceneView >> sendMouseEvent: event [
 RWSceneView >> updateForFrameDelta: delta [
 	super updateForFrameDelta: delta.
 	
-	screenDisplayMode isVR ifTrue: [
-		self applyVRCameraTransform
+	self isInVirtualReality ifTrue: [
+		self updateVRForFrameDelta: delta
 	].
 	
 	
+]
+
+{ #category : #'rendering process stages' }
+RWSceneView >> updateVRForFrameDelta: delta [
+	self applyVRCameraTransform
 ]
 
 { #category : #visiting }

@@ -3,7 +3,8 @@ Class {
 	#superclass : #WDESGenericEntity,
 	#instVars : [
 		'currentEnvironmentFog',
-		'currentEnvironmentSoundGainFactor'
+		'currentEnvironmentSoundGainFactor',
+		'isInVirtualReality'
 	],
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
@@ -31,6 +32,22 @@ WDESPlayerEntity >> currentFogSettings [
 { #category : #environment }
 WDESPlayerEntity >> currentSoundGainFactor [
 	^ currentEnvironmentSoundGainFactor ifNil: [ super currentSoundGainFactor ]
+]
+
+{ #category : #initialization }
+WDESPlayerEntity >> initialize [
+	super initialize.
+	isInVirtualReality := false.
+]
+
+{ #category : #accessing }
+WDESPlayerEntity >> isInVirtualReality [
+	^ isInVirtualReality
+]
+
+{ #category : #accessing }
+WDESPlayerEntity >> isInVirtualReality: anObject [
+	isInVirtualReality := anObject
 ]
 
 { #category : #testing }

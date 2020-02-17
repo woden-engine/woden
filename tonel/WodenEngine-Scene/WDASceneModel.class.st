@@ -4,9 +4,10 @@ Class {
 	#instVars : [
 		'scene',
 		'camera',
-		'currentTime'
+		'currentTime',
+		'isInVirtualReality'
 	],
-	#category : 'WodenEngine-Scene-Application'
+	#category : #'WodenEngine-Scene-Application'
 }
 
 { #category : #'rendering graph' }
@@ -45,6 +46,17 @@ WDASceneModel >> currentTime: anObject [
 WDASceneModel >> initialize [
 	super initialize.
 	currentTime := 0.0.
+	isInVirtualReality := false.
+]
+
+{ #category : #accessing }
+WDASceneModel >> isInVirtualReality [
+	^ isInVirtualReality
+]
+
+{ #category : #accessing }
+WDASceneModel >> isInVirtualReality: anObject [
+	isInVirtualReality := anObject
 ]
 
 { #category : #'instance creation' }
@@ -54,6 +66,11 @@ WDASceneModel >> newScene [
 	camera := WDSGCamera new.
 	scene add: camera.
 	^ scene
+]
+
+{ #category : #'as yet unclassified' }
+WDASceneModel >> openInVR [
+	^ self openWith: self defaultViewClass allowingVR
 ]
 
 { #category : #'rendering graph' }

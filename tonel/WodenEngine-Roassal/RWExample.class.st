@@ -1,12 +1,12 @@
 Class {
 	#name : #RWExample,
 	#superclass : #RWObject,
-	#category : 'WodenEngine-Roassal-Examples'
+	#category : #'WodenEngine-Roassal-Examples'
 }
 
 { #category : #'as yet unclassified' }
 RWExample >> allClasses [
-	<script: 'self new allClasses open'>
+	<script: 'self new allClasses openInVR'>
 	| view els elementClass |
 	view := RWView new.
 	els := RWCube elementsOn: Object withAllSubclasses.
@@ -27,7 +27,7 @@ RWExample >> allClasses [
 
 { #category : #layout }
 RWExample >> circleLayout [
-	<script: 'self new circleLayout open'>
+	<script: 'self new circleLayout openInVR'>
 	| v  |
 	v := RWView new.
 	1 to: 10 do: [ :i |
@@ -42,7 +42,7 @@ RWExample >> circleLayout [
 
 { #category : #'as yet unclassified' }
 RWExample >> classBars [
-	<script: 'self new classBars open'>
+	<script: 'self new classBars openInVR'>
 	| v shape elements |
 	v := RWView new.
 	shape := RWCube new height: [ :cls | cls numberOfMethods sqrt + 0.1 ].
@@ -69,7 +69,7 @@ RWExample >> classBars [
 
 { #category : #'as yet unclassified' }
 RWExample >> clickAddAbove [
-	<script: 'self new clickAddAbove open'>
+	<script: 'self new clickAddAbove openInVR'>
 	| v e cube position action |
 	cube := RWCube new.
 	v := RWView new.
@@ -97,7 +97,7 @@ RWExample >> clickAddAbove [
 
 { #category : #'as yet unclassified' }
 RWExample >> clickGreen [
-	<script: 'self new clickGreen open'>
+	<script: 'self new clickGreen openInVR'>
 	| v e |
 	v := RWView new.
 
@@ -118,7 +118,7 @@ RWExample >> clickGreen [
 
 { #category : #'as yet unclassified' }
 RWExample >> clickLeds [
-	<script: 'self new clickLeds open'>
+	<script: 'self new clickLeds openInVR'>
 	| v e colors cube |
 	colors := {  Color gray . Color red . Color green . Color blue . Color yellow . Color white}.
 	cube := RWCube new.
@@ -150,7 +150,7 @@ RWExample >> clickLeds [
 
 { #category : #trees }
 RWExample >> collectionSubclassesTree [
-	<script: 'self new collectionSubclassesTree open'>
+	<script: 'self new collectionSubclassesTree openInVR'>
 	| view  objects associations elements assocWithElements shape |
 	view := RWView new.
 	objects := Collection withAllSubclasses.
@@ -173,7 +173,7 @@ RWExample >> collectionSubclassesTree [
 
 { #category : #'as yet unclassified' }
 RWExample >> cubeLayout [
-	<script: 'self new cubeLayout open'>
+	<script: 'self new cubeLayout openInVR'>
 	| v  |
 	v := RWView new.
 	1 to: 1000 do: [ :i |
@@ -189,7 +189,7 @@ RWExample >> cubeLayout [
 
 { #category : #trees }
 RWExample >> differentShapes [
-	<script: 'self new differentShapes open'>
+	<script: 'self new differentShapes openInVR'>
 	| view  |
 	view := RWView new.
 	view addAll: ( RWCylinder elementsOn: (1 to: 4)).
@@ -204,7 +204,7 @@ RWExample >> differentShapes [
 
 { #category : #'as yet unclassified' }
 RWExample >> edges [
-	<script: 'self new edges open'>
+	<script: 'self new edges openInVR'>
 
 	| v el1 el2 |
 	v := RWView new.
@@ -224,7 +224,7 @@ RWExample >> edges [
 
 { #category : #'as yet unclassified' }
 RWExample >> eventHandling [
-	<script: 'self new eventHandling open'>
+	<script: 'self new eventHandling openInVR'>
 
 	| v cube |
 	v := RWView new.
@@ -252,7 +252,7 @@ RWExample >> eventHandling [
 
 { #category : #layout }
 RWExample >> exampleBalloonSimulation [
-	<script: 'self new exampleBalloonSimulation open'>
+	<script: 'self new exampleBalloonSimulation openInVR'>
 | view floor weightRadius weight balloonRadius balloon balloonBottomAnchor string balloonMass balloonInertiaDiag balloonInertia balloonInverseInertia balloonLinearDamping balloonAngularDamping stringLength stringRigidity balloonVelocity balloonAngularVelocity balloonOrientation |
 view := RWView new.
 
@@ -353,7 +353,7 @@ view addInteraction: RWOrbitController.
 
 { #category : #layout }
 RWExample >> exampleBalloonSimulation2 [
-	<script: 'self new exampleBalloonSimulation2 open'>
+	<script: 'self new exampleBalloonSimulation2 openInVR'>
 | view floor weightRadius weight balloonRadius balloon balloonBottomAnchor string balloonMass balloonInertiaDiag balloonInertia balloonInverseInertia balloonLinearDamping balloonAngularDamping stringLength stringRigidity balloonVelocity balloonAngularVelocity balloonOrientation |
 view := RWView new.
 
@@ -453,7 +453,7 @@ view addInteraction: RWOrbitController.
 
 { #category : #layout }
 RWExample >> exampleForceBasedLayout [
-	<script: 'self new exampleForceBasedLayout open'>
+	<script: 'self new exampleForceBasedLayout openInVR'>
 	| v boxes |
 	v := RWView new.
 	boxes := RWCube new
@@ -471,7 +471,7 @@ RWExample >> exampleForceBasedLayout [
 
 { #category : #layout }
 RWExample >> exampleForceBasedLayoutXY [
-	<script: 'self new exampleForceBasedLayoutXY open'>
+	<script: 'self new exampleForceBasedLayoutXY openInVR'>
 	| v boxes |
 	v := RWView new.
 	boxes := RWCube new
@@ -489,7 +489,7 @@ RWExample >> exampleForceBasedLayoutXY [
 
 { #category : #layout }
 RWExample >> exampleForceBasedLayoutXZ [
-	<script: 'self new exampleForceBasedLayoutXZ open'>
+	<script: 'self new exampleForceBasedLayoutXZ openInVR'>
 	| v boxes |
 	v := RWView new.
 	boxes := RWCube new
@@ -507,7 +507,7 @@ RWExample >> exampleForceBasedLayoutXZ [
 
 { #category : #layout }
 RWExample >> exampleForceBasedLayoutYZ [
-	<script: 'self new exampleForceBasedLayoutYZ open'>
+	<script: 'self new exampleForceBasedLayoutYZ openInVR'>
 	| v boxes |
 	v := RWView new.
 	boxes := RWCube new
@@ -525,7 +525,7 @@ RWExample >> exampleForceBasedLayoutYZ [
 
 { #category : #'as yet unclassified' }
 RWExample >> fallingCubeLayout [
-	<script: 'self new fallingCubeLayout open'>
+	<script: 'self new fallingCubeLayout openInVR'>
 	| v floor |
 	v := RWView new.
 	1 to: 300 do: [ :i |
@@ -547,7 +547,7 @@ RWExample >> fallingCubeLayout [
 
 { #category : #'as yet unclassified' }
 RWExample >> fallingLineLayout [
-	<script: 'self new fallingLineLayout open'>
+	<script: 'self new fallingLineLayout openInVR'>
 	| v floor |
 	v := RWView new.
 	1 to: 1000 do: [ :i |
@@ -569,7 +569,7 @@ RWExample >> fallingLineLayout [
 
 { #category : #layout }
 RWExample >> gridLayout [
-	<script: 'self new gridLayout open'>
+	<script: 'self new gridLayout openInVR'>
 	| v  |
 	v := RWView new.
 	1 to: 1000 do: [ :i |
@@ -585,7 +585,7 @@ RWExample >> gridLayout [
 
 { #category : #mesh }
 RWExample >> gridMesh [
-	<script: 'self new gridMesh open'>
+	<script: 'self new gridMesh openInVR'>
 	| view shape elements |
 	view := RWView new.
 	view
@@ -605,7 +605,7 @@ RWExample >> gridMesh [
 
 { #category : #'as yet unclassified' }
 RWExample >> growingCubes [
-	<script: 'self new growingCubes open'>
+	<script: 'self new growingCubes openInVR'>
 	| v shape es |
 	v := RWView new.
 	shape := RWCube new size: #yourself.

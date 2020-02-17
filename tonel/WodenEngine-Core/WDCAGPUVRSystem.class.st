@@ -10,7 +10,8 @@ Class {
 		'rightEyeTransform',
 		'trackedDevices',
 		'hmdTrackedDevice',
-		'hasSubmittedEyesInThisFrame'
+		'hasSubmittedEyesInThisFrame',
+		'vrFrameCount'
 	],
 	#classVars : [
 		'DeviceClassIDToClassMap'
@@ -36,7 +37,14 @@ WDCAGPUVRSystem class >> initialize [
 { #category : #'as yet unclassified' }
 WDCAGPUVRSystem >> applyMainLoopDelay: delayTime [
 	"Do not yield to lower threads here."
-	hasSubmittedEyesInThisFrame ifFalse: [ 
+	hasSubmittedEyesInThisFrame ifTrue: [
+		vrFrameCount = 0 ifTrue: [ 
+			vrFrameCount := 5.
+			self yield
+		] ifFalse: [ 
+			vrFrameCount := vrFrameCount - 1
+		].
+	] ifFalse: [ 
 		super applyMainLoopDelay: delayTime
 	].
 ]
@@ -104,6 +112,7 @@ WDCAGPUVRSystem >> initialize [
 	trackedDevices := #().
 	hmdTrackedDevice := WDCVRTrackedDeviceHMD new.
 	hasSubmittedEyesInThisFrame := false.
+	vrFrameCount := 0.
 ]
 
 { #category : #initialization }

@@ -19,5 +19,6 @@ RWBlockBehavior >> block: anObject [
 
 { #category : #'time simulation' }
 RWBlockBehavior >> simulateTime: delta onElement: anElement [
+	(self isEnabledFor: anElement) ifFalse: [ ^ self ].
 	block cull: delta cull: anElement
 ]

@@ -38,7 +38,7 @@ WDAView >> addSubView: aSubView [
 
 { #category : #'mouse capture' }
 WDAView >> captureMouse [
-	window captureMouse.
+	"window captureMouse."
 	hasMouseCapture := true.
 ]
 

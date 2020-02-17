@@ -35,7 +35,9 @@ RWMouseKeyControl >> axisMapping: value [
 
 { #category : #hooks }
 RWMouseKeyControl >> initializeElement: aView [
-	movement := RWForwardMovement new.
+	movement := RWForwardMovement new
+		enabledWhen: [aView isInVirtualReality not];
+		yourself.
 	aView camera addBehavior: movement.
 	
 	aView when: RWKeyDown do: [ :evt |

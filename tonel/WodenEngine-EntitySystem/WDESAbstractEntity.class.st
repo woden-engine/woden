@@ -140,6 +140,11 @@ WDESAbstractEntity >> initialize [
 ]
 
 { #category : #testing }
+WDESAbstractEntity >> isInVirtualReality [
+	^ false
+]
+
+{ #category : #testing }
 WDESAbstractEntity >> isPlayerEntity [
 	^ false
 ]

@@ -131,7 +131,7 @@ WDAFPSSceneView >> updateForFrameDelta: delta [
 
 	cameraTransform := WMReversibleAffineTransformF identity orthonormal: orientation translation: cameraPosition.
 
-	screenDisplayMode isVR ifTrue: [ 
+	self isInVirtualReality ifTrue: [ 
 		self ensureVRTrackedDeviceDisplay: cameraTransform.
 
 		cameraTransform := cameraTransform transformTransform: engine vrSystem hmdTrackedDevice currentPose deviceToAbsoluteTransform.

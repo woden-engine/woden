@@ -109,9 +109,17 @@ WDAESPlayerView >> spawnPlayer [
 { #category : #'rendering process stages' }
 WDAESPlayerView >> updateForFrameDelta: delta [
 	super updateForFrameDelta: delta.
-	viewLivingTime := viewLivingTime + delta.
-	soundGainFactor := viewLivingTime linearStepFrom: 0.0 to: 3.0.
+	self isInVirtualReality ifTrue: [ 
+		self updateVRForFrameDelta: delta
+	].
+	
+]
 
+{ #category : #'rendering process stages' }
+WDAESPlayerView >> updateVRForFrameDelta: delta [
+	playerEntity ifNotNil: [
+		playerEntity sendInputEvent: #onVRCameraTransform: with: engine vrSystem hmdTrackedDevice currentPose deviceToAbsoluteTransform.
+	].
 ]
 
 { #category : #visiting }

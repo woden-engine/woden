@@ -17,6 +17,7 @@ Class {
 { #category : #updating }
 RWOrbitMovement >> applyPositionToElement: anElement [
 	|x y z rotation disp |
+	(self isEnabledFor: anElement) ifFalse: [ ^ self ].
 	
 	z := r * (theta cos) * (phi sin).
 	x := r * (theta sin) * (phi sin).

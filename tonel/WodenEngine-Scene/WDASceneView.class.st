@@ -109,6 +109,11 @@ WDASceneView >> initialize [
 	self screenDisplayMode: WDASceneViewFlatScreenDisplayMode new.
 ]
 
+{ #category : #testing }
+WDASceneView >> isInVirtualReality [
+	^ screenDisplayMode isVR
+]
+
 { #category : #'framebuffer description' }
 WDASceneView >> needsDirectRenderTarget [
 	^ false
@@ -178,5 +183,6 @@ WDASceneView >> stereoTopDown [
 
 { #category : #'screen display modes' }
 WDASceneView >> vr [
+	model isInVirtualReality: true.
 	self screenDisplayMode: WDASceneViewVRDisplayMode new
 ]

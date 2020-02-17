@@ -56,7 +56,7 @@ WDAESProceduralSamples class >> example01SimpleLevel [
 	].
 
 	universe createSimulationModel
-		open
+		openInVR
 		spawnPlayer.
 
 ]
@@ -121,7 +121,7 @@ WDAESProceduralSamples class >> example02PoolLevel [
 	].
 
 	universe createSimulationModel
-		open
+		openInVR
 		spawnPlayer.
 
 ]
@@ -171,7 +171,7 @@ WDAESProceduralSamples class >> example03Island [
 	].
 
 	universe createSimulationModel
-		open
+		openInVR
 		spawnPlayer.
 ]
 
@@ -214,7 +214,7 @@ WDAESProceduralSamples class >> example04BalloonVehicle [
 	].
 
 	universe createSimulationModel
-		open
+		openInVR
 		spawnPlayer.
 
 ]

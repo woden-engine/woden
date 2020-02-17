@@ -61,7 +61,7 @@ WDESCameraSceneNodeComponent >> currentNearDistance [
 
 { #category : #'as yet unclassified' }
 WDESCameraSceneNodeComponent >> currentSoundGainFactor [
-	^ (ownerEntity ifNotNil: [ownerEntity currentSoundGainFactor])
+	^ (ownerEntity ifNil: [1.0] ifNotNil: [ownerEntity currentSoundGainFactor])
 ]
 
 { #category : #'as yet unclassified' }

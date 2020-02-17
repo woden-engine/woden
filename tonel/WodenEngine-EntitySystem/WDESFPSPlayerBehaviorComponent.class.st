@@ -94,6 +94,13 @@ WDESFPSPlayerBehaviorComponent >> onKeyUp: event [
 { #category : #'event handling' }
 WDESFPSPlayerBehaviorComponent >> onMouseMotion: event [
 	| angleScale |
+	self isInVirtualReality ifTrue: [ ^ self ].
 	angleScale := Float pi / 180.0 * 0.25.
 	headAngle := headAngle + (WMVector3F x: event delta y * angleScale negated y: event delta x * angleScale negated z: 0.0)
+]
+
+{ #category : #'event handling' }
+WDESFPSPlayerBehaviorComponent >> onVRCameraTransform: newCameraTransform [
+	ownerEntity isInVirtualReality: true.
+	self applyVRHeadTransform: newCameraTransform.
 ]

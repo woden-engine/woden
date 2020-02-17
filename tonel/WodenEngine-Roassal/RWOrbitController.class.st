@@ -51,7 +51,9 @@ RWOrbitController >> front [
 RWOrbitController >> initializeElement: aView [
 	| r |
 	camera := aView camera.
-	orbitMovement := RWOrbitMovement new.
+	orbitMovement := RWOrbitMovement new
+		enabledWhen: [aView isInVirtualReality not];
+		yourself.
 	camera addBehavior: orbitMovement.
 	
 	orbitMovement center: aView boundingBox center.

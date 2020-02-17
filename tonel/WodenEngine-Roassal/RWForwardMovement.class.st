@@ -9,7 +9,7 @@ Class {
 		'angularSpeed',
 		'speed'
 	],
-	#category : 'WodenEngine-Roassal-Core'
+	#category : #'WodenEngine-Roassal-Core'
 }
 
 { #category : #accessing }
@@ -65,6 +65,7 @@ RWForwardMovement >> initialize [
 { #category : #'time simulation' }
 RWForwardMovement >> simulateTime: delta onElement: anElement [
 	| orientation |
+	(self isEnabledFor: anElement) ifFalse: [ ^ self ].
 	angle := angle + (angularVelocity*(delta*angularSpeed)).
 	orientation := (WMMatrix3F yrot: angle y) * (WMMatrix3F xrot: angle x).
 	anElement

@@ -69,6 +69,10 @@ TInputControllerBehavior >> onMouseLeave: event [
 TInputControllerBehavior >> onMouseMotion: event [
 ]
 
+{ #category : #'event handling' }
+TInputControllerBehavior >> onVRCameraTransform: newCameraTransform [
+]
+
 { #category : #'actor messages' }
 TInputControllerBehavior >> sendInputEvent: inputEventSelector with: anEvent [
 	^ self perform: inputEventSelector with: anEvent
