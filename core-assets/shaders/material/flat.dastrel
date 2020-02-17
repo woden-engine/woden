@@ -1,5 +1,6 @@
 import vertex.stage;
 import fragment.stage;
+import rendering.shaderSignature;
 import rendering.environment;
 import rendering.lightingOutputs;
 
@@ -9,13 +10,17 @@ semantic VertexOutput
 {
     out(0) color: float4;
     out(1) position: float3;
+    out(2) texcoord: float2;
 }
 
 semantic FragmentInput
 {
     in(0) color: float4;
     in(1) position: float3;
+	in(2) texcoord: float2;
 }
+
+uniform(binding = MaterialState.Textures) colorTexture : texture2D;
 
 //==============================================================================
 // Color vertex shader
@@ -33,6 +38,7 @@ code_block(vertex) vertex
 
     // The color.
     VertexOutput.color = GenericVertexLayout.color*currentObjectInstanceColor();
+    VertexOutput.texcoord = GenericVertexLayout.texcoord.xy;
 
     // The position. Used by the stipple shader.
     VertexOutput.position = transformPositionToWorld(GenericVertexLayout.position).xyz;
@@ -45,6 +51,11 @@ code_block(vertex) vertex
 code_block(fragment) flat
 {
     forwardFlatOutput color: FragmentInput.color;
+}
+
+code_block(fragment) flatTextured
+{
+    forwardFlatOutput color: FragmentInput.color * albedoSampler.sample(colorTexture, FragmentInput.texcoord);
 }
 
 //==============================================================================
