@@ -2,15 +2,30 @@ Class {
 	#name : #WDASceneViewWithBabylon,
 	#superclass : #WDASceneView,
 	#instVars : [
-		'pompeiiSurface',
-		'pompeiiDefaultFont'
+		'hasRenderedOverlayTargets',
+		'babylonOverlay',
+		'babylonOverlaySpatialObject'
 	],
 	#category : #'WodenEngine-Scene-Application'
 }
 
 { #category : #rendering }
 WDASceneViewWithBabylon >> babylonDefaultFont [
-	^ pompeiiDefaultFont ifNil: [ pompeiiDefaultFont := engine babylonDriver font: (LogicalFont familyName: 'Arial' pointSize: 20) ]
+	^ babylonOverlay defaultFont
+]
+
+{ #category : #accessing }
+WDASceneViewWithBabylon >> babylonOverlaySpatialObject [
+	babylonOverlaySpatialObject ifNil: [
+		babylonOverlaySpatialObject := WDCSpatialObject new engine: engine
+	].
+	^ babylonOverlaySpatialObject
+]
+
+{ #category : #rendering }
+WDASceneViewWithBabylon >> constructRenderingCommandLists [
+	hasRenderedOverlayTargets := false.
+	^ super constructRenderingCommandLists
 ]
 
 { #category : #'drawing 2d' }
@@ -47,11 +62,59 @@ WDASceneViewWithBabylon >> drawOnBabylonCanvas: canvas [
 ]
 
 { #category : #rendering }
+WDASceneViewWithBabylon >> renderViewport: viewport overlayRenderTargetWith: stateTracker [
+	hasRenderedOverlayTargets ifTrue: [ ^ self ].
+
+	self validBabylonSurface withStateTracker: stateTracker drawDuring: [ :canvas |
+		canvas clear.
+		
+		canvas transform restoreAfter: [
+			babylonOverlay applyLogicalHeightTransformTo: canvas.
+			self drawOnBabylonCanvas: canvas.
+			sceneRenderer ifNotNil: [ sceneRenderer debugDrawOnBabylonCanvas: canvas ]
+		].
+	].
+	hasRenderedOverlayTargets := true.
+
+	self isMultiEyeView ifTrue: [ 
+		| extent aspectRatio overlayHeight overlayDistance |
+		extent := self drawingSurfaceExtent.
+		aspectRatio := extent x asFloat / extent y asFloat.
+		overlayHeight := 0.1.
+		overlayDistance := 0.2.
+		self babylonOverlaySpatialObject
+			transform: (WMReversibleAffineTransformF identity
+				scaleByX: aspectRatio * overlayHeight y: overlayHeight z: 1.0;
+				translateByZ: overlayDistance negated)
+	] ifFalse: [
+		self babylonOverlaySpatialObject
+			transform: (WMReversibleAffineTransformF identity)
+	].
+
+	babylonOverlaySpatialObject
+			updateCommonGpuStateForFrame: engine frameBufferingDriver frameIndex
+
+]
+
+{ #category : #rendering }
 WDASceneViewWithBabylon >> renderViewport: viewport overlayWith: stateTracker [
-	pompeiiSurface := viewport resolveRenderTarget validBabylonSurface.
-	pompeiiSurface withStateTracker: stateTracker drawDuring: [ :canvas |
-		viewport applyBabylonCanvasSafeZoneTransform: canvas transform.
-		self drawOnBabylonCanvas: canvas.
-		sceneRenderer ifNotNil: [ sceneRenderer debugDrawOnBabylonCanvas: canvas ]
-	]
+	babylonOverlay ifNil: [ ^ self ].
+	self isMultiEyeView ifFalse: [ 
+		stateTracker useShaderResources: engine resourceCache screenQuadCameraStateBinding.
+	].
+	self babylonOverlaySpatialObject renderRenderable: babylonOverlay with: stateTracker
+]
+
+{ #category : #'as yet unclassified' }
+WDASceneViewWithBabylon >> validBabylonOverlay [
+	babylonOverlay ifNil: [ babylonOverlay := WDCBabylonOverlay for: engine ].
+	babylonOverlay drawingSurfaceExtent: self drawingSurfaceExtent.
+	^ babylonOverlay 
+]
+
+{ #category : #'as yet unclassified' }
+WDASceneViewWithBabylon >> validBabylonSurface [
+	^ self validBabylonOverlay
+		drawingSurfaceExtent: self drawingSurfaceExtent;
+		validSurface
 ]

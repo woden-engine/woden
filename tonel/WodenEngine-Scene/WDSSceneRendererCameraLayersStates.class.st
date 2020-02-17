@@ -5,7 +5,8 @@ Class {
 		'backgroundLayerState',
 		'foregroundLayerState',
 		'normalLayerState',
-		'postProcessingState'
+		'postProcessingState',
+		'engine'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -49,12 +50,8 @@ WDSSceneRendererCameraLayersStates >> postProcessingState: aPostProcessingState 
 ]
 
 { #category : #'as yet unclassified' }
-WDSSceneRendererCameraLayersStates >> updateForRenderingViewport: renderingViewport [
-]
-
-{ #category : #'as yet unclassified' }
 WDSSceneRendererCameraLayersStates >> updateForRenderingViewport: renderingViewport currentTime: currentTime [
-	| viewport cameraState screenSize inverseScreenSize normalTransform backgroundTransform foregroundTransform |
+	| viewport cameraState screenSize inverseScreenSize normalTransform backgroundTransform foregroundTransform overlayCameraState overlayTransform |
 	viewport := renderingViewport viewport.
 	cameraState := viewport cameraState.
 	screenSize := renderingViewport extent asWMVector2F.
@@ -73,7 +70,6 @@ WDSSceneRendererCameraLayersStates >> updateForRenderingViewport: renderingViewp
 	backgroundLayerState submitState: cameraState withTransform: backgroundTransform.
 	normalLayerState submitState: cameraState withTransform: normalTransform.
 	foregroundLayerState submitState: cameraState withTransform: foregroundTransform.
-				
 	renderingViewport cameraLayersStates: self.
 
 ]

@@ -96,6 +96,11 @@ WDASceneViewStereoDisplayMode >> fragmentShaderName [
 	^ #leftEye
 ]
 
+{ #category : #testing }
+WDASceneViewStereoDisplayMode >> isMultiEyeView [
+	^ true
+]
+
 { #category : #'multi eye rendering' }
 WDASceneViewStereoDisplayMode >> leftEyeCameraTransformFunction [
 	^ [ :ct | ct transformTransform: self leftEyeTransform ]

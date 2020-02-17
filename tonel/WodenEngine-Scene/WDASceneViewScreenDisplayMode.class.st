@@ -32,6 +32,11 @@ WDASceneViewScreenDisplayMode >> engine: anObject [
 ]
 
 { #category : #testing }
+WDASceneViewScreenDisplayMode >> isMultiEyeView [
+	^ false
+]
+
+{ #category : #testing }
 WDASceneViewScreenDisplayMode >> isVR [
 	^ false
 ]

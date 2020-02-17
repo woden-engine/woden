@@ -176,6 +176,7 @@ WDCAbstractRenderTarget >> extent: anExtent [
 	
 		(extentChanged and: [ framebuffers isNotNil ]) ifTrue: [
 			engine trace: 'Framebuffer extent changed'.
+			engine device finishExecution.
 			frameBufferCount := framebuffers size.
 			self recreateFramebuffersForNewExtent: frameBufferCount
 		]

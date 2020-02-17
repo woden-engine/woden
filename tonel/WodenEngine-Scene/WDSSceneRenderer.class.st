@@ -171,15 +171,20 @@ WDSSceneRenderer >> renderSceneViewportsThenDo: aBlock [
 { #category : #rendering }
 WDSSceneRenderer >> renderViewport: renderingViewport index: viewportIndex [
 	| renderTarget resolveTarget renderPass viewport |
+	"Render the overlay render targets"
+	viewport := renderingViewport viewport.
+	viewport overlayRenderer ifNotNil: [ 
+		viewport overlayRenderer renderViewport: viewport overlayRenderTargetWith: stateTracker 
+	].
+
 	self setupStateTracker.
 	
-	viewport := renderingViewport viewport.
 	renderTarget := renderingViewport renderTarget.
 	resolveTarget := viewport resolveRenderTarget.
 
 	renderPass := renderTarget validMainRenderPass.
 	renderPass setColorClearValue: 0 value: renderingViewport scene backgroundColor asWMVector4F asAGPUColor4f.
-	
+
 	"Begin rendering into the viewport"
 	stateTracker
 		beginRenderPass: renderPass renderTarget: renderTarget bounds: viewport bounds.
@@ -187,10 +192,7 @@ WDSSceneRenderer >> renderViewport: renderingViewport index: viewportIndex [
 		setupRenderingViewportStates: renderingViewport;
 		renderViewportVisibleObjects: renderingViewport.
 	
-	"Render the overlays"
-	viewport overlayRenderer ifNotNil: [ 
-		viewport overlayRenderer renderViewport: viewport overlayWith: stateTracker 
-	].
+	self renderViewportOverlays: renderingViewport.
 	
 	"End rendering into the viewport"
 	stateTracker endRenderPass.
@@ -212,6 +214,18 @@ WDSSceneRenderer >> renderViewportLayer: viewportLayer visibleObjectsWithCameraL
 		count := count + 1.
 	].
 	^ count
+]
+
+{ #category : #rendering }
+WDSSceneRenderer >> renderViewportOverlays: renderingViewport [
+	| viewport |
+	viewport := renderingViewport viewport.
+	stateTracker useShaderResources: renderingViewport cameraLayersStates foregroundLayerState shaderBindings.
+	
+	"Render the overlays"
+	viewport overlayRenderer ifNotNil: [ 
+		viewport overlayRenderer renderViewport: viewport overlayWith: stateTracker 
+	].
 ]
 
 { #category : #rendering }

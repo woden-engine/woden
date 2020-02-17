@@ -68,6 +68,11 @@ WDAView >> defaultExtent [
 ]
 
 { #category : #accessing }
+WDAView >> drawingSurfaceExtent [
+	^ window drawingSurfaceExtent
+]
+
+{ #category : #accessing }
 WDAView >> editorViewType [
 	^ nil
 ]

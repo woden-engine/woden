@@ -77,6 +77,15 @@ WDASceneView >> constructRenderingCommandLists [
 ]
 
 { #category : #accessing }
+WDASceneView >> drawingSurfaceExtent [
+	self isInVirtualReality ifTrue: [
+		^ engine vrSystem leftEyeRenderTargetExtent
+	].
+
+	^ super drawingSurfaceExtent
+]
+
+{ #category : #accessing }
 WDASceneView >> engineChanged [
 	super engineChanged.
 	(allowingVR and: [engine hasSupportForVR]) ifTrue: [
@@ -114,6 +123,11 @@ WDASceneView >> isInVirtualReality [
 	^ screenDisplayMode isVR
 ]
 
+{ #category : #testing }
+WDASceneView >> isMultiEyeView [
+	^ screenDisplayMode isMultiEyeView
+]
+
 { #category : #'framebuffer description' }
 WDASceneView >> needsDirectRenderTarget [
 	^ false
@@ -129,6 +143,10 @@ WDASceneView >> prepareRendering [
 { #category : #accessing }
 WDASceneView >> renderSubMode [
 	^ #full
+]
+
+{ #category : #rendering }
+WDASceneView >> renderViewport: viewport overlayRenderTargetWith: stateTracker [ 
 ]
 
 { #category : #rendering }

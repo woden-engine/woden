@@ -157,7 +157,11 @@ WDBBabylonSurface >> allocateDrawingResources [
 
 { #category : #drawing }
 WDBBabylonSurface >> allocateRenderTarget [
-	(renderTarget isNotNil and: [renderTarget extent = extent]) ifTrue: [ ^ self ].
+	renderTarget isNotNil ifTrue: [
+		renderTarget extent: extent.
+		resolveRenderTarget extent: extent.
+		^ self
+	].
 	
 	renderTarget := WDCRenderTarget for: driver engine extent: extent.
 	renderTarget
@@ -405,8 +409,10 @@ WDBBabylonSurface >> extent [
 { #category : #accessing }
 WDBBabylonSurface >> extent: aNewExtent [
 	driver critical: [ 
-		extent := aNewExtent.
-		cpuForm := nil.
+		extent = aNewExtent ifFalse: [ 
+			extent := aNewExtent.
+			cpuForm := nil.
+		].
 	]
 
 ]
@@ -576,6 +582,17 @@ WDBBabylonSurface >> recordDrawingCommands [
 	].
 
 	isInRenderPass ifTrue: [ self finishCurrentRenderPass ].
+]
+
+{ #category : #accessing }
+WDBBabylonSurface >> resolveRenderTarget [
+	self allocateRenderTarget.
+	^ resolveRenderTarget
+]
+
+{ #category : #accessing }
+WDBBabylonSurface >> resolveRenderTargetTexture [
+	^ self resolveRenderTarget framebuffers first colorAttachments first
 ]
 
 { #category : #accessing }
@@ -766,6 +783,21 @@ WDBBabylonSurface >> waitFence [
 
 { #category : #drawing }
 WDBBabylonSurface >> withStateTracker: aStateTracker drawDuring: aBlock [
+	stateTracker := aStateTracker.
+	driver critical: [
+		isInRenderPass := false.
+		self
+			allocateRenderTarget;
+			doDrawBlock: aBlock.
+		renderTarget ~~ resolveRenderTarget ifTrue: [
+			stateTracker
+				resolveRenderTarget: renderTarget into: resolveRenderTarget
+		]
+	]
+]
+
+{ #category : #drawing }
+WDBBabylonSurface >> withStateTracker: aStateTracker drawDuringRenderPass: aBlock [
 	stateTracker := aStateTracker.
 	driver critical: [
 		isInRenderPass := true.

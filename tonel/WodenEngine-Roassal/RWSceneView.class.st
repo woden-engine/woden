@@ -206,6 +206,8 @@ RWSceneView >> visitKeyUpEvent: event [
 RWSceneView >> visitMouseButtonPressEvent: event [
 	"event is an OSMouseButtonPressEvent"
 	| r3Event cls |
+	self isInVirtualReality ifTrue: [ ^ self ].
+	
 	cls := RWMouseButtonDown.
 	
 	"Is left button"
@@ -226,6 +228,8 @@ RWSceneView >> visitMouseButtonPressEvent: event [
 { #category : #visiting }
 RWSceneView >> visitMouseButtonReleaseEvent: event [
 	| r3Event |
+	self isInVirtualReality ifTrue: [ ^ self ].
+	
 	r3Event := RWMouseButtonUp new buttons: event buttons;
 		position: event position asWMVector2F;
 		button: event button.
@@ -237,6 +241,8 @@ RWSceneView >> visitMouseButtonReleaseEvent: event [
 
 { #category : #visiting }
 RWSceneView >> visitMouseMoveEvent: event [
+	"Disable mouse move in VR mode."
+	self isInVirtualReality ifTrue: [ ^ self ].
 	dragElement ifNotNil: [ self onMouseDrag: event ]
 		ifNil: [ self onMouseOverElements: event ]
 ]

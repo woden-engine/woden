@@ -22,7 +22,8 @@ Class {
 		'proceduralOfflineTextureRenderer',
 		'imageBasedLightingIntegrationLibrary',
 		'imageBasedLightingBRDFLut',
-		'neutralObjectInstanceState'
+		'neutralObjectInstanceState',
+		'screenQuadCameraStateBinding'
 	],
 	#classVars : [
 		'ShaderLanguageTargetMap',
@@ -909,6 +910,25 @@ WDCResourceCache >> resourceAt: name ifAbsentPut: aBlock [
 	result := aBlock value.
 	resources at: name put: result.
 	^ result
+]
+
+{ #category : #accessing }
+WDCResourceCache >> screenQuadCameraStateBinding [
+	| camerateStateBuffer |
+	screenQuadCameraStateBinding ifNotNil: [ ^ screenQuadCameraStateBinding ].
+	camerateStateBuffer := (self streamingUniformBufferPoolFor: WTCameraState) allocate.
+	camerateStateBuffer value: (
+		WTCameraState new
+			transform: WMReversibleAffineTransformF identity;
+			projectionMatrix: (WMMatrix4F
+				reverseDepthOrthoLeft: -1.0 right: 1.0 bottom: -1.0
+					top: 1.0 near: -1.0 far: 10000.0 invertedY: engine projectionInvertedY);
+			exposure: 1.0).
+			
+	screenQuadCameraStateBinding := (WDCSceneRenderingShaderSignature for: engine)
+		newCameraState.
+	screenQuadCameraStateBinding bind: 0 uniformBufferElement: camerateStateBuffer.
+	^ screenQuadCameraStateBinding
 ]
 
 { #category : #'special shaders' }

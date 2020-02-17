@@ -258,6 +258,11 @@ WDSLightedSceneRenderer >> renderViewport: renderingViewport index: viewportInde
 	resolveTarget := viewport resolveRenderTarget.
 	camera := viewport camera.
 
+	"Render the overlay render targets"
+	viewport overlayRenderer ifNotNil: [ 
+		viewport overlayRenderer renderViewport: viewport overlayRenderTargetWith: stateTracker 
+	].
+
 	"First pass: g-buffer rendering. Normal and depth-only rendering."
 	self setupStateTrackerForRenderMode: self gbufferRenderMode.
 	stateTracker
@@ -310,10 +315,7 @@ WDSLightedSceneRenderer >> renderViewport: renderingViewport index: viewportInde
 			applyFullScreenPass: renderingViewport hdrToneMappingFullscreenPass.
 	].
 
-	"Render the overlays"
-	viewport overlayRenderer ifNotNil: [ 
-		viewport overlayRenderer renderViewport: viewport overlayWith: stateTracker 
-	].
+	self renderViewportOverlays: renderingViewport.
 	
 	"End rendering into the viewport"
 	stateTracker endRenderPass.

@@ -6,9 +6,10 @@ Class {
 		'writeDepth',
 		'stipple',
 		'thumbnailType',
-		'vertexShader',
-		'fragmentShader',
-		'shaderLibrary'
+		'shaderLibrary',
+		'colorTexture',
+		'resourceBindingsAreUpdated',
+		'resourceBinding'
 	],
 	#category : #'WodenEngine-Core-Material'
 }
@@ -35,9 +36,11 @@ WDCFlatColorMaterial >> activateDepthOnlyOn: stateTracker [
 
 { #category : #rendering }
 WDCFlatColorMaterial >> activateForwardOn: stateTracker [
+	self validateCache.
 	stateTracker
 		vertexShader: self vertexShader;
 		fragmentShader: self fragmentShader;
+		useShaderResources: resourceBinding;
 		materialBlendingMode: WDCBlendingMode alphaOver.
 		
 	useDepth ifFalse: [ 
@@ -49,13 +52,52 @@ WDCFlatColorMaterial >> activateForwardOn: stateTracker [
 	^ true
 ]
 
+{ #category : #rendering }
+WDCFlatColorMaterial >> bindResources [
+	| signature |
+	resourceBinding ifNil: [ 
+		signature := WDCSceneRenderingShaderSignature for: engine.
+		resourceBinding := signature newMaterialState.
+	].
+	colorTexture ifNotNil: [ resourceBinding bind: 2 texture: colorTexture].
+
+]
+
+{ #category : #'as yet unclassified' }
+WDCFlatColorMaterial >> colorTexture [
+	^ colorTexture
+]
+
+{ #category : #'as yet unclassified' }
+WDCFlatColorMaterial >> colorTexture: aTexture [
+	colorTexture ~~ aTexture ifTrue: [ 
+		colorTexture := aTexture.
+		self invalidateCache.
+	].
+
+]
+
 { #category : #accessing }
 WDCFlatColorMaterial >> fragmentShader [
-	^ fragmentShader ifNil: [
-		fragmentShader := stipple
-			ifTrue: [ self shaderLibrary getFragmentStage: #stipple ]
-			ifFalse: [ self shaderLibrary getFragmentStage: #flat ]
-	]
+	^ stipple
+		ifTrue: [ self shaderLibrary getFragmentStage: #stipple ]
+		ifFalse: [ colorTexture
+				ifNotNil: [self shaderLibrary getFragmentStage: #flatTextured]
+				ifNil: [self shaderLibrary getFragmentStage: #flat] ]
+]
+
+{ #category : #initialization }
+WDCFlatColorMaterial >> initialize [
+	super initialize.
+	stipple := false.
+	useDepth := true.
+	writeDepth := true.
+	resourceBindingsAreUpdated := false.
+]
+
+{ #category : #'as yet unclassified' }
+WDCFlatColorMaterial >> invalidateCache [
+	resourceBindingsAreUpdated := false.
 ]
 
 { #category : #parsing }
@@ -112,9 +154,15 @@ WDCFlatColorMaterial >> useDepth: anObject [
 	useDepth := anObject
 ]
 
+{ #category : #rendering }
+WDCFlatColorMaterial >> validateCache [
+	resourceBindingsAreUpdated ifFalse: [ self bindResources ].
+	resourceBindingsAreUpdated := true.
+]
+
 { #category : #accessing }
 WDCFlatColorMaterial >> vertexShader [
-	^ vertexShader ifNil: [vertexShader := self shaderLibrary getVertexStage: #vertex ]
+	^ self shaderLibrary getVertexStage: #vertex
 ]
 
 { #category : #accessing }

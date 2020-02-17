@@ -27,22 +27,6 @@ Class {
 }
 
 { #category : #accessing }
-WDSGViewport >> applyBabylonCanvasSafeZoneTransform: aBabylonCanvasTransform [
-	aBabylonCanvasTransform loadIdentity.
-	babylonCanvasSafeZoneTransform ifNotNil: [ babylonCanvasSafeZoneTransform value: aBabylonCanvasTransform ]
-]
-
-{ #category : #accessing }
-WDSGViewport >> babylonCanvasSafeZoneTransform [
-	^ babylonCanvasSafeZoneTransform
-]
-
-{ #category : #accessing }
-WDSGViewport >> babylonCanvasSafeZoneTransform: anObject [
-	babylonCanvasSafeZoneTransform := anObject
-]
-
-{ #category : #accessing }
 WDSGViewport >> bounds [
 	^ bounds
 ]

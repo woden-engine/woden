@@ -34,16 +34,6 @@ WDSGSpatialObjectInstanceGroup >> removeChild: aChild [
 	objectState removeChild: aChild objectState
 ]
 
-{ #category : #rendering }
-WDSGSpatialObjectInstanceGroup >> renderOn: commandList mode: renderMode submode: submode [
-	renderable ifNil: [ ^ self ].
-	
-	commandList
-		useShaderResources: self currentObjectStateBinding validHandle.
-		
-	renderable renderOn: commandList mode: renderMode submode: submode instanceCount: children size baseInstance: 0 baseVertex: 0
-]
-
 { #category : #'as yet unclassified' }
 WDSGSpatialObjectInstanceGroup >> updatedPerFrame [
 	^ objectState updatedPerFrame
