@@ -185,7 +185,11 @@ WDCAGPUVRSystem >> pollVREvents [
 
 { #category : #'as yet unclassified' }
 WDCAGPUVRSystem >> processVREvent: agpuVREvent [
-	Stdio stdout nextPutAll: 'VR Event '; print: agpuVREvent type; nextPutAll: ' device '; print: agpuVREvent tracked_device_index; lf
+	| trackedDevice |
+	trackedDevices ifNil: [ ^ self ].
+	trackedDevice := trackedDevices at: agpuVREvent tracked_device_index + 1 ifAbsent: [^ self].
+	trackedDevice ifNil: [ ^ self ].
+	trackedDevice processAndDispatchEvent: agpuVREvent
 ]
 
 { #category : #'multi eye rendering' }
@@ -248,7 +252,7 @@ WDCAGPUVRSystem >> waitAndFetchPoses [
 		].
 	].
 
-	trackedDevices detect: #isHeadMountedDisplay ifFound: [ :device | hmdTrackedDevice := device ].
+	trackedDevices detect: [:each | each isNotNil and: [each isHeadMountedDisplay]] ifFound: [ :device | hmdTrackedDevice := device ].
 	
 	"Transcript show: hmdTrackedDevice currentPose deviceToAbsoluteTransform translation; cr.
 	Transcript show: hmdTrackedDevice currentPose deviceToAbsoluteTransform matrix; cr."

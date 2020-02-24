@@ -3,3 +3,8 @@ Class {
 	#superclass : #WDCVRTrackedDevice,
 	#category : #'WodenEngine-Core-VR'
 }
+
+{ #category : #testing }
+WDCVRTrackedDeviceTrackingReference >> isTrackingReference [
+	^ true
+]

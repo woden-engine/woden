@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'id',
 		'currentPose',
-		'currentRenderPose'
+		'currentRenderPose',
+		'eventHandler'
 	],
 	#category : #'WodenEngine-Core-VR'
 }
@@ -30,6 +31,16 @@ WDCVRTrackedDevice >> currentRenderPose: anObject [
 ]
 
 { #category : #accessing }
+WDCVRTrackedDevice >> eventHandler [
+	^ eventHandler
+]
+
+{ #category : #accessing }
+WDCVRTrackedDevice >> eventHandler: anObject [
+	eventHandler := anObject
+]
+
+{ #category : #accessing }
 WDCVRTrackedDevice >> id [
 	^ id
 ]
@@ -48,6 +59,40 @@ WDCVRTrackedDevice >> initialize [
 ]
 
 { #category : #testing }
+WDCVRTrackedDevice >> isController [
+	^ false
+]
+
+{ #category : #testing }
+WDCVRTrackedDevice >> isDisplayRedirect [
+	^ false
+]
+
+{ #category : #testing }
+WDCVRTrackedDevice >> isGenericTracker [
+	^ false
+]
+
+{ #category : #testing }
 WDCVRTrackedDevice >> isHeadMountedDisplay [
 	^ false
+]
+
+{ #category : #testing }
+WDCVRTrackedDevice >> isInvalid [
+	^ false
+]
+
+{ #category : #testing }
+WDCVRTrackedDevice >> isTrackingReference [
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+WDCVRTrackedDevice >> processAndDispatchEvent: agpuVREvent [
+	| convertedEvent |
+	convertedEvent := WDCVREvent convertFromAGPU: agpuVREvent.
+	convertedEvent ifNil: [ ^ self ].
+	convertedEvent sourceDevice: self.
+	eventHandler ifNotNil: [ eventHandler processVREvent: convertedEvent ]
 ]

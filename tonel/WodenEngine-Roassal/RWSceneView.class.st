@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'dragElement',
 		'mouseFocusElement',
-		'trackedDevicesDisplay'
+		'trackedDevicesDisplay',
+		'vrTrackedDevices'
 	],
 	#category : #'WodenEngine-Roassal-Core'
 }
@@ -17,6 +18,13 @@ RWSceneView >> applyVRCameraTransform [
 
 	cameraTransform := cameraTransform transformTransform: engine vrSystem hmdTrackedDevice currentPose deviceToAbsoluteTransform.
 	self camera transform: cameraTransform
+]
+
+{ #category : #'rendering process stages' }
+RWSceneView >> createVRTrackedDeviceModelFor: vrTrackedDevice [
+	vrTrackedDevice isController ifTrue: [ ^ (RWVRTrackedController for: model device: vrTrackedDevice) ].
+	vrTrackedDevice isGenericTracker ifTrue: [ ^ (RWVRGenericTrackedDevice for: model device: vrTrackedDevice) ].
+	^ nil
 ]
 
 { #category : #rendering }
@@ -65,23 +73,20 @@ RWSceneView >> elementInPositionWithRayPicking: aPoint [
 
 { #category : #'rendering process stages' }
 RWSceneView >> ensureVRTrackedDeviceDisplay: baseCameraTransform [
-	| interestingDevices shape |
-	interestingDevices := engine vrSystem trackedDevices select: [:dev | dev isNotNil and: [dev isHeadMountedDisplay not]].
-	
-	(trackedDevicesDisplay isNil or: [trackedDevicesDisplay size ~= interestingDevices size]) ifTrue: [
-		trackedDevicesDisplay ifNotNil: [ 
-			trackedDevicesDisplay do: #remove
-		].
-	
-		shape := RWCube new size: 0.1.
-		trackedDevicesDisplay := shape elementsOn: interestingDevices.
-		model addAllInternalElements: trackedDevicesDisplay.
+	engine vrSystem trackedDevices select: [:dev | dev isNotNil] thenDo: [ :eachTrackedDevice |
+		(vrTrackedDevices at: eachTrackedDevice ifAbsentPut: [ 
+			self createVRTrackedDeviceModelFor: eachTrackedDevice
+		]) ifNotNil: [ :vrTrackedDevice |
+			vrTrackedDevice transform: (baseCameraTransform transformTransform: eachTrackedDevice currentPose deviceToAbsoluteTransform)
+		]
 	].
 
-	trackedDevicesDisplay do: [ :deviceDisplay |
-		deviceDisplay transform: (baseCameraTransform transformTransform: deviceDisplay model currentPose deviceToAbsoluteTransform)
-	 ]
+]
 
+{ #category : #initialization }
+RWSceneView >> initialize [
+	super initialize.
+	vrTrackedDevices := Dictionary new.
 ]
 
 { #category : #visiting }
