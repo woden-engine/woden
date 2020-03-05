@@ -224,6 +224,13 @@ RWView >> drawOverlaysOnBabylonCanvas: canvas [
 	]
 ]
 
+{ #category : #overlays }
+RWView >> drawOverlaysOnScaledBabylonCanvas: canvas [
+	overlays do: [ :overlay |
+		overlay drawOnScaledBabylonCanvas: canvas
+	]
+]
+
 { #category : #internal }
 RWView >> element: element idChangedFrom: oldId into: newId [
 	oldId ifNotNil: [ 
@@ -366,6 +373,26 @@ RWView >> rayCast: ray [
 			bestDistance := distance.
 			bestResult := result.
 		]
+	].
+
+	^ bestDistance -> bestResult.
+]
+
+{ #category : #'ray casting' }
+RWView >> rayCast: ray satisfying: predicate [
+	| bestDistance bestResult distanceResult distance result |
+	bestDistance := Float infinity.
+	bestResult := nil.
+	elements do: [ :element |
+		(predicate value: element) ifTrue: [ 
+			distanceResult := element rayCast: ray.
+			distance := distanceResult key.
+			result := distanceResult value.
+			(result notNil and: [ distance < bestDistance ]) ifTrue: [
+				bestDistance := distance.
+				bestResult := result.
+			]
+		].
 	].
 
 	^ bestDistance -> bestResult.

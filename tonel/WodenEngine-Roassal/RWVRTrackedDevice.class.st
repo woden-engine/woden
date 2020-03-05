@@ -4,14 +4,21 @@ Class {
 	#instVars : [
 		'deviceHandle',
 		'element',
-		'shape'
+		'shape',
+		'sceneView'
 	],
 	#category : #'WodenEngine-Roassal-Core'
 }
 
 { #category : #'instance creation' }
-RWVRTrackedDevice class >> for: view device: aTrackedDevice [
-	^ self new deviceHandle: aTrackedDevice; addToView: view; yourself
+RWVRTrackedDevice class >> for: sceneView device: aTrackedDevice [
+	^ self new deviceHandle: aTrackedDevice; addToSceneView: sceneView; yourself
+]
+
+{ #category : #adding }
+RWVRTrackedDevice >> addToSceneView: anSceneView [
+	sceneView := anSceneView.
+	self addToView: sceneView model.
 ]
 
 { #category : #adding }
@@ -50,4 +57,8 @@ RWVRTrackedDevice >> transform: newTransform [
 
 { #category : #accessing }
 RWVRTrackedDevice >> transformChanged [
+]
+
+{ #category : #'rendering process stages' }
+RWVRTrackedDevice >> updateForFrameDelta: delta [
 ]

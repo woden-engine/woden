@@ -80,7 +80,7 @@ RWPopup >> initializeElement: anElement [
 				canvas draw: popupMesh
 			].
 		];
-		"when: RWMouseMove do: [ :evt | popupElement position: evt position ];"
+		when: RWMouseMove do: [ :evt | popupElement view isInVirtualReality ifTrue: [popupElement position: evt position ]];
 		when: RWMouseLeave do: [ :evt | popupElement remove ]
 ]
 

@@ -30,8 +30,11 @@ RWExample >> circleLayout [
 	<script: 'self new circleLayout openInVR'>
 	| v  |
 	v := RWView new.
-	1 to: 10 do: [ :i |
-		v add: RWCube element.
+	v addAll: (RWCube elementsOn: (1 to: 10)).
+	v elements do: [ :each |
+		each
+			addInteraction: RWHighlightable;
+			addInteraction: RWPopup.
 	].
 
 	RWCircleLayout on: v elements.

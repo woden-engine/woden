@@ -5,7 +5,8 @@ Class {
 		'dragElement',
 		'mouseFocusElement',
 		'trackedDevicesDisplay',
-		'vrTrackedDevices'
+		'vrTrackedDevices',
+		'vrCameraBaseTransform'
 	],
 	#category : #'WodenEngine-Roassal-Core'
 }
@@ -13,7 +14,7 @@ Class {
 { #category : #'rendering process stages' }
 RWSceneView >> applyVRCameraTransform [
 	| cameraTransform |
-	cameraTransform := WMReversibleAffineTransformF identity.
+	cameraTransform := vrCameraBaseTransform copy.
  	self ensureVRTrackedDeviceDisplay: cameraTransform.
 
 	cameraTransform := cameraTransform transformTransform: engine vrSystem hmdTrackedDevice currentPose deviceToAbsoluteTransform.
@@ -22,37 +23,47 @@ RWSceneView >> applyVRCameraTransform [
 
 { #category : #'rendering process stages' }
 RWSceneView >> createVRTrackedDeviceModelFor: vrTrackedDevice [
-	vrTrackedDevice isController ifTrue: [ ^ (RWVRTrackedController for: model device: vrTrackedDevice) ].
-	vrTrackedDevice isGenericTracker ifTrue: [ ^ (RWVRGenericTrackedDevice for: model device: vrTrackedDevice) ].
+	vrTrackedDevice isController ifTrue: [ ^ (RWVRTrackedController for: self device: vrTrackedDevice) ].
+	vrTrackedDevice isGenericTracker ifTrue: [ ^ (RWVRGenericTrackedDevice for: self device: vrTrackedDevice) ].
 	^ nil
+]
+
+{ #category : #visiting }
+RWSceneView >> dispatchMouseOverElementsEvent: event newElement: elementBeingPointed [
+	| leave enter move |
+	self mouseFocusElement ~~ elementBeingPointed ifTrue: [
+		leave := RWMouseLeave new.
+		leave element: self mouseFocusElement;
+			position: event position;
+			sendToElement.
+
+		enter := RWMouseEnter new.
+		enter element: elementBeingPointed;
+			position: event position;
+			sendToElement.
+		mouseFocusElement := elementBeingPointed.
+	] ifFalse: [
+		move := RWMouseMove new.
+		move element: elementBeingPointed;
+			position: event position;
+			delta: event delta;
+			sendToElement.
+	].
+	model signalUpdate
 ]
 
 { #category : #rendering }
 RWSceneView >> drawOnBabylonCanvas: canvas [
 	model ifNotNil: [
 		model drawOverlaysOnBabylonCanvas: canvas
-	].
+	]
+]
 
-	"| font builder mesh |
-	font := self babylonDefaultFont.
-		
-	builder := canvas driver mesh2DBuilder.
-	builder fill
-		gradientStart: 0@0 color: Color cyan end: 0@128 color: Color blue;
-		rectangle: (0@0 extent: 128@128) round: 15.
-	builder stroke
-		color: (Color black alpha: 0.5);
-		width: 3;
-		rectangle: (0@0 extent: 128@128) round: 15.
-	builder text
-		color: Color black;
-		font: font;
-		position: (30 @ (30 + font getPreciseAscent));
-		draw: 'Hello ';
-		color: Color red;
-		draw: 'World!'.
-	mesh := builder mesh.
-	canvas draw: mesh"
+{ #category : #rendering }
+RWSceneView >> drawOnScaledBabylonCanvas: canvas [
+	model ifNotNil: [
+		model drawOverlaysOnScaledBabylonCanvas: canvas
+	]
 ]
 
 { #category : #selection }
@@ -64,7 +75,7 @@ RWSceneView >> elementInPosition: aPoint [
 { #category : #selection }
 RWSceneView >> elementInPositionWithRayPicking: aPoint [
 	| nx ny extent |
-	extent := window drawingSurfaceExtent.
+	extent := self drawingSurfaceExtent.
 	nx := aPoint x / extent x asFloat.
 	ny := 1.0 - (aPoint y / extent y).
 	^ model rayPickNormalizedPosition: nx @ ny.
@@ -87,6 +98,7 @@ RWSceneView >> ensureVRTrackedDeviceDisplay: baseCameraTransform [
 RWSceneView >> initialize [
 	super initialize.
 	vrTrackedDevices := Dictionary new.
+	vrCameraBaseTransform := WMReversibleAffineTransformF identity.
 ]
 
 { #category : #visiting }
@@ -109,27 +121,27 @@ RWSceneView >> onMouseDrag: event [
 
 { #category : #visiting }
 RWSceneView >> onMouseOverElements: event [
-	| elementBeingPointed leave enter move |
+	| elementBeingPointed |
 	elementBeingPointed := self elementInPosition: event position.
-	self mouseFocusElement ~~ elementBeingPointed ifTrue: [
-		leave := RWMouseLeave new.
-		leave element: self mouseFocusElement;
-			position: event position;
-			sendToElement.
+	self dispatchMouseOverElementsEvent: event newElement: elementBeingPointed
+]
 
-		enter := RWMouseEnter new.
-		enter element: elementBeingPointed;
-			position: event position;
-			sendToElement.
-		mouseFocusElement := elementBeingPointed.
-	] ifFalse: [
-		move := RWMouseMove new.
-		move element: self mouseFocusElement;
-			position: event position;
-			delta: event delta;
-			sendToElement.
-	].
-	model signalUpdate
+{ #category : #'as yet unclassified' }
+RWSceneView >> projectPointToScreen: aPoint [
+	| viewPoint projectedPoint ndcPoint ndcX ndcY extent x y |
+	viewPoint := camera sceneNode globalTransform inverseTransformPosition3: aPoint.
+	projectedPoint := camera sceneNode frustum matrix transformVector4: viewPoint asWMVector4F.
+	(projectedPoint w closeTo: 0.0) ifTrue: [ ^ 0@0 ].
+	(projectedPoint z >= 0.0) ifTrue: [ ^ 0@0 ].
+	
+	ndcPoint := projectedPoint xyz / projectedPoint w.
+	ndcX := ndcPoint x * 0.5 + 0.5.
+	ndcY := ndcPoint y * 0.5 + 0.5.
+	extent := self drawingSurfaceExtent.
+	x := ndcX * extent x.
+	y := ndcY * extent y.
+
+	^ x@y
 ]
 
 { #category : #visiting }
@@ -150,7 +162,8 @@ RWSceneView >> updateForFrameDelta: delta [
 
 { #category : #'rendering process stages' }
 RWSceneView >> updateVRForFrameDelta: delta [
-	self applyVRCameraTransform
+	self applyVRCameraTransform.
+	vrTrackedDevices valuesDo: [ :each | each ifNotNil: [each updateForFrameDelta: delta ]]
 ]
 
 { #category : #visiting }
@@ -250,4 +263,9 @@ RWSceneView >> visitMouseMoveEvent: event [
 	self isInVirtualReality ifTrue: [ ^ self ].
 	dragElement ifNotNil: [ self onMouseDrag: event ]
 		ifNil: [ self onMouseOverElements: event ]
+]
+
+{ #category : #accessing }
+RWSceneView >> vrCameraBaseTransform [
+	^ vrCameraBaseTransform
 ]

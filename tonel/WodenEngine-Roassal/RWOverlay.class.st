@@ -17,6 +17,11 @@ RWOverlay >> drawOnBabylonCanvas: canvas [
 	"This is the place for drawing the overlay."
 ]
 
+{ #category : #rendering }
+RWOverlay >> drawOnScaledBabylonCanvas: canvas [
+	"This is the place for drawing the overlay with a scaled logical height."
+]
+
 { #category : #removing }
 RWOverlay >> remove [
 	view removeOverlay: self.

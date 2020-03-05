@@ -30,6 +30,11 @@ WDCBabylonOverlay >> applyLogicalHeightTransformTo: canvas [
 	logicalHeight := self logicalHeight asFloat.
 	scaleFactor := actualHeight / logicalHeight.
 	logicalWidth := actualWidth / scaleFactor.
+	canvas physicalToLogicalTransform: (BabylonAffineTransform new
+		translateX: logicalWidth * 0.5 Y: logicalHeight * 0.5;
+		scaleBy: 1.0/scaleFactor;
+		translateX: actualWidth * -0.5 Y: actualHeight * -0.5;
+		yourself).
 	canvas transform
 		translateX: actualWidth * 0.5 Y: actualHeight * 0.5;
 		scaleBy: scaleFactor;

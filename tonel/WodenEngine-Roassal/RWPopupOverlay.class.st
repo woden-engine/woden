@@ -9,9 +9,9 @@ Class {
 }
 
 { #category : #rendering }
-RWPopupOverlay >> drawOnBabylonCanvas: canvas [
+RWPopupOverlay >> drawOnScaledBabylonCanvas: canvas [
 	canvas transform restoreAfter: [
-		canvas transform translateBy: position.
+		canvas transform translateBy: (canvas physicalToLogicalTransformPoint: position).
 		drawingBlock cull: canvas
 	]
 

@@ -2,7 +2,8 @@ Class {
 	#name : #WDBBabylonCanvas,
 	#superclass : #BabylonCanvas,
 	#instVars : [
-		'surface'
+		'surface',
+		'physicalToLogicalTransform'
 	],
 	#category : #'WodenEngine-Babylon'
 }
@@ -29,6 +30,21 @@ WDBBabylonCanvas >> drawWodenMesh2D: mesh2D [
 { #category : #'drawing commands' }
 WDBBabylonCanvas >> driver [
 	^ surface driver
+]
+
+{ #category : #accessing }
+WDBBabylonCanvas >> physicalToLogicalTransform [
+	^ physicalToLogicalTransform
+]
+
+{ #category : #accessing }
+WDBBabylonCanvas >> physicalToLogicalTransform: anObject [
+	physicalToLogicalTransform := anObject
+]
+
+{ #category : #accessing }
+WDBBabylonCanvas >> physicalToLogicalTransformPoint: aPoint [
+	^ physicalToLogicalTransform transform: aPoint
 ]
 
 { #category : #'as yet unclassified' }

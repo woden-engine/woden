@@ -32,7 +32,7 @@ WDAGSLevelPlayerView >> drawFrameRateOn: canvas [
 ]
 
 { #category : #'drawing 2d' }
-WDAGSLevelPlayerView >> drawOnBabylonCanvas: canvas [
+WDAGSLevelPlayerView >> drawOnScaledBabylonCanvas: canvas [
 	self drawFrameRateOn: canvas
 ]
 

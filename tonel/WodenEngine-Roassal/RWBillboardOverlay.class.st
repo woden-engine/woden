@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #rendering }
-RWBillboardOverlay >> drawOnBabylonCanvas: canvas [
+RWBillboardOverlay >> drawOnScaledBabylonCanvas: canvas [
 	| viewPos4 projectedPosition ndcPosition surfaceExtent x y |
 	viewPos4 := view camera transform inverseMatrix4 transformVector4: (WMVector4F xyz: position w: 1.0).
 	projectedPosition := view camera frustum matrix transformVector4: viewPos4.
@@ -23,7 +23,7 @@ RWBillboardOverlay >> drawOnBabylonCanvas: canvas [
 	].
 	y := y * surfaceExtent y.
 	canvas transform restoreAfter: [
-		canvas transform translateBy: x@y.
+		canvas transform translateBy: (canvas physicalToLogicalTransformPoint: x@y).
 		drawingBlock cull: canvas
 	]
 

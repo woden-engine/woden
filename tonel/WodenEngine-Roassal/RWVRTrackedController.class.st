@@ -5,7 +5,9 @@ Class {
 		'cursorColor',
 		'triggerPressed',
 		'triggerTouched',
-		'cursorNode'
+		'cursorNode',
+		'dragElement',
+		'movingForward'
 	],
 	#category : #'WodenEngine-Roassal-Core'
 }
@@ -48,27 +50,51 @@ RWVRTrackedController >> cursorColor: anObject [
 	]
 ]
 
+{ #category : #'as yet unclassified' }
+RWVRTrackedController >> elementPointedByCursor [
+	| ray view distanceAndElement |
+	ray := WMRayF origin: element position
+		direction: (element orientation transformVector3: (WMVector3F z: -1.0)).
+	view := element view.
+	view ifNil: [ ^ nil ].
+
+	distanceAndElement := view rayCast: ray satisfying: [:el | el ~~ element ].
+	^ distanceAndElement value
+]
+
 { #category : #initialization }
 RWVRTrackedController >> initialize [
 	super initialize.
 	triggerPressed := false.
 	triggerTouched := false.
+	movingForward := false.
 	self updateCursor.
 ]
 
 { #category : #'as yet unclassified' }
 RWVRTrackedController >> onVRButtonPressedEvent: event [
+	event isSteamVRTouchpad ifTrue: [ 
+		movingForward := true.
+	].
+
 	event isSteamVRTrigger ifTrue: [
 		triggerPressed := true.
-		self updateCursor
+		self updateCursor.
+		
+		dragElement := self elementPointedByCursor.
 	].
 ]
 
 { #category : #'as yet unclassified' }
 RWVRTrackedController >> onVRButtonReleasedEvent: event [
+	event isSteamVRTouchpad ifTrue: [
+		movingForward := false.
+	].
+
 	event isSteamVRTrigger ifTrue: [
 		triggerPressed := false.
-		self updateCursor
+		dragElement := nil.
+		self updateCursor.
 	].
 
 ]
@@ -90,7 +116,29 @@ RWVRTrackedController >> onVRButtonUntouchEvent: event [
 ]
 
 { #category : #accessing }
+RWVRTrackedController >> sendCursorOverElements: moveEvent [
+	| elementBeingPointed |
+	elementBeingPointed := self elementPointedByCursor.
+	elementBeingPointed ifNil: [ elementBeingPointed := element view ].
+	sceneView dispatchMouseOverElementsEvent: moveEvent newElement: elementBeingPointed
+]
+
+{ #category : #accessing }
+RWVRTrackedController >> sendDragElementEvent: moveEvent [
+	Transcript show: 'TODO: sendDragElementEvent '; cr.
+]
+
+{ #category : #accessing }
 RWVRTrackedController >> transformChanged [
+	| moveEvent |
+	(triggerPressed or: [ triggerTouched ]) ifFalse: [ ^ self ].
+	moveEvent := RWMouseMove new
+		position: (sceneView projectPointToScreen: element position);
+		delta: 0@0;
+		yourself.
+	dragElement
+		ifNotNil: [ self sendDragElementEvent: moveEvent ]
+		ifNil: [ self sendCursorOverElements: moveEvent ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -106,4 +154,13 @@ RWVRTrackedController >> updateCursor [
 		cursorNode visible: (triggerPressed or: triggerTouched)
 	].
 
+]
+
+{ #category : #'rendering process stages' }
+RWVRTrackedController >> updateForFrameDelta: delta [
+	| direction |
+	movingForward ifTrue: [
+		direction := sceneView camera orientation transformVector3: (WMVector3F z: -1.0).
+		sceneView vrCameraBaseTransform translateBy: direction * delta * 2.0.
+	].
 ]

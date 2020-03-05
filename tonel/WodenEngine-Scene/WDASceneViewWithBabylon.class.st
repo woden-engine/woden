@@ -62,6 +62,14 @@ WDASceneViewWithBabylon >> drawOnBabylonCanvas: canvas [
 ]
 
 { #category : #rendering }
+WDASceneViewWithBabylon >> drawOnScaledBabylonCanvas: canvas [
+	WDCEngine displayFrameRate ifTrue: [ 
+		self drawFrameRateOn: canvas
+	].
+
+]
+
+{ #category : #rendering }
 WDASceneViewWithBabylon >> renderViewport: viewport overlayRenderTargetWith: stateTracker [
 	hasRenderedOverlayTargets ifTrue: [ ^ self ].
 
@@ -70,9 +78,10 @@ WDASceneViewWithBabylon >> renderViewport: viewport overlayRenderTargetWith: sta
 		
 		canvas transform restoreAfter: [
 			babylonOverlay applyLogicalHeightTransformTo: canvas.
-			self drawOnBabylonCanvas: canvas.
+			self drawOnScaledBabylonCanvas: canvas.
 			sceneRenderer ifNotNil: [ sceneRenderer debugDrawOnBabylonCanvas: canvas ]
 		].
+		self drawOnBabylonCanvas: canvas.
 	].
 	hasRenderedOverlayTargets := true.
 

@@ -158,9 +158,9 @@ WDAModel >> openOnRenderTargetTexture: screenTexture with: aView [
 
 { #category : #opening }
 WDAModel >> openWith: aView [
-	self isOSWindowBlacklisted ifTrue: [
+	"self isOSWindowBlacklisted ifTrue: [
 		^ self openInMorphicWith: aView
-	].
+	]."
  
 	^ self openInOSWindowWith: aView
 ]
