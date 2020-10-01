@@ -47,12 +47,12 @@ WDAESProceduralSamples class >> example01SimpleLevel [
 		].
 
 		sector
-			addPointLightAt: (WMVector3F x: 0.5 y: 1.0 z: 0.0) with: [ :light |
+			addPointLightAt: (Float32x3 x: 0.5 y: 1.0 z: 0.0) with: [ :light |
 				light
 					radius: 12.0;
-					intensity: WMVector4F ones * 3.0
+					intensity: Float32x4 ones * 3.0
 			];
-			addPlayerStartPointAt: (WMVector3F x: 0.0 y: 2.0 z: 2.0)
+			addPlayerStartPointAt: (Float32x3 x: 0.0 y: 2.0 z: 2.0)
 	].
 
 	universe createSimulationModel
@@ -77,7 +77,7 @@ WDAESProceduralSamples class >> example02PoolLevel [
 				| skyTexture |
 				light
 					castShadows: true;
-					intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.7;
+					intensity: (Float32x4 x: 1.0 y: 1.0 z: 0.8) normalized * 0.7;
 					rotateDegreesOnX: -35;
 					rotateDegreesOnY: -180;
 					translateToX: 0.0 y: 1.5 z: 2.5.
@@ -86,22 +86,22 @@ WDAESProceduralSamples class >> example02PoolLevel [
 				skyTexture := skyTexture asTextureFor: engine.
 				sector addSkyBoxWithTexture: skyTexture
 			];
-			addWaterVolumeAt: (WMVector3F y: -0.3) with: [ :waterVolume |
+			addWaterVolumeAt: (Float32x3 y: -0.3) with: [ :waterVolume |
 				(waterVolume buildWaterMeshWith: [ :meshBuilder |
 				
 					waterMaterial := engine resourceCache loadMaterial: 'materials/demos/water.json'.
 					meshBuilder
 						material: waterMaterial;
 						heightScale: 0.1;
-						createGridWithSize: (WMVector2F x: 5.0 y: 5.0) subdivisions: 64;
+						createGridWithSize: (Float32x2 x: 5.0 y: 5.0) subdivisions: 64;
 						addCollisionBoxWithMinHeight: -2.0 maxHeight: 0.0
 				]) renderable deformationState
-					harmonicAt: 1 amplitude: 0.05 frequency: -1.1 center: WMVector2F new;
-					harmonicAt: 2 amplitude: 0.02 frequency: 2.23 direction: (WMVector2F y: -1.0);
-					harmonicAt: 3 amplitude: 0.015 frequency: 1.80 direction: (WMVector2F x: 1.0).
+					harmonicAt: 1 amplitude: 0.05 frequency: -1.1 center: Float32x2 new;
+					harmonicAt: 2 amplitude: 0.02 frequency: 2.23 direction: (Float32x2 y: -1.0);
+					harmonicAt: 3 amplitude: 0.015 frequency: 1.80 direction: (Float32x2 x: 1.0).
 			];
 		
-			addRigidBodyAt: (WMVector3F x: -4.5 y: 0.6 z: 0.0) with: [ :rigidBody |
+			addRigidBodyAt: (Float32x3 x: -4.5 y: 0.6 z: 0.0) with: [ :rigidBody |
 				rigidBody buildGenericMeshWith: [ :meshBuilder |
 					meshBuilder
 						addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
@@ -109,7 +109,7 @@ WDAESProceduralSamples class >> example02PoolLevel [
 				].
 			];
 
-			addRigidBodyAt: (WMVector3F x: -4.2 y: 1.8 z: -0.4) with: [ :rigidBody |
+			addRigidBodyAt: (Float32x3 x: -4.2 y: 1.8 z: -0.4) with: [ :rigidBody |
 				rigidBody buildGenericMeshWith: [ :meshBuilder |
 					meshBuilder
 						addCubeWithWidth: 0.6 height: 0.6 depth: 0.6;
@@ -117,7 +117,7 @@ WDAESProceduralSamples class >> example02PoolLevel [
 				].
 			];
 		
-			addPlayerStartPointAt: (WMVector3F x: -2.0 y: 2.0 z: 4.0)
+			addPlayerStartPointAt: (Float32x3 x: -2.0 y: 2.0 z: 4.0)
 	].
 
 	universe createSimulationModel
@@ -141,7 +141,7 @@ WDAESProceduralSamples class >> example03Island [
 	universe buildSector: [ :sector |
 		sector buildTerrainMeshWithData: terrainData withMaterial: terrainMaterial.
 		
-		sector addWaterVolumeAt: WMVector3F zero with: [ :waterVolume |
+		sector addWaterVolumeAt: Float32x3 zero with: [ :waterVolume |
 			(waterVolume buildWaterMeshWith: [ :meshBuilder |
 				waterMaterial := engine resourceCache loadMaterial: 'materials/demos/ocean.json'.
 				meshBuilder material: waterMaterial.
@@ -149,8 +149,8 @@ WDAESProceduralSamples class >> example03Island [
 				meshBuilder
 					addCollisionBoxWithMinHeight: -200.0 maxHeight: 0.0 
 			]) renderable deformationState
-				harmonicAt: 1 amplitude: 0.015 frequency: 2.23 center: (WMVector2F zero);
-				harmonicAt: 2 amplitude: 0.03 frequency: 0.50 center: (WMVector2F zero).
+				harmonicAt: 1 amplitude: 0.015 frequency: 2.23 center: (Float32x2 zero);
+				harmonicAt: 2 amplitude: 0.03 frequency: 0.50 center: (Float32x2 zero).
 		].
 
 		sector
@@ -158,7 +158,7 @@ WDAESProceduralSamples class >> example03Island [
 				| skyTexture |
 				light
 					castShadows: true;
-					intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.7;
+					intensity: (Float32x4 x: 1.0 y: 1.0 z: 0.8) normalized * 0.7;
 					rotateDegreesOnX: -35;
 					translateToX: 0.0 y: 1.5 z: 2.5.
 					
@@ -167,7 +167,7 @@ WDAESProceduralSamples class >> example03Island [
 				sector addSkyBoxWithTexture: skyTexture
 			];
 		
-			addPlayerStartPointAt: (WMVector3F x: 0.0 y: 2.0 z: 85.0)
+			addPlayerStartPointAt: (Float32x3 x: 0.0 y: 2.0 z: 85.0)
 	].
 
 	universe createSimulationModel
@@ -187,19 +187,19 @@ WDAESProceduralSamples class >> example04BalloonVehicle [
 				currentMaterial: (universe engine resourceCache loadMaterial: 'materials/procedural/terrain/sand.json');
 				translateToX: 0.0 y: -1.0 z: 0.0;
 				addCubeWithWidth: 500.0 height: 2.0 depth: 500.0;
-				planeTextureScale: (WMVector2F x: 0.1 y: 0.1) offset: (WMVector2F x: 0.0 y: 0.0);
+				planeTextureScale: (Float32x2 x: 0.1 y: 0.1) offset: (Float32x2 x: 0.0 y: 0.0);
 				computeTangentsBitangents;
 				addCollisionBox
 		].
 	
-		self addBalloonVehicleAt: WMVector3F zero toSector: sector.
+		self addBalloonVehicleAt: Float32x3 zero toSector: sector.
 	
 		sector
 			addDirectionalLightWith: [ :light |
 				| skyTexture |
 				light
 					castShadows: true;
-					intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.7;
+					intensity: (Float32x4 x: 1.0 y: 1.0 z: 0.8) normalized * 0.7;
 					rotateDegreesOnX: -45;
 					rotateDegreesOnY: -180;
 					translateToX: 0.0 y: 1.5 z: 2.5.
@@ -210,7 +210,7 @@ WDAESProceduralSamples class >> example04BalloonVehicle [
 			].
 		
 		sector
-			addPlayerStartPointAt: (WMVector3F x: 0.0 y: 2.0 z: 10.0)
+			addPlayerStartPointAt: (Float32x3 x: 0.0 y: 2.0 z: 10.0)
 	].
 
 	universe createSimulationModel

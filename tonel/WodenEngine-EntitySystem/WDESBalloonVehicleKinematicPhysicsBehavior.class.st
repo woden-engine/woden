@@ -49,8 +49,8 @@ WDESBalloonVehicleKinematicPhysicsBehavior >> initialize [
 	engineDirection := 0.0.
 	turnDirection := 0.0.
 	
-	linearVelocity := WMVector3F zero.
-	linearAcceleration := WMVector3F zero.
+	linearVelocity := Float32x3 zero.
+	linearAcceleration := Float32x3 zero.
 	
 	linearDamping := 0.5.
 	
@@ -68,10 +68,10 @@ WDESBalloonVehicleKinematicPhysicsBehavior >> prePhysicsTick: delta [
 	| engineAcceleration gravity buoyancy oldTransform newTranslation |
 
 	oldTransform := self ownerEntity transform.
-	engineAcceleration := WMVector3F z: engineDirection negated * self maxEngineAcceleration.
+	engineAcceleration := Float32x3 z: engineDirection negated * self maxEngineAcceleration.
 	
-	gravity := WMVector3F y: -9.8.
-	buoyancy := WMVector3F y: (0.0 interpolateTo: 12.0 at: altitudeDirection).
+	gravity := Float32x3 y: -9.8.
+	buoyancy := Float32x3 y: (0.0 interpolateTo: 12.0 at: altitudeDirection).
 	angularVelocity := turnDirection * -0.5.
 	angularVelocity abs < 0.001 ifTrue: [ angularVelocity := 0.0 ].
 	angularVelocity := angularVelocity * engineDirection abs.
@@ -91,8 +91,8 @@ WDESBalloonVehicleKinematicPhysicsBehavior >> prePhysicsTick: delta [
 	].
 
 	self ownerEntity
-		transform: (WMReversibleAffineTransformF identity
-			orthonormal: (WMMatrix3F yrot: angularVelocity * delta) * oldTransform matrix translation: newTranslation)
+		transform: (ReversibleAffineTransform3dF32 identity
+			orthonormal: (Float32x3x3 yrot: angularVelocity * delta) * oldTransform matrix translation: newTranslation)
 ]
 
 { #category : #accessing }

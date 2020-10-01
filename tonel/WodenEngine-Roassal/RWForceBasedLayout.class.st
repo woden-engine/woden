@@ -63,7 +63,7 @@ RWForceBasedLayout >> accumulate: aQuad [
 RWForceBasedLayout >> accumulateChargeOnTree: treeNode [
 	| nodeCharge nodeCenter k |
 	nodeCharge := 0.0.
-	nodeCenter := WMVector3F zero.
+	nodeCenter := Float32x3 zero.
 	treeNode children do: [ :childNode |
 		self accumulateChargeOnTree: childNode.
 		nodeCharge := nodeCharge + childNode charge.
@@ -93,7 +93,7 @@ RWForceBasedLayout >> accumulateChargeOnTree: treeNode [
 
 { #category : #hook }
 RWForceBasedLayout >> axisConstraints [
-	^ WMVector3F ones
+	^ Float32x3 ones
 ]
 
 { #category : #accessing }
@@ -155,7 +155,7 @@ RWForceBasedLayout >> initialize [
 	gravity := 0.1.
 	friction := 0.9.
 	theta := 0.8.
-	center := WMVector3F zero.
+	center := Float32x3 zero.
 	alpha := 0.1.
 	random := Random new.
 	axisConstraints := self axisConstraints.

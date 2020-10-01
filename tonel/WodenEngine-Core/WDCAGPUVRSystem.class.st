@@ -63,8 +63,8 @@ WDCAGPUVRSystem >> convertEyeToHeadTransform: rawEyeMatrix [
 	| t |
 	t := rawEyeMatrix c4.
 	
-	^ WMReversibleAffineTransformF identity
-		translation: (WMVector3F x: t x y: t y z: t z)
+	^ ReversibleAffineTransform3dF32 identity
+		translation: (Float32x3 x: t x y: t y z: t z)
 ]
 
 { #category : #initialization }
@@ -80,9 +80,9 @@ WDCAGPUVRSystem >> convertFrustumTangents: tangents [
 { #category : #wrappers }
 WDCAGPUVRSystem >> convertTrackedDevicePose: originalPose [
 	^ WDCVRTrackedDevicePose new
-		deviceToAbsoluteTransform: originalPose device_to_absolute_tracking asWMReversibleAffineTransformF;
-		linearVelocity: originalPose velocity asWMVector3F;
-		angularVelocity: originalPose angular_velocity asWMVector3F;
+		deviceToAbsoluteTransform: originalPose device_to_absolute_tracking asReversibleAffineTransform3dF32;
+		linearVelocity: originalPose velocity asFloat32x3;
+		angularVelocity: originalPose angular_velocity asFloat32x3;
 		yourself
 ]
 

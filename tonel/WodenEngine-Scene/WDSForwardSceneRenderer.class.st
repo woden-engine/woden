@@ -62,8 +62,8 @@ WDSForwardSceneRenderer >> updateFrameLightingStates [
 	self ensureLightingStatesFor: renderingViewports size.
 	currentGlobalLigthingStates := globalLightingStates at: engine bufferingFrameIndex.
 
-	shadowMapExtent := self shadowMapExtent asWMVector2F.
-	shadowMapInverseExtent := (WMVector2F x: 1.0 y: 1.0) / shadowMapExtent.
+	shadowMapExtent := self shadowMapExtent asFloat32x2.
+	shadowMapInverseExtent := (Float32x2 x: 1.0 y: 1.0) / shadowMapExtent.
 
 	renderingViewports doWithIndex: [ :renderingViewport :viewportIndex |
 		viewport := renderingViewport viewport.

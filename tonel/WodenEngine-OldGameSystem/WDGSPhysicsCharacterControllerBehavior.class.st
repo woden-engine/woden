@@ -63,7 +63,7 @@ WDGSPhysicsCharacterControllerBehavior >> createCollisionShape [
 WDGSPhysicsCharacterControllerBehavior >> createGhostObject [
 	ghostObject := WDPhyGhostObjectWithPairCache new.
 	ghostObject shape: collisionShape;
-		position: entity spatialDescription transform translation asWMVector3F.
+		position: entity spatialDescription transform translation asFloat32x3.
 
 	self validDynamicsWorld addGhostObject: ghostObject
 ]
@@ -76,11 +76,11 @@ WDGSPhysicsCharacterControllerBehavior >> crouch [
 { #category : #initialization }
 WDGSPhysicsCharacterControllerBehavior >> initialize [
 	super initialize.
-	angle := WMVector3D new.
-	angularVelocity := WMVector3D new.
-	angularAcceleration := WMVector3D new.
-	linearVelocity := WMVector3D new.
-	linearAcceleration := WMVector3D new.
+	angle := Float64x3 new.
+	angularVelocity := Float64x3 new.
+	angularAcceleration := Float64x3 new.
+	linearVelocity := Float64x3 new.
+	linearAcceleration := Float64x3 new.
 	movingInGrounding := true.
 ]
 
@@ -117,14 +117,14 @@ WDGSPhysicsCharacterControllerBehavior >> simulatePrePhysicsTime: delta [
 
 	angle := angle + (angularVelocity * delta).
 	movingInGrounding ifTrue: [
-		orientation := (WMMatrix3D yrot: angle y).
+		orientation := (Float64x3x3 yrot: angle y).
 	] ifFalse: [
-		orientation := (WMMatrix3D yrot: angle y) * (WMMatrix3D xrot: angle x).
+		orientation := (Float64x3x3 yrot: angle y) * (Float64x3x3 xrot: angle x).
 	].
 
 	physicsCharacterController
 		gravity: (movingInGrounding ifTrue: [ self characterGroundGravity ] ifFalse: [0.0]);
-		linearVelocity: (orientation transformVector3: linearVelocity) asWMVector3F.
+		linearVelocity: (orientation transformVector3: linearVelocity) asFloat32x3.
 	
 	spatialDesc := entity spatialDescription.
 	spatialDesc transform
@@ -137,7 +137,7 @@ WDGSPhysicsCharacterControllerBehavior >> simulateTime: delta [
 	| spatialDesc |
 	spatialDesc := entity spatialDescription.
 	spatialDesc transform
-			translation: ghostObject position asWMVector3D.
+			translation: ghostObject position asFloat64x3.
 	spatialDesc changed.
 ]
 

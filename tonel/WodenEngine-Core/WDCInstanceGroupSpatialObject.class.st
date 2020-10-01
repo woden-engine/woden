@@ -41,7 +41,7 @@ WDCInstanceGroupSpatialObject >> childChanged: aChild [
 { #category : #'as yet unclassified' }
 WDCInstanceGroupSpatialObject >> computeBoundingBoxForRenderable: renderable [
 	| result |
-	result := WMBox3DF empty.
+	result := BoxF32 empty.
 	instances do: [ :instance |
 		result insertBox: (instance computeBoundingBoxForRenderable: renderable)
 	].

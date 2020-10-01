@@ -292,7 +292,7 @@ RWMetricNormalizer >> normalizeElementX: metricBlock min: min max: max minValue:
 			| tt t |
 			t := transformation rwValue: (metricBlock rwValue: el).
 			tt := min + ((max - min) * ( (t - minValue) / (maxValue - minValue))) asInteger.
-			translator translate: el to: el position + (WMVector3F x: tt asFloat y: 0.0 z: 0.0) ] ] 
+			translator translate: el to: el position + (Float32x3 x: tt asFloat y: 0.0 z: 0.0) ] ] 
 ]
 
 { #category : #'public normalize x' }
@@ -333,7 +333,7 @@ RWMetricNormalizer >> normalizeElementY: metricBlock min: min max: max minValue:
 			| tt t |
 			t := transformation rwValue: (metricBlock rwValue: el).
 			tt := min + ((max - min) * ( (t - minValue) / (maxValue - minValue))) asInteger.
-			translator translate: el to: el position + (WMVector3F x: 0.0 y: tt asFloat z: 0.0) ] ] 
+			translator translate: el to: el position + (Float32x3 x: 0.0 y: tt asFloat z: 0.0) ] ] 
 ]
 
 { #category : #'as yet unclassified' }
@@ -374,7 +374,7 @@ RWMetricNormalizer >> normalizeElementZ: metricBlock min: min max: max minValue:
 			| tt t |
 			t := transformation rwValue: (metricBlock rwValue: el).
 			tt := min + ((max - min) * ( (t - minValue) / (maxValue - minValue))) asInteger.
-			translator translate: el to: el position + (WMVector3F x: 0.0 y: 0.0 z: tt asFloat) ] ] 
+			translator translate: el to: el position + (Float32x3 x: 0.0 y: 0.0 z: tt asFloat) ] ] 
 ]
 
 { #category : #'public normalize size' }
@@ -827,7 +827,7 @@ RWMetricNormalizer >> normalizeX: metricBlock min: min max: max minValue: minVal
 			| tt t |
 			t := transformation rwValue: (metricBlock rwValue: el model).
 			tt := self getValue: t min: min max: max minValue: minValue maxValue: maxValue.
-			translator translate: el to: el position + (WMVector3F x: tt asFloat y: 0.0 z: 0.0) ] ] 
+			translator translate: el to: el position + (Float32x3 x: tt asFloat y: 0.0 z: 0.0) ] ] 
 ]
 
 { #category : #'public normalize x' }
@@ -922,7 +922,7 @@ RWMetricNormalizer >> normalizeY: metricBlock min: min max: max minValue: minVal
 			| tt t |
 			t := transformation rwValue: (metricBlock rwValue: el model).
 			tt := self getValue: t min: min max: max minValue: minValue maxValue: maxValue.
-			translator translate: el to: el position + (WMVector3F x: 0.0 y: tt asFloat z: 0.0) ] ] 
+			translator translate: el to: el position + (Float32x3 x: 0.0 y: tt asFloat z: 0.0) ] ] 
 ]
 
 { #category : #'public normalize y' }
@@ -1018,7 +1018,7 @@ RWMetricNormalizer >> normalizeZ: metricBlock min: min max: max minValue: minVal
 			| tt t |
 			t := transformation rwValue: (metricBlock rwValue: el model).
 			tt := self getValue: t min: min max: max minValue: minValue maxValue: maxValue.
-			translator translate: el to: el position + (WMVector3F x: 0.0 y: 0.0 z: tt asFloat) ] ] 
+			translator translate: el to: el position + (Float32x3 x: 0.0 y: 0.0 z: tt asFloat) ] ] 
 ]
 
 { #category : #'public normalize y' }

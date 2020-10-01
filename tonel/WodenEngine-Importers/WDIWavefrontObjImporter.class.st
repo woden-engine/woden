@@ -107,7 +107,7 @@ WDIWavefrontObjImporter >> concretizeVertex: vertexTopology faceNormal: faceNorm
 	| position texcoord normal nextIndex |
 	position := rawPositions at: vertexTopology first.
 	texcoord := vertexTopology second
-		ifNil: [WMVector2F zero]
+		ifNil: [Float32x2 zero]
 		ifNotNil: [:index | rawTexcoords at: index].
 	normal := vertexTopology third
 		ifNil: [faceNormal ]
@@ -157,9 +157,9 @@ WDIWavefrontObjImporter >> initializeLoading [
 	rawNormals := OrderedCollection new.
 	rawTexcoords := OrderedCollection new.
 	
-	positions := SLVMNativeOrderedCollection for: WMVector3F.
-	normals := SLVMNativeOrderedCollection for: WMVector3F.
-	texcoords := SLVMNativeOrderedCollection for: WMVector2F.
+	positions := SLVMNativeOrderedCollection for: Float32x3.
+	normals := SLVMNativeOrderedCollection for: Float32x3.
+	texcoords := SLVMNativeOrderedCollection for: Float32x2.
 	
 	indices := SLVMNativeOrderedCollection for: #uint.
 	
@@ -231,17 +231,17 @@ WDIWavefrontObjImporter >> parseLinesWith: lineReader [
 
 { #category : #parsing }
 WDIWavefrontObjImporter >> parseNormal: components [
-	rawNormals add: (WMVector3F x: components second asNumber asFloat y: components third asNumber asFloat z: components fourth asNumber asFloat)
+	rawNormals add: (Float32x3 x: components second asNumber asFloat y: components third asNumber asFloat z: components fourth asNumber asFloat)
 ]
 
 { #category : #parsing }
 WDIWavefrontObjImporter >> parsePosition: components [
-	rawPositions add: (WMVector3F x: components second asNumber asFloat y: components third asNumber asFloat z: components fourth asNumber asFloat)
+	rawPositions add: (Float32x3 x: components second asNumber asFloat y: components third asNumber asFloat z: components fourth asNumber asFloat)
 ]
 
 { #category : #parsing }
 WDIWavefrontObjImporter >> parseTexcoord: components [
-	rawTexcoords add: (WMVector2F x: components second asNumber asFloat y: 1.0 - components third asNumber asFloat)
+	rawTexcoords add: (Float32x2 x: components second asNumber asFloat y: 1.0 - components third asNumber asFloat)
 ]
 
 { #category : #parsing }

@@ -22,7 +22,7 @@ WDCFrustumTangents >> bottom: anObject [
 
 { #category : #'as yet unclassified' }
 WDCFrustumTangents >> frustumNear: near far: far invertedY: invertedY [
-	^ WMFrustumF new reverseDepthFrustumLeft: left * near right: right * near
+	^ FrustumF32 new reverseDepthFrustumLeft: left * near right: right * near
 		bottom: bottom * near top: top * near
 		near: near far: far invertedY: invertedY
 ]
@@ -39,7 +39,7 @@ WDCFrustumTangents >> left: anObject [
 
 { #category : #'as yet unclassified' }
 WDCFrustumTangents >> projectionMatrixNear: near far: far invertedY: invertedY [
-	^ WMMatrix4F reverseDepthFrustumLeft: left * near right: right * near
+	^ Float32x4x4 reverseDepthFrustumLeft: left * near right: right * near
 		bottom: bottom * near top: top * near
 		near: near far: far invertedY: invertedY
 ]

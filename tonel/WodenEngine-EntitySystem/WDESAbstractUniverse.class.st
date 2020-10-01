@@ -178,7 +178,7 @@ WDESAbstractUniverse >> gameLogicClass: aClass [
 
 { #category : #'as yet unclassified' }
 WDESAbstractUniverse >> globalTransform [
-	^ WMReversibleAffineTransformF identity
+	^ ReversibleAffineTransform3dF32 identity
 ]
 
 { #category : #initialization }

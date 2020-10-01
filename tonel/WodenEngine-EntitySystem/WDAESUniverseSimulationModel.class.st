@@ -12,7 +12,7 @@ WDAESUniverseSimulationModel >> defaultViewClass [
 { #category : #initialization }
 WDAESUniverseSimulationModel >> initializePhysicsWorld [
 	physicsWorld := WDPhyPhysicsEngine current createDynamicsWorld.
-	physicsWorld gravity: (WMVector3F x: 0.0 y: -9.8 z: 0.0).
+	physicsWorld gravity: (Float32x3 x: 0.0 y: -9.8 z: 0.0).
 	
 	physicsWorldDebugDrawingSceneNode := WDSGSpatialObject new.
 	physicsWorldDebugDrawingSceneNode

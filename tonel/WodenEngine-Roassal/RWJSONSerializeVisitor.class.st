@@ -7,7 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 RWJSONSerializeVisitor >> encodeColor: arg1 [
 	| t |
-	t := arg1 asWMVector4F.
+	t := arg1 asFloat32x4.
 	^ {t x.
 	t y.
 	t z.

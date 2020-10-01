@@ -87,13 +87,13 @@ WDASceneViewStereoScreenDisplayMode >> computeProjectionMatrices [
 	focalWidth := aspect * focalDistance * fovyRad tan.
  	focalDistanceFactor := near / focalDistance.
 	
-	leftEyeFrustum := WMFrustumF new
+	leftEyeFrustum := FrustumF32 new
 		reverseDepthFrustumLeft: focalDistanceFactor * (focalWidth - ipd2) negated
 		right: focalDistanceFactor * (focalWidth + ipd2)
 		bottom: top negated top: top near: near far: far invertedY: invertedY.
 	leftProjectionMatrix := leftEyeFrustum matrix.
 
-	rightEyeFrustum := WMFrustumF new
+	rightEyeFrustum := FrustumF32 new
 	 	reverseDepthFrustumLeft: focalDistanceFactor * (focalWidth + ipd2) negated
 		right: focalDistanceFactor * (focalWidth - ipd2)
 		bottom: top negated top: top near: near far: far invertedY: invertedY.
@@ -124,7 +124,7 @@ WDASceneViewStereoScreenDisplayMode >> initialize [
 
 { #category : #'multi eye rendering' }
 WDASceneViewStereoScreenDisplayMode >> leftEyeTransform [
-	^ WMReversibleAffineTransformF identity
+	^ ReversibleAffineTransform3dF32 identity
 			translateByX: ipd * -0.5
 ]
 
@@ -150,7 +150,7 @@ WDASceneViewStereoScreenDisplayMode >> renderSceneViewports [
 
 { #category : #'multi eye rendering' }
 WDASceneViewStereoScreenDisplayMode >> rightEyeTransform [
-	^ WMReversibleAffineTransformF identity
+	^ ReversibleAffineTransform3dF32 identity
 			translateByX: ipd * 0.5
 ]
 
@@ -170,7 +170,7 @@ WDASceneViewStereoScreenDisplayMode >> updateCompositionState [
 	compositionStateBinding ifNil: [ self createCompositionStateBinding ].
 	
 	extent := view window drawingSurfaceExtent.
-	compositionState screenExtents: (WMVector4F x: extent x asFloat y: extent y asFloat z: extent x reciprocalFloatQuiet w: extent y reciprocalFloatQuiet)
+	compositionState screenExtents: (Float32x4 x: extent x asFloat y: extent y asFloat z: extent x reciprocalFloatQuiet w: extent y reciprocalFloatQuiet)
 ]
 
 { #category : #'rendering process stages' }

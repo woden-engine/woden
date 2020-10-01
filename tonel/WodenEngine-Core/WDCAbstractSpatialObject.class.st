@@ -54,7 +54,7 @@ WDCAbstractSpatialObject >> initialize [
 	state := WDCGenericObjectState new.
 	state
 		visible: 1;
-		color: Color white asWMVector4F.
+		color: Color white asFloat32x4.
 ]
 
 { #category : #rendering }

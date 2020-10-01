@@ -61,7 +61,7 @@ WDGSLevelEditorBoxManipulator >> expand: actualExpansion direction: expandDirect
 			ifFalse: [ near := near - actualExpansion z ]
 	].
 
-	^ WMBox3DD 
+	^ BoxF64 
 		nx: (left min: right) ny: (bottom min: top) nz: (near min: far)
 		px: (left max: right) py: (bottom max: top) pz: (near max: far)
 ]
@@ -83,9 +83,9 @@ WDGSLevelEditorBoxManipulator >> view: view dragControllerFor: anEvent [
 	forward := view cameraTransform matrix thirdColumn negated.
 	isBoxTranslation := (direction closeTo: forward) or:
 		[ (direction closeTo: forward negated) or:
-		[ direction closeTo: WMVector3D new] ].
-	fullTranslation := WMVector3D new.
-	expandDirection := WMVector3D x: direction x sign asFloat y: direction y sign asFloat z: direction z sign asFloat.
+		[ direction closeTo: Float64x3 new] ].
+	fullTranslation := Float64x3 new.
+	expandDirection := Float64x3 x: direction x sign asFloat y: direction y sign asFloat z: direction z sign asFloat.
 
 	memento := view editor selectionBox transformMemento.
 	(isBoxTranslation not and: [ view editor selectionBox rotationMode ]) ifTrue: [
@@ -120,8 +120,8 @@ WDGSLevelEditorBoxManipulator >> view: view mouseOver: anEvent [
 
 { #category : #'as yet unclassified' }
 WDGSLevelEditorBoxManipulator >> view: view selectSingleOnEditor: editor [
-	((view isPerspective and: [ direction closeTo: WMVector3D new ]) or:
-	[view isPerspective not and: [ (direction * view xyDragDirection) closeTo: WMVector3D new ] ])
+	((view isPerspective and: [ direction closeTo: Float64x3 new ]) or:
+	[view isPerspective not and: [ (direction * view xyDragDirection) closeTo: Float64x3 new ] ])
 	ifTrue: [
 		editor selectionBox toggleManipulationMode
 	]

@@ -116,7 +116,7 @@ WDCAbstractGenericSurfaceMaterial >> albedoColor [
 
 { #category : #accessing }
 WDCAbstractGenericSurfaceMaterial >> albedoColor: aColor [
-	materialState albedo: aColor asWMVector4F.
+	materialState albedo: aColor asFloat32x4.
 	self uploadMaterialStateData.
 ]
 
@@ -213,7 +213,7 @@ WDCAbstractGenericSurfaceMaterial >> emissionColor [
 
 { #category : #accessing }
 WDCAbstractGenericSurfaceMaterial >> emissionColor: aColor [
-	materialState emission: aColor asWMVector4F.
+	materialState emission: aColor asFloat32x4.
 	self uploadMaterialStateData.
 ]
 
@@ -235,7 +235,7 @@ WDCAbstractGenericSurfaceMaterial >> forwardFragmentShader [
 { #category : #initialization }
 WDCAbstractGenericSurfaceMaterial >> initialize [
 	materialState := self materialStateClass new
-		albedo: Color white asWMVector4F;
+		albedo: Color white asFloat32x4;
 		yourself.
 	doubleSided := false.
 	translucent := false.

@@ -198,7 +198,7 @@ WDCAbstractRenderable >> extractConvexCollisionShapesWithTransform: nodeGlobalTr
 WDCAbstractRenderable >> initialize [
 	super initialize.
 	renderPriority := RenderPriorityDefault.
-	boundingBox := WMBox3DF new.
+	boundingBox := BoxF32 new.
 	isOpaqueShadowCaster := true.
 	depthWriteMask := nil.
 	depthTestingEnabled := nil.

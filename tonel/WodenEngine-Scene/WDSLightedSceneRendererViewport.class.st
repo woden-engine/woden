@@ -238,12 +238,12 @@ WDSLightedSceneRendererViewport >> validGBufferRenderPass [
 { #category : #accessing }
 WDSLightedSceneRendererViewport >> validSceneHDRRenderPass [
 	self flag: 'TODO: Check this MT correctness.'.
-	hdrSceneRenderPass setColorClearValue: 0 value: (self camera backgroundColor ifNil: [self scene backgroundColor]) asWMVector4F asAGPUColor4f.
+	hdrSceneRenderPass setColorClearValue: 0 value: (self camera backgroundColor ifNil: [self scene backgroundColor]) asFloat32x4 asAGPUColor4f.
 	^ hdrSceneRenderPass
 ]
 
 { #category : #accessing }
 WDSLightedSceneRendererViewport >> validSceneLDRRenderPass [
-	ldrSceneRenderPass setColorClearValue: 0 value: (self camera backgroundColor ifNil: [self scene backgroundColor]) asWMVector4F asAGPUColor4f.
+	ldrSceneRenderPass setColorClearValue: 0 value: (self camera backgroundColor ifNil: [self scene backgroundColor]) asFloat32x4 asAGPUColor4f.
 	^ ldrSceneRenderPass
 ]

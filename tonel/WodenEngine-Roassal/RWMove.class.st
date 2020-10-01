@@ -10,14 +10,14 @@ Class {
 { #category : #'as yet unclassified' }
 RWMove class >> boundingBoxOfElements: aCollection [
 	| bbox |
-	bbox := WMBox3DF new.
+	bbox := BoxF32 new.
 	aCollection do: [ :each | bbox insertBox: each boundingBox ].
 	^ bbox
 ]
 
 { #category : #'as yet unclassified' }
 RWMove class >> centerElements: elements [
-	self centerElements: elements at: WMVector3F new
+	self centerElements: elements at: Float32x3 new
 ]
 
 { #category : #'as yet unclassified' }

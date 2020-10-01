@@ -33,7 +33,7 @@ WDCTerrainData >> buildTerrainMeshWith: builder [
 
 { #category : #'mesh building' }
 WDCTerrainData >> buildWaterMeshWith: builder [
-	self doBuildTerrainMeshWith: builder cellSize: (WMVector3F x: 0.1 y: 0.1)
+	self doBuildTerrainMeshWith: builder cellSize: (Float32x3 x: 0.1 y: 0.1)
 ]
 
 { #category : #accessing }
@@ -164,7 +164,7 @@ WDCTerrainData >> heightScale [
 { #category : #initialization }
 WDCTerrainData >> initialize [
 	super initialize.
-	terrainExtent := WMVector2F ones.
+	terrainExtent := Float32x2 ones.
 	minHeight := 0.0.
 	maxHeight := 1.0.
 
@@ -222,8 +222,8 @@ WDCTerrainData >> splatterMap: anObject [
 
 { #category : #accessing }
 WDCTerrainData >> terrainCellSize [
-	heightMap ifNil: [ ^ WMVector2F ones ].
-	^ terrainExtent / heightMap extent asWMVector2F
+	heightMap ifNil: [ ^ Float32x2 ones ].
+	^ terrainExtent / heightMap extent asFloat32x2
 ]
 
 { #category : #accessing }
@@ -233,14 +233,14 @@ WDCTerrainData >> terrainExtent [
 
 { #category : #accessing }
 WDCTerrainData >> terrainExtent: anObject [
-	terrainExtent := anObject asWMVector2F.
+	terrainExtent := anObject asFloat32x2.
 	self invalidateCoordinateTransform.
 ]
 
 { #category : #private }
 WDCTerrainData >> validateCoordinateTransform [
-	heightMapScale := WMVector2F ones / (terrainExtent * 0.5).
-	heightMapOffset := WMVector2F zero.
+	heightMapScale := Float32x2 ones / (terrainExtent * 0.5).
+	heightMapOffset := Float32x2 zero.
 ]
 
 { #category : #private }

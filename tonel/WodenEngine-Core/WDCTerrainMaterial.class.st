@@ -169,13 +169,13 @@ WDCTerrainMaterial >> fragmentShader [
 
 { #category : #initialization }
 WDCTerrainMaterial >> initialize [
-	heightMapSize := WMVector2F x: 2.0 y: 2.0.
+	heightMapSize := Float32x2 x: 2.0 y: 2.0.
 	materialState := WDCTerrainMaterialState new
-		albedo: Color white asWMVector4F;
+		albedo: Color white asFloat32x4;
 		metallicFactor: self class defaultMetallicFactor;
 		roughnessFactor: self class defaultRoughnessFactor;
 		
-		textureScaleAndOffset: ((SLVMNativeArray for: WMVector4F new: 5) atAllPut: (WMVector4F x: 1.0 y: 1.0));
+		textureScaleAndOffset: ((SLVMNativeArray for: Float32x4 new: 5) atAllPut: (Float32x4 x: 1.0 y: 1.0));
 		yourself.
 	albedoTextures := { nil . nil . nil . nil . nil }.
 	normalTextures := { nil . nil . nil . nil . nil }.
@@ -200,7 +200,7 @@ WDCTerrainMaterial >> localBoundingBox [
 	halfSize := heightMapSize*0.5.
 	heightRange := self heightRange.
 	
-	^ WMBox3DF
+	^ BoxF32
 		nx: halfSize x negated ny: heightRange first nz: halfSize y negated 
 		px: halfSize x py: heightRange second pz: halfSize y
 ]
@@ -246,7 +246,7 @@ WDCTerrainMaterial >> parse: materialFileReference data: data [
 				ifNotNil: [ 1.0 ]
 		]);
 		
-		textureScaleAndOffset: (self parse: data at: materialFileReference array: 'texture-scales-offsets' size: 5 nativeType: WMVector4F ifAbsent: [ WMVector4F x: 1.0 y: 1.0 z: 0.0 w: 0.0]).
+		textureScaleAndOffset: (self parse: data at: materialFileReference array: 'texture-scales-offsets' size: 5 nativeType: Float32x4 ifAbsent: [ Float32x4 x: 1.0 y: 1.0 z: 0.0 w: 0.0]).
 
 	self invalidateCache.
 ]

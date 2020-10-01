@@ -26,13 +26,13 @@ WDESAbstractSceneNodeComponent >> createSceneNode [
 
 { #category : #directions }
 WDESAbstractSceneNodeComponent >> forwardDirection [
-	^ localTransform transformVector3: (WMVector3F z: 1.0)
+	^ localTransform transformVector3: (Float32x3 z: 1.0)
 ]
 
 { #category : #initialization }
 WDESAbstractSceneNodeComponent >> initialize [
 	super initialize.
-	localTransform := WMReversibleAffineTransformF identity.
+	localTransform := ReversibleAffineTransform3dF32 identity.
 ]
 
 { #category : #accessing }
@@ -42,7 +42,7 @@ WDESAbstractSceneNodeComponent >> localTransform [
 
 { #category : #accessing }
 WDESAbstractSceneNodeComponent >> localTransform: anObject [
-	localTransform := anObject asWMReversibleAffineTransformF copy.
+	localTransform := anObject asReversibleAffineTransform3dF32 copy.
 	self localTransformChanged.
 ]
 

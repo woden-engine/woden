@@ -45,7 +45,7 @@ WDESRayCastingBoxVolumeComponent >> boxVolume: anObject [
 { #category : #initialization }
 WDESRayCastingBoxVolumeComponent >> initialize [
 	super initialize.
-	boxVolume := WMBox3DF new.
+	boxVolume := BoxF32 new.
 ]
 
 { #category : #notifications }

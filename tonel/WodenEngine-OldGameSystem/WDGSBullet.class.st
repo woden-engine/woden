@@ -31,11 +31,11 @@ WDGSBullet >> position: anObject [
 
 { #category : #'as yet unclassified' }
 WDGSBullet >> update: delta [
-	velocity := velocity - (WMVector3D y: 9.8 * delta).
+	velocity := velocity - (Float64x3 y: 9.8 * delta).
 	position := position + (velocity * delta).
 	
 	node transform
-		translation: position asWMVector3F.
+		translation: position asFloat32x3.
 	node stateChanged
 ]
 

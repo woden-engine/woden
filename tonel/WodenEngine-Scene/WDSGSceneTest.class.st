@@ -71,12 +71,12 @@ WDSGSceneTest >> testPendingStateList [
 	self deny: (scene nodesWithPendingStates includes: nonSpatialObject).
 	self assert: (scene nodesWithPendingStates includes: spatialObject).
 	scene bakeLazyObjectStates.
-	self assert: (spatialObject objectState transform translation closeTo: WMVector3F zero).
+	self assert: (spatialObject objectState transform translation closeTo: Float32x3 zero).
 	
 	self assert: (scene nodesWithPendingStates isEmpty).
 	spatialObject translateByX: 1.0.
 	self assert: (scene nodesWithPendingStates includes: spatialObject).
 	scene bakeLazyObjectStates.
 
-	self assert: (spatialObject objectState transform translation closeTo: (WMVector3F x: 1.0))
+	self assert: (spatialObject objectState transform translation closeTo: (Float32x3 x: 1.0))
 ]

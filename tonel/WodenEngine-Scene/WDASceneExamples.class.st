@@ -78,7 +78,7 @@ WDASceneExamples class >> constructPoolMeshWith: meshBuilder [
 		addCollisionBox;
 
 		"Use a planar texture coordinates"
-		planeTextureScale: (WMVector2F x: 2.0 y: 2.0) offset: (WMVector2F x: 0.0 y: 0.0);
+		planeTextureScale: (Float32x2 x: 2.0 y: 2.0) offset: (Float32x2 x: 0.0 y: 0.0);
 		computeTangentsBitangents.
 
 ]
@@ -111,12 +111,12 @@ WDASceneExamples class >> constructPoolSceneInto: scene [
 	waterMesh := (WDCTerrainMeshBuilder for: scene engine)
 		material: waterMaterial;
 		heightScale: 0.1;
-		createGridWithSize: (WMVector2F x: 5.0 y: 5.0) subdivisions: 64;
+		createGridWithSize: (Float32x2 x: 5.0 y: 5.0) subdivisions: 64;
 		waterMesh.
 	waterMesh deformationState
-		harmonicAt: 1 amplitude: 0.05 frequency: -1.1 center: WMVector2F new;
-		harmonicAt: 2 amplitude: 0.02 frequency: 2.23 direction: (WMVector2F y: -1.0);
-		harmonicAt: 3 amplitude: 0.015 frequency: 1.80 direction: (WMVector2F x: 1.0).
+		harmonicAt: 1 amplitude: 0.05 frequency: -1.1 center: Float32x2 new;
+		harmonicAt: 2 amplitude: 0.02 frequency: 2.23 direction: (Float32x2 y: -1.0);
+		harmonicAt: 3 amplitude: 0.015 frequency: 1.80 direction: (Float32x2 x: 1.0).
 		
 	waterSurface := WDSGSpatialObject new.
 	waterSurface
@@ -148,12 +148,12 @@ WDASceneExamples class >> createIslandWaterObjectFor: engine [
 	mesh := (WDCTerrainMeshBuilder for: engine)
 		material: material;
 		heightScale: 0.1;
-		createClipMapWithLevels: 3 size: (WMVector2F x: 40.0 y: 40.0) subdivisions: 128;
+		createClipMapWithLevels: 3 size: (Float32x2 x: 40.0 y: 40.0) subdivisions: 128;
 		waterMesh.
 
 	mesh deformationState
-		harmonicAt: 1 amplitude: 0.015 frequency: 2.23 center: (WMVector2F zero);
-		harmonicAt: 2 amplitude: 0.03 frequency: 0.50 center: (WMVector2F zero).
+		harmonicAt: 1 amplitude: 0.015 frequency: 2.23 center: (Float32x2 zero);
+		harmonicAt: 2 amplitude: 0.03 frequency: 0.50 center: (Float32x2 zero).
 
 	waterObject := WDSGSpatialObject new.
 	waterObject renderable: mesh.
@@ -180,7 +180,7 @@ WDASceneExamples class >> example01Cube [
 	light point.
 	light
 		radius: 4.0; 
-		intensity: Color yellow asWMVector4F * 5.0;
+		intensity: Color yellow asFloat32x4 * 5.0;
 		translateByX: -1.5 y: 1.5 z: 1.6.
 	scene add: light.
 
@@ -210,7 +210,7 @@ WDASceneExamples class >> example02TextureCube [
 	light := WDSGLightSource new.
 	light
 		point;
-		intensity: Color yellow asWMVector4F;
+		intensity: Color yellow asFloat32x4;
 		translateByX: -1.5 y: 1.5 z: 1.6.
 	scene add: light.
 
@@ -231,7 +231,7 @@ WDASceneExamples class >> example03Floor [
 	meshBuilder
 		currentMaterial: material;
 		addCubeWithWidth: 10.0 height: 0.5 depth: 10.0;
-		planeTextureScale: (WMVector2F x: 2.0 y: 2.0) offset: (WMVector2F x: 0.0 y: 0.0);
+		planeTextureScale: (Float32x2 x: 2.0 y: 2.0) offset: (Float32x2 x: 0.0 y: 0.0);
 		computeTangentsBitangents.
 	mesh := meshBuilder mesh.
 	
@@ -242,7 +242,7 @@ WDASceneExamples class >> example03Floor [
 	light := WDSGLightSource new.
 	light
 		point;
-		intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.3 w: 1.0) * 0.8;
+		intensity: (Float32x4 x: 1.0 y: 1.0 z: 0.3 w: 1.0) * 0.8;
 		translateByX: -1.5 y: 1.5 z: 1.6.
 	scene add: light.
 
@@ -269,16 +269,16 @@ WDASceneExamples class >> example04Pool [
 	sunLight
 		directional;
 		castShadows: true;
-		intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.7;
+		intensity: (Float32x4 x: 1.0 y: 1.0 z: 0.8) normalized * 0.7;
 		rotateDegreesOnX: -35;
 		translateToX: 0.0 y: 1.5 z: 2.5.
 
 	scene add: sunLight.
 
-	scene ambientLighting: WMVector4F ones.
+	scene ambientLighting: Float32x4 ones.
 
 	"Create the sky."
-	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector3: (WMVector3F z: 1.0)).
+	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector3: (Float32x3 z: 1.0)).
 	skyTexture := skyTexture asTextureFor: engine.
 	scene createSkyWithCubeTexture: skyTexture.
 
@@ -309,17 +309,17 @@ WDASceneExamples class >> example04ProceduralSky [
 	sunLight
 		directional;
 		castShadows: true;
-		intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.7;
+		intensity: (Float32x4 x: 1.0 y: 1.0 z: 0.8) normalized * 0.7;
 		rotateDegreesOnX: -45;
 		translateToX: 0.0 y: 1.5 z: 2.5.
 		
-	sunDirection := sunLight transform transformVector3: (WMVector3F z: 1.0).
+	sunDirection := sunLight transform transformVector3: (Float32x3 z: 1.0).
 		
 	"Create the sky."
 	skyTexture := self proceduralSkySunDirection: sunDirection.
 	skyTexture := skyTexture asTextureFor: scene engine.
 	scene createSkyWithCubeTexture: skyTexture.
-	scene ambientLighting: WMVector4F ones.
+	scene ambientLighting: Float32x4 ones.
 		
 	model openWith: WDAFPSSceneView.
 
@@ -342,7 +342,7 @@ WDASceneExamples class >> example05DangerousPool [
 	sunLight
 		directional;
 		castShadows: true;
-		intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.8;
+		intensity: (Float32x4 x: 1.0 y: 1.0 z: 0.8) normalized * 0.8;
 		rotateDegreesOnX: -45;
 		translateToX: 0.0 y: 1.5 z: 2.5.
 		
@@ -351,7 +351,7 @@ WDASceneExamples class >> example05DangerousPool [
 	"Add the sky box"
 	skyMaterial := engine resourceCache loadMaterial: 'materials/demos/skybox.json'.
 	scene createSkyWithCubeTexture: skyMaterial skyTexture.
-	scene ambientLighting: WMVector4F ones.
+	scene ambientLighting: Float32x4 ones.
 		
 	magnumMesh := engine resourceCache loadMesh: 'models/demos/magnum_fps.fmdl'.
 	
@@ -378,7 +378,7 @@ WDASceneExamples class >> example05DangerousPool [
 	].
 	
 	view := WDAFPSSceneView allowingVR.
-	view cameraAngle: (WMVector3F y: Float pi).
+	view cameraAngle: (Float32x3 y: Float pi).
 	model openWith: view.
 ]
 
@@ -405,7 +405,7 @@ WDASceneExamples class >> example06MeshGrid [
 	light := WDSGLightSource new.
 	light
 		point;
-		intensity: Color yellow asWMVector4F;
+		intensity: Color yellow asFloat32x4;
 		translateByX: -1.5 y: 1.5 z: 1.6.
 	scene add: light.
 
@@ -455,7 +455,7 @@ WDASceneExamples class >> example07SmallTerrain [
 	light := WDSGLightSource new.
 	light directional; castShadows: true.
 	light 
-		intensity: (Color fromHexString: 'f1efd7') asWMVector4F;
+		intensity: (Color fromHexString: 'f1efd7') asFloat32x4;
 		rotateDegreesOnX: -45;
 		rotateDegreesOnY: 135;
 		translateToX: 0.0 y: 1.5 z: 2.5.
@@ -501,7 +501,7 @@ WDASceneExamples class >> example08MediumTerrain [
 	light
 		directional;
 		castShadows: true;
-		intensity: (Color fromHexString: 'f1efd7') asWMVector4F;
+		intensity: (Color fromHexString: 'f1efd7') asFloat32x4;
 		rotateDegreesOnX: -45;
 		rotateDegreesOnY: 135;
 		translateToX: 0.0 y: 1.5 z: 2.5.
@@ -525,15 +525,15 @@ WDASceneExamples class >> example09DragonIsland [
 	sunLight directional; castShadows: true;
 		shadowMapDepthBiasConstant: 20.0;
 		shadowMapDepthBiasSlope: 5.0;
-		intensity: (Color fromHexString: 'f1efd7') asWMVector4F*0.6;
+		intensity: (Color fromHexString: 'f1efd7') asFloat32x4*0.6;
 		rotateDegreesOnX: -35;
 		translateToX: 0.0 y: 1.5 z: 2.5.
 	scene add: sunLight.
 	
-	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector3: (WMVector3F z: 1.0)).
+	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector3: (Float32x3 z: 1.0)).
 	skyTexture := skyTexture asTextureFor: model engine.
 	scene createSkyWithCubeTexture: skyTexture.
-	scene ambientLighting: WMVector4F ones.
+	scene ambientLighting: Float32x4 ones.
 
 	terrain := self createIslandTerrainObjectFor: scene engine.
 	scene add: terrain.
@@ -590,20 +590,20 @@ WDASceneExamples class >> example10ParticleSystem [
 	light := WDSGLightSource new.
 	light
 		point;
-		intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.9) normalized * 0.8;
+		intensity: (Float32x4 x: 1.0 y: 1.0 z: 0.9) normalized * 0.8;
 		translateByX: -1.5 y: 1.5 z: 1.6.
 	scene add: light.
 
 	"Particle system"
 	colorRamp := WDCLinearRamp with: {
-		0.0 -> '000000' asColor asWMVector3F asWMVector4F.
-		0.6 -> 'ff0000' asColor asWMVector3F asWMVector4F.
-		0.90 -> 'ffff00' asColor asWMVector3F asWMVector4F.
-		1.0 -> 'ffff80' asColor asWMVector3F asWMVector4F.
+		0.0 -> '000000' asColor asFloat32x3 asFloat32x4.
+		0.6 -> 'ff0000' asColor asFloat32x3 asFloat32x4.
+		0.90 -> 'ffff00' asColor asFloat32x3 asFloat32x4.
+		1.0 -> 'ffff80' asColor asFloat32x3 asFloat32x4.
 	}.
 
 	particleSystemRenderable := WDCParticleSystemRenderable new.
-	particleSystemRenderable boundingBox: (WMBox3DF halfExtent: (WMVector3F ones*5.0)).
+	particleSystemRenderable boundingBox: (BoxF32 halfExtent: (Float32x3 ones*5.0)).
 	particleSystemRenderable particleCount: (WDCEngine gpuBasedParticleSimulation
 		ifTrue: [ 10000 ]
 		ifFalse: [ 2000 ]).
@@ -615,7 +615,7 @@ WDASceneExamples class >> example10ParticleSystem [
 			particleState
 				startingUp: false;
 				position: particleState nextRandomVector3F * 0.25;
-				velocity: (WMVector3F
+				velocity: (Float32x3
 					x: particleState nextRandom*0.5
 					y: 2.0 + (particleState nextRandom *0.5)
 					z: particleState nextRandom*0.5).
@@ -625,8 +625,8 @@ WDASceneExamples class >> example10ParticleSystem [
 		flickering := (lifeTime*25.0) signedGradientNoise  *0.4 + 0.6.
 		
 		particleState
-			size: (WMVector3F x: 0.2 y: 0.2);
-			velocity: (particleState velocity + (WMVector3F y: -9.8 * delta*0.04));
+			size: (Float32x3 x: 0.2 y: 0.2);
+			velocity: (particleState velocity + (Float32x3 y: -9.8 * delta*0.04));
 			position: (particleState position + (particleState velocity *delta));
 			color: color * flickering;
 			lifeTime: lifeTime.
@@ -675,7 +675,7 @@ WDASceneExamples class >> exampleModelSponza [
 	sceneModel scene: scene.
 	
 	scene backgroundColor: Color black.
-	scene ambientLighting: WMVector4F ones*0.05.
+	scene ambientLighting: Float32x4 ones*0.05.
 	scene initializeWithEngine: sceneModel engine.
 	
 	camera := WDSGCamera new.
@@ -687,21 +687,21 @@ WDASceneExamples class >> exampleModelSponza [
 	moonLight := WDSGLightSource new.
 	moonLight
 		directional;
-		intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.3;
+		intensity: (Float32x4 x: 1.0 y: 1.0 z: 0.8) normalized * 0.3;
 		rotateDegreesOnX: -35.
 		
 	scene add: moonLight.
 
 	{
-		WMVector3F x: 3.9 y: 1.3 z: 1.18.
-		WMVector3F x: 3.9 y: 1.3 z: -1.72.
-		WMVector3F x: -4.95 y: 1.3 z: 1.18.
-		WMVector3F x: -4.95 y: 1.3 z: -1.72.
+		Float32x3 x: 3.9 y: 1.3 z: 1.18.
+		Float32x3 x: 3.9 y: 1.3 z: -1.72.
+		Float32x3 x: -4.95 y: 1.3 z: 1.18.
+		Float32x3 x: -4.95 y: 1.3 z: -1.72.
 	} do: [ :position |
 		light := WDSGLightSource new.
 		light point
 			radius: 9.0;
-			intensity: (WMVector4F ones)*2.5.
+			intensity: (Float32x4 ones)*2.5.
 		light position: position.
 		scene add: light.
 	].
@@ -717,13 +717,13 @@ WDASceneExamples class >> proceduralSkySunDirection: sunDirection [
 		1.0 -> (Color fromHexString: '001c6f').
 	}.
 		
-	sunColor := (Color fromHexString: 'f3f3e8') asWMVector4F.
+	sunColor := (Color fromHexString: 'f3f3e8') asFloat32x4.
 	sunAngleSizeCos := 0.5 degreesToRadians cos.
 	sunAngleSizeOuterCos := 20.0 degreesToRadians cos.
 		
 	shader := [ :x :y :z |
 		| direction background atmosphere clouds sunCos sunFactor |
-		direction := (WMVector3F x: x y: y z: z) normalized.
+		direction := (Float32x3 x: x y: y z: z) normalized.
 		sunCos := direction dot: sunDirection.
 		sunFactor := sunCos smoothStepFrom: sunAngleSizeOuterCos to: sunAngleSizeCos.
 
@@ -739,7 +739,7 @@ WDASceneExamples class >> proceduralSkySunDirection: sunDirection [
 			clouds := clouds * (direction y smoothStepFrom: 0.0 to: 0.25)
 		].
 	
-		background := atmosphere interpolateTo: (WMVector4F x: 1.0 y: 1.0 z: 1.0 w: 1.0) at: clouds.
+		background := atmosphere interpolateTo: (Float32x4 x: 1.0 y: 1.0 z: 1.0 w: 1.0) at: clouds.
 		background interpolateTo: sunColor at: (sunFactor raisedTo: 8.0)
 	].
 

@@ -21,7 +21,7 @@ Class {
 WDESFogSettings class >> defaultUnderwaterFogSettings [
 	^ self new
 		useExponentialFog
-		fogColor: (Color fromHexString: '0E1233') asWMVector4F;
+		fogColor: (Color fromHexString: '0E1233') asFloat32x4;
 		fogDensity: 0.005;
 		yourself
 ]
@@ -129,7 +129,7 @@ WDESFogSettings >> initialize [
 	fogStartDistance := 0.0.
 	fogEndDistance := 1.0.
 	fogDensity := 0.0.
-	fogColor := WMVector4F zero. 
+	fogColor := Float32x4 zero. 
 	farDistanceOverride := nil.
 ]
 

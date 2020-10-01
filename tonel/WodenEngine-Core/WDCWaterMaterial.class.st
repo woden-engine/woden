@@ -68,7 +68,7 @@ WDCWaterMaterial >> createTerrainMeshForSceneNode: sceneNode boundingBox: boundi
 	self flag: 'TODO: Support parameterizing this.'.
 	^ (WDCTerrainMeshBuilder for: self engine)
 		material: self;
-		createGridWithSize: (WMVector2F x: boundingBox width y: boundingBox depth)
+		createGridWithSize: (Float32x2 x: boundingBox width y: boundingBox depth)
 			subdivisions: 64;
 		mesh
 ]
@@ -83,11 +83,11 @@ WDCWaterMaterial >> fragmentShader [
 { #category : #initialization }
 WDCWaterMaterial >> initialize [
 	materialState := WDCWaterMaterialState new
-		albedo: Color white asWMVector4F;
-		fresnel: (WMVector3F x: 0.04 y: 0.04 z: 0.04);
+		albedo: Color white asFloat32x4;
+		fresnel: (Float32x3 x: 0.04 y: 0.04 z: 0.04);
 		smoothness: 0.45;
 		propagationSpeed: 2.0;
-		textureScale: (WMVector2F x: 1.0 y: 1.0);
+		textureScale: (Float32x2 x: 1.0 y: 1.0);
 		yourself.
 		
 	self invalidateCache.
@@ -111,11 +111,11 @@ WDCWaterMaterial >> materialState [
 { #category : #parsing }
 WDCWaterMaterial >> parse: materialFileReference data: data [
 	materialState
-		textureOffset: (self parse: data at: materialFileReference vector2: 'texture-offset' ifAbsent: [ WMVector2F zero ]);
-		textureScale: (self parse: data at: materialFileReference vector2: 'texture-scale' ifAbsent: [ WMVector2F x: 1.0 y: 1.0 ]);
+		textureOffset: (self parse: data at: materialFileReference vector2: 'texture-offset' ifAbsent: [ Float32x2 zero ]);
+		textureScale: (self parse: data at: materialFileReference vector2: 'texture-scale' ifAbsent: [ Float32x2 x: 1.0 y: 1.0 ]);
 
 		albedo: (self parse: data at: materialFileReference srgbColor: 'albedo' ifAbsent: [ Color white ]);
-		fresnel: (self parse: data at: materialFileReference vector3: 'fresnel' ifAbsent: [ WMVector3F x: 0.04 y: 0.04 z: 0.04 ]);
+		fresnel: (self parse: data at: materialFileReference vector3: 'fresnel' ifAbsent: [ Float32x3 x: 0.04 y: 0.04 z: 0.04 ]);
 		smoothness: (1.0 - (data at: 'roughness' ifAbsent: [0.0])).
 	albedoTexture := self parse: data at: materialFileReference optionalSRGBTexture: 'albedo-texture'.
 	normalTexture := self parse: data at: materialFileReference optionalTexture: 'normal-texture'.

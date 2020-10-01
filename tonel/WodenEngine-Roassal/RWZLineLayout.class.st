@@ -6,7 +6,7 @@ Class {
 
 { #category : #hook }
 RWZLineLayout >> getNewPositionFor: aValue [
-	^ WMVector3F new z: aValue asFloat
+	^ Float32x3 new z: aValue asFloat
 ]
 
 { #category : #hook }

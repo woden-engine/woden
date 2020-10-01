@@ -124,8 +124,8 @@ WDCSkinnedMeshAnimationState >> pose [
 { #category : #accessing }
 WDCSkinnedMeshAnimationState >> pose: anObject [
 	pose := anObject.
-	poseMatrices := SLVMNativeArray for: WMMatrix4F new: pose size.
-	poseForwardMatrices := SLVMNativeArray for: WMMatrix4F new: pose size.
+	poseMatrices := SLVMNativeArray for: Float32x4x4 new: pose size.
+	poseForwardMatrices := SLVMNativeArray for: Float32x4x4 new: pose size.
 ]
 
 { #category : #accessing }

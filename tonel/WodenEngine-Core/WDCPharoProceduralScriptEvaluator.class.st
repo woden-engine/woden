@@ -446,10 +446,10 @@ WDCPharoProceduralScriptEvaluator >> skyCubeMap: aBoolean [
 { #category : #'as yet unclassified' }
 WDCPharoProceduralScriptEvaluator >> terrainCoordinateTransform [
 	^ terrainCellSize
-		ifNil: [ { WMVector2F ones . WMVector2F zero } ]
+		ifNil: [ { Float32x2 ones . Float32x2 zero } ]
 		ifNotNil: [
 			| scale |
-			scale := WMVector2F ones * 2.0 / self terrainData heightMapScale.
+			scale := Float32x2 ones * 2.0 / self terrainData heightMapScale.
 			{scale . self terrainData heightMapOffset*scale - (scale*0.5)}
 		]
 ]
@@ -482,7 +482,7 @@ WDCPharoProceduralScriptEvaluator >> textureExtent: anObject [
 { #category : #'as yet unclassified' }
 WDCPharoProceduralScriptEvaluator >> textureExtent: newTextureExtent terrainCellSize: newTerrainCellSize [
 	self textureExtent: newTextureExtent.
-	terrainCellSize := newTerrainCellSize asWMVector2F.
+	terrainCellSize := newTerrainCellSize asFloat32x2.
 	self terrainData
 		terrainExtent: newTextureExtent*newTerrainCellSize.
 ]

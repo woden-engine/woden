@@ -22,7 +22,7 @@ WDGSLevelEditorSelectionBox class >> box: abox [
 
 { #category : #construction }
 WDGSLevelEditorSelectionBox class >> empty [
-	^ self new box: WMBox3DD empty
+	^ self new box: BoxF64 empty
 ]
 
 { #category : #'class initialization' }
@@ -82,7 +82,7 @@ WDGSLevelEditorSelectionBox >> box: anObject [
 
 { #category : #adding }
 WDGSLevelEditorSelectionBox >> buildBoxFromBoundingBoxes [
-	box := WMBox3DD empty.
+	box := BoxF64 empty.
 	elements do: [ :element | box insertBox: element boundingBox ].
 	editor ifNotNil: [ editor selectionBoxViewsDo: #updateNodes ]
 ]

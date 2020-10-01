@@ -35,11 +35,11 @@ WDGSForwardKinematicMovementBehavior >> angularVelocity: anObject [
 { #category : #initialization }
 WDGSForwardKinematicMovementBehavior >> initialize [
 	super initialize.
-	angle := WMVector3D new.
-	angularVelocity := WMVector3D new.
-	angularAcceleration := WMVector3D new.
-	linearVelocity := WMVector3D new.
-	linearAcceleration := WMVector3D new.
+	angle := Float64x3 new.
+	angularVelocity := Float64x3 new.
+	angularAcceleration := Float64x3 new.
+	linearVelocity := Float64x3 new.
+	linearAcceleration := Float64x3 new.
 	movingInGrounding := true.
 ]
 
@@ -71,9 +71,9 @@ WDGSForwardKinematicMovementBehavior >> simulateTime: delta [
 	
 	angle := angle + (angularVelocity * delta).
 	movingInGrounding ifTrue: [
-		orientation := (WMMatrix3D yrot: angle y).
+		orientation := (Float64x3x3 yrot: angle y).
 	] ifFalse: [
-		orientation := (WMMatrix3D yrot: angle y) * (WMMatrix3D xrot: angle x).
+		orientation := (Float64x3x3 yrot: angle y) * (Float64x3x3 xrot: angle x).
 	].
 
 	spatialDesc := entity spatialDescription.

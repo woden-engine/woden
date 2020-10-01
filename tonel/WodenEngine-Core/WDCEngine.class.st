@@ -238,7 +238,7 @@ WDCEngine >> createBasicRenderPassWithColor: aColor [
 			format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB;
 			begin_action: AGPU_ATTACHMENT_CLEAR;
 			end_action: AGPU_ATTACHMENT_KEEP;
-			clear_value: aColor asWMVector4F asAGPUColor4f;
+			clear_value: aColor asFloat32x4 asAGPUColor4f;
 			yourself
 	}.
 		
@@ -264,7 +264,7 @@ WDCEngine >> createBasicRenderPassWithOnlyColor: aColor [
 			format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB;
 			begin_action: AGPU_ATTACHMENT_CLEAR;
 			end_action: AGPU_ATTACHMENT_KEEP;
-			clear_value: aColor asWMVector4F asAGPUColor4f;
+			clear_value: aColor asFloat32x4 asAGPUColor4f;
 			yourself
 	}.
 	^ (WDCRenderPass for: self)
@@ -760,14 +760,14 @@ WDCEngine >> queryDeviceCapabilities [
 	
 	"Do we need to flip the texture coordinates when doing projective texturing?"
 	self hasTopLeftNDCOrigin ~= self hasTopLeftTextureCoordinates ifTrue: [
-		projectiveTextureBiasMatrix := WMMatrix4F newFrom: #(
+		projectiveTextureBiasMatrix := Float32x4x4 newFrom: #(
 			0.5  0.0 0.0 0.5
 			0.0 -0.5 0.0 0.5
 			0.0  0.0 1.0 0.0
 			0.0  0.0 0.0 1.0
 		)
 	] ifFalse: [ 
-		projectiveTextureBiasMatrix := WMMatrix4F newFrom: #(
+		projectiveTextureBiasMatrix := Float32x4x4 newFrom: #(
 			0.5 0.0 0.0 0.5
 			0.0 0.5 0.0 0.5
 			0.0 0.0 1.0 0.0

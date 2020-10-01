@@ -65,7 +65,7 @@ RWViewTest >> testBaseShapePutting [
 { #category : #tests }
 RWViewTest >> testBoundingBox [
 	view add: RWCube element.
-	self assert: (view boundingBox closeTo: (WMBox3DF unitCube)).
+	self assert: (view boundingBox closeTo: (BoxF32 unitCube)).
 ]
 
 { #category : #tests }

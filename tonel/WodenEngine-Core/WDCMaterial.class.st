@@ -118,13 +118,13 @@ WDCMaterial >> parse: data at: fileReference color: name ifAbsent: aBlock [
 				colorData isString ifTrue: [
 					self halt
 				] ifFalse: [
-					WMVector4F x: (colorData at: 1) 
+					Float32x4 x: (colorData at: 1) 
 							y: (colorData at: 2)
 							z: (colorData at: 3)
 							w: (colorData at: 4 ifAbsent: [ 1.0 ])
 				] 
 		]
-		ifAbsent: [ aBlock value asWMVector4F ] .
+		ifAbsent: [ aBlock value asFloat32x4 ] .
 	
 ]
 
@@ -156,10 +156,10 @@ WDCMaterial >> parse: data at: fileReference srgbColor: name ifAbsent: aBlock [
 					(Color r: (colorData at: 1) 
 							g: (colorData at: 2)
 							b: (colorData at: 3)
-							alpha: (colorData at: 4 ifAbsent: [ 1.0 ])) asWMVector4F
+							alpha: (colorData at: 4 ifAbsent: [ 1.0 ])) asFloat32x4
 				] 
 		]
-		ifAbsent: [ aBlock value asWMVector4F ] .
+		ifAbsent: [ aBlock value asFloat32x4 ] .
 	
 ]
 
@@ -213,10 +213,10 @@ WDCMaterial >> parse: data at: fileReference texture: name ifAbsent: aBlock [
 WDCMaterial >> parse: data at: fileReference vector2: name ifAbsent: aBlock [
 	^ data at: name
 		ifPresent: [ :vector2 |
-					WMVector2F x: (vector2 at: 1) 
+					Float32x2 x: (vector2 at: 1) 
 							y: (vector2 at: 2)
 		]
-		ifAbsent: [ aBlock value asWMVector2F ] .
+		ifAbsent: [ aBlock value asFloat32x2 ] .
 	
 ]
 
@@ -224,11 +224,11 @@ WDCMaterial >> parse: data at: fileReference vector2: name ifAbsent: aBlock [
 WDCMaterial >> parse: data at: fileReference vector3: name ifAbsent: aBlock [
 	^ data at: name
 		ifPresent: [ :vector3 |
-					WMVector3F x: (vector3 at: 1) 
+					Float32x3 x: (vector3 at: 1) 
 							y: (vector3 at: 2)
 							z: (vector3 at: 3)
 		]
-		ifAbsent: [ aBlock value asWMVector3F ] .
+		ifAbsent: [ aBlock value asFloat32x3 ] .
 	
 ]
 
@@ -236,12 +236,12 @@ WDCMaterial >> parse: data at: fileReference vector3: name ifAbsent: aBlock [
 WDCMaterial >> parse: data at: fileReference vector4: name ifAbsent: aBlock [
 	^ data at: name
 		ifPresent: [ :vector4 |
-					WMVector4F x: (vector4 at: 1) 
+					Float32x4 x: (vector4 at: 1) 
 							y: (vector4 at: 2)
 							z: (vector4 at: 3)
 							w: (vector4 at: 4)
 		]
-		ifAbsent: [ aBlock value asWMVector4F ]
+		ifAbsent: [ aBlock value asFloat32x4 ]
 	
 ]
 

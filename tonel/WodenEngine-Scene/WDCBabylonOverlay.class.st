@@ -92,10 +92,10 @@ WDCBabylonOverlay >> overlayMesh [
 		overlayMesh := (WDCGenericMeshBuilder for: engine)
 			currentMaterial: self overlayMaterial;
 			beginTriangles;
-			addP: (WMVector3F x: -1.0 y: -1.0) TC: (WMVector2F x: 0.0 y: 1.0);
-			addP: (WMVector3F x: 1.0 y: -1.0) TC: (WMVector2F x: 1.0 y: 1.0);
-			addP: (WMVector3F x: 1.0 y: 1.0) TC: (WMVector2F x: 1.0 y: 0.0);
-			addP: (WMVector3F x: -1.0 y: 1.0) TC: (WMVector2F x: 0.0 y: 0.0);
+			addP: (Float32x3 x: -1.0 y: -1.0) TC: (Float32x2 x: 0.0 y: 1.0);
+			addP: (Float32x3 x: 1.0 y: -1.0) TC: (Float32x2 x: 1.0 y: 1.0);
+			addP: (Float32x3 x: 1.0 y: 1.0) TC: (Float32x2 x: 1.0 y: 0.0);
+			addP: (Float32x3 x: -1.0 y: 1.0) TC: (Float32x2 x: 0.0 y: 0.0);
 			addQuadI1: 1 i2: 2 i3: 3 i4: 4;
 			mesh			
 	].

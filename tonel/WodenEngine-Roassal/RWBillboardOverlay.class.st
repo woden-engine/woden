@@ -11,10 +11,10 @@ Class {
 { #category : #rendering }
 RWBillboardOverlay >> drawOnScaledBabylonCanvas: canvas [
 	| viewPos4 projectedPosition ndcPosition surfaceExtent x y |
-	viewPos4 := view camera transform inverseMatrix4 transformVector4: (WMVector4F xyz: position w: 1.0).
+	viewPos4 := view camera transform inverseMatrix4 transformVector4: (Float32x4 xyz: position w: 1.0).
 	projectedPosition := view camera frustum matrix transformVector4: viewPos4.
 	projectedPosition w <= 0.0 ifTrue: [ ^ self ].
-	ndcPosition := (WMVector2F x: projectedPosition x y: projectedPosition y) / projectedPosition w.
+	ndcPosition := (Float32x2 x: projectedPosition x y: projectedPosition y) / projectedPosition w.
 	surfaceExtent := canvas surface extent.
 	x := (ndcPosition x * 0.5 + 0.5) * surfaceExtent x.
 	y := (ndcPosition y * 0.5 + 0.5).

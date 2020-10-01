@@ -112,15 +112,15 @@ WDIGLTF2Importer >> cleanupMeshes [
 WDIGLTF2Importer >> computeTangent4WithTangent: rawTangent bitangent: rawBitangent normal: normal [
 	| tangent bitangent scaleFactor |
 	
-	((rawTangent closeTo: WMVector3F zero) and: [ rawBitangent closeTo: WMVector3F zero ]) ifTrue: [ 
-		^ self computeTangent4WithTangent: (WMVector3F x: 1.0) bitangent: (WMVector3F y: 1.0) normal: normal
+	((rawTangent closeTo: Float32x3 zero) and: [ rawBitangent closeTo: Float32x3 zero ]) ifTrue: [ 
+		^ self computeTangent4WithTangent: (Float32x3 x: 1.0) bitangent: (Float32x3 y: 1.0) normal: normal
 	].
 
 	"Gram schmidth orthogonalization"
 	tangent := (rawTangent - (normal * (normal dot: rawTangent))) normalized.
 	bitangent := (rawBitangent - (normal * (normal dot: rawBitangent)) - (tangent * (tangent dot: rawBitangent))) normalized.
 	scaleFactor := (normal cross: tangent) dot: bitangent.
-	^ WMVector4F x: tangent x y: tangent y z: tangent z w: scaleFactor.
+	^ Float32x4 x: tangent x y: tangent y z: tangent z w: scaleFactor.
 
 ]
 
@@ -166,7 +166,7 @@ WDIGLTF2Importer >> convertIndices: indexCountToConvert withAccessors: indexBuff
 { #category : #'as yet unclassified' }
 WDIGLTF2Importer >> generateMissingVertexTangentSpaceFrames: vertexDataWithSubmeshesDictionary [
 	| encodedTangent4 tangent4BufferView encodedTangent4Data |
-	encodedTangent4 := SLVMNativeOrderedCollection for: WMVector4F.
+	encodedTangent4 := SLVMNativeOrderedCollection for: Float32x4.
 	tangent4BufferView := WDCBufferView new.
 	
 	vertexDataWithSubmeshesDictionary keysAndValuesDo: [ :vertex :submeshes |
@@ -200,8 +200,8 @@ WDIGLTF2Importer >> generateVertexDataTangentSpaceFrame: vertexData submeshes: s
 	self assert: texcoordsChannel size = normalsChannel size.
 	
 	vertexCount := positionChannel size.
-	tangents := (Array new: vertexCount) atAllPut: WMVector3F new.
-	bitangents := (Array new: vertexCount) atAllPut: WMVector3F new.
+	tangents := (Array new: vertexCount) atAllPut: Float32x3 new.
+	bitangents := (Array new: vertexCount) atAllPut: Float32x3 new.
 	
 	triangleIterator := WDCSubmeshTriangleIterator new submeshes: submeshes.
 	triangleIterator do: [ :triangle |
@@ -246,7 +246,7 @@ WDIGLTF2Importer >> generateVertexDataTangentSpaceFrame: vertexData submeshes: s
 	tangent4Accessor := WDCBufferAccessor new
 		type: (WDCStructureFieldType typeNamed: #float4);
 		bufferView: tangent4BufferView;
-		byteOffset: encodedTangents4 size * WMVector4F structureSize;
+		byteOffset: encodedTangents4 size * Float32x4 structureSize;
 		count: vertexCount;
 		yourself.
 
@@ -259,7 +259,7 @@ WDIGLTF2Importer >> generateVertexDataTangentSpaceFrame: vertexData submeshes: s
 	1 to: vertexCount do: [ :vertexIndex |
 		tangent := tangents at: vertexIndex.
 		bitangent := bitangents at: vertexIndex.
-		normal := (normalsChannel at: vertexIndex) asWMVector3F.
+		normal := (normalsChannel at: vertexIndex) asFloat32x3.
 
 		encodedTangents4 add: (self computeTangent4WithTangent: tangent bitangent: bitangent normal: normal)
 	].
@@ -290,18 +290,18 @@ WDIGLTF2Importer >> loadAccessorFrom: accessorDescription [
 		].
 
 		type = 'VEC2' ifTrue: [
-			min := WMVector2F x: minValues first y: minValues second.
-			max := WMVector2F x: maxValues first y: maxValues second.
+			min := Float32x2 x: minValues first y: minValues second.
+			max := Float32x2 x: maxValues first y: maxValues second.
 		].
 
 		type = 'VEC3' ifTrue: [
-			min := WMVector3F x: minValues first y: minValues second z: minValues third.
-			max := WMVector3F x: maxValues first y: maxValues second z: maxValues third.
+			min := Float32x3 x: minValues first y: minValues second z: minValues third.
+			max := Float32x3 x: maxValues first y: maxValues second z: maxValues third.
 		].
 
 		type = 'VEC4' ifTrue: [
-			min := WMVector4F x: minValues first y: minValues second z: minValues third w: minValues fourth.
-			max := WMVector4F x: maxValues first y: maxValues second z: maxValues third w: maxValues fourth.
+			min := Float32x4 x: minValues first y: minValues second z: minValues third w: minValues fourth.
+			max := Float32x4 x: maxValues first y: maxValues second z: maxValues third w: maxValues fourth.
 		].
 
 	].
@@ -483,7 +483,7 @@ WDIGLTF2Importer >> loadMeshPrimitives: primitives [
 			newMesh := WDCGenericMesh new
 				vertexData: submesh vertexData;
 				submeshes: OrderedCollection new;
-				boundingBox: (WMBox3DF min: positionsAccessor min max: positionsAccessor max);
+				boundingBox: (BoxF32 min: positionsAccessor min max: positionsAccessor max);
 				yourself.
 			convertedMeshes add: newMesh.
 			meshesToCleanup add: newMesh.
@@ -512,9 +512,9 @@ WDIGLTF2Importer >> loadMetallicRoughnessMaterial: description commonDescription
 	| material occlusionTexture metallicRoughnessTexture |
 	material := WDCMetallicRoughnessMaterial new.
 	description at: 'baseColorFactor' ifPresent: [ :baseColor |
-		material albedoColor: (WMVector4F x: baseColor first y: baseColor second z: baseColor third w: baseColor fourth)
+		material albedoColor: (Float32x4 x: baseColor first y: baseColor second z: baseColor third w: baseColor fourth)
 	] ifAbsent: [
-		material albedoColor: (WMVector4F x: 1.0 y: 1.0 z: 1.0 w: 1.0)
+		material albedoColor: (Float32x4 x: 1.0 y: 1.0 z: 1.0 w: 1.0)
 	].
 
 	material
@@ -558,9 +558,9 @@ WDIGLTF2Importer >> loadMetallicRoughnessMaterial: description commonDescription
 	].
 
 	commonDescription at: 'emissiveFactor' ifPresent: [ :factor |
-		material emissionColor: (WMVector4F x: factor first y: factor second z: factor third w: 0.0)
+		material emissionColor: (Float32x4 x: factor first y: factor second z: factor third w: 0.0)
 	] ifAbsent: [
-		material emissionColor: WMVector4F zero
+		material emissionColor: Float32x4 zero
 	].
 
 	commonDescription at: 'emissiveTexture' ifPresent: [ :textureDescription |
@@ -601,7 +601,7 @@ WDIGLTF2Importer >> loadNodeFrom: nodeDescription [
 	node ifNil: [ node := WDSGSpatialObject new ].
 	
 	nodeDescription at: 'matrix' ifPresent: [ :matrixElements |
-		node transform: (WMReversibleAffineTransformF fromInvertibleMatrix4: (WMMatrix4F newFrom: matrixElements) transposed).
+		node transform: (ReversibleAffineTransform3dF32 fromInvertibleMatrix4: (Float32x4x4 newFrom: matrixElements) transposed).
 	].
 
 	nodeDescription at: 'scale' ifPresent: [ :scaleComponent |
@@ -609,7 +609,7 @@ WDIGLTF2Importer >> loadNodeFrom: nodeDescription [
 	].
 
 	nodeDescription at: 'rotation' ifPresent: [ :rotationComponent |
-		node transform applyOrthonormalMatrix: (WMQuaternionF r: rotationComponent fourth i: rotationComponent first j: rotationComponent second k: rotationComponent third) asWMMatrix3F
+		node transform applyOrthonormalMatrix: (QuaternionF32 r: rotationComponent fourth i: rotationComponent first j: rotationComponent second k: rotationComponent third) asFloat32x3x3
 	].
 
 	nodeDescription at: 'translation' ifPresent: [ :translationComponent |

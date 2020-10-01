@@ -108,7 +108,7 @@ WDASceneViewStereoDisplayMode >> leftEyeCameraTransformFunction [
 
 { #category : #'multi eye rendering' }
 WDASceneViewStereoDisplayMode >> leftEyeTransform [
-	^ WMReversibleAffineTransformF identity
+	^ ReversibleAffineTransform3dF32 identity
 ]
 
 { #category : #'render targets' }
@@ -170,7 +170,7 @@ WDASceneViewStereoDisplayMode >> rightEyeCameraTransformFunction [
 
 { #category : #'multi eye rendering' }
 WDASceneViewStereoDisplayMode >> rightEyeTransform [
-	^ WMReversibleAffineTransformF identity
+	^ ReversibleAffineTransform3dF32 identity
 ]
 
 { #category : #'render targets' }
@@ -222,7 +222,7 @@ WDASceneViewStereoDisplayMode >> updateCameraFrustum [
 	far := camera farDistance.
 	
 	invertedY := engine projectionInvertedY.
-	combinedFrustum := WMFrustumF new
+	combinedFrustum := FrustumF32 new
 		reverseDepthFrustumLeft: left right: right bottom: bottom top: top near: near far: far invertedY: invertedY.
 	"Transcript show: left; space; show: right; space; show: bottom; space; show: top; space; show: near; space; show: far; cr."
 	camera setExplicitFrustum: combinedFrustum invertedY: invertedY.

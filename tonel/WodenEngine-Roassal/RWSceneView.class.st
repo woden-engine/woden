@@ -98,7 +98,7 @@ RWSceneView >> ensureVRTrackedDeviceDisplay: baseCameraTransform [
 RWSceneView >> initialize [
 	super initialize.
 	vrTrackedDevices := Dictionary new.
-	vrCameraBaseTransform := WMReversibleAffineTransformF identity.
+	vrCameraBaseTransform := ReversibleAffineTransform3dF32 identity.
 ]
 
 { #category : #visiting }
@@ -110,8 +110,8 @@ RWSceneView >> mouseFocusElement [
 RWSceneView >> onMouseDrag: event [
 	| r3Event |
 	r3Event := RWMouseDrag new buttons: event buttons;
-		position: event position asWMVector2F;
-		delta: event delta asWMVector2F;
+		position: event position asFloat32x2;
+		delta: event delta asFloat32x2;
 		"element: dragElement."
 		element: model.
 	r3Event sendToElement.
@@ -130,7 +130,7 @@ RWSceneView >> onMouseOverElements: event [
 RWSceneView >> projectPointToScreen: aPoint [
 	| viewPoint projectedPoint ndcPoint ndcX ndcY extent x y |
 	viewPoint := camera sceneNode globalTransform inverseTransformPosition3: aPoint.
-	projectedPoint := camera sceneNode frustum matrix transformVector4: viewPoint asWMVector4F.
+	projectedPoint := camera sceneNode frustum matrix transformVector4: viewPoint asFloat32x4.
 	(projectedPoint w closeTo: 0.0) ifTrue: [ ^ 0@0 ].
 	(projectedPoint z >= 0.0) ifTrue: [ ^ 0@0 ].
 	
@@ -249,7 +249,7 @@ RWSceneView >> visitMouseButtonReleaseEvent: event [
 	self isInVirtualReality ifTrue: [ ^ self ].
 	
 	r3Event := RWMouseButtonUp new buttons: event buttons;
-		position: event position asWMVector2F;
+		position: event position asFloat32x2;
 		button: event button.
 	r3Event element: (self elementInPosition: event position).
 	dragElement := nil.

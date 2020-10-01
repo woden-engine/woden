@@ -8,7 +8,7 @@ Class {
 WDGSEDragCameraRotate >> onDragEvent: event [
 	| dragDelta angleDeltaVector |
 	dragDelta := event delta.
-	angleDeltaVector := WMVector3D x: dragDelta y negated degreesToRadians y: dragDelta x degreesToRadians negated.
+	angleDeltaVector := Float64x3 x: dragDelta y negated degreesToRadians y: dragDelta x degreesToRadians negated.
 	
 	view cameraAngle: view cameraAngle + angleDeltaVector
 ]

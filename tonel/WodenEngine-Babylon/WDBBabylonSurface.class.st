@@ -226,7 +226,7 @@ WDBBabylonSurface >> beginRenderPassWithColor: aColor [
 	isInRenderPass ifTrue: [ self finishCurrentRenderPass ].
 	
 	pass := self solidRenderPass.
-	pass setColorClearValue: 0 value: aColor asWMVector4F asAGPUColor4f.
+	pass setColorClearValue: 0 value: aColor asFloat32x4 asAGPUColor4f.
 	
 	stateTracker
 		beginRenderPass: pass renderTarget: renderTarget.
@@ -369,7 +369,7 @@ WDBBabylonSurface >> ensureMatrixBufferCapacity: requiredSize [
 	newCapacity := 1 << requiredSize highBit max: 256.
 	self assert: newCapacity >= requiredSize.	
 	matrixBufferCapacity := matrixBufferCapacity max: newCapacity.
-	matrixBuffer := engine createStreamingStorageBuffer: matrixBufferCapacity * WMMatrix4F structureSize.
+	matrixBuffer := engine createStreamingStorageBuffer: matrixBufferCapacity * Float32x4x4 structureSize.
 	
 	"Bind the new buffer"
 	matrixBufferBinding ifNil: [ matrixBufferBinding := self shaderSignature newCanvasViewport ].
@@ -441,7 +441,7 @@ WDBBabylonSurface >> flushClippingRectangles [
 WDBBabylonSurface >> flushTransforms [
 	currentTransform ~= transform ifTrue: [
 		self addCommand: (WDBBabylonSetModelViewMatrixCommand new
-			matrix: (self pushMatrix: transform asWMMatrix4F)).
+			matrix: (self pushMatrix: transform asFloat32x4x4)).
 		currentTransform := transform copy.
 	]
 ]
@@ -501,7 +501,7 @@ WDBBabylonSurface >> initialize [
 	matrixBufferCapacity := 0.
 	matrixBuffer := nil.
 	
-	matrices := SLVMNativeOrderedCollection for: WMMatrix4F.
+	matrices := SLVMNativeOrderedCollection for: Float32x4x4.
 	quickStateBuffer := ByteArray new: WDBQuickState structureSize.
 	
 	destroyed := false.
@@ -534,7 +534,7 @@ WDBBabylonSurface >> popClipRectangle [
 
 { #category : #accessing }
 WDBBabylonSurface >> projectionMatrix [
-	^ WMMatrix4F
+	^ Float32x4x4
 		orthoLeft: 0.0 right: extent x asFloat
 		bottom: extent y asFloat top: 0.0
 		near: -1.0 far: 1.0
@@ -666,7 +666,7 @@ WDBBabylonSurface >> setupCommonState [
 	quickState := WDBQuickState new.
 	self
 		projectionMatrixIndex: (self pushMatrix: self projectionMatrix);
-		modelViewMatrixIndex: (self pushMatrix: WMMatrix4F identity).
+		modelViewMatrixIndex: (self pushMatrix: Float32x4x4 identity).
 ]
 
 { #category : #drawing }

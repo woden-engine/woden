@@ -29,5 +29,5 @@ WDPhyBoxCollisionShape >> halfExtent: aWDVector3 [
 
 { #category : #accessing }
 WDPhyBoxCollisionShape >> initialize [
-	halfExtent := WMVector3F x: 1.0 y: 1.0 z: 1.0
+	halfExtent := Float32x3 x: 1.0 y: 1.0 z: 1.0
 ]

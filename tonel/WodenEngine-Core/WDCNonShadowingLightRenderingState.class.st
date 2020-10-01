@@ -13,5 +13,5 @@ WDCNonShadowingLightRenderingState >> setupShadowMappingTransforms [
 
 { #category : #'as yet unclassified' }
 WDCNonShadowingLightRenderingState >> shadowMapMatrixForCameraTransform: cameraTransform [
-	^ WMMatrix4F zeros
+	^ Float32x4x4 zeros
 ]

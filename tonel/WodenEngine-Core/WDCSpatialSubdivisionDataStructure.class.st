@@ -8,7 +8,7 @@ Class {
 WDCSpatialSubdivisionDataStructure class >> forAll: aCollection [
 	| spatialObjects boundingBox |
 	spatialObjects := aCollection collect: #asSpatialSubdivisionDataStructureElement.
-	boundingBox := WMBox3DF empty.
+	boundingBox := BoxF32 empty.
 	spatialObjects do: [ :el |
 		boundingBox insertBox: el spatialElementBoundingBox
 	].

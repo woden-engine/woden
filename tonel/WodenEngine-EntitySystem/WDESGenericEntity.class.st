@@ -43,7 +43,7 @@ WDESGenericEntity >> addDirectionalLightWith: aBlock [
 WDESGenericEntity >> addGenericObjectAt: position with: aBlock [
 	| entity |
 	entity := WDESGenericEntity new
-		transform: (WMReversibleAffineTransformF identity translation: position).
+		transform: (ReversibleAffineTransform3dF32 identity translation: position).
 	self addChild: entity.
 	aBlock value: entity.
 	^ entity
@@ -80,7 +80,7 @@ WDESGenericEntity >> addPointEntityWithType: pointEntityTypeName at: position [
 	| entity |
 	entity := WDESPointEntity new
 		typeName: pointEntityTypeName;
-		transform: (WMReversibleAffineTransformF identity translation: position ).
+		transform: (ReversibleAffineTransform3dF32 identity translation: position ).
 	self addChild: entity.
 	^ entity
 ]
@@ -100,7 +100,7 @@ WDESGenericEntity >> addRigidBodyAt: position with: aBlock [
 	| entity |
 	entity := WDESGenericEntity new
 		makeRigidBodyWithMass: 1.0;
-		transform: (WMReversibleAffineTransformF identity translation: position).
+		transform: (ReversibleAffineTransform3dF32 identity translation: position).
 	self addChild: entity.
 	aBlock value: entity.
 	^ entity
@@ -135,7 +135,7 @@ WDESGenericEntity >> addUseActuationBoxVolume: boxVolume withAction: actionBlock
 WDESGenericEntity >> addWaterVolumeAt: position with: aBlock [
 	| entity waterComponent |
 	entity := WDESVolumeSensorEntity new
-		transform: (WMReversibleAffineTransformF identity translation: position).
+		transform: (ReversibleAffineTransform3dF32 identity translation: position).
 	self addChild: entity.
 	waterComponent := entity addComponent: (WDESWaterVolumeSensorBehaviorComponent new).
 	aBlock cull: entity cull: waterComponent.
@@ -261,13 +261,13 @@ WDESGenericEntity >> buildWaterMeshWith: aBlock [
 
 { #category : #directions }
 WDESGenericEntity >> forwardDirection [
-	^ transform transformVector3: (WMVector3F z: 1.0)
+	^ transform transformVector3: (Float32x3 z: 1.0)
 ]
 
 { #category : #initialization }
 WDESGenericEntity >> initialize [
 	super initialize.
-	transform := WMReversibleAffineTransformF identity.
+	transform := ReversibleAffineTransform3dF32 identity.
 	self makeStaticPhysicsObject
 ]
 

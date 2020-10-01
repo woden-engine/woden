@@ -32,7 +32,7 @@ WDGSPlayerBehavior class >> eyePosition [
 
 { #category : #accessing }
 WDGSPlayerBehavior class >> halfExtent [
-	^ WMVector3D x: 0.3 y: 0.9 z: 0.3
+	^ Float64x3 x: 0.3 y: 0.9 z: 0.3
 ]
 
 { #category : #adding }
@@ -78,7 +78,7 @@ WDGSPlayerBehavior >> createCollisionShape [
 WDGSPlayerBehavior >> fireBulletSpeed: initialSpeed [
 	| initialVelocity initialPosition node bullet |
 	headTransform ifNil: [ ^ self ].
-	initialVelocity := headTransform transformVector3: (WMVector3F z: initialSpeed negated).
+	initialVelocity := headTransform transformVector3: (Float32x3 z: initialSpeed negated).
 	initialPosition := headTransform translation.
 
 	node := WDSGLocalSpatialInstanceObject new.
@@ -87,8 +87,8 @@ WDGSPlayerBehavior >> fireBulletSpeed: initialSpeed [
 	bulletsNode addChild: node.
 		
 	bullet := WDGSBullet new
-		position: initialPosition asWMVector3D;
-		velocity: initialVelocity asWMVector3D;
+		position: initialPosition asFloat64x3;
+		velocity: initialVelocity asFloat64x3;
 		node: node.
 	bullets add: bullet.
 	
@@ -100,7 +100,7 @@ WDGSPlayerBehavior >> initialize [
 	speed := 1.0.
 	weapons := OrderedCollection new.
 	weaponAnimationSpeed := 1.0.
-	velocityDirection := WMVector3D new.
+	velocityDirection := Float64x3 new.
 ]
 
 { #category : #'event handling' }
@@ -206,7 +206,7 @@ WDGSPlayerBehavior >> onMouseButtonUp: anEvent [
 WDGSPlayerBehavior >> onMouseMove: event [
 	| angleScale |
 	angleScale := Float pi / 180.0 * 0.1.
-	angle := angle + (WMVector3D x: event delta y * angleScale negated y: event delta x * angleScale  negated z: 0.0)
+	angle := angle + (Float64x3 x: event delta y * angleScale negated y: event delta x * angleScale  negated z: 0.0)
 ]
 
 { #category : #'as yet unclassified' }
@@ -281,20 +281,20 @@ WDGSPlayerBehavior >> simulateTime: delta [
 	
 	camera := self cameraSceneNode.
 	camera ifNotNil: [
-		orientation := (WMMatrix3F yrot: angle y) * (WMMatrix3F xrot: angle x).
+		orientation := (Float32x3x3 yrot: angle y) * (Float32x3x3 xrot: angle x).
 		
 		camera transform
 			orthonormal: orientation;
-			translation: transform translation asWMVector3F;
+			translation: transform translation asFloat32x3;
 			translateByY: self class eyePosition.
 		headTransform := camera transform copy
 	].
 
 	soundListener ifNotNil: [ 
 		soundListener
-			position: transform translation asWMVector3F;
-			velocity: linearVelocity asWMVector3F;
-			orientation: transform matrix asWMMatrix3F.
+			position: transform translation asFloat32x3;
+			velocity: linearVelocity asFloat32x3;
+			orientation: transform matrix asFloat32x3x3.
 	].
 
 	weaponAction ifNotNil: [

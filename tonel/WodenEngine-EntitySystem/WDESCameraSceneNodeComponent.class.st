@@ -23,9 +23,9 @@ WDESCameraSceneNodeComponent >> applySoundListenerParameters: soundListener with
 	globalTransform := self validSceneNode globalTransform.
 	soundListener
 		gain: self currentSoundGainFactor * soundGainFactor;
-		position: globalTransform translation asWMVector3F;
-		"velocity: linearVelocity asWMVector3F;"
-		orientation: globalTransform matrix asWMMatrix3F.
+		position: globalTransform translation asFloat32x3;
+		"velocity: linearVelocity asFloat32x3;"
+		orientation: globalTransform matrix asFloat32x3x3.
 
 ]
 

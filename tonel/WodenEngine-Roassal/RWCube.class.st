@@ -21,7 +21,7 @@ RWCube >> buildCollisionShapeFor: element [
 	w := self widthFor: element.
 	h := self heightFor: element.
 	d := self depthFor: element.
-	^ WDPhyBoxCollisionShape halfExtent: (WMVector3F x: w *0.5 y: h*0.5 z: d*0.5).
+	^ WDPhyBoxCollisionShape halfExtent: (Float32x3 x: w *0.5 y: h*0.5 z: d*0.5).
 ]
 
 { #category : #hooks }

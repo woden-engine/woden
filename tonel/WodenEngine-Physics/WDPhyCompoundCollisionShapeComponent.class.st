@@ -42,7 +42,7 @@ WDPhyCompoundCollisionShapeComponent >> shape: anObject [
 
 { #category : #accessing }
 WDPhyCompoundCollisionShapeComponent >> transform [
-	^ transform ifNil: [ transform := WMReversibleAffineTransformF identity ]
+	^ transform ifNil: [ transform := ReversibleAffineTransform3dF32 identity ]
 ]
 
 { #category : #accessing }

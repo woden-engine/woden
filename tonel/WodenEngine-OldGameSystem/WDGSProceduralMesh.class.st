@@ -41,7 +41,7 @@ WDGSProceduralMesh >> createMeshInto: node [
 WDGSProceduralMesh >> createSceneNode [
 	| node mesh |
 	node := WDSGSpatialObject new.
-	node transform 	translation: boundingBox center asWMVector3F.
+	node transform 	translation: boundingBox center asFloat32x3.
 	mesh := self createMeshFor: node.
 	node renderable: mesh.
 	^ node

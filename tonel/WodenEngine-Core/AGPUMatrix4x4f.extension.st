@@ -1,9 +1,9 @@
 Extension { #name : #AGPUMatrix4x4f }
 
 { #category : #'*WodenEngine-Core' }
-AGPUMatrix4x4f >> asWMReversibleAffineTransformF [
+AGPUMatrix4x4f >> asReversibleAffineTransform3dF32 [
 	| matrix translation |
-	matrix := WMMatrix3F c1: self c1 asWMVector3F c2: self c2 asWMVector3F c3: self c3 asWMVector3F.
-	translation := self c4 asWMVector3F.
-	^ WMReversibleAffineTransformF identity orthonormal: matrix translation: translation
+	matrix := Float32x3x3 c1: self c1 asFloat32x3 c2: self c2 asFloat32x3 c3: self c3 asFloat32x3.
+	translation := self c4 asFloat32x3.
+	^ ReversibleAffineTransform3dF32 identity orthonormal: matrix translation: translation
 ]

@@ -307,7 +307,7 @@ WDESAbstractEntity >> tick: delta [
 
 { #category : #transforming }
 WDESAbstractEntity >> transform [
-	^ WMReversibleAffineTransformF identity
+	^ ReversibleAffineTransform3dF32 identity
 ]
 
 { #category : #accessing }

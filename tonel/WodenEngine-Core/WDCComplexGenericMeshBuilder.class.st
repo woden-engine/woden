@@ -25,12 +25,12 @@ WDCComplexGenericMeshBuilder class >> initialize [
 	
 	"Potential normal axis"
 	NormalAxis := { 
-		WMVector3F x: 1.0 y: 0.0 z: 0.0 .
-		WMVector3F x: -1.0 y: 0.0 z: 0.0 .
-		WMVector3F x: 0.0 y: 1.0 z: 0.0 .
-		WMVector3F x: 0.0 y: -1.0 z: 0.0 .
-		WMVector3F x: 0.0 y: 0.0 z: 1.0 .
-		WMVector3F x: 0.0 y: 0.0 z: -1.0 .
+		Float32x3 x: 1.0 y: 0.0 z: 0.0 .
+		Float32x3 x: -1.0 y: 0.0 z: 0.0 .
+		Float32x3 x: 0.0 y: 1.0 z: 0.0 .
+		Float32x3 x: 0.0 y: -1.0 z: 0.0 .
+		Float32x3 x: 0.0 y: 0.0 z: 1.0 .
+		Float32x3 x: 0.0 y: 0.0 z: -1.0 .
 	}.
 ]
 
@@ -58,7 +58,7 @@ WDCComplexGenericMeshBuilder >> addP: position N: normal T4: tangent4 TC: texcoo
 	vertices add: (WDCGenericVertexF32 new
 		position: (transform transformPosition3: position);
 		normal: (transform transformNormal: normal);
-		tangent4: (WMVector4F xyz: (transform transformNormal: tangent4 xyz) w: tangent4 w);
+		tangent4: (Float32x4 xyz: (transform transformNormal: tangent4 xyz) w: tangent4 w);
 		texcoord: texcoord;
 		color: currentColor;
 		yourself)
@@ -86,7 +86,7 @@ WDCComplexGenericMeshBuilder >> addP: position TC: texcoord [
 { #category : #accessing }
 WDCComplexGenericMeshBuilder >> addSolidBox: box [
 	self restoreTransformAfter: [
-		transform translateBy: box center asWMVector3F.
+		transform translateBy: box center asFloat32x3.
 		self addCubeWithWidth: box width height: box height depth: box depth
 	]
 ]
@@ -94,7 +94,7 @@ WDCComplexGenericMeshBuilder >> addSolidBox: box [
 { #category : #accessing }
 WDCComplexGenericMeshBuilder >> addWireBox: box [
 	self restoreTransformAfter: [
-		transform translateBy: box center asWMVector3F.
+		transform translateBy: box center asFloat32x3.
 		self addWireCubeWithWidth: box width height: box height depth: box depth
 	]
 ]
@@ -125,12 +125,12 @@ WDCComplexGenericMeshBuilder >> computeNormalAxis: normal [
 { #category : #initialization }
 WDCComplexGenericMeshBuilder >> initialize [
 	super initialize.
-	transform := WMReversibleAffineTransformF identity.
+	transform := ReversibleAffineTransform3dF32 identity.
 ]
 
 { #category : #'as yet unclassified' }
 WDCComplexGenericMeshBuilder >> planeTextureScale: texScale offset: texOffset [
-	self planeTextureTransform: (WMMatrix3F texScale: texScale offset: texOffset).
+	self planeTextureTransform: (Float32x3x3 texScale: texScale offset: texOffset).
 ]
 
 { #category : #'as yet unclassified' }
@@ -147,7 +147,7 @@ WDCComplexGenericMeshBuilder >> planeTextureTransform: textureMatrix [
 		bitangent := self bitangentForAxis: normalAxis.
 		
 		"Compute the new texcoord"
-		uv := WMVector2F x: (tangent dot: position) y: (bitangent dot: position).
+		uv := Float32x2 x: (tangent dot: position) y: (bitangent dot: position).
 		vertex texcoord: (textureMatrix transformPosition2: uv).
 		
 		vertices at: vi put: vertex.

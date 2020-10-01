@@ -49,7 +49,7 @@ WDGSLightSourceComponent >> directional [
 { #category : #initialization }
 WDGSLightSourceComponent >> initialize [
 	super initialize.
-	intensity := WMVector4F x: 1.0 y: 1.0 z: 1.0 w: 1.0.
+	intensity := Float32x4 x: 1.0 y: 1.0 z: 1.0 w: 1.0.
 	type := #point.
 	outerSpotCutoff := 90.0.
 	innerSpotCutoff := 80.0.
@@ -85,7 +85,7 @@ WDGSLightSourceComponent >> isSingleton [
 { #category : #serialization }
 WDGSLightSourceComponent >> loadFromJson: jsonData [
 	jsonData at: 'intensity' ifPresent: [ :jsonIntensity |
-		intensity := WMVector4F loadFromJson: jsonIntensity
+		intensity := Float32x4 loadFromJson: jsonIntensity
 	].
 
 	type := (jsonData at: 'light-type' ifAbsent: [ #point ]) asSymbol.

@@ -29,7 +29,7 @@ RWVRTrackedController >> addToView: aView [
 		mesh.
 	cursorNode := WDSGSpatialObject new
 		visible: false;
-		color: cursorColor asWMVector4F;
+		color: cursorColor asFloat32x4;
 		renderable: cursorMesh;
 		yourself.
 	element sceneNode addChild: cursorNode.
@@ -45,7 +45,7 @@ RWVRTrackedController >> cursorColor: anObject [
 	cursorColor := anObject.
 	cursorNode ifNotNil: [ 
 		cursorNode
-			color: cursorColor asWMVector4F;
+			color: cursorColor asFloat32x4;
 			stateChanged
 	]
 ]
@@ -53,8 +53,8 @@ RWVRTrackedController >> cursorColor: anObject [
 { #category : #'as yet unclassified' }
 RWVRTrackedController >> elementPointedByCursor [
 	| ray view distanceAndElement |
-	ray := WMRayF origin: element position
-		direction: (element orientation transformVector3: (WMVector3F z: -1.0)).
+	ray := Ray3dF32 origin: element position
+		direction: (element orientation transformVector3: (Float32x3 z: -1.0)).
 	view := element view.
 	view ifNil: [ ^ nil ].
 
@@ -144,11 +144,11 @@ RWVRTrackedController >> transformChanged [
 { #category : #'as yet unclassified' }
 RWVRTrackedController >> updateCursor [
 	self cursorColor: (triggerPressed ifTrue: [
-		WMVector4F x: 0.8 y: 0.3 z: 0.3 w: 1.0
+		Float32x4 x: 0.8 y: 0.3 z: 0.3 w: 1.0
 	] ifFalse: [
 		triggerTouched
-			ifTrue: [WMVector4F x: 0.3 y: 0.8 z: 0.3 w: 1.0]
-			ifFalse: [WMVector4F x: 0.8 y: 0.8 z: 0.8 w: 1.0 ]
+			ifTrue: [Float32x4 x: 0.3 y: 0.8 z: 0.3 w: 1.0]
+			ifFalse: [Float32x4 x: 0.8 y: 0.8 z: 0.8 w: 1.0 ]
 	]).
 	cursorNode ifNotNil: [ 
 		cursorNode visible: (triggerPressed or: triggerTouched)
@@ -160,7 +160,7 @@ RWVRTrackedController >> updateCursor [
 RWVRTrackedController >> updateForFrameDelta: delta [
 	| direction |
 	movingForward ifTrue: [
-		direction := sceneView camera orientation transformVector3: (WMVector3F z: -1.0).
+		direction := sceneView camera orientation transformVector3: (Float32x3 z: -1.0).
 		sceneView vrCameraBaseTransform translateBy: direction * delta * 2.0.
 	].
 ]

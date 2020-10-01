@@ -142,7 +142,7 @@ WDAPhyEngine >> convertMatrix3: matrix3 [
 	firstRow := matrix3 firstRow.
 	secondRow := matrix3 secondRow.
 	thirdRow := matrix3 thirdRow.
-	^ WMMatrix3F
+	^ Float32x3x3
 		m11: firstRow x m12: firstRow y m13: firstRow z 
 		m21: secondRow x m22: secondRow y m23: secondRow z
 		m31: thirdRow x m32: thirdRow y m33: thirdRow z
@@ -153,12 +153,12 @@ WDAPhyEngine >> convertTransform: transform [
 	| matrix translation |
 	matrix := self convertMatrix3: transform rotation.
 	translation := self convertVector3: transform origin.
-	^ WMReversibleAffineTransformF new orthonormal: matrix translation: translation
+	^ ReversibleAffineTransform3dF32 new orthonormal: matrix translation: translation
 ]
 
 { #category : #rendering }
 WDAPhyEngine >> convertVector3: vector3 [
-	^ WMVector3F x: vector3 x y: vector3 y z: vector3 z
+	^ Float32x3 x: vector3 x y: vector3 y z: vector3 z
 ]
 
 { #category : #rendering }

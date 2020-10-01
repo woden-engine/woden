@@ -68,7 +68,7 @@ WDAGSLevelModel >> map: anObject [
 { #category : #'as yet unclassified' }
 WDAGSLevelModel >> selectPlayerSpawnPosition [
 	^ playerSpawnPositions
-		ifEmpty: [ WMVector3D zero ]
+		ifEmpty: [ Float64x3 zero ]
 		ifNotEmpty: [ playerSpawnPositions first ]
 ]
 

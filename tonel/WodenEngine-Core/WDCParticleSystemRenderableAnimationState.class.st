@@ -35,8 +35,8 @@ WDCParticleSystemRenderableAnimationState >> createCPUParticleSimulationBuffer [
 	
 	cpuParticleSimulationBuffer := SLVMNativeArray for: WDCParticleState new: particleCount.
 	initialParticleState := WDCParticleState new
-		size: (WMVector3F x: 0.2 y: 0.2 z: 0.2);
-		color: Color black asWMVector4F;
+		size: (Float32x3 x: 0.2 y: 0.2 z: 0.2);
+		color: Color black asFloat32x4;
 		startingUp: true.
 		
 	1 to: particleSystem particleCount do: [ :index |

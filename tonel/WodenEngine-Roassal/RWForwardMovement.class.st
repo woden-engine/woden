@@ -54,11 +54,11 @@ RWForwardMovement >> angularVelocity: anObject [
 
 { #category : #initialization }
 RWForwardMovement >> initialize [
-	velocity := WMVector3F new.
-	acceleration := WMVector3F new.
-	angle := WMVector3F new.
+	velocity := Float32x3 new.
+	acceleration := Float32x3 new.
+	angle := Float32x3 new.
 	speed := 1.0.
-	angularVelocity := WMVector3F new.
+	angularVelocity := Float32x3 new.
 	angularSpeed := 0.5.
 ]
 
@@ -67,7 +67,7 @@ RWForwardMovement >> simulateTime: delta onElement: anElement [
 	| orientation |
 	(self isEnabledFor: anElement) ifFalse: [ ^ self ].
 	angle := angle + (angularVelocity*(delta*angularSpeed)).
-	orientation := (WMMatrix3F yrot: angle y) * (WMMatrix3F xrot: angle x).
+	orientation := (Float32x3x3 yrot: angle y) * (Float32x3x3 xrot: angle x).
 	anElement
 		orientation: orientation;
 		translateBy: (orientation transformVector3: (velocity*(delta*speed))).

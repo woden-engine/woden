@@ -166,7 +166,7 @@ WDSGNode >> globalTransformValidated [
 { #category : #initialization }
 WDSGNode >> initialize [
 	super initialize.
-	transform := WMReversibleAffineTransformF identity.
+	transform := ReversibleAffineTransform3dF32 identity.
 	globalTransform := nil.
 	children := OrderedCollection new.
 	visible := true.
@@ -214,7 +214,7 @@ WDSGNode >> isSpatialObject [
 
 { #category : #'as yet unclassified' }
 WDSGNode >> localBoundingBox [
-	^ WMBox3DF new
+	^ BoxF32 new
 ]
 
 { #category : #accessing }
@@ -395,7 +395,7 @@ WDSGNode >> transform [
 
 { #category : #accessing }
 WDSGNode >> transform: aTransform [
-	transform := aTransform asWMReversibleAffineTransformF.
+	transform := aTransform asReversibleAffineTransform3dF32.
 	self transformChanged
 ]
 

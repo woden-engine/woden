@@ -17,7 +17,7 @@ Class {
 { #category : #'position calculation' }
 RWWallLayout >> computeMaximumDimension: nodes [
 	^ (nodes
-		inject: WMVector3F zero
+		inject: Float32x3 zero
 		into: [ :maxiumDimension :each |
 			| boundingBoxDimension |
 			boundingBoxDimension := each extent.
@@ -25,7 +25,7 @@ RWWallLayout >> computeMaximumDimension: nodes [
 				x: (maxiumDimension x max: boundingBoxDimension x);
 				y: (maxiumDimension y max: boundingBoxDimension y);
 				z: (maxiumDimension z max: boundingBoxDimension z);
-				yourself ]) + (WMVector3F x: gap y: gap z: gap)
+				yourself ]) + (Float32x3 x: gap y: gap z: gap)
 ]
 
 { #category : #'dimension calculation' }

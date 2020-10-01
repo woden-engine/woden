@@ -24,21 +24,21 @@ WDGBrushFaceTextureTransform class >> initialize [
 	super initialize.
 	
 	VectorDirections := { 
-		WMVector3D x: 1.0 y: 0.0 z: 0.0 .
-		WMVector3D x: -1.0 y: 0.0 z: 0.0 .
-		WMVector3D x: 0.0 y: 1.0 z: 0.0 .
-		WMVector3D x: 0.0 y: -1.0 z: 0.0 .
-		WMVector3D x: 0.0 y: 0.0 z: 1.0 .
-		WMVector3D x: 0.0 y: 0.0 z: -1.0 .
+		Float64x3 x: 1.0 y: 0.0 z: 0.0 .
+		Float64x3 x: -1.0 y: 0.0 z: 0.0 .
+		Float64x3 x: 0.0 y: 1.0 z: 0.0 .
+		Float64x3 x: 0.0 y: -1.0 z: 0.0 .
+		Float64x3 x: 0.0 y: 0.0 z: 1.0 .
+		Float64x3 x: 0.0 y: 0.0 z: -1.0 .
 	 }.
 	
 	UDirections := { 
-		WMVector3D x: 0.0 y: 0.0 z: 1.0 .
-		WMVector3D x: 0.0 y: 0.0 z: 1.0 .
-		WMVector3D x: 1.0 y: 0.0 z: 0.0 .
-		WMVector3D x: 1.0 y: 0.0 z: 0.0 .
-		WMVector3D x: 1.0 y: 0.0 z: 0.0 .
-		WMVector3D x: 1.0 y: 0.0 z: 0.0 .
+		Float64x3 x: 0.0 y: 0.0 z: 1.0 .
+		Float64x3 x: 0.0 y: 0.0 z: 1.0 .
+		Float64x3 x: 1.0 y: 0.0 z: 0.0 .
+		Float64x3 x: 1.0 y: 0.0 z: 0.0 .
+		Float64x3 x: 1.0 y: 0.0 z: 0.0 .
+		Float64x3 x: 1.0 y: 0.0 z: 0.0 .
 	}.
 	
 	VDirections := (1 to: 6) collect: [ :i | (VectorDirections at: i) cross: (UDirections at: i)] 
@@ -66,7 +66,7 @@ WDGBrushFaceTextureTransform >> asMatrixForNormal: aNormal [
 	u := tangents first.
 	v := tangents second.
 	
-	^ self textureMatrix4 * (WMMatrix4D newFrom: { 
+	^ self textureMatrix4 * (Float64x4x4 newFrom: { 
 		u x . u y . u z . 0.0 .
 		v x . v y . v z . 0.0 .
 		0.0 . 0.0 . 1.0 . 0.0 .
@@ -119,8 +119,8 @@ WDGBrushFaceTextureTransform >> findTangents: aNormal [
 { #category : #initialization }
 WDGBrushFaceTextureTransform >> initialize [
 	super initialize.
-	scale := WMVector2D x: 1.0 y: 1.0.
-	offset := WMVector2D new.
+	scale := Float64x2 x: 1.0 y: 1.0.
+	offset := Float64x2 new.
 	rotation := 0.0.
 	lock := false.
 ]
@@ -132,8 +132,8 @@ WDGBrushFaceTextureTransform >> invalidateModels [
 
 { #category : #serialization }
 WDGBrushFaceTextureTransform >> loadFromJson: jsonData [
-	scale := WMVector2D loadFromJson: (jsonData at: 'scale').
-	offset := WMVector2D loadFromJson: (jsonData at: 'offset').
+	scale := Float64x2 loadFromJson: (jsonData at: 'scale').
+	offset := Float64x2 loadFromJson: (jsonData at: 'offset').
 	rotation := jsonData at: 'rotation'.
 	lock := jsonData at: 'lock'.
 ]
@@ -180,7 +180,7 @@ WDGBrushFaceTextureTransform >> textureMatrix4 [
 	sy := scale y.
 	ox := offset x.
 	oy := offset y.
-	^ WMMatrix4D newFrom: {
+	^ Float64x4x4 newFrom: {
 		c * sx . s negated * sy . 0.0 . ox .
 		s * sx . c * sy . 0.0 . oy .
 		0.0 . 0.0 . 1.0 . 0.0 .

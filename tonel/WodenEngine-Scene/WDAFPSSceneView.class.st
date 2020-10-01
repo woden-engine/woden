@@ -102,11 +102,11 @@ WDAFPSSceneView >> ensureVRTrackedDeviceDisplay: cameraTransform [
 WDAFPSSceneView >> initialize [
 	super initialize.
 
-	cameraVelocity := WMVector3F new.
+	cameraVelocity := Float32x3 new.
 	cameraSpeed := 1.0.
 	
-	cameraAngle := WMVector3F new.
-	cameraAngularVelocity := WMVector3F new.
+	cameraAngle := Float32x3 new.
+	cameraAngularVelocity := Float32x3 new.
 	cameraAngularSpeed := 1.0.
 	dragging := false.
 ]
@@ -122,14 +122,14 @@ WDAFPSSceneView >> updateForFrameDelta: delta [
 	cameraPosition ifNil: [ cameraPosition := self camera transform translation ].
 	
 	orientation := screenDisplayMode isVR ifTrue: [ 
-		WMMatrix3F yrot: cameraAngle y.
+		Float32x3x3 yrot: cameraAngle y.
 	] ifFalse: [ 
-		(WMMatrix3F yrot: cameraAngle y) * (WMMatrix3F xrot: cameraAngle x).
+		(Float32x3x3 yrot: cameraAngle y) * (Float32x3x3 xrot: cameraAngle x).
 	].
 
 	cameraPosition := cameraPosition + (orientation transformVector3: (cameraVelocity * (cameraSpeed * delta))).
 
-	cameraTransform := WMReversibleAffineTransformF identity orthonormal: orientation translation: cameraPosition.
+	cameraTransform := ReversibleAffineTransform3dF32 identity orthonormal: orientation translation: cameraPosition.
 
 	self isInVirtualReality ifTrue: [ 
 		self ensureVRTrackedDeviceDisplay: cameraTransform.
@@ -195,7 +195,7 @@ WDAFPSSceneView >> visitMouseButtonReleaseEvent: anEvent [
 { #category : #visiting }
 WDAFPSSceneView >> visitMouseMoveEvent: anEvent [
 	dragging ifTrue: [ 
-		cameraAngle := cameraAngle + ((WMVector3F x: anEvent delta y negated asFloat y: anEvent delta negated x asFloat z: 0.0) * 0.01)
+		cameraAngle := cameraAngle + ((Float32x3 x: anEvent delta y negated asFloat y: anEvent delta negated x asFloat z: 0.0) * 0.01)
 	].
 
 ]

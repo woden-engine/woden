@@ -54,8 +54,8 @@ WDSSceneRendererCameraLayersStates >> updateForRenderingViewport: renderingViewp
 	| viewport cameraState screenSize inverseScreenSize normalTransform backgroundTransform foregroundTransform overlayCameraState overlayTransform |
 	viewport := renderingViewport viewport.
 	cameraState := viewport cameraState.
-	screenSize := renderingViewport extent asWMVector2F.
-	inverseScreenSize := WMVector2F x: screenSize x reciprocalFloatQuiet y: screenSize y reciprocalFloatQuiet.
+	screenSize := renderingViewport extent asFloat32x2.
+	inverseScreenSize := Float32x2 x: screenSize x reciprocalFloatQuiet y: screenSize y reciprocalFloatQuiet.
 		
 	cameraState
 		transform: viewport cameraTransform;
@@ -64,8 +64,8 @@ WDSSceneRendererCameraLayersStates >> updateForRenderingViewport: renderingViewp
 		currentTime: currentTime.
 		
 	normalTransform := viewport cameraTransform.
-	backgroundTransform := normalTransform copy translation: WMVector3F zero.
-	foregroundTransform := WMReversibleAffineTransformF identity.
+	backgroundTransform := normalTransform copy translation: Float32x3 zero.
+	foregroundTransform := ReversibleAffineTransform3dF32 identity.
 	
 	backgroundLayerState submitState: cameraState withTransform: backgroundTransform.
 	normalLayerState submitState: cameraState withTransform: normalTransform.

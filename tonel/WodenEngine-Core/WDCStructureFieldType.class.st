@@ -32,12 +32,12 @@ WDCStructureFieldType class >> initializeFieldTypes [
 	FieldTypes := Dictionary new.
 	#(
 		R32G32B32A32_TYPELESS 		(uint 	4 false 16 4)
-		R32G32B32A32_FLOAT 			(float 4 false 16 4 WMVector4F)
+		R32G32B32A32_FLOAT 			(float 4 false 16 4 Float32x4)
 		R32G32B32A32_UINT 				(uint 	4 false 16 4)
 		R32G32B32A32_SINT 				(int 	4 false 16 4)
 
 		R32G32B32_TYPELESS 			(uint  3 false 12 4)
-		R32G32B32_FLOAT 				(float 3 false 12 4 WMCompactVector3F)
+		R32G32B32_FLOAT 				(float 3 false 12 4 CompactFloat32x3)
 		R32G32B32_UINT 					(uint  3 false 12 4)
 		R32G32B32_SINT 					(int  3 false 12 4)
 
@@ -49,7 +49,7 @@ WDCStructureFieldType class >> initializeFieldTypes [
 		R16G16B16A16_SINT 				(short    4 false 8 4 WMVector4S)
 
 		R32G32_TYPELESS 				(uint  2 false 8 4)
-		R32G32_FLOAT 					(float  2 false 8 4 WMVector2F)
+		R32G32_FLOAT 					(float  2 false 8 4 Float32x2)
 		R32G32_UINT 						(uint  2 false 8 4)
 		R32G32_SINT 						(int  2 false 8 4)
 		R32G8X24_TYPELESS 				(uint  2 false 8 4)
@@ -156,9 +156,9 @@ WDCStructureFieldType class >> initializeFieldTypes [
 		uint4	(R32G32B32A32_UINT uint 4 false 16 16 #uint)
 
 		float 		(R32_FLOAT float 1 false 4 4 #float)
-		float2 	(R32G32_FLOAT float 2 false 8 8 WMVector2F)
-		float3 	(R32G32B32_FLOAT  float 3 false 16 16 WMVector3F)
-		float4 	(R32G32B32A32_FLOAT  float 4 false 16 16 WMVector4F)
+		float2 	(R32G32_FLOAT float 2 false 8 8 Float32x2)
+		float3 	(R32G32B32_FLOAT  float 3 false 16 16 Float32x3)
+		float4 	(R32G32B32A32_FLOAT  float 4 false 16 16 Float32x4)
 	) pairsDo: [ :formatName :spec |
 		formatId := (AGPUConstants bindingOf: (#AGPU_TEXTURE_FORMAT_ , spec first) asSymbol) value.
 		self assert: formatId isNotNil.

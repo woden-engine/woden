@@ -54,7 +54,7 @@ RWExample >> classBars [
 	v addAll: elements.
 
 	RWXZGridLayout on: elements.
-	RWAlign elements: elements abovePoint: WMVector3F zero.
+	RWAlign elements: elements abovePoint: Float32x3 zero.
 
 	elements do: [ :el |
 		el
@@ -93,7 +93,7 @@ RWExample >> clickAddAbove [
 	].
 	(RWXZGridLayout gap: 0.05) on: v elements.
 	v addInteraction: RWMouseKeyControl.
-	v camera position: (WMVector3F x: 0.0 y: 3.0 z: 0.0).
+	v camera position: (Float32x3 x: 0.0 y: 3.0 z: 0.0).
 	^ v
 
 ]
@@ -114,7 +114,7 @@ RWExample >> clickGreen [
 	].
 	RWXZGridLayout on: v elements.
 	v addInteraction: RWMouseKeyControl.
-	v camera position: (WMVector3F x: 0.0 y: 1.0 z: 3.0).
+	v camera position: (Float32x3 x: 0.0 y: 1.0 z: 3.0).
 	^ v
 
 ]
@@ -146,7 +146,7 @@ RWExample >> clickLeds [
 	].
 	(RWXZGridLayout gap: 0.05) on: v elements.
 	v addInteraction: RWMouseKeyControl.
-	v camera position: (WMVector3F x: 0.0 y: 3.0 z: 0.0).
+	v camera position: (Float32x3 x: 0.0 y: 3.0 z: 0.0).
 	^ v
 
 ]
@@ -183,7 +183,7 @@ RWExample >> cubeLayout [
 		v add: RWCube element.
 	].
 
-	v camera position: (WMVector3F x: 0.0 y: 0.0 z: 3.0). 
+	v camera position: (Float32x3 x: 0.0 y: 0.0 z: 3.0). 
 	RWCubeLayout on: v elements.
 
 	v addInteraction: RWMouseKeyControl.
@@ -281,7 +281,7 @@ view addAll: {balloon . weight . string }.
 "Constants"
 balloonMass := 1.00.
 balloonInertiaDiag := 2.0/5.0*balloonMass*balloonRadius*balloonRadius.
-balloonInertia := WMMatrix3F newFrom: {
+balloonInertia := Float32x3x3 newFrom: {
 	balloonInertiaDiag . 0.0 . 0.0 .
 	0.0 . balloonInertiaDiag . 0.0 .
 	0.0 . 0.0 . balloonInertiaDiag
@@ -296,9 +296,9 @@ stringRigidity := 300.0.
 balloon translateToY: (weightRadius *2.0) + balloonRadius.
 "balloon translateByZ: 0.8."
 balloon translateByX: 1.2.
-balloonVelocity := WMVector3F zero.
-balloonAngularVelocity := WMVector3F zero.
-balloonOrientation := WMQuaternionF identity.
+balloonVelocity := Float32x3 zero.
+balloonAngularVelocity := Float32x3 zero.
+balloonOrientation := QuaternionF32 identity.
 
 "Physical simulation"
 balloon setBehavior: [ :delta |
@@ -309,10 +309,10 @@ balloon setBehavior: [ :delta |
 	|
 	
 	"Dynamics"
-	gravity := (WMVector3F y: -9.8) * balloonMass.
-	buoyancy := (WMVector3F y: 12.8) * balloonMass.
-	springForce := WMVector3F zero.
-	springTorque := WMVector3F zero.
+	gravity := (Float32x3 y: -9.8) * balloonMass.
+	buoyancy := (Float32x3 y: 12.8) * balloonMass.
+	springForce := Float32x3 zero.
+	springTorque := Float32x3 zero.
 	
 	currentStringLength := (balloonBottomAnchor position - weight position) length
 		- balloonRadius - weightRadius.
@@ -338,15 +338,15 @@ balloon setBehavior: [ :delta |
 	balloonAngularVelocity := balloonAngularVelocity + (angularAccel*delta).
 	
 	"balloonOrientation := balloonOrientation +
-		((WMQuaternionF r: 0.0 xyz: balloonAngularVelocity)*balloonOrientation * (0.5 * delta))."
+		((QuaternionF32 r: 0.0 xyz: balloonAngularVelocity)*balloonOrientation * (0.5 * delta))."
 	balloonOrientation := balloonOrientation +
-		(balloonOrientation * (WMQuaternionF r: 0.0 xyz: balloonAngularVelocity)* (0.5 * delta)).
+		(balloonOrientation * (QuaternionF32 r: 0.0 xyz: balloonAngularVelocity)* (0.5 * delta)).
 		
 	balloonOrientation := balloonOrientation normalized.
 	
 	"Set the balloon orientation and position"
 	balloon
-		orientation: balloonOrientation asWMMatrix3F;
+		orientation: balloonOrientation asFloat32x3x3;
 		translateBy: balloonVelocity * delta.
 ].
 
@@ -381,7 +381,7 @@ view addAll: {balloon . weight . string }.
 "Constants"
 balloonMass := 1.00.
 balloonInertiaDiag := 2.0/5.0*balloonMass*balloonRadius*balloonRadius.
-balloonInertia := WMMatrix3F newFrom: {
+balloonInertia := Float32x3x3 newFrom: {
 	balloonInertiaDiag . 0.0 . 0.0 .
 	0.0 . balloonInertiaDiag . 0.0 .
 	0.0 . 0.0 . balloonInertiaDiag
@@ -396,9 +396,9 @@ stringRigidity := 300.0.
 balloon translateToY: (weightRadius *2.0) + balloonRadius.
 "balloon translateByZ: 0.8."
 balloon translateByX: 1.2.
-balloonVelocity := WMVector3F zero.
-balloonAngularVelocity := WMVector3F zero.
-balloonOrientation := WMQuaternionF identity.
+balloonVelocity := Float32x3 zero.
+balloonAngularVelocity := Float32x3 zero.
+balloonOrientation := QuaternionF32 identity.
 
 "Physical simulation"
 balloon setBehavior: [ :delta |
@@ -409,10 +409,10 @@ balloon setBehavior: [ :delta |
 	|
 	
 	"Dynamics"
-	gravity := (WMVector3F y: -9.8) * balloonMass.
-	buoyancy := (WMVector3F y: 12.8) * balloonMass.
-	springForce := WMVector3F zero.
-	springTorque := WMVector3F zero.
+	gravity := (Float32x3 y: -9.8) * balloonMass.
+	buoyancy := (Float32x3 y: 12.8) * balloonMass.
+	springForce := Float32x3 zero.
+	springTorque := Float32x3 zero.
 	
 	currentStringLength := (balloonBottomAnchor position - weight position) length
 		- balloonRadius - weightRadius.
@@ -438,15 +438,15 @@ balloon setBehavior: [ :delta |
 	balloonAngularVelocity := balloonAngularVelocity + (angularAccel*delta).
 	
 	"balloonOrientation := balloonOrientation +
-		((WMQuaternionF r: 0.0 xyz: balloonAngularVelocity)*balloonOrientation * (0.5 * delta))."
+		((QuaternionF32 r: 0.0 xyz: balloonAngularVelocity)*balloonOrientation * (0.5 * delta))."
 	balloonOrientation := balloonOrientation +
-		(balloonOrientation * (WMQuaternionF r: 0.0 xyz: balloonAngularVelocity)* (0.5 * delta)).
+		(balloonOrientation * (QuaternionF32 r: 0.0 xyz: balloonAngularVelocity)* (0.5 * delta)).
 		
 	balloonOrientation := balloonOrientation normalized.
 	
 	"Set the balloon orientation and position"
 	balloon
-		orientation: balloonOrientation asWMMatrix3F;
+		orientation: balloonOrientation asFloat32x3x3;
 		translateBy: balloonVelocity * delta.
 ].
 
@@ -579,7 +579,7 @@ RWExample >> gridLayout [
 		v add: RWCube element.
 	].
 
-	v camera position: (WMVector3F x: 0.0 y: 0.0 z: 3.0). 
+	v camera position: (Float32x3 x: 0.0 y: 0.0 z: 3.0). 
 	RWXZGridLayout on: v elements.
 
 	v addInteraction: RWMouseKeyControl.
@@ -615,7 +615,7 @@ RWExample >> growingCubes [
 	es := shape elementsOn: (1 to: 3 by: 0.5).
 	v addAll: es.
 	v addInteraction: RWMouseKeyControl.
-	v camera position: (WMVector3F x: 5.0 y: 0.0 z: 10.0). 
+	v camera position: (Float32x3 x: 5.0 y: 0.0 z: 10.0). 
 	RWXLineLayout on: es.
 	^ v
 ]
@@ -651,7 +651,7 @@ RWExample >> manyCubeLayout [
 		v add: RWCube element.
 	].
 
-	v camera position: (WMVector3F x: 0.0 y: 0.0 z: 3.0). 
+	v camera position: (Float32x3 x: 0.0 y: 0.0 z: 3.0). 
 	RWCubeLayout on: v elements.
 
 	v addInteraction: RWMouseKeyControl.
@@ -667,7 +667,7 @@ RWExample >> mediumCubeLayout [
 		v add: RWCube element.
 	].
 
-	v camera position: (WMVector3F x: 0.0 y: 0.0 z: 3.0). 
+	v camera position: (Float32x3 x: 0.0 y: 0.0 z: 3.0). 
 	RWCubeLayout on: v elements.
 
 	v addInteraction: RWMouseKeyControl.
@@ -792,7 +792,7 @@ RWExample >> threeCubesAndLight [
 	v := RWView new.
 	v blackBackground.
 	v add: (RWCube element).
-	v add: (RWPointLight new color: Color red asWMVector4F *10.0).
+	v add: (RWPointLight new color: Color red asFloat32x4 *10.0).
 	v add: (RWCube element).
 	v add: (RWCube element).
 	RWXLineLayout on: v elements.
@@ -817,7 +817,7 @@ RWExample >> threeCubesAndLightWithShadows [
 	
 	light := RWSpotLight new.
 	light lookDown;
-		color: WMVector4F ones *10.0;
+		color: Float32x4 ones *10.0;
 		translateByX: 2.0 y: 3.0 z: 0.0;
 		influenceRadius: 10.0;
 		castShadows: true.
@@ -847,7 +847,7 @@ RWExample >> threeCubesAndLightWithShadowsAndPhysics [
 	
 	light := RWSpotLight new.
 	light lookDown;
-		color: WMVector4F ones *10.0;
+		color: Float32x4 ones *10.0;
 		translateByX: 2.0 y: 3.0 z: 0.0;
 		influenceRadius: 10.0;
 		castShadows: true.

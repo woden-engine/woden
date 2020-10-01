@@ -44,9 +44,9 @@ WDCSoundListener >> gain: anObject [
 { #category : #initialization }
 WDCSoundListener >> initialize [
 	super initialize.
-	position := WMVector3F new.
-	velocity := WMVector3F new.
-	orientation := WMMatrix3F new.
+	position := Float32x3 new.
+	velocity := Float32x3 new.
+	orientation := Float32x3x3 new.
 	gain := 1.0.
 ]
 

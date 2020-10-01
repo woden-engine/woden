@@ -16,7 +16,7 @@ Class {
 { #category : #'class initialization' }
 WDGSSpatialDescription class >> initialize [
 	super initialize.
-	DefaultHalfExtent := WMVector3D x: 0.1 y: 0.1 z: 0.1
+	DefaultHalfExtent := Float64x3 x: 0.1 y: 0.1 z: 0.1
 ]
 
 { #category : #serialization }
@@ -75,8 +75,8 @@ WDGSSpatialDescription >> hasVolume: anObject [
 { #category : #initialization }
 WDGSSpatialDescription >> initialize [
 	super initialize.
-	transform := WMReversibleAffineTransformD identity.
-	localBoundingBox := WMBox3DD min: DefaultHalfExtent negated max: DefaultHalfExtent.
+	transform := ReversibleAffineTransform3dF64 identity.
+	localBoundingBox := BoxF64 min: DefaultHalfExtent negated max: DefaultHalfExtent.
 	boundingBox := localBoundingBox copy.
 	hasVolume := false.
 ]
@@ -89,11 +89,11 @@ WDGSSpatialDescription >> isSingleton [
 { #category : #serialization }
 WDGSSpatialDescription >> loadFromJson: jsonData [
 	jsonData at: 'transform' ifPresent: [ :jsonTransform |
-		transform := WMReversibleAffineTransformD loadFromJson: jsonTransform
+		transform := ReversibleAffineTransform3dF64 loadFromJson: jsonTransform
 	].
 
 	jsonData at: 'bounding-box' ifPresent: [ :jsonLocalBoundingBox |
-		localBoundingBox := WMBox3DD loadFromJson: jsonLocalBoundingBox
+		localBoundingBox := BoxF64 loadFromJson: jsonLocalBoundingBox
 	].
 	self
 		changed;
@@ -113,7 +113,7 @@ WDGSSpatialDescription >> localBoundingBox: anObject [
 
 { #category : #transformations }
 WDGSSpatialDescription >> lookDown [
-	transform orthonormal: (WMMatrix3D xrot: Float halfPi negated).
+	transform orthonormal: (Float64x3x3 xrot: Float halfPi negated).
 	self changed.
 ]
 

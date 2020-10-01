@@ -28,12 +28,12 @@ WDCDummyVRSystem >> initialize [
 
 { #category : #'multi eye rendering' }
 WDCDummyVRSystem >> leftEyeFrustumNear: near far: far invertedY: invertedY [
-	^ WMFrustumF new reverseDepthPerspectiveFovY: 60.0 aspect: 1.0 near: near far: far invertedY: invertedY
+	^ FrustumF32 new reverseDepthPerspectiveFovY: 60.0 aspect: 1.0 near: near far: far invertedY: invertedY
 ]
 
 { #category : #'multi eye rendering' }
 WDCDummyVRSystem >> leftEyeProjectionMatrixNear: near far: far invertedY: invertedY [
-	^ WMMatrix4F reverseDepthPerspectiveFovY: 60.0 aspect: 1.0 near: near far: far invertedY: invertedY
+	^ Float32x4x4 reverseDepthPerspectiveFovY: 60.0 aspect: 1.0 near: near far: far invertedY: invertedY
 ]
 
 { #category : #testing }
@@ -43,12 +43,12 @@ WDCDummyVRSystem >> leftEyeRenderTargetExtent [
 
 { #category : #'multi eye rendering' }
 WDCDummyVRSystem >> rightEyeFrustumNear: near far: far invertedY: invertedY [
-	^ WMFrustumF new reverseDepthPerspectiveFovY: 60.0 aspect: 1.0 near: near far: far invertedY: invertedY
+	^ FrustumF32 new reverseDepthPerspectiveFovY: 60.0 aspect: 1.0 near: near far: far invertedY: invertedY
 ]
 
 { #category : #'multi eye rendering' }
 WDCDummyVRSystem >> rightEyeProjectionMatrixNear: near far: far invertedY: invertedY [
-	^ WMMatrix4F reverseDepthPerspectiveFovY: 60.0 aspect: 1.0 near: near far: far invertedY: invertedY
+	^ Float32x4x4 reverseDepthPerspectiveFovY: 60.0 aspect: 1.0 near: near far: far invertedY: invertedY
 ]
 
 { #category : #testing }

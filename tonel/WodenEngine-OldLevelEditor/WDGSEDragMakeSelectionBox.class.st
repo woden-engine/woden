@@ -56,7 +56,7 @@ WDGSEDragMakeSelectionBox >> updateSelectionBox [
 	
 	min := (xdirection * leftPosition) + (ydirection * bottomPosition) + (zdirection * near).
 	max := (xdirection * rightPosition) + (ydirection * topPosition) + (zdirection * far).
-	box := WMBox3DD empty
+	box := BoxF64 empty
 		insertPoint: min;
 		insertPoint: max;
 		yourself.

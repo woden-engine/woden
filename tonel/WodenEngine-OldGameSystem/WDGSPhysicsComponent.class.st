@@ -38,8 +38,8 @@ WDGSPhysicsComponent >> boxCollisionShape: aBox [
 	| center halfExtent |
 	center := aBox center.
 	halfExtent := aBox halfExtent.
-	renderObjectTransform := WMReversibleAffineTransformD identity translation: center asWMVector3D negated.
-	self collisionShape: (WDPhyBoxCollisionShape new halfExtent: halfExtent asWMVector3F)
+	renderObjectTransform := ReversibleAffineTransform3dF64 identity translation: center asFloat64x3 negated.
+	self collisionShape: (WDPhyBoxCollisionShape new halfExtent: halfExtent asFloat32x3)
 ]
 
 { #category : #accessing }
@@ -55,14 +55,14 @@ WDGSPhysicsComponent >> collisionShape: aExplicitCollisionShape [
 
 { #category : #'physics hooks' }
 WDGSPhysicsComponent >> convertTransformFromRendering: transform [
-	renderObjectTransform ifNil: [ ^ transform asWMReversibleAffineTransformF ].
-	^ (renderObjectTransform inverseTransformTransform: transform) asWMReversibleAffineTransformF
+	renderObjectTransform ifNil: [ ^ transform asReversibleAffineTransform3dF32 ].
+	^ (renderObjectTransform inverseTransformTransform: transform) asReversibleAffineTransform3dF32
 ]
 
 { #category : #'physics hooks' }
 WDGSPhysicsComponent >> convertTransformIntoRendering: transform [
-	renderObjectTransform ifNil: [ ^ transform asWMReversibleAffineTransformD ].
-	^ (renderObjectTransform transformTransform: transform asWMReversibleAffineTransformD)
+	renderObjectTransform ifNil: [ ^ transform asReversibleAffineTransform3dF64 ].
+	^ (renderObjectTransform transformTransform: transform asReversibleAffineTransform3dF64)
 ]
 
 { #category : #physics }
@@ -188,7 +188,7 @@ WDGSPhysicsComponent >> spawn [
 { #category : #'physics hooks' }
 WDGSPhysicsComponent >> transform [
 	^ self convertTransformFromRendering: (entity spatialDescription
-		ifNil: [ WMReversibleAffineTransformF identity ]
+		ifNil: [ ReversibleAffineTransform3dF32 identity ]
 		ifNotNil: [:spatialDesc | spatialDesc transform])
 ]
 

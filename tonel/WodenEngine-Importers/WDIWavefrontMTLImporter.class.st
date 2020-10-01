@@ -71,7 +71,7 @@ WDIWavefrontMTLImporter >> parseDiffuseColor: parameters [
 	r := parameters second asNumber.
 	g := parameters third asNumber.
 	b := parameters fourth asNumber.
-	color := WMVector4F x: r y: g z: b w: currentMaterial albedoColor w.
+	color := Float32x4 x: r y: g z: b w: currentMaterial albedoColor w.
 	currentMaterial albedoColor: color
 ]
 

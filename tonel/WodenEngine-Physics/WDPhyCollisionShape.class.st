@@ -17,7 +17,7 @@ WDPhyCollisionShape >> asCollisionShape [
 { #category : #converting }
 WDPhyCollisionShape >> asCompoundCollisionShapeComponent [
 	^ WDPhyCompoundCollisionShapeComponent new
-		transform: WMReversibleAffineTransformF identity;
+		transform: ReversibleAffineTransform3dF32 identity;
 		shape: self;
 		yourself
 ]

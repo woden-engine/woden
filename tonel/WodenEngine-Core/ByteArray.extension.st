@@ -7,7 +7,7 @@ ByteArray >> bgraColorAt: index [
 	g := (self unsignedByteAt: index + 1) asFloatFromNormalizedUByte.
 	r := (self unsignedByteAt: index + 2) asFloatFromNormalizedUByte.
 	a := (self unsignedByteAt: index + 3) asFloatFromNormalizedUByte.
-	^ WMVector4F x: r y: g z: b w: a
+	^ Float32x4 x: r y: g z: b w: a
 ]
 
 { #category : #'*WodenEngine-Core' }
@@ -40,7 +40,7 @@ ByteArray >> sBGR_A_colorAt: index [
 	g := (self unsignedByteAt: index + 1) asFloatFromNormalizedUByte decodeSRGBComponent.
 	r := (self unsignedByteAt: index + 2) asFloatFromNormalizedUByte decodeSRGBComponent.
 	a := (self unsignedByteAt: index + 3) asFloatFromNormalizedUByte.
-	^ WMVector4F x: r y: g z: b w: a
+	^ Float32x4 x: r y: g z: b w: a
 ]
 
 { #category : #'*WodenEngine-Core' }

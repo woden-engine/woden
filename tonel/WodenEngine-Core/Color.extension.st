@@ -24,7 +24,7 @@ Color >> formatAsDastrelColor [
 
 { #category : #'*WodenEngine-Core' }
 Color >> hdrNormalized [
-	^ (self asWMVector4F w: 0.0) normalized
+	^ (self asFloat32x4 w: 0.0) normalized
 ]
 
 { #category : #'*WodenEngine-Core' }

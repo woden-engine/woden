@@ -19,7 +19,7 @@ Class {
 WDGSESelectionBoxView >> createManipulatorsAtPositions: positions center: center [
 	| halfExtent baseBox manipulatorBox manip |
 	halfExtent := 0.08 * self manipBoxScale.
-	baseBox := WMBox3DD halfExtent: (WMVector3D x: halfExtent y: halfExtent z: halfExtent).
+	baseBox := BoxF64 halfExtent: (Float64x3 x: halfExtent y: halfExtent z: halfExtent).
 	positions doWithIndex: [ :corner :index |
 		manipulatorBox := baseBox translatedBy: corner.
 		manipulatorBoxes at: index put: manipulatorBox.
@@ -27,7 +27,7 @@ WDGSESelectionBoxView >> createManipulatorsAtPositions: positions center: center
 		manip := manipulatorNodes at: index.
 		manip model direction: (corner - center) normalized.
 		manip visible: manipulatorBox isEmpty not.
-		manip visible ifTrue: [ manip transform setForBox: manipulatorBox asWMBox3DF ]
+		manip visible ifTrue: [ manip transform setForBox: manipulatorBox asBoxF32 ]
 	].
 ]
 
@@ -56,7 +56,7 @@ WDGSESelectionBoxView >> createSelectionBoxManipulatorMesh [
 { #category : #initialization }
 WDGSESelectionBoxView >> createSelectionBoxManipulators [
 	| manipulatorNode corners |
-	corners := WMBox3DD unitCube manipulationCorners.
+	corners := BoxF64 unitCube manipulationCorners.
 	manipulatorNodesInstanceGroup := WDSGSpatialObjectInstanceGroup new
 		model: (WDGSLevelEditorElementModel new view: view);
 		useViewportCamera: true;
@@ -81,7 +81,7 @@ WDGSESelectionBoxView >> createSelectionBoxManipulators [
 		manipulatorNode
 	].
 
-	manipulatorBoxes := corners collect: [ :i | WMBox3DD empty ].
+	manipulatorBoxes := corners collect: [ :i | BoxF64 empty ].
 ]
 
 { #category : #initialization }
@@ -98,20 +98,20 @@ WDGSESelectionBoxView >> createSelectionBoxMesh [
 
 { #category : #rendering }
 WDGSESelectionBoxView >> createTranslationAndRotationManipulators [
-	node transform setForBox: editor selectionBox box asWMBox3DF.
+	node transform setForBox: editor selectionBox box asBoxF32.
 	self createManipulatorsAtPositions: editor selectionBox box rotationManipulationCorners center: editor selectionBox box center.
 
 ]
 
 { #category : #rendering }
 WDGSESelectionBoxView >> createTranslationAndScaleManipulators [
-	node transform setForBox: editor selectionBox box asWMBox3DF.
+	node transform setForBox: editor selectionBox box asBoxF32.
 	self createManipulatorsAtPositions: editor selectionBox box manipulationCorners center: editor selectionBox box center.
 ]
 
 { #category : #rendering }
 WDGSESelectionBoxView >> createTranslationManipulators [
-	node transform setForBox: editor selectionBox box asWMBox3DF.
+	node transform setForBox: editor selectionBox box asBoxF32.
 	self createManipulatorsAtPositions: { editor selectionBox box center} center: editor selectionBox box center
 ]
 

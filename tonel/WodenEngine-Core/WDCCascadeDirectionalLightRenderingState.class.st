@@ -63,8 +63,8 @@ WDCCascadeDirectionalLightRenderingState >> viewStateForCameraTransform: cameraT
 	| state |
 	state := renderingLight lightSource viewStateForRenderingState: self cameraTransform: cameraTransform.
 	state
-		cascadeSplitOffsets: (WMVector4F x: frustumDivisions first y: frustumDivisions second z: frustumDivisions third w: frustumDivisions fourth);
-		cascadeFrustumPlane: (WMVector4F x: 0.0 y: 0.0 z: -1.0 w: 0.0);
+		cascadeSplitOffsets: (Float32x4 x: frustumDivisions first y: frustumDivisions second z: frustumDivisions third w: frustumDivisions fourth);
+		cascadeFrustumPlane: (Float32x4 x: 0.0 y: 0.0 z: -1.0 w: 0.0);
 
 		shadowMapLayer: shadowMapIndex asFloat;
 		shadowMapTransform: (cascades first shadowMapMatrixForCameraTransform: cameraTransform);

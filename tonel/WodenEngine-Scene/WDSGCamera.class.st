@@ -211,7 +211,7 @@ WDSGCamera >> frustumConvexHullTransformedWith: aTransform [
 { #category : #'as yet unclassified' }
 WDSGCamera >> frustumForNearDistance: newNearDistance farDistance: newFarDistance [
 	| result hh hw leftBottomNear rightTopNear left right bottom top nearFactor |
-	result := WMFrustumF new.
+	result := FrustumF32 new.
 	self isPerspective ifTrue: [
 		leftBottomNear := frustum leftBottomNear.
 		rightTopNear := frustum rightTopNear.
@@ -263,7 +263,7 @@ WDSGCamera >> initialize [
 	focalDistance := 10.
 	isPerspective := true.
 	isNotControlledByTheUser := false.
-	frustum := WMFrustumF new.
+	frustum := FrustumF32 new.
 	exposure := 1.0.
 	hasAutoExposure := true.
 	toneMappingOperator := #linear.
@@ -272,7 +272,7 @@ WDSGCamera >> initialize [
 	fogStartDistance := 0.0.
 	fogEndDistance := 1.0.
 	fogDensity := 0.0.
-	fogColor := WMVector4F zero.
+	fogColor := Float32x4 zero.
 	usesSceneBackgroundLayer := true.
 	usesSceneForegroundLayer := true.
 ]
@@ -342,7 +342,7 @@ WDSGCamera >> storeGlobalStatesForGPUIn: cameraState [
 		clipMapCameraPosition: self globalTransform translation;
 		exposure: exposure;
 		fogMode: fogMode;
-		fogColor: fogColor asWMVector4F.		
+		fogColor: fogColor asFloat32x4.		
 
 	self hasLinearFog ifTrue: [ 
 		cameraState

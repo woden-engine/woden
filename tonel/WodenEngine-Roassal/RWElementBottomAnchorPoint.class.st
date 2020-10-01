@@ -6,5 +6,5 @@ Class {
 
 { #category : #accessing }
 RWElementBottomAnchorPoint >> position [
-	^ element transform transformPosition3: (WMVector3F y: element height * -0.5)
+	^ element transform transformPosition3: (Float32x3 y: element height * -0.5)
 ]

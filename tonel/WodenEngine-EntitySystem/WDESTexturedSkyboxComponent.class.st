@@ -42,7 +42,7 @@ WDESTexturedSkyboxComponent >> createSkyBoxRenderableWithMaterial: skyMaterial [
 { #category : #initialization }
 WDESTexturedSkyboxComponent >> initialize [
 	super initialize.
-	ambientLighting := WMVector4F ones.
+	ambientLighting := Float32x4 ones.
 ]
 
 { #category : #accessing }

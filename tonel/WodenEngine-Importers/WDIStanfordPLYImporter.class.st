@@ -82,7 +82,7 @@ WDIStanfordPLYImporter >> extractIndices [
 WDIStanfordPLYImporter >> extractPositions [
 	| vertexElement positions values xi yi zi x y z vertexValue |
 	vertexElement := elementDictionary at: 'vertex'.
-	positions := SLVMNativeArray for: WMVector3F new: vertexElement count.
+	positions := SLVMNativeArray for: Float32x3 new: vertexElement count.
 	values := vertexElement values.
 	xi := vertexElement indexOfProperty: #x.
 	yi := vertexElement indexOfProperty: #y.
@@ -94,7 +94,7 @@ WDIStanfordPLYImporter >> extractPositions [
 		y := vertexValue at: yi.
 		z := vertexValue at: zi.
 		
-		positions at: index put: (WMVector3F x: x y: y z: z)
+		positions at: index put: (Float32x3 x: x y: y z: z)
 	].
 
 	^ positions

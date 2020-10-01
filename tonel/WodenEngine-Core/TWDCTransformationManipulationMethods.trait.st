@@ -15,22 +15,22 @@ TWDCTransformationManipulationMethods >> translateBy: translation [
 
 { #category : #transforming }
 TWDCTransformationManipulationMethods >> translateByX: translation [
-	self translateBy: (WMVector3F x: translation)
+	self translateBy: (Float32x3 x: translation)
 ]
 
 { #category : #transforming }
 TWDCTransformationManipulationMethods >> translateByX: x y: y z: z [
-	self translateBy: (WMVector3F x: x y: y z: z)
+	self translateBy: (Float32x3 x: x y: y z: z)
 ]
 
 { #category : #transforming }
 TWDCTransformationManipulationMethods >> translateByY: translation [
-	self translateBy: (WMVector3F y: translation)
+	self translateBy: (Float32x3 y: translation)
 ]
 
 { #category : #transforming }
 TWDCTransformationManipulationMethods >> translateByZ: translation [
-	self translateBy: (WMVector3F new z: translation)
+	self translateBy: (Float32x3 new z: translation)
 ]
 
 { #category : #transforming }
@@ -45,7 +45,7 @@ TWDCTransformationManipulationMethods >> translateToX: newX [
 
 { #category : #transforming }
 TWDCTransformationManipulationMethods >> translateToX: newX y: newY z: newZ [ 
-	self translateTo: (WMVector3F x: newX y: newY z: newZ)
+	self translateTo: (Float32x3 x: newX y: newY z: newZ)
 ]
 
 { #category : #transforming }

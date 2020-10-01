@@ -183,7 +183,7 @@ WDSSceneRenderer >> renderViewport: renderingViewport index: viewportIndex [
 	resolveTarget := viewport resolveRenderTarget.
 
 	renderPass := renderTarget validMainRenderPass.
-	renderPass setColorClearValue: 0 value: renderingViewport scene backgroundColor asWMVector4F asAGPUColor4f.
+	renderPass setColorClearValue: 0 value: renderingViewport scene backgroundColor asFloat32x4 asAGPUColor4f.
 
 	"Begin rendering into the viewport"
 	stateTracker

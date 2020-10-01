@@ -23,7 +23,7 @@ WDCTerrainMeshBuilder >> addCollisionBoxWithMinHeight: minCollisionHeight maxHei
 	| collisionBBox |
 	self minHeight: minCollisionHeight;
 		maxHeight: maxCollisionHeight.
-	collisionBBox := WMBox3DF
+	collisionBBox := BoxF32
 		min: (boundingBox min copy y: minCollisionHeight)
 		max: (boundingBox max copy y: maxCollisionHeight).
 	self addBoxCollisionShape: collisionBBox
@@ -33,7 +33,7 @@ WDCTerrainMeshBuilder >> addCollisionBoxWithMinHeight: minCollisionHeight maxHei
 { #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> addVertex: aVertex [
 	vertices add: aVertex.
-	boundingBox insertPoint: (WMVector3F x: aVertex x y: 0.0 z: aVertex y).
+	boundingBox insertPoint: (Float32x3 x: aVertex x y: 0.0 z: aVertex y).
 ]
 
 { #category : #'terrain mesh building' }
@@ -78,7 +78,7 @@ WDCTerrainMeshBuilder >> createGridWithSize: size offset: offset subdivisions: s
 	0 to: subdivisions do: [ :iy |
 		x := sx.
 		0 to: subdivisions do: [ :ix |
-			vertex := WMVector3F x: x y: y z: lodLevel asFloat.
+			vertex := Float32x3 x: x y: y z: lodLevel asFloat.
 			self addVertex: vertex.
 			x := x + dx
 		].
@@ -116,7 +116,7 @@ WDCTerrainMeshBuilder >> createGridWithSize: size offset: offset subdivisions: s
 
 { #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> createGridWithSize: size subdivisions: subdivisions [
-	^ self createGridWithSize: size offset: WMVector2F zero subdivisions: subdivisions lodLevel: 0
+	^ self createGridWithSize: size offset: Float32x2 zero subdivisions: subdivisions lodLevel: 0
 ]
 
 { #category : #'mesh building' }
@@ -132,7 +132,7 @@ WDCTerrainMeshBuilder >> createRingWithLevels: levelCount size: size subdivision
 	-1 to: 1 do: [ :cy |
 		-1 to: 1 do: [ :cx |
 			(cx = 0 and: [ cy = 0 ]) ifFalse: [ 
-				cellOffset := WMVector2F x: cx * radius x * 2.0 y: cy * radius y * 2.0.
+				cellOffset := Float32x2 x: cx * radius x * 2.0 y: cy * radius y * 2.0.
 				cellEdges := self createGridWithSize: size offset: cellOffset subdivisions: subdivisions lodLevel: lodLevel.
 				allCellEdges at: (cy+1)*3 + (cx+1) + 1 put: cellEdges.
 			]
@@ -191,7 +191,7 @@ WDCTerrainMeshBuilder >> createVertexData [
 { #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> doCreateClipMapWithLevels: levelCount size: size subdivisions: subdivisions [
 	| gridEdges |
-	gridEdges := self createGridWithSize: size offset: WMVector2F zero subdivisions: subdivisions lodLevel: 0.
+	gridEdges := self createGridWithSize: size offset: Float32x2 zero subdivisions: subdivisions lodLevel: 0.
 	
 	levelCount > 1 ifTrue: [ 
 		 self createRingWithLevels: levelCount - 1 size: size subdivisions: subdivisions / 2 radius: size / 2 interiorEdges: gridEdges lodLevel: 1.
@@ -230,7 +230,7 @@ WDCTerrainMeshBuilder >> initialize [
 	vertices := SLVMNativeOrderedCollection for: self vertexClass.
 	indices := SLVMNativeOrderedCollection for: #uint.
 	self createVertexData.
-	boundingBox := WMBox3DF empty.
+	boundingBox := BoxF32 empty.
 	minHeight := maxHeight := 0.0.
 ]
 
@@ -259,7 +259,7 @@ WDCTerrainMeshBuilder >> mesh [
 	| mesh |
 	mesh := WDCGenericMesh new.
 	mesh
-		boundingBox: (WMBox3DF
+		boundingBox: (BoxF32
 			nx: boundingBox min x ny: minHeight nz: boundingBox min z
 			px: boundingBox max x py: maxHeight pz: boundingBox max x);
 		vertexData: vertexData;
@@ -316,7 +316,7 @@ WDCTerrainMeshBuilder >> stitchInnerEdge: innerEdge withOuterEdge: outerEdge fli
 
 { #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> terrainExtent: terrainExtent [
-	boundingBox := WMBox3DF halfExtent: (WMVector3F x: terrainExtent x * 0.5 y: 0.0 z: terrainExtent y *0.5)
+	boundingBox := BoxF32 halfExtent: (Float32x3 x: terrainExtent x * 0.5 y: 0.0 z: terrainExtent y *0.5)
 ]
 
 { #category : #'mesh building' }

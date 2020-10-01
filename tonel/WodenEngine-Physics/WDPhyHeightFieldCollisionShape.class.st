@@ -80,7 +80,7 @@ WDPhyHeightFieldCollisionShape >> offset: anObject [
 
 { #category : #'as yet unclassified' }
 WDPhyHeightFieldCollisionShape >> physicsTranslatedOrigin [
-	^ WMVector3F y: (self maxHeight + self minHeight) * -0.5
+	^ Float32x3 y: (self maxHeight + self minHeight) * -0.5
 ]
 
 { #category : #accessing }

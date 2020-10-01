@@ -76,7 +76,7 @@ WDGSLevelEditorModel >> addLightEntity: aPosition [
 
 { #category : #actions }
 WDGSLevelEditorModel >> addModel: modelName [
-	self addModel: modelName position: WMVector3D new.
+	self addModel: modelName position: Float64x3 new.
 ]
 
 { #category : #actions }
@@ -88,7 +88,7 @@ WDGSLevelEditorModel >> addModel: modelName position: aPosition [
 		addComponent: WDGSSpatialDescription new;
 		addComponent: (WDGSModel new modelName: modelName).
 	entity spatialDescription
-		localBoundingBox: model boundingBox asWMBox3DD;
+		localBoundingBox: model boundingBox asBoxF64;
 		translation: aPosition.
 	map addEntity: entity.
 	^ entity
@@ -112,7 +112,7 @@ WDGSLevelEditorModel >> addPlayerSpawnPoint: aPosition [
 		addComponent: (WDGSBehaviorClass new behaviorClassName: WDGSPlayerSpawnPointBehavior name).
 	entity spatialDescription
 		translation: aPosition;
-		localBoundingBox: (WMBox3DD halfExtent: WDGSPlayerBehavior halfExtent).
+		localBoundingBox: (BoxF64 halfExtent: WDGSPlayerBehavior halfExtent).
 	map addEntity: entity.
 ]
 
@@ -134,7 +134,7 @@ WDGSLevelEditorModel >> addTerrainPlaneAtSelectionCubeWithMaterial: aTerrainMate
 
 	terrainComponent := WDGSTerrainComponent new
 		materialName: currentMaterialName;
-		boundingBox: selectionBox box asWMBox3DD copy;
+		boundingBox: selectionBox box asBoxF64 copy;
 		yourself.
 	
 	map entities first addComponent: terrainComponent.
@@ -149,7 +149,7 @@ WDGSLevelEditorModel >> addVolumeWithGridAtSelectionCube [
 
 	volumeComponent := WDGSProceduralMeshVolumeWithTopGrid new
 		materialName: currentMaterialName;
-		boundingBox: selectionBox box asWMBox3DD copy;
+		boundingBox: selectionBox box asBoxF64 copy;
 		yourself.
 	
 	map entities first addComponent: volumeComponent.
@@ -174,14 +174,14 @@ WDGSLevelEditorModel >> centerAxisMesh [
 		material: self gridMaterial;
 		beginLines;
 		color: Color red;
-		addP: (WMVector3F x: start y: 0.0 z: 0.0);
-		addP: (WMVector3F x: end y: 0.0 z: 0.0);
+		addP: (Float32x3 x: start y: 0.0 z: 0.0);
+		addP: (Float32x3 x: end y: 0.0 z: 0.0);
 		color: Color green;
-		addP: (WMVector3F x: 0.0 y: start z: 0.0);
-		addP: (WMVector3F x: 0.0 y: end z: 0.0);
+		addP: (Float32x3 x: 0.0 y: start z: 0.0);
+		addP: (Float32x3 x: 0.0 y: end z: 0.0);
 		color: Color blue;
-		addP: (WMVector3F x: 0.0 y: 0.0 z: start);
-		addP: (WMVector3F x: 0.0 y: 0.0 z: end);
+		addP: (Float32x3 x: 0.0 y: 0.0 z: start);
+		addP: (Float32x3 x: 0.0 y: 0.0 z: end);
 		addI1: 1 i2: 2;
 		addI1: 3 i2: 4;
 		addI1: 5 i2: 6;
@@ -519,12 +519,12 @@ WDGSLevelEditorModel >> selectionChanged [
 
 { #category : #snapping }
 WDGSLevelEditorModel >> snapBox: box [
-	^ WMBox3DD min: (self snapTranslation: box min) max: (self snapTranslation: box max)
+	^ BoxF64 min: (self snapTranslation: box min) max: (self snapTranslation: box max)
 ]
 
 { #category : #snapping }
 WDGSLevelEditorModel >> snapTranslation: translation [
-	^ WMVector3D
+	^ Float64x3
 		x: (self roundToGrid: translation x)
 		y: (self roundToGrid: translation y)
 		z: (self roundToGrid: translation z)

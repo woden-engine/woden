@@ -36,7 +36,7 @@ WDGSBrushFace class >> loadFromJson: jsonData [
 
 { #category : #construction }
 WDGSBrushFace class >> nx: nx ny: ny nz: nz d: d [
-	^ self new plane: (WMPlaneD nx: nx ny: ny nz: nz d: d)
+	^ self new plane: (PlaneF64 nx: nx ny: ny nz: nz d: d)
 ]
 
 { #category : #construction }
@@ -73,12 +73,12 @@ WDGSBrushFace >> buildSolidModelInto: meshBuilder [
 	| positions position normal |
 	meshBuilder
 		beginTriangles;
-		currentColor: self currentColor asWMVector4F.
+		currentColor: self currentColor asFloat32x4.
 		
 	positions := brush positions.
-	normal := plane normal asWMVector3F.
+	normal := plane normal asFloat32x3.
 	indices do: [ :i |
-		position := (positions at: i + 1) asWMVector3F.
+		position := (positions at: i + 1) asFloat32x3.
 		meshBuilder addP: position N: normal.
 	].
 
@@ -92,24 +92,24 @@ WDGSBrushFace >> buildSolidModelInto: meshBuilder [
 WDGSBrushFace >> buildTexturedModelInto: meshBuilder [
 	| positions position normal texcoord textureMatrix texcoord3 tangentAndBitangent tangent bitangent tangentScaleFactor tangent4 |
 	meshBuilder
-		currentColor: self currentTexturedColor asWMVector4F;
+		currentColor: self currentTexturedColor asFloat32x4;
 		material: self validMaterial;
 		beginTriangles.
 		
 	positions := brush positions.
-	normal := plane normal asWMVector3F.
+	normal := plane normal asFloat32x3.
 	textureMatrix := textureTransform asMatrixForNormal: plane normal.
 	tangentAndBitangent := textureTransform findTangents: plane normal.
 	tangent := tangentAndBitangent first.
 	bitangent := tangentAndBitangent second.
 	tangentScaleFactor := (plane normal cross: tangent) dot: bitangent.
-	tangent4 := WMVector4F x: tangent x y: tangent y z: tangent z w: tangentScaleFactor.
+	tangent4 := Float32x4 x: tangent x y: tangent y z: tangent z w: tangentScaleFactor.
 	
 	indices do: [ :i |
 		position := positions at: i + 1.
 		texcoord3 := textureMatrix transformPosition3: position.
-		texcoord := WMVector2F x: texcoord3 x y: texcoord3 y.
-		meshBuilder addP: position asWMVector3F N: normal T4: tangent4 TC: texcoord.
+		texcoord := Float32x2 x: texcoord3 x y: texcoord3 y.
+		meshBuilder addP: position asFloat32x3 N: normal T4: tangent4 TC: texcoord.
 	].
 
 	3 to: indices size do:[ :i |
@@ -131,7 +131,7 @@ WDGSBrushFace >> buildWireModelInto: meshBuilder [
 { #category : #accessing }
 WDGSBrushFace >> center [	
 	| center |
-	center := WMVector3D new.
+	center := Float64x3 new.
 	1 to: indices size do: [ :i | center := center + (self positionAt: i)].
 	^ center / indices size
 ]
@@ -219,7 +219,7 @@ WDGSBrushFace >> invalidateTexturedModel [
 { #category : #serialization }
 WDGSBrushFace >> loadFromJson: jsonData [
 	material := jsonData at: 'material'.
-	plane := WMPlaneD loadFromJson: (jsonData at: 'plane').
+	plane := PlaneF64 loadFromJson: (jsonData at: 'plane').
 	textureTransform := WDGBrushFaceTextureTransform loadFromJson: (jsonData at: 'texture-transform').
 	
 ]
@@ -275,7 +275,7 @@ WDGSBrushFace >> rebuildPlane [
 	d := v1 dot: n.
 	d2 := v2 dot: n.
 	d3 := v3 dot: n.
-	plane := WMPlaneD normal: n distance: d.
+	plane := PlaneF64 normal: n distance: d.
 ]
 
 { #category : #accessing }

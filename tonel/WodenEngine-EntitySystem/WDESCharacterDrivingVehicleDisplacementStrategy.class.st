@@ -23,7 +23,7 @@ WDESCharacterDrivingVehicleDisplacementStrategy >> isRotatingFullBody [
 WDESCharacterDrivingVehicleDisplacementStrategy >> postPhysicsTick: delta [
 	super postPhysicsTick: delta.
 	
-	character ownerEntity transform: (WMReversibleAffineTransformF identity
+	character ownerEntity transform: (ReversibleAffineTransform3dF32 identity
 		orthonormal: character bodyOrientation translation: self vehicleDriverPosition).
 	
 ]

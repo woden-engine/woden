@@ -37,7 +37,7 @@ WDESLightSourceSceneNodeComponent >> createSceneNode [
 { #category : #initialization }
 WDESLightSourceSceneNodeComponent >> initialize [
 	super initialize.
-	intensity := Color white asWMVector4F.
+	intensity := Color white asFloat32x4.
 	radius := 3.0.
 	castShadows := false.
 	shadowMapDepthBiasConstant := WDCLightSource defaultShadowMapDepthBiasConstant.

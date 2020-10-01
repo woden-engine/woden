@@ -58,7 +58,7 @@ WDGSModelingComponent >> bucket [
 WDGSModelingComponent >> buildSolidModelInto: aMeshBuilder [
 	aMeshBuilder
 		beginTriangles;
-		currentColor: self currentColor asWMVector4F;
+		currentColor: self currentColor asFloat32x4;
 		addSolidBox: boundingBox
 ]
 
@@ -66,7 +66,7 @@ WDGSModelingComponent >> buildSolidModelInto: aMeshBuilder [
 WDGSModelingComponent >> buildTexturedModelInto: aMeshBuilder [
 	aMeshBuilder
 		beginTriangles;
-		currentColor: (self currentColor asWMVector4F);
+		currentColor: (self currentColor asFloat32x4);
 		addSolidBox: boundingBox
 ]
 
@@ -74,7 +74,7 @@ WDGSModelingComponent >> buildTexturedModelInto: aMeshBuilder [
 WDGSModelingComponent >> buildWireModelInto: aMeshBuilder [
 	aMeshBuilder
 		beginLines;
-		currentColor: self currentColor asWMVector4F;
+		currentColor: self currentColor asFloat32x4;
 		addWireBox: boundingBox
 ]
 
@@ -124,7 +124,7 @@ WDGSModelingComponent >> generateColor [
 WDGSModelingComponent >> initialize [
 	super initialize.	
 	color := self generateColor.
-	boundingBox := WMBox3DD empty.
+	boundingBox := BoxF64 empty.
 ]
 
 { #category : #rendering }

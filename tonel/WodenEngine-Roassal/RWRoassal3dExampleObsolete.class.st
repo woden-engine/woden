@@ -46,7 +46,7 @@ RWRoassal3dExampleObsolete >> exampleClickAddAbove [
 	].
 	(RWXZGridLayout gap: 0.05) on: v elements.
 	v addInteraction: RWMouseKeyControl.
-	v camera position: (WMVector3F x: 0.0 y: 3.0 z: 0.0).
+	v camera position: (Float32x3 x: 0.0 y: 3.0 z: 0.0).
 ^ v
 ]
 
@@ -77,7 +77,7 @@ RWRoassal3dExampleObsolete >> exampleClickLeds [
 	].
 	(RWXZGridLayout gap: 0.05) on: v elements.
 	v addInteraction: RWMouseKeyControl.
-	v camera position: (WMVector3F x: 0.0 y: 3.0 z: 0.0).
+	v camera position: (Float32x3 x: 0.0 y: 3.0 z: 0.0).
 
 ^ v
 ]
@@ -98,7 +98,7 @@ RWRoassal3dExampleObsolete >> exampleClickToGetGreen [
 	].
 	RWXZGridLayout on: v elements.
 	v addInteraction: RWMouseKeyControl.
-	v camera position: (WMVector3F x: 0.0 y: 0.0 z: 3.0).
+	v camera position: (Float32x3 x: 0.0 y: 0.0 z: 3.0).
 
 ^ v
 ]
@@ -109,7 +109,7 @@ RWRoassal3dExampleObsolete >> exampleCone [
 	| v |
 	v := RWView new.
 	v add: RWCone element.
-	v camera position: (WMVector3F x: 0.0 y: 0.0 z: 3.0). 
+	v camera position: (Float32x3 x: 0.0 y: 0.0 z: 3.0). 
 	v  @ RWMouseKeyControl.
 
 	^ v
@@ -210,7 +210,7 @@ RWCubeLayout on: es.
 es when: RWMouseButtonDown do: [ :evt |
         | node |
         node := evt element sceneNode.
-          node shapeMatrix: (WMMatrix4F scale: 1.1) * (node shapeMatrix )
+          node shapeMatrix: (Float32x4x4 scale: 1.1) * (node shapeMatrix )
          ].
 
 ^	 v

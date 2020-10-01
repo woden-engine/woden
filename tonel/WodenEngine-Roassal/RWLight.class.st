@@ -22,7 +22,7 @@ RWLight >> color [
 
 { #category : #accessing }
 RWLight >> color: aColor [
-	sceneNode intensity: aColor asWMVector4F
+	sceneNode intensity: aColor asFloat32x4
 ]
 
 { #category : #accessing }

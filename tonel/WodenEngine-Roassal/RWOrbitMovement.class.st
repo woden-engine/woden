@@ -23,8 +23,8 @@ RWOrbitMovement >> applyPositionToElement: anElement [
 	x := r * (theta sin) * (phi sin).
 	y := r * (phi cos).
 	
-	rotation := (WMMatrix3F yrot: theta) * (WMMatrix3F xrot: (phi -((Float pi)/2.0))).
-	disp := (WMVector3F x: x y: y z: z).
+	rotation := (Float32x3x3 yrot: theta) * (Float32x3x3 xrot: (phi -((Float pi)/2.0))).
+	disp := (Float32x3 x: x y: y z: z).
 	"disp := rotation transformVector: disp."
 	
 	anElement
@@ -79,8 +79,8 @@ RWOrbitMovement >> initialize [
 	speedr := 0.
 	accelerationr := 0.
 	
-	speedp := WMVector3D zero.
-	accelerationp := WMVector3D zero.
+	speedp := Float64x3 zero.
+	accelerationp := Float64x3 zero.
 	
 	super initialize.
 ]

@@ -41,8 +41,8 @@ WDCSimpleModelArmature >> bones: anObject [
 { #category : #'as yet unclassified' }
 WDCSimpleModelArmature >> computeRestPose [
 	| identity |
-	restPoseMatrices := SLVMNativeArray for: WMMatrix4F new: bones size.
-	identity := WMMatrix4F identity.
+	restPoseMatrices := SLVMNativeArray for: Float32x4x4 new: bones size.
+	identity := Float32x4x4 identity.
 	1 to: restPoseMatrices size do: [ :i |
 		restPoseMatrices at: i put: identity
 	]
@@ -51,8 +51,8 @@ WDCSimpleModelArmature >> computeRestPose [
 { #category : #'as yet unclassified' }
 WDCSimpleModelArmature >> computeRestPoseForwardAndInverse [
 	| bone parentIndex parentInverseMatrix parentForwardMatrix forwardMatrix inverseMatrix |
-	restPoseForwardMatrices := SLVMNativeArray for: WMMatrix4F new: bones size.
-	restPoseInverseMatrices := SLVMNativeArray for: WMMatrix4F new: bones size.
+	restPoseForwardMatrices := SLVMNativeArray for: Float32x4x4 new: bones size.
+	restPoseInverseMatrices := SLVMNativeArray for: Float32x4x4 new: bones size.
 	1 to: bones size do: [ :i |
 		bone := bones at: i.
 		parentIndex := boneParents at: i.

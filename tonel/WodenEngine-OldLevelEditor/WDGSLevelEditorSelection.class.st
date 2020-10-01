@@ -126,10 +126,10 @@ WDGSLevelEditorSelection >> restoreTransformMemento: memento [
 { #category : #transforming }
 WDGSLevelEditorSelection >> rotate: angle axis: axis pivot: pivot [
 	| quaternion transformation |
-	quaternion := WMQuaternionD axis: axis asWMVector3D angle: angle.
-	transformation := WMReversibleAffineTransformD identity
+	quaternion := QuaternionF64 axis: axis asFloat64x3 angle: angle.
+	transformation := ReversibleAffineTransform3dF64 identity
 		translateBy: pivot negated;
-		applyOrthonormalMatrix: quaternion asWMMatrix3D;
+		applyOrthonormalMatrix: quaternion asFloat64x3x3;
 		translateBy: pivot.
 	self applyTransformation: transformation
 ]
@@ -187,7 +187,7 @@ WDGSLevelEditorSelection >> transformMemento [
 { #category : #transforming }
 WDGSLevelEditorSelection >> translateBy: translation [
 	| transform |
-	transform := WMReversibleAffineTransformD identity translateBy: translation.
+	transform := ReversibleAffineTransform3dF64 identity translateBy: translation.
 	self applyTransformation: transform
 ]
 

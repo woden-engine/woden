@@ -88,7 +88,7 @@ RWView >> addAllInternalElements: someElements [
 { #category : #scene }
 RWView >> addCameraLight: color [
 	cameraLight := WDSGLightSource new directional.
-	cameraLight intensity: color asWMVector4F.
+	cameraLight intensity: color asFloat32x4.
 	camera sceneNode addChild: cameraLight.
 ]
 
@@ -165,9 +165,9 @@ RWView >> blackBackground [
 RWView >> boundingBox [
 	"Return the bounding box of the view"
 	| aBox |
-	elements ifEmpty: [ ^ WMBox3DF new ].
+	elements ifEmpty: [ ^ BoxF32 new ].
 	
-	aBox := WMBox3DF new.
+	aBox := BoxF32 new.
 	elements do: [ :e | aBox insertBox: e boundingBox ].
 	^ aBox
 ]
@@ -189,7 +189,7 @@ RWView >> cameraLightIntensity [
 
 { #category : #scene }
 RWView >> cameraLightIntensity: aColor [
-	cameraLight intensity: aColor asWMVector4F
+	cameraLight intensity: aColor asFloat32x4
 ]
 
 { #category : #overlays }
@@ -480,7 +480,7 @@ RWView >> when: anEvent do: aBlock [
 { #category : #physics }
 RWView >> withPhysics [
 	dynamicsWorld := WDPhyPhysicsEngine current createDynamicsWorld.
-	dynamicsWorld gravity: (WMVector3F x: 0.0 y: -9.8 z: 0.0).
+	dynamicsWorld gravity: (Float32x3 x: 0.0 y: -9.8 z: 0.0).
 	dynamicsWorld addRigidBodies: rigidBodies.
 
 ]

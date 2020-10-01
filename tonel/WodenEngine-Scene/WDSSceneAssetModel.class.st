@@ -36,7 +36,7 @@ WDSSceneAssetModel >> createViewer [
 	sceneModel camera ifNil: [ 
 		camera := WDSGCamera new.
 		sceneBBox := mainScene normalLayer globalBoundingBox.
-		camera position: (sceneBBox center + (WMVector3F z: sceneBBox depth)).
+		camera position: (sceneBBox center + (Float32x3 z: sceneBBox depth)).
 		
 		viewScene add: camera.
 		sceneModel camera: camera.
@@ -47,15 +47,15 @@ WDSSceneAssetModel >> createViewer [
 		sunLight := WDSGLightSource new.
 		sunLight
 			directional; castShadows: false;
-			intensity: (WMVector4F x: 1.0 y: 1.0 z: 0.8) normalized * 0.6;
+			intensity: (Float32x4 x: 1.0 y: 1.0 z: 0.8) normalized * 0.6;
 			rotateDegreesOnX: -35.
 		
 		viewScene add: sunLight.
 
-		viewScene ambientLighting: WMVector4F ones*0.6.
+		viewScene ambientLighting: Float32x4 ones*0.6.
 		
 		skyTexture := WDASceneExamples proceduralSkySunDirection: (sunLight transform
-				transformVector3:(WMVector3F z: 1.0)
+				transformVector3:(Float32x3 z: 1.0)
 			).
 		skyTexture := skyTexture asSRGBTextureFor: sceneModel engine.
 		viewScene createSkyWithCubeTexture: skyTexture.
@@ -99,7 +99,7 @@ WDSSceneAssetModel >> getCollisionShapeForConvexCollisionTreeNamed: collisionTre
 	self ensureValidNameDictionaries.
 	treeRoot := sceneNodeNameDictionary at: collisionTreeNodeName.
 	convexComponents := OrderedCollection new.
-	self extractConvexCollisionShapesFrom: treeRoot withTransform: WMReversibleAffineTransformF identity into: convexComponents.
+	self extractConvexCollisionShapesFrom: treeRoot withTransform: ReversibleAffineTransform3dF32 identity into: convexComponents.
 	convexComponents ifEmpty: [ ^ nil ].
 	
 	self flag: 'TODO: Add a cache for this collision shapes.'.
@@ -142,7 +142,7 @@ WDSSceneAssetModel >> instanceSceneNodeNamed: sceneNodeName [
 WDSSceneAssetModel >> instanceSceneNodeNamed: sceneNodeName ifAbsent: aBlock [
 	self ensureValidNameDictionaries.
 	^ (sceneNodeNameDictionary at: sceneNodeName ifAbsent: [ aBlock ]) copy
-		transform: WMReversibleAffineTransformF identity;
+		transform: ReversibleAffineTransform3dF32 identity;
 		yourself
 ]
 

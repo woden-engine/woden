@@ -10,7 +10,7 @@ Class {
 { #category : #initialization }
 WDESLinearKinematicPhysicsBehavior >> initialize [
 	super initialize.
-	linearVelocity := WMVector3F zero.
+	linearVelocity := Float32x3 zero.
 ]
 
 { #category : #accessing }
@@ -25,7 +25,7 @@ WDESLinearKinematicPhysicsBehavior >> linearVelocity: anObject [
 
 { #category : #simulation }
 WDESLinearKinematicPhysicsBehavior >> prePhysicsTick: delta [
-	(linearVelocity closeTo: WMVector3F zero) ifTrue: [ ^ self ].
+	(linearVelocity closeTo: Float32x3 zero) ifTrue: [ ^ self ].
 
 	self ownerEntity translateBy: (linearVelocity * delta).
 

@@ -25,7 +25,7 @@ RWAbstractLineShape >> baseShapeDescriptor [
 
 { #category : #computing }
 RWAbstractLineShape >> boundingBoxFor: element [
-	^ WMBox3DF empty
+	^ BoxF32 empty
 		insertPoint: element from position;
 		insertPoint: element to position;
 		yourself

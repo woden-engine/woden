@@ -19,12 +19,12 @@ WDESCharacterDisplacementStrategy >> adjustHeadAndBodyOrientations [
 	
 	self isRotatingFullBody ifTrue: [ 
 		character
-			bodyOrientation: (WMMatrix3F yrot: headAngle y) * (WMMatrix3F xrot: headAngle x);
-			headOrientation: WMMatrix3F identity.
+			bodyOrientation: (Float32x3x3 yrot: headAngle y) * (Float32x3x3 xrot: headAngle x);
+			headOrientation: Float32x3x3 identity.
 	] ifFalse: [ 
 		character
-			bodyOrientation: (WMMatrix3F yrot: headAngle y);
-			headOrientation: (WMMatrix3F xrot: headAngle x)
+			bodyOrientation: (Float32x3x3 yrot: headAngle y);
+			headOrientation: (Float32x3x3 xrot: headAngle x)
 	].
 
 ]
@@ -62,7 +62,7 @@ WDESCharacterDisplacementStrategy >> jump [
 { #category : #simulation }
 WDESCharacterDisplacementStrategy >> postPhysicsTick: delta [
 	self usingPhysicsObject ifTrue: [ 
-		character ownerEntity transform: (WMReversibleAffineTransformF identity
+		character ownerEntity transform: (ReversibleAffineTransform3dF32 identity
 			orthonormal: character bodyOrientation translation: character ghostObject position).
 	]
 

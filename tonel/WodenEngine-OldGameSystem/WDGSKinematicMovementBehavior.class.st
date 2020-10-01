@@ -33,10 +33,10 @@ WDGSKinematicMovementBehavior >> angularVelocity: anObject [
 { #category : #initialization }
 WDGSKinematicMovementBehavior >> initialize [
 	super initialize.
-	angularVelocity := WMVector3D new.
-	angularAcceleration := WMVector3D new.
-	linearVelocity := WMVector3D new.
-	linearAcceleration := WMVector3D new.
+	angularVelocity := Float64x3 new.
+	angularAcceleration := Float64x3 new.
+	linearVelocity := Float64x3 new.
+	linearAcceleration := Float64x3 new.
 
 	
 ]
@@ -70,7 +70,7 @@ WDGSKinematicMovementBehavior >> simulateTime: delta [
 	spatialDesc := entity spatialDescription.
 	spatialDesc transform
 		kinematicTranslateBy: linearVelocity * delta
-		rotateByQuaternion: (WMQuaternionD vector3: angularVelocity * delta * 0.5). "TODO: Look this up"
+		rotateByQuaternion: (QuaternionF64 vector3: angularVelocity * delta * 0.5). "TODO: Look this up"
 	spatialDesc changed.
 ]
 

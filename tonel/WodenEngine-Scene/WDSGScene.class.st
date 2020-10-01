@@ -213,9 +213,9 @@ WDSGScene >> groundLighting: anObject [
 WDSGScene >> initialize [
 	super initialize.
 	backgroundColor := Color black.
-	skyLighting := WMVector4F x: 0.1 y: 0.1 z: 0.1 w: 0.1.
+	skyLighting := Float32x4 x: 0.1 y: 0.1 z: 0.1 w: 0.1.
 	groundLighting := skyLighting*0.5.
-	sunDirection := (WMVector3F y: 1.0).
+	sunDirection := (Float32x3 y: 1.0).
 
 	nodesWithPendingStates := IdentitySet new.
 	

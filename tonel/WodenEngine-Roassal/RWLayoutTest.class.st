@@ -28,10 +28,10 @@ RWLayoutTest >> testCircleLayout [
 
 	RWCircleLayout on: { element1 . element2 . element3 . element4 }.
 	
-	self assert: element1 position equals: (WMVector3F x: 2.0 y: 0.0 z: 0.0).
-	self assert: (element2 position closeTo: (WMVector3F x: 0.0 y: 2.0 z: 0.0)).
-	self assert: (element3 position closeTo: (WMVector3F x: -2.0 y: 0.0 z: 0.0)).
-	self assert: (element4 position closeTo: (WMVector3F x: 0.0 y: -2.0 z: 0.0)).
+	self assert: element1 position equals: (Float32x3 x: 2.0 y: 0.0 z: 0.0).
+	self assert: (element2 position closeTo: (Float32x3 x: 0.0 y: 2.0 z: 0.0)).
+	self assert: (element3 position closeTo: (Float32x3 x: -2.0 y: 0.0 z: 0.0)).
+	self assert: (element4 position closeTo: (Float32x3 x: 0.0 y: -2.0 z: 0.0)).
 ]
 
 { #category : #'test layout' }

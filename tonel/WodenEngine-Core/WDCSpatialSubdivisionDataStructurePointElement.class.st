@@ -26,7 +26,7 @@ WDCSpatialSubdivisionDataStructurePointElement >> isSpatialVolumeElement [
 
 { #category : #testing }
 WDCSpatialSubdivisionDataStructurePointElement >> spatialElementBoundingBox [
-	^ WMBox3DF min: value max: value
+	^ BoxF32 min: value max: value
 ]
 
 { #category : #testing }

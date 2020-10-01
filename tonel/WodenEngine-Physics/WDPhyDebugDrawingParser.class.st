@@ -56,12 +56,12 @@ WDPhyDebugDrawingParser >> meshBuilder: anObject [
 
 { #category : #'as yet unclassified' }
 WDPhyDebugDrawingParser >> nextColor3 [
-	^ WMVector4F xyz: self nextVector3 w: 1.0.
+	^ Float32x4 xyz: self nextVector3 w: 1.0.
 ]
 
 { #category : #'as yet unclassified' }
 WDPhyDebugDrawingParser >> nextVector3 [
-	^ WMVector3F x: in nextFloat32 y: in nextFloat32 z: in nextFloat32
+	^ Float32x3 x: in nextFloat32 y: in nextFloat32 z: in nextFloat32
 ]
 
 { #category : #parsing }

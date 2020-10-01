@@ -46,9 +46,9 @@ WTOpenALSoundListener >> hasValidHandle [
 { #category : #initialization }
 WTOpenALSoundListener >> initialize [
 	super initialize.
-	position := WMVector3F new.
-	velocity := WMVector3F new.
-	orientation := WMMatrix3F new.
+	position := Float32x3 new.
+	velocity := Float32x3 new.
+	orientation := Float32x3x3 new.
 	gain := 1.0.
 ]
 
@@ -68,8 +68,8 @@ WTOpenALSoundListener >> orientation: anObject [
 	orientation := anObject.
 	
 	(self hasValidHandle and: [ self isCurrentListener ]) ifTrue: [
-		forward := orientation transformVector3: (WMVector3F z: -1.0).
-		up := orientation transformVector3: (WMVector3F y: 1.0).
+		forward := orientation transformVector3: (Float32x3 z: -1.0).
+		up := orientation transformVector3: (Float32x3 y: 1.0).
 	
 		orientationData := {
 			forward x . forward y . forward z .
@@ -106,8 +106,8 @@ WTOpenALSoundListener >> sendValues [
 			listener3f: AL_POSITION value: position x value: position y value: position z;
 			listener3f: AL_VELOCITY value: velocity x value: velocity y value: velocity z.
 		
-		forward := orientation transformVector3: (WMVector3F z: -1.0).
-		up := orientation transformVector3: (WMVector3F y: 1.0).
+		forward := orientation transformVector3: (Float32x3 z: -1.0).
+		up := orientation transformVector3: (Float32x3 y: 1.0).
 	
 		orientationData := {
 			forward x . forward y . forward z .

@@ -28,7 +28,7 @@ WDSGAbstractSpatialObject >> color [
 
 { #category : #accessing }
 WDSGAbstractSpatialObject >> color: aColor [
-	objectState color: aColor asWMVector4F.
+	objectState color: aColor asFloat32x4.
 	self stateChanged.
 ]
 

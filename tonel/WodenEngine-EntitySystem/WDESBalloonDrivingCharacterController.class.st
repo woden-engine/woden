@@ -11,7 +11,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 WDESBalloonDrivingCharacterController >> applyVehicleAngleDelta: angleDelta [
-	character headAngle: character headAngle + (WMVector3F y: angleDelta)
+	character headAngle: character headAngle + (Float32x3 y: angleDelta)
 ]
 
 { #category : #initialization }
@@ -23,8 +23,8 @@ WDESBalloonDrivingCharacterController >> character: aCharacter [
 { #category : #initialization }
 WDESBalloonDrivingCharacterController >> initialize [
 	super initialize.
-	localDriverPosition := WMVector3F zero.
-	driverEntryPosition := WMVector3F zero.
+	localDriverPosition := Float32x3 zero.
+	driverEntryPosition := Float32x3 zero.
 	drivingTime := 0.0.
 ]
 

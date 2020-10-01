@@ -321,7 +321,7 @@ WDGSEntity >> loadFromJson: jsonData [
 { #category : #accessing }
 WDGSEntity >> localBoundingBox [
 	self spatialDescription ifNotNil: [ :desc | ^ desc localBoundingBox ].
-	^ WMBox3DD nx: -0.1 ny: -0.1 nz: -0.1 px: 0.1 py: 0.1 pz: 0.1
+	^ BoxF64 nx: -0.1 ny: -0.1 nz: -0.1 px: 0.1 py: 0.1 pz: 0.1
 ]
 
 { #category : #accessing }
@@ -365,12 +365,12 @@ WDGSEntity >> pointEntity: anObject [
 
 { #category : #'as yet unclassified' }
 WDGSEntity >> pointEntityShapeTransform [
-	^ WMReversibleAffineTransformF identity scaleBy: self localBoundingBox extent asWMVector3F
+	^ ReversibleAffineTransform3dF32 identity scaleBy: self localBoundingBox extent asFloat32x3
 ]
 
 { #category : #accessing }
 WDGSEntity >> position [
-	^ self spatialDescription ifNotNil: [ :desc | desc transform translation ] ifNil: [ WMVector3D new ]
+	^ self spatialDescription ifNotNil: [ :desc | desc transform translation ] ifNil: [ Float64x3 new ]
 ]
 
 { #category : #adding }

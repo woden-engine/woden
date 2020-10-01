@@ -39,7 +39,7 @@ RWSimpleShape >> createBaseShapeNodeForView: aView [
 
 { #category : #hooks }
 RWSimpleShape >> shapeTransformFor: anElement [
-	^ WMReversibleAffineTransformF identity
+	^ ReversibleAffineTransform3dF32 identity
 		scaleByX: (self widthFor: anElement) asFloat
 		y: (self heightFor: anElement) asFloat
 		z: (self depthFor: anElement) asFloat

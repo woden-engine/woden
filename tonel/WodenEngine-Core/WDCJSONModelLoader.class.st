@@ -155,9 +155,9 @@ WDCJSONModelLoader >> loadBoneWeightsChannelClass: vectorClass elements: channel
 { #category : #'as yet unclassified' }
 WDCJSONModelLoader >> loadBoundingBox: bboxData [
 	| min max |
-	min := WMVector3F x: (bboxData at: 1) y: (bboxData at: 2) z: (bboxData at: 3).
-	max := WMVector3F x: (bboxData at: 4) y: (bboxData at: 5) z: (bboxData at: 6).
-	^ WMBox3DF min: min max: max
+	min := Float32x3 x: (bboxData at: 1) y: (bboxData at: 2) z: (bboxData at: 3).
+	max := Float32x3 x: (bboxData at: 4) y: (bboxData at: 5) z: (bboxData at: 6).
+	^ BoxF32 min: min max: max
 ]
 
 { #category : #'vertex data loading' }
@@ -211,22 +211,22 @@ WDCJSONModelLoader >> loadInterleavedVertices: verticesData [
 	vertexBuffer := SLVMNativeArray for: vertexClass new: numberOfVertices.
 	1 to: numberOfVertices do: [ :i |
 		vertex := vertexClass new.
-		vertex position: (WMVector3F x: (positions at: i*3 - 2) y: (positions at: i*3 - 1) z: (positions at: i*3)).
+		vertex position: (Float32x3 x: (positions at: i*3 - 2) y: (positions at: i*3 - 1) z: (positions at: i*3)).
 		
-		vertex color: (WMVector4F x: 1.0 y: 1.0 z: 1.0 w: 1.0).
+		vertex color: (Float32x4 x: 1.0 y: 1.0 z: 1.0 w: 1.0).
 		
 		texcoords ifNotNil: [ 
-			vertex texcoord: (WMVector2F x: (texcoords at: i*2 - 1) y: (texcoords at: i*2)).
+			vertex texcoord: (Float32x2 x: (texcoords at: i*2 - 1) y: (texcoords at: i*2)).
 		].
 	
 		normals ifNotNil: [ 
-			normal := (WMVector3F x: (normals at: i*3 - 2) y: (normals at: i*3 - 1) z: (normals at: i*3)).
+			normal := (Float32x3 x: (normals at: i*3 - 2) y: (normals at: i*3 - 1) z: (normals at: i*3)).
 			vertex normal: normal.
 		].
 
 		tangents4 ifNotNil: [
 			vertex
-				tangent4: (WMVector4F x: (tangents4 at: i*4 - 3) y: (tangents4 at: i*4 - 2) z: (tangents4 at: i*4 - 1) w: (tangents4 at: i*4))
+				tangent4: (Float32x4 x: (tangents4 at: i*4 - 3) y: (tangents4 at: i*4 - 2) z: (tangents4 at: i*4 - 1) w: (tangents4 at: i*4))
 		].
 	
 		isSkinned ifTrue: [
@@ -235,7 +235,7 @@ WDCJSONModelLoader >> loadInterleavedVertices: verticesData [
 				y: (boneIndices at: i*4 - 2)
 				z: (boneIndices at: i*4 - 1)
 				w: (boneIndices at: i*4)).
-			weights := (WMVector4F
+			weights := (Float32x4
 				x: (boneWeights at: i*4 - 3)
 				y: (boneWeights at: i*4 - 2)
 				z: (boneWeights at: i*4 - 1)
@@ -255,7 +255,7 @@ WDCJSONModelLoader >> loadInterleavedVertices: verticesData [
 
 { #category : #'as yet unclassified' }
 WDCJSONModelLoader >> loadQuaternion: quaternionData [
-	^ WMQuaternionF 
+	^ QuaternionF32 
 		r: (quaternionData at: 1) asFloat
 		i: (quaternionData at: 2) asFloat
 		j: (quaternionData at: 3) asFloat
@@ -353,7 +353,7 @@ WDCJSONModelLoader >> loadVector2ChannelClass: vectorClass elements: channelElem
 
 { #category : #'as yet unclassified' }
 WDCJSONModelLoader >> loadVector3: vectorData [
-	^ WMVector3F
+	^ Float32x3
 		x: (vectorData at: 1) asFloat
 		y: (vectorData at: 2) asFloat
 		z: (vectorData at: 3) asFloat

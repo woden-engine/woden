@@ -70,7 +70,7 @@ WDCAbstractVRSystem >> leftEyeRenderTargetExtent [
 
 { #category : #'multi eye rendering' }
 WDCAbstractVRSystem >> leftEyeTransform [
-	^ WMReversibleAffineTransformF identity
+	^ ReversibleAffineTransform3dF32 identity
 ]
 
 { #category : #'as yet unclassified' }
@@ -94,7 +94,7 @@ WDCAbstractVRSystem >> rightEyeRenderTargetExtent [
 
 { #category : #'multi eye rendering' }
 WDCAbstractVRSystem >> rightEyeTransform [
-	^ WMReversibleAffineTransformF identity
+	^ ReversibleAffineTransform3dF32 identity
 ]
 
 { #category : #'as yet unclassified' }

@@ -40,7 +40,7 @@ WDCDirectionalLightRenderingState >> computeUpVectorWithViewVector: v lightVecto
 { #category : #'shadow mapping' }
 WDCDirectionalLightRenderingState >> computeViewVectorWithShadowCastingBody: body [
 	| vector viewPosition |
-	vector := WMVector3F zero.
+	vector := Float32x3 zero.
 	viewPosition := mainCameraTransform translation.
 	body do: [ :point |
 		vector := vector + (point - viewPosition)
@@ -112,9 +112,9 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 	| frustumBox viewVector viewPosition cosGamma sinGamma lightDepth z_n z_f nearDistance farDistance upVector perspectivePoint perspectiveTransform falloff bodyNearDistance shadowMapWarpNearDistance |
 	mainCameraTransform := "self roundCameraTransform:" mainCamera globalTransform.
 	
-	lightVector := renderingLight transform matrix transformVector3: (WMVector3F z: -1.0).
+	lightVector := renderingLight transform matrix transformVector3: (Float32x3 z: -1.0).
 	viewPosition := mainCameraTransform translation.
-	viewVector := (mainCameraTransform transformVector3: (WMVector3F z: -1.0)) normalized.
+	viewVector := (mainCameraTransform transformVector3: (Float32x3 z: -1.0)) normalized.
 	shadowCastingBody := self extractShadowCastingBodyPoints.
 
 	"Compute an initial render transform."	
@@ -126,9 +126,9 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 		^ self setupUniformShadowMappingTransforms
 	]."
 	
-	renderTransform := WMReversibleAffineTransformF from: viewPosition lookAtDirection: lightVector up: upVector.
+	renderTransform := ReversibleAffineTransform3dF32 from: viewPosition lookAtDirection: lightVector up: upVector.
 	
-	frustumBox := WMBox3DF empty.
+	frustumBox := BoxF32 empty.
 	shadowCastingBody do: [ :point |
 		frustumBox insertPoint: (renderTransform inverseTransformPosition3: point).
 	].
@@ -151,17 +151,17 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 
 	"Compute the perspective point and the new render transform"
 	perspectivePoint := viewPosition - (upVector*(nearDistance - bodyNearDistance)).
-	renderTransform := WMReversibleAffineTransformF from: perspectivePoint lookAtDirection: lightVector up: upVector.
+	renderTransform := ReversibleAffineTransform3dF32 from: perspectivePoint lookAtDirection: lightVector up: upVector.
 
-	perspectiveTransform := WMMatrix4F newFrom: { 
+	perspectiveTransform := Float32x4x4 newFrom: { 
 		1.0 . 0.0 . 0.0 . 0.0 .
 		0.0 . (farDistance + nearDistance)/(farDistance - nearDistance) . 0.0 . -2.0*farDistance*nearDistance/(farDistance - nearDistance)  .
 		0.0 . 0.0 . 1.0 . 0.0 .
 		0.0 . 1.0 . 0.0 . 0.0 .
 	}.
-	"perspectiveTransform := WMMatrix4F identity."
+	"perspectiveTransform := Float32x4x4 identity."
 
-	frustumBox := WMBox3DF empty.
+	frustumBox := BoxF32 empty.
 	shadowCastingBody do: [ :point |
 		frustumBox insertPoint: (perspectiveTransform perspectiveTransformPosition3: (renderTransform inverseTransformPosition3: point)).
 	].
@@ -176,12 +176,12 @@ WDCDirectionalLightRenderingState >> setupUniformShadowMappingTransforms [
 	mainCameraTransform := self roundCameraTransform: mainCamera globalTransform.
 	
 	viewPosition := mainCameraTransform translation.
-	viewVector := mainCameraTransform transformVector3: (WMVector3F z: -1.0).
+	viewVector := mainCameraTransform transformVector3: (Float32x3 z: -1.0).
 	
-	"renderTransform := WMReversibleAffineTransformF from: viewPosition lookAtDirection: lightVector up: viewVector."
+	"renderTransform := ReversibleAffineTransform3dF32 from: viewPosition lookAtDirection: lightVector up: viewVector."
 	renderTransform := renderingLight transform.
 	
-	frustumBox := WMBox3DF empty.
+	frustumBox := BoxF32 empty.
 	shadowCastingBody do: [ :point |
 		frustumBox insertPoint: (renderTransform inverseTransformPosition3: point).
 	].
@@ -194,7 +194,7 @@ WDCDirectionalLightRenderingState >> viewStateForCameraTransform: cameraTransfor
 	| state |
 	state := super viewStateForCameraTransform: cameraTransform.
 	state
-		cascadeSplitOffsets: (WMVector4F x: 0.0 y: 1.0 z: 0.0 w: 0.0);
-		cascadeFrustumPlane: (WMVector4F x: 0.0 y: 0.0 z: 0.0 w: 0.0).
+		cascadeSplitOffsets: (Float32x4 x: 0.0 y: 1.0 z: 0.0 w: 0.0);
+		cascadeFrustumPlane: (Float32x4 x: 0.0 y: 0.0 z: 0.0 w: 0.0).
 	^ state
 ]

@@ -27,7 +27,7 @@ RWElementTest >> testBottomAnchorPoint [
 	| anchor |
 	anchor := element bottomAnchorPoint.
 	self assert: anchor element equals: element.
-	self assert: anchor position closeTo: (element position - (WMVector3F y: 0.5)).
+	self assert: anchor position closeTo: (element position - (Float32x3 y: 0.5)).
 ]
 
 { #category : #test }
@@ -65,7 +65,7 @@ RWElementTest >> testConnectedEdgesBasic [
 { #category : #tests }
 RWElementTest >> testDefaultOrientationMatrix [
 
-	self assert: element orientationMatrix equals: WMMatrix3F identity.
+	self assert: element orientationMatrix equals: Float32x3x3 identity.
 ]
 
 { #category : #tests }
@@ -78,7 +78,7 @@ RWElementTest >> testGrowingCubes [
 	v addAll: es. 
 	
 	"We cannot test much because Renderable does not have bounding box"
-	self assert: (es first boundingBox extent closeTo: (WMVector3F x: 1.0 y: 1.0 z: 1.0))
+	self assert: (es first boundingBox extent closeTo: (Float32x3 x: 1.0 y: 1.0 z: 1.0))
 ]
 
 { #category : #tests }
@@ -96,18 +96,18 @@ RWElementTest >> testIsInView [
 { #category : #tests }
 RWElementTest >> testLookDown [
 
-	self assert: element orientationMatrix equals: WMMatrix3F identity.
+	self assert: element orientationMatrix equals: Float32x3x3 identity.
 	element lookDown.
-	self assert: (element orientationMatrix thirdRow closeTo: (WMVector3F x: 0.0 y: -1.0 z: 0.0))
+	self assert: (element orientationMatrix thirdRow closeTo: (Float32x3 x: 0.0 y: -1.0 z: 0.0))
 ]
 
 { #category : #tests }
 RWElementTest >> testPosition [
 
-	self assert: element position equals: WMVector3F new.
+	self assert: element position equals: Float32x3 new.
 	
 	element translateToX: 1.0 y: 2.0 z: 3.0.
-	self assert: element position equals: (WMVector3F x: 1.0 y: 2.0 z: 3.0).
+	self assert: element position equals: (Float32x3 x: 1.0 y: 2.0 z: 3.0).
 ]
 
 { #category : #tests }
@@ -124,7 +124,7 @@ RWElementTest >> testReplaceSceneNode [
 RWElementTest >> testRotateByX [
 	| angle matrix |
 	angle := 60 degreesToRadians.
-	matrix := WMMatrix3F xrot: angle.
+	matrix := Float32x3x3 xrot: angle.
 	element rotateByX: angle.
 	self assert: (element orientationMatrix closeTo: matrix)
 ]
@@ -133,7 +133,7 @@ RWElementTest >> testRotateByX [
 RWElementTest >> testRotateByXDegrees [
 	| angle matrix |
 	angle := 60.
-	matrix := WMMatrix3F xrot: angle degreesToRadians.
+	matrix := Float32x3x3 xrot: angle degreesToRadians.
 	element rotateByXDegrees: angle.
 	self assert: (element orientationMatrix closeTo: matrix)
 ]
@@ -142,7 +142,7 @@ RWElementTest >> testRotateByXDegrees [
 RWElementTest >> testRotateByY [
 	| angle matrix |
 	angle := 60 degreesToRadians.
-	matrix := WMMatrix3F yrot: angle.
+	matrix := Float32x3x3 yrot: angle.
 	element rotateByY: angle.
 	self assert: (element orientationMatrix closeTo: matrix)
 ]
@@ -151,7 +151,7 @@ RWElementTest >> testRotateByY [
 RWElementTest >> testRotateByYDegrees [
 	| angle matrix |
 	angle := 60.
-	matrix := WMMatrix3F yrot: angle degreesToRadians.
+	matrix := Float32x3x3 yrot: angle degreesToRadians.
 	element rotateByYDegrees: angle.
 	self assert: (element orientationMatrix closeTo: matrix)
 ]
@@ -160,7 +160,7 @@ RWElementTest >> testRotateByYDegrees [
 RWElementTest >> testRotateByZ [
 	| angle matrix |
 	angle := 60 degreesToRadians.
-	matrix := WMMatrix3F zrot: angle.
+	matrix := Float32x3x3 zrot: angle.
 	element rotateByZ: angle.
 	self assert: (element orientationMatrix closeTo: matrix)
 ]
@@ -169,7 +169,7 @@ RWElementTest >> testRotateByZ [
 RWElementTest >> testRotateByZDegrees [
 	| angle matrix |
 	angle := 60.
-	matrix := WMMatrix3F zrot: angle degreesToRadians.
+	matrix := Float32x3x3 zrot: angle degreesToRadians.
 	element rotateByZDegrees: angle.
 	self assert: (element orientationMatrix closeTo: matrix)
 ]
@@ -185,7 +185,7 @@ RWElementTest >> testShapeSize [
 					
 	el := shape elementOn: 5.
 
-	self assert: el extent = (WMVector3F x: 6.0 y: 7.0 z: 8.0)
+	self assert: el extent = (Float32x3 x: 6.0 y: 7.0 z: 8.0)
 ]
 
 { #category : #test }
@@ -193,85 +193,85 @@ RWElementTest >> testTopAnchorPoint [
 	| anchor |
 	anchor := element topAnchorPoint.
 	self assert: anchor element equals: element.
-	self assert: anchor position closeTo: (element position + (WMVector3F y: 0.5)).
+	self assert: anchor position closeTo: (element position + (Float32x3 y: 0.5)).
 ]
 
 { #category : #tests }
 RWElementTest >> testTranslateBy [
 
-	self assert: element position equals: WMVector3F new.
+	self assert: element position equals: Float32x3 new.
 		
-	element translateBy: (WMVector3F x: 1.0 y: 2.0 z: 3.0).
-	self assert: element position equals: (WMVector3F x: 1.0 y: 2.0 z: 3.0).
+	element translateBy: (Float32x3 x: 1.0 y: 2.0 z: 3.0).
+	self assert: element position equals: (Float32x3 x: 1.0 y: 2.0 z: 3.0).
 ]
 
 { #category : #tests }
 RWElementTest >> testTranslateByX [
 
-	self assert: element position equals: WMVector3F zero.
+	self assert: element position equals: Float32x3 zero.
 		
 	element translateByX: 2.0.
-	self assert: element position equals: (WMVector3F x: 2.0 y: 0.0 z: 0.0).
+	self assert: element position equals: (Float32x3 x: 2.0 y: 0.0 z: 0.0).
 ]
 
 { #category : #tests }
 RWElementTest >> testTranslateByXYZ [
 
-	self assert: element position equals: WMVector3F zero.
+	self assert: element position equals: Float32x3 zero.
 		
 	element translateByX: 1.0 y: 2.0 z: 3.0.
-	self assert: element position equals: (WMVector3F x: 1.0 y: 2.0 z: 3.0).
+	self assert: element position equals: (Float32x3 x: 1.0 y: 2.0 z: 3.0).
 ]
 
 { #category : #tests }
 RWElementTest >> testTranslateByY [
 
-	self assert: element position equals: WMVector3F zero.
+	self assert: element position equals: Float32x3 zero.
 		
 	element translateByY: 2.0.
-	self assert: element position equals: (WMVector3F x: 0.0 y: 2.0 z: 0.0).
+	self assert: element position equals: (Float32x3 x: 0.0 y: 2.0 z: 0.0).
 ]
 
 { #category : #tests }
 RWElementTest >> testTranslateByZ [
 
-	self assert: element position equals: WMVector3F zero.
+	self assert: element position equals: Float32x3 zero.
 		
 	element translateByZ: 2.0.
-	self assert: element position equals: (WMVector3F x: 0.0 y: 0.0 z: 2.0).
+	self assert: element position equals: (Float32x3 x: 0.0 y: 0.0 z: 2.0).
 ]
 
 { #category : #tests }
 RWElementTest >> testTranslateTo [
 
-	self assert: element position equals: WMVector3F zero.
+	self assert: element position equals: Float32x3 zero.
 	element translateToX: 1.0 y: 2.0 z: 3.0.
-	self assert: element position equals: (WMVector3F x: 1.0 y: 2.0 z: 3.0).
+	self assert: element position equals: (Float32x3 x: 1.0 y: 2.0 z: 3.0).
 ]
 
 { #category : #tests }
 RWElementTest >> testTranslateToX [
 
-	self assert: element position equals: WMVector3F zero.
+	self assert: element position equals: Float32x3 zero.
 		
 	element translateToX: 5.0.
-	self assert: element position equals: (WMVector3F x: 5.0 y: 0.0 z: 0.0).
+	self assert: element position equals: (Float32x3 x: 5.0 y: 0.0 z: 0.0).
 ]
 
 { #category : #tests }
 RWElementTest >> testTranslateToY [
 
-	self assert: element position equals: WMVector3F zero.
+	self assert: element position equals: Float32x3 zero.
 		
 	element translateToY: 2.0.
-	self assert: element position equals: (WMVector3F x: 0.0 y: 2.0 z: 0.0).
+	self assert: element position equals: (Float32x3 x: 0.0 y: 2.0 z: 0.0).
 ]
 
 { #category : #tests }
 RWElementTest >> testTranslateToZ [
 
-	self assert: element position equals: WMVector3F zero.
+	self assert: element position equals: Float32x3 zero.
 		
 	element translateToZ: -3.0.
-	self assert: element position equals: (WMVector3F x: 0.0 y: 0.0 z: -3.0).
+	self assert: element position equals: (Float32x3 x: 0.0 y: 0.0 z: -3.0).
 ]

@@ -92,12 +92,12 @@ WDASceneViewWithBabylon >> renderViewport: viewport overlayRenderTargetWith: sta
 		overlayHeight := 0.1.
 		overlayDistance := 0.2.
 		self babylonOverlaySpatialObject
-			transform: (WMReversibleAffineTransformF identity
+			transform: (ReversibleAffineTransform3dF32 identity
 				scaleByX: aspectRatio * overlayHeight y: overlayHeight z: 1.0;
 				translateByZ: overlayDistance negated)
 	] ifFalse: [
 		self babylonOverlaySpatialObject
-			transform: (WMReversibleAffineTransformF identity)
+			transform: (ReversibleAffineTransform3dF32 identity)
 	].
 
 	babylonOverlaySpatialObject

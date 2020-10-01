@@ -16,7 +16,7 @@ WDESAnimalCharacterDisplacementStrategy >> jump [
 
 { #category : #simulation }
 WDESAnimalCharacterDisplacementStrategy >> movementAxes [
-	^ WMVector3F ones
+	^ Float32x3 ones
 ]
 
 { #category : #simulation }
@@ -29,7 +29,7 @@ WDESAnimalCharacterDisplacementStrategy >> prePhysicsTick: delta [
 	| movementDirection |
 	movementDirection := character leftStickDirection.
 	character
-		linearAcceleration: (WMVector3F x: movementDirection x y: movementDirection z z: movementDirection y negated) normalized * self movementAxes * self accelerationMagnitude.
+		linearAcceleration: (Float32x3 x: movementDirection x y: movementDirection z z: movementDirection y negated) normalized * self movementAxes * self accelerationMagnitude.
 	
 	character isUnderwater ifTrue: [
 		self isUnderwaterDisplacementStrategy ifFalse: [ 

@@ -111,7 +111,7 @@ WDESSector >> sector [
 
 { #category : #'as yet unclassified' }
 WDESSector >> sectorTransform [
-	^ WMReversibleAffineTransformF identity
+	^ ReversibleAffineTransform3dF32 identity
 ]
 
 { #category : #simulation }

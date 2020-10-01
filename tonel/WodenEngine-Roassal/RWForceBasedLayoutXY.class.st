@@ -6,7 +6,7 @@ Class {
 
 { #category : #hook }
 RWForceBasedLayoutXY >> axisConstraints [
-	^ WMVector3F x: 1.0 y: 1.0 z: 0.0
+	^ Float32x3 x: 1.0 y: 1.0 z: 0.0
 ]
 
 { #category : #initialization }

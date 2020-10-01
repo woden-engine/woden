@@ -60,7 +60,7 @@ WDGSMap >> backgroundColor: anObject [
 WDGSMap >> createDynamicsWorld [
 	| world |
 	world := WDPhyPhysicsEngine current createDynamicsWorld.
-	world gravity: (WMVector3F x: 0.0 y: -9.8 z: 0.0).
+	world gravity: (Float32x3 x: 0.0 y: -9.8 z: 0.0).
 	physicsWorldDebugDrawingSceneNode := WDSGSpatialObject new.
 	physicsWorldDebugDrawingSceneNode
 		makeTranslucentSorted;

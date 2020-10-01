@@ -27,8 +27,8 @@ WDCGenericMeshBuilder >> addCircleCenter: center radius: radius slices: slices i
 	| normal position phi x z firstSlice secondSlice|
 	self beginTriangles.
 	
-	isTop ifTrue: [ normal := WMVector3F x: 0.0 y: 1.0 z: 0.0 ] ifFalse: [ normal := WMVector3F x: 0.0 y: -1.0 z: 0.0 ].
-	self addP: center N: normal TC: (WMVector2F x: 0.0 y: 0.0).
+	isTop ifTrue: [ normal := Float32x3 x: 0.0 y: 1.0 z: 0.0 ] ifFalse: [ normal := Float32x3 x: 0.0 y: -1.0 z: 0.0 ].
+	self addP: center N: normal TC: (Float32x2 x: 0.0 y: 0.0).
 	
 	0 to: (slices - 1) do: [ :slice |
 			firstSlice := slice + 2.
@@ -36,8 +36,8 @@ WDCGenericMeshBuilder >> addCircleCenter: center radius: radius slices: slices i
 			phi := (Float twoPi  * slice) / (slices - 1).
 			x := phi cos * radius.
 			z := phi sin * radius.
-			position := center + (WMVector3F x: x y: 0.0 z: z).
-			self addP: position N: normal TC: (WMVector2F x: x y: z).
+			position := center + (Float32x3 x: x y: 0.0 z: z).
+			self addP: position N: normal TC: (Float32x2 x: x y: z).
 			isTop ifTrue: [
 				self addI1: firstSlice i2: 1 i3: secondSlice .
 			] ifFalse: [ 
@@ -49,9 +49,9 @@ WDCGenericMeshBuilder >> addCircleCenter: center radius: radius slices: slices i
 { #category : #collisions }
 WDCGenericMeshBuilder >> addCollisionBox [
 	| box |
-	box := WMBox3DF empty.
+	box := BoxF32 empty.
 	lastUsedVertexForCollision + 1 to: vertices size do: [ :i |
-		box insertPoint: (vertices at: i) position asWMVector3F
+		box insertPoint: (vertices at: i) position asFloat32x3
 	].
 
 	lastUsedVertexForCollision := vertices size.
@@ -71,9 +71,9 @@ WDCGenericMeshBuilder >> addConeRadius: baseRadius height: height segments: segm
 			phi := (Float twoPi  * slice) / (slices - 1).
 			x := phi cos.
 			z := phi sin.
-			position := (WMVector3F x: x * radius y: y z: z * radius).
-			normal := WMVector3F x: x y: 0.0 z: z.
-			texcoord := WMVector2F x: phi / Float twoPi y: (segment/(segments - 1)) asFloat.
+			position := (Float32x3 x: x * radius y: y z: z * radius).
+			normal := Float32x3 x: x y: 0.0 z: z.
+			texcoord := Float32x2 x: phi / Float twoPi y: (segment/(segments - 1)) asFloat.
 			self addP: position N: normal TC: texcoord.
 		].		
 	].
@@ -90,7 +90,7 @@ WDCGenericMeshBuilder >> addConeRadius: baseRadius height: height segments: segm
 	].
 
 	"Add the caps"
-	self addCircleCenter: (WMVector3F x: 0.0 y: height * -0.5 z: 0.0) radius: radius slices: slices isTop: false.
+	self addCircleCenter: (Float32x3 x: 0.0 y: height * -0.5 z: 0.0) radius: radius slices: slices isTop: false.
 
 ]
 
@@ -99,7 +99,7 @@ WDCGenericMeshBuilder >> addConvexHull [
 	| points |
 	points := OrderedCollection new.
 	lastUsedVertexForCollision + 1 to: vertices size do: [ :i |
-		points add: (vertices at: i) position asWMVector3F
+		points add: (vertices at: i) position asFloat32x3
 	].
 
 	lastUsedVertexForCollision := vertices size.
@@ -119,50 +119,50 @@ WDCGenericMeshBuilder >> addCubeWithWidth: width height: height depth: depth [
 	nz := depth * -0.5.
 	
 	"Back Face"
-	self addP: (WMVector3F x: px y: py z: nz)  N: (WMVector3F x: 0.0 y: 0.0 z: -1.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-	self addP: (WMVector3F x: px y: ny z: nz)  N: (WMVector3F x: 0.0 y: 0.0 z: -1.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: ny z: nz)  N: (WMVector3F x: 0.0 y: 0.0 z: -1.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-	self addP: (WMVector3F x: nx y: py z: nz)  N: (WMVector3F x: 0.0 y: 0.0 z: -1.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+	self addP: (Float32x3 x: px y: py z: nz)  N: (Float32x3 x: 0.0 y: 0.0 z: -1.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+	self addP: (Float32x3 x: px y: ny z: nz)  N: (Float32x3 x: 0.0 y: 0.0 z: -1.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: ny z: nz)  N: (Float32x3 x: 0.0 y: 0.0 z: -1.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+	self addP: (Float32x3 x: nx y: py z: nz)  N: (Float32x3 x: 0.0 y: 0.0 z: -1.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 	self addI1: 1 i2: 2 i3: 3.
 	self addI1: 3 i2: 4 i3: 1.
 	
 	"Front Face"
-	self addP: (WMVector3F x: px y: py z: pz)  N: (WMVector3F x: 0.0 y: 0.0 z: 1.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: py z: pz)  N: (WMVector3F x: 0.0 y: 0.0 z: 1.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: ny z: pz)  N: (WMVector3F x: 0.0 y: 0.0 z: 1.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-	self addP: (WMVector3F x: px y: ny z: pz)  N: (WMVector3F x: 0.0 y: 0.0 z: 1.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+	self addP: (Float32x3 x: px y: py z: pz)  N: (Float32x3 x: 0.0 y: 0.0 z: 1.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: py z: pz)  N: (Float32x3 x: 0.0 y: 0.0 z: 1.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: ny z: pz)  N: (Float32x3 x: 0.0 y: 0.0 z: 1.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+	self addP: (Float32x3 x: px y: ny z: pz)  N: (Float32x3 x: 0.0 y: 0.0 z: 1.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 	self addI1: 5 i2: 6 i3: 7.
 	self addI1: 7 i2: 8 i3: 5.
 
 	"Top Face"
-	self addP: (WMVector3F x: px y: py z: pz)  N: (WMVector3F x: 0.0 y: 1.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-	self addP: (WMVector3F x: px y: py z: nz)  N: (WMVector3F x: 0.0 y: 1.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: py z: nz)  N: (WMVector3F x: 0.0 y: 1.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-	self addP: (WMVector3F x: nx y: py z: pz)  N: (WMVector3F x: 0.0 y: 1.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+	self addP: (Float32x3 x: px y: py z: pz)  N: (Float32x3 x: 0.0 y: 1.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+	self addP: (Float32x3 x: px y: py z: nz)  N: (Float32x3 x: 0.0 y: 1.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: py z: nz)  N: (Float32x3 x: 0.0 y: 1.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+	self addP: (Float32x3 x: nx y: py z: pz)  N: (Float32x3 x: 0.0 y: 1.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 	self addI1: 9 i2: 10 i3: 11.
 	self addI1: 11 i2: 12 i3: 9.
 	
 	"Bottom Face"
-	self addP: (WMVector3F x: px y: ny z: pz)  N: (WMVector3F x: 0.0 y: -1.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: ny z: pz)  N: (WMVector3F x: 0.0 y: -1.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: ny z: nz)  N: (WMVector3F x: 0.0 y: -1.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-	self addP: (WMVector3F x: px y: ny z: nz)  N: (WMVector3F x: 0.0 y: -1.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+	self addP: (Float32x3 x: px y: ny z: pz)  N: (Float32x3 x: 0.0 y: -1.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: ny z: pz)  N: (Float32x3 x: 0.0 y: -1.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: ny z: nz)  N: (Float32x3 x: 0.0 y: -1.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+	self addP: (Float32x3 x: px y: ny z: nz)  N: (Float32x3 x: 0.0 y: -1.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 	self addI1: 13 i2: 14 i3: 15.
 	self addI1: 15 i2: 16 i3: 13.
 
 	"Left Face"
-	self addP: (WMVector3F x: nx y: ny z: pz)  N: (WMVector3F x: -1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: py z: pz)  N: (WMVector3F x: -1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: py z: nz)  N: (WMVector3F x: -1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-	self addP: (WMVector3F x: nx y: ny z: nz)  N: (WMVector3F x: -1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+	self addP: (Float32x3 x: nx y: ny z: pz)  N: (Float32x3 x: -1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: py z: pz)  N: (Float32x3 x: -1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: py z: nz)  N: (Float32x3 x: -1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+	self addP: (Float32x3 x: nx y: ny z: nz)  N: (Float32x3 x: -1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 	self addI1: 17 i2: 18 i3: 19.
 	self addI1: 19 i2: 20 i3: 17.
 
 	"Right Face"
-	self addP: (WMVector3F x: px y: py z: pz)  N: (WMVector3F x: 1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-	self addP: (WMVector3F x: px y: ny z: pz)  N: (WMVector3F x: 1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-	self addP: (WMVector3F x: px y: ny z: nz)  N: (WMVector3F x: 1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-	self addP: (WMVector3F x: px y: py z: nz)  N: (WMVector3F x: 1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+	self addP: (Float32x3 x: px y: py z: pz)  N: (Float32x3 x: 1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+	self addP: (Float32x3 x: px y: ny z: pz)  N: (Float32x3 x: 1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+	self addP: (Float32x3 x: px y: ny z: nz)  N: (Float32x3 x: 1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+	self addP: (Float32x3 x: px y: py z: nz)  N: (Float32x3 x: 1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 	self addI1: 21 i2: 22 i3: 23.
 	self addI1: 23 i2: 24 i3: 21.
 
@@ -180,9 +180,9 @@ WDCGenericMeshBuilder >> addCylinderRadius: radius height: height segments: segm
 			phi := (Float twoPi  * slice) / (slices - 1).
 			x := phi cos.
 			z := phi sin.
-			position := (WMVector3F x: x * radius y: y z: z * radius).
-			normal := WMVector3F x: x y: 0.0 z: z.
-			texcoord := WMVector2F x: phi / Float twoPi y: (segment/(segments - 1)) asFloat.
+			position := (Float32x3 x: x * radius y: y z: z * radius).
+			normal := Float32x3 x: x y: 0.0 z: z.
+			texcoord := Float32x2 x: phi / Float twoPi y: (segment/(segments - 1)) asFloat.
 			self addP: position N: normal TC: texcoord.
 		].		
 	].
@@ -199,8 +199,8 @@ WDCGenericMeshBuilder >> addCylinderRadius: radius height: height segments: segm
 	].
 
 	"Add the caps"
-	self addCircleCenter: (WMVector3F x: 0.0 y: height * 0.5 z: 0.0) radius: radius slices: slices isTop: true.
-	self addCircleCenter: (WMVector3F x: 0.0 y: height * -0.5 z: 0.0) radius: radius slices: slices isTop: false.
+	self addCircleCenter: (Float32x3 x: 0.0 y: height * 0.5 z: 0.0) radius: radius slices: slices isTop: true.
+	self addCircleCenter: (Float32x3 x: 0.0 y: height * -0.5 z: 0.0) radius: radius slices: slices isTop: false.
 
 ]
 
@@ -231,50 +231,50 @@ WDCGenericMeshBuilder >> addFloorWithWidth: width height: height depth: depth [
 		nz := depth * -0.5.
 	
 		"Back Face"
-		self addP: (WMVector3F x: px y: py z: nz)  N: (WMVector3F x: 0.0 y: 0.0 z: -1.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-		self addP: (WMVector3F x: px y: ny z: nz)  N: (WMVector3F x: 0.0 y: 0.0 z: -1.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-		self addP: (WMVector3F x: nx y: ny z: nz)  N: (WMVector3F x: 0.0 y: 0.0 z: -1.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-		self addP: (WMVector3F x: nx y: py z: nz)  N: (WMVector3F x: 0.0 y: 0.0 z: -1.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+		self addP: (Float32x3 x: px y: py z: nz)  N: (Float32x3 x: 0.0 y: 0.0 z: -1.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+		self addP: (Float32x3 x: px y: ny z: nz)  N: (Float32x3 x: 0.0 y: 0.0 z: -1.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+		self addP: (Float32x3 x: nx y: ny z: nz)  N: (Float32x3 x: 0.0 y: 0.0 z: -1.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+		self addP: (Float32x3 x: nx y: py z: nz)  N: (Float32x3 x: 0.0 y: 0.0 z: -1.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 		self addI1: 1 i2: 2 i3: 3.
 		self addI1: 3 i2: 4 i3: 1.
 	
 	"Front Face"
-	self addP: (WMVector3F x: px y: py z: pz)  N: (WMVector3F x: 0.0 y: 0.0 z: 1.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: py z: pz)  N: (WMVector3F x: 0.0 y: 0.0 z: 1.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: ny z: pz)  N: (WMVector3F x: 0.0 y: 0.0 z: 1.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-	self addP: (WMVector3F x: px y: ny z: pz)  N: (WMVector3F x: 0.0 y: 0.0 z: 1.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+	self addP: (Float32x3 x: px y: py z: pz)  N: (Float32x3 x: 0.0 y: 0.0 z: 1.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: py z: pz)  N: (Float32x3 x: 0.0 y: 0.0 z: 1.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: ny z: pz)  N: (Float32x3 x: 0.0 y: 0.0 z: 1.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+	self addP: (Float32x3 x: px y: ny z: pz)  N: (Float32x3 x: 0.0 y: 0.0 z: 1.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 	self addI1: 5 i2: 6 i3: 7.
 	self addI1: 7 i2: 8 i3: 5.
 
 	"Top Face"
-	self addP: (WMVector3F x: px y: py z: pz)  N: (WMVector3F x: 0.0 y: 1.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-	self addP: (WMVector3F x: px y: py z: nz)  N: (WMVector3F x: 0.0 y: 1.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: py z: nz)  N: (WMVector3F x: 0.0 y: 1.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-	self addP: (WMVector3F x: nx y: py z: pz)  N: (WMVector3F x: 0.0 y: 1.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+	self addP: (Float32x3 x: px y: py z: pz)  N: (Float32x3 x: 0.0 y: 1.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+	self addP: (Float32x3 x: px y: py z: nz)  N: (Float32x3 x: 0.0 y: 1.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: py z: nz)  N: (Float32x3 x: 0.0 y: 1.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+	self addP: (Float32x3 x: nx y: py z: pz)  N: (Float32x3 x: 0.0 y: 1.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 	self addI1: 9 i2: 10 i3: 11.
 	self addI1: 11 i2: 12 i3: 9.
 	
 	"Bottom Face"
-	self addP: (WMVector3F x: px y: ny z: pz)  N: (WMVector3F x: 0.0 y: -1.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: ny z: pz)  N: (WMVector3F x: 0.0 y: -1.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: ny z: nz)  N: (WMVector3F x: 0.0 y: -1.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-	self addP: (WMVector3F x: px y: ny z: nz)  N: (WMVector3F x: 0.0 y: -1.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+	self addP: (Float32x3 x: px y: ny z: pz)  N: (Float32x3 x: 0.0 y: -1.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: ny z: pz)  N: (Float32x3 x: 0.0 y: -1.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: ny z: nz)  N: (Float32x3 x: 0.0 y: -1.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+	self addP: (Float32x3 x: px y: ny z: nz)  N: (Float32x3 x: 0.0 y: -1.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 	self addI1: 13 i2: 14 i3: 15.
 	self addI1: 15 i2: 16 i3: 13.
 
 	"Left Face"
-	self addP: (WMVector3F x: nx y: ny z: pz)  N: (WMVector3F x: -1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: py z: pz)  N: (WMVector3F x: -1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: py z: nz)  N: (WMVector3F x: -1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-	self addP: (WMVector3F x: nx y: ny z: nz)  N: (WMVector3F x: -1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+	self addP: (Float32x3 x: nx y: ny z: pz)  N: (Float32x3 x: -1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: py z: pz)  N: (Float32x3 x: -1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: py z: nz)  N: (Float32x3 x: -1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+	self addP: (Float32x3 x: nx y: ny z: nz)  N: (Float32x3 x: -1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 	self addI1: 17 i2: 18 i3: 19.
 	self addI1: 19 i2: 20 i3: 17.
 
 	"Right Face"
-	self addP: (WMVector3F x: px y: py z: pz)  N: (WMVector3F x: 1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-	self addP: (WMVector3F x: px y: ny z: pz)  N: (WMVector3F x: 1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-	self addP: (WMVector3F x: px y: ny z: nz)  N: (WMVector3F x: 1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-	self addP: (WMVector3F x: px y: py z: nz)  N: (WMVector3F x: 1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+	self addP: (Float32x3 x: px y: py z: pz)  N: (Float32x3 x: 1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+	self addP: (Float32x3 x: px y: ny z: pz)  N: (Float32x3 x: 1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+	self addP: (Float32x3 x: px y: ny z: nz)  N: (Float32x3 x: 1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+	self addP: (Float32x3 x: px y: py z: nz)  N: (Float32x3 x: 1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 	self addI1: 21 i2: 22 i3: 23.
 	self addI1: 23 i2: 24 i3: 21.
 
@@ -302,7 +302,7 @@ WDCGenericMeshBuilder >> addGridWithWidth: width height: height subdivisions: su
 		t := (j - 1) / (subdivisions - 1) asFloat.
 		1 to: subdivisions do: [:i |
 			s := (i - 1) / (subdivisions - 1) asFloat.
-			self addP: (WMVector3F x: x y: 0.0 z: y) N: (WMVector3F x: 0.0 y: 1.0 z: 0.0) TC: (WMVector2F x: s y: t).
+			self addP: (Float32x3 x: x y: 0.0 z: y) N: (Float32x3 x: 0.0 y: 1.0 z: 0.0) TC: (Float32x2 x: s y: t).
 			x := x + dx.
 		].
 	
@@ -350,50 +350,50 @@ WDCGenericMeshBuilder >> addInteriorCubeWithWidth: width height: height depth: d
 	nz := depth * -0.5.
 	
 	"Back Face"
-	self addP: (WMVector3F x: px y: py z: nz)  N: (WMVector3F x: 0.0 y: 0.0 z: -1.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-	self addP: (WMVector3F x: px y: ny z: nz)  N: (WMVector3F x: 0.0 y: 0.0 z: -1.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: ny z: nz)  N: (WMVector3F x: 0.0 y: 0.0 z: -1.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-	self addP: (WMVector3F x: nx y: py z: nz)  N: (WMVector3F x: 0.0 y: 0.0 z: -1.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+	self addP: (Float32x3 x: px y: py z: nz)  N: (Float32x3 x: 0.0 y: 0.0 z: -1.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+	self addP: (Float32x3 x: px y: ny z: nz)  N: (Float32x3 x: 0.0 y: 0.0 z: -1.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: ny z: nz)  N: (Float32x3 x: 0.0 y: 0.0 z: -1.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+	self addP: (Float32x3 x: nx y: py z: nz)  N: (Float32x3 x: 0.0 y: 0.0 z: -1.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 	self addI1: 3 i2: 2 i3: 1.
 	self addI1: 1 i2: 4 i3: 3.
 	
 	"Front Face"
-	self addP: (WMVector3F x: px y: py z: pz)  N: (WMVector3F x: 0.0 y: 0.0 z: 1.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: py z: pz)  N: (WMVector3F x: 0.0 y: 0.0 z: 1.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: ny z: pz)  N: (WMVector3F x: 0.0 y: 0.0 z: 1.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-	self addP: (WMVector3F x: px y: ny z: pz)  N: (WMVector3F x: 0.0 y: 0.0 z: 1.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+	self addP: (Float32x3 x: px y: py z: pz)  N: (Float32x3 x: 0.0 y: 0.0 z: 1.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: py z: pz)  N: (Float32x3 x: 0.0 y: 0.0 z: 1.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: ny z: pz)  N: (Float32x3 x: 0.0 y: 0.0 z: 1.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+	self addP: (Float32x3 x: px y: ny z: pz)  N: (Float32x3 x: 0.0 y: 0.0 z: 1.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 	self addI1: 7 i2: 6 i3: 5.
 	self addI1: 5 i2: 8 i3: 7.
 
 	"Top Face"
-	self addP: (WMVector3F x: px y: py z: pz)  N: (WMVector3F x: 0.0 y: 1.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-	self addP: (WMVector3F x: px y: py z: nz)  N: (WMVector3F x: 0.0 y: 1.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: py z: nz)  N: (WMVector3F x: 0.0 y: 1.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-	self addP: (WMVector3F x: nx y: py z: pz)  N: (WMVector3F x: 0.0 y: 1.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+	self addP: (Float32x3 x: px y: py z: pz)  N: (Float32x3 x: 0.0 y: 1.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+	self addP: (Float32x3 x: px y: py z: nz)  N: (Float32x3 x: 0.0 y: 1.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: py z: nz)  N: (Float32x3 x: 0.0 y: 1.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+	self addP: (Float32x3 x: nx y: py z: pz)  N: (Float32x3 x: 0.0 y: 1.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 	self addI1: 11 i2: 10 i3: 9.
 	self addI1: 9 i2: 12 i3: 11.
 	
 	"Bottom Face"
-	self addP: (WMVector3F x: px y: ny z: pz)  N: (WMVector3F x: 0.0 y: -1.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: ny z: pz)  N: (WMVector3F x: 0.0 y: -1.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: ny z: nz)  N: (WMVector3F x: 0.0 y: -1.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-	self addP: (WMVector3F x: px y: ny z: nz)  N: (WMVector3F x: 0.0 y: -1.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+	self addP: (Float32x3 x: px y: ny z: pz)  N: (Float32x3 x: 0.0 y: -1.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: ny z: pz)  N: (Float32x3 x: 0.0 y: -1.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: ny z: nz)  N: (Float32x3 x: 0.0 y: -1.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+	self addP: (Float32x3 x: px y: ny z: nz)  N: (Float32x3 x: 0.0 y: -1.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 	self addI1: 15 i2: 14 i3: 13.
 	self addI1: 13 i2: 16 i3: 15.
 
 	"Left Face"
-	self addP: (WMVector3F x: nx y: ny z: pz)  N: (WMVector3F x: -1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: py z: pz)  N: (WMVector3F x: -1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-	self addP: (WMVector3F x: nx y: py z: nz)  N: (WMVector3F x: -1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-	self addP: (WMVector3F x: nx y: ny z: nz)  N: (WMVector3F x: -1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+	self addP: (Float32x3 x: nx y: ny z: pz)  N: (Float32x3 x: -1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: py z: pz)  N: (Float32x3 x: -1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+	self addP: (Float32x3 x: nx y: py z: nz)  N: (Float32x3 x: -1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+	self addP: (Float32x3 x: nx y: ny z: nz)  N: (Float32x3 x: -1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 	self addI1: 19 i2: 18 i3: 17.
 	self addI1: 17 i2: 20 i3: 19.
 
 	"Right Face"
-	self addP: (WMVector3F x: px y: py z: pz)  N: (WMVector3F x: 1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 1.0).
-	self addP: (WMVector3F x: px y: ny z: pz)  N: (WMVector3F x: 1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 1.0).
-	self addP: (WMVector3F x: px y: ny z: nz)  N: (WMVector3F x: 1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 1.0 y: 0.0).
-	self addP: (WMVector3F x: px y: py z: nz)  N: (WMVector3F x: 1.0 y: 0.0 z: 0.0 ) TC: (WMVector2F x: 0.0 y: 0.0).
+	self addP: (Float32x3 x: px y: py z: pz)  N: (Float32x3 x: 1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 1.0).
+	self addP: (Float32x3 x: px y: ny z: pz)  N: (Float32x3 x: 1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 1.0).
+	self addP: (Float32x3 x: px y: ny z: nz)  N: (Float32x3 x: 1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 1.0 y: 0.0).
+	self addP: (Float32x3 x: px y: py z: nz)  N: (Float32x3 x: 1.0 y: 0.0 z: 0.0 ) TC: (Float32x2 x: 0.0 y: 0.0).
 	self addI1: 23 i2: 22 i3: 21.
 	self addI1: 21 i2: 24 i3: 23.
 
@@ -419,14 +419,14 @@ WDCGenericMeshBuilder >> addLineGridWithWidth: width height: height subdivisions
 	py := height * 0.5.
 	nx := px negated.
 	ny := py negated.
-	tc := WMVector2F new.
+	tc := Float32x2 new.
 	x := nx.
 	
 	"Vertical lines"
 	self beginLines.
 	1 to: subdivisions do: [:i |
-		self addP: (WMVector3F x: x y: ny z: 0.0) TC: tc.
-		self addP: (WMVector3F x: x y: py z: 0.0) TC: tc.
+		self addP: (Float32x3 x: x y: ny z: 0.0) TC: tc.
+		self addP: (Float32x3 x: x y: py z: 0.0) TC: tc.
 		self addI1: i*2 - 1 i2: i*2.
 		x := x + dx.
 	].
@@ -435,8 +435,8 @@ WDCGenericMeshBuilder >> addLineGridWithWidth: width height: height subdivisions
 	self beginLines.
 	y := ny.
 	1 to: subdivisions do: [:i |
-		self addP: (WMVector3F x: nx y: y z: 0.0) TC: tc.
-		self addP: (WMVector3F x: px y: y z: 0.0) TC: tc.
+		self addP: (Float32x3 x: nx y: y z: 0.0) TC: tc.
+		self addP: (Float32x3 x: px y: y z: 0.0) TC: tc.
 		self addI1: i*2 - 1 i2: i*2.
 		y := y + dy.
 	].
@@ -494,9 +494,9 @@ WDCGenericMeshBuilder >> addUVSphereRadius: radius segments: segments slices: sl
 			x := (theta cos) * (phi sin ).
 			y := (theta sin) * (phi sin ).
 			z := phi cos.
-			normal := WMVector3F x: x y: y z: z.
-			position := WMVector3F x: (x * radius) y: (y * radius) z: (z * radius).			
-			texcoord := WMVector2F x: theta / Float twoPi y: phi / Float pi.
+			normal := Float32x3 x: x y: y z: z.
+			position := Float32x3 x: (x * radius) y: (y * radius) z: (z * radius).			
+			texcoord := Float32x2 x: theta / Float twoPi y: phi / Float pi.
 			self addP: position N: normal  TC: texcoord.
 		].		
 	].
@@ -527,15 +527,15 @@ WDCGenericMeshBuilder >> addWireCubeWithWidth: width height: height depth: depth
 	nz := depth * -0.5.
 	
 	self
-		addP: (WMVector3F x: nx y: ny z: nz);
-		addP: (WMVector3F x: px y: ny z: nz);
-		addP: (WMVector3F x: nx y: py z: nz);
-		addP: (WMVector3F x: px y: py z: nz);
+		addP: (Float32x3 x: nx y: ny z: nz);
+		addP: (Float32x3 x: px y: ny z: nz);
+		addP: (Float32x3 x: nx y: py z: nz);
+		addP: (Float32x3 x: px y: py z: nz);
 		
-		addP: (WMVector3F x: nx y: ny z: pz);
-		addP: (WMVector3F x: px y: ny z: pz);
-		addP: (WMVector3F x: nx y: py z: pz);
-		addP: (WMVector3F x: px y: py z: pz).
+		addP: (Float32x3 x: nx y: ny z: pz);
+		addP: (Float32x3 x: px y: ny z: pz);
+		addP: (Float32x3 x: nx y: py z: pz);
+		addP: (Float32x3 x: px y: py z: pz).
 		
 	self
 		addI1: 1 i2: 2;
@@ -598,8 +598,8 @@ WDCGenericMeshBuilder >> clear [
 	indices removeAll.
 	submeshes removeAll.
 	baseVertex := 0.
-	currentColor := Color white asWMVector4F.
-	boundingBox := WMBox3DF empty.
+	currentColor := Color white asFloat32x4.
+	boundingBox := BoxF32 empty.
 	lastUsedVertexForCollision := 0.
 ]
 
@@ -610,16 +610,16 @@ WDCGenericMeshBuilder >> color: aMaterial [
 
 { #category : #'display box access' }
 WDCGenericMeshBuilder >> computeBoundingBox [
-	boundingBox := WMBox3DF empty.
-	vertices do: [ :vertex | boundingBox insertPoint: vertex position asWMVector3F ]
+	boundingBox := BoxF32 empty.
+	vertices do: [ :vertex | boundingBox insertPoint: vertex position asFloat32x3 ]
 ]
 
 { #category : #'as yet unclassified' }
 WDCGenericMeshBuilder >> computeTangentsBitangents [
 	| vertex normal tangent bitangent tangents bitangents scaleFactor |
 	self finishSubmesh.
-	tangents := SLVMNativeArray for: WMVector3F new: vertices size.
-	bitangents := SLVMNativeArray for: WMVector3F new: vertices size.
+	tangents := SLVMNativeArray for: Float32x3 new: vertices size.
+	bitangents := SLVMNativeArray for: Float32x3 new: vertices size.
 	submeshes do: [ :sm | self computeTangentsBitangentsFor: sm tangents: tangents bitangents: bitangents ].
 	
 	1 to: vertices size do: [ :vi |
@@ -633,7 +633,7 @@ WDCGenericMeshBuilder >> computeTangentsBitangents [
 		tangent := (tangent - (normal * (normal dot: tangent))) normalized.
 		bitangent := (bitangent - (normal * (normal dot: bitangent)) - (tangent * (tangent dot: bitangent))) normalized.
 		scaleFactor := (normal cross: tangent) dot: bitangent.
-		vertex tangent4: (WMVector4F x: tangent x y: tangent y z: tangent z w: scaleFactor).
+		vertex tangent4: (Float32x4 x: tangent x y: tangent y z: tangent z w: scaleFactor).
 		
 		vertices at: vi put: vertex.
 	].
@@ -747,8 +747,8 @@ WDCGenericMeshBuilder >> currentColor [
 ]
 
 { #category : #accessing }
-WDCGenericMeshBuilder >> currentColor: aColorOrWMVector4F [
-	currentColor := aColorOrWMVector4F asWMVector4F
+WDCGenericMeshBuilder >> currentColor: aColorOrFloat32x4 [
+	currentColor := aColorOrFloat32x4 asFloat32x4
 ]
 
 { #category : #accessing }
@@ -791,10 +791,10 @@ WDCGenericMeshBuilder >> initialize [
 	vertices := SLVMNativeOrderedCollection for: self vertexClass.
 	indices := SLVMNativeOrderedCollection for: #int.
 	self createVertexData.
-	boundingBox := WMBox3DF empty.
+	boundingBox := BoxF32 empty.
 	submeshes := OrderedCollection new.
 	baseVertex := 0.
-	currentColor := Color white asWMVector4F.
+	currentColor := Color white asFloat32x4.
 	lastUsedVertexForCollision := 0.
 
 ]

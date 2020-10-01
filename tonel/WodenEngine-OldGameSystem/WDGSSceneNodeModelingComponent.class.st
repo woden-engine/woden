@@ -21,7 +21,7 @@ WDGSSceneNodeModelingComponent >> addedToScene: scene [
 WDGSSceneNodeModelingComponent >> applyTransformation: transformation [
 	boundingBox := boundingBox transformedWith: transformation.
 	sceneNode
-		transform: (transformation asWMReversibleAffineTransformF transformTransform: sceneNode transform)
+		transform: (transformation asReversibleAffineTransform3dF32 transformTransform: sceneNode transform)
 ]
 
 { #category : #rendering }

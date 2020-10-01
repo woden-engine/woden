@@ -216,8 +216,8 @@ WDGSLevelEditorSceneViewPanel >> findElementsAtWindowCoord: coord [
 
 { #category : #'view side' }
 WDGSLevelEditorSceneViewPanel >> frontView [
-	cameraAngle := WMVector3D new.
-	gridOrientation := WMMatrix3F lookAtFront.
+	cameraAngle := Float64x3 new.
+	gridOrientation := Float32x3x3 lookAtFront.
 	editorViewType := #front.
 ]
 
@@ -401,7 +401,7 @@ WDGSLevelEditorSceneViewPanel >> handleMouseMove: anEvent [
 { #category : #'event handling' }
 WDGSLevelEditorSceneViewPanel >> handleMouseWheel: event [
 	isPerspective ifTrue: [
-		cameraTransform translateBy: (cameraTransform matrix transformVector3: (WMVector3D z: -0.2*event scrollVertical)).
+		cameraTransform translateBy: (cameraTransform matrix transformVector3: (Float64x3 z: -0.2*event scrollVertical)).
 	] ifFalse: [
 		viewScale := viewScale *(1.0 - (event scrollVertical*0.1) max:0.1).
 		selectionBoxView ifNotNil: [ selectionBoxView updateNodes ]
@@ -437,7 +437,7 @@ WDGSLevelEditorSceneViewPanel >> normalizedPosition: aPosition [
 { #category : #'coordinate systems' }
 WDGSLevelEditorSceneViewPanel >> normalizedToLocal: aPosition depth: aDepth [
 	camera frustum ifNil: [ self updateCameraProjection ].
-	^ (camera frustum localPoint: aPosition atDistance: aDepth) asWMVector3D
+	^ (camera frustum localPoint: aPosition atDistance: aDepth) asFloat64x3
 ]
 
 { #category : #'coordinate systems' }
@@ -453,7 +453,7 @@ WDGSLevelEditorSceneViewPanel >> normalizedToWindow: aVector3 [
 { #category : #'coordinate systems' }
 WDGSLevelEditorSceneViewPanel >> normalizedToWorld: aPosition depth: aDepth [
 	camera frustum ifNil: [ self updateCameraProjection ].
-	^ cameraTransform transformPosition3: (camera frustum localPoint: aPosition atDistance: aDepth) asWMVector3D
+	^ cameraTransform transformPosition3: (camera frustum localPoint: aPosition atDistance: aDepth) asFloat64x3
 ]
 
 { #category : #'projection mode' }
@@ -476,7 +476,7 @@ WDGSLevelEditorSceneViewPanel >> rayAtWindowCoord: coord [
 	| ray |
 	camera frustum ifNil: [ self updateCameraProjection ].
 	ray := camera frustum rayAtNormalizedPoint: (self normalizedPosition: coord).
-	^ ray asWMRayD transformedWith: cameraTransform
+	^ ray asRay3dF64 transformedWith: cameraTransform
 ]
 
 { #category : #accessing }
@@ -486,13 +486,13 @@ WDGSLevelEditorSceneViewPanel >> renderMode [
 
 { #category : #camera }
 WDGSLevelEditorSceneViewPanel >> resetCameraState [
-	cameraTransform := WMReversibleAffineTransformD identity.
+	cameraTransform := ReversibleAffineTransform3dF64 identity.
 	
-	cameraVelocity := WMVector3D new.
+	cameraVelocity := Float64x3 new.
 	cameraSpeed := 1.0.
 	
-	cameraAngle := WMVector3D new.
-	cameraAngularVelocity := WMVector3D new.
+	cameraAngle := Float64x3 new.
+	cameraAngularVelocity := Float64x3 new.
 	cameraAngularSpeed := 1.0.
 
 ]
@@ -519,8 +519,8 @@ WDGSLevelEditorSceneViewPanel >> selectionBoxView [
 
 { #category : #'view side' }
 WDGSLevelEditorSceneViewPanel >> sideView [
-	cameraAngle := WMVector3D y: Float halfPi.
-	gridOrientation := WMMatrix3F lookAtLeft.
+	cameraAngle := Float64x3 y: Float halfPi.
+	gridOrientation := Float32x3x3 lookAtLeft.
 	editorViewType := #side.
 ]
 
@@ -530,7 +530,7 @@ WDGSLevelEditorSceneViewPanel >> simulateCameraMovement: delta [
 	oldAngle := cameraAngle.
 	cameraAngle := cameraAngle + (cameraAngularVelocity * (cameraAngularSpeed * delta)).
 	(oldAngle closeTo: cameraAngle) ifFalse: [ 	editorViewType := #rotated. ].
-	orientation := (WMMatrix3D yrot: cameraAngle y) * (WMMatrix3D xrot: cameraAngle x).
+	orientation := (Float64x3x3 yrot: cameraAngle y) * (Float64x3x3 xrot: cameraAngle x).
 
 	cameraTransform
 		orthonormal: orientation;
@@ -589,8 +589,8 @@ WDGSLevelEditorSceneViewPanel >> toolControllerFinished [
 
 { #category : #'view side' }
 WDGSLevelEditorSceneViewPanel >> topView [
-	cameraAngle := WMVector3D x: Float halfPi negated.
-	gridOrientation := WMMatrix3F lookAtBottom.
+	cameraAngle := Float64x3 x: Float halfPi negated.
+	gridOrientation := Float32x3x3 lookAtBottom.
 	editorViewType := #top.
 ]
 
@@ -616,14 +616,14 @@ WDGSLevelEditorSceneViewPanel >> updateCameraStateForRendering [
 { #category : #grid }
 WDGSLevelEditorSceneViewPanel >> updateGridTransform [
 	| orientation scale renderPriority u v cameraTranslation du dv translation |
-	orientation := isPerspective ifTrue: [ WMMatrix3F lookAtBottom ] ifFalse: [ gridOrientation ].
+	orientation := isPerspective ifTrue: [ Float32x3x3 lookAtBottom ] ifFalse: [ gridOrientation ].
 	renderPriority := isPerspective
 		ifTrue: [ WDSGNode renderPriorityEditorOpaqueAfter ]
 		ifFalse: [ WDSGNode renderPriorityEditorOpaqueBefore ].
 		
 	scale := self editor primaryGridSize / baseGridSize.
-	u := orientation firstRow asWMVector3D.
-	v := orientation secondRow asWMVector3D.
+	u := orientation firstRow asFloat64x3.
+	v := orientation secondRow asFloat64x3.
 	
 	cameraTranslation := cameraTransform translation.
 	du := self roundFloor: (u dot: cameraTranslation) quantum: self primaryGridSize.
@@ -636,14 +636,14 @@ WDGSLevelEditorSceneViewPanel >> updateGridTransform [
 		setIdentity;
 		orthonormal: orientation;
 		scaleByX: scale y: scale z: scale;
-		translation: translation asWMVector3F.
+		translation: translation asFloat32x3.
 		
 	secondaryGrid renderPriority: renderPriority.
 	secondaryGrid transform
 		setIdentity;
 		orthonormal: orientation;
 		scaleByX: scale y: scale z: scale;
-		translation: translation asWMVector3F.
+		translation: translation asFloat32x3.
 		
 	centerAxis renderPriority: renderPriority + 2.
 ]
@@ -685,7 +685,7 @@ WDGSLevelEditorSceneViewPanel >> wireframe [
 
 { #category : #'coordinate systems' }
 WDGSLevelEditorSceneViewPanel >> worldToWindow: aPoint [
-	^ self normalizedToWindow: (camera frustum localToNormalized: (cameraTransform inverseTransformPosition3: aPoint) asWMVector3F)
+	^ self normalizedToWindow: (camera frustum localToNormalized: (cameraTransform inverseTransformPosition3: aPoint) asFloat32x3)
 ]
 
 { #category : #'coordinate systems' }

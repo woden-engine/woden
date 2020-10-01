@@ -70,7 +70,7 @@ WDCLightSource >> initialize [
 	shadowMapDepthBiasSlope := DefaultShadowMapDepthBiasSlope.
 	lightState := WDCLightSourceData new.
 	lightState
-		intensity: Color white asWMVector4F;
+		intensity: Color white asFloat32x4;
 		radius: 3.0.
 	self point.
 
@@ -213,13 +213,13 @@ WDCLightSource >> viewStateForRenderingState: renderingState cameraTransform: ca
 	result := lightState copy.
 	result shadowMapLayer: -1.0.
 	type == #directional ifTrue: [
-		result direction: (cameraTransform inverseTransformVector3: (self transform transformVector3: (WMVector3F z: 1.0))).
+		result direction: (cameraTransform inverseTransformVector3: (self transform transformVector3: (Float32x3 z: 1.0))).
 	] ifFalse: [
 		result position: (cameraTransform inverseTransformPosition3: self transform translation).
 	].
 
 	type == #spot ifTrue: [ 
-		result spotDirection: (cameraTransform inverseTransformVector3: (self transform transformVector3: (WMVector3F z: 1.0))).
+		result spotDirection: (cameraTransform inverseTransformVector3: (self transform transformVector3: (Float32x3 z: 1.0))).
 	].
 
 	^ result

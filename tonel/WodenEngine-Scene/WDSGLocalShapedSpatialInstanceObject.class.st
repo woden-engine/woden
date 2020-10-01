@@ -18,7 +18,7 @@ WDSGLocalShapedSpatialInstanceObject >> computeGlobalTransform [
 { #category : #initialization }
 WDSGLocalShapedSpatialInstanceObject >> initialize [
 	super initialize.
-	shapeTransform := WMReversibleAffineTransformF identity.
+	shapeTransform := ReversibleAffineTransform3dF32 identity.
 ]
 
 { #category : #accessing }

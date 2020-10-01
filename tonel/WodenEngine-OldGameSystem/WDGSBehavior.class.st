@@ -16,15 +16,15 @@ Class {
 { #category : #'class initialization' }
 WDGSBehavior class >> initialize [
 		
-	Vector2 := WMVector2D.
-	Vector3 := WMVector3D.
-	Vector4 := WMVector4D.
-	Complex := WMComplexD.
-	Quaternion := WMQuaternionD.
+	Vector2 := Float64x2.
+	Vector3 := Float64x3.
+	Vector4 := Float64x4.
+	Complex := ComplexF64.
+	Quaternion := QuaternionF64.
 
-	ReversibleAffineTransform := WMReversibleAffineTransformD.
+	ReversibleAffineTransform := ReversibleAffineTransform3dF64.
 	
-	Box3D := WMBox3DD.
+	Box3D := BoxF64.
 
 ]
 
@@ -51,7 +51,7 @@ WDGSBehavior >> localBoundingBox [
 
 { #category : #utility }
 WDGSBehavior >> setBoundingBox: aBox [
-	entity spatialDescription localBoundingBox: aBox asWMBox3DD
+	entity spatialDescription localBoundingBox: aBox asBoxF64
 ]
 
 { #category : #utility }

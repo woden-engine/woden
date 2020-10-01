@@ -9,7 +9,7 @@ WDCGenericMesh >> createCollisionTriangleMeshAccessors [
 WDCGenericMesh >> extractConvexCollisionShapesWithTransform: collisionShapeTransform into: convexComponents [
 	| vertexSet extractedVertices globalIndices globalFirstIndex positions |
 	vertexSet := Set new.
-	extractedVertices := SLVMNativeOrderedCollection for: WMVector3F.
+	extractedVertices := SLVMNativeOrderedCollection for: Float32x3.
 	globalIndices := indexBuffer ifNotNil: [ indexBuffer asNativeArrayReference ].
 	globalFirstIndex := indexBuffer ifNil: [ 0 ] ifNotNil: [ indexBuffer asFirstIndexIndex ].
 	positions := vertexData positions.
@@ -22,7 +22,7 @@ WDCGenericMesh >> extractConvexCollisionShapesWithTransform: collisionShapeTrans
 			position := positions at: index + 1.
 			(vertexSet includes: position) ifFalse: [
 				vertexSet add: position.
-				extractedVertices add: position asWMVector3F
+				extractedVertices add: position asFloat32x3
 			]
 		].
 	].

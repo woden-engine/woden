@@ -919,8 +919,8 @@ WDCResourceCache >> screenQuadCameraStateBinding [
 	camerateStateBuffer := (self streamingUniformBufferPoolFor: WDCCameraState) allocate.
 	camerateStateBuffer value: (
 		WDCCameraState new
-			transform: WMReversibleAffineTransformF identity;
-			projectionMatrix: (WMMatrix4F
+			transform: ReversibleAffineTransform3dF32 identity;
+			projectionMatrix: (Float32x4x4
 				reverseDepthOrthoLeft: -1.0 right: 1.0 bottom: -1.0
 					top: 1.0 near: -1.0 far: 10000.0 invertedY: engine projectionInvertedY);
 			exposure: 1.0).

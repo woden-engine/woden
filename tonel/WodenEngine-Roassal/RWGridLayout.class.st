@@ -49,7 +49,7 @@ RWGridLayout >> on: elements [
 	lineItemCount := 0.
 	maxLastLineHeight := 0.0.
 	
-	currentPosition := WMVector3F zero.
+	currentPosition := Float32x3 zero.
 	elements do: [ :el |
 		w := u dot: el extent.
 		h := v dot: el extent.

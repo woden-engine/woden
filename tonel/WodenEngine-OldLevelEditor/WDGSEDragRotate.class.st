@@ -19,9 +19,9 @@ WDGSEDragRotate >> onDragEvent: event [
 	| newPosition u v rotation angle |
 	newPosition := view globalPointToLocal: event position.
 	
-	u := startPosition asWMComplexF - pivotPoint asWMComplexF.
-	v := newPosition asWMComplexF - pivotPoint asWMComplexF.
-	(v closeTo: [ WMComplexF new ]) ifTrue: [ 
+	u := startPosition asComplexF32 - pivotPoint asComplexF32.
+	v := newPosition asComplexF32 - pivotPoint asComplexF32.
+	(v closeTo: [ ComplexF32 new ]) ifTrue: [ 
 		angle := 0.0.
 	] ifFalse: [ 
 		rotation := v / u.

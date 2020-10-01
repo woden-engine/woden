@@ -33,7 +33,7 @@ WDCShadowLightRenderingStateLayer >> roundCameraCoordinate: aCoordinate [
 
 { #category : #'shadow mapping' }
 WDCShadowLightRenderingStateLayer >> roundCameraPosition: aPosition [
-	^ WMVector3F
+	^ Float32x3
 		x: (self roundCameraCoordinate: aPosition x)
 		y: (self roundCameraCoordinate: aPosition y)
 		z: (self roundCameraCoordinate: aPosition z)

@@ -130,8 +130,8 @@ WDPhyCollisionObject >> hasValidHandle [
 { #category : #initialization }
 WDPhyCollisionObject >> initialize [
 	super initialize.
-	position := WMVector3F zero.
-	orientation := WMMatrix3F identity.
+	position := Float32x3 zero.
+	orientation := Float32x3x3 identity.
 	
 	hasCollisionResponse := true.
 	isStaticObject := false.

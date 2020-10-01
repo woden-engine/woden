@@ -21,7 +21,7 @@ WDCAbstractMeshVertexData >> colors [
 
 { #category : #'display box access' }
 WDCAbstractMeshVertexData >> computeBoundingBox [
-	^ WMBox3DF empty insertPoints: self positions; yourself.
+	^ BoxF32 empty insertPoints: self positions; yourself.
 ]
 
 { #category : #'vertex manipulations' }
@@ -63,7 +63,7 @@ WDCAbstractMeshVertexData >> computeTangent4WithTangent: rawTangent bitangent: r
 	tangent := (rawTangent - (normal * (normal dot: rawTangent))) normalized.
 	bitangent := (rawBitangent - (normal * (normal dot: rawBitangent)) - (tangent * (tangent dot: rawBitangent))) normalized.
 	scaleFactor := (normal cross: tangent) dot: bitangent.
-	^ WMVector4F x: tangent x y: tangent y z: tangent z w: scaleFactor.
+	^ Float32x4 x: tangent x y: tangent y z: tangent z w: scaleFactor.
 
 ]
 
@@ -76,8 +76,8 @@ WDCAbstractMeshVertexData >> computeTangents4WithTriangles: triangles [
 	texcoords := self texcoords.
 	normals := self normals.
 	
-	tangents := SLVMNativeArray for: WMVector3F new: self size.
-	bitangents := SLVMNativeArray for: WMVector3F new: self size.
+	tangents := SLVMNativeArray for: Float32x3 new: self size.
+	bitangents := SLVMNativeArray for: Float32x3 new: self size.
 
 	triangles do: [ :triangle |
 		i1 := triangle first + 1.
@@ -118,7 +118,7 @@ WDCAbstractMeshVertexData >> computeTangents4WithTriangles: triangles [
 		].
 	].
 
-	tangents4 := SLVMNativeArray for: WMVector4F new: self size.
+	tangents4 := SLVMNativeArray for: Float32x4 new: self size.
 	1 to: self size do: [ :vertexIndex |
 		tangent := tangents at: vertexIndex.
 		bitangent := bitangents at: vertexIndex.
@@ -177,7 +177,7 @@ WDCAbstractMeshVertexData >> scaleBy: scaleFactor [
 
 { #category : #'vertex manipulations' }
 WDCAbstractMeshVertexData >> scaleByX: xScale y: yScale z: zScale [
-	self applyTransform: (WMReversibleAffineTransformF identity scaleByX: xScale y: yScale z: zScale)
+	self applyTransform: (ReversibleAffineTransform3dF32 identity scaleByX: xScale y: yScale z: zScale)
 ]
 
 { #category : #accessing }
@@ -236,7 +236,7 @@ WDCAbstractMeshVertexData >> transformTBNWith: aTransform [
 	1 to: normals size do: [ :index |
 		normal := normals at: index.
 		tangent4 := tangents4 at: index.
-		tangent := WMVector3F x: tangent4 x y: tangent4 y z: tangent4 z.
+		tangent := Float32x3 x: tangent4 x y: tangent4 y z: tangent4 z.
 		bitangent := (normal cross: tangent) * tangent4 w.
 		
 		transformedNormal := (aTransform transformNormal: normal) normalized.

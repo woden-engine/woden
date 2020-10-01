@@ -29,12 +29,12 @@ Class {
 
 { #category : #accessing }
 WDESCharacterBehaviorComponent class >> halfExtent [
-	^ WMVector3D x: 0.3 y: 0.8 z: 0.3
+	^ Float64x3 x: 0.3 y: 0.8 z: 0.3
 ]
 
 { #category : #accessing }
 WDESCharacterBehaviorComponent class >> headPosition [
-	^ WMVector3F y: self halfExtent y * 0.9
+	^ Float32x3 y: self halfExtent y * 0.9
 ]
 
 { #category : #'as yet unclassified' }
@@ -56,7 +56,7 @@ WDESCharacterBehaviorComponent >> addedToPhysicsWorld: physicsWorld [
 WDESCharacterBehaviorComponent >> applyCameraTransform [
 	ownerEntity findCameraSceneNodeComponentOrNil ifNotNil: [ :cameraNodeComponent |
 		cameraNodeComponent validSceneNode
-			transform: (WMReversibleAffineTransformF identity
+			transform: (ReversibleAffineTransform3dF32 identity
 				orthonormal: headOrientation translation: self headPosition)
 	].
 ]
@@ -127,7 +127,7 @@ WDESCharacterBehaviorComponent >> displacementStrategy: aDisplacementStrategy [
 
 { #category : #accessing }
 WDESCharacterBehaviorComponent >> footPosition [
-	^ WMVector3F y: self halfExtent y negated
+	^ Float32x3 y: self halfExtent y negated
 ]
 
 { #category : #accessing }
@@ -183,19 +183,19 @@ WDESCharacterBehaviorComponent >> headPosition [
 { #category : #initialization }
 WDESCharacterBehaviorComponent >> initialize [
 	super initialize.
-	headAngle := WMVector3F zero.
-	headAngularVelocity := WMVector3F zero.
+	headAngle := Float32x3 zero.
+	headAngularVelocity := Float32x3 zero.
 	
-	bodyOrientation := WMMatrix3F identity.
-	headOrientation := WMMatrix3F identity.
+	bodyOrientation := Float32x3x3 identity.
+	headOrientation := Float32x3x3 identity.
 	headPosition := self class headPosition.
 	
-	leftStickDirection := WMVector3F zero.
-	rightStickDirection := WMVector3F zero.
+	leftStickDirection := Float32x3 zero.
+	rightStickDirection := Float32x3 zero.
 	
 	linearDamping := 10.0.
-	linearVelocity := WMVector3F zero.
-	linearAcceleration := WMVector3F zero.
+	linearVelocity := Float32x3 zero.
+	linearAcceleration := Float32x3 zero.
 	running := false.
 	isUnderwater := false.
 	isHeadUnderwater := false.
@@ -306,7 +306,7 @@ WDESCharacterBehaviorComponent >> postPhysicsTick: delta [
 
 { #category : #simulation }
 WDESCharacterBehaviorComponent >> prePhysicsTick: delta [
-	headAngularVelocity := WMVector3F x: rightStickDirection y y: rightStickDirection x negated z: 0.0.
+	headAngularVelocity := Float32x3 x: rightStickDirection y y: rightStickDirection x negated z: 0.0.
 	
 	headAngle := headAngle + (headAngularVelocity * delta).
 	headAngle x: (headAngle x min: Float halfPi max: Float halfPi negated).
@@ -358,7 +358,7 @@ WDESCharacterBehaviorComponent >> running: anObject [
 
 { #category : #accessing }
 WDESCharacterBehaviorComponent >> sectorHeadDirection [
-	^ ownerEntity sectorTransform transformVector3: (headOrientation transformVector3: (WMVector3F z: -1.0))
+	^ ownerEntity sectorTransform transformVector3: (headOrientation transformVector3: (Float32x3 z: -1.0))
 ]
 
 { #category : #accessing }
@@ -368,7 +368,7 @@ WDESCharacterBehaviorComponent >> sectorHeadPosition [
 
 { #category : #accessing }
 WDESCharacterBehaviorComponent >> sectorHeadRay [
-	^ WMRayF origin: self sectorHeadPosition direction: self sectorHeadDirection
+	^ Ray3dF32 origin: self sectorHeadPosition direction: self sectorHeadDirection
 ]
 
 { #category : #accessing }

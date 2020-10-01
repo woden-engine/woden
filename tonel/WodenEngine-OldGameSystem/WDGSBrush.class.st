@@ -80,9 +80,9 @@ WDGSBrush >> buildSolidModelInto: aMeshBuilder [
 WDGSBrush >> buildWireModelInto: aMeshBuilder [
 	aMeshBuilder
 		beginLines;
-		currentColor: self currentColor asWMVector4F.
+		currentColor: self currentColor asFloat32x4.
 	positions do: [ :position |
-		aMeshBuilder addP: position asWMVector3F.
+		aMeshBuilder addP: position asFloat32x3.
 	].
 
 	faces do: [ :face | face buildWireModelInto: aMeshBuilder ].
@@ -156,8 +156,8 @@ WDGSBrush >> createAxisAlignedCollisionShapeComponent [
 	| bbox |
 	bbox := self boundingBox.
 	^ WDPhyCompoundCollisionShapeComponent new
-		translation: bbox center asWMVector3F;
-		shape: (WDPhyBoxCollisionShape new halfExtent: bbox halfExtent asWMVector3F);
+		translation: bbox center asFloat32x3;
+		shape: (WDPhyBoxCollisionShape new halfExtent: bbox halfExtent asFloat32x3);
 		yourself
 ]
 
@@ -169,13 +169,13 @@ WDGSBrush >> createCollisionShapeComponent [
 	].
 		
 	center := self boundingBox center.
-	centeredPositions := SLVMNativeArray for: WMVector3F new: positions size.
+	centeredPositions := SLVMNativeArray for: Float32x3 new: positions size.
 	positions doWithIndex: [ :p :i |
-		centeredPositions at: i put: (p - center) asWMVector3F
+		centeredPositions at: i put: (p - center) asFloat32x3
 	].
 
 	^ WDPhyCompoundCollisionShapeComponent new
-		translation: center asWMVector3F;
+		translation: center asFloat32x3;
 		shape: (WDPhyConvexHullCollisionShape new points: centeredPositions);
 		yourself
 ]
@@ -224,7 +224,7 @@ WDGSBrush >> faces: anArrayOfFaces [
 WDGSBrush >> initialize [
 	super initialize.
 	faces := #().
-	positions := SLVMNativeOrderedCollection for: WMVector3D.
+	positions := SLVMNativeOrderedCollection for: Float64x3.
 ]
 
 { #category : #private }

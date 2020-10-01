@@ -1,8 +1,8 @@
 Extension { #name : #BabylonGenericTransform }
 
 { #category : #'*WodenEngine-Babylon' }
-BabylonGenericTransform >> asWMMatrix4F [
-	^ WMMatrix4F new
+BabylonGenericTransform >> asFloat32x4x4 [
+	^ Float32x4x4 new
 		m11: sx asFloat; m12: shx asFloat; m14: x asFloat;
 		m21: shy asFloat; m22: sy asFloat; m24: y asFloat;
 		m33: 1.0;

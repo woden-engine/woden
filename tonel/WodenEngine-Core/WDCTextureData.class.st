@@ -94,8 +94,8 @@ WDCTextureData class >> extent: anExtent normalMapWithHeightFunction: heightFunc
 		dx := (heightFunction value: s + (hx * 0.5) value: t) - (heightFunction value: s - (hx * 0.5) value: t).
 		dy := (heightFunction value: s value: t + (hy * 0.5)) - (heightFunction value: s value: t - (hy * 0.5)).
 		
-		tangent := WMVector3F x: 1.0 y: 0.0 z: dx*scaleFactor.
-		bitangent := WMVector3F x: 0.0 y: 1.0 z: dy*scaleFactor.
+		tangent := Float32x3 x: 1.0 y: 0.0 z: dx*scaleFactor.
+		bitangent := Float32x3 x: 0.0 y: 1.0 z: dy*scaleFactor.
 		normal :=(tangent cross: bitangent) normalized.
 		
 		Color r: normal x*0.5 + 0.5 g: normal y*0.5 + 0.5 b: normal z*0.5 + 0.5 alpha: 1.0

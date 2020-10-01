@@ -10,8 +10,8 @@ WDESCharacterWalkingDisplacementStrategy >> adjustHeadAndBodyOrientations [
 	headAngle := character headAngle.
 	
 	character
-		bodyOrientation: (WMMatrix3F yrot: headAngle y);
-		headOrientation: (WMMatrix3F xrot: headAngle x).
+		bodyOrientation: (Float32x3x3 yrot: headAngle y);
+		headOrientation: (Float32x3x3 xrot: headAngle x).
 ]
 
 { #category : #testing }
@@ -21,7 +21,7 @@ WDESCharacterWalkingDisplacementStrategy >> isRotatingFullBody [
 
 { #category : #testing }
 WDESCharacterWalkingDisplacementStrategy >> movementAxes [
-	^ WMVector3F x: 1.0 y: 0.0 z: 1.0
+	^ Float32x3 x: 1.0 y: 0.0 z: 1.0
 ]
 
 { #category : #simulation }

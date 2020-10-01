@@ -135,7 +135,7 @@ RWElement >> colorChanged [
 
 { #category : #updating }
 RWElement >> colorUsedForRendering [
-	^ color asWMVector4F * (shape colorFor: self) asWMVector4F
+	^ color asFloat32x4 * (shape colorFor: self) asFloat32x4
 ]
 
 { #category : #'accessing - edges' }
@@ -157,7 +157,7 @@ RWElement >> depth [
 
 { #category : #accessing }
 RWElement >> extent [
-	^ WMVector3F x: self width asFloat y: self height asFloat z: self depth asFloat
+	^ Float32x3 x: self width asFloat y: self height asFloat z: self depth asFloat
 ]
 
 { #category : #accessing }
@@ -194,7 +194,7 @@ RWElement >> initialize [
 	behaviors := OrderedCollection new.
 	sceneNode := self createSceneNode.
 	shape := RWNullShape new.
-	color := WMVector4F x: 1.0 y: 1.0 z: 1.0 w: 1.0.
+	color := Float32x4 x: 1.0 y: 1.0 z: 1.0 w: 1.0.
 ]
 
 { #category : #'as yet unclassified' }
@@ -242,7 +242,7 @@ RWElement >> localBoundingBox [
 
 { #category : #orientation }
 RWElement >> lookDown [
-	sceneNode transform orthonormal: (WMMatrix3F xrot: Float halfPi negated ).
+	sceneNode transform orthonormal: (Float32x3x3 xrot: Float halfPi negated ).
 	sceneNode transformChanged.
 	self invalidateBoundingBoxCache.
 ]
@@ -282,7 +282,7 @@ RWElement >> orientation [
 RWElement >> orientation: anOrientation [
 	self notifyConnectedEdges.
 	self invalidateBoundingBoxCache.
-	sceneNode transform orthonormal: anOrientation asWMMatrix3F.
+	sceneNode transform orthonormal: anOrientation asFloat32x3x3.
 	sceneNode transformChanged.
 ]
 

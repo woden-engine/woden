@@ -33,5 +33,5 @@ WDASolidColorViewSample >> initialize [
 { #category : #'rendering process stages' }
 WDASolidColorViewSample >> setupMainRenderpass [
 	super setupMainRenderpass.
-	renderPass setColorClearValue: 0 value: color asWMVector4F asAGPUColor4f.
+	renderPass setColorClearValue: 0 value: color asFloat32x4 asAGPUColor4f.
 ]
