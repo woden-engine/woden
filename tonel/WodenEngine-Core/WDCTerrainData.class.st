@@ -240,7 +240,7 @@ WDCTerrainData >> terrainExtent: anObject [
 { #category : #private }
 WDCTerrainData >> validateCoordinateTransform [
 	heightMapScale := Float32x2 ones / (terrainExtent * 0.5).
-	heightMapOffset := Float32x2 zero.
+	heightMapOffset := Float32x2 zeros.
 ]
 
 { #category : #private }

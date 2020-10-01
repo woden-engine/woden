@@ -261,7 +261,7 @@ WDESGenericEntity >> buildWaterMeshWith: aBlock [
 
 { #category : #directions }
 WDESGenericEntity >> forwardDirection [
-	^ transform transformVector3: (Float32x3 z: 1.0)
+	^ transform transformVector: (Float32x3 z: 1.0)
 ]
 
 { #category : #initialization }

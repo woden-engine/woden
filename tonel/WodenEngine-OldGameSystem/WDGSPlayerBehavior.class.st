@@ -78,7 +78,7 @@ WDGSPlayerBehavior >> createCollisionShape [
 WDGSPlayerBehavior >> fireBulletSpeed: initialSpeed [
 	| initialVelocity initialPosition node bullet |
 	headTransform ifNil: [ ^ self ].
-	initialVelocity := headTransform transformVector3: (Float32x3 z: initialSpeed negated).
+	initialVelocity := headTransform transformVector: (Float32x3 z: initialSpeed negated).
 	initialPosition := headTransform translation.
 
 	node := WDSGLocalSpatialInstanceObject new.
@@ -281,7 +281,7 @@ WDGSPlayerBehavior >> simulateTime: delta [
 	
 	camera := self cameraSceneNode.
 	camera ifNotNil: [
-		orientation := (Float32x3x3 yrot: angle y) * (Float32x3x3 xrot: angle x).
+		orientation := (Float32x3x3 yRotation: angle y) * (Float32x3x3 xRotation: angle x).
 		
 		camera transform
 			orthonormal: orientation;

@@ -14,5 +14,5 @@ WDGSEDragCameraTranslate >> onDragEvent: event [
 		dragDelta := Float64x3 x: dragDelta x y: 0.0 z: dragDelta y negated
 	].
 
-	view cameraTransform translateBy: (view cameraTransform transformVector3: dragDelta asFloat64x3)
+	view cameraTransform translateBy: (view cameraTransform transformVector: dragDelta asFloat64x3)
 ]

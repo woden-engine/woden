@@ -67,10 +67,10 @@ RWForwardMovement >> simulateTime: delta onElement: anElement [
 	| orientation |
 	(self isEnabledFor: anElement) ifFalse: [ ^ self ].
 	angle := angle + (angularVelocity*(delta*angularSpeed)).
-	orientation := (Float32x3x3 yrot: angle y) * (Float32x3x3 xrot: angle x).
+	orientation := (Float32x3x3 yRotation: angle y) * (Float32x3x3 xRotation: angle x).
 	anElement
 		orientation: orientation;
-		translateBy: (orientation transformVector3: (velocity*(delta*speed))).
+		translateBy: (orientation * (velocity*(delta*speed))).
 	velocity := velocity + (acceleration*delta).
 ]
 

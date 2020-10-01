@@ -112,7 +112,7 @@ WDIGLTF2Importer >> cleanupMeshes [
 WDIGLTF2Importer >> computeTangent4WithTangent: rawTangent bitangent: rawBitangent normal: normal [
 	| tangent bitangent scaleFactor |
 	
-	((rawTangent closeTo: Float32x3 zero) and: [ rawBitangent closeTo: Float32x3 zero ]) ifTrue: [ 
+	((rawTangent closeTo: Float32x3 zeros) and: [ rawBitangent closeTo: Float32x3 zeros ]) ifTrue: [ 
 		^ self computeTangent4WithTangent: (Float32x3 x: 1.0) bitangent: (Float32x3 y: 1.0) normal: normal
 	].
 
@@ -166,7 +166,7 @@ WDIGLTF2Importer >> convertIndices: indexCountToConvert withAccessors: indexBuff
 { #category : #'as yet unclassified' }
 WDIGLTF2Importer >> generateMissingVertexTangentSpaceFrames: vertexDataWithSubmeshesDictionary [
 	| encodedTangent4 tangent4BufferView encodedTangent4Data |
-	encodedTangent4 := SLVMNativeOrderedCollection for: Float32x4.
+	encodedTangent4 := StdnVector newFor: Float32x4.
 	tangent4BufferView := WDCBufferView new.
 	
 	vertexDataWithSubmeshesDictionary keysAndValuesDo: [ :vertex :submeshes |
@@ -246,7 +246,7 @@ WDIGLTF2Importer >> generateVertexDataTangentSpaceFrame: vertexData submeshes: s
 	tangent4Accessor := WDCBufferAccessor new
 		type: (WDCStructureFieldType typeNamed: #float4);
 		bufferView: tangent4BufferView;
-		byteOffset: encodedTangents4 size * Float32x4 structureSize;
+		byteOffset: encodedTangents4 size * Float32x4 instanceSize;
 		count: vertexCount;
 		yourself.
 
@@ -560,7 +560,7 @@ WDIGLTF2Importer >> loadMetallicRoughnessMaterial: description commonDescription
 	commonDescription at: 'emissiveFactor' ifPresent: [ :factor |
 		material emissionColor: (Float32x4 x: factor first y: factor second z: factor third w: 0.0)
 	] ifAbsent: [
-		material emissionColor: Float32x4 zero
+		material emissionColor: Float32x4 zeros
 	].
 
 	commonDescription at: 'emissiveTexture' ifPresent: [ :textureDescription |

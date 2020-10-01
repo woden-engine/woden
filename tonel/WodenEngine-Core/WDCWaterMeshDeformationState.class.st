@@ -10,7 +10,7 @@ Class {
 
 { #category : #accessing }
 WDCWaterMeshDeformationState >> clipMapPeriod: clipMapPeriod [
-	waterStateData clipMapPeriod: (clipMapPeriod ifNil: [Float32x2 zero])
+	waterStateData clipMapPeriod: (clipMapPeriod ifNil: [Float32x2 zeros])
 ]
 
 { #category : #accessing }

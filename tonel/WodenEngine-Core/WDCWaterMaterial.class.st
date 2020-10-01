@@ -52,7 +52,7 @@ WDCWaterMaterial >> bindResources [
 	].
 
 	stateUniformBuffer ifNil: [
-		stateUniformBuffer := engine createStreamingUniformBuffer: (materialState class structureSize alignedTo: 256).
+		stateUniformBuffer := engine createStreamingUniformBuffer: (materialState class instanceSize alignedTo: 256).
 		self uploadMaterialStateData.
 	].
 
@@ -111,7 +111,7 @@ WDCWaterMaterial >> materialState [
 { #category : #parsing }
 WDCWaterMaterial >> parse: materialFileReference data: data [
 	materialState
-		textureOffset: (self parse: data at: materialFileReference vector2: 'texture-offset' ifAbsent: [ Float32x2 zero ]);
+		textureOffset: (self parse: data at: materialFileReference vector2: 'texture-offset' ifAbsent: [ Float32x2 zeros ]);
 		textureScale: (self parse: data at: materialFileReference vector2: 'texture-scale' ifAbsent: [ Float32x2 x: 1.0 y: 1.0 ]);
 
 		albedo: (self parse: data at: materialFileReference srgbColor: 'albedo' ifAbsent: [ Color white ]);

@@ -40,7 +40,7 @@ WDCQuadTree >> allElementsIntersectingBox: box do: aBlock [
 { #category : #adding }
 WDCQuadTree >> boundingBoxForInitialElement: anElement [
 	| center halfExtent box |
-	center := Float32x3 zero.
+	center := Float32x3 zeros.
 	halfExtent := Float32x3 ones * 1000.0.
 	anElement isSpatialVolumeElement ifTrue: [
 		box := anElement spatialElementBoundingBox.
@@ -50,7 +50,7 @@ WDCQuadTree >> boundingBoxForInitialElement: anElement [
 		center := anElement spatialElementCenter.
 	].
 
-	^ BoxF32 halfExtent: halfExtent center: center
+	^ BoxF32 center: center halfExtent: halfExtent
 ]
 
 { #category : #adding }

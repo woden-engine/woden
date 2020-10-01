@@ -7,7 +7,7 @@ WDCAbstractGeometryBuilder >> createAABoxCollisionShape: aabox [
 	halfExtent := aabox halfExtent.
 	shape := WDPhyBoxCollisionShape new halfExtent: halfExtent.
 	
-	(center closeTo: (Float32x3 zero)) ifFalse: [ 
+	(center closeTo: (Float32x3 zeros)) ifFalse: [ 
 		shape := WDPhyCompoundCollisionShapeComponent new
 			translation: center;
 			shape: shape;
@@ -41,7 +41,7 @@ WDCAbstractGeometryBuilder >> createHeightMapCollision: heightMapTexture heightS
 		offset: heightMapOffset;
 		yourself.
 	translatedOrigin := heightCollisionShape physicsTranslatedOrigin.
-	(translatedOrigin closeTo: Float32x3 zero) ifFalse: [
+	(translatedOrigin closeTo: Float32x3 zeros) ifFalse: [
 		^ WDPhyCompoundCollisionShape new
 		 components: { WDPhyCompoundCollisionShapeComponent new
 			shape: heightCollisionShape;

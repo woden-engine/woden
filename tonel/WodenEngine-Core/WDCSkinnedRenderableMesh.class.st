@@ -56,5 +56,5 @@ WDCSkinnedRenderableMesh >> initialize [
 
 { #category : #'extra per object rendering data' }
 WDCSkinnedRenderableMesh >> poseStateSize [
-	^ Float32x4x4 structureSize * armature bones size alignedTo: 256.
+	^ Float32x4x4 instanceSize * armature bones size alignedTo: 256.
 ]

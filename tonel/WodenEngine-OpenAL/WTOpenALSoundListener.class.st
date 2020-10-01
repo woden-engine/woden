@@ -68,8 +68,8 @@ WTOpenALSoundListener >> orientation: anObject [
 	orientation := anObject.
 	
 	(self hasValidHandle and: [ self isCurrentListener ]) ifTrue: [
-		forward := orientation transformVector3: (Float32x3 z: -1.0).
-		up := orientation transformVector3: (Float32x3 y: 1.0).
+		forward := orientation transformVector: (Float32x3 z: -1.0).
+		up := orientation transformVector: (Float32x3 y: 1.0).
 	
 		orientationData := {
 			forward x . forward y . forward z .
@@ -106,8 +106,8 @@ WTOpenALSoundListener >> sendValues [
 			listener3f: AL_POSITION value: position x value: position y value: position z;
 			listener3f: AL_VELOCITY value: velocity x value: velocity y value: velocity z.
 		
-		forward := orientation transformVector3: (Float32x3 z: -1.0).
-		up := orientation transformVector3: (Float32x3 y: 1.0).
+		forward := orientation transformVector: (Float32x3 z: -1.0).
+		up := orientation transformVector: (Float32x3 y: 1.0).
 	
 		orientationData := {
 			forward x . forward y . forward z .

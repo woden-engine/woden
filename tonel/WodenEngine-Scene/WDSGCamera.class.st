@@ -11,6 +11,7 @@ Class {
 		'focalDistance',
 		'isPerspective',
 		'frustum',
+		'projectionMatrix',
 		'aspectRatio',
 		'projectionInvertedY',
 		'isNotControlledByTheUser',
@@ -272,7 +273,7 @@ WDSGCamera >> initialize [
 	fogStartDistance := 0.0.
 	fogEndDistance := 1.0.
 	fogDensity := 0.0.
-	fogColor := Float32x4 zero.
+	fogColor := Float32x4 zeros.
 	usesSceneBackgroundLayer := true.
 	usesSceneForegroundLayer := true.
 ]
@@ -321,6 +322,11 @@ WDSGCamera >> nearDistance [
 { #category : #accessing }
 WDSGCamera >> nearDistance: anObject [
 	nearDistance := anObject
+]
+
+{ #category : #accessing }
+WDSGCamera >> projectionMatrix [
+	^ projectionMatrix
 ]
 
 { #category : #'tone mapping' }
@@ -383,13 +389,17 @@ WDSGCamera >> updateFrustumWithAspectRatio: newAspectRatio projectionInvertedY: 
 WDSGCamera >> updateSymmetricalFrustum [
 	| hh hw |
 	self isPerspective ifTrue: [
-		frustum reverseDepthPerspectiveFovY: fieldOfView aspect: aspectRatio near: nearDistance far: farDistance invertedY: projectionInvertedY.
+		projectionMatrix := Float32x4x4 reversePerspectiveFovY: fieldOfView aspect: aspectRatio near: nearDistance far: farDistance invertedY: projectionInvertedY.
+		frustum makePerspectiveFovY: fieldOfView aspect: aspectRatio near: nearDistance far: farDistance
 	] ifFalse: [
 		hh := (fieldOfView * 0.5 ) degreesToRadians tan * focalDistance.
 		hw := hh * aspectRatio.
-		frustum reverseDepthOrthoLeft: hw negated right: hw
+		projectionMatrix := Float32x4x4 reverseDepthOrthoLeft: hw negated right: hw
 			bottom: hh negated top: hh
-			near: nearDistance far: farDistance invertedY: projectionInvertedY
+			near: nearDistance far: farDistance invertedY: projectionInvertedY.
+		frustum makeOrthoLeft: hw negated right: hw
+			bottom: hh negated top: hh
+			near: nearDistance far: farDistance
 	]
 ]
 

@@ -26,7 +26,7 @@ WDESAbstractSceneNodeComponent >> createSceneNode [
 
 { #category : #directions }
 WDESAbstractSceneNodeComponent >> forwardDirection [
-	^ localTransform transformVector3: (Float32x3 z: 1.0)
+	^ localTransform transformVector: (Float32x3 z: 1.0)
 ]
 
 { #category : #initialization }

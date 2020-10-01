@@ -71,15 +71,15 @@ WDGSForwardKinematicMovementBehavior >> simulateTime: delta [
 	
 	angle := angle + (angularVelocity * delta).
 	movingInGrounding ifTrue: [
-		orientation := (Float64x3x3 yrot: angle y).
+		orientation := (Float64x3x3 yRotation: angle y).
 	] ifFalse: [
-		orientation := (Float64x3x3 yrot: angle y) * (Float64x3x3 xrot: angle x).
+		orientation := (Float64x3x3 yRotation: angle y) * (Float64x3x3 xRotation: angle x).
 	].
 
 	spatialDesc := entity spatialDescription.
 	spatialDesc transform
 			orthonormal: orientation;
-			translateBy: (orientation transformVector3: linearVelocity * delta).
+			translateBy: orientation * (linearVelocity * delta).
 	spatialDesc changed.
 ]
 

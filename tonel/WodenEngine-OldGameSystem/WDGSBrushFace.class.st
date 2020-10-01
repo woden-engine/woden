@@ -200,7 +200,7 @@ WDGSBrushFace >> indices [
 { #category : #initialization }
 WDGSBrushFace >> initialize [
 	super initialize.
-	indices := SLVMNativeOrderedCollection for: #int.
+	indices := StdnVector newFor: #int.
 	material := ''.
 	textureTransform := WDGBrushFaceTextureTransform new.
 	textureTransform face: self.

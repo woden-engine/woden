@@ -66,7 +66,7 @@ WDIStanfordPLYImporter >> beginElement: arguments [
 { #category : #loading }
 WDIStanfordPLYImporter >> extractIndices [
 	| faceElement indexOfFaceIndices indexList indices |
-	indices := SLVMNativeOrderedCollection for: #uint.
+	indices := StdnVector newFor: UInt32.
 	
 	faceElement := elementDictionary at: #face.
 	indexOfFaceIndices := faceElement indexOfProperty: #vertex_indices.

@@ -300,7 +300,7 @@ WDGSMap >> sendTouchEvents [
 		touchListeners do: [ :b |
 			a ~~ b ifTrue: [
  				secondBox := b boundingBox.
-				(firstBox intersectsOrContainsBox: secondBox) ifTrue: [
+				(firstBox hasIntersectionWithBox: secondBox) ifTrue: [
 					a touch: b.
 					b touch: a
 				] 

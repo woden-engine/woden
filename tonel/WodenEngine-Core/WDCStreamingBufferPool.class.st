@@ -8,7 +8,7 @@ Class {
 		'heapSize',
 		'heaps'
 	],
-	#category : 'WodenEngine-Core-Pool'
+	#category : #'WodenEngine-Core-Pool'
 }
 
 { #category : #settings }
@@ -63,7 +63,7 @@ WDCStreamingBufferPool >> elementType [
 { #category : #accessing }
 WDCStreamingBufferPool >> elementType: anObject [
 	elementType := anObject.
-	elementSize := elementType structureSize alignedTo: self minimalAlignment.
+	elementSize := elementType instanceSize alignedTo: self minimalAlignment.
 	heapSize := elementType wodenPoolBufferHeapSize.
 ]
 

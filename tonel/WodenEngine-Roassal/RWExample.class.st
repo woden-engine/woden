@@ -54,7 +54,7 @@ RWExample >> classBars [
 	v addAll: elements.
 
 	RWXZGridLayout on: elements.
-	RWAlign elements: elements abovePoint: Float32x3 zero.
+	RWAlign elements: elements abovePoint: Float32x3 zeros.
 
 	elements do: [ :el |
 		el
@@ -286,7 +286,7 @@ balloonInertia := Float32x3x3 newFrom: {
 	0.0 . balloonInertiaDiag . 0.0 .
 	0.0 . 0.0 . balloonInertiaDiag
 }.
-balloonInverseInertia := balloonInertia inverted.
+balloonInverseInertia := balloonInertia inverse.
 balloonLinearDamping := 0.8.
 balloonAngularDamping := 0.8.
 stringLength := 1.5.
@@ -296,8 +296,8 @@ stringRigidity := 300.0.
 balloon translateToY: (weightRadius *2.0) + balloonRadius.
 "balloon translateByZ: 0.8."
 balloon translateByX: 1.2.
-balloonVelocity := Float32x3 zero.
-balloonAngularVelocity := Float32x3 zero.
+balloonVelocity := Float32x3 zeros.
+balloonAngularVelocity := Float32x3 zeros.
 balloonOrientation := QuaternionF32 identity.
 
 "Physical simulation"
@@ -311,8 +311,8 @@ balloon setBehavior: [ :delta |
 	"Dynamics"
 	gravity := (Float32x3 y: -9.8) * balloonMass.
 	buoyancy := (Float32x3 y: 12.8) * balloonMass.
-	springForce := Float32x3 zero.
-	springTorque := Float32x3 zero.
+	springForce := Float32x3 zeros.
+	springTorque := Float32x3 zeros.
 	
 	currentStringLength := (balloonBottomAnchor position - weight position) length
 		- balloonRadius - weightRadius.
@@ -334,7 +334,7 @@ balloon setBehavior: [ :delta |
 	balloonVelocity := balloonVelocity + (accel*delta).
 	
 	"Angular integration"
-	angularAccel := balloonInverseInertia transformVector3: torque.
+	angularAccel := balloonInverseInertia * torque.
 	balloonAngularVelocity := balloonAngularVelocity + (angularAccel*delta).
 	
 	"balloonOrientation := balloonOrientation +
@@ -386,7 +386,7 @@ balloonInertia := Float32x3x3 newFrom: {
 	0.0 . balloonInertiaDiag . 0.0 .
 	0.0 . 0.0 . balloonInertiaDiag
 }.
-balloonInverseInertia := balloonInertia inverted.
+balloonInverseInertia := balloonInertia inverse.
 balloonLinearDamping := 0.8.
 balloonAngularDamping := 0.8.
 stringLength := 1.5.
@@ -396,8 +396,8 @@ stringRigidity := 300.0.
 balloon translateToY: (weightRadius *2.0) + balloonRadius.
 "balloon translateByZ: 0.8."
 balloon translateByX: 1.2.
-balloonVelocity := Float32x3 zero.
-balloonAngularVelocity := Float32x3 zero.
+balloonVelocity := Float32x3 zeros.
+balloonAngularVelocity := Float32x3 zeros.
 balloonOrientation := QuaternionF32 identity.
 
 "Physical simulation"
@@ -411,8 +411,8 @@ balloon setBehavior: [ :delta |
 	"Dynamics"
 	gravity := (Float32x3 y: -9.8) * balloonMass.
 	buoyancy := (Float32x3 y: 12.8) * balloonMass.
-	springForce := Float32x3 zero.
-	springTorque := Float32x3 zero.
+	springForce := Float32x3 zeros.
+	springTorque := Float32x3 zeros.
 	
 	currentStringLength := (balloonBottomAnchor position - weight position) length
 		- balloonRadius - weightRadius.
@@ -434,7 +434,7 @@ balloon setBehavior: [ :delta |
 	balloonVelocity := balloonVelocity + (accel*delta).
 	
 	"Angular integration"
-	angularAccel := balloonInverseInertia transformVector3: torque.
+	angularAccel := balloonInverseInertia * torque.
 	balloonAngularVelocity := balloonAngularVelocity + (angularAccel*delta).
 	
 	"balloonOrientation := balloonOrientation +

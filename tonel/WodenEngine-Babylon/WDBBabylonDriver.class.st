@@ -69,7 +69,7 @@ WDBBabylonDriver >> convertMaterial: aMaterial [
 WDBBabylonDriver >> convertMesh2D: aPompeiiMesh [
 	| vertices indices indexCount glSubmesh submeshes |
 	vertices := SLVMNativeArray for: WDBCanvasVertex2D new: aPompeiiMesh vertices size.
-	indices := SLVMNativeOrderedCollection for: #uint.
+	indices := StdnVector newFor: UInt32.
 	aPompeiiMesh vertices doWithIndex: [ :vertex :index |
 		vertices at: index put: vertex asWDBCanvasVertex2D
 	].

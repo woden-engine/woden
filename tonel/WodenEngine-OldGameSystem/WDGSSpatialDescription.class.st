@@ -113,7 +113,7 @@ WDGSSpatialDescription >> localBoundingBox: anObject [
 
 { #category : #transformations }
 WDGSSpatialDescription >> lookDown [
-	transform orthonormal: (Float64x3x3 xrot: Float halfPi negated).
+	transform orthonormal: (Float64x3x3 xRotation: Float halfPi negated).
 	self changed.
 ]
 

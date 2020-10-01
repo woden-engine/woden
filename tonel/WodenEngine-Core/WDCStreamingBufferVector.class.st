@@ -9,7 +9,7 @@ Class {
 		'reallocatedAction',
 		'buffer'
 	],
-	#category : 'WodenEngine-Core-Pool'
+	#category : #'WodenEngine-Core-Pool'
 }
 
 { #category : #bindings }
@@ -50,7 +50,7 @@ WDCStreamingBufferVector >> elementType [
 { #category : #accessing }
 WDCStreamingBufferVector >> elementType: anObject [
 	elementType := anObject.
-	elementSize := elementType structureSize alignedTo: self minimalAlignment.
+	elementSize := elementType instanceSize alignedTo: self minimalAlignment.
 ]
 
 { #category : #accessing }

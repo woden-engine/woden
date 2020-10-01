@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'view'
 	],
-	#category : 'WodenEngine-Roassal-Tests'
+	#category : #'WodenEngine-Roassal-Tests'
 }
 
 { #category : #running }
@@ -65,7 +65,7 @@ RWViewTest >> testBaseShapePutting [
 { #category : #tests }
 RWViewTest >> testBoundingBox [
 	view add: RWCube element.
-	self assert: (view boundingBox closeTo: (BoxF32 unitCube)).
+	self assert: (view boundingBox closeTo: (BoxF32 unitBox)).
 ]
 
 { #category : #tests }

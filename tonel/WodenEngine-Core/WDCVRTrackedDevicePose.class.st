@@ -34,8 +34,8 @@ WDCVRTrackedDevicePose >> initialize [
 	super initialize.
 	
 	deviceToAbsoluteTransform := ReversibleAffineTransform3dF32 identity.
-	linearVelocity := Float32x3 zero.
-	angularVelocity := Float32x3 zero.
+	linearVelocity := Float32x3 zeros.
+	angularVelocity := Float32x3 zeros.
 ]
 
 { #category : #accessing }

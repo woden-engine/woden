@@ -49,8 +49,8 @@ WDESBalloonVehicleKinematicPhysicsBehavior >> initialize [
 	engineDirection := 0.0.
 	turnDirection := 0.0.
 	
-	linearVelocity := Float32x3 zero.
-	linearAcceleration := Float32x3 zero.
+	linearVelocity := Float32x3 zeros.
+	linearAcceleration := Float32x3 zeros.
 	
 	linearDamping := 0.5.
 	
@@ -76,7 +76,7 @@ WDESBalloonVehicleKinematicPhysicsBehavior >> prePhysicsTick: delta [
 	angularVelocity abs < 0.001 ifTrue: [ angularVelocity := 0.0 ].
 	angularVelocity := angularVelocity * engineDirection abs.
 	
-	linearAcceleration := (oldTransform transformVector3: engineAcceleration) +
+	linearAcceleration := (oldTransform transformVector: engineAcceleration) +
 		gravity + buoyancy - (linearVelocity * linearDamping).
 	linearVelocity := linearVelocity + (linearAcceleration * delta).
 

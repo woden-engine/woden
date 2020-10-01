@@ -67,7 +67,7 @@ WDCQuadTreeNode >> allElementsInsideOfBox: box do: aBlock [
 	children do: [ :child |
 		| childBox |
 		childBox := child boundingBox.
-		(box intersectsOrContainsBox: childBox) ifTrue: [ 
+		(box hasIntersectionWithBox: childBox) ifTrue: [ 
 			(box includesBox: childBox) ifTrue: [ 
 				child do: aBlock
 			] ifFalse: [
@@ -90,7 +90,7 @@ WDCQuadTreeNode >> allElementsIntersectingBox: box do: aBlock [
 	children do: [ :child |
 		| childBox |
 		childBox := child boundingBox.
-		(box intersectsOrContainsBox: childBox) ifTrue: [ 
+		(box hasIntersectionWithBox: childBox) ifTrue: [ 
 			(box includesBox: childBox) ifTrue: [ 
 				child do: aBlock
 			] ifFalse: [

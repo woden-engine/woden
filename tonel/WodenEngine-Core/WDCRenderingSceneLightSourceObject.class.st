@@ -11,8 +11,8 @@ Class {
 WDCRenderingSceneLightSourceObject >> computeBoundingBox [
 	| radius |
 	radius := self lightSource radius.
-	^ BoxF32 halfExtent: (Float32x3 x: radius y: radius z: radius)
-		center: self transform translation
+	^ BoxF32 center: self transform translation
+		halfExtent: (Float32x3 x: radius y: radius z: radius)
 ]
 
 { #category : #accessing }

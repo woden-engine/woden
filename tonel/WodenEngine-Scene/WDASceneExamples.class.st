@@ -152,8 +152,8 @@ WDASceneExamples class >> createIslandWaterObjectFor: engine [
 		waterMesh.
 
 	mesh deformationState
-		harmonicAt: 1 amplitude: 0.015 frequency: 2.23 center: (Float32x2 zero);
-		harmonicAt: 2 amplitude: 0.03 frequency: 0.50 center: (Float32x2 zero).
+		harmonicAt: 1 amplitude: 0.015 frequency: 2.23 center: (Float32x2 zeros);
+		harmonicAt: 2 amplitude: 0.03 frequency: 0.50 center: (Float32x2 zeros).
 
 	waterObject := WDSGSpatialObject new.
 	waterObject renderable: mesh.
@@ -278,7 +278,7 @@ WDASceneExamples class >> example04Pool [
 	scene ambientLighting: Float32x4 ones.
 
 	"Create the sky."
-	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector3: (Float32x3 z: 1.0)).
+	skyTexture := self proceduralSkySunDirection: (sunLight transform * (Float32x3 z: 1.0)).
 	skyTexture := skyTexture asTextureFor: engine.
 	scene createSkyWithCubeTexture: skyTexture.
 
@@ -313,7 +313,7 @@ WDASceneExamples class >> example04ProceduralSky [
 		rotateDegreesOnX: -45;
 		translateToX: 0.0 y: 1.5 z: 2.5.
 		
-	sunDirection := sunLight transform transformVector3: (Float32x3 z: 1.0).
+	sunDirection := sunLight transform * (Float32x3 z: 1.0).
 		
 	"Create the sky."
 	skyTexture := self proceduralSkySunDirection: sunDirection.
@@ -530,7 +530,7 @@ WDASceneExamples class >> example09DragonIsland [
 		translateToX: 0.0 y: 1.5 z: 2.5.
 	scene add: sunLight.
 	
-	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector3: (Float32x3 z: 1.0)).
+	skyTexture := self proceduralSkySunDirection: (sunLight transform * (Float32x3 z: 1.0)).
 	skyTexture := skyTexture asTextureFor: model engine.
 	scene createSkyWithCubeTexture: skyTexture.
 	scene ambientLighting: Float32x4 ones.

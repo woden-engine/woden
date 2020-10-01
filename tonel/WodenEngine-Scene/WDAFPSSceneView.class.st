@@ -122,12 +122,12 @@ WDAFPSSceneView >> updateForFrameDelta: delta [
 	cameraPosition ifNil: [ cameraPosition := self camera transform translation ].
 	
 	orientation := screenDisplayMode isVR ifTrue: [ 
-		Float32x3x3 yrot: cameraAngle y.
+		Float32x3x3 yRotation: cameraAngle y.
 	] ifFalse: [ 
-		(Float32x3x3 yrot: cameraAngle y) * (Float32x3x3 xrot: cameraAngle x).
+		(Float32x3x3 yRotation: cameraAngle y) * (Float32x3x3 xRotation: cameraAngle x).
 	].
 
-	cameraPosition := cameraPosition + (orientation transformVector3: (cameraVelocity * (cameraSpeed * delta))).
+	cameraPosition := cameraPosition + (orientation * (cameraVelocity * (cameraSpeed * delta))).
 
 	cameraTransform := ReversibleAffineTransform3dF32 identity orthonormal: orientation translation: cameraPosition.
 

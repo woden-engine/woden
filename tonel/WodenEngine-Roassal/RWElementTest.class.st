@@ -5,7 +5,7 @@ Class {
 		'element',
 		'shape'
 	],
-	#category : 'WodenEngine-Roassal-Tests'
+	#category : #'WodenEngine-Roassal-Tests'
 }
 
 { #category : #tests }
@@ -124,7 +124,7 @@ RWElementTest >> testReplaceSceneNode [
 RWElementTest >> testRotateByX [
 	| angle matrix |
 	angle := 60 degreesToRadians.
-	matrix := Float32x3x3 xrot: angle.
+	matrix := Float32x3x3 xRotation: angle.
 	element rotateByX: angle.
 	self assert: (element orientationMatrix closeTo: matrix)
 ]
@@ -133,7 +133,7 @@ RWElementTest >> testRotateByX [
 RWElementTest >> testRotateByXDegrees [
 	| angle matrix |
 	angle := 60.
-	matrix := Float32x3x3 xrot: angle degreesToRadians.
+	matrix := Float32x3x3 xRotation: angle degreesToRadians.
 	element rotateByXDegrees: angle.
 	self assert: (element orientationMatrix closeTo: matrix)
 ]
@@ -160,7 +160,7 @@ RWElementTest >> testRotateByYDegrees [
 RWElementTest >> testRotateByZ [
 	| angle matrix |
 	angle := 60 degreesToRadians.
-	matrix := Float32x3x3 zrot: angle.
+	matrix := Float32x3x3 zRotation: angle.
 	element rotateByZ: angle.
 	self assert: (element orientationMatrix closeTo: matrix)
 ]
@@ -169,7 +169,7 @@ RWElementTest >> testRotateByZ [
 RWElementTest >> testRotateByZDegrees [
 	| angle matrix |
 	angle := 60.
-	matrix := Float32x3x3 zrot: angle degreesToRadians.
+	matrix := Float32x3x3 zRotation: angle degreesToRadians.
 	element rotateByZDegrees: angle.
 	self assert: (element orientationMatrix closeTo: matrix)
 ]
@@ -208,7 +208,7 @@ RWElementTest >> testTranslateBy [
 { #category : #tests }
 RWElementTest >> testTranslateByX [
 
-	self assert: element position equals: Float32x3 zero.
+	self assert: element position equals: Float32x3 zeros.
 		
 	element translateByX: 2.0.
 	self assert: element position equals: (Float32x3 x: 2.0 y: 0.0 z: 0.0).
@@ -217,7 +217,7 @@ RWElementTest >> testTranslateByX [
 { #category : #tests }
 RWElementTest >> testTranslateByXYZ [
 
-	self assert: element position equals: Float32x3 zero.
+	self assert: element position equals: Float32x3 zeros.
 		
 	element translateByX: 1.0 y: 2.0 z: 3.0.
 	self assert: element position equals: (Float32x3 x: 1.0 y: 2.0 z: 3.0).
@@ -226,7 +226,7 @@ RWElementTest >> testTranslateByXYZ [
 { #category : #tests }
 RWElementTest >> testTranslateByY [
 
-	self assert: element position equals: Float32x3 zero.
+	self assert: element position equals: Float32x3 zeros.
 		
 	element translateByY: 2.0.
 	self assert: element position equals: (Float32x3 x: 0.0 y: 2.0 z: 0.0).
@@ -235,7 +235,7 @@ RWElementTest >> testTranslateByY [
 { #category : #tests }
 RWElementTest >> testTranslateByZ [
 
-	self assert: element position equals: Float32x3 zero.
+	self assert: element position equals: Float32x3 zeros.
 		
 	element translateByZ: 2.0.
 	self assert: element position equals: (Float32x3 x: 0.0 y: 0.0 z: 2.0).
@@ -244,7 +244,7 @@ RWElementTest >> testTranslateByZ [
 { #category : #tests }
 RWElementTest >> testTranslateTo [
 
-	self assert: element position equals: Float32x3 zero.
+	self assert: element position equals: Float32x3 zeros.
 	element translateToX: 1.0 y: 2.0 z: 3.0.
 	self assert: element position equals: (Float32x3 x: 1.0 y: 2.0 z: 3.0).
 ]
@@ -252,7 +252,7 @@ RWElementTest >> testTranslateTo [
 { #category : #tests }
 RWElementTest >> testTranslateToX [
 
-	self assert: element position equals: Float32x3 zero.
+	self assert: element position equals: Float32x3 zeros.
 		
 	element translateToX: 5.0.
 	self assert: element position equals: (Float32x3 x: 5.0 y: 0.0 z: 0.0).
@@ -261,7 +261,7 @@ RWElementTest >> testTranslateToX [
 { #category : #tests }
 RWElementTest >> testTranslateToY [
 
-	self assert: element position equals: Float32x3 zero.
+	self assert: element position equals: Float32x3 zeros.
 		
 	element translateToY: 2.0.
 	self assert: element position equals: (Float32x3 x: 0.0 y: 2.0 z: 0.0).
@@ -270,7 +270,7 @@ RWElementTest >> testTranslateToY [
 { #category : #tests }
 RWElementTest >> testTranslateToZ [
 
-	self assert: element position equals: Float32x3 zero.
+	self assert: element position equals: Float32x3 zeros.
 		
 	element translateToZ: -3.0.
 	self assert: element position equals: (Float32x3 x: 0.0 y: 0.0 z: -3.0).

@@ -261,7 +261,7 @@ WDGSEntity >> findBrushesIntersectingBox: box into: collection [
 	| models |
 	models := components at: #modeling ifAbsent: [ ^ self ].
 	models do: [ :model |
-		(box intersectsOrContainsBox: model boundingBox) ifTrue: [ collection add: model ]
+		(box hasIntersectionWithBox: model boundingBox) ifTrue: [ collection add: model ]
 	]
 ]
 

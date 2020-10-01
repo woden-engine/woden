@@ -116,7 +116,7 @@ WDCTerrainMeshBuilder >> createGridWithSize: size offset: offset subdivisions: s
 
 { #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> createGridWithSize: size subdivisions: subdivisions [
-	^ self createGridWithSize: size offset: Float32x2 zero subdivisions: subdivisions lodLevel: 0
+	^ self createGridWithSize: size offset: Float32x2 zeros subdivisions: subdivisions lodLevel: 0
 ]
 
 { #category : #'mesh building' }
@@ -191,7 +191,7 @@ WDCTerrainMeshBuilder >> createVertexData [
 { #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> doCreateClipMapWithLevels: levelCount size: size subdivisions: subdivisions [
 	| gridEdges |
-	gridEdges := self createGridWithSize: size offset: Float32x2 zero subdivisions: subdivisions lodLevel: 0.
+	gridEdges := self createGridWithSize: size offset: Float32x2 zeros subdivisions: subdivisions lodLevel: 0.
 	
 	levelCount > 1 ifTrue: [ 
 		 self createRingWithLevels: levelCount - 1 size: size subdivisions: subdivisions / 2 radius: size / 2 interiorEdges: gridEdges lodLevel: 1.
@@ -227,8 +227,8 @@ WDCTerrainMeshBuilder >> indices: anObject [
 { #category : #initialization }
 WDCTerrainMeshBuilder >> initialize [
 	super initialize.
-	vertices := SLVMNativeOrderedCollection for: self vertexClass.
-	indices := SLVMNativeOrderedCollection for: #uint.
+	vertices := StdnVector newFor: self vertexClass.
+	indices := StdnVector newFor: UInt32.
 	self createVertexData.
 	boundingBox := BoxF32 empty.
 	minHeight := maxHeight := 0.0.

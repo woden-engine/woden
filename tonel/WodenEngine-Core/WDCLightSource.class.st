@@ -213,13 +213,13 @@ WDCLightSource >> viewStateForRenderingState: renderingState cameraTransform: ca
 	result := lightState copy.
 	result shadowMapLayer: -1.0.
 	type == #directional ifTrue: [
-		result direction: (cameraTransform inverseTransformVector3: (self transform transformVector3: (Float32x3 z: 1.0))).
+		result direction: (cameraTransform inverseTransformVector: (self transform transformVector: (Float32x3 z: 1.0))).
 	] ifFalse: [
-		result position: (cameraTransform inverseTransformPosition3: self transform translation).
+		result position: (cameraTransform inverseTransformPosition: self transform translation).
 	].
 
 	type == #spot ifTrue: [ 
-		result spotDirection: (cameraTransform inverseTransformVector3: (self transform transformVector3: (Float32x3 z: 1.0))).
+		result spotDirection: (cameraTransform inverseTransformVector: (self transform transformVector: (Float32x3 z: 1.0))).
 	].
 
 	^ result

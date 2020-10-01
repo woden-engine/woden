@@ -104,7 +104,7 @@ RWOrbitController >> onKeyDown: event [
 	symbol == OSK_w ifTrue: [ orbitMovement updateAccelerationr: step negated].
 	symbol == OSK_s ifTrue: [ orbitMovement updateAccelerationr: step ].
 
-	accp := Float64x3 zero.
+	accp := Float64x3 zeros.
 	
 	symbol == OSK_a ifTrue: [ accp x: (step negated)].
 	symbol == OSK_d ifTrue: [ accp x: step ].	

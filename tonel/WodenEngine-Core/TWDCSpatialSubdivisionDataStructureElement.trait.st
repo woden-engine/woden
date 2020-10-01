@@ -15,7 +15,7 @@ TWDCSpatialSubdivisionDataStructureElement >> isSpatialElementInsideOfBox: box [
 
 { #category : #testing }
 TWDCSpatialSubdivisionDataStructureElement >> isSpatialElementIntersectingBox: box [
-	^ box intersectsOrContainsBox: self spatialElementBoundingBox
+	^ box hasIntersectionWithBox: self spatialElementBoundingBox
 ]
 
 { #category : #testing }

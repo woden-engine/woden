@@ -183,19 +183,19 @@ WDESCharacterBehaviorComponent >> headPosition [
 { #category : #initialization }
 WDESCharacterBehaviorComponent >> initialize [
 	super initialize.
-	headAngle := Float32x3 zero.
-	headAngularVelocity := Float32x3 zero.
+	headAngle := Float32x3 zeros.
+	headAngularVelocity := Float32x3 zeros.
 	
 	bodyOrientation := Float32x3x3 identity.
 	headOrientation := Float32x3x3 identity.
 	headPosition := self class headPosition.
 	
-	leftStickDirection := Float32x3 zero.
-	rightStickDirection := Float32x3 zero.
+	leftStickDirection := Float32x3 zeros.
+	rightStickDirection := Float32x3 zeros.
 	
 	linearDamping := 10.0.
-	linearVelocity := Float32x3 zero.
-	linearAcceleration := Float32x3 zero.
+	linearVelocity := Float32x3 zeros.
+	linearAcceleration := Float32x3 zeros.
 	running := false.
 	isUnderwater := false.
 	isHeadUnderwater := false.
@@ -358,7 +358,7 @@ WDESCharacterBehaviorComponent >> running: anObject [
 
 { #category : #accessing }
 WDESCharacterBehaviorComponent >> sectorHeadDirection [
-	^ ownerEntity sectorTransform transformVector3: (headOrientation transformVector3: (Float32x3 z: -1.0))
+	^ ownerEntity sectorTransform transformVector: (headOrientation transformVector: (Float32x3 z: -1.0))
 ]
 
 { #category : #accessing }

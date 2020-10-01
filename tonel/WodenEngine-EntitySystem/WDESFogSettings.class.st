@@ -129,7 +129,7 @@ WDESFogSettings >> initialize [
 	fogStartDistance := 0.0.
 	fogEndDistance := 1.0.
 	fogDensity := 0.0.
-	fogColor := Float32x4 zero. 
+	fogColor := Float32x4 zeros. 
 	farDistanceOverride := nil.
 ]
 

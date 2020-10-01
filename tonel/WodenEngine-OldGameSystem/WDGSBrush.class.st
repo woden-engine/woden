@@ -45,7 +45,7 @@ WDGSBrush class >> jsonTypeName [
 ]
 
 { #category : #construction }
-WDGSBrush class >> unitCube [
+WDGSBrush class >> unitBox [
 	^ self cubeSize: 1.
 ]
 
@@ -224,7 +224,7 @@ WDGSBrush >> faces: anArrayOfFaces [
 WDGSBrush >> initialize [
 	super initialize.
 	faces := #().
-	positions := SLVMNativeOrderedCollection for: Float64x3.
+	positions := StdnVector newFor: Float64x3.
 ]
 
 { #category : #private }

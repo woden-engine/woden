@@ -58,7 +58,7 @@ WDESAnimalCharacterDisplacementStrategy >> terminalSpeed [
 WDESAnimalCharacterDisplacementStrategy >> tickLinearMovement: delta [
 
 	| accel |
-	accel := (character bodyOrientation transformVector3: character linearAcceleration).
+	accel := (character bodyOrientation transformVector: character linearAcceleration).
 	accel := accel - (character linearVelocity * character linearDamping).
 	
 	character linearVelocity: character linearVelocity + (accel*delta).

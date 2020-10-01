@@ -107,7 +107,7 @@ WDIWavefrontObjImporter >> concretizeVertex: vertexTopology faceNormal: faceNorm
 	| position texcoord normal nextIndex |
 	position := rawPositions at: vertexTopology first.
 	texcoord := vertexTopology second
-		ifNil: [Float32x2 zero]
+		ifNil: [Float32x2 zeros]
 		ifNotNil: [:index | rawTexcoords at: index].
 	normal := vertexTopology third
 		ifNil: [faceNormal ]
@@ -157,11 +157,11 @@ WDIWavefrontObjImporter >> initializeLoading [
 	rawNormals := OrderedCollection new.
 	rawTexcoords := OrderedCollection new.
 	
-	positions := SLVMNativeOrderedCollection for: Float32x3.
-	normals := SLVMNativeOrderedCollection for: Float32x3.
-	texcoords := SLVMNativeOrderedCollection for: Float32x2.
+	positions := StdnVector newFor: Float32x3.
+	normals := StdnVector newFor: Float32x3.
+	texcoords := StdnVector newFor: Float32x2.
 	
-	indices := SLVMNativeOrderedCollection for: #uint.
+	indices := StdnVector newFor: UInt32.
 	
 	concreteVertexDictionary := Dictionary new.
 	submeshes := OrderedCollection new.

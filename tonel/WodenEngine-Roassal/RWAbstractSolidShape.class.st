@@ -12,8 +12,9 @@ Class {
 { #category : #computing }
 RWAbstractSolidShape >> boundingBoxFor: element [
 	^ BoxF32
-		halfExtent: (self halfExtentFor: element)
 		center: (self localCenterFor: element)
+		halfExtent: (self halfExtentFor: element)
+
 ]
 
 { #category : #accessing }
@@ -72,7 +73,7 @@ RWAbstractSolidShape >> initialize [
 
 { #category : #computing }
 RWAbstractSolidShape >> localCenterFor: anElement [
-	^ Float32x3 zero
+	^ Float32x3 zeros
 ]
 
 { #category : #accessing }

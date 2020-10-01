@@ -23,8 +23,8 @@ WDESBalloonDrivingCharacterController >> character: aCharacter [
 { #category : #initialization }
 WDESBalloonDrivingCharacterController >> initialize [
 	super initialize.
-	localDriverPosition := Float32x3 zero.
-	driverEntryPosition := Float32x3 zero.
+	localDriverPosition := Float32x3 zeros.
+	driverEntryPosition := Float32x3 zeros.
 	drivingTime := 0.0.
 ]
 

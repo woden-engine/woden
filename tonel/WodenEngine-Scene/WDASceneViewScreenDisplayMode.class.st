@@ -18,7 +18,7 @@ WDASceneViewScreenDisplayMode >> compositionShaderSignature [
 
 { #category : #'as yet unclassified' }
 WDASceneViewScreenDisplayMode >> computeProjectionMatrixFor: camera [
-	^ camera frustum matrix
+	^ camera projectionMatrix
 ]
 
 { #category : #accessing }
@@ -117,7 +117,7 @@ WDASceneViewScreenDisplayMode >> viewportForCamera: camera renderTarget: renderT
 	projectionMatrix := self computeProjectionMatrixFor: camera.
 	cameraState
 		projectionMatrix: projectionMatrix;
-		inverseProjectionMatrix: projectionMatrix inverted.
+		inverseProjectionMatrix: projectionMatrix inverse.
 	camera storeGlobalStatesForGPUIn: cameraState.
 		
 	^ WDSGViewport new

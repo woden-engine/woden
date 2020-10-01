@@ -10,8 +10,8 @@ WDESCharacterWalkingDisplacementStrategy >> adjustHeadAndBodyOrientations [
 	headAngle := character headAngle.
 	
 	character
-		bodyOrientation: (Float32x3x3 yrot: headAngle y);
-		headOrientation: (Float32x3x3 xrot: headAngle x).
+		bodyOrientation: (Float32x3x3 yRotation: headAngle y);
+		headOrientation: (Float32x3x3 xRotation: headAngle x).
 ]
 
 { #category : #testing }

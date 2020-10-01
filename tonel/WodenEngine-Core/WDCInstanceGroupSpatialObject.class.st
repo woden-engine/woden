@@ -22,7 +22,7 @@ WDCInstanceGroupSpatialObject >> addChild: aChild [
 	aChild owner: self.
 	updatedPerFrame ifFalse: [
 		self assert: instances last == aChild.
-		childOffsetDictionary at: aChild put: (instances size - 1) * WDCGenericObjectState structureSize.
+		childOffsetDictionary at: aChild put: (instances size - 1) * WDCGenericObjectState instanceSize.
 		pendingUpdates add: aChild.
 	]
 	

@@ -110,7 +110,7 @@ WDASceneViewStereoScreenDisplayMode >> createCompositionStateBinding [
 
 { #category : #'rendering process stages' }
 WDASceneViewStereoScreenDisplayMode >> createCompositionStateBuffer [
-	compositionStateBuffer := engine createStreamingUniformBuffer: WDCCompositionState structureSize.
+	compositionStateBuffer := engine createStreamingUniformBuffer: WDCCompositionState instanceSize.
 	compositionStateBinding bind: 0 uniformBuffer: compositionStateBuffer.
 ]
 
@@ -169,8 +169,8 @@ WDASceneViewStereoScreenDisplayMode >> updateCompositionState [
 	| extent |
 	compositionStateBinding ifNil: [ self createCompositionStateBinding ].
 	
-	extent := view window drawingSurfaceExtent.
-	compositionState screenExtents: (Float32x4 x: extent x asFloat y: extent y asFloat z: extent x reciprocalFloatQuiet w: extent y reciprocalFloatQuiet)
+	extent := view window drawingSurfaceExtent asFloat32x2.
+	compositionState screenExtents: (Float32x4 xy: extent zw: 1.0 / extent)
 ]
 
 { #category : #'rendering process stages' }

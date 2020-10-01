@@ -67,7 +67,7 @@ WDESSoundSourceComponent >> gain: aNumber [
 { #category : #initialization }
 WDESSoundSourceComponent >> initialize [
 	super initialize.
-	position := Float32x3 zero.
+	position := Float32x3 zeros.
 	isGlobalSource := 0.0.
 	looped := false.
 	playing := false.

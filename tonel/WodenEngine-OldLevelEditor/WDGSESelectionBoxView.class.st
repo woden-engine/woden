@@ -56,7 +56,7 @@ WDGSESelectionBoxView >> createSelectionBoxManipulatorMesh [
 { #category : #initialization }
 WDGSESelectionBoxView >> createSelectionBoxManipulators [
 	| manipulatorNode corners |
-	corners := BoxF64 unitCube manipulationCorners.
+	corners := BoxF64 unitBox manipulationCorners.
 	manipulatorNodesInstanceGroup := WDSGSpatialObjectInstanceGroup new
 		model: (WDGSLevelEditorElementModel new view: view);
 		useViewportCamera: true;

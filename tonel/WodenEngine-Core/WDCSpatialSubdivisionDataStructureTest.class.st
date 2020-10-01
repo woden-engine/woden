@@ -57,8 +57,8 @@ WDCSpatialSubdivisionDataStructureTest >> testAddPoint [
 	self assert: collection size equals: 1.
 	self assert: collection asArray equals: { point }.
 	
-	self assert: (collection allElementsInsideOfBox: BoxF32 unitCube) isEmpty.
-	self assert: (collection allElementsIntersectingBox: BoxF32 unitCube) isEmpty.
+	self assert: (collection allElementsInsideOfBox: BoxF32 unitBox) isEmpty.
+	self assert: (collection allElementsIntersectingBox: BoxF32 unitBox) isEmpty.
 	self assert: (collection allElementsInsideOfBox: (BoxF32 halfExtent: (Float32x3 x: 3.0 y: 3.0 z: 3.0))) asArray equals: { point }.
 	self assert: (collection allElementsIntersectingBox: (BoxF32 halfExtent: (Float32x3 x: 3.0 y: 3.0 z: 3.0))) asArray equals: { point }.
 ]
@@ -67,15 +67,15 @@ WDCSpatialSubdivisionDataStructureTest >> testAddPoint [
 WDCSpatialSubdivisionDataStructureTest >> testAddTwoPoints [
 	| collection firstPoint secondPoint |
 	collection := dataStructureClass new.
-	firstPoint := Float32x3 zero.
+	firstPoint := Float32x3 zeros.
 	secondPoint := Float32x3 x: 1.0 y: 2.0 z: 3.0.
 	self assert: collection isEmpty.
 	collection addPoints: { firstPoint . secondPoint }.
 	
 	self assert: collection size equals: 2.
 	
-	self assert: (collection allElementsInsideOfBox: BoxF32 unitCube) asArray equals: { firstPoint }.
-	self assert: (collection allElementsIntersectingBox: BoxF32 unitCube) asArray equals: { firstPoint }.
+	self assert: (collection allElementsInsideOfBox: BoxF32 unitBox) asArray equals: { firstPoint }.
+	self assert: (collection allElementsIntersectingBox: BoxF32 unitBox) asArray equals: { firstPoint }.
 
 	self assert: (collection allElementsInsideOfBox: (BoxF32 halfExtent: (Float32x3 x: 3.0 y: 3.0 z: 3.0))) size equals: 2.
 	self assert: (collection allElementsIntersectingBox: (BoxF32 halfExtent: (Float32x3 x: 3.0 y: 3.0 z: 3.0))) size equals: 2.

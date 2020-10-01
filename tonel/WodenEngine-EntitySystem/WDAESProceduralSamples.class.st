@@ -141,7 +141,7 @@ WDAESProceduralSamples class >> example03Island [
 	universe buildSector: [ :sector |
 		sector buildTerrainMeshWithData: terrainData withMaterial: terrainMaterial.
 		
-		sector addWaterVolumeAt: Float32x3 zero with: [ :waterVolume |
+		sector addWaterVolumeAt: Float32x3 zeros with: [ :waterVolume |
 			(waterVolume buildWaterMeshWith: [ :meshBuilder |
 				waterMaterial := engine resourceCache loadMaterial: 'materials/demos/ocean.json'.
 				meshBuilder material: waterMaterial.
@@ -149,8 +149,8 @@ WDAESProceduralSamples class >> example03Island [
 				meshBuilder
 					addCollisionBoxWithMinHeight: -200.0 maxHeight: 0.0 
 			]) renderable deformationState
-				harmonicAt: 1 amplitude: 0.015 frequency: 2.23 center: (Float32x2 zero);
-				harmonicAt: 2 amplitude: 0.03 frequency: 0.50 center: (Float32x2 zero).
+				harmonicAt: 1 amplitude: 0.015 frequency: 2.23 center: (Float32x2 zeros);
+				harmonicAt: 2 amplitude: 0.03 frequency: 0.50 center: (Float32x2 zeros).
 		].
 
 		sector
@@ -192,14 +192,14 @@ WDAESProceduralSamples class >> example04BalloonVehicle [
 				addCollisionBox
 		].
 	
-		self addBalloonVehicleAt: Float32x3 zero toSector: sector.
+		self addBalloonVehicleAt: Float32x3 zeros toSector: sector.
 	
 		sector
 			addDirectionalLightWith: [ :light |
 				| skyTexture |
 				light
 					castShadows: true;
-					intensity: (Float32x4 x: 1.0 y: 1.0 z: 0.8) normalized * 0.7;
+					intensity: (Float32x4 x: 1.0 y: 1.0 z: 0.8 w: 0.0) normalized * 0.7;
 					rotateDegreesOnX: -45;
 					rotateDegreesOnY: -180;
 					translateToX: 0.0 y: 1.5 z: 2.5.

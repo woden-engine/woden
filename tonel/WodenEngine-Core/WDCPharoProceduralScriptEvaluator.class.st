@@ -446,7 +446,7 @@ WDCPharoProceduralScriptEvaluator >> skyCubeMap: aBoolean [
 { #category : #'as yet unclassified' }
 WDCPharoProceduralScriptEvaluator >> terrainCoordinateTransform [
 	^ terrainCellSize
-		ifNil: [ { Float32x2 ones . Float32x2 zero } ]
+		ifNil: [ { Float32x2 ones . Float32x2 zeros } ]
 		ifNotNil: [
 			| scale |
 			scale := Float32x2 ones * 2.0 / self terrainData heightMapScale.

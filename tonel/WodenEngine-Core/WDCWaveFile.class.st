@@ -14,7 +14,7 @@ Class {
 		'WaveHeaderSignature',
 		'WaveIDValue'
 	],
-	#category : 'WodenEngine-Core-Sound'
+	#category : #'WodenEngine-Core-Sound'
 }
 
 { #category : #'as yet unclassified' }
@@ -56,7 +56,7 @@ WDCWaveFile >> asSoundSampleFor: engine [
 { #category : #private }
 WDCWaveFile >> loadFrom: in [
 	| sampleChunkHeader formatHeader formatData |
-	header := WDCWaveHeader newFrom: (in next: WDCWaveHeader structureSize).
+	header := WDCWaveHeader newFrom: (in next: WDCWaveHeader instanceSize).
 	header signature ~= WaveHeaderSignature ifTrue: [ 
 		self error: 'Wave file contains an invalid signature.'
 	].
@@ -64,7 +64,7 @@ WDCWaveFile >> loadFrom: in [
 		self error: 'Wave file contains an invalid WAVE id signature.'
 	].
 
-	formatHeader := WDCWaveChunkHeader newFrom: (in next: WDCWaveChunkHeader structureSize).
+	formatHeader := WDCWaveChunkHeader newFrom: (in next: WDCWaveChunkHeader instanceSize).
 	formatHeader chunkID ~= FormatChunkSignature ifTrue: [ 
 		self error: 'Wave file contains an invalid format chunk.'
 	].
@@ -75,7 +75,7 @@ WDCWaveFile >> loadFrom: in [
 	self assert: (format formatTag = FormatPCM or: [format formatTag = FormatIEEEFloat]).
 	self assert: (#(8 16 32) includes: format bitsPerSample).
 
-	sampleChunkHeader := WDCWaveChunkHeader newFrom: (in next: WDCWaveChunkHeader structureSize).
+	sampleChunkHeader := WDCWaveChunkHeader newFrom: (in next: WDCWaveChunkHeader instanceSize).
 	sampleChunkHeader chunkID ~= DataChunkSignature ifTrue: [ 
 		self error: 'Wave file contains an invalid data chunk.'
 	].

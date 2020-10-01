@@ -55,7 +55,7 @@ WDSSceneAssetModel >> createViewer [
 		viewScene ambientLighting: Float32x4 ones*0.6.
 		
 		skyTexture := WDASceneExamples proceduralSkySunDirection: (sunLight transform
-				transformVector3:(Float32x3 z: 1.0)
+				transformVector:(Float32x3 z: 1.0)
 			).
 		skyTexture := skyTexture asSRGBTextureFor: sceneModel engine.
 		viewScene createSkyWithCubeTexture: skyTexture.

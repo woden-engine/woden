@@ -242,7 +242,7 @@ RWElement >> localBoundingBox [
 
 { #category : #orientation }
 RWElement >> lookDown [
-	sceneNode transform orthonormal: (Float32x3x3 xrot: Float halfPi negated ).
+	sceneNode transform orthonormal: (Float32x3x3 xRotation: Float halfPi negated ).
 	sceneNode transformChanged.
 	self invalidateBoundingBoxCache.
 ]

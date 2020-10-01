@@ -26,7 +26,7 @@ WDCDynamicMeshInterleavedVertexData >> createVertexBindingFor: anEngine [
 WDCDynamicMeshInterleavedVertexData >> createVertexBufferFor: anEngine [
 	(vertexBuffer isNil or: [ vertexBufferCapacity < data capacity ]) ifTrue: [
 		vertexBufferCapacity := data capacity.
-		vertexBuffer := anEngine createVertex: WDCGenericVertexF32 structureSize streamingElements: vertexBufferCapacity.
+		vertexBuffer := anEngine createVertex: WDCGenericVertexF32 instanceSize streamingElements: vertexBufferCapacity.
 	].
 
 	LibC memCopy: data rawData to: vertexBuffer validPointer size: data rawDataSize.

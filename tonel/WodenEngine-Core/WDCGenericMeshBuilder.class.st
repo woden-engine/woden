@@ -788,8 +788,8 @@ WDCGenericMeshBuilder >> finishSubmesh [
 { #category : #initialization }
 WDCGenericMeshBuilder >> initialize [
 	super initialize.
-	vertices := SLVMNativeOrderedCollection for: self vertexClass.
-	indices := SLVMNativeOrderedCollection for: #int.
+	vertices := StdnVector newFor: self vertexClass.
+	indices := StdnVector newFor: Int32.
 	self createVertexData.
 	boundingBox := BoxF32 empty.
 	submeshes := OrderedCollection new.

@@ -401,7 +401,7 @@ WDGSLevelEditorSceneViewPanel >> handleMouseMove: anEvent [
 { #category : #'event handling' }
 WDGSLevelEditorSceneViewPanel >> handleMouseWheel: event [
 	isPerspective ifTrue: [
-		cameraTransform translateBy: (cameraTransform matrix transformVector3: (Float64x3 z: -0.2*event scrollVertical)).
+		cameraTransform translateBy: (cameraTransform matrix transformVector: (Float64x3 z: -0.2*event scrollVertical)).
 	] ifFalse: [
 		viewScale := viewScale *(1.0 - (event scrollVertical*0.1) max:0.1).
 		selectionBoxView ifNotNil: [ selectionBoxView updateNodes ]
@@ -530,11 +530,11 @@ WDGSLevelEditorSceneViewPanel >> simulateCameraMovement: delta [
 	oldAngle := cameraAngle.
 	cameraAngle := cameraAngle + (cameraAngularVelocity * (cameraAngularSpeed * delta)).
 	(oldAngle closeTo: cameraAngle) ifFalse: [ 	editorViewType := #rotated. ].
-	orientation := (Float64x3x3 yrot: cameraAngle y) * (Float64x3x3 xrot: cameraAngle x).
+	orientation := (Float64x3x3 yRotation: cameraAngle y) * (Float64x3x3 xRotation: cameraAngle x).
 
 	cameraTransform
 		orthonormal: orientation;
-		translateBy: (orientation transformVector3: (cameraVelocity * (cameraSpeed * delta))).
+		translateBy: orientation * (cameraVelocity * (cameraSpeed * delta)).
 
 ]
 

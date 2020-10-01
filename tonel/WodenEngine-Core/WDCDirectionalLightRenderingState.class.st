@@ -40,7 +40,7 @@ WDCDirectionalLightRenderingState >> computeUpVectorWithViewVector: v lightVecto
 { #category : #'shadow mapping' }
 WDCDirectionalLightRenderingState >> computeViewVectorWithShadowCastingBody: body [
 	| vector viewPosition |
-	vector := Float32x3 zero.
+	vector := Float32x3 zeros.
 	viewPosition := mainCameraTransform translation.
 	body do: [ :point |
 		vector := vector + (point - viewPosition)
@@ -112,9 +112,9 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 	| frustumBox viewVector viewPosition cosGamma sinGamma lightDepth z_n z_f nearDistance farDistance upVector perspectivePoint perspectiveTransform falloff bodyNearDistance shadowMapWarpNearDistance |
 	mainCameraTransform := "self roundCameraTransform:" mainCamera globalTransform.
 	
-	lightVector := renderingLight transform matrix transformVector3: (Float32x3 z: -1.0).
+	lightVector := renderingLight transform matrix transformVector: (Float32x3 z: -1.0).
 	viewPosition := mainCameraTransform translation.
-	viewVector := (mainCameraTransform transformVector3: (Float32x3 z: -1.0)) normalized.
+	viewVector := (mainCameraTransform transformVector: (Float32x3 z: -1.0)) normalized.
 	shadowCastingBody := self extractShadowCastingBodyPoints.
 
 	"Compute an initial render transform."	
@@ -130,7 +130,7 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 	
 	frustumBox := BoxF32 empty.
 	shadowCastingBody do: [ :point |
-		frustumBox insertPoint: (renderTransform inverseTransformPosition3: point).
+		frustumBox insertPoint: (renderTransform inverseTransformPosition: point).
 	].
 
 	"Compute the perspective transformation near and far planes. This is based on the sample code of the paper."
@@ -163,7 +163,7 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 
 	frustumBox := BoxF32 empty.
 	shadowCastingBody do: [ :point |
-		frustumBox insertPoint: (perspectiveTransform perspectiveTransformPosition3: (renderTransform inverseTransformPosition3: point)).
+		frustumBox insertPoint: (perspectiveTransform perspectiveTransformPosition3: (renderTransform inverseTransformPosition: point)).
 	].
 
 	"Transcript show: frustumBox; cr."
@@ -176,14 +176,14 @@ WDCDirectionalLightRenderingState >> setupUniformShadowMappingTransforms [
 	mainCameraTransform := self roundCameraTransform: mainCamera globalTransform.
 	
 	viewPosition := mainCameraTransform translation.
-	viewVector := mainCameraTransform transformVector3: (Float32x3 z: -1.0).
+	viewVector := mainCameraTransform transformVector: (Float32x3 z: -1.0).
 	
 	"renderTransform := ReversibleAffineTransform3dF32 from: viewPosition lookAtDirection: lightVector up: viewVector."
 	renderTransform := renderingLight transform.
 	
 	frustumBox := BoxF32 empty.
 	shadowCastingBody do: [ :point |
-		frustumBox insertPoint: (renderTransform inverseTransformPosition3: point).
+		frustumBox insertPoint: (renderTransform inverseTransformPosition: point).
 	].
 
 	shadowProjectionMatrix := frustumBox mappingToNDCCoordinatesReverseDepth: engine projectionInvertedY

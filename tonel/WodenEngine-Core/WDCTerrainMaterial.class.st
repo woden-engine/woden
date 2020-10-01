@@ -124,7 +124,7 @@ WDCTerrainMaterial >> bindResources [
 
 	stateUniformBuffer ifNil: [
 		self flag: 'TODO: Use a memory pool here.'.
-		stateUniformBuffer := engine createStreamingUniformBuffer: (WDCTerrainMaterialState structureSize alignedTo: 256).
+		stateUniformBuffer := engine createStreamingUniformBuffer: (WDCTerrainMaterialState instanceSize alignedTo: 256).
 		self uploadMaterialStateData.
 	].
 

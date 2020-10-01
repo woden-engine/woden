@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'gap'
 	],
-	#category : 'WodenEngine-Roassal-Layout'
+	#category : #'WodenEngine-Roassal-Layout'
 }
 
 { #category : #accessing }
@@ -49,7 +49,7 @@ RWGridLayout >> on: elements [
 	lineItemCount := 0.
 	maxLastLineHeight := 0.0.
 	
-	currentPosition := Float32x3 zero.
+	currentPosition := Float32x3 zeros.
 	elements do: [ :el |
 		w := u dot: el extent.
 		h := v dot: el extent.

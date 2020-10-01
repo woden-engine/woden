@@ -19,12 +19,12 @@ WDESCharacterDisplacementStrategy >> adjustHeadAndBodyOrientations [
 	
 	self isRotatingFullBody ifTrue: [ 
 		character
-			bodyOrientation: (Float32x3x3 yrot: headAngle y) * (Float32x3x3 xrot: headAngle x);
+			bodyOrientation: (Float32x3x3 yRotation: headAngle y) * (Float32x3x3 xRotation: headAngle x);
 			headOrientation: Float32x3x3 identity.
 	] ifFalse: [ 
 		character
-			bodyOrientation: (Float32x3x3 yrot: headAngle y);
-			headOrientation: (Float32x3x3 xrot: headAngle x)
+			bodyOrientation: (Float32x3x3 yRotation: headAngle y);
+			headOrientation: (Float32x3x3 xRotation: headAngle x)
 	].
 
 ]

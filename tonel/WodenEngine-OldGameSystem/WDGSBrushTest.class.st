@@ -19,16 +19,16 @@ WDGSBrushTest >> testNew [
 WDGSBrushTest >> testTranslate [
 	| brush vector |
 	vector := (Float64x3 x: 3.0 y: 0.0 z: 0.0 ).
-	brush := WDGSBrush unitCube translateBy: vector.
-	self assert: (brush boundingBox closeTo: (BoxF64 unitCube translatedBy: vector))
+	brush := WDGSBrush unitBox translateBy: vector.
+	self assert: (brush boundingBox closeTo: (BoxF64 unitBox translatedBy: vector))
 ]
 
 { #category : #tests }
 WDGSBrushTest >> testUnitBlock [
 	| brush |
-	brush := WDGSBrush unitCube.
+	brush := WDGSBrush unitBox.
 	self assert: brush numberOfFaces equals: 6.
 	self assert: brush positions size equals: 8.
 	self assert: brush isValid.
-	self assert: (brush boundingBox closeTo: BoxF64 unitCube).
+	self assert: (brush boundingBox closeTo: BoxF64 unitBox).
 ]

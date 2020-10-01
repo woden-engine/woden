@@ -28,8 +28,8 @@ WDCLineMeshComponent >> endPoint: anObject [
 { #category : #initialization }
 WDCLineMeshComponent >> initialize [
 	super initialize.
-	startPoint := Float32x3 zero.
-	endPoint := Float32x3 zero.
+	startPoint := Float32x3 zeros.
+	endPoint := Float32x3 zeros.
 ]
 
 { #category : #accessing }

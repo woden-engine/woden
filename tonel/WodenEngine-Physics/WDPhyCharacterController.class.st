@@ -77,7 +77,7 @@ WDPhyCharacterController >> initialize [
 	maxJumpHeight := 0.6.
 	gravity := -9.8.
 	buoyancy := 0.0.
-	linearVelocity := Float32x3 zero.
+	linearVelocity := Float32x3 zeros.
 	self computeJumpSpeed.
 ]
 

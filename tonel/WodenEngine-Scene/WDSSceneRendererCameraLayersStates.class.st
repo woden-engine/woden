@@ -51,11 +51,11 @@ WDSSceneRendererCameraLayersStates >> postProcessingState: aPostProcessingState 
 
 { #category : #'as yet unclassified' }
 WDSSceneRendererCameraLayersStates >> updateForRenderingViewport: renderingViewport currentTime: currentTime [
-	| viewport cameraState screenSize inverseScreenSize normalTransform backgroundTransform foregroundTransform overlayCameraState overlayTransform |
+	| viewport cameraState screenSize inverseScreenSize normalTransform backgroundTransform foregroundTransform |
 	viewport := renderingViewport viewport.
 	cameraState := viewport cameraState.
 	screenSize := renderingViewport extent asFloat32x2.
-	inverseScreenSize := Float32x2 x: screenSize x reciprocalFloatQuiet y: screenSize y reciprocalFloatQuiet.
+	inverseScreenSize := 1.0 / screenSize.
 		
 	cameraState
 		transform: viewport cameraTransform;
@@ -64,7 +64,7 @@ WDSSceneRendererCameraLayersStates >> updateForRenderingViewport: renderingViewp
 		currentTime: currentTime.
 		
 	normalTransform := viewport cameraTransform.
-	backgroundTransform := normalTransform copy translation: Float32x3 zero.
+	backgroundTransform := normalTransform copy translation: Float32x3 zeros.
 	foregroundTransform := ReversibleAffineTransform3dF32 identity.
 	
 	backgroundLayerState submitState: cameraState withTransform: backgroundTransform.

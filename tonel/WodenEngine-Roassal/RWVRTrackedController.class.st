@@ -54,7 +54,7 @@ RWVRTrackedController >> cursorColor: anObject [
 RWVRTrackedController >> elementPointedByCursor [
 	| ray view distanceAndElement |
 	ray := Ray3dF32 origin: element position
-		direction: (element orientation transformVector3: (Float32x3 z: -1.0)).
+		direction: (element orientation * (Float32x3 z: -1.0)).
 	view := element view.
 	view ifNil: [ ^ nil ].
 
@@ -160,7 +160,7 @@ RWVRTrackedController >> updateCursor [
 RWVRTrackedController >> updateForFrameDelta: delta [
 	| direction |
 	movingForward ifTrue: [
-		direction := sceneView camera orientation transformVector3: (Float32x3 z: -1.0).
+		direction := sceneView camera orientation * (Float32x3 z: -1.0).
 		sceneView vrCameraBaseTransform translateBy: direction * delta * 2.0.
 	].
 ]

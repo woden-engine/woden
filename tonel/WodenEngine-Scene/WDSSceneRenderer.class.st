@@ -145,7 +145,7 @@ WDSSceneRenderer >> renderSceneViewports [
 ]
 
 { #category : #rendering }
-WDSSceneRenderer >> renderSceneViewportsIntoStateTracker: aStateTracker. [
+WDSSceneRenderer >> renderSceneViewportsIntoStateTracker: aStateTracker [.
 	renderingViewports ifEmpty: [ ^ nil ].
 
 	stateTracker := aStateTracker.

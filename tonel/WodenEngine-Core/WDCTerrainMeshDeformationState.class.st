@@ -28,7 +28,7 @@ WDCTerrainMeshDeformationState >> applyTerrainDataState [
 
 { #category : #accessing }
 WDCTerrainMeshDeformationState >> clipMapPeriod: clipMapPeriod [
-	terrainStateData clipMapPeriod: (clipMapPeriod ifNil: [Float32x2 zero])
+	terrainStateData clipMapPeriod: (clipMapPeriod ifNil: [Float32x2 zeros])
 ]
 
 { #category : #resources }
@@ -55,7 +55,7 @@ WDCTerrainMeshDeformationState >> initialize [
 	super initialize.
 	terrainStateData := WDCTerrainDeformationStateStructure new
 		heightMapScale: (Float32x2 x: 1.0 y: 1.0);
-		heightMapOffset: Float32x2 zero;
+		heightMapOffset: Float32x2 zeros;
 		heightScale: 1.0;
 		yourself.
 	self terrainData: WDCTerrainData new.

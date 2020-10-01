@@ -369,7 +369,7 @@ WDBBabylonSurface >> ensureMatrixBufferCapacity: requiredSize [
 	newCapacity := 1 << requiredSize highBit max: 256.
 	self assert: newCapacity >= requiredSize.	
 	matrixBufferCapacity := matrixBufferCapacity max: newCapacity.
-	matrixBuffer := engine createStreamingStorageBuffer: matrixBufferCapacity * Float32x4x4 structureSize.
+	matrixBuffer := engine createStreamingStorageBuffer: matrixBufferCapacity * Float32x4x4 instanceSize.
 	
 	"Bind the new buffer"
 	matrixBufferBinding ifNil: [ matrixBufferBinding := self shaderSignature newCanvasViewport ].
@@ -394,7 +394,7 @@ WDBBabylonSurface >> ensureVertexBufferCapacity: requiredSize [
 	newCapacity := 1 << requiredSize highBit max: 256.
 	self assert: newCapacity >= requiredSize.	
 	vertexBufferCapacity := vertexBufferCapacity max: newCapacity.
-	vertexBuffer := engine createVertex: WDBCanvasVertex2D structureSize streamingElements: vertexBufferCapacity.
+	vertexBuffer := engine createVertex: WDBCanvasVertex2D instanceSize streamingElements: vertexBufferCapacity.
 	
 	"Create the vertex binding"
 	vertexBinding ifNil: [vertexBinding := engine createVertexBindingForLayout: (engine vertexLayoutFor: WDBCanvasVertex2D)].
@@ -501,8 +501,8 @@ WDBBabylonSurface >> initialize [
 	matrixBufferCapacity := 0.
 	matrixBuffer := nil.
 	
-	matrices := SLVMNativeOrderedCollection for: Float32x4x4.
-	quickStateBuffer := ByteArray new: WDBQuickState structureSize.
+	matrices := StdnVector newFor: Float32x4x4.
+	quickStateBuffer := ByteArray new: WDBQuickState instanceSize.
 	
 	destroyed := false.
 ]
@@ -639,9 +639,9 @@ WDBBabylonSurface >> sendMeshesToMemory [
 	nextIndexOffset := 0.
 
 	meshesInMemory do: [ :mesh |
-		self assert: mesh vertices size % BabylonMesh2DVertex structureSize = 0.
+		self assert: mesh vertices size % BabylonMesh2DVertex instanceSize = 0.
 		map := WDBBabylonMeshMemoryMap new
-				baseVertex: nextVertexOffset // BabylonMesh2DVertex structureSize;
+				baseVertex: nextVertexOffset // BabylonMesh2DVertex instanceSize;
 				baseIndex: nextIndexOffset // 4;
 				yourself.
 		meshMemoryMap at: mesh put: map.
@@ -770,7 +770,7 @@ WDBBabylonSurface >> transformClipRectangle: aRectangle [
 WDBBabylonSurface >> validateQuickState [
 	hasValidQuickState ifTrue: [ ^ self ].
 	quickState storeBytesIn: quickStateBuffer.
-	stateTracker pushConstants: 0 size: WDBQuickState structureSize values: quickStateBuffer.
+	stateTracker pushConstants: 0 size: WDBQuickState instanceSize values: quickStateBuffer.
 	hasValidQuickState := true.
 ]
 

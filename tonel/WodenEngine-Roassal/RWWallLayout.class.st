@@ -11,13 +11,13 @@ Class {
 	#instVars : [
 		'gap'
 	],
-	#category : 'WodenEngine-Roassal-Layout'
+	#category : #'WodenEngine-Roassal-Layout'
 }
 
 { #category : #'position calculation' }
 RWWallLayout >> computeMaximumDimension: nodes [
 	^ (nodes
-		inject: Float32x3 zero
+		inject: Float32x3 zeros
 		into: [ :maxiumDimension :each |
 			| boundingBoxDimension |
 			boundingBoxDimension := each extent.

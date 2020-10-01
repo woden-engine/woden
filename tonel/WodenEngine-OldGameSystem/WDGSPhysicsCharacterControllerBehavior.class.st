@@ -117,14 +117,14 @@ WDGSPhysicsCharacterControllerBehavior >> simulatePrePhysicsTime: delta [
 
 	angle := angle + (angularVelocity * delta).
 	movingInGrounding ifTrue: [
-		orientation := (Float64x3x3 yrot: angle y).
+		orientation := (Float64x3x3 yRotation: angle y).
 	] ifFalse: [
-		orientation := (Float64x3x3 yrot: angle y) * (Float64x3x3 xrot: angle x).
+		orientation := (Float64x3x3 yRotation: angle y) * (Float64x3x3 xRotation: angle x).
 	].
 
 	physicsCharacterController
 		gravity: (movingInGrounding ifTrue: [ self characterGroundGravity ] ifFalse: [0.0]);
-		linearVelocity: (orientation transformVector3: linearVelocity) asFloat32x3.
+		linearVelocity: (orientation * linearVelocity) asFloat32x3.
 	
 	spatialDesc := entity spatialDescription.
 	spatialDesc transform
