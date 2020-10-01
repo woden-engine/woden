@@ -33,7 +33,7 @@ WDCWaterMeshDeformationState >> currentGPUWaterStates [
 { #category : #accessing }
 WDCWaterMeshDeformationState >> harmonicAt: index amplitude: amplitude frequency: frequency center: center [
 	waterStateData harmonicAt: index put: (
-		WTWaterHarmonic new
+		WDCWaterHarmonic new
 		amplitude: amplitude;
 		frequency: frequency;
 		center: center;
@@ -44,7 +44,7 @@ WDCWaterMeshDeformationState >> harmonicAt: index amplitude: amplitude frequency
 { #category : #accessing }
 WDCWaterMeshDeformationState >> harmonicAt: index amplitude: amplitude frequency: frequency direction: direction [
 	waterStateData harmonicAt: index put: (
-		WTWaterHarmonic new
+		WDCWaterHarmonic new
 		amplitude: amplitude;
 		frequency: frequency;
 		center: direction;

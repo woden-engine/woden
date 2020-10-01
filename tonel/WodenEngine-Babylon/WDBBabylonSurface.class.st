@@ -394,10 +394,10 @@ WDBBabylonSurface >> ensureVertexBufferCapacity: requiredSize [
 	newCapacity := 1 << requiredSize highBit max: 256.
 	self assert: newCapacity >= requiredSize.	
 	vertexBufferCapacity := vertexBufferCapacity max: newCapacity.
-	vertexBuffer := engine createVertex: WDPCanvasVertex2D structureSize streamingElements: vertexBufferCapacity.
+	vertexBuffer := engine createVertex: WDBCanvasVertex2D structureSize streamingElements: vertexBufferCapacity.
 	
 	"Create the vertex binding"
-	vertexBinding ifNil: [vertexBinding := engine createVertexBindingForLayout: (engine vertexLayoutFor: WDPCanvasVertex2D)].
+	vertexBinding ifNil: [vertexBinding := engine createVertexBindingForLayout: (engine vertexLayoutFor: WDBCanvasVertex2D)].
 	vertexBinding vertexBuffers: { vertexBuffer }; offsets: { 0 }
 ]
 
@@ -502,7 +502,7 @@ WDBBabylonSurface >> initialize [
 	matrixBuffer := nil.
 	
 	matrices := SLVMNativeOrderedCollection for: WMMatrix4F.
-	quickStateBuffer := ByteArray new: WDPQuickState structureSize.
+	quickStateBuffer := ByteArray new: WDBQuickState structureSize.
 	
 	destroyed := false.
 ]
@@ -663,7 +663,7 @@ WDBBabylonSurface >> setupCommonState [
 	drawingCommands removeAll.
 	matrices removeAll.
 	clipRectangleStack removeAll.
-	quickState := WDPQuickState new.
+	quickState := WDBQuickState new.
 	self
 		projectionMatrixIndex: (self pushMatrix: self projectionMatrix);
 		modelViewMatrixIndex: (self pushMatrix: WMMatrix4F identity).
@@ -770,7 +770,7 @@ WDBBabylonSurface >> transformClipRectangle: aRectangle [
 WDBBabylonSurface >> validateQuickState [
 	hasValidQuickState ifTrue: [ ^ self ].
 	quickState storeBytesIn: quickStateBuffer.
-	stateTracker pushConstants: 0 size: WDPQuickState structureSize values: quickStateBuffer.
+	stateTracker pushConstants: 0 size: WDBQuickState structureSize values: quickStateBuffer.
 	hasValidQuickState := true.
 ]
 

@@ -15,7 +15,7 @@ WDSForwardSceneRenderer >> ensureLightingStatesFor: requiredNumberOfCameras [
 		globalLightingStates := engine frameBufferingCollect: [ :f | #() ].
 	].
 
-	pool := engine resourceCache streamingUniformBufferPoolFor: WTGlobalLightingState.
+	pool := engine resourceCache streamingUniformBufferPoolFor: WDCGlobalLightingState.
 	
 	currentNumberOfCameras := globalLightingStates first size.
 	missingNumberOfCameras := requiredNumberOfCameras - currentNumberOfCameras.
@@ -70,14 +70,14 @@ WDSForwardSceneRenderer >> updateFrameLightingStates [
 		transform := viewport cameraTransform.
 		scene := viewport camera scene.
 
-		lightSources := SLVMNativeArray for: WTLightSourceData new: 16.
+		lightSources := SLVMNativeArray for: WDCLightSourceData new: 16.
 
 		viewportLights := renderingViewport lightRenderingStates.
 		viewportLights doWithIndex: [ :lightSource :lightIndex |
 			lightSources at: lightIndex put: (lightSource viewStateForCameraTransform: transform).
 		].
 		
-		lightingState := WTGlobalLightingState  new.
+		lightingState := WDCGlobalLightingState  new.
 		ambientLightingFactor := scene lightingProbe ifNil: [ Float pi ] ifNotNil: [ 1.0 ]. 
 		lightingState
 			skyLighting: scene skyLighting*ambientLightingFactor;

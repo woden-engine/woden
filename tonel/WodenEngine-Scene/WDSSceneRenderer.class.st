@@ -68,7 +68,7 @@ WDSSceneRenderer >> ensureCameraStatesFor: requiredNumberOfCameras [
 	missingNumberOfCameras := requiredNumberOfCameras - currentNumberOfCameras.
 	
 	missingNumberOfCameras > 0 ifTrue: [
-		postProcessingStatePool := engine resourceCache streamingStorageBufferPoolFor: WTCameraPostProcessingState.
+		postProcessingStatePool := engine resourceCache streamingStorageBufferPoolFor: WDCCameraPostProcessingState.
 		postProcessingStates := (1 to: missingNumberOfCameras) collect: [ :i |
 			postProcessingStatePool allocate.
 		].

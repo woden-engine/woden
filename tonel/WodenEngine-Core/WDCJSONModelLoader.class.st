@@ -87,9 +87,9 @@ WDCJSONModelLoader >> loadActionBone: actionBoneData [
 	| boneIndex keyframes keyframesData |
 	boneIndex := actionBoneData at: 'index'.
 	keyframesData := actionBoneData at: 'keyframes'.
-	keyframes := SLVMNativeArray for: WTAnimationActionBoneFrame new: keyframesData size.
+	keyframes := SLVMNativeArray for: WDCAnimationActionBoneFrame new: keyframesData size.
 	keyframesData doWithIndex: [ :kf :index |
-		keyframes at: index put: (WTAnimationActionBoneFrame new
+		keyframes at: index put: (WDCAnimationActionBoneFrame new
 			rotation: (self loadQuaternion: (kf at: 'rotation'));
 			translation: (self loadVector3: (kf at: 'translation'));
 			yourself
@@ -118,13 +118,13 @@ WDCJSONModelLoader >> loadArmature: armatureData [
 	| bones names location orientation parentIndex boneParents |
 	names := armatureData collect: [ :boneData | boneData at: 'name' ].
 	boneParents := SLVMNativeArray for: #int new: armatureData size.
-	bones := SLVMNativeArray for: WTAnimationActionBoneFrame new: armatureData size.
+	bones := SLVMNativeArray for: WDCAnimationActionBoneFrame new: armatureData size.
 	armatureData doWithIndex: [ :boneData :index |
 		location := self loadVector3: (boneData at: 'location').
 		orientation := self loadQuaternion: (boneData at: 'orientation').
 		parentIndex := boneData at: 'parent'.
 		boneParents at: index put: parentIndex.
-		bones at: index put: (WTAnimationActionBoneFrame new
+		bones at: index put: (WDCAnimationActionBoneFrame new
 			translation: location;
 			rotation: orientation;
 			yourself)
@@ -206,7 +206,7 @@ WDCJSONModelLoader >> loadInterleavedVertices: verticesData [
 	boneWeights := verticesData at: 'boneWeights' ifAbsent: [ nil ].
 	
 	isSkinned := boneIndices isNotNil and: [ boneWeights isNotNil ].
-	vertexClass := isSkinned ifTrue: [ WTSkinnedGenericVertexF ] ifFalse: [ WTGenericVertexF ].
+	vertexClass := isSkinned ifTrue: [ WDCSkinnedGenericVertexF32 ] ifFalse: [ WDCGenericVertexF32 ].
 	numberOfVertices := positions size // 3.
 	vertexBuffer := SLVMNativeArray for: vertexClass new: numberOfVertices.
 	1 to: numberOfVertices do: [ :i |

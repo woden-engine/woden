@@ -68,7 +68,7 @@ WDCLightSource >> initialize [
 	innerSpotCutoff := DefaultSpotInnerCutoff.
 	shadowMapDepthBiasConstant := DefaultShadowMapDepthBiasConstant.
 	shadowMapDepthBiasSlope := DefaultShadowMapDepthBiasSlope.
-	lightState := WTLightSourceData new.
+	lightState := WDCLightSourceData new.
 	lightState
 		intensity: Color white asWMVector4F;
 		radius: 3.0.

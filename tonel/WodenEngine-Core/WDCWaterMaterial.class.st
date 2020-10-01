@@ -82,7 +82,7 @@ WDCWaterMaterial >> fragmentShader [
 
 { #category : #initialization }
 WDCWaterMaterial >> initialize [
-	materialState := WTWaterMaterialState new
+	materialState := WDCWaterMaterialState new
 		albedo: Color white asWMVector4F;
 		fresnel: (WMVector3F x: 0.04 y: 0.04 z: 0.04);
 		smoothness: 0.45;

@@ -51,7 +51,7 @@ WDCAbstractSpatialObject >> engine: newEngine [
 { #category : #initialization }
 WDCAbstractSpatialObject >> initialize [
 	super initialize.
-	state := WTGenericObjectState new.
+	state := WDCGenericObjectState new.
 	state
 		visible: 1;
 		color: Color white asWMVector4F.

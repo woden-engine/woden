@@ -428,7 +428,7 @@ WDCResourceCache >> flatColorMaterial [
 
 { #category : #'memory pools' }
 WDCResourceCache >> genericObjectStatePool [
-	^ self streamingUniformBufferPoolFor: WTGenericObjectState
+	^ self streamingUniformBufferPoolFor: WDCGenericObjectState
 ]
 
 { #category : #'resource loading' }
@@ -687,8 +687,8 @@ WDCResourceCache >> mainProceduralOfflineTextureRendererForExtent: anExtent [
 { #category : #'memory pools' }
 WDCResourceCache >> neutralGenericObjectInstanceState [
 	neutralObjectInstanceState ifNil: [
-		neutralObjectInstanceState := (self streamingStorageBufferPoolFor: WTGenericObjectState) allocate.
-		neutralObjectInstanceState value: WTGenericObjectState neutralState
+		neutralObjectInstanceState := (self streamingStorageBufferPoolFor: WDCGenericObjectState) allocate.
+		neutralObjectInstanceState value: WDCGenericObjectState neutralState
 	].
 	^ neutralObjectInstanceState
 ]
@@ -916,9 +916,9 @@ WDCResourceCache >> resourceAt: name ifAbsentPut: aBlock [
 WDCResourceCache >> screenQuadCameraStateBinding [
 	| camerateStateBuffer |
 	screenQuadCameraStateBinding ifNotNil: [ ^ screenQuadCameraStateBinding ].
-	camerateStateBuffer := (self streamingUniformBufferPoolFor: WTCameraState) allocate.
+	camerateStateBuffer := (self streamingUniformBufferPoolFor: WDCCameraState) allocate.
 	camerateStateBuffer value: (
-		WTCameraState new
+		WDCCameraState new
 			transform: WMReversibleAffineTransformF identity;
 			projectionMatrix: (WMMatrix4F
 				reverseDepthOrthoLeft: -1.0 right: 1.0 bottom: -1.0

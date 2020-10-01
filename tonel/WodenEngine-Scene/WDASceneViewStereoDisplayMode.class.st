@@ -119,7 +119,7 @@ WDASceneViewStereoDisplayMode >> leftRenderTargetRequiredExtent [
 { #category : #'multi eye rendering' }
 WDASceneViewStereoDisplayMode >> leftViewportForCamera: camera [
 	| cameraState |
-	cameraState := WTCameraState new.
+	cameraState := WDCCameraState new.
 	cameraState
 		projectionMatrix: leftProjectionMatrix;
 		inverseProjectionMatrix: leftProjectionMatrix inverted.
@@ -181,7 +181,7 @@ WDASceneViewStereoDisplayMode >> rightRenderTargetRequiredExtent [
 { #category : #'multi eye rendering' }
 WDASceneViewStereoDisplayMode >> rightViewportForCamera: camera [
 	| cameraState |
-	cameraState := WTCameraState new.
+	cameraState := WDCCameraState new.
 	cameraState
 		projectionMatrix: rightProjectionMatrix;
 		inverseProjectionMatrix: rightProjectionMatrix inverted.

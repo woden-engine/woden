@@ -22,7 +22,7 @@ WDCInstanceGroupSpatialObject >> addChild: aChild [
 	aChild owner: self.
 	updatedPerFrame ifFalse: [
 		self assert: instances last == aChild.
-		childOffsetDictionary at: aChild put: (instances size - 1) * WTGenericObjectState structureSize.
+		childOffsetDictionary at: aChild put: (instances size - 1) * WDCGenericObjectState structureSize.
 		pendingUpdates add: aChild.
 	]
 	
@@ -87,7 +87,7 @@ WDCInstanceGroupSpatialObject >> createEngineDependantData [
 WDCInstanceGroupSpatialObject >> createInstanceStateBuffer [
 	^ WDCStreamingStorageBufferVector new
 			capacity: (32 max: instances size);
-			elementType: WTGenericObjectState;
+			elementType: WDCGenericObjectState;
 			engine: engine;
 			yourself.
 ]

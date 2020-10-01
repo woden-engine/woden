@@ -19,7 +19,7 @@ WDSSceneRendererCameraLayerState class >> for: anEngine [
 { #category : #initialization }
 WDSSceneRendererCameraLayerState >> initializeWithEngine: anEngine [
 	| pool |
-	pool := anEngine resourceCache streamingUniformBufferPoolFor: WTCameraState.
+	pool := anEngine resourceCache streamingUniformBufferPoolFor: WDCCameraState.
 	shaderBindingsBufferElement := pool allocate.
 	shaderBindings := (WDCSceneRenderingShaderSignature for: anEngine) newCameraState.
 	shaderBindings bind: 0 uniformBufferElement: shaderBindingsBufferElement

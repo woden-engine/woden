@@ -140,7 +140,7 @@ WDGSESelectionBoxView >> elementsAlongRay: ray do: aBlock [
 	manipulatorBoxes doWithIndex: [ :box :index |
 		(box isEmpty not and: [ (distance := ray intersectionDistanceWithBox: box) isNotNil ]) ifTrue: [
 			model := (manipulatorNodes at: index) model.
-			aBlock value: (WMRayIntersectionTestResultD new priority: -1; distance: distance; value: model)
+			aBlock value: (WDCRayIntersectionTestResultF64 new priority: -1; distance: distance; value: model)
 		]
 	].
 ]

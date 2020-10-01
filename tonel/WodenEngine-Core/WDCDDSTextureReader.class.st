@@ -167,15 +167,15 @@ WDCDDSTextureReader >> loadFromStream: aBinaryStream [
 		self error: 'Trying to read a DDS file an invalid signature.'
 	].
 	
-	header := WTDDSFileHeader new.
-	header readBytesFrom: (aBinaryStream next: WTDDSFileHeader structureSize).
+	header := WDCDDSFileHeader new.
+	header readBytesFrom: (aBinaryStream next: WDCDDSFileHeader structureSize).
 	
-	header size ~= WTDDSFileHeader structureSize ifTrue: [ 
+	header size ~= WDCDDSFileHeader structureSize ifTrue: [ 
 		self error: 'DDS file contains an invalid header'.
 	].
 
 	pixelFormat := header pixelFormat.
-	pixelFormat size ~= WTDDSPixelFormat structureSize ifTrue: [ 
+	pixelFormat size ~= WDCDDSPixelFormat structureSize ifTrue: [ 
 		self error: 'DDS file contains an invalid pixel format header'.
 	].
 

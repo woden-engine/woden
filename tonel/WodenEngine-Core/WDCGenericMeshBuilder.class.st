@@ -445,17 +445,17 @@ WDCGenericMeshBuilder >> addLineGridWithWidth: width height: height subdivisions
 
 { #category : #adding }
 WDCGenericMeshBuilder >> addP: position [
-	vertices add: (WTGenericVertexF new position: position; color: currentColor; yourself)
+	vertices add: (WDCGenericVertexF32 new position: position; color: currentColor; yourself)
 ]
 
 { #category : #adding }
 WDCGenericMeshBuilder >> addP: position N: normal [
-	vertices add: (WTGenericVertexF new position: position; normal: normal; color: currentColor; yourself)
+	vertices add: (WDCGenericVertexF32 new position: position; normal: normal; color: currentColor; yourself)
 ]
 
 { #category : #adding }
 WDCGenericMeshBuilder >> addP: position N: normal T4: tangent4 TC: texcoord [
-	vertices add: (WTGenericVertexF new
+	vertices add: (WDCGenericVertexF32 new
 		position: position;
 		normal: normal;
 		tangent4: tangent4;
@@ -466,12 +466,12 @@ WDCGenericMeshBuilder >> addP: position N: normal T4: tangent4 TC: texcoord [
 
 { #category : #adding }
 WDCGenericMeshBuilder >> addP: position N: normal TC: texcoord [
-	vertices add: (WTGenericVertexF new position: position; normal: normal; texcoord: texcoord; color: currentColor; yourself)
+	vertices add: (WDCGenericVertexF32 new position: position; normal: normal; texcoord: texcoord; color: currentColor; yourself)
 ]
 
 { #category : #adding }
 WDCGenericMeshBuilder >> addP: position TC: texcoord [
-	vertices add: (WTGenericVertexF new position: position; texcoord: texcoord; color: currentColor; yourself)
+	vertices add: (WDCGenericVertexF32 new position: position; texcoord: texcoord; color: currentColor; yourself)
 ]
 
 { #category : #adding }
@@ -825,5 +825,5 @@ WDCGenericMeshBuilder >> useFlatColorMaterial [
 
 { #category : #initialization }
 WDCGenericMeshBuilder >> vertexClass [
-	^ vertexClass ifNil: [ vertexClass := WTGenericVertexF ]
+	^ vertexClass ifNil: [ vertexClass := WDCGenericVertexF32 ]
 ]

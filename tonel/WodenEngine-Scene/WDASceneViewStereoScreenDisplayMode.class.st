@@ -103,14 +103,14 @@ WDASceneViewStereoScreenDisplayMode >> computeProjectionMatrices [
 
 { #category : #'rendering process stages' }
 WDASceneViewStereoScreenDisplayMode >> createCompositionStateBinding [
-	compositionState := WTCompositionState new.
+	compositionState := WDCCompositionState new.
 	compositionStateBinding := self shaderSignature newParameters.
 	self createCompositionStateBuffer
 ]
 
 { #category : #'rendering process stages' }
 WDASceneViewStereoScreenDisplayMode >> createCompositionStateBuffer [
-	compositionStateBuffer := engine createStreamingUniformBuffer: WTCompositionState structureSize.
+	compositionStateBuffer := engine createStreamingUniformBuffer: WDCCompositionState structureSize.
 	compositionStateBinding bind: 0 uniformBuffer: compositionStateBuffer.
 ]
 

@@ -193,7 +193,7 @@ WDSGScene >> foregroundLayer [
 WDSGScene >> genericObjectStatePool [
 	genericObjectStatePool ifNil: [
 		genericObjectStatePool := WDCStreamingUniformBufferPool new
-			elementType: WTGenericObjectState;
+			elementType: WDCGenericObjectState;
 			engine: engine;
 			yourself ].
 	^ genericObjectStatePool

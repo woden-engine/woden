@@ -10,42 +10,44 @@ BaselineOfWodenEngine >> baseline: spec [
     spec for: #'common' do: [
 			spec blessing: #baseline.
 			spec postLoadDoIt: #postLoadActions.
-			spec 
+			spec
 				baseline: #'NeoJSON' with: [
 					spec
 					repository: 'github://svenvc/NeoJSON:v17/repository' ].
-			spec 
+			spec
 				baseline: #'AbstractGPU' with: [
 				spec
 					repository: 'github://ronsaldo/abstract-gpu/tonel' ].
-			spec 
+			spec
 				baseline: #'AbstractPhysics' with: [
 				spec
 					repository: 'github://ronsaldo/abstract-physics/tonel' ].
-			spec 
+			spec
 				baseline: #'Dastrel' with: [
 				spec
 					repository: 'github://ronsaldo/dastrel/tonel' ].
-			spec 
+			spec
 				baseline: #'BabylonGraphics' with: [
 				spec
 					repository: 'github://ronsaldo/babylon-graphics/tonel';
                     loads: #(API) ].
-			spec 
+			spec
 				baseline: #'CyrusToolkit' with: [
 				spec
 					repository: 'github://ronsaldo/babylon-graphics/tonel' ].
 
-			spec 
+			spec
 				baseline: #'OpenAL' with: [
 				spec
 					repository: 'github://ronsaldo/pharo-openal/tonel' ].
-			spec 
-				baseline: #'WodenMath' with: [
+			spec
+				baseline: #'Sysmel' with: [
 				spec
-					repository: 'github://ronsaldo/woden/tonel' ].
+					repository: 'github://ronsaldo/sysmel' ].
+		spec package: #'WodenEngine-NativeStructures' with: [
+				spec requires: #(#'Sysmel')].
 		spec package: #'WodenEngine-Core' with: [
-				spec requires: #(#'NeoJSON' #'AbstractGPU' #'Dastrel' #'WodenMath')].
+				spec requires: #(#'NeoJSON' #'AbstractGPU' #'Dastrel' #'Sysmel' #'WodenEngine-NativeStructures')].
 		spec package: #'WodenEngine-Babylon' with: [
 				spec requires: #('WodenEngine-Core' 'BabylonGraphics' 'CyrusToolkit')].
 		spec package: #'WodenEngine-Scene' with: [
@@ -79,7 +81,7 @@ BaselineOfWodenEngine >> postLoadActions [
 	(ProcessorScheduler respondsTo: #idleTime:) ifTrue: [
 		ProcessorScheduler idleTime: 250.
 	].
-	
+
 	"Rebuild the field accessors"
 	self flag: 'FIXME: Remove this hack when is not required anymore in Pharo'.
 	FFIExternalStructure allSubclassesDo: #rebuildFieldAccessors.

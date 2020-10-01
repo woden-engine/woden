@@ -113,7 +113,7 @@ WDASceneViewScreenDisplayMode >> viewportForCamera: camera renderTarget: renderT
 { #category : #'as yet unclassified' }
 WDASceneViewScreenDisplayMode >> viewportForCamera: camera renderTarget: renderTarget resolveRenderTarget: resolveRenderTarget submode: submode [
 	| cameraState projectionMatrix |
-	cameraState := WTCameraState new.
+	cameraState := WDCCameraState new.
 	projectionMatrix := self computeProjectionMatrixFor: camera.
 	cameraState
 		projectionMatrix: projectionMatrix;

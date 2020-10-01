@@ -36,7 +36,7 @@ WDCComplexGenericMeshBuilder class >> initialize [
 
 { #category : #adding }
 WDCComplexGenericMeshBuilder >> addP: position [
-	vertices add: (WTGenericVertexF new
+	vertices add: (WDCGenericVertexF32 new
 		position: (transform transformPosition3: position);
 		color: currentColor;
 		yourself)
@@ -45,7 +45,7 @@ WDCComplexGenericMeshBuilder >> addP: position [
 
 { #category : #adding }
 WDCComplexGenericMeshBuilder >> addP: position N: normal [
-	vertices add: (WTGenericVertexF new
+	vertices add: (WDCGenericVertexF32 new
 		position: (transform transformPosition3: position);
 		normal: (transform transformNormal: normal);
 		color: currentColor;
@@ -55,7 +55,7 @@ WDCComplexGenericMeshBuilder >> addP: position N: normal [
 
 { #category : #adding }
 WDCComplexGenericMeshBuilder >> addP: position N: normal T4: tangent4 TC: texcoord [
-	vertices add: (WTGenericVertexF new
+	vertices add: (WDCGenericVertexF32 new
 		position: (transform transformPosition3: position);
 		normal: (transform transformNormal: normal);
 		tangent4: (WMVector4F xyz: (transform transformNormal: tangent4 xyz) w: tangent4 w);
@@ -66,7 +66,7 @@ WDCComplexGenericMeshBuilder >> addP: position N: normal T4: tangent4 TC: texcoo
 
 { #category : #adding }
 WDCComplexGenericMeshBuilder >> addP: position N: normal TC: texcoord [
-	vertices add: (WTGenericVertexF new
+	vertices add: (WDCGenericVertexF32 new
 		position: (transform transformPosition3: position);
 		normal: (transform transformNormal: normal);
 		texcoord: texcoord;
@@ -76,7 +76,7 @@ WDCComplexGenericMeshBuilder >> addP: position N: normal TC: texcoord [
 
 { #category : #adding }
 WDCComplexGenericMeshBuilder >> addP: position TC: texcoord [
-	vertices add: (WTGenericVertexF new
+	vertices add: (WDCGenericVertexF32 new
 		position: (transform transformPosition3: position);
 		texcoord: texcoord;
 		color: currentColor;
