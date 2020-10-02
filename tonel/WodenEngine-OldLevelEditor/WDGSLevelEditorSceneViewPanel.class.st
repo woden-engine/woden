@@ -475,7 +475,7 @@ WDGSLevelEditorSceneViewPanel >> primaryGridSize [
 WDGSLevelEditorSceneViewPanel >> rayAtWindowCoord: coord [
 	| ray |
 	camera frustum ifNil: [ self updateCameraProjection ].
-	ray := camera frustum rayAtNormalizedPoint: (self normalizedPosition: coord).
+	ray := camera frustum rayForNormalizedPoint: (self normalizedPosition: coord).
 	^ ray asRay3dF64 transformedWith: cameraTransform
 ]
 

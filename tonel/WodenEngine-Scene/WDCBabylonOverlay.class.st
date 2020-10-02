@@ -43,7 +43,7 @@ WDCBabylonOverlay >> applyLogicalHeightTransformTo: canvas [
 
 { #category : #accessing }
 WDCBabylonOverlay >> defaultFont [
-	^ defaultFont ifNil: [ defaultFont := engine babylonDriver font: (LogicalFont familyName: 'Arial' pointSize: 20) ]
+	^ defaultFont ifNil: [ defaultFont := engine babylonDriver font: (LogicalFont familyName: 'DejaVu Sans' pointSize: 12) ]
 ]
 
 { #category : #'as yet unclassified' }

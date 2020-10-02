@@ -56,7 +56,7 @@ WDCDirectionalLightRenderingState >> extractShadowCastingBodyPoints [
 	shadowCastingMaxExtent := Float negativeInfinity.
 	sceneBoundingBox := renderingLight node scene normalLayer globalBoundingBox.
 	
-	sceneBoundingBox corners do: [ :corner |
+	sceneBoundingBox cornersDo: [ :corner |
 		| extent |
 		extent := corner dot: shadowCastingVector.
 		shadowCastingMaxExtent := shadowCastingMaxExtent max: extent.
@@ -112,7 +112,7 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 	| frustumBox viewVector viewPosition cosGamma sinGamma lightDepth z_n z_f nearDistance farDistance upVector perspectivePoint perspectiveTransform falloff bodyNearDistance shadowMapWarpNearDistance |
 	mainCameraTransform := "self roundCameraTransform:" mainCamera globalTransform.
 	
-	lightVector := renderingLight transform matrix transformVector: (Float32x3 z: -1.0).
+	lightVector := renderingLight transform transformVector: (Float32x3 z: -1.0).
 	viewPosition := mainCameraTransform translation.
 	viewVector := (mainCameraTransform transformVector: (Float32x3 z: -1.0)) normalized.
 	shadowCastingBody := self extractShadowCastingBodyPoints.
@@ -153,7 +153,7 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 	perspectivePoint := viewPosition - (upVector*(nearDistance - bodyNearDistance)).
 	renderTransform := ReversibleAffineTransform3dF32 from: perspectivePoint lookAtDirection: lightVector up: upVector.
 
-	perspectiveTransform := Float32x4x4 newFrom: { 
+	perspectiveTransform := Float32x4x4 rows: { 
 		1.0 . 0.0 . 0.0 . 0.0 .
 		0.0 . (farDistance + nearDistance)/(farDistance - nearDistance) . 0.0 . -2.0*farDistance*nearDistance/(farDistance - nearDistance)  .
 		0.0 . 0.0 . 1.0 . 0.0 .
@@ -167,7 +167,7 @@ http://www.cg.tuwien.ac.at/research/vr/lispsm/
 	].
 
 	"Transcript show: frustumBox; cr."
-	shadowProjectionMatrix := (frustumBox mappingToNDCCoordinatesReverseDepth: engine engine projectionInvertedY) * perspectiveTransform
+	shadowProjectionMatrix := (frustumBox mappingToNDCCoordinatesReverseDepthWithInvertedY: engine engine projectionInvertedY) * perspectiveTransform
 ]
 
 { #category : #'shadow mapping' }
@@ -186,7 +186,7 @@ WDCDirectionalLightRenderingState >> setupUniformShadowMappingTransforms [
 		frustumBox insertPoint: (renderTransform inverseTransformPosition: point).
 	].
 
-	shadowProjectionMatrix := frustumBox mappingToNDCCoordinatesReverseDepth: engine projectionInvertedY
+	shadowProjectionMatrix := frustumBox mappingToNDCCoordinatesReverseDepthWithInvertedY: engine projectionInvertedY
 ]
 
 { #category : #'shadow mapping' }

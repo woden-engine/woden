@@ -112,6 +112,21 @@ WDCMaterial >> parse: data at: materialFileReference array: name size: size nati
 ]
 
 { #category : #parsing }
+WDCMaterial >> parse: data at: materialFileReference array: name type: nativeType ifAbsent: ifAbsentBlock [
+	| result |
+	result := nativeType new.
+	result atAllPut: ifAbsentBlock value.
+	data at: name ifPresent: [ :array |
+		array withIndexDo: [ :element :index |
+			index <= result size ifTrue: [
+				result at: index put: (nativeType elementType loadFromJson: element)
+			]
+		]
+	].
+	^ result
+]
+
+{ #category : #parsing }
 WDCMaterial >> parse: data at: fileReference color: name ifAbsent: aBlock [
 	^ data at: name
 		ifPresent: [ :colorData |

@@ -24,7 +24,7 @@ WDPhyBoxCollisionShape >> halfExtent [
 
 { #category : #accessing }
 WDPhyBoxCollisionShape >> halfExtent: aWDVector3 [
-	halfExtent set: aWDVector3
+	halfExtent := aWDVector3 copy
 ]
 
 { #category : #accessing }

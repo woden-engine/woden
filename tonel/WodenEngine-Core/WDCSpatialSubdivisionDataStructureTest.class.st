@@ -29,18 +29,18 @@ WDCSpatialSubdivisionDataStructureTest >> setUp [
 WDCSpatialSubdivisionDataStructureTest >> testAddBox [
 	| collection box |
 	collection := dataStructureClass new.
-	box := BoxF32 unitCube.
+	box := BoxF32 unitBox.
 	self assert: collection isEmpty.
 	collection addBox: box.
 	
 	self assert: collection size equals: 1.
 	self assert: collection asArray equals: { box }.
 	
-	self assert: (collection allElementsInsideOfBox: (BoxF32 halfExtent: Float32x3 ones center: Float32x3 ones * 2.0)) isEmpty.
-	self assert: (collection allElementsIntersectingBox: (BoxF32 halfExtent: Float32x3 ones center: Float32x3 ones * 2.0 )) isEmpty.
+	self assert: (collection allElementsInsideOfBox: (BoxF32 center: Float32x3 ones * 2.0 halfExtent: Float32x3 ones)) isEmpty.
+	self assert: (collection allElementsIntersectingBox: (BoxF32 center: Float32x3 ones * 2.0 halfExtent: Float32x3 ones)) isEmpty.
 
-	self assert: (collection allElementsInsideOfBox: BoxF32 unitCube) asArray equals: { box }.
-	self assert: (collection allElementsIntersectingBox: BoxF32 unitCube) asArray equals: { box }.
+	self assert: (collection allElementsInsideOfBox: BoxF32 unitBox) asArray equals: { box }.
+	self assert: (collection allElementsIntersectingBox: BoxF32 unitBox) asArray equals: { box }.
 
 	self assert: (collection allElementsInsideOfBox: (BoxF32 halfExtent: Float32x3 ones * 0.25)) asArray isEmpty.
 	self assert: (collection allElementsIntersectingBox: (BoxF32 halfExtent: Float32x3 ones * 0.25)) asArray equals: { box }.

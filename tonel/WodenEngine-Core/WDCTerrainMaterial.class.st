@@ -175,7 +175,7 @@ WDCTerrainMaterial >> initialize [
 		metallicFactor: self class defaultMetallicFactor;
 		roughnessFactor: self class defaultRoughnessFactor;
 		
-		textureScaleAndOffset: ((SLVMNativeArray for: Float32x4 new: 5) atAllPut: (Float32x4 x: 1.0 y: 1.0));
+		textureScaleAndOffset: ((Float32x4 array: 5) new atAllPut: (Float32x4 x: 1.0 y: 1.0));
 		yourself.
 	albedoTextures := { nil . nil . nil . nil . nil }.
 	normalTextures := { nil . nil . nil . nil . nil }.
@@ -246,7 +246,7 @@ WDCTerrainMaterial >> parse: materialFileReference data: data [
 				ifNotNil: [ 1.0 ]
 		]);
 		
-		textureScaleAndOffset: (self parse: data at: materialFileReference array: 'texture-scales-offsets' size: 5 nativeType: Float32x4 ifAbsent: [ Float32x4 x: 1.0 y: 1.0 z: 0.0 w: 0.0]).
+		textureScaleAndOffset: (self parse: data at: materialFileReference array: 'texture-scales-offsets' type: (Float32x4 array: 5) ifAbsent: [ Float32x4 x: 1.0 y: 1.0 z: 0.0 w: 0.0]).
 
 	self invalidateCache.
 ]

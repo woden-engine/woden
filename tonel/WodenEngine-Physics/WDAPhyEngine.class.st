@@ -142,10 +142,12 @@ WDAPhyEngine >> convertMatrix3: matrix3 [
 	firstRow := matrix3 firstRow.
 	secondRow := matrix3 secondRow.
 	thirdRow := matrix3 thirdRow.
-	^ Float32x3x3
-		m11: firstRow x m12: firstRow y m13: firstRow z 
-		m21: secondRow x m22: secondRow y m23: secondRow z
-		m31: thirdRow x m32: thirdRow y m33: thirdRow z
+	^ Float32x3x3 rows: {
+		firstRow x . firstRow y . firstRow z.
+		secondRow x . secondRow y . secondRow z.
+		thirdRow x . thirdRow y . thirdRow z.
+	}
+
 ]
 
 { #category : #rendering }

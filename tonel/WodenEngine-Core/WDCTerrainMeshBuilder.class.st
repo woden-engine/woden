@@ -32,7 +32,7 @@ WDCTerrainMeshBuilder >> addCollisionBoxWithMinHeight: minCollisionHeight maxHei
 
 { #category : #'terrain mesh building' }
 WDCTerrainMeshBuilder >> addVertex: aVertex [
-	vertices add: aVertex.
+	vertices add: (WDCTerrainMeshVertexF32 basicNew position: aVertex).
 	boundingBox insertPoint: (Float32x3 x: aVertex x y: 0.0 z: aVertex y).
 ]
 
@@ -260,8 +260,8 @@ WDCTerrainMeshBuilder >> mesh [
 	mesh := WDCGenericMesh new.
 	mesh
 		boundingBox: (BoxF32
-			nx: boundingBox min x ny: minHeight nz: boundingBox min z
-			px: boundingBox max x py: maxHeight pz: boundingBox max x);
+			min: (Float32x3 x: boundingBox min x y: minHeight z: boundingBox min z)
+			max: (Float32x3 x: boundingBox max x y: maxHeight z: boundingBox max x));
 		vertexData: vertexData;
 		vertexBinding: self createVertexBinding;
 		indexBuffer: self createIndexBuffer;
@@ -281,7 +281,7 @@ WDCTerrainMeshBuilder >> minHeight: anObject [
 
 { #category : #'mesh building' }
 WDCTerrainMeshBuilder >> retrieveVertexLayout [
-	^ engine vertexLayoutFor: WDCTerrainMeshVertexF
+	^ engine vertexLayoutFor: WDCTerrainMeshVertexF32
 ]
 
 { #category : #'terrain mesh building' }
@@ -331,7 +331,7 @@ WDCTerrainMeshBuilder >> terrainMesh [
 
 { #category : #initialization }
 WDCTerrainMeshBuilder >> vertexClass [
-	^ WDCTerrainMeshVertexF
+	^ WDCTerrainMeshVertexF32
 ]
 
 { #category : #accessing }

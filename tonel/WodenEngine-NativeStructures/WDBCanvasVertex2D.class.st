@@ -1,6 +1,6 @@
 Class {
 	#name : #WDBCanvasVertex2D,
-	#superclass : #SysmelStructureType,
+	#superclass : #WDCVertexDataStructure,
 	#instVars : [
 		'#position => Float32x2 location: 0',
 		'#texcoord => Float32x2 location: 1',

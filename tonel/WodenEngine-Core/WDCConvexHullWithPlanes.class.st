@@ -16,10 +16,9 @@ WDCConvexHullWithPlanes >> initialize [
 { #category : #testing }
 WDCConvexHullWithPlanes >> isBoxOutside: aBox [
 	"Algorithm from: http://www.lighthouse3d.com/tutorials/view-frustum-culling/geometric-approach-testing-boxes-ii/"
-	planes do: [ :plane |
-		(plane isInFront: (aBox negativeVertex: plane normal)) ifTrue: [ ^ true ]
-	].
-	^ false
+	^ planes anySatisfy: [ :each |
+		each isInFront: (aBox negativeVertex: each normal)
+	]
 ]
 
 { #category : #accessing }

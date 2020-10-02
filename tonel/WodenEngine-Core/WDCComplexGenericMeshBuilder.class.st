@@ -138,8 +138,8 @@ WDCComplexGenericMeshBuilder >> planeTextureTransform: textureMatrix [
 	| vertex normal position normalAxis tangent bitangent uv |
 	1 to: vertices size do: [ :vi |
 		vertex := vertices at: vi.
-		normal := vertex normal asWMVector3.
-		position := vertex position asWMVector3.
+		normal := vertex normal asFloat32x3.
+		position := vertex position asFloat32x3.
 		
 		"Compute the predominant normal plane."
 		normalAxis := self computeNormalAxis: normal.
@@ -148,7 +148,7 @@ WDCComplexGenericMeshBuilder >> planeTextureTransform: textureMatrix [
 		
 		"Compute the new texcoord"
 		uv := Float32x2 x: (tangent dot: position) y: (bitangent dot: position).
-		vertex texcoord: (textureMatrix transformPosition2: uv).
+		vertex texcoord: (textureMatrix transformVector2: uv).
 		
 		vertices at: vi put: vertex.
 	]

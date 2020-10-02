@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'frustum'
 	],
-	#category : 'WodenEngine-Roassal-Core'
+	#category : #'WodenEngine-Roassal-Core'
 }
 
 { #category : #visiting }
@@ -40,6 +40,6 @@ RWCamera >> worldRayAtWindowCoordinate: point [
 	frustum := self frustum.
 	frustum leftBottomFar ifNil: [ ^ nil ].
 	
-	ray := frustum rayAtNormalizedPoint: point.
-	^ ray transformedWith: sceneNode transform
+	ray := frustum rayForNormalizedPoint: point.
+	^ ray transformedWith: sceneNode globalTransform
 ]

@@ -66,7 +66,7 @@ WDGBrushFaceTextureTransform >> asMatrixForNormal: aNormal [
 	u := tangents first.
 	v := tangents second.
 	
-	^ self textureMatrix4 * (Float64x4x4 newFrom: { 
+	^ self textureMatrix4 * (Float64x4x4 rows: { 
 		u x . u y . u z . 0.0 .
 		v x . v y . v z . 0.0 .
 		0.0 . 0.0 . 1.0 . 0.0 .
@@ -180,7 +180,7 @@ WDGBrushFaceTextureTransform >> textureMatrix4 [
 	sy := scale y.
 	ox := offset x.
 	oy := offset y.
-	^ Float64x4x4 newFrom: {
+	^ Float64x4x4 rows: {
 		c * sx . s negated * sy . 0.0 . ox .
 		s * sx . c * sy . 0.0 . oy .
 		0.0 . 0.0 . 1.0 . 0.0 .

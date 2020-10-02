@@ -128,7 +128,7 @@ RWView >> announce: eventOrClassEvent [
 
 { #category : #accessing }
 RWView >> babylonDefaultFont [
-	^ babylonDefaultFont ifNil: [ babylonDefaultFont := engine babylonDriver font: (LogicalFont familyName: 'Arial' pointSize: 20) ]
+	^ babylonDefaultFont ifNil: [ babylonDefaultFont := engine babylonDriver font: (LogicalFont familyName: 'DejaVu Sans' pointSize: 12) ]
 ]
 
 { #category : #accessing }

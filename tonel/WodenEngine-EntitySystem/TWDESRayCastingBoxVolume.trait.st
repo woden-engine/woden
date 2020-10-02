@@ -1,7 +1,6 @@
 Trait {
 	#name : #TWDESRayCastingBoxVolume,
 	#traits : 'TWDESRayCastingVolume',
-	#classTraits : 'TWDESRayCastingVolume classTrait',
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
 

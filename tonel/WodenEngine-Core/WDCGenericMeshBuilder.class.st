@@ -616,16 +616,17 @@ WDCGenericMeshBuilder >> computeBoundingBox [
 
 { #category : #'as yet unclassified' }
 WDCGenericMeshBuilder >> computeTangentsBitangents [
-	| vertex normal tangent bitangent tangents bitangents scaleFactor |
+	| vertexCount vertex normal tangent bitangent tangents bitangents scaleFactor |
 	self finishSubmesh.
-	tangents := SLVMNativeArray for: Float32x3 new: vertices size.
-	bitangents := SLVMNativeArray for: Float32x3 new: vertices size.
+	vertexCount := vertices size.
+	tangents := Array new: vertexCount withAll: Float32x3 zeros.
+	bitangents := Array new: vertexCount withAll: Float32x3 zeros.
 	submeshes do: [ :sm | self computeTangentsBitangentsFor: sm tangents: tangents bitangents: bitangents ].
 	
-	1 to: vertices size do: [ :vi |
+	1 to: vertexCount do: [ :vi |
 		vertex := (vertices at: vi).
 		
-		normal := vertex normal asWMVector3.
+		normal := vertex normal asFloat32x3.
 		tangent := tangents at: vi.
 		bitangent := bitangents at: vi.
 		
@@ -655,9 +656,9 @@ WDCGenericMeshBuilder >> computeTangentsBitangentsFor: submesh tangents: tangent
 		vi2 := (indices at: i2) + 1.
 		vi3 := (indices at: i3) + 1.
 		
-		p1 := (vertices at: vi1) position asWMVector3.
-		p2 := (vertices at: vi2) position asWMVector3.
-		p3 := (vertices at: vi3) position asWMVector3.
+		p1 := (vertices at: vi1) position asFloat32x3.
+		p2 := (vertices at: vi2) position asFloat32x3.
+		p3 := (vertices at: vi3) position asFloat32x3.
 
 		tc1 := (vertices at: vi1) texcoord.
 		tc2 := (vertices at: vi2) texcoord.

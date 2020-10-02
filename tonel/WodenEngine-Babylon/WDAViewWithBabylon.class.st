@@ -10,7 +10,7 @@ Class {
 
 { #category : #accessing }
 WDAViewWithBabylon >> babylonDefaultFont [
-	^ babylonDefaultFont ifNil: [ babylonDefaultFont := engine babylonDriver font: (LogicalFont familyName: 'Arial' pointSize: 20) ]
+	^ babylonDefaultFont ifNil: [ babylonDefaultFont := engine babylonDriver font: (LogicalFont familyName: 'DejaVu Sans' pointSize: 12) ]
 ]
 
 { #category : #'rendering process stages' }

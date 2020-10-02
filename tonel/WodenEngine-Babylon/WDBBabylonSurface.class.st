@@ -639,9 +639,9 @@ WDBBabylonSurface >> sendMeshesToMemory [
 	nextIndexOffset := 0.
 
 	meshesInMemory do: [ :mesh |
-		self assert: mesh vertices size % BabylonMesh2DVertex instanceSize = 0.
+		self assert: mesh vertices size % WDBCanvasVertex2D instanceSize = 0.
 		map := WDBBabylonMeshMemoryMap new
-				baseVertex: nextVertexOffset // BabylonMesh2DVertex instanceSize;
+				baseVertex: nextVertexOffset // WDBCanvasVertex2D instanceSize;
 				baseIndex: nextIndexOffset // 4;
 				yourself.
 		meshMemoryMap at: mesh put: map.

@@ -281,7 +281,7 @@ view addAll: {balloon . weight . string }.
 "Constants"
 balloonMass := 1.00.
 balloonInertiaDiag := 2.0/5.0*balloonMass*balloonRadius*balloonRadius.
-balloonInertia := Float32x3x3 newFrom: {
+balloonInertia := Float32x3x3 rows: {
 	balloonInertiaDiag . 0.0 . 0.0 .
 	0.0 . balloonInertiaDiag . 0.0 .
 	0.0 . 0.0 . balloonInertiaDiag
@@ -340,7 +340,7 @@ balloon setBehavior: [ :delta |
 	"balloonOrientation := balloonOrientation +
 		((QuaternionF32 r: 0.0 xyz: balloonAngularVelocity)*balloonOrientation * (0.5 * delta))."
 	balloonOrientation := balloonOrientation +
-		(balloonOrientation * (QuaternionF32 r: 0.0 xyz: balloonAngularVelocity)* (0.5 * delta)).
+		(balloonOrientation * (QuaternionF32 xyz: balloonAngularVelocity w: 0.0 )* (0.5 * delta)).
 		
 	balloonOrientation := balloonOrientation normalized.
 	
@@ -381,7 +381,7 @@ view addAll: {balloon . weight . string }.
 "Constants"
 balloonMass := 1.00.
 balloonInertiaDiag := 2.0/5.0*balloonMass*balloonRadius*balloonRadius.
-balloonInertia := Float32x3x3 newFrom: {
+balloonInertia := Float32x3x3 rows: {
 	balloonInertiaDiag . 0.0 . 0.0 .
 	0.0 . balloonInertiaDiag . 0.0 .
 	0.0 . 0.0 . balloonInertiaDiag
@@ -440,7 +440,7 @@ balloon setBehavior: [ :delta |
 	"balloonOrientation := balloonOrientation +
 		((QuaternionF32 r: 0.0 xyz: balloonAngularVelocity)*balloonOrientation * (0.5 * delta))."
 	balloonOrientation := balloonOrientation +
-		(balloonOrientation * (QuaternionF32 r: 0.0 xyz: balloonAngularVelocity)* (0.5 * delta)).
+		(balloonOrientation * (QuaternionF32 xyz: balloonAngularVelocity w: 0.0 )* (0.5 * delta)).
 		
 	balloonOrientation := balloonOrientation normalized.
 	
@@ -711,7 +711,7 @@ RWExample >> onePyramid [
 	v := RWView new.
 	v add: RWPyramid element.
 	v  @ RWMouseKeyControl.
-	^ v open
+	^ v
 ]
 
 { #category : #shapes }
@@ -726,7 +726,7 @@ RWExample >> oneRedCube [
 
 { #category : #shapes }
 RWExample >> oneUVSphere [
-	<script: 'self new onUVSphere open'>
+	<script: 'self new oneUVSphere open'>
 	| v |
 	v := RWView new.
 	v add: RWUVSphere element.

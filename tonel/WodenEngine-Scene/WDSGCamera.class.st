@@ -223,14 +223,14 @@ WDSGCamera >> frustumForNearDistance: newNearDistance farDistance: newFarDistanc
 		top := rightTopNear y.
 		nearFactor := newNearDistance / nearDistance.
 		
-		result reverseDepthFrustumLeft: left * nearFactor right: right * nearFactor
-			bottom: bottom * nearFactor top: top * nearFactor near: newNearDistance far: newFarDistance 			invertedY: projectionInvertedY
+		result makeFrustumLeft: left * nearFactor right: right * nearFactor
+			bottom: bottom * nearFactor top: top * nearFactor near: newNearDistance far: newFarDistance 
 	] ifFalse: [
 		hh := (fieldOfView * 0.5) degreesToRadians tan * focalDistance.
 		hw := hh * aspectRatio.
-		result reverseDepthOrthoLeft: hw negated right: hw
+		result makeOrthoLeft: hw negated right: hw
 			bottom: hh negated top: hh
-			near: newNearDistance far: newFarDistance invertedY: projectionInvertedY
+			near: newNearDistance far: newFarDistance
 	].
 	^ result
 ]

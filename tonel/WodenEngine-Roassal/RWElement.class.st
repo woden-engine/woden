@@ -308,7 +308,7 @@ RWElement >> rayCast: ray [
 	worldBoundingBox := self boundingBox.
 	worldBoundingBox isEmpty ifTrue: [ ^ 0 -> nil ].
 	
-	distance := ray intersectionDistanceWithBox: worldBoundingBox.
+	distance := worldBoundingBox intersectionWithRay: ray.
 	(distance isNil or: [distance <= 0]) ifTrue: [ ^ distance -> nil ].
 	^ distance -> self.
 ]

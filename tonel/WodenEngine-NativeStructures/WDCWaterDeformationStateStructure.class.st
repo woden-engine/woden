@@ -20,6 +20,16 @@ WDCWaterDeformationStateStructure >> clipMapPeriod: anObject [
 ]
 
 { #category : #accessing }
+WDCWaterDeformationStateStructure >> harmonicAt: index [
+	^ harmonics at: index
+]
+
+{ #category : #accessing }
+WDCWaterDeformationStateStructure >> harmonicAt: index put: harmonic [
+	harmonics at: index put: harmonic
+]
+
+{ #category : #accessing }
 WDCWaterDeformationStateStructure >> harmonics [
 	^ harmonics
 ]

@@ -66,19 +66,15 @@ WDBBabylonDriver >> convertMaterial: aMaterial [
 ]
 
 { #category : #'shape convertion' }
-WDBBabylonDriver >> convertMesh2D: aPompeiiMesh [
+WDBBabylonDriver >> convertMesh2D: aBabylonMesh [
 	| vertices indices indexCount glSubmesh submeshes |
-	vertices := SLVMNativeArray for: WDBCanvasVertex2D new: aPompeiiMesh vertices size.
 	indices := StdnVector newFor: UInt32.
-	aPompeiiMesh vertices doWithIndex: [ :vertex :index |
-		vertices at: index put: vertex asWDBCanvasVertex2D
-	].
+	vertices := aBabylonMesh vertices
+		collect: [:each | each asWDBCanvasVertex2D] as: (StdnVector for: WDBCanvasVertex2D).
 	
 	indexCount := 0.
-	submeshes := aPompeiiMesh submeshes collect: [ :submesh |
-		submesh indices do: [ :index |
-			indices add: index
-		].
+	submeshes := aBabylonMesh submeshes collect: [ :submesh |
+		indices addAll: submesh indices.
 		glSubmesh := WDBBabylonSubmesh new
 			startIndex: indexCount;
 			indexCount: submesh indices size;

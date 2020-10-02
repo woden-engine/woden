@@ -601,7 +601,7 @@ WDIGLTF2Importer >> loadNodeFrom: nodeDescription [
 	node ifNil: [ node := WDSGSpatialObject new ].
 	
 	nodeDescription at: 'matrix' ifPresent: [ :matrixElements |
-		node transform: (ReversibleAffineTransform3dF32 fromInvertibleMatrix4: (Float32x4x4 newFrom: matrixElements) transposed).
+		node transform: (ReversibleAffineTransform3dF32 fromInvertibleMatrix4: (Float32x4x4 columns: matrixElements)).
 	].
 
 	nodeDescription at: 'scale' ifPresent: [ :scaleComponent |

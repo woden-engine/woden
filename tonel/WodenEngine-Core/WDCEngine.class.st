@@ -760,14 +760,14 @@ WDCEngine >> queryDeviceCapabilities [
 	
 	"Do we need to flip the texture coordinates when doing projective texturing?"
 	self hasTopLeftNDCOrigin ~= self hasTopLeftTextureCoordinates ifTrue: [
-		projectiveTextureBiasMatrix := Float32x4x4 newFrom: #(
+		projectiveTextureBiasMatrix := Float32x4x4 rows: #(
 			0.5  0.0 0.0 0.5
 			0.0 -0.5 0.0 0.5
 			0.0  0.0 1.0 0.0
 			0.0  0.0 0.0 1.0
 		)
 	] ifFalse: [ 
-		projectiveTextureBiasMatrix := Float32x4x4 newFrom: #(
+		projectiveTextureBiasMatrix := Float32x4x4 rows: #(
 			0.5 0.0 0.0 0.5
 			0.0 0.5 0.0 0.5
 			0.0 0.0 1.0 0.0
