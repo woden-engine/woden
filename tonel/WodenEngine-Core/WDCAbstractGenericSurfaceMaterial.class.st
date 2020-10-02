@@ -152,7 +152,7 @@ WDCAbstractGenericSurfaceMaterial >> bindResources [
 
 	stateUniformBuffer ifNil: [
 		self flag: 'Use a memory pool here.'.
-		stateUniformBuffer := engine createStreamingUniformBuffer: (self materialStateClass structureSize alignedTo: 256).
+		stateUniformBuffer := engine createStreamingUniformBuffer: (self materialStateClass instanceSize alignedTo: 256).
 		self uploadMaterialStateData.
 	].
 

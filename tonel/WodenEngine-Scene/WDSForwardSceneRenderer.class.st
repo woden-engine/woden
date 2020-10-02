@@ -70,14 +70,13 @@ WDSForwardSceneRenderer >> updateFrameLightingStates [
 		transform := viewport cameraTransform.
 		scene := viewport camera scene.
 
-		lightSources := SLVMNativeArray for: WDCLightSourceData new: 16.
+		lightSources := (WDCLightSourceData array: 16) new.
 
 		viewportLights := renderingViewport lightRenderingStates.
 		viewportLights doWithIndex: [ :lightSource :lightIndex |
 			lightSources at: lightIndex put: (lightSource viewStateForCameraTransform: transform).
 		].
-		
-		lightingState := WDCGlobalLightingState  new.
+		lightingState := WDCGlobalLightingState new.
 		ambientLightingFactor := scene lightingProbe ifNil: [ Float pi ] ifNotNil: [ 1.0 ]. 
 		lightingState
 			skyLighting: scene skyLighting*ambientLightingFactor;

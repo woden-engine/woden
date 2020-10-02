@@ -185,11 +185,6 @@ WDSLightedSceneRendererViewport >> selectedLights [
 	^ selectedLights
 ]
 
-{ #category : #accessing }
-WDSLightedSceneRendererViewport >> selectedLights: anObject [
-	selectedLights := anObject
-]
-
 { #category : #asserting }
 WDSLightedSceneRendererViewport >> shouldRenderBackgroundLayer [
 	^ self camera usesSceneBackgroundLayer
