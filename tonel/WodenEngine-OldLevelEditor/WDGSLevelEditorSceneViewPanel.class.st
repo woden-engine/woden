@@ -453,7 +453,7 @@ WDGSLevelEditorSceneViewPanel >> normalizedToWindow: aVector3 [
 { #category : #'coordinate systems' }
 WDGSLevelEditorSceneViewPanel >> normalizedToWorld: aPosition depth: aDepth [
 	camera frustum ifNil: [ self updateCameraProjection ].
-	^ cameraTransform transformPosition3: (camera frustum localPoint: aPosition atDistance: aDepth) asFloat64x3
+	^ cameraTransform transformPosition: (camera frustum localPoint: aPosition atDistance: aDepth) asFloat64x3
 ]
 
 { #category : #'projection mode' }

@@ -56,14 +56,14 @@ WDCDirectionalLightRenderingState >> extractShadowCastingBodyPoints [
 	shadowCastingMaxExtent := Float negativeInfinity.
 	sceneBoundingBox := renderingLight node scene normalLayer globalBoundingBox.
 	
-	sceneBoundingBox cornersDo: [ :corner |
+	sceneBoundingBox corners do: [ :corner |
 		| extent |
 		extent := corner dot: shadowCastingVector.
 		shadowCastingMaxExtent := shadowCastingMaxExtent max: extent.
 	].
 	
 	self cameraFrustum corners do: [ :corner |
-		worldCorner := mainCameraTransform transformPosition3: corner.
+		worldCorner := mainCameraTransform transformPosition: corner.
 		flattenedWorldCorner := worldCorner - (shadowCastingVector* (shadowCastingVector dot: worldCorner)).
 		
 		points

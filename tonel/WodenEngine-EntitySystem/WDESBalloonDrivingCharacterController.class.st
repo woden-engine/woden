@@ -53,5 +53,5 @@ WDESBalloonDrivingCharacterController >> prePhysicsTick: delta [
 
 { #category : #initialization }
 WDESBalloonDrivingCharacterController >> vehicleDriverPosition [
-	^ driverEntryPosition interpolateTo: (vehicle sectorTransform transformPosition3: localDriverPosition) at: (drivingTime smoothStepFrom: 0.0 to: 0.8)
+	^ driverEntryPosition interpolateTo: (vehicle sectorTransform transformPosition: localDriverPosition) at: (drivingTime smoothStepFrom: 0.0 to: 0.8)
 ]

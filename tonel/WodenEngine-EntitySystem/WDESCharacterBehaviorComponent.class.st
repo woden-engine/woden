@@ -137,7 +137,7 @@ WDESCharacterBehaviorComponent >> ghostObject [
 
 { #category : #accessing }
 WDESCharacterBehaviorComponent >> globalHeadPosition [
-	^ ownerEntity globalTransform transformPosition3: self headPosition
+	^ ownerEntity globalTransform transformPosition: self headPosition
 ]
 
 { #category : #accessing }
@@ -363,7 +363,7 @@ WDESCharacterBehaviorComponent >> sectorHeadDirection [
 
 { #category : #accessing }
 WDESCharacterBehaviorComponent >> sectorHeadPosition [
-	^ ownerEntity sectorTransform transformPosition3: self headPosition
+	^ ownerEntity sectorTransform transformPosition: self headPosition
 ]
 
 { #category : #accessing }

@@ -210,7 +210,7 @@ WDCAbstractMeshVertexData >> transformOnlyNormalsWith: aTransform [
 	normals := self normals.
 	1 to: normals size do: [ :index |
 		normal := normals at: index.
-		transformedNormal := aTransform transformPosition3: normal.
+		transformedNormal := aTransform transformPosition: normal.
 		normals at: index put: transformedNormal
 	]
 
@@ -222,7 +222,7 @@ WDCAbstractMeshVertexData >> transformPositionsWith: aTransform [
 	positions := self positions.
 	1 to: positions size do: [ :index |
 		position := positions at: index.
-		transformedPosition := aTransform transformPosition3: position.
+		transformedPosition := aTransform transformPosition: position.
 		positions at: index put: transformedPosition
 	]
 ]

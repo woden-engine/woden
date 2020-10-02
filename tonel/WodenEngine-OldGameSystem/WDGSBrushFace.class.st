@@ -107,7 +107,7 @@ WDGSBrushFace >> buildTexturedModelInto: meshBuilder [
 	
 	indices do: [ :i |
 		position := positions at: i + 1.
-		texcoord3 := textureMatrix transformPosition3: position.
+		texcoord3 := textureMatrix transformPosition: position.
 		texcoord := Float32x2 x: texcoord3 x y: texcoord3 y.
 		meshBuilder addP: position asFloat32x3 N: normal T4: tangent4 TC: texcoord.
 	].

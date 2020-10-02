@@ -59,7 +59,7 @@ WDGSBrush >> addPosition: aPosition [
 
 { #category : #transformations }
 WDGSBrush >> applyTransformation: transformation [
-	self modifyPositionsApplying: [ :v | transformation transformPosition3: v ]
+	self modifyPositionsApplying: [ :v | transformation transformPosition: v ]
 ]
 
 { #category : #serialization }

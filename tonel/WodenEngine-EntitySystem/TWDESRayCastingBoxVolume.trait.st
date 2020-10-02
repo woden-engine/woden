@@ -1,6 +1,7 @@
 Trait {
 	#name : #TWDESRayCastingBoxVolume,
 	#traits : 'TWDESRayCastingVolume',
+	#classTraits : 'TWDESRayCastingVolume classTrait',
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
 
@@ -20,7 +21,7 @@ TWDESRayCastingBoxVolume >> rayCast: ray [
 	localIntersectionDistance ifNil: [ ^ Float infinity -> nil ].
 	
 	localIntersectionPoint := localRay pointAtDistance: localIntersectionDistance.
-	intersectionPoint := globalTransform transformPosition3: localIntersectionPoint.
+	intersectionPoint := globalTransform transformPosition: localIntersectionPoint.
 	
 	intersectionDistance := intersectionPoint - ray origin dot: ray direction.
 	^ intersectionDistance -> self
