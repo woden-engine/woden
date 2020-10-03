@@ -49,7 +49,7 @@ WDCResourceCache class >> cachedValueFor: anObjectDescription ifPresent: ifPrese
 WDCResourceCache class >> cachedValueFor: anObjectDescription ifPresent: ifPresentBlock ifAbsentPut: ifAbsentPutBlock [
 	| fileName valueToSave |
 	fileName := self fileNameForCachedValue: anObjectDescription.
-	fileName exists ifTrue: [ ^ ifPresentBlock value: (FLMaterializer materializeFromFileNamed: fileName fullName)].
+	fileName exists ifTrue: [ ^ ifPresentBlock value: (FLMaterializer wodenMaterializeFromFileNamed: fileName fullName)].
 	
 	valueToSave := ifAbsentPutBlock value.
 	FLSerializer serialize: valueToSave toFileNamed: fileName fullName.

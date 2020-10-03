@@ -1,5 +1,5 @@
 Class {
-	#name : #WTOpenALSoundListener,
+	#name : #WDOpenALSoundListener,
 	#superclass : #Object,
 	#instVars : [
 		'device',
@@ -15,22 +15,22 @@ Class {
 }
 
 { #category : #accessing }
-WTOpenALSoundListener >> device [
+WDOpenALSoundListener >> device [
 	^ device
 ]
 
 { #category : #accessing }
-WTOpenALSoundListener >> device: anObject [
+WDOpenALSoundListener >> device: anObject [
 	device := anObject
 ]
 
 { #category : #accessing }
-WTOpenALSoundListener >> gain [
+WDOpenALSoundListener >> gain [
 	^ gain
 ]
 
 { #category : #accessing }
-WTOpenALSoundListener >> gain: anObject [
+WDOpenALSoundListener >> gain: anObject [
 	gain := anObject.
 	
 	(self hasValidHandle and: [ self isCurrentListener ]) ifTrue: [
@@ -39,12 +39,12 @@ WTOpenALSoundListener >> gain: anObject [
 ]
 
 { #category : #accessing }
-WTOpenALSoundListener >> hasValidHandle [
+WDOpenALSoundListener >> hasValidHandle [
 	^ device isNotNil
 ]
 
 { #category : #initialization }
-WTOpenALSoundListener >> initialize [
+WDOpenALSoundListener >> initialize [
 	super initialize.
 	position := Float32x3 new.
 	velocity := Float32x3 new.
@@ -53,23 +53,23 @@ WTOpenALSoundListener >> initialize [
 ]
 
 { #category : #testing }
-WTOpenALSoundListener >> isCurrentListener [
+WDOpenALSoundListener >> isCurrentListener [
 	^ device currentListener == self
 ]
 
 { #category : #accessing }
-WTOpenALSoundListener >> orientation [
+WDOpenALSoundListener >> orientation [
 	^ orientation
 ]
 
 { #category : #accessing }
-WTOpenALSoundListener >> orientation: anObject [
+WDOpenALSoundListener >> orientation: anObject [
 	| forward up orientationData |
 	orientation := anObject.
 	
 	(self hasValidHandle and: [ self isCurrentListener ]) ifTrue: [
-		forward := orientation transformVector: (Float32x3 z: -1.0).
-		up := orientation transformVector: (Float32x3 y: 1.0).
+		forward := orientation * (Float32x3 z: -1.0).
+		up := orientation * (Float32x3 y: 1.0).
 	
 		orientationData := {
 			forward x . forward y . forward z .
@@ -82,12 +82,12 @@ WTOpenALSoundListener >> orientation: anObject [
 ]
 
 { #category : #accessing }
-WTOpenALSoundListener >> position [
+WDOpenALSoundListener >> position [
 	^ position
 ]
 
 { #category : #accessing }
-WTOpenALSoundListener >> position: anObject [
+WDOpenALSoundListener >> position: anObject [
 	position := anObject.
 	
 	(self hasValidHandle and: [ self isCurrentListener ]) ifTrue: [
@@ -98,7 +98,7 @@ WTOpenALSoundListener >> position: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-WTOpenALSoundListener >> sendValues [
+WDOpenALSoundListener >> sendValues [
 	| forward up orientationData |
 	device asCurrentDo: [
 		OpenAL
@@ -106,8 +106,8 @@ WTOpenALSoundListener >> sendValues [
 			listener3f: AL_POSITION value: position x value: position y value: position z;
 			listener3f: AL_VELOCITY value: velocity x value: velocity y value: velocity z.
 		
-		forward := orientation transformVector: (Float32x3 z: -1.0).
-		up := orientation transformVector: (Float32x3 y: 1.0).
+		forward := orientation * (Float32x3 z: -1.0).
+		up := orientation * (Float32x3 y: 1.0).
 	
 		orientationData := {
 			forward x . forward y . forward z .
@@ -117,12 +117,12 @@ WTOpenALSoundListener >> sendValues [
 ]
 
 { #category : #accessing }
-WTOpenALSoundListener >> velocity [
+WDOpenALSoundListener >> velocity [
 	^ velocity
 ]
 
 { #category : #accessing }
-WTOpenALSoundListener >> velocity: anObject [
+WDOpenALSoundListener >> velocity: anObject [
 	velocity := anObject.
 	
 	(self hasValidHandle and: [ self isCurrentListener ]) ifTrue: [

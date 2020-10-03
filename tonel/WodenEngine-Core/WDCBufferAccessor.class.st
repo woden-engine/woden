@@ -30,7 +30,9 @@ WDCBufferAccessor >> asIndexBuffer [
 
 { #category : #converting }
 WDCBufferAccessor >> asNativeArrayReference [
-	^ SLVMNativeArrayReference for: type slvmType offset: bufferView offset + byteOffset size: count data: bufferView buffer data
+	| bufferDataPointer |
+	bufferDataPointer := type sysmelType pointer adoptFrom: bufferView buffer data offset: bufferView offset + byteOffset.
+	^ bufferDataPointer until: count
 ]
 
 { #category : #accessing }

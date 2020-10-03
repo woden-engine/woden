@@ -10,7 +10,7 @@ Class {
 		'normalized',
 		'size',
 		'alignment',
-		'slvmType'
+		'sysmelType'
 	],
 	#classVars : [
 		'FieldTypes'
@@ -27,8 +27,6 @@ WDCStructureFieldType class >> initializeFieldTypes [
 	"
 	self initializeFieldTypes
 	"
-	| formatId componentType components normalized size alignment type slvmType |
-
 	FieldTypes := Dictionary new.
 	#(
 		R32G32B32A32_TYPELESS 		(uint 	4 false 16 4)
@@ -117,6 +115,7 @@ WDCStructureFieldType class >> initializeFieldTypes [
 		B8G8R8X8_TYPELESS
 		B8G8R8X8_UNORM_SRGB"
 	) pairsDo: [ :formatName :spec |
+		| formatId componentType components normalized size alignment type sysmelType |
 		formatId := (AGPUConstants bindingOf: (#AGPU_TEXTURE_FORMAT_ , formatName) asSymbol) value.
 		self assert: formatId isNotNil.
 		componentType := spec first.
@@ -124,7 +123,7 @@ WDCStructureFieldType class >> initializeFieldTypes [
 		normalized := spec third.
 		size := spec fourth.
 		alignment := spec fifth.
-		slvmType := self parseOptionalSLVMType: (spec at: 6 ifAbsent: nil).
+		sysmelType := self parseOptionalSLVMType: (spec at: 6 ifAbsent: nil).
 		type := self new
 			name: formatName asSymbol;
 			componentType: componentType;
@@ -134,32 +133,33 @@ WDCStructureFieldType class >> initializeFieldTypes [
 			rows: 1;
 			size: size;
 			alignment: alignment;
-			slvmType: slvmType;
+			sysmelType: sysmelType;
 			yourself.
 		FieldTypes at: type name put: type
 	].
 
 	#(
-		byte 		(UNKNOWN byte 1 false 1 1 #uchar)
-		byte2 		(UNKNOWN byte 2 false 2 2 #uchar)
-		byte3 		(UNKNOWN byte 3 false 3 4 #uchar)
-		byte4 		(R8G8B8A8_UINT byte 4 false 4 4 #uchar)
+		byte 		(UNKNOWN byte 1 false 1 1 UInt8)
+		byte2 		(UNKNOWN byte 2 false 2 2 UInt8x2)
+		byte3 		(UNKNOWN byte 3 false 3 4 UInt8x3)
+		byte4 		(R8G8B8A8_UINT byte 4 false 4 4 UInt8x4)
 
-		ushort		(R16_UINT ushort 1 false 2 2 #ushort)
-		ushort2	(R16G16_UINT ushort 2 false 4 4 #ushort)
-		ushort3	(UNKNOWN ushort 3 false 6 8 #ushort)
-		ushort4	(R16G16B16A16_UINT ushort 4 false 8 8 #ushort)
+		ushort		(R16_UINT ushort 1 false 2 2 UInt16)
+		ushort2	(R16G16_UINT ushort 2 false 4 4 UInt16x2)
+		ushort3	(UNKNOWN ushort 3 false 6 8 UInt16x3)
+		ushort4	(R16G16B16A16_UINT ushort 4 false 8 8 UInt16x4)
 
-		uint	(R32_UINT uint 1 false 4 4 #uint)
-		uint2	(R32G32_UINT uint 2 false 8 8 #uint)
-		uint3	(R32G32B32_UINT uint 3 false 12 16 #uint)
-		uint4	(R32G32B32A32_UINT uint 4 false 16 16 #uint)
+		uint	(R32_UINT uint 1 false 4 4 UInt32)
+		uint2	(R32G32_UINT uint 2 false 8 8 UInt32x2)
+		uint3	(R32G32B32_UINT uint 3 false 12 16 UInt32x3)
+		uint4	(R32G32B32A32_UINT uint 4 false 16 16 UInt32x4)
 
-		float 		(R32_FLOAT float 1 false 4 4 #float)
+		float 		(R32_FLOAT float 1 false 4 4 Float32)
 		float2 	(R32G32_FLOAT float 2 false 8 8 Float32x2)
 		float3 	(R32G32B32_FLOAT  float 3 false 16 16 Float32x3)
 		float4 	(R32G32B32A32_FLOAT  float 4 false 16 16 Float32x4)
 	) pairsDo: [ :formatName :spec |
+		| formatId componentType components normalized size alignment type sysmelType |
 		formatId := (AGPUConstants bindingOf: (#AGPU_TEXTURE_FORMAT_ , spec first) asSymbol) value.
 		self assert: formatId isNotNil.
 		componentType := spec second.
@@ -167,7 +167,7 @@ WDCStructureFieldType class >> initializeFieldTypes [
 		normalized := spec fourth.
 		size := spec fifth.
 		alignment := spec sixth.
-		slvmType := self parseOptionalSLVMType: (spec at: 7 ifAbsent: nil).
+		sysmelType := self parseOptionalSLVMType: (spec at: 7 ifAbsent: nil).
 		type := self new
 			name: formatName asSymbol;
 			componentType: componentType;
@@ -177,7 +177,7 @@ WDCStructureFieldType class >> initializeFieldTypes [
 			rows: 1;
 			size: size;
 			alignment: alignment;
-			slvmType: slvmType;
+			sysmelType: sysmelType;
 			yourself.
 		FieldTypes at: type name put: type
 	]
@@ -277,11 +277,11 @@ WDCStructureFieldType >> size: anObject [
 ]
 
 { #category : #accessing }
-WDCStructureFieldType >> slvmType [
-	^ slvmType
+WDCStructureFieldType >> sysmelType [
+	^ sysmelType
 ]
 
 { #category : #accessing }
-WDCStructureFieldType >> slvmType: anObject [
-	slvmType := anObject
+WDCStructureFieldType >> sysmelType: anObject [
+	sysmelType := anObject
 ]

@@ -92,7 +92,7 @@ WDESBalloonVehicleKinematicPhysicsBehavior >> prePhysicsTick: delta [
 
 	self ownerEntity
 		transform: (ReversibleAffineTransform3dF32 identity
-			orthonormal: (Float32x3x3 yrot: angularVelocity * delta) * oldTransform matrix translation: newTranslation)
+			orthonormal: (Float32x3x3 yRotation: angularVelocity * delta) * oldTransform matrix translation: newTranslation)
 ]
 
 { #category : #accessing }

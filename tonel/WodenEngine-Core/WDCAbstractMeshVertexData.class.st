@@ -21,7 +21,7 @@ WDCAbstractMeshVertexData >> colors [
 
 { #category : #'display box access' }
 WDCAbstractMeshVertexData >> computeBoundingBox [
-	^ BoxF32 empty insertPoints: self positions; yourself.
+	^ BoxF32 encompassing: self positions
 ]
 
 { #category : #'vertex manipulations' }
@@ -52,7 +52,8 @@ WDCAbstractMeshVertexData >> computeNormalsWithTriangles: triangles [
 
 	1 to: normals size do: [ :i |
 		normals at: i put: (normals at: i) normalized
-	]
+	].
+
 ]
 
 { #category : #private }
@@ -76,17 +77,17 @@ WDCAbstractMeshVertexData >> computeTangents4WithTriangles: triangles [
 	texcoords := self texcoords.
 	normals := self normals.
 	
-	tangents := SLVMNativeArray for: Float32x3 new: self size.
-	bitangents := SLVMNativeArray for: Float32x3 new: self size.
+	tangents := Array new: self size withAll: Float32x3 zeros.
+	bitangents := Array new: self size withAll: Float32x3 zeros.
 
 	triangles do: [ :triangle |
 		i1 := triangle first + 1.
 		i2 := triangle second + 1.
 		i3 := triangle third + 1.
 		
-		p1 := (positions at: i1) asWMVector3.
-		p2 := (positions at: i2) asWMVector3.
-		p3 := (positions at: i3) asWMVector3.
+		p1 := (positions at: i1) asFloat32x3.
+		p2 := (positions at: i2) asFloat32x3.
+		p3 := (positions at: i3) asFloat32x3.
 
 		tc1 := texcoords at: i1.
 		tc2 := texcoords at: i2.
@@ -118,14 +119,14 @@ WDCAbstractMeshVertexData >> computeTangents4WithTriangles: triangles [
 		].
 	].
 
-	tangents4 := SLVMNativeArray for: Float32x4 new: self size.
+	tangents4 := (StdnVector for: Float32x4) new: self size.
 	1 to: self size do: [ :vertexIndex |
 		tangent := tangents at: vertexIndex.
 		bitangent := bitangents at: vertexIndex.
 		normal := normals at: vertexIndex.
 		
 		tangent4 := self computeTangent4WithTangent: tangent bitangent: bitangent normal: normal.
-		tangents4 at: vertexIndex put: tangent4		
+		tangents4 add: tangent4		
 	].
 
 	self addChannelNativeTangents4: tangents4

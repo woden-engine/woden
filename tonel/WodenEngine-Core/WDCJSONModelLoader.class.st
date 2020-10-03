@@ -49,7 +49,7 @@ WDCJSONModelLoader >> createWhiteColorChannelOfSize: vertexCount [
 	| description channelData vectorClass white |
 	description := WDCMeshImplicitSeparatedVertexData vertexChannelDescriptions at: #colors.
 
-	vectorClass := description type slvmType.
+	vectorClass := description type sysmelType.
 	
 	vectorClass ifNil: [
 		self error: 'Cannot decoded channel without an associated class.'
@@ -399,7 +399,7 @@ WDCJSONModelLoader >> loadVertexChannel: channelName data: sourceData [
 		self error: 'Unsupported/unknown vertex channel ' , channelName printString
 	].
 
-	vectorClass := description type slvmType.
+	vectorClass := description type sysmelType.
 	vectorSize := description type components.
 	rows := description type rows.
 	self assert: rows = 1.

@@ -1,5 +1,5 @@
 Class {
-	#name : #WTOpenALSoundDevice,
+	#name : #WDOpenALSoundDevice,
 	#superclass : #WDCSoundDevice,
 	#instVars : [
 		'device',
@@ -9,66 +9,66 @@ Class {
 	#pools : [
 		'OpenALConstants'
 	],
-	#category : 'WodenEngine-OpenAL'
+	#category : #'WodenEngine-OpenAL'
 }
 
 { #category : #'as yet unclassified' }
-WTOpenALSoundDevice >> asCurrentDo: aBlock [
+WDOpenALSoundDevice >> asCurrentDo: aBlock [
 	context currentDuring: aBlock
 ]
 
 { #category : #accessing }
-WTOpenALSoundDevice >> context [
+WDOpenALSoundDevice >> context [
 	^ context
 ]
 
 { #category : #accessing }
-WTOpenALSoundDevice >> context: anObject [
+WDOpenALSoundDevice >> context: anObject [
 	context := anObject
 ]
 
 { #category : #'as yet unclassified' }
-WTOpenALSoundDevice >> createListener [
-	^ WTOpenALSoundListener new device: self.
+WDOpenALSoundDevice >> createListener [
+	^ WDOpenALSoundListener new device: self.
 ]
 
 { #category : #factory }
-WTOpenALSoundDevice >> createSampleFor: sample [
+WDOpenALSoundDevice >> createSampleFor: sample [
 	| sid |
 	self asCurrentDo: [
 		sid := OpenAL genBuffer.
 	].
 
-	^ WTOpenALSoundSample new device: self; handle: sid; uploadSample: sample
+	^ WDOpenALSoundSample new device: self; handle: sid; uploadSample: sample
 ]
 
 { #category : #factory }
-WTOpenALSoundDevice >> createSource [
+WDOpenALSoundDevice >> createSource [
 	| sid |
 	self asCurrentDo: [
 		sid := OpenAL genSource.
 	].
 
-	^ WTOpenALSoundSource new device: self; handle: sid
+	^ WDOpenALSoundSource new device: self; handle: sid
 ]
 
 { #category : #accessing }
-WTOpenALSoundDevice >> currentListener [
+WDOpenALSoundDevice >> currentListener [
 	^ currentListener
 ]
 
 { #category : #accessing }
-WTOpenALSoundDevice >> device [
+WDOpenALSoundDevice >> device [
 	^ device
 ]
 
 { #category : #accessing }
-WTOpenALSoundDevice >> device: anObject [
+WDOpenALSoundDevice >> device: anObject [
 	device := anObject
 ]
 
 { #category : #'as yet unclassified' }
-WTOpenALSoundDevice >> useListener: soundListener [
+WDOpenALSoundDevice >> useListener: soundListener [
 	currentListener := soundListener.
 	currentListener
 		ifNil: [ self asCurrentDo: [

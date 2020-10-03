@@ -31,7 +31,7 @@ WDCGenericMesh >> extractConvexCollisionShapesWithTransform: collisionShapeTrans
 	
 	convexComponents add: (WDPhyCompoundCollisionShapeComponent new
 		transform: collisionShapeTransform;
-		shape: (WDPhyConvexHullCollisionShape new points: extractedVertices asNativeArray);
+		shape: (WDPhyConvexHullCollisionShape new points: extractedVertices);
 		yourself)
 
 ]

@@ -130,16 +130,18 @@ WDCMeshImplicitSeparatedVertexData >> findChannelNamed: aChannelName [
 
 { #category : #adding }
 WDCMeshImplicitSeparatedVertexData >> generateEmptyTexcoords [
-	| description vectorClass channelData |
+	| description vectorClass channelData emptyCoord |
 	description := VertexChannelDescriptions at: #texcoords.
 
-	vectorClass := description type slvmType.
+	vectorClass := description type sysmelType.
 	
 	vectorClass ifNil: [
 		self error: 'Cannot decoded channel without an associated class.'
 	].
 	
-	channelData := SLVMNativeArray for: vectorClass new: vertexCount.
+	channelData := (StdnVector for: vectorClass) new: vertexCount.
+	emptyCoord := vectorClass zeros.
+	1 to: vertexCount do: [ :i | channelData add: emptyCoord ].
 	self addChannelNativeTexcoords: channelData
 ]
 
@@ -148,30 +150,32 @@ WDCMeshImplicitSeparatedVertexData >> generateWhiteColorChannel [
 	| description vectorClass channelData white |
 	description := VertexChannelDescriptions at: #colors.
 
-	vectorClass := description type slvmType.
+	vectorClass := description type sysmelType.
 	
 	vectorClass ifNil: [
 		self error: 'Cannot decoded channel without an associated class.'
 	].
 	
-	channelData := SLVMNativeArray for: vectorClass new: vertexCount.
+	channelData := (StdnVector for: vectorClass) new: vertexCount.
 	white := vectorClass x: 1.0 y: 1.0 z: 1.0 w: 1.0.
-	1 to: vertexCount do: [ :i | channelData at: i put: white ].
+	1 to: vertexCount do: [ :i | channelData add: white ].
 	self addChannelNativeColors: channelData
 ]
 
 { #category : #adding }
 WDCMeshImplicitSeparatedVertexData >> generateZeroNormals [
-	| description vectorClass channelData |
+	| description vectorClass channelData zeroNormal |
 	description := VertexChannelDescriptions at: #normals.
 
-	vectorClass := description type slvmType.
+	vectorClass := description type sysmelType.
 	
 	vectorClass ifNil: [
 		self error: 'Cannot decoded channel without an associated class.'
 	].
 	
-	channelData := SLVMNativeArray for: vectorClass new: vertexCount.
+	channelData := (StdnVector for: vectorClass) new: vertexCount.
+	zeroNormal := vectorClass zeros.
+	1 to: vertexCount do: [ :i | channelData add: zeroNormal ].
 	self addChannelNativeNormals: channelData
 ]
 

@@ -75,14 +75,14 @@ WDIStanfordPLYImporter >> extractIndices [
 		self triangulateFace: indexList into: indices
 	].
 
-	^ indices asNativeArray
+	^ indices
 ]
 
 { #category : #loading }
 WDIStanfordPLYImporter >> extractPositions [
 	| vertexElement positions values xi yi zi x y z vertexValue |
 	vertexElement := elementDictionary at: 'vertex'.
-	positions := SLVMNativeArray for: Float32x3 new: vertexElement count.
+	positions := (StdnVector for: Float32x3) new: vertexElement count.
 	values := vertexElement values.
 	xi := vertexElement indexOfProperty: #x.
 	yi := vertexElement indexOfProperty: #y.
@@ -94,7 +94,7 @@ WDIStanfordPLYImporter >> extractPositions [
 		y := vertexValue at: yi.
 		z := vertexValue at: zi.
 		
-		positions at: index put: (Float32x3 x: x y: y z: z)
+		positions add: (Float32x3 x: x y: y z: z)
 	].
 
 	^ positions
@@ -118,7 +118,7 @@ WDIStanfordPLYImporter >> finishLoading [
 	vertices := WDCMeshImplicitSeparatedVertexData new.
 	vertices
 		vertexCount: positions size;
-		addChannelNativePositions: positions asNativeArray;
+		addChannelNativePositions: positions;
 		generateEmptyTexcoords;
 		computeNormalsWithTriangles: triangles;
 		computeTangents4WithTriangles: triangles;
@@ -127,7 +127,7 @@ WDIStanfordPLYImporter >> finishLoading [
 	
 	^ WDCSimpleModel new
 		vertices: vertices;
-		indices: indices asNativeArray;
+		indices: indices;
 		submeshes: submeshes asArray;
 		boundingBox: vertices computeBoundingBox;
 		yourself

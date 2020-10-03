@@ -131,7 +131,7 @@ WDIGLTF2Importer >> convertIndices: indexCountToConvert withAccessors: indexBuff
 		ifTrue: [ WDCStructureFieldType typeNamed: #uint ]
 		ifFalse: [ WDCStructureFieldType typeNamed: #ushort ].
 
-	newIndexDataArray := SLVMNativeArray for: newIndexType slvmType new: indexCountToConvert.
+	newIndexDataArray := SLVMNativeArray for: newIndexType sysmelType new: indexCountToConvert.
 	newIndexBuffer := WDCBufferResource new
 		description: (AGPUBufferDescription new
 			size: newIndexDataArray rawData size;
@@ -209,9 +209,9 @@ WDIGLTF2Importer >> generateVertexDataTangentSpaceFrame: vertexData submeshes: s
 		i2 := triangle second + 1.
 		i3 := triangle third + 1.
 		
-		p1 := (positionChannel at: i1) asWMVector3.
-		p2 := (positionChannel at: i2) asWMVector3.
-		p3 := (positionChannel at: i3) asWMVector3.
+		p1 := (positionChannel at: i1) asFloat32x3.
+		p2 := (positionChannel at: i2) asFloat32x3.
+		p3 := (positionChannel at: i3) asFloat32x3.
 
 		tc1 := texcoordsChannel at: i1.
 		tc2 := texcoordsChannel at: i2.

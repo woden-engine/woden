@@ -33,7 +33,7 @@ WDCTerrainData >> buildTerrainMeshWith: builder [
 
 { #category : #'mesh building' }
 WDCTerrainData >> buildWaterMeshWith: builder [
-	self doBuildTerrainMeshWith: builder cellSize: (Float32x3 x: 0.1 y: 0.1)
+	self doBuildTerrainMeshWith: builder cellSize: (Float32x2 x: 0.1 y: 0.1)
 ]
 
 { #category : #accessing }

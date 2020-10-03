@@ -1,5 +1,5 @@
 Class {
-	#name : #WTOpenALSoundSample,
+	#name : #WDOpenALSoundSample,
 	#superclass : #Object,
 	#instVars : [
 		'device',
@@ -8,37 +8,37 @@ Class {
 	#pools : [
 		'OpenALConstants'
 	],
-	#category : 'WodenEngine-OpenAL'
+	#category : #'WodenEngine-OpenAL'
 }
 
 { #category : #'as yet unclassified' }
-WTOpenALSoundSample >> applyOnSource: source [
+WDOpenALSoundSample >> applyOnSource: source [
 	source hasValidHandle ifFalse: [ ^ self ].
 	OpenAL sourcei: source handle param: AL_BUFFER value: handle.
 ]
 
 { #category : #accessing }
-WTOpenALSoundSample >> device [
+WDOpenALSoundSample >> device [
 	^ device
 ]
 
 { #category : #accessing }
-WTOpenALSoundSample >> device: anObject [
+WDOpenALSoundSample >> device: anObject [
 	device := anObject
 ]
 
 { #category : #accessing }
-WTOpenALSoundSample >> handle [
+WDOpenALSoundSample >> handle [
 	^ handle
 ]
 
 { #category : #accessing }
-WTOpenALSoundSample >> handle: anObject [
+WDOpenALSoundSample >> handle: anObject [
 	handle := anObject
 ]
 
 { #category : #'as yet unclassified' }
-WTOpenALSoundSample >> mapFormat: format channels: channels [
+WDOpenALSoundSample >> mapFormat: format channels: channels [
 	channels = 1 ifTrue: [ 
 		format == #byte ifTrue: [ ^ AL_FORMAT_MONO8 ].
 		format == #short ifTrue: [ ^ AL_FORMAT_MONO16 ].
@@ -52,7 +52,7 @@ WTOpenALSoundSample >> mapFormat: format channels: channels [
 ]
 
 { #category : #'as yet unclassified' }
-WTOpenALSoundSample >> uploadSample: sample [
+WDOpenALSoundSample >> uploadSample: sample [
 	| data |
 	sample data ifNil: [ ^ self ].
 	data := sample data.

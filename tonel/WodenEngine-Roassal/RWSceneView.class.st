@@ -54,6 +54,7 @@ RWSceneView >> dispatchMouseOverElementsEvent: event newElement: elementBeingPoi
 
 { #category : #rendering }
 RWSceneView >> drawOnBabylonCanvas: canvas [
+	super drawOnBabylonCanvas: canvas.
 	model ifNotNil: [
 		model drawOverlaysOnBabylonCanvas: canvas
 	]
@@ -61,6 +62,7 @@ RWSceneView >> drawOnBabylonCanvas: canvas [
 
 { #category : #rendering }
 RWSceneView >> drawOnScaledBabylonCanvas: canvas [
+	super drawOnScaledBabylonCanvas: canvas.
 	model ifNotNil: [
 		model drawOverlaysOnScaledBabylonCanvas: canvas
 	]

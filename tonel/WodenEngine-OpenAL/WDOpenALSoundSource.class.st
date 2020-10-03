@@ -1,5 +1,5 @@
 Class {
-	#name : #WTOpenALSoundSource,
+	#name : #WDOpenALSoundSource,
 	#superclass : #Object,
 	#instVars : [
 		'device',
@@ -19,33 +19,33 @@ Class {
 }
 
 { #category : #accessing }
-WTOpenALSoundSource >> dataSource [
+WDOpenALSoundSource >> dataSource [
 	^ dataSource
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> dataSource: anObject [
+WDOpenALSoundSource >> dataSource: anObject [
 	dataSource := anObject.
 	dataSource ifNotNil: [ dataSource applyOnSource: self ]
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> device [
+WDOpenALSoundSource >> device [
 	^ device
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> device: anObject [
+WDOpenALSoundSource >> device: anObject [
 	device := anObject
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> gain [
+WDOpenALSoundSource >> gain [
 	^ gain
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> gain: anObject [
+WDOpenALSoundSource >> gain: anObject [
 	gain := anObject.
 	
 	device asCurrentDo: [
@@ -54,22 +54,22 @@ WTOpenALSoundSource >> gain: anObject [
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> handle [
+WDOpenALSoundSource >> handle [
 	^ handle
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> handle: anObject [
+WDOpenALSoundSource >> handle: anObject [
 	handle := anObject
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> hasValidHandle [
+WDOpenALSoundSource >> hasValidHandle [
 	^ handle ~= 0
 ]
 
 { #category : #initialization }
-WTOpenALSoundSource >> initialize [
+WDOpenALSoundSource >> initialize [
 	super initialize.
 	gain := 1.0.
 	pitch := 1.0.
@@ -81,12 +81,12 @@ WTOpenALSoundSource >> initialize [
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> isGlobalSource [
+WDOpenALSoundSource >> isGlobalSource [
 	^ isGlobalSource
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> isGlobalSource: anObject [
+WDOpenALSoundSource >> isGlobalSource: anObject [
 	isGlobalSource := anObject.
 	
 	(self hasValidHandle) ifTrue: [
@@ -98,12 +98,12 @@ WTOpenALSoundSource >> isGlobalSource: anObject [
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> looped [
+WDOpenALSoundSource >> looped [
 	^ looped
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> looped: anObject [
+WDOpenALSoundSource >> looped: anObject [
 	looped := anObject.
 	
 	(self hasValidHandle) ifTrue: [
@@ -115,12 +115,12 @@ WTOpenALSoundSource >> looped: anObject [
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> pitch [
+WDOpenALSoundSource >> pitch [
 	^ pitch
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> pitch: anObject [
+WDOpenALSoundSource >> pitch: anObject [
 	pitch := anObject.
 	
 	device asCurrentDo: [
@@ -129,19 +129,19 @@ WTOpenALSoundSource >> pitch: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-WTOpenALSoundSource >> play [
+WDOpenALSoundSource >> play [
 	device asCurrentDo: [
 		OpenAL sourcePlay: handle.
 	]
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> position [
+WDOpenALSoundSource >> position [
 	^ position
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> position: anObject [
+WDOpenALSoundSource >> position: anObject [
 	position := anObject.
 	
 	(self hasValidHandle) ifTrue: [
@@ -153,7 +153,7 @@ WTOpenALSoundSource >> position: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-WTOpenALSoundSource >> sendValues [
+WDOpenALSoundSource >> sendValues [
 	OpenAL
 		sourcef: handle param: AL_GAIN value: gain;
 		source3f: handle param: AL_POSITION value: position x value: position y value: position z;
@@ -161,19 +161,19 @@ WTOpenALSoundSource >> sendValues [
 ]
 
 { #category : #'as yet unclassified' }
-WTOpenALSoundSource >> stop [
+WDOpenALSoundSource >> stop [
 	device asCurrentDo: [
 		OpenAL sourceStop: handle.
 	]
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> velocity [
+WDOpenALSoundSource >> velocity [
 	^ velocity
 ]
 
 { #category : #accessing }
-WTOpenALSoundSource >> velocity: anObject [
+WDOpenALSoundSource >> velocity: anObject [
 	velocity := anObject.
 	
 	(self hasValidHandle) ifTrue: [

@@ -135,9 +135,9 @@ WDIWavefrontObjImporter >> finishLoading [
 	vertices := WDCMeshImplicitSeparatedVertexData new.
 	vertices
 		vertexCount: positions size;
-		addChannelNativePositions: positions asNativeArray;
-		addChannelNativeTexcoords: texcoords asNativeArray;
-		addChannelNativeNormals: normals asNativeArray;
+		addChannelNativePositions: positions;
+		addChannelNativeTexcoords: texcoords;
+		addChannelNativeNormals: normals;
 		computeTangents4WithTriangles: (WDCSubmeshTriangleIterator indices: indices submeshes: submeshes);
 		generateWhiteColorChannel;
 		sortChannels;
@@ -145,7 +145,7 @@ WDIWavefrontObjImporter >> finishLoading [
 	
 	^ WDCSimpleModel new
 		vertices: vertices;
-		indices: indices asNativeArray;
+		indices: indices;
 		submeshes: submeshes asArray;
 		boundingBox: vertices computeBoundingBox;
 		yourself

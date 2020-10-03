@@ -358,7 +358,7 @@ WDESCharacterBehaviorComponent >> running: anObject [
 
 { #category : #accessing }
 WDESCharacterBehaviorComponent >> sectorHeadDirection [
-	^ ownerEntity sectorTransform transformVector: (headOrientation transformVector: (Float32x3 z: -1.0))
+	^ ownerEntity sectorTransform transformVector: (headOrientation * (Float32x3 z: -1.0))
 ]
 
 { #category : #accessing }

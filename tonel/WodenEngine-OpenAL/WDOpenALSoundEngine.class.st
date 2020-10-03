@@ -1,5 +1,5 @@
 Class {
-	#name : #WTOpenALSoundEngine,
+	#name : #WDOpenALSoundEngine,
 	#superclass : #WDCSoundEngine,
 	#pools : [
 		'OpenALConstants'
@@ -8,12 +8,12 @@ Class {
 }
 
 { #category : #testing }
-WTOpenALSoundEngine class >> isSupported [
+WDOpenALSoundEngine class >> isSupported [
 	^ OpenAL loadLibrary isNotNil
 ]
 
 { #category : #factory }
-WTOpenALSoundEngine >> createSoundDevice [
+WDOpenALSoundEngine >> createSoundDevice [
 	| alcDevice attributes alcContext |
 	alcDevice := OpenALC openDefaultDevice.
 	alcDevice ifNil: [ ^ nil ].
@@ -25,5 +25,5 @@ WTOpenALSoundEngine >> createSoundDevice [
 		OpenAL listenerf: AL_GAIN value: 0.0.
 	].
 	alcContext process.
-	^ WTOpenALSoundDevice new device: alcDevice; context: alcContext; yourself
+	^ WDOpenALSoundDevice new device: alcDevice; context: alcContext; yourself
 ]
