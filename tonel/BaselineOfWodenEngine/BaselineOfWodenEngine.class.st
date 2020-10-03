@@ -46,8 +46,10 @@ BaselineOfWodenEngine >> baseline: spec [
 					repository: 'github://ronsaldo/sysmel' ].
 		spec package: #'WodenEngine-NativeStructures' with: [
 				spec requires: #(#'Sysmel')].
+		spec package: #'WodenEngine-NativeDastrelBindings' with: [
+				spec requires: #(#'Dastrel' #'WodenEngine-NativeStructures')].
 		spec package: #'WodenEngine-Core' with: [
-				spec requires: #(#'NeoJSON' #'AbstractGPU' #'Dastrel' #'Sysmel' #'WodenEngine-NativeStructures')].
+				spec requires: #(#'NeoJSON' #'AbstractGPU' #'Dastrel' #'Sysmel' #'WodenEngine-NativeStructures' #'WodenEngine-NativeDastrelBindings')].
 		spec package: #'WodenEngine-Babylon' with: [
 				spec requires: #('WodenEngine-Core' 'BabylonGraphics' 'CyrusToolkit')].
 		spec package: #'WodenEngine-Scene' with: [
