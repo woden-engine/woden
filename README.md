@@ -8,10 +8,7 @@ Woden communicates with the 3D graphics via the abstract-gpu abstraction layer.
 
 #### Windows and Linux
 
-Woden on windows requires a modern graphics card with support for at least one
-of the following two graphics APIs:
-* Vulkan
-* OpenGL 4.5
+Woden on Windows requires a modern graphics card with support for Vulkan.
 
 #### OS X
 
@@ -19,8 +16,7 @@ Woden on OS X requires a Mac with support for the Metal API.
 
 ## Loading Woden
 
-Woden can be loaded in a 64 bits Pharo 7 image by running the following script in a
-playground:
+Woden can be loaded in a 64 bits Pharo 8 (and 9) image by running the following script in a playground:
 
 ```smalltalk
 Metacello new
