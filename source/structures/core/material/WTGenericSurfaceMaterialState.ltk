@@ -1,8 +1,0 @@
-Structure <<< #WTGenericSurfaceMaterialState
-	slots: {
-		#albedo => WMVector4F. 
-		#fresnel => WMCompactVector3F. 
-		#smoothness => Float32
-	};
-	package: 'WodenEngine-Structures-Core-Material';
-	yourself.

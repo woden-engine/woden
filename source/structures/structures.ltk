@@ -1,4 +1,0 @@
-Compiler
-    evaluateFileNamed: 'core/package.ltk';
-	evaluateFileNamed: 'pompeii/package.ltk';
-	yourself

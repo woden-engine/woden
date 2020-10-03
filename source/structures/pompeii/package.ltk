@@ -1,6 +1,0 @@
-Compiler
-	declarePackage: #'WodenEngine-Structures-Pompeii';
-    evaluateFileNamed: 'WDPCanvasVertex2D.ltk';
-    evaluateFileNamed: 'WDPColorRampEntry.ltk';
-    evaluateFileNamed: 'WDPQuickState.ltk';
-	yourself.

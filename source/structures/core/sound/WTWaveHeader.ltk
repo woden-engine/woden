@@ -1,8 +1,0 @@
-Structure <<< #WTWaveHeader
-	slots: {
-		#signature => UInt32. 
-		#chunkSize => UInt32. 
-		#waveID => UInt32
-	};
-	package: 'WodenEngine-Structures-Core-Sound';
-	yourself.

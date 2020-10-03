@@ -1,5 +1,0 @@
-Compiler
-    evaluateFileNamed: 'WTCameraState.ltk';
-    evaluateFileNamed: 'WTCompositionState.ltk';
-    evaluateFileNamed: 'WTVRState.ltk';
-	yourself.

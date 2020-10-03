@@ -1,5 +1,0 @@
-Compiler
-    evaluateFileNamed: 'WTLodenFontCharMapEntry.ltk';
-    evaluateFileNamed: 'WTLodenFontGlyphMetadata.ltk';
-    evaluateFileNamed: 'WTLodenFontHeader.ltk';
-	yourself.

@@ -1,6 +1,0 @@
-Compiler
-	evaluateFileNamed: 'generic/package.ltk';
-	evaluateFileNamed: 'compressed-vectors/category.ltk';
-	evaluateFileNamed: 'extensions.ltk';
-	evaluateFileNamed: 'tests/package.ltk';
-	yourself

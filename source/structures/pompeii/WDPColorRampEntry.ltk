@@ -1,7 +1,0 @@
-Structure <<< #WDPColorRampEntry
-	slots: {
-		#edge => Float32.
-		#color => WMVector4F
-	};
-	package: 'WodenEngine-Structures-Pompeii';
-	yourself.

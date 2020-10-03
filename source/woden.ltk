@@ -1,4 +1,0 @@
-Compiler
-	evaluateFileNamed: 'math/math.ltk';
-	evaluateFileNamed: 'structures/structures.ltk';
-	yourself
