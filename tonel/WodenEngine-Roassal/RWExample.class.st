@@ -553,7 +553,7 @@ RWExample >> fallingLineLayout [
 	<script: 'self new fallingLineLayout openInVR'>
 	| v floor |
 	v := RWView new.
-	1 to: 1000 do: [ :i |
+	1 to: 300 do: [ :i |
 		v add: (RWCube element mass: 1.0).
 	].
 
