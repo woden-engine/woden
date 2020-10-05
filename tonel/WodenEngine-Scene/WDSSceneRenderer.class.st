@@ -104,6 +104,7 @@ WDSSceneRenderer >> intermediateRenderTargetsClass [
 { #category : #'rendering preparations' }
 WDSSceneRenderer >> prepareRenderingForCamera: camera withViewports: viewports [
 	| perCameraViewports |
+	camera ifNil: [ ^ nil ].
 	perCameraViewports := WDSSceneRendererPerCameraRenderingViewports new
 		camera: camera;
 		renderingViewports: (viewports collect: [ :viewport |

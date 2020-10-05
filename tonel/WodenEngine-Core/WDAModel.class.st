@@ -56,6 +56,16 @@ WDAModel >> continousUpdating [
 	^ started
 ]
 
+{ #category : #opening }
+WDAModel >> createWidgetInMorphicWith: aView [
+	| view widget |
+	view := aView engine: engine model: self.
+	widget := view createWidgetInMorphic.
+	self addView: view.
+	self start.
+	^ widget
+]
+
 { #category : #'as yet unclassified' }
 WDAModel >> defaultViewClass [
 	^ WDAView

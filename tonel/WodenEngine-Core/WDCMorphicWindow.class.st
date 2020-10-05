@@ -73,6 +73,7 @@ WDCMorphicWindow >> close [
 { #category : #rendering }
 WDCMorphicWindow >> commitSurface [
 	| pitch slicePitch |
+	displayForm ifNil: [ ^ self ].
 	pitch := displayForm width * 4.
 	slicePitch := pitch * displayForm height.
 	displayForm unhibernate.

@@ -47,7 +47,7 @@ WDSLightedSceneRenderer class >> maxShadowCastingLightCount [
 
 { #category : #'shadow mapping' }
 WDSLightedSceneRenderer class >> shadowMapExtent [
-	^ 1024 @ 1024
+	^ 2048 @ 2048
 ]
 
 { #category : #'debug rendering' }

@@ -62,6 +62,13 @@ WDAView >> commitSurfaces [
 	window commitSurface
 ]
 
+{ #category : #opening }
+WDAView >> createWidgetInMorphic [
+	window := (WDAMorphicViewWindow for: self) engine: engine; yourself.
+	self openedWithWindow: window.
+	^ window
+]
+
 { #category : #accessing }
 WDAView >> defaultExtent [
 	^ 640@480
@@ -142,10 +149,10 @@ WDAView >> needsDirectRenderTarget [
 
 { #category : #opening }
 WDAView >> openInMorphic [
-	window := (WDAMorphicViewWindow for: self) engine: engine; yourself.
-	window openInWindow.
-	self openedWithWindow: window.
-	^ window
+	^ self createWidgetInMorphic
+		openInWindow;
+		yourself
+
 ]
 
 { #category : #opening }

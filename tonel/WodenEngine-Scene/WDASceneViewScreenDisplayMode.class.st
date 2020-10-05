@@ -57,6 +57,7 @@ WDASceneViewScreenDisplayMode >> prepareRendering [
 { #category : #'rendering process stages' }
 WDASceneViewScreenDisplayMode >> prepareSceneRenderer [
 	| renderTarget resolveTarget |
+	view cameraSceneNode ifNil: [ ^ self ].
 	renderTarget := view window validRenderTarget.
 	resolveTarget := view window validResolveRenderTarget.
 	view sceneRenderer
@@ -85,6 +86,7 @@ WDASceneViewScreenDisplayMode >> submitLowLatencyData [
 WDASceneViewScreenDisplayMode >> updateCameraFrustum [
 	| camera extent aspect |
 	camera := view cameraSceneNode.
+	camera ifNil: [ ^ self ].
 	extent := view window drawingSurfaceExtent.
 	aspect := extent x asFloat / extent y asFloat.
 	camera updateFrustumWithAspectRatio: aspect projectionInvertedY: engine projectionInvertedY

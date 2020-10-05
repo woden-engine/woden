@@ -68,10 +68,17 @@ BaselineOfWodenEngine >> baseline: spec [
 				spec requires: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL')].
 		spec package: #'WodenEngine-OldLevelEditor' with: [
 				spec requires: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL' 'WodenEngine-OldGameSystem')].
+		spec package: #'WodenEngine-Spec2' with: [
+				spec requires: #(#'WodenEngine-Core')].
+		spec package: #'WodenEngine-Editor-Model' with: [
+				spec requires: #(#'WodenEngine-Core')].
+		spec package: #'WodenEngine-Editor-UI' with: [
+				spec requires: #(#'WodenEngine-Core' #'WodenEngine-Spec2' #'WodenEngine-Editor-Model')].
+
 		spec package: #'WodenEngine-Roassal' with: [
 				spec requires: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Scene' 'WodenEngine-Physics')].
 
-		spec group: 'default' with: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Samples' 'WodenEngine-EntitySystem' 'WodenEngine-OldGameSystem' 'WodenEngine-OldLevelEditor' 'WodenEngine-Roassal')
+		spec group: 'default' with: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Samples' 'WodenEngine-EntitySystem' 'WodenEngine-OldGameSystem' 'WodenEngine-OldLevelEditor' 'WodenEngine-Roassal' #'WodenEngine-Editor-UI')
 	]
 
 ]

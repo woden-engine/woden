@@ -147,6 +147,7 @@ WDASceneViewStereoDisplayMode >> prepareDisplayMode [
 
 { #category : #'rendering process stages' }
 WDASceneViewStereoDisplayMode >> prepareSceneRenderer [
+	view cameraSceneNode ifNil: [ ^ self ].
 	view sceneRenderer
 		useLateLatching: self useLateLatching;
 		currentTime: view model currentTime;
@@ -218,6 +219,7 @@ WDASceneViewStereoDisplayMode >> updateCameraFrustum [
 	top := left_rightTopNear y max: right_rightTopNear y.
 
 	camera := view cameraSceneNode.
+	camera ifNil: [ ^ self ].
 	near := camera nearDistance.
 	far := camera farDistance.
 	
