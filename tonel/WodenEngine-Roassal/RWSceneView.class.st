@@ -130,9 +130,11 @@ RWSceneView >> onMouseOverElements: event [
 
 { #category : #'as yet unclassified' }
 RWSceneView >> projectPointToScreen: aPoint [
-	| viewPoint projectedPoint ndcPoint ndcX ndcY extent x y |
-	viewPoint := camera sceneNode globalTransform inverseTransformPosition3: aPoint.
-	projectedPoint := camera sceneNode frustum matrix transformVector4: viewPoint asFloat32x4.
+	| viewPoint projectionMatrix projectedPoint ndcPoint ndcX ndcY extent x y |
+	viewPoint := camera sceneNode globalTransform inverseTransformPosition: aPoint.
+	projectionMatrix := camera sceneNode projectionMatrix.
+	projectionMatrix ifNil: [ ^ 0@0 ].
+	projectedPoint := projectionMatrix * (Float32x4 xyz: viewPoint w: 1.0).
 	(projectedPoint w closeTo: 0.0) ifTrue: [ ^ 0@0 ].
 	(projectedPoint z >= 0.0) ifTrue: [ ^ 0@0 ].
 	

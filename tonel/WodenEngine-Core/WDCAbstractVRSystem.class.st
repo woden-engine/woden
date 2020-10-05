@@ -54,7 +54,7 @@ WDCAbstractVRSystem >> initializeWithEngine: anEngine [
 ]
 
 { #category : #'multi eye rendering' }
-WDCAbstractVRSystem >> leftEyeFrustumNear: near far: far invertedY: invertedY [
+WDCAbstractVRSystem >> leftEyeFrustumNear: near far: far [
 	self subclassResponsibility
 ]
 
@@ -78,7 +78,7 @@ WDCAbstractVRSystem >> pollVREvents [
 ]
 
 { #category : #'multi eye rendering' }
-WDCAbstractVRSystem >> rightEyeFrustumNear: near far: far invertedY: invertedY [
+WDCAbstractVRSystem >> rightEyeFrustumNear: near far: far [
 	self subclassResponsibility
 ]
 

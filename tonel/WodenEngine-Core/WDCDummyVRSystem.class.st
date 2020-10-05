@@ -27,8 +27,8 @@ WDCDummyVRSystem >> initialize [
 ]
 
 { #category : #'multi eye rendering' }
-WDCDummyVRSystem >> leftEyeFrustumNear: near far: far invertedY: invertedY [
-	^ FrustumF32 new reverseDepthPerspectiveFovY: 60.0 aspect: 1.0 near: near far: far invertedY: invertedY
+WDCDummyVRSystem >> leftEyeFrustumNear: near far: far [
+	^ FrustumF32 new makePerspectiveFovY: 60.0 aspect: 1.0 near: near far: far
 ]
 
 { #category : #'multi eye rendering' }
@@ -42,8 +42,8 @@ WDCDummyVRSystem >> leftEyeRenderTargetExtent [
 ]
 
 { #category : #'multi eye rendering' }
-WDCDummyVRSystem >> rightEyeFrustumNear: near far: far invertedY: invertedY [
-	^ FrustumF32 new reverseDepthPerspectiveFovY: 60.0 aspect: 1.0 near: near far: far invertedY: invertedY
+WDCDummyVRSystem >> rightEyeFrustumNear: near far: far [
+	^ FrustumF32 new makePerspectiveFovY: 60.0 aspect: 1.0 near: near far: far
 ]
 
 { #category : #'multi eye rendering' }

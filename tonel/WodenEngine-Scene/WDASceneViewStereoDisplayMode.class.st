@@ -223,7 +223,8 @@ WDASceneViewStereoDisplayMode >> updateCameraFrustum [
 	
 	invertedY := engine projectionInvertedY.
 	combinedFrustum := FrustumF32 new
-		reverseDepthFrustumLeft: left right: right bottom: bottom top: top near: near far: far invertedY: invertedY.
+		makeFrustumLeft: left right: right bottom: bottom top: top near: near far: far.
 	"Transcript show: left; space; show: right; space; show: bottom; space; show: top; space; show: near; space; show: far; cr."
-	camera setExplicitFrustum: combinedFrustum invertedY: invertedY.
+	camera
+		setExplicitFrustum: combinedFrustum invertedY: invertedY projectionMatrix: (Float32x4x4 reverseDepthFrustumLeft: left right: right bottom: bottom top: top near: near far: far invertedY: invertedY)
 ]

@@ -147,8 +147,8 @@ WDCAGPUVRSystem >> initializeWithEngine: anEngine [
 ]
 
 { #category : #'multi eye rendering' }
-WDCAGPUVRSystem >> leftEyeFrustumNear: near far: far invertedY: invertedY [
-	^ leftEyeFrustumTangents frustumNear: near far: far invertedY: invertedY
+WDCAGPUVRSystem >> leftEyeFrustumNear: near far: far [
+	^ leftEyeFrustumTangents frustumNear: near far: far
 ]
 
 { #category : #'multi eye rendering' }
@@ -193,8 +193,8 @@ WDCAGPUVRSystem >> processVREvent: agpuVREvent [
 ]
 
 { #category : #'multi eye rendering' }
-WDCAGPUVRSystem >> rightEyeFrustumNear: near far: far invertedY: invertedY [
-	^ rightEyeFrustumTangents frustumNear: near far: far invertedY: invertedY
+WDCAGPUVRSystem >> rightEyeFrustumNear: near far: far [
+	^ rightEyeFrustumTangents frustumNear: near far: far
 ]
 
 { #category : #'multi eye rendering' }

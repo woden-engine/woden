@@ -343,6 +343,12 @@ WDSGCamera >> setExplicitFrustum: newFrustum invertedY: anInvertedY [
 ]
 
 { #category : #'as yet unclassified' }
+WDSGCamera >> setExplicitFrustum: newFrustum invertedY: anInvertedY projectionMatrix: theProjectionMatrix [
+	projectionMatrix := theProjectionMatrix.
+	self setExplicitFrustum: newFrustum invertedY: anInvertedY.
+]
+
+{ #category : #'as yet unclassified' }
 WDSGCamera >> storeGlobalStatesForGPUIn: cameraState [
 	cameraState
 		clipMapCameraPosition: self globalTransform translation;
@@ -389,7 +395,7 @@ WDSGCamera >> updateFrustumWithAspectRatio: newAspectRatio projectionInvertedY: 
 WDSGCamera >> updateSymmetricalFrustum [
 	| hh hw |
 	self isPerspective ifTrue: [
-		projectionMatrix := Float32x4x4 reversePerspectiveFovY: fieldOfView aspect: aspectRatio near: nearDistance far: farDistance invertedY: projectionInvertedY.
+		projectionMatrix := Float32x4x4 reverseDepthPerspectiveFovY: fieldOfView aspect: aspectRatio near: nearDistance far: farDistance invertedY: projectionInvertedY.
 		frustum makePerspectiveFovY: fieldOfView aspect: aspectRatio near: nearDistance far: farDistance
 	] ifFalse: [
 		hh := (fieldOfView * 0.5 ) degreesToRadians tan * focalDistance.

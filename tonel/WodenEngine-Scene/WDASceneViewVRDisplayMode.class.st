@@ -20,12 +20,12 @@ WDASceneViewVRDisplayMode >> computeProjectionMatrices [
 	far := camera farDistance.
 
 	vrSystem := engine vrSystem.
-	leftEyeFrustum := vrSystem leftEyeFrustumNear: near far: far invertedY: invertedY.
-	leftProjectionMatrix := leftEyeFrustum matrix.
+	leftEyeFrustum := vrSystem leftEyeFrustumNear: near far: far.
+	leftProjectionMatrix := vrSystem leftEyeProjectionMatrixNear: near far: far invertedY: invertedY.
 	leftEyeTransform := vrSystem leftEyeTransform.
 	
-	rightEyeFrustum := vrSystem rightEyeFrustumNear: near far: far invertedY: invertedY.
-	rightProjectionMatrix := rightEyeFrustum matrix.
+	rightEyeFrustum := vrSystem rightEyeFrustumNear: near far: far.
+	rightProjectionMatrix := vrSystem rightEyeProjectionMatrixNear: near far: far invertedY: invertedY.
 	rightEyeTransform := vrSystem rightEyeTransform
 
 ]
