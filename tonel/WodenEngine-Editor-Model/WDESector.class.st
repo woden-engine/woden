@@ -3,6 +3,7 @@ Class {
 	#superclass : #WDELevelElement,
 	#instVars : [
 		'level',
+		'isSector2D',
 		'layers'
 	],
 	#category : #'WodenEngine-Editor-Model'
@@ -25,6 +26,22 @@ WDESector >> children [
 WDESector >> initialize [
 	super initialize.
 	layers := OrderedCollection new.
+	isSector2D := false.
+]
+
+{ #category : #accessing }
+WDESector >> isSector2D [
+	^ isSector2D
+]
+
+{ #category : #accessing }
+WDESector >> isSector2D: anObject [
+	isSector2D := anObject
+]
+
+{ #category : #accessing }
+WDESector >> layers: anObject [
+	layers := anObject
 ]
 
 { #category : #accessing }

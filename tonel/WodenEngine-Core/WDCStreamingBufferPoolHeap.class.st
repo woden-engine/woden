@@ -9,30 +9,41 @@ Class {
 		'pointer',
 		'freeList',
 		'elementSize',
-		'elementType'
+		'elementType',
+		'freeIndexList',
+		'allocatedElements'
 	],
-	#category : 'WodenEngine-Core-Pool'
+	#category : #'WodenEngine-Core-Pool'
 }
 
 { #category : #accessing }
 WDCStreamingBufferPoolHeap >> allocate [
-	| element |
-	self assert: size < capacity.
-	self flag: 'TODO: use a free list.'.
+	| element elementIndex |
+	self assert: (size < capacity or: [freeIndexList isNotEmpty]).
+	
+	elementIndex := nil.
+	freeIndexList ifEmpty: [
+		elementIndex := size + 1.
+		size := size + 1.
+	] ifNotEmpty: [
+		elementIndex := freeIndexList last.
+		freeIndexList removeLast.
+	].
+
 	element := WDCStreamingBufferPoolElement new
 		heap: self;
-		index: size + 1;
+		index: elementIndex;
 		offset: elementSize * size;
+		autoRelease;
 		yourself.
-	size := size + 1.
+	allocatedElements add: element.
 	^ element
 
 ]
 
 { #category : #accessing }
 WDCStreamingBufferPoolHeap >> buffer [
-	buffer ifNil: [ buffer := pool createBuffer: capacity ].
-	^ buffer
+	^ buffer ifNil: [ buffer := pool createBuffer: capacity ]
 ]
 
 { #category : #accessing }
@@ -75,10 +86,17 @@ WDCStreamingBufferPoolHeap >> hasAvailableElement [
 	^ size < capacity
 ]
 
+{ #category : #accessing }
+WDCStreamingBufferPoolHeap >> indexReleased: index [
+	freeIndexList add: index
+]
+
 { #category : #initialization }
 WDCStreamingBufferPoolHeap >> initialize [
 	super initialize.
 	size := 0.
+	freeIndexList := OrderedCollection new.
+	allocatedElements := WeakSet new.
 ]
 
 { #category : #accessing }
@@ -94,6 +112,12 @@ WDCStreamingBufferPoolHeap >> pool [
 { #category : #accessing }
 WDCStreamingBufferPoolHeap >> pool: anObject [
 	pool := anObject
+]
+
+{ #category : #path }
+WDCStreamingBufferPoolHeap >> sessionChanged [
+	pointer := nil.
+	allocatedElements do: [ :each | each sessionChanged ]
 ]
 
 { #category : #accessing }

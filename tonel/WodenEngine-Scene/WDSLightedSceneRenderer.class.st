@@ -229,6 +229,7 @@ WDSLightedSceneRenderer >> prepareShadowMapRendering [
 	
 	| viewports shadowCastingLightAndViewer |
 	shadowCastingLightCount = 0 ifTrue: [ ^ self ].
+	self shadowMapRenderTargets ifNil: [ ^ self ].
 	
 	viewports := (1 to: shadowCastingLightCount) collect: [ :i |
 		shadowCastingLightAndViewer := shadowCastingLights at: i.
@@ -339,6 +340,13 @@ WDSLightedSceneRenderer >> sceneRendererViewportClass [
 	^ WDSLightedSceneRendererViewport
 ]
 
+{ #category : #initialization }
+WDSLightedSceneRenderer >> sessionChanged [
+	super sessionChanged.
+	shadowMapRenderTargets := nil.
+	shadowSceneRenderer ifNotNil: [ shadowSceneRenderer sessionChanged ].
+]
+
 { #category : #accessing }
 WDSLightedSceneRenderer >> shaderSignatureClass [
 	^ WDCSceneRenderingShaderSignature
@@ -371,21 +379,31 @@ WDSLightedSceneRenderer >> shadowMapBuffer [
 			checkSession;
 			yourself.
 
-	shadowMapRenderTargets := (1 to: self maxShadowCastingLightCount) collect: [ :i |
-		(WDCRenderTarget for: engine extent: shadowMapExtent)
-			colorAttachmentFormats: #();
-			depthStencilFormat: shadowMapFormat;
-			hasDepth: true;
-			createFramebuffersWithColorAttachments: #() views: #() depthStencilAttachment: shadowMapBuffer view: (shadowMapBuffer createViewForSingleLayer: i - 1);
-			yourself
-	].
-	
 	^ shadowMapBuffer
 ]
 
 { #category : #'shadow mapping' }
 WDSLightedSceneRenderer >> shadowMapExtent [
 	^ self class shadowMapExtent
+]
+
+{ #category : #'shadow mapping' }
+WDSLightedSceneRenderer >> shadowMapRenderTargets [
+	| shadowMapExtent shadowMapFormat |
+	shadowMapRenderTargets ifNotNil: [ ^ shadowMapRenderTargets ].
+	shadowMapExtent := self shadowMapExtent.
+	shadowMapFormat := engine preferredDepthFormat.
+
+	shadowMapRenderTargets := (1 to: self maxShadowCastingLightCount) collect: [ :i |
+		(WDCRenderTarget for: engine extent: shadowMapExtent)
+			colorAttachmentFormats: #();
+			depthStencilFormat: shadowMapFormat;
+			hasDepth: true;
+			createFramebuffersWithColorAttachments: #() views: #() depthStencilAttachment: self shadowMapBuffer view: (self shadowMapBuffer createViewForSingleLayer: i - 1);
+			yourself
+	].
+	
+	^ shadowMapRenderTargets
 ]
 
 { #category : #'shadow mapping' }

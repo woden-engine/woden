@@ -4,9 +4,9 @@ Class {
 	#instVars : [
 		'description',
 		'handle',
-		'device'
+		'engine'
 	],
-	#category : 'WodenEngine-Core-GPU-Resources'
+	#category : #'WodenEngine-Core-GPU-Resources'
 }
 
 { #category : #building }
@@ -26,13 +26,13 @@ WDCPipelineState >> description: anObject [
 ]
 
 { #category : #accessing }
-WDCPipelineState >> device [
-	^ device
+WDCPipelineState >> engine [
+	^ engine
 ]
 
 { #category : #accessing }
-WDCPipelineState >> device: anObject [
-	device := anObject
+WDCPipelineState >> engine: anObject [
+	engine := anObject
 ]
 
 { #category : #accessing }
@@ -47,7 +47,12 @@ WDCPipelineState >> handle: anObject [
 
 { #category : #building }
 WDCPipelineState >> reload [
-	handle := description buildForDevice: device.
+	handle := description buildForDevice: engine device.
+]
+
+{ #category : #path }
+WDCPipelineState >> sessionChanged [
+	self reload
 ]
 
 { #category : #accessing }

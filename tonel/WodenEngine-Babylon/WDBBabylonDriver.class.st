@@ -148,9 +148,8 @@ WDBBabylonDriver >> initialize [
 	super initialize.
 	engine ifNil: [ engine := WDCEngine default ].
 	engine babylonDriver: self.
-	formTextureCache := WeakValueDictionary new.
-	textureMaterialCache := WeakValueDictionary new.
-	textureArrayMaterialCache := WeakValueDictionary new.
+	self sessionChanged.
+
 ]
 
 { #category : #initialization }
@@ -162,6 +161,15 @@ WDBBabylonDriver >> initializeWithEngine: anEngine [
 { #category : #'as yet unclassified' }
 WDBBabylonDriver >> mapPrimitiveType: primitiveType [
 	^ PrimitiveTypeMap at: primitiveType
+]
+
+{ #category : #initialization }
+WDBBabylonDriver >> sessionChanged [
+	cachedFonts := Dictionary new.
+	formTextureCache := WeakValueDictionary new.
+	textureMaterialCache := WeakValueDictionary new.
+	textureArrayMaterialCache := WeakValueDictionary new.
+
 ]
 
 { #category : #'instance creation' }

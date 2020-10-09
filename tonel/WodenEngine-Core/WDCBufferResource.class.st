@@ -6,7 +6,7 @@ Class {
 		'data',
 		'pointer'
 	],
-	#category : 'WodenEngine-Core-GPU-Resources'
+	#category : #'WodenEngine-Core-GPU-Resources'
 }
 
 { #category : #'as yet unclassified' }
@@ -18,6 +18,7 @@ WDCBufferResource >> applyAsIndexBufferToCommandList: commandListBuilder [
 WDCBufferResource >> buildHandle [
 	self assert: description isNotNil.
 	handle := engine device createBuffer: description initial_data: self initialData.
+	session := Smalltalk session.
 	(description mapping_flags anyMask: AGPU_MAP_PERSISTENT_BIT) ifTrue: [ 
 		pointer := handle mapBuffer: self defaultMappingMode.
 		self assert: pointer isNull not.

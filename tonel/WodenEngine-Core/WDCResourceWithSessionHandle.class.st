@@ -9,7 +9,7 @@ Class {
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Core-GPU-Resources'
+	#category : #'WodenEngine-Core-GPU-Resources'
 }
 
 { #category : #'as yet unclassified' }
@@ -94,6 +94,11 @@ WDCResourceWithSessionHandle >> removeResourceDependency: dependency [
 { #category : #accessing }
 WDCResourceWithSessionHandle >> session [
 	^ session
+]
+
+{ #category : #path }
+WDCResourceWithSessionHandle >> sessionChanged [
+	self checkSession
 ]
 
 { #category : #accessing }

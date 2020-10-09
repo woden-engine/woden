@@ -110,6 +110,12 @@ WDASceneViewWithBabylon >> renderViewport: viewport overlayWith: stateTracker [
 	self babylonOverlaySpatialObject renderRenderable: babylonOverlay with: stateTracker
 ]
 
+{ #category : #path }
+WDASceneViewWithBabylon >> sessionChanged [
+	babylonOverlay := nil.
+	super sessionChanged
+]
+
 { #category : #'as yet unclassified' }
 WDASceneViewWithBabylon >> validBabylonOverlay [
 	babylonOverlay ifNil: [ babylonOverlay := WDCBabylonOverlay for: engine ].

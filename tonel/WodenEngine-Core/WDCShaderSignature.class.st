@@ -8,7 +8,7 @@ Class {
 	#pools : [
 		'AGPUConstants'
 	],
-	#category : 'WodenEngine-Core-Shaders'
+	#category : #'WodenEngine-Core-Shaders'
 }
 
 { #category : #compiling }
@@ -96,6 +96,11 @@ WDCShaderSignature >> activeOnStateTracker: stateTracker [
 	stateTracker shaderSignature: self
 ]
 
+{ #category : #'generated shader signature methods' }
+WDCShaderSignature >> createHandleForDevice: device [
+	self subclassResponsibility
+]
+
 { #category : #accessing }
 WDCShaderSignature >> engine [
 	^ engine
@@ -114,6 +119,11 @@ WDCShaderSignature >> handle [
 { #category : #accessing }
 WDCShaderSignature >> handle: anObject [
 	handle := anObject
+]
+
+{ #category : #path }
+WDCShaderSignature >> sessionChanged [
+	self handle: (self createHandleForDevice: engine device)
 ]
 
 { #category : #'instance creation' }

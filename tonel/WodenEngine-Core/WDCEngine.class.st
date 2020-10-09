@@ -86,6 +86,11 @@ WDCEngine class >> gpuBasedParticleSimulation [
 	^ true
 ]
 
+{ #category : #'system startup' }
+WDCEngine class >> initialize [
+	SessionManager default registerGuiClassNamed: self name
+]
+
 { #category : #preferences }
 WDCEngine class >> maxAnisotropy [
 	^ MaxAnisotropy ifNil: [ MaxAnisotropy := 1 ]
@@ -121,6 +126,13 @@ WDCEngine class >> ssaoEnabled [
 { #category : #preferences }
 WDCEngine class >> ssaoEnabled: aBoolean [
 	SSAOEnabled := aBoolean
+]
+
+{ #category : #'system startup' }
+WDCEngine class >> startUp: resuming [
+	resuming ifTrue: [
+		self allInstancesDo: [ :each | each startUpForNewSession ]
+	]
 ]
 
 { #category : #preferences }
@@ -673,7 +685,12 @@ WDCEngine >> initializeForNewSession [
 		createDevice;
 		queryDeviceCapabilities;
 		createResourceCache.
-	frameBufferingDriver := WDCFrameBufferingDriver for: self.
+	frameBufferingDriver ifNotNil: [
+		frameBufferingDriver sessionChanged
+	] ifNil: [ 
+		frameBufferingDriver := WDCFrameBufferingDriver for: self.
+	].
+	babylonDriver ifNotNil: [ babylonDriver sessionChanged ].
 
 ]
 
@@ -807,6 +824,11 @@ WDCEngine >> soundDevice [
 { #category : #accessing }
 WDCEngine >> ssaoEnabled [
 	^ self class ssaoEnabled
+]
+
+{ #category : #initialization }
+WDCEngine >> startUpForNewSession [
+	self checkSession.
 ]
 
 { #category : #'resource building' }

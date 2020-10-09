@@ -130,6 +130,10 @@ WDCLowLevelShaderSource >> reload [
 	libraries do: #reload
 ]
 
+{ #category : #path }
+WDCLowLevelShaderSource >> sessionChanged [
+]
+
 { #category : #accessing }
 WDCLowLevelShaderSource >> source [
 	^ source

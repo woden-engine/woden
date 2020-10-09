@@ -23,7 +23,8 @@ Class {
 		'imageBasedLightingIntegrationLibrary',
 		'imageBasedLightingBRDFLut',
 		'neutralObjectInstanceState',
-		'screenQuadCameraStateBinding'
+		'screenQuadCameraStateBinding',
+		'sessionDependentResources'
 	],
 	#classVars : [
 		'ShaderLanguageTargetMap',
@@ -141,7 +142,7 @@ WDCResourceCache >> buildPipelineStateWithDescription: description [
 	description traceBuildWith: engine.
 	result := WDCPipelineState new
 		description: description copy;
-		device: engine device;
+		engine: engine;
 		yourself.
 	result build.
 	^ result
@@ -504,20 +505,12 @@ WDCResourceCache >> initializeForEngine: anEngine [
 	streamingUniformBufferPools := IdentityDictionary new.
 	streamingStorageBufferPools := IdentityDictionary new.
 
-	shaderLanguageTarget := engine device getPreferredIntermediateShaderLanguage.
-	shaderLanguageTarget = AGPU_SHADER_LANGUAGE_NONE ifTrue: [ 
-		shaderLanguageTarget := engine device getPreferredHighLevelShaderLanguage.
-		shaderLanguageTarget = AGPU_SHADER_LANGUAGE_NONE ifTrue: [
-			shaderLanguageTarget := engine device getPreferredShaderLanguage
-		].
-	].
-
-	shaderLanguageTargetName := ShaderLanguageTargetMap at: shaderLanguageTarget.
 	pendingResourceReloadActions := WaitfreeQueue new.
 	
 	temporaryResourcesMutex := Semaphore forMutualExclusion.
 	temporaryResourcesDictionary := Dictionary new.
-	
+	sessionDependentResources := WeakSet new.
+	self sessionChanged
 ]
 
 { #category : #'3d models' }
@@ -833,6 +826,11 @@ WDCResourceCache >> proceduralMipmapGenerationLibrary [
 	^ proceduralMipmapGenerationLibrary ifNil: [ proceduralMipmapGenerationLibrary := self loadShaderLibrary: 'shaders/compute/mipmapGeneration.dastrel' ]
 ]
 
+{ #category : #initialization }
+WDCResourceCache >> registerSessionDependentResource: resource [
+	sessionDependentResources add: resource
+]
+
 { #category : #'auto reloading' }
 WDCResourceCache >> reloadPendingResources [
 	| action hasSynchronizedWithGpu |
@@ -942,8 +940,25 @@ WDCResourceCache >> screenQuadVertexShader [
 	]
 ]
 
-{ #category : #'session management' }
+{ #category : #path }
 WDCResourceCache >> sessionChanged [
+	shaderLanguageTarget := engine device getPreferredIntermediateShaderLanguage.
+	shaderLanguageTarget = AGPU_SHADER_LANGUAGE_NONE ifTrue: [ 
+		shaderLanguageTarget := engine device getPreferredHighLevelShaderLanguage.
+		shaderLanguageTarget = AGPU_SHADER_LANGUAGE_NONE ifTrue: [
+			shaderLanguageTarget := engine device getPreferredShaderLanguage
+		].
+	].
+	shaderLanguageTargetName := ShaderLanguageTargetMap at: shaderLanguageTarget.
+
+	shaderSignatures do: [ :each | each sessionChanged ].
+	vertexLayouts do: [ :each | self buildVertexLayout: each ].
+	pipelineStates do: [ :each | each sessionChanged ].
+	streamingUniformBufferPools valuesDo: [ :each | each sessionChanged ].
+	streamingStorageBufferPools valuesDo: [ :each | each sessionChanged ].
+	temporaryResourcesDictionary valuesDo: [ :each | each sessionChanged ].
+	resources valuesDo: [ :each | each sessionChanged ].
+	sessionDependentResources do: [ :each | each sessionChanged ].
 ]
 
 { #category : #'memory pools' }

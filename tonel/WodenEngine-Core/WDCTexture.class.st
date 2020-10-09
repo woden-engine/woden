@@ -70,6 +70,7 @@ WDCTexture >> athensFillRectangle: rectangle on: canvas [
 WDCTexture >> buildHandle [
 	self assert: description isNotNil.
 	handle := engine device createTexture: description.
+	session := Smalltalk session.
 	self canUploadData ifTrue: [ 
 		self uploadTextureData.
 	].

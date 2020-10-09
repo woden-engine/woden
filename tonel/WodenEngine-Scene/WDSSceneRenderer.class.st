@@ -91,9 +91,7 @@ WDSSceneRenderer >> initializeWithEngine: aWDCEngine [
 	currentTime := 0.0.
 	
 	useLateLatching := false.
-	directCommandLists := WDCPerFrameSimpleCommandList for: engine.
-	perCameraRenderingViewports := OrderedCollection new.
-	renderingViewports := OrderedCollection new.
+	self sessionChanged.
 ]
 
 { #category : #'rendering preparations' }
@@ -257,6 +255,15 @@ WDSSceneRenderer >> sceneRendererViewportClass [
 	self subclassResponsibility
 ]
 
+{ #category : #initialization }
+WDSSceneRenderer >> sessionChanged [
+	directCommandLists := WDCPerFrameSimpleCommandList for: engine.
+	perCameraRenderingViewports := OrderedCollection new.
+	renderingViewports := OrderedCollection new.
+	intermediateRenderTargets := Dictionary new.
+
+]
+
 { #category : #rendering }
 WDSSceneRenderer >> setupRenderingViewportStates: renderingViewport [
 	stateTracker
@@ -269,8 +276,6 @@ WDSSceneRenderer >> setupRenderingViewportsIntermediateRenderTargets [
 	| targetsClass requiredExtent requiredSampleCount signature |
 	targetsClass := self intermediateRenderTargetsClass.
 	targetsClass ifNil: [ ^ self ].
-	
-	intermediateRenderTargets ifNil: [ intermediateRenderTargets := Dictionary new. ].
 	
 	intermediateRenderTargets valuesDo: [ :value | value usedInThisFrame: false ].
 

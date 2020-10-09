@@ -184,6 +184,10 @@ WDCVirtualWindow >> screenTargetTexture: anObject [
 	self extent: screenTargetTexture extent
 ]
 
+{ #category : #path }
+WDCVirtualWindow >> sessionChanged [
+]
+
 { #category : #accessing }
 WDCVirtualWindow >> surfaceDrawingExtent [
 	^ extent

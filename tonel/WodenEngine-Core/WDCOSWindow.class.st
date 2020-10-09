@@ -187,6 +187,14 @@ WDCOSWindow >> sampleCount [
 	^ 1
 ]
 
+{ #category : #path }
+WDCOSWindow >> sessionChanged [
+	window := nil.
+	resolveRenderTarget := nil.
+	renderTarget := nil.
+	self open
+]
+
 { #category : #rendering }
 WDCOSWindow >> validRenderTarget [
 	self checkRenderTargets.

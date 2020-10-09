@@ -33,12 +33,6 @@ WDSForwardSceneRenderer >> ensureLightingStatesFor: requiredNumberOfCameras [
 	].
 ]
 
-{ #category : #initialization }
-WDSForwardSceneRenderer >> initializeWithEngine: aWDCEngine [
-	super initializeWithEngine: aWDCEngine.
-
-]
-
 { #category : #'rendering preparations' }
 WDSForwardSceneRenderer >> intermediateRenderTargetsClass [
 	^ WDSForwardSceneRendererIntermediateTextures

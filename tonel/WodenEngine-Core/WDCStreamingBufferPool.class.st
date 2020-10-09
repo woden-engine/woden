@@ -107,3 +107,8 @@ WDCStreamingBufferPool >> initialize [
 WDCStreamingBufferPool >> minimalAlignment [
 	^ 1
 ]
+
+{ #category : #path }
+WDCStreamingBufferPool >> sessionChanged [
+	heaps do: [ :each | each sessionChanged ]
+]

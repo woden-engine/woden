@@ -28,6 +28,14 @@ WDCGenericObjectState >> color: anObject [
 	color := anObject
 ]
 
+{ #category : #printing }
+WDCGenericObjectState >> printOn: aStream [
+	aStream nextPutAll: self class name;
+		nextPutAll: 'transform: '; print: transform;
+		nextPutAll: ' visible:'; print: visible;
+		nextPutAll: ' color:'; print: color
+]
+
 { #category : #accessing }
 WDCGenericObjectState >> transform [
 	^ transform

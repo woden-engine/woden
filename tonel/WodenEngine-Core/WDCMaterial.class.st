@@ -57,7 +57,8 @@ WDCMaterial >> engine [
 
 { #category : #accessing }
 WDCMaterial >> engine: anObject [
-	engine := anObject
+	engine := anObject.
+	engine resourceCache registerSessionDependentResource: self.
 ]
 
 { #category : #'as yet unclassified' }
@@ -280,6 +281,12 @@ WDCMaterial >> requiresTangentSpaceData [
 	^ false
 ]
 
+{ #category : #'state binding' }
+WDCMaterial >> sessionChanged [
+	self uploadMaterialStateData.
+	self invalidateCache.
+]
+
 { #category : #'as yet unclassified' }
 WDCMaterial >> setupRenderableTranslucency: renderable [
 ]
@@ -287,4 +294,9 @@ WDCMaterial >> setupRenderableTranslucency: renderable [
 { #category : #preview }
 WDCMaterial >> thumbnail [
 	^ WDCResourceThumbnail type: self class name value: Color magenta
+]
+
+{ #category : #'state binding' }
+WDCMaterial >> uploadMaterialStateData [
+
 ]

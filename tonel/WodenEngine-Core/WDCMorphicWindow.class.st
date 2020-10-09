@@ -229,6 +229,11 @@ WDCMorphicWindow >> sampleCount [
 	^ 1
 ]
 
+{ #category : #path }
+WDCMorphicWindow >> sessionChanged [
+	self checkSession.
+]
+
 { #category : #rendering }
 WDCMorphicWindow >> validRenderTarget [
 	self checkSession; checkRenderTarget.

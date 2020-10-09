@@ -45,6 +45,10 @@ WDCResourceWithDependants >> removeWodenResourceDependant: dep [
 	self validDependants remove: dep
 ]
 
+{ #category : #path }
+WDCResourceWithDependants >> sessionChanged [
+]
+
 { #category : #'resource reloading' }
 WDCResourceWithDependants >> validDependants [
 	^ dependants ifNil: [ dependants := WeakSet new ]

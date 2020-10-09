@@ -212,6 +212,12 @@ WDAView >> sampleCount [
 	^ 1
 ]
 
+{ #category : #path }
+WDAView >> sessionChanged [
+	window ifNotNil: [ window sessionChanged ].
+	subViews do: [ :each | each session changed ].
+]
+
 { #category : #'window handling' }
 WDAView >> toggleFullscreen [
 	self fullscreen: self fullscreen not

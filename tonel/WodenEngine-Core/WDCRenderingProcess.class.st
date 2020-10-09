@@ -37,6 +37,10 @@ WDCRenderingProcess >> needsToRender [
 WDCRenderingProcess >> processEvents [
 ]
 
+{ #category : #path }
+WDCRenderingProcess >> sessionChanged [
+]
+
 { #category : #accessing }
 WDCRenderingProcess >> suspend [
 	suspended := true

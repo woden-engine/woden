@@ -133,14 +133,7 @@ WDCFrameBufferingDriver >> frameIndex [
 { #category : #initialization }
 WDCFrameBufferingDriver >> initializeWithEngine: anEngine [
 	engine := anEngine.
-	frameIndex := -1.
-	bufferingFrameIndex := 1.
-	frameFences := Array new: self frameBufferingCount.
-	renderingProcessesLock := Semaphore forMutualExclusion.
-	renderingProcessMutex := Mutex new.
-	frontRenderingProcesses := OrderedCollection new.
-	backRenderingProcesses := OrderedCollection new.
-	self createMainRenderingProcess.
+	self sessionChanged.
 ]
 
 { #category : #accessing }
@@ -287,6 +280,33 @@ WDCFrameBufferingDriver >> renderingProcessesRenderDo: aBlock [
 		thenDo: [ :process |
 		self renderingProcess: process do: aBlock
 	]
+]
+
+{ #category : #initialization }
+WDCFrameBufferingDriver >> sessionChanged [
+	| oldRenderingProcesses |
+	mainRenderingProcess ifNotNil: [
+		mainRenderingProcess terminate.
+		mainRenderingProcess := nil.
+	].
+
+	oldRenderingProcesses := #().
+	frontRenderingProcesses ifNotNil: [
+		oldRenderingProcesses := frontRenderingProcesses asArray , backRenderingProcesses asArray
+	].
+
+	frameIndex := -1.
+	bufferingFrameIndex := 1.
+	frameFences := Array new: self frameBufferingCount.
+	renderingProcessesLock := Semaphore forMutualExclusion.
+	renderingProcessMutex := Mutex new.
+	frontRenderingProcesses := OrderedCollection new.
+	backRenderingProcesses := OrderedCollection new.
+	backRenderingProcesses addAll: oldRenderingProcesses.
+
+	oldRenderingProcesses do: [ :each  | each sessionChanged ].
+	self createMainRenderingProcess.
+
 ]
 
 { #category : #'rendering process' }

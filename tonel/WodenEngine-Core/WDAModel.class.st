@@ -201,6 +201,11 @@ WDAModel >> renderingGraphDependencies [
 	^ renderingDependencies
 ]
 
+{ #category : #path }
+WDAModel >> sessionChanged [
+	views do: [ :each | each sessionChanged ]
+]
+
 { #category : #initialization }
 WDAModel >> start [
 	started ifTrue: [ ^ self ].

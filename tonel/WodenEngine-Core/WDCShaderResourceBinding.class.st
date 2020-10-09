@@ -7,7 +7,7 @@ Class {
 		'binding',
 		'slotActions'
 	],
-	#category : 'WodenEngine-Core-GPU-Resources'
+	#category : #'WodenEngine-Core-GPU-Resources'
 }
 
 { #category : #binding }
@@ -130,6 +130,7 @@ WDCShaderResourceBinding >> binding: anObject [
 { #category : #'resource building' }
 WDCShaderResourceBinding >> buildHandle [
 	handle := shaderSignature handle createShaderResourceBinding: binding.
+	session := Smalltalk session.
 	slotActions do: [ :slot | slot value ]
 ]
 

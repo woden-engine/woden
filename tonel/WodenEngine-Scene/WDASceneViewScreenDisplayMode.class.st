@@ -75,6 +75,10 @@ WDASceneViewScreenDisplayMode >> renderSceneViewports [
 	^ view sceneRenderer renderSceneViewports
 ]
 
+{ #category : #path }
+WDASceneViewScreenDisplayMode >> sessionChanged [
+]
+
 { #category : #'as yet unclassified' }
 WDASceneViewScreenDisplayMode >> submitLowLatencyData [
 	self useLateLatching ifTrue: [

@@ -179,6 +179,14 @@ WDASceneView >> sendRenderingCommands [
 		
 ]
 
+{ #category : #path }
+WDASceneView >> sessionChanged [
+	commandList := nil.
+	sceneRenderer sessionChanged.
+	screenDisplayMode sessionChanged.
+	^ super sessionChanged
+]
+
 { #category : #'screen display modes' }
 WDASceneView >> stereo [
 	self stereoSideBySide

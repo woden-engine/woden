@@ -200,6 +200,15 @@ WDASceneViewStereoDisplayMode >> rightViewportForCamera: camera [
 		submode: #full
 ]
 
+{ #category : #path }
+WDASceneViewStereoDisplayMode >> sessionChanged [
+	super sessionChanged.
+	leftRenderTarget := nil.
+	leftResolveRenderTarget := nil.
+	rightResolveRenderTarget := nil.
+	rightRenderTarget := nil.
+]
+
 { #category : #'rendering process stages' }
 WDASceneViewStereoDisplayMode >> updateCameraFrustum [
 	| localLeftEyeFrustum localRightEyeFrustum left_leftBottomNear right_leftBottomNear left bottom near left_rightTopNear right_rightTopNear right top far combinedFrustum invertedY camera |
