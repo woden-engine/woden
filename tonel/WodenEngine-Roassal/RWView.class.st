@@ -432,6 +432,14 @@ RWView >> render3DOnWindow: aWindow extraRenderTime: extraRenderTime [
 
 ]
 
+{ #category : #path }
+RWView >> sessionChanged [
+	babylonDefaultFont := nil.
+	elements do: [ :each | each changed ].
+	super sessionChanged.
+
+]
+
 { #category : #interaction }
 RWView >> signalUpdate [
 	"Call this method when you wish to update the view"
