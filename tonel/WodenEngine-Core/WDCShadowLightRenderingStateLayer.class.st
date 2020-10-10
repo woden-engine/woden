@@ -66,5 +66,5 @@ WDCShadowLightRenderingStateLayer >> viewStateForCameraTransform: cameraTransfor
 
 { #category : #'as yet unclassified' }
 WDCShadowLightRenderingStateLayer >> viewportForShadowMap: renderTarget camera: camera [
-	^ self viewportForShadowMap: renderTarget camera: camera submode: #full
+	^ self viewportForShadowMap: renderTarget camera: camera submode: WDCStateTrackerFullShadedRenderMode uniqueInstance
 ]

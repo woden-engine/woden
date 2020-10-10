@@ -142,7 +142,7 @@ WDASceneView >> prepareRendering [
 
 { #category : #accessing }
 WDASceneView >> renderSubMode [
-	^ #full
+	^ WDCStateTrackerFullShadedRenderMode uniqueInstance
 ]
 
 { #category : #rendering }

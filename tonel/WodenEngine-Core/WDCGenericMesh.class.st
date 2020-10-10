@@ -13,6 +13,13 @@ Class {
 	#category : #'WodenEngine-Core-Mesh'
 }
 
+{ #category : #copying }
+WDCGenericMesh >> copyWithMaterial: newMaterial [
+	^ self copy
+		submeshes: (submeshes collect: [:each | each copy material: newMaterial]);
+		yourself
+]
+
 { #category : #'as yet unclassified' }
 WDCGenericMesh >> engine: newEngine [
 	indexBuffer ifNotNil: [ indexBuffer engine: newEngine ].

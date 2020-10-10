@@ -430,11 +430,7 @@ WDCResourceCache >> flatColorMaterial [
 { #category : #'special meshes' }
 WDCResourceCache >> flatShadedTranslucentUnitCubeMesh [
 	^ self resourceAt: #flatShadedTranslucentUnitCubeMesh ifAbsentPut: [
-		((WDCGenericMeshBuilder for: engine)
-			currentMaterial: self whiteFlatColorMaterial;
-			addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
-			computeBoundingBox;
-			mesh)
+		self flatShadedUnitCubeMesh copy
 				makeTranslucent;
 				yourself
 	]
@@ -443,11 +439,7 @@ WDCResourceCache >> flatShadedTranslucentUnitCubeMesh [
 { #category : #'special meshes' }
 WDCResourceCache >> flatShadedUnitCubeMesh [
 	^ self resourceAt: #flatShadedUnitCubeMesh ifAbsentPut: [
-		(WDCGenericMeshBuilder for: engine)
-			currentMaterial: self whiteFlatColorMaterial;
-			addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
-			computeBoundingBox;
-			mesh
+		self unitCubeMesh copyWithMaterial: self whiteFlatColorMaterial
 	]
 ]
 
@@ -1016,10 +1008,7 @@ WDCResourceCache >> stringifyPath: aPath [
 { #category : #'special meshes' }
 WDCResourceCache >> translucentUnitCubeMesh [
 	^ self resourceAt: #unitCubeMesh ifAbsentPut: [
-		((WDCGenericMeshBuilder for: engine)
-			addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
-			computeBoundingBox;
-			mesh)
+		self unitCubeMesh copy
 			makeTranslucent;
 			yourself
 	]

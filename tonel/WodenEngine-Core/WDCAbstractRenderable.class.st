@@ -11,7 +11,8 @@ Class {
 		'isOpaqueShadowCaster',
 		'blendingMode',
 		'depthWriteMask',
-		'depthTestingEnabled'
+		'depthTestingEnabled',
+		'subRenderMode'
 	],
 	#classVars : [
 		'RenderPriorityDefault',
@@ -272,12 +273,43 @@ WDCAbstractRenderable >> renderPriority: anObject [
 	renderPriority := anObject
 ]
 
+{ #category : #initialization }
+WDCAbstractRenderable >> setFlatColorSubRenderMode [
+	self subRenderMode: WDCStateTrackerSubRenderMode flatColor
+]
+
+{ #category : #initialization }
+WDCAbstractRenderable >> setFlatTexturedSubRenderMode [
+	self subRenderMode: WDCStateTrackerSubRenderMode flatTextured
+]
+
+{ #category : #initialization }
+WDCAbstractRenderable >> setFullShadedSubRenderMode [
+	self subRenderMode: WDCStateTrackerSubRenderMode fullShaded
+]
+
+{ #category : #initialization }
+WDCAbstractRenderable >> setShadedColorSubRenderMode [
+	self subRenderMode: WDCStateTrackerSubRenderMode shadedColor
+]
+
 { #category : #rendering }
 WDCAbstractRenderable >> setupObjectRenderingStatesOn: stateTracker [
 	stateTracker
 		objectDepthWriteMask: depthWriteMask;
 		objectDepthEnabled: depthTestingEnabled;
-		objectBlendingMode: blendingMode
+		objectBlendingMode: blendingMode;
+		objectSubMode: subRenderMode
+]
+
+{ #category : #accessing }
+WDCAbstractRenderable >> subRenderMode [
+	^ subRenderMode
+]
+
+{ #category : #accessing }
+WDCAbstractRenderable >> subRenderMode: anObject [
+	subRenderMode := anObject
 ]
 
 { #category : #accessing }

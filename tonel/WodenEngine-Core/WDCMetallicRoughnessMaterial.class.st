@@ -30,10 +30,25 @@ WDCMetallicRoughnessMaterial >> concretizeMaterial [
 ]
 
 { #category : #rendering }
-WDCMetallicRoughnessMaterial >> forwardFragmentShader [
-	^ forwardFragmentShader ifNil: [ 
-		forwardFragmentShader := 
-		albedoTexture ifNotNil: [ 
+WDCMetallicRoughnessMaterial >> forwardFragmentShaderFor: stateTracker [
+	stateTracker submode isWireFrame ifTrue: [
+		^ self shaderLibrary getFragmentStage: #forwardFlat_color
+	].
+
+	stateTracker submode isShaded ifFalse: [ 
+		(stateTracker submode hasNoTextures or: [ albedoTexture isNil ]) ifTrue: [
+			^ self shaderLibrary getFragmentStage: #forwardFlat_color
+		] ifFalse: [
+			^ self shaderLibrary getFragmentStage: #forwardFlat_albedo
+		]
+	] ifTrue: [
+		stateTracker submode hasNoTextures ifTrue: [
+			^ self shaderLibrary getFragmentStage: #forward_color
+		]
+	].
+
+
+	^ albedoTexture ifNotNil: [ 
 			normalTexture ifNotNil: [
 				metallicRoughnessTexture ifNotNil: [
 					self shaderLibrary getFragmentStage: #forward_albedoNormalMetallicRoughness
@@ -47,10 +62,9 @@ WDCMetallicRoughnessMaterial >> forwardFragmentShader [
 					self shaderLibrary getFragmentStage: #forward_albedo
 				]
 			]	
-		] ifNil: [
-			self shaderLibrary getFragmentStage: #forward_color
-		].
-	]
+	] ifNil: [
+		self shaderLibrary getFragmentStage: #forward_color
+	].
 
 ]
 

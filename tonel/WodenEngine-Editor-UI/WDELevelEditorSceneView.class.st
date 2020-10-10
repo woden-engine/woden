@@ -4,10 +4,39 @@ Class {
 	#instVars : [
 		'activeToolMode',
 		'activeEditionMode',
-		'cameraAngle'
+		'cameraAngle',
+		'renderSubMode',
+		'editorViewType',
+		'gridOrientation',
+		'isPerspective'
 	],
 	#category : #'WodenEngine-Editor-UI'
 }
+
+{ #category : #'sub render mode' }
+WDELevelEditorSceneView >> activateFlatColor [
+	^ self renderSubMode: WDCStateTrackerSubRenderMode flatColor
+]
+
+{ #category : #'sub render mode' }
+WDELevelEditorSceneView >> activateFlatTextured [
+	^ self renderSubMode: WDCStateTrackerSubRenderMode flatTextured
+]
+
+{ #category : #'sub render mode' }
+WDELevelEditorSceneView >> activateFullShaded [
+	^ self renderSubMode: WDCStateTrackerSubRenderMode fullShaded
+]
+
+{ #category : #'sub render mode' }
+WDELevelEditorSceneView >> activateShadedColor [
+	^ self renderSubMode: WDCStateTrackerSubRenderMode shadedColor
+]
+
+{ #category : #'sub render mode' }
+WDELevelEditorSceneView >> activateWireFrame [
+	^ self renderSubMode: WDCStateTrackerSubRenderMode wireframe
+]
 
 { #category : #accessing }
 WDELevelEditorSceneView >> activeEditionMode [
@@ -22,6 +51,11 @@ WDELevelEditorSceneView >> activeToolMode: anObject [
 { #category : #accessing }
 WDELevelEditorSceneView >> activeToolModeOrEditionMode [
 	^ activeToolMode ifNil: [ self activeEditionMode ]
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneView >> editorViewType [
+	^ editorViewType
 ]
 
 { #category : #visiting }
@@ -40,12 +74,46 @@ WDELevelEditorSceneView >> elementInPositionWithRayPicking: aPoint [
 
 ]
 
+{ #category : #'view perspective' }
+WDELevelEditorSceneView >> freePerspectiveView [
+	gridOrientation := Float32x3x3 lookAtBottom.
+	editorViewType := #free.
+]
+
+{ #category : #'view perspective' }
+WDELevelEditorSceneView >> frontView [
+	cameraAngle := Float32x3 zeros.
+	gridOrientation := Float32x3x3 lookAtFront.
+	editorViewType := #front.
+]
+
 { #category : #initialization }
 WDELevelEditorSceneView >> initialize [
 	super initialize.
 
 	cameraAngle := Float32x3 new.
+	isPerspective := true.
+	self freePerspectiveView.
+]
 
+{ #category : #accessing }
+WDELevelEditorSceneView >> isPerspective [
+	^ isPerspective
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneView >> isPerspective: anObject [
+	isPerspective := anObject
+]
+
+{ #category : #'view perspective' }
+WDELevelEditorSceneView >> orthographicView [
+	isPerspective := false
+]
+
+{ #category : #'view perspective' }
+WDELevelEditorSceneView >> perspectiveView [
+	isPerspective := true
 ]
 
 { #category : #visiting }
@@ -59,9 +127,33 @@ WDELevelEditorSceneView >> rayPickNormalizedPosition: aPoint [
 	
 ]
 
+{ #category : #accessing }
+WDELevelEditorSceneView >> renderSubMode [
+	^ renderSubMode ifNil: [ renderSubMode := WDCStateTrackerSubRenderMode fullShaded ]
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneView >> renderSubMode: aMode [
+	renderSubMode := aMode
+]
+
 { #category : #'as yet unclassified' }
 WDELevelEditorSceneView >> rotateCameraWithAngles: deltaAngles [
 	cameraAngle := cameraAngle + deltaAngles.
+]
+
+{ #category : #'view perspective' }
+WDELevelEditorSceneView >> sideView [
+	cameraAngle := Float32x3 y: Float halfPi.
+	gridOrientation := Float32x3x3 lookAtLeft.
+	editorViewType := #side.
+]
+
+{ #category : #'view perspective' }
+WDELevelEditorSceneView >> topView [
+	cameraAngle := Float32x3 x: Float halfPi negated.
+	gridOrientation := Float32x3x3 lookAtBottom.
+	editorViewType := #top.
 ]
 
 { #category : #'as yet unclassified' }
@@ -75,7 +167,7 @@ WDELevelEditorSceneView >> updateForFrameDelta: delta [
 	super updateForFrameDelta: delta.
 	camera := self camera.
 	cameraPosition := self camera transform translation.
-	
+
 	orientation := screenDisplayMode isVR ifTrue: [ 
 		Float32x3x3 yRotation: cameraAngle y.
 	] ifFalse: [ 
@@ -83,8 +175,31 @@ WDELevelEditorSceneView >> updateForFrameDelta: delta [
 	].
 	cameraTransform := ReversibleAffineTransform3dF32 identity orthonormal: orientation translation: cameraPosition.
 	
-	self camera transform: cameraTransform
+	self camera transform: cameraTransform.
 	
+	self updateGridsForCamera.
+]
+
+{ #category : #initialization }
+WDELevelEditorSceneView >> updateGridsForCamera [
+	| gridPosition gridTransform renderPriority |
+	renderPriority := isPerspective
+		ifTrue: [ WDCAbstractRenderable renderPriorityEditorOpaqueAfter ]
+		ifFalse: [ WDCAbstractRenderable renderPriorityEditorOpaqueBefore ].
+		
+	gridPosition := Float32x3 zeros.	
+	gridTransform := ReversibleAffineTransform3dF32 identity orthonormal: gridOrientation translation: gridPosition.
+	model subGridNode ifNotNil: [ :node |
+		node transform: gridTransform.
+		node renderable renderPriority: renderPriority
+	].
+	model gridNode ifNotNil: [ :node |
+		node transform: gridTransform.
+		node renderable renderPriority: renderPriority + 1
+	].
+	model axisNode ifNotNil: [ :node |
+		node renderable renderPriority: renderPriority + 2
+	].
 ]
 
 { #category : #visiting }

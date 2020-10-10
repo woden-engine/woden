@@ -14,6 +14,11 @@ SpWodenViewPresenter class >> adapterName [
 ]
 
 { #category : #accessing }
+SpWodenViewPresenter >> view [
+	^ wodenApplication views first
+]
+
+{ #category : #accessing }
 SpWodenViewPresenter >> wodenApplication [
 	^ wodenApplication
 ]

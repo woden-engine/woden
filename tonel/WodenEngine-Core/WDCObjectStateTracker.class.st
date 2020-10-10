@@ -21,7 +21,9 @@ Class {
 		'materialDepthWriteMask',
 		'materialDepthFunction',
 		'deformationState',
-		'sceneBlendingMode'
+		'sceneBlendingMode',
+		'sceneSubMode',
+		'objectSubMode'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -138,12 +140,25 @@ WDCObjectStateTracker >> applyPolygonMode [
 
 ]
 
+{ #category : #private }
+WDCObjectStateTracker >> applySubMode [
+	objectSubMode ifNotNil: [
+		^ self submode: objectSubMode
+	].
+	sceneSubMode ifNotNil: [
+		^ self submode: sceneSubMode
+	]
+
+
+]
+
 { #category : #commands }
 WDCObjectStateTracker >> clearObjectRenderingStates [
 	self
 		objectDepthWriteMask: nil;
 		objectDepthEnabled: nil;
-		objectBlendingMode: nil
+		objectBlendingMode: nil;
+		objectSubMode: nil.
 ]
 
 { #category : #accessing }
@@ -294,6 +309,17 @@ WDCObjectStateTracker >> objectPolygonMode: anObject [
 ]
 
 { #category : #accessing }
+WDCObjectStateTracker >> objectSubMode [
+	^ objectSubMode
+]
+
+{ #category : #accessing }
+WDCObjectStateTracker >> objectSubMode: anObject [
+	objectSubMode := anObject.
+	self applySubMode
+]
+
+{ #category : #accessing }
 WDCObjectStateTracker >> reset [
 	super reset.
 	activeMaterial := nil.
@@ -311,6 +337,8 @@ WDCObjectStateTracker >> reset [
 	materialDepthEnabled := nil.
 	materialDepthWriteMask := nil.
 	materialDepthFunction := nil.
+	sceneSubMode := nil.
+	objectSubMode := nil.
 	deformationState := nil
 ]
 
@@ -356,6 +384,17 @@ WDCObjectStateTracker >> sceneDepthFunction: anObject [
 WDCObjectStateTracker >> sceneDepthWriteMask: anObject [
 	sceneDepthWriteMask := anObject.
 	self applyDepthWriteMask
+]
+
+{ #category : #accessing }
+WDCObjectStateTracker >> sceneSubMode [
+	^ sceneSubMode
+]
+
+{ #category : #accessing }
+WDCObjectStateTracker >> sceneSubMode: anObject [
+	sceneSubMode := anObject.
+	self applySubMode
 ]
 
 { #category : #'as yet unclassified' }

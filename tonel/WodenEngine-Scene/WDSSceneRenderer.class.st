@@ -267,7 +267,7 @@ WDSSceneRenderer >> sessionChanged [
 { #category : #rendering }
 WDSSceneRenderer >> setupRenderingViewportStates: renderingViewport [
 	stateTracker
-		submode: renderingViewport submode;
+		sceneSubMode: renderingViewport submode;
 		editorViewType: renderingViewport editorViewType.
 ]
 

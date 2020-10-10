@@ -9,8 +9,6 @@ Class {
 		'resourceBinding',
 		'materialState',
 		'stateUniformBuffer',
-		'depthNormalFragmentShader',
-		'forwardFragmentShader',
 		'shaderLibrary',
 		'doubleSided',
 		'translucent'
@@ -42,11 +40,12 @@ WDCAbstractGenericSurfaceMaterial class >> initialize [
 WDCAbstractGenericSurfaceMaterial >> activateDepthNormalOn: stateTracker [
 	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
 	translucent ifTrue: [ ^ false ].
+	stateTracker submode isWireFrame ifTrue: [ ^ false ].
 
 	self validateCache.
 	stateTracker
 		vertexShader: (self depthNormalVertexShaderFor: stateTracker);
-		fragmentShader: self depthNormalFragmentShader.
+		fragmentShader: (self depthNormalFragmentShaderFor: stateTracker).
 		
 	resourceBinding ifNotNil: [ 
 		stateTracker useShaderResources: resourceBinding.
@@ -63,6 +62,7 @@ WDCAbstractGenericSurfaceMaterial >> activateDepthNormalOn: stateTracker [
 WDCAbstractGenericSurfaceMaterial >> activateDepthOnlyOn: stateTracker [
 	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
 	translucent ifTrue: [ ^ false ].
+	stateTracker submode isWireFrame ifTrue: [ ^ false ].
 
 	self validateCache.
 	stateTracker
@@ -86,16 +86,12 @@ WDCAbstractGenericSurfaceMaterial >> activateForwardOn: stateTracker [
 	
 	stateTracker
 		vertexShader: (self vertexShaderFor: stateTracker);
-		fragmentShader: self forwardFragmentShader.
+		fragmentShader: (self forwardFragmentShaderFor: stateTracker).
 	
-	stateTracker submode == #solid ifTrue: [
-		stateTracker fragmentShader: self solidFragmentShader.
-	].
-	stateTracker submode == #wire ifTrue: [
+	stateTracker submode isWireFrame ifTrue: [
 		stateTracker
 			materialPolygonMode: AGPU_POLYGON_MODE_LINE;
-			materialCullMode: AGPU_CULL_MODE_NONE;
-			fragmentShader: self wireFragmentShader
+			materialCullMode: AGPU_CULL_MODE_NONE
 	].
 
 	doubleSided ifTrue: [ 
@@ -173,14 +169,12 @@ WDCAbstractGenericSurfaceMaterial >> concretizeMaterial [
 ]
 
 { #category : #shaders }
-WDCAbstractGenericSurfaceMaterial >> depthNormalFragmentShader [
-	^ depthNormalFragmentShader ifNil: [
-		albedoTexture ifNil: [ 
-			depthNormalFragmentShader := self shaderLibrary getFragmentStage: #depthNormal_fragment
-		] ifNotNil: [ 
-			depthNormalFragmentShader := self shaderLibrary getFragmentStage: #depthNormalMask_fragment
-		].
-	]
+WDCAbstractGenericSurfaceMaterial >> depthNormalFragmentShaderFor: stateTracker [
+	^ (albedoTexture isNil or: [stateTracker submode hasNoTextures]) ifTrue: [ 
+		self shaderLibrary getFragmentStage: #depthNormal_fragment
+	] ifFalse: [ 
+		self shaderLibrary getFragmentStage: #depthNormalMask_fragment
+	].
 
 ]
 
@@ -227,9 +221,9 @@ WDCAbstractGenericSurfaceMaterial >> emissionTexture: anObject [
 	emissionTexture := anObject
 ]
 
-{ #category : #rendering }
-WDCAbstractGenericSurfaceMaterial >> forwardFragmentShader [
-	self subclassResponsibility
+{ #category : #shaders }
+WDCAbstractGenericSurfaceMaterial >> forwardFragmentShaderFor: stateTracker [
+	^ self subclassResponsibility
 ]
 
 { #category : #initialization }
@@ -245,8 +239,6 @@ WDCAbstractGenericSurfaceMaterial >> initialize [
 { #category : #'state binding' }
 WDCAbstractGenericSurfaceMaterial >> invalidateCache [
 	resourceBindingsAreUpdated := false.
-	forwardFragmentShader := nil.
-	depthNormalFragmentShader := nil.
 ]
 
 { #category : #testing }
@@ -314,11 +306,6 @@ WDCAbstractGenericSurfaceMaterial >> shaderLibrary [
 	self subclassResponsibility
 ]
 
-{ #category : #shaders }
-WDCAbstractGenericSurfaceMaterial >> solidFragmentShader [
-	^ self forwardFragmentShader
-]
-
 { #category : #accessing }
 WDCAbstractGenericSurfaceMaterial >> stateUniformBuffer [
 	^ stateUniformBuffer
@@ -367,9 +354,4 @@ WDCAbstractGenericSurfaceMaterial >> validateCache [
 { #category : #shaders }
 WDCAbstractGenericSurfaceMaterial >> vertexShaderFor: stateTracker [
 	^ self shaderLibrary getVertexStage: (VertexShaderVariantTable at: { stateTracker hasSkinning . stateTracker hasVertexColors . stateTracker hasVertexTangents })
-]
-
-{ #category : #shaders }
-WDCAbstractGenericSurfaceMaterial >> wireFragmentShader [
-	^ self forwardFragmentShader
 ]

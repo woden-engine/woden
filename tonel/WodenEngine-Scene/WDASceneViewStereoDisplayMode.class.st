@@ -134,7 +134,7 @@ WDASceneViewStereoDisplayMode >> leftViewportForCamera: camera [
 		bounds: leftRenderTarget bounds;
 		overlayRenderer: view;
 		cameraTransformFunction: self leftEyeCameraTransformFunction;
-		submode: #full
+		submode: WDCStateTrackerFullShadedRenderMode uniqueInstance
 ]
 
 { #category : #'rendering process stages' }
@@ -197,7 +197,7 @@ WDASceneViewStereoDisplayMode >> rightViewportForCamera: camera [
 		bounds: rightRenderTarget bounds;
 		overlayRenderer: view;
 		cameraTransformFunction: self rightEyeCameraTransformFunction;
-		submode: #full
+		submode: WDCStateTrackerFullShadedRenderMode uniqueInstance
 ]
 
 { #category : #path }

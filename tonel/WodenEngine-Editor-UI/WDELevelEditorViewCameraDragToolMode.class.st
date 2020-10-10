@@ -7,6 +7,7 @@ Class {
 { #category : #'event handling' }
 WDELevelEditorViewCameraDragToolMode >> onMouseMove: event [
 	event modifiers ctrl ifTrue: [
+		view freePerspectiveView.
 		^ view rotateCameraWithAngles: ((Float32x3 x: event delta y negated asFloat y: event delta x negated asFloat z: 0.0) * 0.01).
 	].
 	event modifiers shift ifTrue: [

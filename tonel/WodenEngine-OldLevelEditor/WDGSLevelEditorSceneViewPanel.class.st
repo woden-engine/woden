@@ -550,7 +550,7 @@ WDGSLevelEditorSceneViewPanel >> snapTranslation: translation [
 
 { #category : #'rendering mode' }
 WDGSLevelEditorSceneViewPanel >> solid [
-	renderMode := #solid
+	renderMode := WDCStateTrackerFlatColorRenderMode uniqueInstance
 ]
 
 { #category : #'event handling' }
@@ -564,7 +564,7 @@ WDGSLevelEditorSceneViewPanel >> startDragController: aDrawToolController event:
 
 { #category : #'rendering mode' }
 WDGSLevelEditorSceneViewPanel >> textured [
-	renderMode := #textured
+	renderMode := WDCStateTrackerFlatTexturedRenderMode uniqueInstance
 ]
 
 { #category : #'projection mode' }
@@ -680,7 +680,7 @@ WDGSLevelEditorSceneViewPanel >> windowToWorld: aPosition depth: aDepth [
 
 { #category : #'rendering mode' }
 WDGSLevelEditorSceneViewPanel >> wireframe [
-	renderMode := #wire
+	renderMode := WDCStateTrackerWireFrameRenderMode uniqueInstance
 ]
 
 { #category : #'coordinate systems' }

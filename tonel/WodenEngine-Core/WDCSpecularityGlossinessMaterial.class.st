@@ -21,9 +21,7 @@ WDCSpecularityGlossinessMaterial >> concretizeMaterial [
 
 { #category : #shaders }
 WDCSpecularityGlossinessMaterial >> forwardFragmentShader [
-	^ forwardFragmentShader ifNil: [ 
-		forwardFragmentShader := 
-		albedoTexture ifNotNil: [ 
+	^ albedoTexture ifNotNil: [ 
 			normalTexture ifNotNil: [
 				specularityGlossinessTexture ifNotNil: [
 					self shaderLibrary getFragmentStage: #forward_albedoNormalSpecularGlossiness
@@ -40,7 +38,28 @@ WDCSpecularityGlossinessMaterial >> forwardFragmentShader [
 		] ifNil: [
 			self shaderLibrary getFragmentStage: #forward_color
 		].
-	]
+]
+
+{ #category : #shaders }
+WDCSpecularityGlossinessMaterial >> forwardFragmentShaderFor: stateTracker [
+	stateTracker submode hasNoTextures ifTrue: [ ^ shaderLibrary getFragmentStage: #forward_color ].
+	^ albedoTexture ifNotNil: [ 
+			normalTexture ifNotNil: [
+				specularityGlossinessTexture ifNotNil: [
+					self shaderLibrary getFragmentStage: #forward_albedoNormalSpecularGlossiness
+				] ifNil: [
+					self shaderLibrary getFragmentStage: #forward_albedoNormal
+				]		
+			] ifNil: [
+				specularityGlossinessTexture ifNotNil: [ 
+					self shaderLibrary getFragmentStage: #forward_albedoSpecularGlossiness
+			] ifNil: [
+					self shaderLibrary getFragmentStage: #forward_albedo
+				]
+			]	
+		] ifNil: [
+			self shaderLibrary getFragmentStage: #forward_color
+		].
 
 ]
 
