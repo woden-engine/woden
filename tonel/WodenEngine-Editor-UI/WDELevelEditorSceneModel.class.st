@@ -10,60 +10,17 @@ Class {
 }
 
 { #category : #accessing }
-WDELevelEditorSceneModel >> createEntitySelectionBox: entity [
+WDELevelEditorSceneModel >> createEntityEditorSelectionBoxNode: entity [
 	| entityNode selectionBoxNode |
 	(levelElementToSelectionBoxNode includesKey: entity) ifTrue: [ ^ self ].
 	entityNode := self nodeForLevelElement: entity.
+	entityNode children isNotEmpty ifTrue: [ ^ self ].
 
 	selectionBoxNode := WDSGSpatialObject new.
 	selectionBoxNode renderable: engine resourceCache unitCubeMesh.
 	entityNode addChild: selectionBoxNode.
 	levelElementToSelectionBoxNode at: entity put: selectionBoxNode.
-	Transcript show: entity localSelectableBoundingBox center; space; show: entity localSelectableBoundingBox halfExtent; cr.
 	selectionBoxNode transform: entity localSelectableBoundingBox reversibleTransformToConvertUnitBoxToMe.
-]
-
-{ #category : #accessing }
-WDELevelEditorSceneModel >> createSceneNodeForEntity: entity [
-	| node |
-	node := WDSGSpatialObject new.
-	node position: entity validPosition3D.
-	levelElementToSceneNodeDictionary at: entity put: node.
-	entity components do: [ :each |
-		(self createSceneNodeForEntityComponent: each) ifNotNil: [ :componentNode |
-			node addChild: componentNode
-		].
-	].
-
-	self createEntitySelectionBox: entity.
-	^ node
-]
-
-{ #category : #accessing }
-WDELevelEditorSceneModel >> createSceneNodeForEntityComponent: entityComponent [
-	^ nil
-]
-
-{ #category : #accessing }
-WDELevelEditorSceneModel >> createSceneNodeForSector: sector [
-	| node |
-	node := WDSGSpatialObject new.
-	levelElementToSceneNodeDictionary at: sector put: node.
-	sector layers do: [ :each |
-		node addChild: (self createSceneNodeForSectorLayer: each)
-	].
-	^ node
-]
-
-{ #category : #accessing }
-WDELevelEditorSceneModel >> createSceneNodeForSectorLayer: sectorLayer [
-	| node |
-	node := WDSGSpatialObject new.
-	levelElementToSceneNodeDictionary at: sectorLayer put: node.
-	sectorLayer entities do: [ :each |
-		node addChild: (self createSceneNodeForEntity: each)
-	].
-	^ node
 ]
 
 { #category : #initialization }
@@ -77,11 +34,13 @@ WDELevelEditorSceneModel >> level [
 
 { #category : #accessing }
 WDELevelEditorSceneModel >> levelChanged [
+	| builder |
 	self newScene.
 	levelElementToSceneNodeDictionary := IdentityDictionary new.
 	levelElementToSelectionBoxNode := IdentityDictionary new.
+	builder := WDELevelEditorElementSceneNodeBuilder new editorSceneModel: self.
 	self level sectors do: [ :each |
-		scene add: (self createSceneNodeForSector: each)
+		scene add: (builder visitLevelElement: each)
 	].
 ]
 
@@ -96,6 +55,11 @@ WDELevelEditorSceneModel >> levelEditorSession: anObject [
 	
 	levelEditorSession whenLevelChangedDo: [ self levelChanged ].
 	self levelChanged.
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneModel >> mapLevelElement: levelElement toSceneNode: sceneNode [
+	levelElementToSceneNodeDictionary at: levelElement put: sceneNode
 ]
 
 { #category : #'instance creation' }

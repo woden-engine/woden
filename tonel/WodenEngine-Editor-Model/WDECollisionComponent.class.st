@@ -27,3 +27,8 @@ WDECollisionComponent class >> rectangle: rectangle [
 WDECollisionComponent >> boundingBox [
 	^ self subclassResponsibility
 ]
+
+{ #category : #testing }
+WDECollisionComponent >> isCollisionComponent [
+	^ true
+]

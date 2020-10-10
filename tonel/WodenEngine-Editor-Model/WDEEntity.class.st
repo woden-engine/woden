@@ -67,7 +67,8 @@ WDEEntity >> computeLocalBoundingBoxFromComponents [
 
 { #category : #private }
 WDEEntity >> computeLocalSelecteableBoundingBox [
-	localSelectableBoundingBox := BoxF32 center: self localBoundingBoxWithDepth center halfExtent: self localBoundingBoxWithDepth halfExtent + 0.1
+
+	localSelectableBoundingBox := BoxF32 center: self localBoundingBoxWithDepth center halfExtent: (self localBoundingBoxWithDepth halfExtent max: 0.1)
 ]
 
 { #category : #initialization }

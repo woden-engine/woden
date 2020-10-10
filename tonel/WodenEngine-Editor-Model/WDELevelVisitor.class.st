@@ -1,50 +1,50 @@
 Class {
-	#name : #WDELevelElementVisitor,
+	#name : #WDELevelVisitor,
 	#superclass : #Object,
 	#category : #'WodenEngine-Editor-Model'
 }
 
 { #category : #visiting }
-WDELevelElementVisitor >> visitBoxCollisionComponent: component [
+WDELevelVisitor >> visitBoxCollisionComponent: component [
 	self subclassResponsibility
 ]
 
 { #category : #visiting }
-WDELevelElementVisitor >> visitBoxVisualComponent: component [
+WDELevelVisitor >> visitBoxVisualComponent: component [
 	self subclassResponsibility
 ]
 
 { #category : #visiting }
-WDELevelElementVisitor >> visitEntity: entity [
+WDELevelVisitor >> visitEntity: entity [
 	self subclassResponsibility
 ]
 
 { #category : #visiting }
-WDELevelElementVisitor >> visitLevel: level [
+WDELevelVisitor >> visitLevel: level [
 	self subclassResponsibility
 ]
 
 { #category : #visiting }
-WDELevelElementVisitor >> visitLevelElement: element [
+WDELevelVisitor >> visitLevelElement: element [
 	^ element accept: self
 ]
 
 { #category : #visiting }
-WDELevelElementVisitor >> visitRectangleCollisionComponent: component [
+WDELevelVisitor >> visitRectangleCollisionComponent: component [
 	self subclassResponsibility
 ]
 
 { #category : #visiting }
-WDELevelElementVisitor >> visitRectangleVisualComponent: component [
+WDELevelVisitor >> visitRectangleVisualComponent: component [
 	self subclassResponsibility
 ]
 
 { #category : #visiting }
-WDELevelElementVisitor >> visitSector: sector [
+WDELevelVisitor >> visitSector: sector [
 	self subclassResponsibility
 ]
 
 { #category : #visiting }
-WDELevelElementVisitor >> visitSectorLayer: sectorLayer [
+WDELevelVisitor >> visitSectorLayer: sectorLayer [
 	self subclassResponsibility
 ]

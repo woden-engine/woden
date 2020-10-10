@@ -27,6 +27,26 @@ WDELevelElement >> initialize [
 	super initialize.
 ]
 
+{ #category : #testing }
+WDELevelElement >> isCollisionComponent [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isVisualComponent [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isVisualComponent2D [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isVisualComponent3D [
+	^ false
+]
+
 { #category : #accessing }
 WDELevelElement >> name [
 	^ name ifNil: [ name := '' ]

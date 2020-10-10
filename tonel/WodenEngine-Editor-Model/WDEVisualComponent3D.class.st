@@ -8,3 +8,8 @@ Class {
 WDEVisualComponent3D class >> isAbstract [
 	^ self == WDEVisualComponent3D
 ]
+
+{ #category : #testing }
+WDEVisualComponent3D >> isVisualComponent3D [
+	^ true
+]
