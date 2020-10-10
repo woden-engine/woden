@@ -26,6 +26,7 @@ WDELevelEditor >> content [
 { #category : #initialization }
 WDELevelEditor >> initializePresenters [
 	wodenApplication := WDELevelEditorSceneModel new.
+	wodenApplication levelEditorSession: self model.
 	content := self newWodenView.
 	content
 		wodenApplication: wodenApplication;
@@ -34,7 +35,7 @@ WDELevelEditor >> initializePresenters [
 	levelTreeView
 		addColumn: (SpCompositeTableColumn new
 			title: 'Element';
-			addColumn: (SpStringTableColumn evaluated: [ :node | node name ]);
+			addColumn: (SpStringTableColumn evaluated: [ :node | node treeDisplayName ]);
 			yourself
 		);
 		hideColumnHeaders;
@@ -43,6 +44,12 @@ WDELevelEditor >> initializePresenters [
 		whenSelectionChangedDo: [ :selection | self treeViewItemSelected: selection selectedItem ];
 		whenActivatedDo: [ :selection | self treeViewItemActivated: selection selectedItem ]"
 	
+]
+
+{ #category : #initialization }
+WDELevelEditor >> initializeWindow: aWindowPresenter [
+	super initializeWindow: aWindowPresenter.
+	aWindowPresenter initialExtent: 1024@768
 ]
 
 { #category : #accessing }

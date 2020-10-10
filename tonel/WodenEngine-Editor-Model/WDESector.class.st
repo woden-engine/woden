@@ -9,6 +9,11 @@ Class {
 	#category : #'WodenEngine-Editor-Model'
 }
 
+{ #category : #visiting }
+WDESector >> accept: visitor [
+	^ visitor visitSector: self
+]
+
 { #category : #adding }
 WDESector >> addLayer: aLayer [
 	self assert: aLayer sector isNil.
@@ -40,8 +45,8 @@ WDESector >> isSector2D: anObject [
 ]
 
 { #category : #accessing }
-WDESector >> layers: anObject [
-	layers := anObject
+WDESector >> layers [
+	^ layers
 ]
 
 { #category : #accessing }

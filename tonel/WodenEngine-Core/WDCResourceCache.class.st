@@ -989,6 +989,16 @@ WDCResourceCache >> stringifyPath: aPath [
 	]
 ]
 
+{ #category : #'special meshes' }
+WDCResourceCache >> unitCubeMesh [
+	^ self resourceAt: #unitCubeMesh ifAbsentPut: [
+		(WDCGenericMeshBuilder for: engine)
+			addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+			computeBoundingBox;
+			mesh
+	]
+]
+
 { #category : #'resource loading' }
 WDCResourceCache >> vertexLayoutFor: aVertexClass [
 	^ vertexLayouts at: aVertexClass ifAbsentPut: [ self loadVertexLayoutFrom: aVertexClass ]

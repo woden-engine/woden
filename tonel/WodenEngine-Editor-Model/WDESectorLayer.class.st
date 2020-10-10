@@ -3,24 +3,71 @@ Class {
 	#superclass : #WDELevelElement,
 	#instVars : [
 		'sector',
-		'elements',
 		'defaultMinZ',
-		'defaultMaxZ'
+		'defaultMaxZ',
+		'entities'
 	],
 	#category : #'WodenEngine-Editor-Model'
 }
 
+{ #category : #visiting }
+WDESectorLayer >> accept: visitor [
+	^ visitor visitSectorLayer: self
+]
+
+{ #category : #adding }
+WDESectorLayer >> addEntity: anEntity [
+	self assert: anEntity sectorLayer isNil.
+	entities add: anEntity.
+	anEntity sectorLayer: self.
+]
+
 { #category : #accessing }
 WDESectorLayer >> children [
-	^ elements
+	^ entities
+]
+
+{ #category : #'as yet unclassified' }
+WDESectorLayer >> createEntityWithClassName: className [
+	^ WDEEntity new
+		className: className;
+		yourself
 ]
 
 { #category : #'as yet unclassified' }
 WDESectorLayer >> createPointEntity: entityClassName at: entityLocation [
+	| entity |
+	entity := self createEntityWithClassName: entityClassName.
+	entity position: entityLocation.
+	self addEntity: entity
 ]
 
 { #category : #'as yet unclassified' }
-WDESectorLayer >> createSolidEntity: entityClassName boxMin: boxMin max: boxMax color: colors [
+WDESectorLayer >> createSolidEntity: entityClassName box: box color: color [
+	| center localBox |
+	center := box center.
+	localBox := box translatedBy: center negated. 
+
+	self addEntity: ((self createEntityWithClassName: entityClassName)
+		position: center;
+		localBoundingBox: localBox;
+		addComponent: (WDEVisualComponent box: localBox color: color);
+		addComponent: (WDECollisionComponent box: localBox);
+		yourself)
+]
+
+{ #category : #'as yet unclassified' }
+WDESectorLayer >> createSolidEntity: entityClassName rectangle: rectangle color: color [
+	| center localRectangle |
+	center := rectangle center.
+	localRectangle := rectangle translatedBy: center negated. 
+
+	self addEntity: ((self createEntityWithClassName: entityClassName)
+		position: center;
+		localBoundingRectangle: localRectangle;
+		addComponent: (WDEVisualComponent rectangle: localRectangle color: color);
+		addComponent: (WDECollisionComponent rectangle: localRectangle);
+		yourself)
 ]
 
 { #category : #accessing }
@@ -50,15 +97,20 @@ WDESectorLayer >> defaultThickness: defaultThickness [
 		defaultMaxZ: defaultThickness * 0.5
 ]
 
+{ #category : #'as yet unclassified' }
+WDESectorLayer >> defaultZ [
+	^ defaultMinZ + ((defaultMaxZ  - defaultMinZ) /2)
+]
+
 { #category : #accessing }
-WDESectorLayer >> elements: anObject [
-	elements := anObject
+WDESectorLayer >> entities [
+	^ entities
 ]
 
 { #category : #initialization }
 WDESectorLayer >> initialize [
 	super initialize.
-	elements := OrderedCollection new.
+	entities := OrderedCollection new.
 	defaultMinZ := -1.0.
 	defaultMaxZ := -1.0.
 ]

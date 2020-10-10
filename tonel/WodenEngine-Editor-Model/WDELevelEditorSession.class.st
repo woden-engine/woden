@@ -22,3 +22,8 @@ WDELevelEditorSession >> level [
 WDELevelEditorSession >> level: anObject [
 	level value: anObject
 ]
+
+{ #category : #enumerating }
+WDELevelEditorSession >> whenLevelChangedDo: aBlock [
+	level whenChangedDo: aBlock
+]

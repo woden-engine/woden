@@ -1,5 +1,5 @@
 Class {
 	#name : #WDELevelEditorSceneView,
-	#superclass : #WDASceneViewWithBabylon,
+	#superclass : #WDAFPSSceneView,
 	#category : #'WodenEngine-Editor-UI'
 }

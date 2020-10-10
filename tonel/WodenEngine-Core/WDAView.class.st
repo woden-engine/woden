@@ -186,6 +186,11 @@ WDAView >> openOnRenderTargetTexture: screenTexture [
 WDAView >> openedWithWindow: aWindow [
 ]
 
+{ #category : #'rendering process stages' }
+WDAView >> prepareRendering [
+	window prepareRendering.
+]
+
 { #category : #'event processing' }
 WDAView >> processEvents [
 	window ifNotNil: #processEvents

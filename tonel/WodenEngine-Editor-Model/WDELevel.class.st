@@ -19,6 +19,11 @@ WDELevel class >> empty [
 		yourself
 ]
 
+{ #category : #visiting }
+WDELevel >> accept: visitor [
+	^ visitor visitLevel: self
+]
+
 { #category : #adding }
 WDELevel >> addSector: aSector [
 	self assert: aSector level isNil.

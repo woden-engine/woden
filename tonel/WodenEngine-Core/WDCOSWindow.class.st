@@ -161,6 +161,10 @@ WDCOSWindow >> open [
 
 ]
 
+{ #category : #rendering }
+WDCOSWindow >> prepareRendering [
+]
+
 { #category : #'event processing' }
 WDCOSWindow >> processEvent: anEvent [
 	handledHere := false.

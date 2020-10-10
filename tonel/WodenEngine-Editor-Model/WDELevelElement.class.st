@@ -7,6 +7,16 @@ Class {
 	#category : #'WodenEngine-Editor-Model'
 }
 
+{ #category : #testing }
+WDELevelElement class >> isAbstract [
+	^ self == WDELevelElement
+]
+
+{ #category : #visiting }
+WDELevelElement >> accept: visitor [
+	^ self subclassResponsibility
+]
+
 { #category : #accessing }
 WDELevelElement >> children [
 	^ #()
@@ -25,4 +35,9 @@ WDELevelElement >> name [
 { #category : #accessing }
 WDELevelElement >> name: aString [
 	name := aString.
+]
+
+{ #category : #accessing }
+WDELevelElement >> treeDisplayName [
+	^ self name
 ]

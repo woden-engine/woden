@@ -10,7 +10,8 @@ Class {
 		'resolveRenderTarget',
 		'lastMousePosition',
 		'handledHere',
-		'eventQueue'
+		'eventQueue',
+		'displayFormMutex'
 	],
 	#category : #'WodenEngine-Core-Window'
 }
@@ -72,18 +73,8 @@ WDCMorphicWindow >> close [
 
 { #category : #rendering }
 WDCMorphicWindow >> commitSurface [
-	| pitch slicePitch |
-	displayForm ifNil: [ ^ self ].
-	pitch := displayForm width * 4.
-	slicePitch := pitch * displayForm height.
-	displayForm unhibernate.
-	
-	engine device finishExecution.
-	resolveRenderTarget currentFramebuffer colorAttachments first validHandle
-		readTextureData: 0 arrayIndex: 0 pitch: pitch slicePitch: slicePitch buffer: displayForm bits.
-		
-	engine hasBottomLeftTextureCoordinates ifTrue: [ 
-		displayForm flipHorizontally
+	displayFormMutex critical: [
+		self doCommitSurface
 	].
 
 	self changed
@@ -122,16 +113,38 @@ WDCMorphicWindow >> defaultExtent [
 WDCMorphicWindow >> destroyRenderingResources [
 ]
 
+{ #category : #rendering }
+WDCMorphicWindow >> doCommitSurface [
+	| pitch slicePitch |
+	
+	displayForm ifNil: [ ^ self ].
+	pitch := displayForm width * 4.
+	slicePitch := pitch * displayForm height.
+	displayForm unhibernate.
+	
+	engine device finishExecution.
+	resolveRenderTarget currentFramebuffer colorAttachments first validHandle
+		readTextureData: 0 arrayIndex: 0 pitch: pitch slicePitch: slicePitch buffer: displayForm bits.
+		
+	engine hasBottomLeftTextureCoordinates ifTrue: [ 
+		displayForm flipHorizontally
+	].
+
+	self changed
+]
+
 { #category : #initialization }
 WDCMorphicWindow >> drawOn: aCanvas [
 	engine ifNil: [ ^ self ].
 	
-	self checkSession.
-	self checkRenderTarget.
-	
-	aCanvas
-		fillRectangle: self bounds color: Color black;
-		translucentImage: displayForm at: self bounds origin.
+	displayFormMutex critical: [
+		displayForm ifNotNil: [ 
+			aCanvas
+				fillRectangle: self bounds color: Color black;
+				translucentImage: displayForm at: self bounds origin.
+		].
+	]
+
 ]
 
 { #category : #initialization }
@@ -175,6 +188,7 @@ WDCMorphicWindow >> initialize [
 	super initialize.
 	
 	eventQueue := WaitfreeQueue new.
+	displayFormMutex := Semaphore forMutualExclusion.
 	self extent: self defaultExtent.
 	self clipSubmorphs: true.
 ]
@@ -193,6 +207,13 @@ WDCMorphicWindow >> initializeForNewSession [
 { #category : #'framebuffer description' }
 WDCMorphicWindow >> needsDirectRenderTarget [
 	^ true
+]
+
+{ #category : #'rendering process stages' }
+WDCMorphicWindow >> prepareRendering [
+	displayFormMutex critical: [
+		self checkSession; checkRenderTarget
+	]
 ]
 
 { #category : #'events-processing' }
