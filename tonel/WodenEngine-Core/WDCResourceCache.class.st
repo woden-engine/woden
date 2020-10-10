@@ -427,6 +427,30 @@ WDCResourceCache >> flatColorMaterial [
 	^ self loadMaterial: 'materials/basic/flat.json'
 ]
 
+{ #category : #'special meshes' }
+WDCResourceCache >> flatShadedTranslucentUnitCubeMesh [
+	^ self resourceAt: #flatShadedTranslucentUnitCubeMesh ifAbsentPut: [
+		((WDCGenericMeshBuilder for: engine)
+			currentMaterial: self whiteFlatColorMaterial;
+			addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+			computeBoundingBox;
+			mesh)
+				makeTranslucent;
+				yourself
+	]
+]
+
+{ #category : #'special meshes' }
+WDCResourceCache >> flatShadedUnitCubeMesh [
+	^ self resourceAt: #flatShadedUnitCubeMesh ifAbsentPut: [
+		(WDCGenericMeshBuilder for: engine)
+			currentMaterial: self whiteFlatColorMaterial;
+			addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+			computeBoundingBox;
+			mesh
+	]
+]
+
 { #category : #'memory pools' }
 WDCResourceCache >> genericObjectStatePool [
 	^ self streamingUniformBufferPoolFor: WDCGenericObjectState
@@ -990,6 +1014,18 @@ WDCResourceCache >> stringifyPath: aPath [
 ]
 
 { #category : #'special meshes' }
+WDCResourceCache >> translucentUnitCubeMesh [
+	^ self resourceAt: #unitCubeMesh ifAbsentPut: [
+		((WDCGenericMeshBuilder for: engine)
+			addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+			computeBoundingBox;
+			mesh)
+			makeTranslucent;
+			yourself
+	]
+]
+
+{ #category : #'special meshes' }
 WDCResourceCache >> unitCubeMesh [
 	^ self resourceAt: #unitCubeMesh ifAbsentPut: [
 		(WDCGenericMeshBuilder for: engine)
@@ -1012,6 +1048,11 @@ WDCResourceCache >> vertexLayoutForVertexChannelDescriptions: channelDescription
 { #category : #textures }
 WDCResourceCache >> whiteCubeMap [
 	^ self getOrCreateColorCubeMap: Color white
+]
+
+{ #category : #'as yet unclassified' }
+WDCResourceCache >> whiteFlatColorMaterial [
+	^ self resourceAt: #whiteFlatColorMaterial ifAbsentPut: [ WDCFlatColorMaterial for: engine]
 ]
 
 { #category : #textures }

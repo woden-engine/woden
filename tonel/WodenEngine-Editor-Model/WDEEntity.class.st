@@ -30,7 +30,7 @@ WDEEntity >> addComponent: aComponent [
 
 { #category : #accessing }
 WDEEntity >> boundingBox [
-	^ boundingBox ifNil: [ boundingBox := self localBoundingBox translatedBy: self position ]
+	^ boundingBox ifNil: [ boundingBox := self localBoundingBoxWithDepth translatedBy: self validPosition3D ]
 ]
 
 { #category : #accessing }
@@ -141,6 +141,16 @@ WDEEntity >> positionBoxChanged [
 	boundingBox := nil.
 ]
 
+{ #category : #'ray casting' }
+WDEEntity >> rayCast: ray [
+	| distance |
+	self selectableBoundingBox isEmpty ifTrue: [ ^ nil ].
+	
+	distance := selectableBoundingBox intersectionWithRay: ray.
+	(distance isNil or: [(distance between: ray tmin and: ray tmax) not]) ifTrue: [ ^ nil ].
+	^ distance -> self.
+]
+
 { #category : #accessing }
 WDEEntity >> sectorLayer [
 	^ sectorLayer
@@ -153,7 +163,7 @@ WDEEntity >> sectorLayer: anObject [
 
 { #category : #accessing }
 WDEEntity >> selectableBoundingBox [
-	^ selectableBoundingBox ifNil: [ selectableBoundingBox := self localSelectableBoundingBox translatedBy: self position ]
+	^ selectableBoundingBox ifNil: [ selectableBoundingBox := self localSelectableBoundingBox translatedBy: self validPosition3D ]
 ]
 
 { #category : #accessing }

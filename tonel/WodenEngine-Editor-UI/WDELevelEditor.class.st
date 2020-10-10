@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'content',
 		'levelTreeView',
+		'elementTemplateList',
 		'wodenApplication'
 	],
 	#category : #'WodenEngine-Editor-UI'
@@ -14,13 +15,22 @@ WDELevelEditor class >> defaultSpec [
 	^ SpPanedLayout newHorizontal
 		position: 2/3;
 		add: #content;
-		add: #levelTreeView;
+		add: (SpPanedLayout newVertical
+			position: 2/3;
+			add: #levelTreeView;
+			add: #elementTemplateList;
+			yourself)
 		yourself
 ]
 
 { #category : #accessing }
 WDELevelEditor >> content [
 	^ content
+]
+
+{ #category : #accessing }
+WDELevelEditor >> elementTemplateList [
+	^ elementTemplateList
 ]
 
 { #category : #initialization }
@@ -43,7 +53,7 @@ WDELevelEditor >> initializePresenters [
 		"contextMenu: [ self treeViewMenu ];
 		whenSelectionChangedDo: [ :selection | self treeViewItemSelected: selection selectedItem ];
 		whenActivatedDo: [ :selection | self treeViewItemActivated: selection selectedItem ]"
-	
+	elementTemplateList := self newTable.
 ]
 
 { #category : #initialization }

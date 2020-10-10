@@ -47,6 +47,26 @@ WDELevel >> newEditorSession [
 	^ WDELevelEditorSession new level: self; yourself
 ]
 
+{ #category : #'ray casting' }
+WDELevel >> rayCast: ray [
+	| bestResult |
+	bestResult := nil.
+	self sectors do: [ :eachSector |
+		eachSector layers do: [ :eachLayer |
+			eachLayer entities do: [ :eachEntity |
+				| newResult |
+				newResult := eachEntity rayCast: ray.
+				newResult ifNotNil: [
+					(bestResult isNil or: [ newResult < bestResult ]) ifTrue: [ 
+						bestResult := newResult
+					].
+				].
+			]
+		].
+	].
+	^ bestResult
+]
+
 { #category : #accessing }
 WDELevel >> sectors [
 	^ sectors

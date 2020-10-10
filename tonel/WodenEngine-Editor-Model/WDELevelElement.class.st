@@ -57,6 +57,11 @@ WDELevelElement >> name: aString [
 	name := aString.
 ]
 
+{ #category : #'ray casting' }
+WDELevelElement >> rayCast: ray [
+	^ nil
+]
+
 { #category : #accessing }
 WDELevelElement >> treeDisplayName [
 	^ self name

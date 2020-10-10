@@ -1,0 +1,35 @@
+Class {
+	#name : #WDELevelEditorViewEditionMode,
+	#superclass : #WDELevelEditorViewMode,
+	#category : #'WodenEngine-Editor-UI'
+}
+
+{ #category : #'event handling' }
+WDELevelEditorViewEditionMode >> onMouseButtonPress: event [
+	event button = 1 ifTrue: [ ^ self startSelectionDraggingWith: event ].
+	event button = 2 ifTrue: [ ^ self startCameraRotateDraggingWith: event ].
+	event button = 3 ifTrue: [ ^ self startCameraDraggingWith: event ].
+]
+
+{ #category : #'event handling' }
+WDELevelEditorViewEditionMode >> onMouseWheel: event [
+	view translateCameraBy: (Float32x3 z: event scrollVertical * -0.5)
+]
+
+{ #category : #'event handling' }
+WDELevelEditorViewEditionMode >> startCameraDraggingWith: event [
+	view activeToolMode: ((WDELevelEditorViewCameraDragToolMode for: view)
+		dragStartedWith: event;
+		yourself)
+]
+
+{ #category : #'event handling' }
+WDELevelEditorViewEditionMode >> startCameraRotateDraggingWith: event [
+	view activeToolMode: ((WDELevelEditorViewCameraRotateDragToolMode for: view)
+		dragStartedWith: event;
+		yourself)
+]
+
+{ #category : #'event handling' }
+WDELevelEditorViewEditionMode >> startSelectionDraggingWith: event [
+]
