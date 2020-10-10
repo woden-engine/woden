@@ -6,7 +6,8 @@ Class {
 		'engine',
 		'elementSize',
 		'heapSize',
-		'heaps'
+		'heaps',
+		'mutex'
 	],
 	#category : #'WodenEngine-Core-Pool'
 }
@@ -23,9 +24,12 @@ WDCStreamingBufferPool class >> engine: engine elementType: elementType [
 
 { #category : #accessing }
 WDCStreamingBufferPool >> allocate [
-	heaps do: [ :heap | heap hasAvailableElement ifTrue: [ ^ heap allocate ] ].
-	self createHeap.
-	^ heaps last allocate
+	^ mutex critical: [ 
+		heaps do: [ :heap | heap hasAvailableElement ifTrue: [ ^ heap allocate ] ].
+		self createHeap.
+		heaps last allocate
+	]
+
 ]
 
 { #category : #'instance creation' }
@@ -101,6 +105,7 @@ WDCStreamingBufferPool >> heapSize: anObject [
 WDCStreamingBufferPool >> initialize [
 	super initialize.
 	heaps := OrderedCollection new.
+	mutex := Mutex new.
 ]
 
 { #category : #accessing }
@@ -108,7 +113,15 @@ WDCStreamingBufferPool >> minimalAlignment [
 	^ 1
 ]
 
+{ #category : #accessing }
+WDCStreamingBufferPool >> mutex [
+	^ mutex
+]
+
 { #category : #path }
 WDCStreamingBufferPool >> sessionChanged [
-	heaps do: [ :each | each sessionChanged ]
+	mutex critical: [ 
+		heaps do: [ :each | each sessionChanged ]
+	].
+
 ]

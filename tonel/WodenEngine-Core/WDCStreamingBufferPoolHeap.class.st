@@ -33,7 +33,7 @@ WDCStreamingBufferPoolHeap >> allocate [
 	element := WDCStreamingBufferPoolElement new
 		heap: self;
 		index: elementIndex;
-		offset: elementSize * size;
+		offset: elementSize * elementIndex;
 		autoRelease;
 		yourself.
 	allocatedElements add: element.
@@ -88,7 +88,10 @@ WDCStreamingBufferPoolHeap >> hasAvailableElement [
 
 { #category : #accessing }
 WDCStreamingBufferPoolHeap >> indexReleased: index [
-	freeIndexList add: index
+	self pool mutex critical: [ 
+		freeIndexList add: index
+	].
+
 ]
 
 { #category : #initialization }
