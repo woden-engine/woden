@@ -79,6 +79,23 @@ WDEEntity >> initialize [
 	localBoundingBox := (BoxF32 point: Float32x3 zeros) asValueHolder.
 ]
 
+{ #category : #'ray casting' }
+WDEEntity >> intersectsFrustum: frustum [
+	self selectableBoundingBox isEmpty ifTrue: [ ^ false ].
+	
+	^ frustum intersectsOrContainsBox: self selectableBoundingBox
+]
+
+{ #category : #testing }
+WDEEntity >> isEntity [
+	^ true
+]
+
+{ #category : #testing }
+WDEEntity >> isPointEntity [
+	^ self localBoundingBox min = self localBoundingBox max
+]
+
 { #category : #accessing }
 WDEEntity >> localBoundingBox [
 	^ localBoundingBox value
@@ -147,8 +164,15 @@ WDEEntity >> rayCast: ray [
 	self selectableBoundingBox isEmpty ifTrue: [ ^ nil ].
 	
 	distance := selectableBoundingBox intersectionWithRay: ray.
-	(distance isNil or: [(distance between: ray tmin and: ray tmax) not]) ifTrue: [ ^ nil ].
+	distance ifNil: [ ^ nil ].
 	^ distance -> self.
+]
+
+{ #category : #memento }
+WDEEntity >> restoreTransformStateMemento: memento [
+	self
+		position: memento first;
+		localBoundingBox: memento second.
 ]
 
 { #category : #accessing }
@@ -164,6 +188,23 @@ WDEEntity >> sectorLayer: anObject [
 { #category : #accessing }
 WDEEntity >> selectableBoundingBox [
 	^ selectableBoundingBox ifNil: [ selectableBoundingBox := self localSelectableBoundingBox translatedBy: self validPosition3D ]
+]
+
+{ #category : #memento }
+WDEEntity >> transformStateMemento [
+	^ { self position . self localBoundingBox }
+]
+
+{ #category : #transforms }
+WDEEntity >> translateBy: translation [
+	| rawPosition |
+	rawPosition := self position.
+	rawPosition class elements = 2 ifTrue: [ 
+		self position: rawPosition + translation xy
+	] ifFalse: [ 
+		self position: rawPosition + translation
+	].
+
 ]
 
 { #category : #accessing }

@@ -7,7 +7,8 @@ Class {
 		'elementTemplateList',
 		'wodenApplication',
 		'mainMenuBar',
-		'mainStatusBar'
+		'mainStatusBar',
+		'mainToolbar'
 	],
 	#category : #'WodenEngine-Editor-UI'
 }
@@ -16,6 +17,7 @@ Class {
 WDELevelEditor class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		add: #mainMenuBar withConstraints: [ :constraints | constraints height: self toolbarHeight ];
+		add: #mainToolbar withConstraints: [ :constraints | constraints height: self toolbarHeight ];
 		add: (	SpPanedLayout newHorizontal
 			position: 2/3;
 			add: #content;
@@ -56,6 +58,24 @@ WDELevelEditor >> buildMainMenuBar [
 						subMenu: self helpMenu
 				]
 		];
+		yourself
+]
+
+{ #category : #initialization }
+WDELevelEditor >> buildMainToolbar [
+	^ self newToolbar
+		addItem: (SpToolbarButtonPresenter new
+			label: 'Object';
+			action: [ content view activateObjectMode ];
+			yourself);
+		addItem: (SpToolbarButtonPresenter new
+			label: 'Brush';
+			action: [ content view activateBrushConstructionMode ];
+			yourself);
+		addItem: (SpToolbarButtonPresenter new
+			label: 'Point';
+			action: [ content view activatePointEntityPlacementMode ];
+			yourself);
 		yourself
 ]
 
@@ -204,6 +224,7 @@ WDELevelEditor >> helpMenu [
 { #category : #initialization }
 WDELevelEditor >> initializePresenters [
 	mainMenuBar := self buildMainMenuBar.
+	mainToolbar := self buildMainToolbar.
 	mainStatusBar := self newStatusBar.
 	wodenApplication := WDELevelEditorSceneModel new.
 	wodenApplication levelEditorSession: self model.
@@ -248,6 +269,11 @@ WDELevelEditor >> mainMenuBar [
 { #category : #accessing }
 WDELevelEditor >> mainStatusBar [
 	^ mainStatusBar
+]
+
+{ #category : #accessing }
+WDELevelEditor >> mainToolbar [
+	^ mainToolbar
 ]
 
 { #category : #initialization }

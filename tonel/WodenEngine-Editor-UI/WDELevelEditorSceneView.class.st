@@ -35,6 +35,11 @@ WDELevelEditorSceneView class >> defaultPerspectiveNearDistance [
 	^ 0.01
 ]
 
+{ #category : #'editor modes' }
+WDELevelEditorSceneView >> activateBrushConstructionMode [
+	self activeEditionMode: (WDELevelEditorViewBrushConstructionMode for: self)
+]
+
 { #category : #'sub render mode' }
 WDELevelEditorSceneView >> activateFlatColor [
 	^ self renderSubMode: WDCStateTrackerSubRenderMode flatColor
@@ -50,6 +55,16 @@ WDELevelEditorSceneView >> activateFullShaded [
 	^ self renderSubMode: WDCStateTrackerSubRenderMode fullShaded
 ]
 
+{ #category : #'editor modes' }
+WDELevelEditorSceneView >> activateObjectMode [
+	self activeEditionMode: (WDELevelEditorViewObjectEditionMode for: self)
+]
+
+{ #category : #'editor modes' }
+WDELevelEditorSceneView >> activatePointEntityPlacementMode [
+	self activeEditionMode: (WDELevelEditorViewPointEntityPlacementMode for: self)
+]
+
 { #category : #'sub render mode' }
 WDELevelEditorSceneView >> activateShadedColor [
 	^ self renderSubMode: WDCStateTrackerSubRenderMode shadedColor
@@ -63,6 +78,11 @@ WDELevelEditorSceneView >> activateWireFrame [
 { #category : #accessing }
 WDELevelEditorSceneView >> activeEditionMode [
 	^ activeEditionMode ifNil: [ activeEditionMode := WDELevelEditorViewObjectEditionMode for: self  ]
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneView >> activeEditionMode: newEditionMode [
+	^ activeEditionMode := newEditionMode
 ]
 
 { #category : #accessing }
@@ -124,11 +144,15 @@ WDELevelEditorSceneView >> elementInScreenPosition: aPoint [
 
 { #category : #visiting }
 WDELevelEditorSceneView >> elementsInScreenRectangle: screenRectangle [
-	| originPosition cornerPosition normalizedScreenRectangle |
+	| originPosition cornerPosition normalizedScreenRectangle selectionFrustum |
 	originPosition := (self normalizeScreenPosition: screenRectangle origin) asFloat32x2.
 	cornerPosition := (self normalizeScreenPosition: screenRectangle corner) asFloat32x2.
 	normalizedScreenRectangle := RectangleF32 min: (originPosition min: cornerPosition) max: (originPosition max: cornerPosition).
-	^ #()
+	
+	selectionFrustum := ((self camera frustum splitAtLeftLambda: normalizedScreenRectangle min x rightLambda: normalizedScreenRectangle max x)
+			splitAtBottomLambda: normalizedScreenRectangle min y topLambda: normalizedScreenRectangle max y)
+			transformedWith: self camera globalTransform.
+	^ model elementsInFrustum: selectionFrustum
 ]
 
 { #category : #'view perspective' }
@@ -170,14 +194,14 @@ WDELevelEditorSceneView >> isPerspective: anObject [
 ]
 
 { #category : #visiting }
-WDELevelEditorSceneView >> manipulatorInPosition: aPoint [
-	^ self manipulatorInPositionWithRayPicking: aPoint
-
+WDELevelEditorSceneView >> manipulatorInPositionWithRayPicking: aPoint [
+	^ self rayPickManipulator: (self rayForScreenPosition: aPoint)
 ]
 
 { #category : #visiting }
-WDELevelEditorSceneView >> manipulatorInPositionWithRayPicking: aPoint [
-	^ self rayPickManipulator: (self rayForScreenPosition: aPoint)
+WDELevelEditorSceneView >> manipulatorInScreenPosition: aPoint [
+	^ self manipulatorInPositionWithRayPicking: aPoint
+
 ]
 
 { #category : #visiting }

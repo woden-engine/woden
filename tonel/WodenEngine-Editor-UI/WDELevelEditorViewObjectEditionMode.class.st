@@ -6,8 +6,24 @@ Class {
 
 { #category : #'event handling' }
 WDELevelEditorViewObjectEditionMode >> onMouseMove: event [
-	| elementBeingPointed |
-	elementBeingPointed := view elementInScreenPosition: event position.
-	self model highlightElement: elementBeingPointed.
+	| elementBeingPointed manipulatorBeingPointed |
+	manipulatorBeingPointed := view manipulatorInScreenPosition: event position.
+	manipulatorBeingPointed ifNotNil: [ 
+		self model
+			highlightManipulator: manipulatorBeingPointed;
+			highlightElement: nil
+	] ifNil: [ 
+		elementBeingPointed := view elementInScreenPosition: event position.
+		self model
+			highlightElement: elementBeingPointed;
+			highlightManipulator: nil
+	].
 	^ super onMouseMove: event
+]
+
+{ #category : #'event handling' }
+WDELevelEditorViewObjectEditionMode >> startActionDraggingWith: event [
+	view activeToolMode: ((WDELevelEditorRectangleSelectionDragToolMode for: view)
+		dragStartedWith: event;
+		yourself)
 ]

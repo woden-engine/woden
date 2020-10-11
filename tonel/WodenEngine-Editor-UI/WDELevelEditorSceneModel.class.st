@@ -14,14 +14,35 @@ Class {
 		'subGridMesh',
 		'axisNode',
 		'axisMesh',
-		'baseGridSize'
+		'baseGridSize',
+		'selectionManipulator',
+		'highlightedManipulator'
 	],
 	#category : #'WodenEngine-Editor-UI'
 }
 
+{ #category : #'ray casting' }
+WDELevelEditorSceneModel >> activeManipulatorsDo: aBlock [
+	selectionManipulator ifNotNil: [ aBlock value: selectionManipulator ].
+]
+
 { #category : #accessing }
 WDELevelEditorSceneModel >> applyNewSelection: newSelection [
-	Transcript show: 'newSelection: '; show: newSelection; cr.
+	| selectedEntities |
+	selectionManipulator ifNotNil: [
+		selectionManipulator removeFromScene.
+		selectionManipulator := nil.
+	].
+
+	selectedEntities := newSelection selectedItems select: [ :each | each isEntity ].
+	selectedEntities ifNotEmpty: [
+		selectionManipulator := (WDELevelEditor3DSelectionManipulator for: self)
+			selectedElements: selectedEntities;
+			addToScene: scene;
+			yourself.
+		self highlightManipulator: nil; highlightElement: nil
+	].
+
 ]
 
 { #category : #'instance creation' }
@@ -113,6 +134,11 @@ WDELevelEditorSceneModel >> createSubGridNode [
 	scene add: subGridNode
 ]
 
+{ #category : #'ray casting' }
+WDELevelEditorSceneModel >> elementsInFrustum: frustum [
+	^ self level elementsInFrustum: frustum
+]
+
 { #category : #accessing }
 WDELevelEditorSceneModel >> entitySelectionBoxRenderable [
 	^ entitySelectionBoxRenderable ifNil: [ entitySelectionBoxRenderable := engine resourceCache flatShadedUnitCubeMesh copy setFlatColorSubRenderMode; yourself ]
@@ -154,6 +180,13 @@ WDELevelEditorSceneModel >> highlightElement: anElement [
 			visible: true;
 			transform: (anElement selectableBoundingBox withExpandedHalfExtent: 0.025) reversibleTransformToConvertUnitBoxToMe.
 	]
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneModel >> highlightManipulator: aManipulator [
+	highlightedManipulator ifNotNil: [ highlightedManipulator highlighted: false ].
+	highlightedManipulator := aManipulator.
+	highlightedManipulator ifNotNil: [ highlightedManipulator highlighted: true ].
 ]
 
 { #category : #initialization }
@@ -226,7 +259,17 @@ WDELevelEditorSceneModel >> rayCast: ray [
 
 { #category : #'ray casting' }
 WDELevelEditorSceneModel >> rayCastForManipulator: ray [
-	^ nil
+	| bestResult |
+	bestResult := nil.
+	self activeManipulatorsDo: [ :each |
+		(each rayCast: ray) ifNotNil: [ :result |
+			(bestResult isNil or: [ result < bestResult ]) ifTrue: [ 
+				bestResult := result
+			]
+		].
+	].
+
+	^ bestResult value
 ]
 
 { #category : #utiltity }

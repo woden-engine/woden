@@ -24,6 +24,11 @@ WDEEntityComponent >> initialize [
 	changedEventHolder := false asValueHolder.
 ]
 
+{ #category : #testing }
+WDEEntityComponent >> isEntityComponent [
+	^ true
+]
+
 { #category : #accessing }
 WDEEntityComponent >> parentEntity [
 	^ parentEntity

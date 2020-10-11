@@ -27,8 +27,43 @@ WDELevelElement >> initialize [
 	super initialize.
 ]
 
+{ #category : #'ray casting' }
+WDELevelElement >> intersectsFrustum: frustum [
+	^ false
+]
+
 { #category : #testing }
 WDELevelElement >> isCollisionComponent [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isEntity [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isEntityComponent [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isLevel [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isPointEntity [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isSector [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isSectorLayer [
 	^ false
 ]
 
@@ -60,6 +95,19 @@ WDELevelElement >> name: aString [
 { #category : #'ray casting' }
 WDELevelElement >> rayCast: ray [
 	^ nil
+]
+
+{ #category : #memento }
+WDELevelElement >> restoreTransformStateMemento: memento [
+]
+
+{ #category : #memento }
+WDELevelElement >> transformStateMemento [
+	^ nil
+]
+
+{ #category : #transforms }
+WDELevelElement >> translateBy: translation [
 ]
 
 { #category : #accessing }

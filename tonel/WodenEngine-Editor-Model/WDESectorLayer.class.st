@@ -115,6 +115,11 @@ WDESectorLayer >> initialize [
 	defaultMaxZ := -1.0.
 ]
 
+{ #category : #testing }
+WDESectorLayer >> isSectorLayer [
+	^ true
+]
+
 { #category : #accessing }
 WDESectorLayer >> sector [
 	^ sector

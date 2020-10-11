@@ -31,15 +31,42 @@ WDELevel >> addSector: aSector [
 	aSector level: self
 ]
 
+{ #category : #'ray casting' }
+WDELevel >> allEntitiesDo: aBlock [
+	self sectors do: [ :eachSector |
+		eachSector layers do: [ :eachLayer |
+			eachLayer entities do: aBlock
+		].
+	].
+
+]
+
 { #category : #accessing }
 WDELevel >> children [
 	^ sectors
+]
+
+{ #category : #'ray casting' }
+WDELevel >> elementsInFrustum: frustum [
+	| result |
+	result := OrderedCollection new.
+	self allEntitiesDo: [ :eachEntity |
+		(eachEntity intersectsFrustum: frustum) ifTrue: [
+			result add: eachEntity
+		]
+	].
+	^ result asArray
 ]
 
 { #category : #initialization }
 WDELevel >> initialize [
 	super initialize.
 	sectors := OrderedCollection new.
+]
+
+{ #category : #testing }
+WDELevel >> isLevel [
+	^ true
 ]
 
 { #category : #'instance creation' }
@@ -51,17 +78,13 @@ WDELevel >> newEditorSession [
 WDELevel >> rayCast: ray [
 	| bestResult |
 	bestResult := nil.
-	self sectors do: [ :eachSector |
-		eachSector layers do: [ :eachLayer |
-			eachLayer entities do: [ :eachEntity |
-				| newResult |
-				newResult := eachEntity rayCast: ray.
-				newResult ifNotNil: [
-					(bestResult isNil or: [ newResult < bestResult ]) ifTrue: [ 
-						bestResult := newResult
-					].
-				].
-			]
+	self allEntitiesDo: [ :eachEntity |
+		| newResult |
+		newResult := eachEntity rayCast: ray.
+		newResult ifNotNil: [
+			(bestResult isNil or: [ newResult < bestResult ]) ifTrue: [ 
+				bestResult := newResult
+			].
 		].
 	].
 	^ bestResult

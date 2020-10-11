@@ -322,6 +322,7 @@ WDSGNode >> removedFromNode: oldParentNode [
 
 { #category : #adding }
 WDSGNode >> removedFromScene: oldScene [
+	self sceneLayer removeRenderingRenderables: self renderingRenderables.
 	oldScene removeNodeWithPendingState: self.
 	scene := nil.
 	children do: [ :child | child removedFromScene: oldScene ].
