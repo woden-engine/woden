@@ -1,7 +1,7 @@
 Class {
 	#name : #WDELevelEditorViewTranslateManipulatorDragToolMode,
 	#superclass : #WDELevelEditorViewManipulatorDragToolMode,
-	#category : #'WodenEngine-Editor-UI'
+	#category : #'WodenEngine-Editor-UI-ViewMode'
 }
 
 { #category : #'event handling' }
@@ -10,12 +10,12 @@ WDELevelEditorViewTranslateManipulatorDragToolMode >> onMouseMove: event [
 	mouseDelta := event position - dragStartPosition.
 	
 	worldDelta := event modifiers ctrl ifTrue: [
-		self cameraXZDeltaToWorld: mouseDelta
+		self cameraXZDeltaToWorld: mouseDelta distance: dragScreenDistance
 	] ifFalse: [
-		self cameraXYDeltaToWorld: mouseDelta
+		self cameraXYDeltaToWorld: mouseDelta distance: dragScreenDistance
 	].
 
 	manipulator
 		restoreMementoForDragging: memento;
-		applyTransformForTranslationDelta: worldDelta.
+		applyTransformForTranslationDelta: (self snapToSubGrid: worldDelta).
 ]

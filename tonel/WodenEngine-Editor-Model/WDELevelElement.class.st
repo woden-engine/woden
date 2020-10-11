@@ -33,6 +33,11 @@ WDELevelElement >> intersectsFrustum: frustum [
 ]
 
 { #category : #testing }
+WDELevelElement >> is2DLevelElement [
+	^ false
+]
+
+{ #category : #testing }
 WDELevelElement >> isCollisionComponent [
 	^ false
 ]
@@ -44,6 +49,11 @@ WDELevelElement >> isEntity [
 
 { #category : #testing }
 WDELevelElement >> isEntityComponent [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isInSector2D [
 	^ false
 ]
 
@@ -92,6 +102,16 @@ WDELevelElement >> name: aString [
 	name := aString.
 ]
 
+{ #category : #accessing }
+WDELevelElement >> position [
+	^ Float32x3 zeros
+]
+
+{ #category : #accessing }
+WDELevelElement >> position: aPosition [
+	"By default do nothing"
+]
+
 { #category : #'ray casting' }
 WDELevelElement >> rayCast: ray [
 	^ nil
@@ -104,6 +124,10 @@ WDELevelElement >> restoreTransformStateMemento: memento [
 { #category : #memento }
 WDELevelElement >> transformStateMemento [
 	^ nil
+]
+
+{ #category : #transforms }
+WDELevelElement >> transformWith: transform [
 ]
 
 { #category : #transforms }

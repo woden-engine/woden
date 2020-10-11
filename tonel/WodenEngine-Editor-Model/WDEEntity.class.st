@@ -86,9 +86,19 @@ WDEEntity >> intersectsFrustum: frustum [
 	^ frustum intersectsOrContainsBox: self selectableBoundingBox
 ]
 
+{ #category : #transforms }
+WDEEntity >> is2DLevelElement [
+	^ self position class elements = 2
+]
+
 { #category : #testing }
 WDEEntity >> isEntity [
 	^ true
+]
+
+{ #category : #testing }
+WDEEntity >> isInSector2D [
+	^ sectorLayer isInSector2D
 ]
 
 { #category : #testing }
@@ -149,11 +159,12 @@ WDEEntity >> position [
 
 { #category : #accessing }
 WDEEntity >> position: anObject [
+	self positionChanged.
 	position value: anObject
 ]
 
 { #category : #private }
-WDEEntity >> positionBoxChanged [
+WDEEntity >> positionChanged [
 	selectableBoundingBox := nil.
 	boundingBox := nil.
 ]
@@ -170,9 +181,17 @@ WDEEntity >> rayCast: ray [
 
 { #category : #memento }
 WDEEntity >> restoreTransformStateMemento: memento [
+	| componentMementos |
+	self assert: memento size = 3.
+	self assert: memento third size = components size.
 	self
 		position: memento first;
 		localBoundingBox: memento second.
+
+	componentMementos := memento third.
+	components doWithIndex: [ :eachComponent :index |
+		eachComponent restoreTransformStateMemento: (componentMementos at: index)
+	]
 ]
 
 { #category : #accessing }
@@ -192,7 +211,25 @@ WDEEntity >> selectableBoundingBox [
 
 { #category : #memento }
 WDEEntity >> transformStateMemento [
-	^ { self position . self localBoundingBox }
+	^ { self position . self localBoundingBox . components collect: [:each | each transformStateMemento ]}
+]
+
+{ #category : #transforms }
+WDEEntity >> transformWith: transform [
+	| rawPosition oldPosition componentTransform |
+	rawPosition := self position.
+	oldPosition := self validPosition3D.
+	self is2DLevelElement ifTrue: [ 
+		self position: (transform transformPosition: self validPosition3D) xy
+	] ifFalse: [ 
+		self position: (transform transformPosition: rawPosition).
+	].
+
+	componentTransform := transform copy translation: Float32x3 zeros.
+	self localBoundingBox: (self localBoundingBox transformedWith: componentTransform).
+	components do: [ :each |
+		each transformWith: componentTransform
+	]
 ]
 
 { #category : #transforms }

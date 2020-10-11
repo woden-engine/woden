@@ -38,7 +38,7 @@ WDELevelEditorElementSceneNodeBuilder >> visitBoxVisualComponent: component [
 	component whenChangedDo: [
 		node
 			color: component color;
-			transform: component reversibleTransformToConvertUnitBoxToMe
+			transform: component boundingBox reversibleTransformToConvertUnitBoxToMe
 	].
 	^ node
 ]

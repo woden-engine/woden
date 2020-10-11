@@ -5,7 +5,7 @@ Class {
 		'rectangle',
 		'color'
 	],
-	#category : #'WodenEngine-Editor-UI'
+	#category : #'WodenEngine-Editor-UI-Overlays'
 }
 
 { #category : #accessing }

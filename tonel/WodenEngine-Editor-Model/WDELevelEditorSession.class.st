@@ -50,6 +50,16 @@ WDELevelEditorSession >> level: anObject [
 	level value: anObject
 ]
 
+{ #category : #snapping }
+WDELevelEditorSession >> round: value quantum: quantum [
+	^ (((value / quantum) + 0.5) floor) * quantum
+]
+
+{ #category : #snapping }
+WDELevelEditorSession >> roundFloor: value quantum: quantum [
+	^ ((value / quantum) floor) * quantum
+]
+
 { #category : #accessing }
 WDELevelEditorSession >> selection [
 	^ selection value
@@ -63,6 +73,16 @@ WDELevelEditorSession >> selection: newSelection [
 { #category : #adding }
 WDELevelEditorSession >> setSelectedElements: elements [
 	self selection: (WDELevelEditorSelection for: elements asArray)
+]
+
+{ #category : #snapping }
+WDELevelEditorSession >> snapToGrid: vector [
+	^ self round: vector quantum: self gridSize
+]
+
+{ #category : #snapping }
+WDELevelEditorSession >> snapToSubGrid: vector [
+	^ self round: vector quantum: self subGridSize
 ]
 
 { #category : #snapping }

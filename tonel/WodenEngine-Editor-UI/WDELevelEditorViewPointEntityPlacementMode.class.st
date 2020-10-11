@@ -1,5 +1,5 @@
 Class {
 	#name : #WDELevelEditorViewPointEntityPlacementMode,
 	#superclass : #WDELevelEditorViewEditionMode,
-	#category : #'WodenEngine-Editor-UI'
+	#category : #'WodenEngine-Editor-UI-ViewMode'
 }

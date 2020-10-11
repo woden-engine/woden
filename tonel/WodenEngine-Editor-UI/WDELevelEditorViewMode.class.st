@@ -7,7 +7,7 @@ Class {
 	#pools : [
 		'OSKeySymbols'
 	],
-	#category : #'WodenEngine-Editor-UI'
+	#category : #'WodenEngine-Editor-UI-ViewMode'
 }
 
 { #category : #'instance creation' }

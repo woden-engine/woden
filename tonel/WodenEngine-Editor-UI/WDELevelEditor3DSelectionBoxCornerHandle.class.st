@@ -1,12 +1,34 @@
 Class {
 	#name : #WDELevelEditor3DSelectionBoxCornerHandle,
 	#superclass : #WDELevelEditor3DManipulator,
-	#category : #'WodenEngine-Editor-UI'
+	#category : #'WodenEngine-Editor-UI-Manipulators'
 }
 
 { #category : #removing }
 WDELevelEditor3DSelectionBoxCornerHandle >> applyHighlightingEffect [
 	sceneNode ifNotNil: [ sceneNode color: self currentColor ]
+]
+
+{ #category : #'element manipulation' }
+WDELevelEditor3DSelectionBoxCornerHandle >> applyTransformForTranslationDelta: translation [
+	| axis constrainedTranslation originalBox min max newBox transform sanitizedNewBox |
+	originalBox := parent boundingBox.
+	axis := (self position - originalBox center) sign.
+	constrainedTranslation := translation * axis abs.
+
+	min := originalBox min copy.
+	max := originalBox max copy.
+	axis x < 0 ifTrue: [ min x: min x + constrainedTranslation x ].
+	axis x > 0 ifTrue: [ max x: max x + constrainedTranslation x ].
+	axis y < 0 ifTrue: [ min y: min y + constrainedTranslation y ].
+	axis y > 0 ifTrue: [ max y: max y + constrainedTranslation y ].
+	axis z < 0 ifTrue: [ min z: min z + constrainedTranslation z ].
+	axis z > 0 ifTrue: [ max z: max z + constrainedTranslation z ].
+
+	newBox := BoxF32 min: (min min: max) max: (min max: max).
+	sanitizedNewBox := BoxF32 center: newBox center halfExtent: (newBox halfExtent max: 0.001).
+	transform := sanitizedNewBox reversibleTransformToConvertToMe: originalBox.
+	parent applyTransform: transform
 ]
 
 { #category : #removing }
@@ -35,6 +57,11 @@ WDELevelEditor3DSelectionBoxCornerHandle >> currentDragToolClass [
 	^ WDELevelEditorViewTranslateManipulatorDragToolMode
 ]
 
+{ #category : #memento }
+WDELevelEditor3DSelectionBoxCornerHandle >> mementoForDragging [
+	^ {boundingBox . parent transformStateMemento}
+]
+
 { #category : #accessing }
 WDELevelEditor3DSelectionBoxCornerHandle >> position [
 	^ boundingBox center
@@ -46,4 +73,10 @@ WDELevelEditor3DSelectionBoxCornerHandle >> position: position [
 	sceneNode ifNotNil: [ 
 		sceneNode transform: boundingBox reversibleTransformToConvertUnitBoxToMe
 	]
+]
+
+{ #category : #memento }
+WDELevelEditor3DSelectionBoxCornerHandle >> restoreMementoForDragging: memento [
+	boundingBox := memento first.
+	^ parent restoreTransformStateMemento: memento second
 ]

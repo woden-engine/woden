@@ -102,12 +102,40 @@ WDELevelEditorSceneView >> addElementsToSelection: elements [
 
 { #category : #'as yet unclassified' }
 WDELevelEditorSceneView >> cameraXYDeltaToWorld: screenDelta [
-	^ (screenDelta x * self xDragDirection) + (screenDelta y * self yDragDirection)
+	^ self cameraXYDeltaToWorld: screenDelta distance: 3.0
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneView >> cameraXYDeltaToWorld: screenDelta distance: screenDistance [
+	| depth cameraDelta |
+	depth := self depthAtCameraDistance: screenDistance.
+	cameraDelta := (self windowToLocal: screenDelta depth: depth) - (self windowToLocal: 0@0 depth: depth).
+	^ (cameraDelta x * self xDragDirection) + (cameraDelta y * self yDragDirection)
 ]
 
 { #category : #'as yet unclassified' }
 WDELevelEditorSceneView >> cameraXZDeltaToWorld: screenDelta [
-	^ (screenDelta x * self xDragDirection) + (screenDelta y * self zDragDirection)
+	^ self cameraXZDeltaToWorld: screenDelta distance: 3.0
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneView >> cameraXZDeltaToWorld: screenDelta distance: screenDistance [
+	| depth cameraDelta |
+	depth := self depthAtCameraDistance: screenDistance.
+	cameraDelta := (self windowToLocal: screenDelta depth: depth) - (self windowToLocal: 0@0 depth: depth).
+	^ (cameraDelta x * self xDragDirection) + (cameraDelta y * self zDragDirection)
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneView >> computeScreenDistanceForPoint: aPoint [
+	^ (self camera globalTransform inverseTransformPosition: aPoint) z negated
+]
+
+{ #category : #'coordinate systems' }
+WDELevelEditorSceneView >> depthAtCameraDistance: distance [
+	^ isPerspective
+		ifTrue: [ (distance - self perspectiveNearDistance) / (self perspectiveFarDistance - self perspectiveNearDistance) ]
+		ifFalse: [ (distance - self orthographicNearDistance) / (self orthographicFarDistance - self orthographicNearDistance) ]
 ]
 
 { #category : #accessing }
@@ -213,6 +241,11 @@ WDELevelEditorSceneView >> normalizeScreenPosition: aPoint [
 	^ nx @ ny
 ]
 
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneView >> normalizedToLocal: aPosition depth: aDepth [
+	^ self camera frustum normalizedPoint: aPosition linearDepth: aDepth
+]
+
 { #category : #accessing }
 WDELevelEditorSceneView >> orthographicFarDistance [
 	^ self class defaultOrthographicFarDistance
@@ -298,6 +331,16 @@ WDELevelEditorSceneView >> sideView [
 	cameraAngle := Float32x3 y: Float halfPi.
 	gridOrientation := Float32x3x3 lookAtLeft.
 	editorViewType := #side.
+]
+
+{ #category : #snapping }
+WDELevelEditorSceneView >> snapToGrid: vector [
+	^ model snapToGrid: vector
+]
+
+{ #category : #snapping }
+WDELevelEditorSceneView >> snapToSubGrid: vector [
+	^ model snapToSubGrid: vector
 ]
 
 { #category : #snapping }
@@ -439,6 +482,11 @@ WDELevelEditorSceneView >> visitMouseMoveEvent: event [
 { #category : #visiting }
 WDELevelEditorSceneView >> visitMouseWheelEvent: event [
 	^ self activeToolModeOrEditionMode onMouseWheel: event
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneView >> windowToLocal: aPosition depth: aDepth [
+	^ self normalizedToLocal: (self normalizeScreenPosition: aPosition) depth: aDepth
 ]
 
 { #category : #visiting }

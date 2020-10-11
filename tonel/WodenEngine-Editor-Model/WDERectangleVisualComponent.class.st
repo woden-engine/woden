@@ -46,3 +46,19 @@ WDERectangleVisualComponent >> rectangle: anObject [
 	rectangle := anObject.
 	self changed.
 ]
+
+{ #category : #memento }
+WDERectangleVisualComponent >> restoreTransformStateMemento: memento [
+	self rectangle: memento
+]
+
+{ #category : #memento }
+WDERectangleVisualComponent >> transformStateMemento [
+	^ self rectangle
+]
+
+{ #category : #transforms }
+WDERectangleVisualComponent >> transformWith: transform [
+	self rectangle: (self rectangle asBox transformedWith: transform) asRectangleXY.
+
+]

@@ -26,6 +26,12 @@ WDEVisualComponent2D >> boundingRectangle [
 	^ self subclassResponsibility
 ]
 
+{ #category : #updating }
+WDEVisualComponent2D >> changed [
+	boundingBox := nil.
+	super changed.
+]
+
 { #category : #testing }
 WDEVisualComponent2D >> isVisualComponent2D [
 	^ true

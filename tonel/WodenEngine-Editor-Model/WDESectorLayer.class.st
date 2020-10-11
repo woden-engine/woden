@@ -116,6 +116,11 @@ WDESectorLayer >> initialize [
 ]
 
 { #category : #testing }
+WDESectorLayer >> isInSector2D [
+	^ sector isSector2D
+]
+
+{ #category : #testing }
 WDESectorLayer >> isSectorLayer [
 	^ true
 ]

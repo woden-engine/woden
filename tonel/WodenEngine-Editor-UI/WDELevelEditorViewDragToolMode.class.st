@@ -6,22 +6,27 @@ Class {
 		'dragStartPosition',
 		'dragEndPosition'
 	],
-	#category : #'WodenEngine-Editor-UI'
+	#category : #'WodenEngine-Editor-UI-ViewMode'
 }
 
 { #category : #'as yet unclassified' }
 WDELevelEditorViewDragToolMode >> cameraXYDeltaToWorld: delta [
-	^ (self view cameraXYDeltaToWorld: (self convertMouseDeltaToCamera: delta)) * 0.01
+	^ self view cameraXYDeltaToWorld: delta
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewDragToolMode >> cameraXYDeltaToWorld: delta distance: screenDistance [
+	^ self view cameraXYDeltaToWorld: delta distance: screenDistance
 ]
 
 { #category : #'as yet unclassified' }
 WDELevelEditorViewDragToolMode >> cameraXZDeltaToWorld: delta [
-	^ (self view cameraXZDeltaToWorld: (self convertMouseDeltaToCamera: delta)) * 0.01
+	^ self view cameraXZDeltaToWorld: delta
 ]
 
 { #category : #'as yet unclassified' }
-WDELevelEditorViewDragToolMode >> convertMouseDeltaToCamera: delta [
-	^ Float32x2 x: delta x y: delta y negated
+WDELevelEditorViewDragToolMode >> cameraXZDeltaToWorld: delta distance: screenDistance [
+	^ self view cameraXZDeltaToWorld: delta distance: screenDistance
 ]
 
 { #category : #'as yet unclassified' }
@@ -41,4 +46,9 @@ WDELevelEditorViewDragToolMode >> finishDraggingWith: event [
 { #category : #'event handling' }
 WDELevelEditorViewDragToolMode >> onMouseButtonRelease: event [
 	event button = dragStartButton ifTrue: [ self finishDraggingWith: event ].
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewDragToolMode >> snapToSubGrid: vector [
+	^ view snapToSubGrid: vector
 ]

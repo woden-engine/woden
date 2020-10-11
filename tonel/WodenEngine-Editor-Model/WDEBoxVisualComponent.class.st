@@ -44,3 +44,18 @@ WDEBoxVisualComponent >> initialize [
 	color := Float32x4 ones.
 	box := BoxF32 unitBox.
 ]
+
+{ #category : #memento }
+WDEBoxVisualComponent >> restoreTransformStateMemento: memento [
+	self box: memento
+]
+
+{ #category : #memento }
+WDEBoxVisualComponent >> transformStateMemento [
+	^ self box
+]
+
+{ #category : #transforms }
+WDEBoxVisualComponent >> transformWith: transform [
+	self box: (self box transformedWith: transform)
+]

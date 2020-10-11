@@ -9,7 +9,7 @@ Class {
 		'children',
 		'highlighted'
 	],
-	#category : #'WodenEngine-Editor-UI'
+	#category : #'WodenEngine-Editor-UI-Manipulators'
 }
 
 { #category : #'instance creation' }
@@ -33,13 +33,19 @@ WDELevelEditor3DManipulator >> applyTransformForTranslationDelta: translationDel
 ]
 
 { #category : #accessing }
+WDELevelEditor3DManipulator >> boundingBox [
+	^ boundingBox
+]
+
+{ #category : #accessing }
 WDELevelEditor3DManipulator >> children: newChildren [
 	sceneNode ifNotNil: [
 		children do: [ :each | each removeFromScene ].
 	].
 	children := newChildren.
+	children do: [ :each | each parent: self ].
 	sceneNode ifNotNil: [
-		newChildren do: [ :each | each parent: self; addToScene: sceneNode scene ]
+		children do: [ :each | each addToScene: sceneNode scene ]
 	]
 ]
 

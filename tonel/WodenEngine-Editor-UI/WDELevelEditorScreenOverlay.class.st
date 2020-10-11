@@ -1,7 +1,7 @@
 Class {
 	#name : #WDELevelEditorScreenOverlay,
 	#superclass : #Object,
-	#category : #'WodenEngine-Editor-UI'
+	#category : #'WodenEngine-Editor-UI-Overlays'
 }
 
 { #category : #rendering }

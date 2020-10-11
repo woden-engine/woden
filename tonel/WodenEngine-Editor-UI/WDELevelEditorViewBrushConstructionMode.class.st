@@ -1,7 +1,7 @@
 Class {
 	#name : #WDELevelEditorViewBrushConstructionMode,
 	#superclass : #WDELevelEditorViewEditionMode,
-	#category : #'WodenEngine-Editor-UI'
+	#category : #'WodenEngine-Editor-UI-ViewMode'
 }
 
 { #category : #'event handling' }

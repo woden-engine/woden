@@ -274,7 +274,7 @@ WDELevelEditorSceneModel >> rayCastForManipulator: ray [
 
 { #category : #utiltity }
 WDELevelEditorSceneModel >> roundFloor: value quantum: quantum [
-	^ ((value / quantum) floor) * quantum
+	^ levelEditorSession roundFloor: value quantum: quantum
 ]
 
 { #category : #snapping }
@@ -282,6 +282,16 @@ WDELevelEditorSceneModel >> roundToGrid: value [
 	| quantum |
 	quantum := self secondaryGridSize.
 	^ ((value / quantum) + 0.5) floor * quantum
+]
+
+{ #category : #snapping }
+WDELevelEditorSceneModel >> snapToGrid: vector [
+	^ levelEditorSession snapToGrid: vector
+]
+
+{ #category : #snapping }
+WDELevelEditorSceneModel >> snapToSubGrid: vector [
+	^ levelEditorSession snapToSubGrid: vector
 ]
 
 { #category : #'instance creation' }
