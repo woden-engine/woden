@@ -6,7 +6,7 @@ Class {
 
 { #category : #'event handling' }
 WDELevelEditorViewEditionMode >> onMouseButtonPress: event [
-	event button = 1 ifTrue: [ ^ self startSelectionDraggingWith: event ].
+	event button = 1 ifTrue: [ ^ self selectPointedElementOrStartSelectionDraggingWith: event ].
 	event button = 2 ifTrue: [ ^ self startCameraRotateDraggingWith: event ].
 	event button = 3 ifTrue: [ ^ self startCameraDraggingWith: event ].
 ]
@@ -19,6 +19,18 @@ WDELevelEditorViewEditionMode >> onMouseWheel: event [
 		view viewScale: view viewScale *(1.0 - (event scrollVertical*0.1) max:0.1).
 	].
 
+]
+
+{ #category : #'event handling' }
+WDELevelEditorViewEditionMode >> selectPointedElementOrStartSelectionDraggingWith: event [
+	| manipulator |
+	manipulator := view manipulatorInPosition: event position.
+	manipulator ifNotNil: [
+		Transcript show: 'TODO: Start drag manipulator '; show: manipulator; cr.
+		^ self.
+	].
+
+	^ self startSelectionDraggingWith: event
 ]
 
 { #category : #'event handling' }
@@ -37,4 +49,7 @@ WDELevelEditorViewEditionMode >> startCameraRotateDraggingWith: event [
 
 { #category : #'event handling' }
 WDELevelEditorViewEditionMode >> startSelectionDraggingWith: event [
+	view activeToolMode: ((WDELevelEditorRectangleSelectionDragToolMode for: view)
+		dragStartedWith: event;
+		yourself)
 ]

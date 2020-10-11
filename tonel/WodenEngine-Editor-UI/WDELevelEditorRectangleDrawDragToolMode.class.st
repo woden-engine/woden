@@ -1,5 +1,5 @@
 Class {
-	#name : #WDELevelEditorViewSelectionDragToolMode,
+	#name : #WDELevelEditorRectangleDrawDragToolMode,
 	#superclass : #WDELevelEditorViewDragToolMode,
 	#category : #'WodenEngine-Editor-UI'
 }

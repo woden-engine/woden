@@ -14,11 +14,15 @@ Class {
 		'subGridMesh',
 		'axisNode',
 		'axisMesh',
-		'gridSize',
 		'baseGridSize'
 	],
 	#category : #'WodenEngine-Editor-UI'
 }
+
+{ #category : #accessing }
+WDELevelEditorSceneModel >> applyNewSelection: newSelection [
+	Transcript show: 'newSelection: '; show: newSelection; cr.
+]
 
 { #category : #'instance creation' }
 WDELevelEditorSceneModel >> axisMesh [
@@ -138,7 +142,7 @@ WDELevelEditorSceneModel >> gridNode [
 
 { #category : #snapping }
 WDELevelEditorSceneModel >> gridSize [
-	^ gridSize
+	^ levelEditorSession gridSize
 ]
 
 { #category : #'as yet unclassified' }
@@ -154,7 +158,6 @@ WDELevelEditorSceneModel >> highlightElement: anElement [
 
 { #category : #initialization }
 WDELevelEditorSceneModel >> initializeModel [
-	gridSize := 10.0.
 	baseGridSize := 10.0.
 ]
 
@@ -184,7 +187,9 @@ WDELevelEditorSceneModel >> levelEditorSession [
 WDELevelEditorSceneModel >> levelEditorSession: anObject [
 	levelEditorSession := anObject.
 	
-	levelEditorSession whenLevelChangedDo: [ self levelChanged ].
+	levelEditorSession
+		whenLevelChangedDo: [ self levelChanged ];
+		whenSelectionChangedDo: [ :newSelection | self applyNewSelection: newSelection ].
 	self levelChanged.
 ]
 
@@ -219,6 +224,11 @@ WDELevelEditorSceneModel >> rayCast: ray [
 	^ self level rayCast: ray
 ]
 
+{ #category : #'ray casting' }
+WDELevelEditorSceneModel >> rayCastForManipulator: ray [
+	^ nil
+]
+
 { #category : #utiltity }
 WDELevelEditorSceneModel >> roundFloor: value quantum: quantum [
 	^ ((value / quantum) floor) * quantum
@@ -250,5 +260,5 @@ WDELevelEditorSceneModel >> subGridNode [
 
 { #category : #snapping }
 WDELevelEditorSceneModel >> subGridSize [
-	^ gridSize * 0.1
+	^ levelEditorSession subGridSize 
 ]

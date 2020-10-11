@@ -2,7 +2,9 @@ Class {
 	#name : #WDELevelEditorViewDragToolMode,
 	#superclass : #WDELevelEditorViewMode,
 	#instVars : [
-		'dragStartButton'
+		'dragStartButton',
+		'dragStartPosition',
+		'dragEndPosition'
 	],
 	#category : #'WodenEngine-Editor-UI'
 }
@@ -25,14 +27,18 @@ WDELevelEditorViewDragToolMode >> convertMouseDeltaToCamera: delta [
 { #category : #'as yet unclassified' }
 WDELevelEditorViewDragToolMode >> dragStartedWith: startEvent [
 	dragStartButton := startEvent button.
+	dragStartPosition := startEvent position.
 ]
 
 { #category : #'events-processing' }
-WDELevelEditorViewDragToolMode >> finishDragging [
-	self view activeToolMode: nil
+WDELevelEditorViewDragToolMode >> finishDraggingWith: event [
+	dragEndPosition := event position.
+	self view
+		dragToolScreenOverlay: nil;
+		activeToolMode: nil
 ]
 
 { #category : #'event handling' }
 WDELevelEditorViewDragToolMode >> onMouseButtonRelease: event [
-	event button = dragStartButton ifTrue: [ self finishDragging ].
+	event button = dragStartButton ifTrue: [ self finishDraggingWith: event ].
 ]

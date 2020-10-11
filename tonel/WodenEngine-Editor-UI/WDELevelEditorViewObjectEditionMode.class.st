@@ -7,7 +7,7 @@ Class {
 { #category : #'event handling' }
 WDELevelEditorViewObjectEditionMode >> onMouseMove: event [
 	| elementBeingPointed |
-	elementBeingPointed := view elementInPosition: event position.
+	elementBeingPointed := view elementInScreenPosition: event position.
 	self model highlightElement: elementBeingPointed.
 	^ super onMouseMove: event
 ]

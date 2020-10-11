@@ -219,9 +219,12 @@ WDELevelEditor >> initializePresenters [
 			yourself
 		);
 		hideColumnHeaders;
-		children: [ :node | node children ].
+		children: [ :node | node children ];
+		beMultipleSelection;
+		whenSelectionChangedDo: [ :selection |
+			self model selection: (WDELevelEditorSelection for: selection selectedItems)
+		].
 		"contextMenu: [ self treeViewMenu ];
-		whenSelectionChangedDo: [ :selection | self treeViewItemSelected: selection selectedItem ];
 		whenActivatedDo: [ :selection | self treeViewItemActivated: selection selectedItem ]"
 	elementTemplateList := self newTable.
 ]
@@ -250,6 +253,11 @@ WDELevelEditor >> mainStatusBar [
 { #category : #initialization }
 WDELevelEditor >> modelChanged [
 	levelTreeView roots: self model level children.
+	self model whenSelectionChangedDo: [ :selection |
+		levelTreeView selectedItems asSet = selection selectedItems asSet ifFalse: [
+			levelTreeView unselectAll; selectItems: selection selectedItems
+		]
+	]
 ]
 
 { #category : #menu }

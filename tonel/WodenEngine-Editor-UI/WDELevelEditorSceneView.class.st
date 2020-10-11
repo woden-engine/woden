@@ -9,7 +9,8 @@ Class {
 		'editorViewType',
 		'gridOrientation',
 		'isPerspective',
-		'viewScale'
+		'viewScale',
+		'dragToolScreenOverlay'
 	],
 	#category : #'WodenEngine-Editor-UI'
 }
@@ -74,6 +75,11 @@ WDELevelEditorSceneView >> activeToolModeOrEditionMode [
 	^ activeToolMode ifNil: [ self activeEditionMode ]
 ]
 
+{ #category : #selection }
+WDELevelEditorSceneView >> addElementsToSelection: elements [
+	^ model levelEditorSession addElementsToSelection: elements
+]
+
 { #category : #'as yet unclassified' }
 WDELevelEditorSceneView >> cameraXYDeltaToWorld: screenDelta [
 	^ (screenDelta x * self xDragDirection) + (screenDelta y * self yDragDirection)
@@ -85,24 +91,44 @@ WDELevelEditorSceneView >> cameraXZDeltaToWorld: screenDelta [
 ]
 
 { #category : #accessing }
+WDELevelEditorSceneView >> dragToolScreenOverlay [
+	^ dragToolScreenOverlay
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneView >> dragToolScreenOverlay: anObject [
+	dragToolScreenOverlay := anObject
+]
+
+{ #category : #rendering }
+WDELevelEditorSceneView >> drawOnBabylonCanvas: canvas [
+	super drawOnBabylonCanvas: canvas.
+	dragToolScreenOverlay ifNotNil: [ dragToolScreenOverlay drawOnBabylonCanvas: canvas ].
+]
+
+{ #category : #accessing }
 WDELevelEditorSceneView >> editorViewType [
 	^ editorViewType
 ]
 
 { #category : #visiting }
-WDELevelEditorSceneView >> elementInPosition: aPoint [
+WDELevelEditorSceneView >> elementInPositionWithRayPicking: aPoint [
+	^ self rayPickElement: (self rayForScreenPosition: aPoint)
+]
+
+{ #category : #visiting }
+WDELevelEditorSceneView >> elementInScreenPosition: aPoint [
 	^ self elementInPositionWithRayPicking: aPoint
 
 ]
 
 { #category : #visiting }
-WDELevelEditorSceneView >> elementInPositionWithRayPicking: aPoint [
-	| nx ny extent |
-	extent := self drawingSurfaceExtent.
-	nx := aPoint x / extent x asFloat.
-	ny := 1.0 - (aPoint y / extent y).
-	^ self rayPickNormalizedPosition: nx @ ny.
-
+WDELevelEditorSceneView >> elementsInScreenRectangle: screenRectangle [
+	| originPosition cornerPosition normalizedScreenRectangle |
+	originPosition := (self normalizeScreenPosition: screenRectangle origin) asFloat32x2.
+	cornerPosition := (self normalizeScreenPosition: screenRectangle corner) asFloat32x2.
+	normalizedScreenRectangle := RectangleF32 min: (originPosition min: cornerPosition) max: (originPosition max: cornerPosition).
+	^ #()
 ]
 
 { #category : #'view perspective' }
@@ -143,6 +169,26 @@ WDELevelEditorSceneView >> isPerspective: anObject [
 	isPerspective := anObject
 ]
 
+{ #category : #visiting }
+WDELevelEditorSceneView >> manipulatorInPosition: aPoint [
+	^ self manipulatorInPositionWithRayPicking: aPoint
+
+]
+
+{ #category : #visiting }
+WDELevelEditorSceneView >> manipulatorInPositionWithRayPicking: aPoint [
+	^ self rayPickManipulator: (self rayForScreenPosition: aPoint)
+]
+
+{ #category : #visiting }
+WDELevelEditorSceneView >> normalizeScreenPosition: aPoint [
+	| nx ny extent |
+	extent := self drawingSurfaceExtent.
+	nx := aPoint x / extent x asFloat.
+	ny := 1.0 - (aPoint y / extent y).
+	^ nx @ ny
+]
+
 { #category : #accessing }
 WDELevelEditorSceneView >> orthographicFarDistance [
 	^ self class defaultOrthographicFarDistance
@@ -174,14 +220,28 @@ WDELevelEditorSceneView >> perspectiveView [
 ]
 
 { #category : #visiting }
-WDELevelEditorSceneView >> rayPickNormalizedPosition: aPoint [
-	| ray distanceElement |
-	ray := self camera ifNil: [ ^ nil ] ifNotNil: [:c | self worldRayAtWindowCoordinate: aPoint fromCamera: c].
-	ray ifNil: [ ^ nil ].
-	
+WDELevelEditorSceneView >> rayForNormalizedPosition: aPoint [
+	^ self camera ifNotNil: [:c | self worldRayAtWindowCoordinate: aPoint fromCamera: c]
+]
+
+{ #category : #visiting }
+WDELevelEditorSceneView >> rayForScreenPosition: aPoint [
+	^ self rayForNormalizedPosition: (self normalizeScreenPosition: aPoint)
+]
+
+{ #category : #visiting }
+WDELevelEditorSceneView >> rayPickElement: ray [
+	| distanceElement |
 	distanceElement := model rayCast: ray.
 	^ distanceElement value ifNil: [ nil ]
 	
+]
+
+{ #category : #visiting }
+WDELevelEditorSceneView >> rayPickManipulator: ray [
+	| distanceElement |
+	distanceElement := model rayCastForManipulator: ray.
+	^ distanceElement value ifNil: [ nil ]
 ]
 
 { #category : #accessing }
@@ -204,6 +264,11 @@ WDELevelEditorSceneView >> roundFloor: value quantum: quantum [
 	^ model roundFloor: value quantum: quantum
 ]
 
+{ #category : #selection }
+WDELevelEditorSceneView >> setSelectedElements: elements [
+	^ model levelEditorSession setSelectedElements: elements
+]
+
 { #category : #'view perspective' }
 WDELevelEditorSceneView >> sideView [
 	cameraAngle := Float32x3 y: Float halfPi.
@@ -214,6 +279,11 @@ WDELevelEditorSceneView >> sideView [
 { #category : #snapping }
 WDELevelEditorSceneView >> subGridSize [
 	^ model subGridSize
+]
+
+{ #category : #selection }
+WDELevelEditorSceneView >> toggleElementsFromSelection: elements [
+	^ model levelEditorSession toggleElementsFromSelection: elements
 ]
 
 { #category : #'projection mode' }
