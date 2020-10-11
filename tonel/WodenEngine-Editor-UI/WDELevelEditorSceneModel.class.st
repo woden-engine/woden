@@ -13,7 +13,9 @@ Class {
 		'gridMesh',
 		'subGridMesh',
 		'axisNode',
-		'axisMesh'
+		'axisMesh',
+		'gridSize',
+		'baseGridSize'
 	],
 	#category : #'WodenEngine-Editor-UI'
 }
@@ -50,6 +52,11 @@ WDELevelEditorSceneModel >> axisMesh [
 { #category : #accessing }
 WDELevelEditorSceneModel >> axisNode [
 	^ axisNode
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneModel >> baseGridSize [
+	^ baseGridSize
 ]
 
 { #category : #'instance creation' }
@@ -129,6 +136,11 @@ WDELevelEditorSceneModel >> gridNode [
 	^ gridNode
 ]
 
+{ #category : #snapping }
+WDELevelEditorSceneModel >> gridSize [
+	^ gridSize
+]
+
 { #category : #'as yet unclassified' }
 WDELevelEditorSceneModel >> highlightElement: anElement [
 	anElement ifNil: [
@@ -142,6 +154,8 @@ WDELevelEditorSceneModel >> highlightElement: anElement [
 
 { #category : #initialization }
 WDELevelEditorSceneModel >> initializeModel [
+	gridSize := 10.0.
+	baseGridSize := 10.0.
 ]
 
 { #category : #accessing }
@@ -205,6 +219,18 @@ WDELevelEditorSceneModel >> rayCast: ray [
 	^ self level rayCast: ray
 ]
 
+{ #category : #utiltity }
+WDELevelEditorSceneModel >> roundFloor: value quantum: quantum [
+	^ ((value / quantum) floor) * quantum
+]
+
+{ #category : #snapping }
+WDELevelEditorSceneModel >> roundToGrid: value [
+	| quantum |
+	quantum := self secondaryGridSize.
+	^ ((value / quantum) + 0.5) floor * quantum
+]
+
 { #category : #'instance creation' }
 WDELevelEditorSceneModel >> subGridMesh [
 	^ subGridMesh ifNil: [subGridMesh := ((WDCGenericMeshBuilder for: engine)
@@ -220,4 +246,9 @@ WDELevelEditorSceneModel >> subGridMesh [
 { #category : #accessing }
 WDELevelEditorSceneModel >> subGridNode [
 	^ subGridNode
+]
+
+{ #category : #snapping }
+WDELevelEditorSceneModel >> subGridSize [
+	^ gridSize * 0.1
 ]

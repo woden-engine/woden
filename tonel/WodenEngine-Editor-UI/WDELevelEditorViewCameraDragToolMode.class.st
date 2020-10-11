@@ -11,8 +11,8 @@ WDELevelEditorViewCameraDragToolMode >> onMouseMove: event [
 		^ view rotateCameraWithAngles: ((Float32x3 x: event delta y negated asFloat y: event delta x negated asFloat z: 0.0) * 0.01).
 	].
 	event modifiers shift ifTrue: [
-		^ view translateCameraBy: ((Float32x3 x: event delta x asFloat y: 0.0 z: event delta y asFloat) * 0.01)
+		^ view translateCameraBy: (self cameraXZDeltaToWorld: event delta)
 	].
 
-	view translateCameraBy: ((Float32x3 x: event delta x asFloat y: event delta y negated asFloat z: 0.0) * 0.01)
+	view translateCameraBy: (self cameraXYDeltaToWorld: event delta)
 ]

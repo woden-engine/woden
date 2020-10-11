@@ -13,7 +13,12 @@ WDELevelEditorViewEditionMode >> onMouseButtonPress: event [
 
 { #category : #'event handling' }
 WDELevelEditorViewEditionMode >> onMouseWheel: event [
-	view translateCameraBy: (Float32x3 z: event scrollVertical * -0.5)
+	view isPerspective ifTrue: [ 
+		view translateCameraBy: (view zDragDirection * event scrollVertical * 0.5)
+	] ifFalse: [
+		view viewScale: view viewScale *(1.0 - (event scrollVertical*0.1) max:0.1).
+	].
+
 ]
 
 { #category : #'event handling' }

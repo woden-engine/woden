@@ -8,10 +8,31 @@ Class {
 		'renderSubMode',
 		'editorViewType',
 		'gridOrientation',
-		'isPerspective'
+		'isPerspective',
+		'viewScale'
 	],
 	#category : #'WodenEngine-Editor-UI'
 }
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneView class >> defaultOrthographicFarDistance [
+	^ 10000.0
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneView class >> defaultOrthographicNearDistance [
+	^ -10000.0
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneView class >> defaultPerspectiveFarDistance [
+	^ 10000.0
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneView class >> defaultPerspectiveNearDistance [
+	^ 0.01
+]
 
 { #category : #'sub render mode' }
 WDELevelEditorSceneView >> activateFlatColor [
@@ -53,6 +74,16 @@ WDELevelEditorSceneView >> activeToolModeOrEditionMode [
 	^ activeToolMode ifNil: [ self activeEditionMode ]
 ]
 
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneView >> cameraXYDeltaToWorld: screenDelta [
+	^ (screenDelta x * self xDragDirection) + (screenDelta y * self yDragDirection)
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneView >> cameraXZDeltaToWorld: screenDelta [
+	^ (screenDelta x * self xDragDirection) + (screenDelta y * self zDragDirection)
+]
+
 { #category : #accessing }
 WDELevelEditorSceneView >> editorViewType [
 	^ editorViewType
@@ -76,7 +107,7 @@ WDELevelEditorSceneView >> elementInPositionWithRayPicking: aPoint [
 
 { #category : #'view perspective' }
 WDELevelEditorSceneView >> freePerspectiveView [
-	gridOrientation := Float32x3x3 lookAtBottom.
+	gridOrientation := self topGridOrientation.
 	editorViewType := #free.
 ]
 
@@ -87,13 +118,19 @@ WDELevelEditorSceneView >> frontView [
 	editorViewType := #front.
 ]
 
+{ #category : #snapping }
+WDELevelEditorSceneView >> gridSize [
+	^ model gridSize
+]
+
 { #category : #initialization }
 WDELevelEditorSceneView >> initialize [
 	super initialize.
 
 	cameraAngle := Float32x3 new.
 	isPerspective := true.
-	self freePerspectiveView.
+	viewScale := 3.0.
+	self frontView.
 ]
 
 { #category : #accessing }
@@ -106,9 +143,29 @@ WDELevelEditorSceneView >> isPerspective: anObject [
 	isPerspective := anObject
 ]
 
+{ #category : #accessing }
+WDELevelEditorSceneView >> orthographicFarDistance [
+	^ self class defaultOrthographicFarDistance
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneView >> orthographicNearDistance [
+	^ self class defaultOrthographicNearDistance
+]
+
 { #category : #'view perspective' }
 WDELevelEditorSceneView >> orthographicView [
 	isPerspective := false
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneView >> perspectiveFarDistance [
+	^ self class defaultPerspectiveFarDistance
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneView >> perspectiveNearDistance [
+	^ self class defaultPerspectiveNearDistance
 ]
 
 { #category : #'view perspective' }
@@ -142,6 +199,11 @@ WDELevelEditorSceneView >> rotateCameraWithAngles: deltaAngles [
 	cameraAngle := cameraAngle + deltaAngles.
 ]
 
+{ #category : #utiltity }
+WDELevelEditorSceneView >> roundFloor: value quantum: quantum [
+	^ model roundFloor: value quantum: quantum
+]
+
 { #category : #'view perspective' }
 WDELevelEditorSceneView >> sideView [
 	cameraAngle := Float32x3 y: Float halfPi.
@@ -149,19 +211,45 @@ WDELevelEditorSceneView >> sideView [
 	editorViewType := #side.
 ]
 
+{ #category : #snapping }
+WDELevelEditorSceneView >> subGridSize [
+	^ model subGridSize
+]
+
+{ #category : #'projection mode' }
+WDELevelEditorSceneView >> togglePerspective [
+	isPerspective := isPerspective not
+]
+
+{ #category : #'view perspective' }
+WDELevelEditorSceneView >> topGridOrientation [
+	^ Float32x3x3 lookAtBottom
+]
+
 { #category : #'view perspective' }
 WDELevelEditorSceneView >> topView [
 	cameraAngle := Float32x3 x: Float halfPi negated.
-	gridOrientation := Float32x3x3 lookAtBottom.
+	gridOrientation := self topGridOrientation.
 	editorViewType := #top.
 ]
 
 { #category : #'as yet unclassified' }
 WDELevelEditorSceneView >> translateCameraBy: translation [
-	self camera translateBy: (self camera transform matrix * translation)
+	self camera translateBy: translation
 ]
 
-{ #category : #initialization }
+{ #category : #updating }
+WDELevelEditorSceneView >> updateCameraProjection [
+	camera isPerspective: isPerspective.
+	camera focalDistance: (viewScale / ((camera fieldOfView * 0.5) degreesToRadians tan)).
+	isPerspective ifTrue: [
+		camera nearDistance: self perspectiveNearDistance; farDistance: self perspectiveFarDistance
+	] ifFalse: [
+		camera nearDistance: self orthographicNearDistance; farDistance: self orthographicFarDistance.
+	]
+]
+
+{ #category : #updating }
 WDELevelEditorSceneView >> updateForFrameDelta: delta [
 	| orientation cameraTransform cameraPosition |
 	super updateForFrameDelta: delta.
@@ -177,18 +265,35 @@ WDELevelEditorSceneView >> updateForFrameDelta: delta [
 	
 	self camera transform: cameraTransform.
 	
-	self updateGridsForCamera.
+	self
+		updateCameraProjection;
+		updateGridsForCamera.
 ]
 
-{ #category : #initialization }
+{ #category : #updating }
 WDELevelEditorSceneView >> updateGridsForCamera [
-	| gridPosition gridTransform renderPriority |
+	| gridPosition orientation gridTransform renderPriority scale u v cameraPosition du dv |
 	renderPriority := isPerspective
 		ifTrue: [ WDCAbstractRenderable renderPriorityEditorOpaqueAfter ]
 		ifFalse: [ WDCAbstractRenderable renderPriorityEditorOpaqueBefore ].
 		
-	gridPosition := Float32x3 zeros.	
-	gridTransform := ReversibleAffineTransform3dF32 identity orthonormal: gridOrientation translation: gridPosition.
+	orientation := isPerspective
+		ifTrue: [ self topGridOrientation ]
+		ifFalse: [ gridOrientation ].
+
+	scale := self gridSize / model baseGridSize.
+	u := orientation firstRow.
+	v := orientation secondRow.
+
+	cameraPosition := self camera position.
+	du := self roundFloor: (u dot: cameraPosition) quantum: self gridSize.
+	dv := self roundFloor: (v dot: cameraPosition) quantum: self gridSize.
+
+	gridPosition := (u * du) + (v * dv).	
+	gridTransform := ReversibleAffineTransform3dF32 identity
+		orthonormal: orientation;
+		scaleBy: scale;
+		translation: gridPosition.
 	model subGridNode ifNotNil: [ :node |
 		node transform: gridTransform.
 		node renderable renderPriority: renderPriority
@@ -200,6 +305,16 @@ WDELevelEditorSceneView >> updateGridsForCamera [
 	model axisNode ifNotNil: [ :node |
 		node renderable renderPriority: renderPriority + 2
 	].
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneView >> viewScale [
+	^ viewScale
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneView >> viewScale: anObject [
+	viewScale := anObject
 ]
 
 { #category : #visiting }
@@ -240,4 +355,24 @@ WDELevelEditorSceneView >> worldRayAtWindowCoordinate: point fromCamera: aCamera
 	
 	ray := frustum rayForNormalizedPoint: point.
 	^ ray transformedWith: aCamera globalTransform
+]
+
+{ #category : #'coordinate systems' }
+WDELevelEditorSceneView >> xDragDirection [
+	^ self camera transform matrix firstColumn
+]
+
+{ #category : #'coordinate systems' }
+WDELevelEditorSceneView >> xyDragDirection [
+	^ self xDragDirection + self yDragDirection
+]
+
+{ #category : #'coordinate systems' }
+WDELevelEditorSceneView >> yDragDirection [
+	^ self camera transform matrix secondColumn
+]
+
+{ #category : #'coordinate systems' }
+WDELevelEditorSceneView >> zDragDirection [
+	^ self camera transform matrix thirdColumn negated
 ]

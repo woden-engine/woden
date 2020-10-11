@@ -8,6 +8,21 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+WDELevelEditorViewDragToolMode >> cameraXYDeltaToWorld: delta [
+	^ (self view cameraXYDeltaToWorld: (self convertMouseDeltaToCamera: delta)) * 0.01
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewDragToolMode >> cameraXZDeltaToWorld: delta [
+	^ (self view cameraXZDeltaToWorld: (self convertMouseDeltaToCamera: delta)) * 0.01
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewDragToolMode >> convertMouseDeltaToCamera: delta [
+	^ Float32x2 x: delta x y: delta y negated
+]
+
+{ #category : #'as yet unclassified' }
 WDELevelEditorViewDragToolMode >> dragStartedWith: startEvent [
 	dragStartButton := startEvent button.
 ]
