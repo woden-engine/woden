@@ -20,6 +20,11 @@ WDELevelEditorViewDragToolMode >> cameraXYDeltaToWorld: delta distance: screenDi
 ]
 
 { #category : #'as yet unclassified' }
+WDELevelEditorViewDragToolMode >> cameraXYToWorld: position distance: distance [
+	^ self view cameraXYToWorld: position distance: distance
+]
+
+{ #category : #'as yet unclassified' }
 WDELevelEditorViewDragToolMode >> cameraXZDeltaToWorld: delta [
 	^ self view cameraXZDeltaToWorld: delta
 ]

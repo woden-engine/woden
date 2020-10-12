@@ -15,32 +15,45 @@ Class {
 		'axisNode',
 		'axisMesh',
 		'baseGridSize',
-		'selectionManipulator',
-		'highlightedManipulator'
+		'highlightedManipulator',
+		'activeToolManipulator'
 	],
 	#category : #'WodenEngine-Editor-UI'
 }
 
 { #category : #'ray casting' }
 WDELevelEditorSceneModel >> activeManipulatorsDo: aBlock [
-	selectionManipulator ifNotNil: [ aBlock value: selectionManipulator ].
+	activeToolManipulator ifNotNil: [ aBlock value: activeToolManipulator ].
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneModel >> activeToolManipulator [
+	^ activeToolManipulator
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneModel >> activeToolManipulator: newManipulator [
+	activeToolManipulator ifNotNil: [
+		activeToolManipulator removeFromScene.
+		activeToolManipulator := nil.
+	].
+
+	activeToolManipulator := newManipulator.
+	activeToolManipulator ifNotNil: [
+		activeToolManipulator addToScene: scene.
+		self highlightManipulator: nil; highlightElement: nil
+	]
 ]
 
 { #category : #accessing }
 WDELevelEditorSceneModel >> applyNewSelection: newSelection [
 	| selectedEntities |
-	selectionManipulator ifNotNil: [
-		selectionManipulator removeFromScene.
-		selectionManipulator := nil.
-	].
-
+	self activeToolManipulator: nil.
 	selectedEntities := newSelection selectedItems select: [ :each | each isEntity ].
 	selectedEntities ifNotEmpty: [
-		selectionManipulator := (WDELevelEditor3DSelectionManipulator for: self)
+		self activeToolManipulator: ((WDELevelEditor3DSelectionManipulator for: self)
 			selectedElements: selectedEntities;
-			addToScene: scene;
-			yourself.
-		self highlightManipulator: nil; highlightElement: nil
+			yourself)
 	].
 
 ]

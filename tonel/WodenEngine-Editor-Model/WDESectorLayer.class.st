@@ -134,3 +134,8 @@ WDESectorLayer >> sector [
 WDESectorLayer >> sector: anObject [
 	sector := anObject
 ]
+
+{ #category : #accessing }
+WDESectorLayer >> sectorLayer [
+	^ self
+]

@@ -1,17 +1,12 @@
 Class {
 	#name : #WDELevelEditor3DSelectionManipulator,
-	#superclass : #WDELevelEditor3DManipulator,
+	#superclass : #WDELevelEditor3DBoxManipulator,
 	#instVars : [
-		'selectedElements',
-		'displayBoundingBox'
+		'displayBoundingBox',
+		'selectedElements'
 	],
 	#category : #'WodenEngine-Editor-UI-Manipulators'
 }
-
-{ #category : #accessing }
-WDELevelEditor3DSelectionManipulator >> applyHighlightingEffect [
-	sceneNode ifNotNil: [ sceneNode color: self currentColor ]
-]
 
 { #category : #'element manipulation' }
 WDELevelEditor3DSelectionManipulator >> applyTransform: transform [
@@ -30,23 +25,6 @@ WDELevelEditor3DSelectionManipulator >> applyTransformForTranslationDelta: trans
 ]
 
 { #category : #accessing }
-WDELevelEditor3DSelectionManipulator >> buildCornerManipulators [
-	| points |
-	(selectedElements size = 1 and: [ selectedElements first isPointEntity ]) ifTrue: [ ^ self ].
-	points := self computeManipulationPoints.
-	children size = points size ifFalse: [
-		self children: (points
-			collect: [ :corner | WDELevelEditor3DSelectionBoxCornerHandle for: model]
-			as: Array)
-	].
-	
-	points doWithIndex: [ :point :index |
-		(children at: index) position: point
-	]
-	
-]
-
-{ #category : #accessing }
 WDELevelEditor3DSelectionManipulator >> computeBoundingBoxes [
 	boundingBox := BoxF32 empty.
 	displayBoundingBox := BoxF32 empty.
@@ -60,42 +38,14 @@ WDELevelEditor3DSelectionManipulator >> computeBoundingBoxes [
 		boundingBox := displayBoundingBox copy
 	].
 	
-	sceneNode ifNotNil: [
-		sceneNode transform: displayBoundingBox reversibleTransformToConvertUnitBoxToMe
-	].
-	 
-	boundingBox isEmpty ifFalse: [
-		self buildCornerManipulators
-	]
+	self boundingBoxChanged.
 ]
 
 { #category : #accessing }
 WDELevelEditor3DSelectionManipulator >> computeManipulationPoints [
-	(selectedElements allSatisfy: [ :each | each is2DLevelElement ]) ifTrue: [ 
-		^ {
-			boundingBox leftBottomPoint .
-			boundingBox rightBottomPoint .
-			boundingBox leftTopPoint .
-			boundingBox rightTopPoint .
-		
-			boundingBox leftPoint .
-			boundingBox rightPoint .
-			boundingBox bottomPoint .
-			boundingBox topPoint .
-		}
-	].
-
-	^ boundingBox manipulationPoints
-]
-
-{ #category : #removing }
-WDELevelEditor3DSelectionManipulator >> createSceneNode [
-	boundingBox isEmpty ifTrue: [ ^ nil ].
-	^ WDSGSpatialObject new
-		renderable: self engine resourceCache flatShadedTranslucentUnitCubeMesh copy setFlatColorSubRenderMode;
-		color: self currentColor;
-		transform: displayBoundingBox reversibleTransformToConvertUnitBoxToMe;
-		yourself.
+	selectedElements ifEmpty: [ ^ #() ].
+	(selectedElements size = 1 and: [ selectedElements first isPointEntity ]) ifTrue: [ ^ #() ].
+	^ super computeManipulationPoints
 ]
 
 { #category : #accessing }
@@ -105,19 +55,19 @@ WDELevelEditor3DSelectionManipulator >> currentColor [
 		ifFalse: [ (Float32x4 x: 0.9 y: 0.7 z: 0.3 w: 0.3) ]
 ]
 
-{ #category : #'as yet unclassified' }
-WDELevelEditor3DSelectionManipulator >> currentDragToolClass [
-	^ WDELevelEditorViewTranslateManipulatorDragToolMode
+{ #category : #accessing }
+WDELevelEditor3DSelectionManipulator >> displayBoundingBox [
+	^ displayBoundingBox
 ]
 
-{ #category : #memento }
-WDELevelEditor3DSelectionManipulator >> mementoForDragging [
-	^ self positionStateMemento
+{ #category : #testing }
+WDELevelEditor3DSelectionManipulator >> isManipulating2DGeometry [
+	^ selectedElements allSatisfy: [ :each | each is2DLevelElement ]
 ]
 
 { #category : #memento }
 WDELevelEditor3DSelectionManipulator >> positionStateMemento [
-	^ selectedElements collect: [ :each | each position ]
+	^ { super positionStateMemento . selectedElements collect: [ :each | each position ]}
 ]
 
 { #category : #memento }
@@ -127,18 +77,22 @@ WDELevelEditor3DSelectionManipulator >> restoreMementoForDragging: memento [
 
 { #category : #memento }
 WDELevelEditor3DSelectionManipulator >> restorePositionStateMemento: memento [
-	self assert: memento size = selectedElements size.
+	| elementsMemento |
+	super restorePositionStateMemento: memento first.
+	elementsMemento := memento second.
+	self assert: elementsMemento size = selectedElements size.
 	selectedElements doWithIndex: [ :each :index |
-		each position: (memento at: index)
+		each position: (elementsMemento at: index)
 	].
 ]
 
 { #category : #memento }
 WDELevelEditor3DSelectionManipulator >> restoreTransformStateMemento: memento [
-	| elementsMemento |
-	self assert: memento second size = selectedElements size.
-	boundingBox := memento first.
+	| superMemento myMemento elementsMemento |
+	superMemento := super restoreTransformStateMemento: memento first.
+	myMemento := memento second.
 	elementsMemento := memento second.
+	self assert: elementsMemento size = selectedElements size.
 	selectedElements doWithIndex: [ :each :index |
 		each restoreTransformStateMemento: (elementsMemento at: index)
 	].
@@ -158,7 +112,7 @@ WDELevelEditor3DSelectionManipulator >> selectedElements: anObject [
 { #category : #memento }
 WDELevelEditor3DSelectionManipulator >> transformStateMemento [
 	^ {
-		boundingBox .
+		super transformStateMemento.
 		selectedElements collect: [ :each | each transformStateMemento ]
 	}
 ]

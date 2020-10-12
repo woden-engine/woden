@@ -29,6 +29,10 @@ WDELevelEditor3DManipulator >> applyHighlightingEffect [
 ]
 
 { #category : #'element manipulation' }
+WDELevelEditor3DManipulator >> applyTransform: transformation [
+]
+
+{ #category : #'element manipulation' }
 WDELevelEditor3DManipulator >> applyTransformForTranslationDelta: translationDelta [
 ]
 

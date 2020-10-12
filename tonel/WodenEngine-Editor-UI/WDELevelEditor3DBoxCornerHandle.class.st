@@ -1,16 +1,16 @@
 Class {
-	#name : #WDELevelEditor3DSelectionBoxCornerHandle,
+	#name : #WDELevelEditor3DBoxCornerHandle,
 	#superclass : #WDELevelEditor3DManipulator,
 	#category : #'WodenEngine-Editor-UI-Manipulators'
 }
 
 { #category : #removing }
-WDELevelEditor3DSelectionBoxCornerHandle >> applyHighlightingEffect [
+WDELevelEditor3DBoxCornerHandle >> applyHighlightingEffect [
 	sceneNode ifNotNil: [ sceneNode color: self currentColor ]
 ]
 
 { #category : #'element manipulation' }
-WDELevelEditor3DSelectionBoxCornerHandle >> applyTransformForTranslationDelta: translation [
+WDELevelEditor3DBoxCornerHandle >> applyTransformForTranslationDelta: translation [
 	| axis constrainedTranslation originalBox min max newBox transform sanitizedNewBox |
 	originalBox := parent boundingBox.
 	axis := (self position - originalBox center) sign.
@@ -32,7 +32,7 @@ WDELevelEditor3DSelectionBoxCornerHandle >> applyTransformForTranslationDelta: t
 ]
 
 { #category : #removing }
-WDELevelEditor3DSelectionBoxCornerHandle >> createSceneNode [
+WDELevelEditor3DBoxCornerHandle >> createSceneNode [
 	boundingBox isEmpty ifTrue: [ ^ nil ].
 	^ WDSGSpatialObject new
 		renderable: (self engine resourceCache flatShadedUnitCubeMesh copy
@@ -46,29 +46,29 @@ WDELevelEditor3DSelectionBoxCornerHandle >> createSceneNode [
 ]
 
 { #category : #removing }
-WDELevelEditor3DSelectionBoxCornerHandle >> currentColor [
+WDELevelEditor3DBoxCornerHandle >> currentColor [
 	^ highlighted
 		ifTrue: [ Float32x4 ones  ]
 		ifFalse: [ Float32x4 x: 0.6 y: 0.6 z: 0.6 w: 1.0 ]
 ]
 
 { #category : #'as yet unclassified' }
-WDELevelEditor3DSelectionBoxCornerHandle >> currentDragToolClass [
+WDELevelEditor3DBoxCornerHandle >> currentDragToolClass [
 	^ WDELevelEditorViewTranslateManipulatorDragToolMode
 ]
 
 { #category : #memento }
-WDELevelEditor3DSelectionBoxCornerHandle >> mementoForDragging [
+WDELevelEditor3DBoxCornerHandle >> mementoForDragging [
 	^ {boundingBox . parent transformStateMemento}
 ]
 
 { #category : #accessing }
-WDELevelEditor3DSelectionBoxCornerHandle >> position [
+WDELevelEditor3DBoxCornerHandle >> position [
 	^ boundingBox center
 ]
 
 { #category : #accessing }
-WDELevelEditor3DSelectionBoxCornerHandle >> position: position [
+WDELevelEditor3DBoxCornerHandle >> position: position [
 	boundingBox := BoxF32 center: position halfExtent: 0.1.
 	sceneNode ifNotNil: [ 
 		sceneNode transform: boundingBox reversibleTransformToConvertUnitBoxToMe
@@ -76,7 +76,7 @@ WDELevelEditor3DSelectionBoxCornerHandle >> position: position [
 ]
 
 { #category : #memento }
-WDELevelEditor3DSelectionBoxCornerHandle >> restoreMementoForDragging: memento [
+WDELevelEditor3DBoxCornerHandle >> restoreMementoForDragging: memento [
 	boundingBox := memento first.
 	^ parent restoreTransformStateMemento: memento second
 ]

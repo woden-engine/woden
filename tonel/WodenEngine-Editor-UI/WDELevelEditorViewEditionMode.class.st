@@ -12,6 +12,29 @@ WDELevelEditorViewEditionMode >> onMouseButtonPress: event [
 ]
 
 { #category : #'event handling' }
+WDELevelEditorViewEditionMode >> onMouseMove: event [
+	| elementBeingPointed manipulatorBeingPointed |
+	manipulatorBeingPointed := self supportsManipulators
+		ifTrue: [view manipulatorInScreenPosition: event position]
+		ifFalse: [nil].
+
+	manipulatorBeingPointed ifNotNil: [ 
+		self model
+			highlightManipulator: manipulatorBeingPointed;
+			highlightElement: nil
+	] ifNil: [ 
+		elementBeingPointed := self supportsElementSelection
+			ifTrue: [view elementInScreenPosition: event position]
+			ifFalse: [nil].
+		self model
+			highlightElement: elementBeingPointed;
+			highlightManipulator: nil
+	].
+
+	^ super onMouseMove: event
+]
+
+{ #category : #'event handling' }
 WDELevelEditorViewEditionMode >> onMouseWheel: event [
 	view isPerspective ifTrue: [ 
 		view translateCameraBy: (view zDragDirection * event scrollVertical * 0.5)
@@ -48,4 +71,14 @@ WDELevelEditorViewEditionMode >> startCameraRotateDraggingWith: event [
 	view activeToolMode: ((WDELevelEditorViewCameraRotateDragToolMode for: view)
 		dragStartedWith: event;
 		yourself)
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewEditionMode >> supportsElementSelection [
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewEditionMode >> supportsManipulators [
+	^ false
 ]

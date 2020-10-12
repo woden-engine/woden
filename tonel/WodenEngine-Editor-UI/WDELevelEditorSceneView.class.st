@@ -35,11 +35,6 @@ WDELevelEditorSceneView class >> defaultPerspectiveNearDistance [
 	^ 0.01
 ]
 
-{ #category : #'editor modes' }
-WDELevelEditorSceneView >> activateBrushConstructionMode [
-	self activeEditionMode: (WDELevelEditorViewBrushConstructionMode for: self)
-]
-
 { #category : #'sub render mode' }
 WDELevelEditorSceneView >> activateFlatColor [
 	^ self renderSubMode: WDCStateTrackerSubRenderMode flatColor
@@ -61,8 +56,8 @@ WDELevelEditorSceneView >> activateObjectMode [
 ]
 
 { #category : #'editor modes' }
-WDELevelEditorSceneView >> activatePointEntityPlacementMode [
-	self activeEditionMode: (WDELevelEditorViewPointEntityPlacementMode for: self)
+WDELevelEditorSceneView >> activatePlacementMode [
+	self activeEditionMode: (WDELevelEditorViewPlacementMode for: self)
 ]
 
 { #category : #'sub render mode' }
@@ -111,6 +106,15 @@ WDELevelEditorSceneView >> cameraXYDeltaToWorld: screenDelta distance: screenDis
 	depth := self depthAtCameraDistance: screenDistance.
 	cameraDelta := (self windowToLocal: screenDelta depth: depth) - (self windowToLocal: 0@0 depth: depth).
 	^ (cameraDelta x * self xDragDirection) + (cameraDelta y * self yDragDirection)
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneView >> cameraXYToWorld: screenPosition distance: screenDistance [
+	| depth cameraPosition |
+	depth := self depthAtCameraDistance: screenDistance.
+	cameraPosition := (self windowToLocal: screenPosition depth: depth).
+	^ self camera position +
+	(cameraPosition x * self xDragDirection) + (cameraPosition y * self yDragDirection) + (screenDistance * self zDragDirection)
 ]
 
 { #category : #'as yet unclassified' }

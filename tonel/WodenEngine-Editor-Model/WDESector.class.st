@@ -35,6 +35,11 @@ WDESector >> initialize [
 ]
 
 { #category : #testing }
+WDESector >> isInSector2D [
+	^ true
+]
+
+{ #category : #testing }
 WDESector >> isSector [
 	^ true
 ]

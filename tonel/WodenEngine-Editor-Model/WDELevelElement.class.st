@@ -121,6 +121,11 @@ WDELevelElement >> rayCast: ray [
 WDELevelElement >> restoreTransformStateMemento: memento [
 ]
 
+{ #category : #accessing }
+WDELevelElement >> sectorLayer [
+	^ nil
+]
+
 { #category : #memento }
 WDELevelElement >> transformStateMemento [
 	^ nil

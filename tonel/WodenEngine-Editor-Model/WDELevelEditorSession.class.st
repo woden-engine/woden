@@ -4,10 +4,21 @@ Class {
 	#instVars : [
 		'level',
 		'gridSize',
-		'selection'
+		'selection',
+		'activeSectorLayer'
 	],
 	#category : #'WodenEngine-Editor-Model'
 }
+
+{ #category : #accessing }
+WDELevelEditorSession >> activeSectorLayer [
+	^ activeSectorLayer value
+]
+
+{ #category : #accessing }
+WDELevelEditorSession >> activeSectorLayer: newLayer [
+	activeSectorLayer value: newLayer
+]
 
 { #category : #adding }
 WDELevelEditorSession >> addElementsToSelection: elements [
@@ -36,6 +47,7 @@ WDELevelEditorSession >> gridSize: newValue [
 WDELevelEditorSession >> initialize [
 	super initialize.
 	level := nil asValueHolder.
+	activeSectorLayer := nil asValueHolder.
 	gridSize := 10.0 asValueHolder.
 	selection := WDELevelEditorSelection empty asValueHolder.
 ]
@@ -67,7 +79,12 @@ WDELevelEditorSession >> selection [
 
 { #category : #accessing }
 WDELevelEditorSession >> selection: newSelection [
-	selection value: newSelection
+	selection value: newSelection.
+	newSelection selectedItems ifNotEmpty: [ 
+		newSelection selectedItems first sectorLayer ifNotNil: [ :sectorLayer |
+			self activeSectorLayer: sectorLayer
+		]
+	]
 ]
 
 { #category : #adding }

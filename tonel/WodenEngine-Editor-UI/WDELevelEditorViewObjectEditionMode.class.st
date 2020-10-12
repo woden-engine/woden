@@ -27,3 +27,13 @@ WDELevelEditorViewObjectEditionMode >> startActionDraggingWith: event [
 		dragStartedWith: event;
 		yourself)
 ]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewObjectEditionMode >> supportsElementSelection [
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewObjectEditionMode >> supportsManipulators [
+	^ true
+]

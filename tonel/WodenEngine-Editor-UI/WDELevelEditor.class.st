@@ -69,12 +69,8 @@ WDELevelEditor >> buildMainToolbar [
 			action: [ content view activateObjectMode ];
 			yourself);
 		addItem: (SpToolbarButtonPresenter new
-			label: 'Brush';
-			action: [ content view activateBrushConstructionMode ];
-			yourself);
-		addItem: (SpToolbarButtonPresenter new
-			label: 'Point';
-			action: [ content view activatePointEntityPlacementMode ];
+			label: 'Placement';
+			action: [ content view activatePlacementMode ];
 			yourself);
 		yourself
 ]

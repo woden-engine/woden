@@ -16,6 +16,11 @@ WDELevelEditorViewMode class >> for: aView [
 ]
 
 { #category : #accessing }
+WDELevelEditorViewMode >> engine [
+	^ view engine
+]
+
+{ #category : #accessing }
 WDELevelEditorViewMode >> level [
 	^ self model level
 ]
@@ -52,6 +57,11 @@ WDELevelEditorViewMode >> onMouseMove: event [
 
 { #category : #'event handling' }
 WDELevelEditorViewMode >> onMouseWheel: event [
+]
+
+{ #category : #accessing }
+WDELevelEditorViewMode >> scene [
+	^ self model scene
 ]
 
 { #category : #accessing }
