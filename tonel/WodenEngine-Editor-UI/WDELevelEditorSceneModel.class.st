@@ -46,6 +46,24 @@ WDELevelEditorSceneModel >> activeToolManipulator: newManipulator [
 ]
 
 { #category : #accessing }
+WDELevelEditorSceneModel >> addElementToScene: element [
+	| elementNode |
+	(levelElementToSceneNodeDictionary includesKey: element) ifTrue: [ ^ self ].
+
+	elementNode := (WDELevelEditorElementSceneNodeBuilder new editorSceneModel: self)
+		visitLevelElement: element.
+	elementNode ifNil: [ ^ self ].
+	element isSector ifTrue: [
+		scene add: elementNode
+	] ifFalse: [
+		self assert: element parent isNotNil.
+		levelElementToSceneNodeDictionary at: element parent ifPresent: [ :parentNode |
+			parentNode addChild: elementNode
+		]
+	]
+]
+
+{ #category : #accessing }
 WDELevelEditorSceneModel >> applyNewSelection: newSelection [
 	| selectedEntities |
 	self activeToolManipulator: nil.
@@ -214,14 +232,16 @@ WDELevelEditorSceneModel >> level [
 
 { #category : #accessing }
 WDELevelEditorSceneModel >> levelChanged [
-	| builder |
 	self newScene.
 	levelElementToSceneNodeDictionary := IdentityDictionary new.
 	levelElementToSelectionBoxNode := IdentityDictionary new.
-	builder := WDELevelEditorElementSceneNodeBuilder new editorSceneModel: self.
 	self level sectors do: [ :each |
-		scene add: (builder visitLevelElement: each)
-	].
+			self addElementToScene: each
+		].
+	self level
+		whenAddedElementDo: [ :element |
+			self addElementToScene: element
+		].
 ]
 
 { #category : #accessing }

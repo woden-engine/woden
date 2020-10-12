@@ -18,7 +18,8 @@ WDESector >> accept: visitor [
 WDESector >> addLayer: aLayer [
 	self assert: aLayer sector isNil.
 	layers add: aLayer.
-	aLayer sector: self
+	aLayer sector: self.
+	level ifNotNil: [ aLayer addedToLevel: level ].
 
 ]
 
@@ -67,4 +68,9 @@ WDESector >> level [
 { #category : #accessing }
 WDESector >> level: anObject [
 	level := anObject
+]
+
+{ #category : #accessing }
+WDESector >> parent [
+	^ level
 ]

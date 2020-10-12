@@ -5,6 +5,19 @@ Class {
 }
 
 { #category : #'event handling' }
+WDELevelEditorViewEditionMode >> onKeyDown: event [
+	self supportsManipulators ifTrue: [ 
+		(event symbol = OSK_RETURN or: [event symbol = OSK_i]) ifTrue: [ 
+			self model activeToolManipulator ifNotNil: [ :manip |
+				manip activateAction
+			]
+		].
+	].
+
+	^ super onKeyDown: event
+]
+
+{ #category : #'event handling' }
 WDELevelEditorViewEditionMode >> onMouseButtonPress: event [
 	event button = 1 ifTrue: [ ^ self selectPointedElementOrStartSelectionDraggingWith: event ].
 	event button = 2 ifTrue: [ ^ self startCameraRotateDraggingWith: event ].

@@ -2,7 +2,8 @@ Class {
 	#name : #WDELevel,
 	#superclass : #WDELevelElement,
 	#instVars : [
-		'sectors'
+		'sectors',
+		'announcer'
 	],
 	#category : #'WodenEngine-Editor-Model'
 }
@@ -28,7 +29,8 @@ WDELevel >> accept: visitor [
 WDELevel >> addSector: aSector [
 	self assert: aSector level isNil.
 	sectors add: aSector.
-	aSector level: self
+	aSector level: self.
+	aSector addedToLevel: self.
 ]
 
 { #category : #'ray casting' }
@@ -39,6 +41,21 @@ WDELevel >> allEntitiesDo: aBlock [
 		].
 	].
 
+]
+
+{ #category : #'as yet unclassified' }
+WDELevel >> announceAddedElement: anElement [
+	announcer announce: (WDEAddedElementAnnouncement new element: anElement)
+]
+
+{ #category : #'as yet unclassified' }
+WDELevel >> announceRemovedElement: anElement [
+	announcer announce: (WDERemovedElementAnnouncement new element: anElement)
+]
+
+{ #category : #accessing }
+WDELevel >> announcer [
+	^ announcer
 ]
 
 { #category : #accessing }
@@ -62,11 +79,17 @@ WDELevel >> elementsInFrustum: frustum [
 WDELevel >> initialize [
 	super initialize.
 	sectors := OrderedCollection new.
+	announcer := Announcer new.
 ]
 
 { #category : #testing }
 WDELevel >> isLevel [
 	^ true
+]
+
+{ #category : #accessing }
+WDELevel >> level [
+	^ self
 ]
 
 { #category : #'instance creation' }
@@ -93,4 +116,14 @@ WDELevel >> rayCast: ray [
 { #category : #accessing }
 WDELevel >> sectors [
 	^ sectors
+]
+
+{ #category : #'as yet unclassified' }
+WDELevel >> whenAddedElementDo: aBlock [
+	^ announcer when: WDEAddedElementAnnouncement do: [ :ann | aBlock cull: ann element ]
+]
+
+{ #category : #'as yet unclassified' }
+WDELevel >> whenRemovedElementDo: aBlock [
+	^ announcer when: WDERemovedElementAnnouncement do: [ :ann | aBlock cull: ann element ]
 ]

@@ -17,6 +17,12 @@ WDELevelElement >> accept: visitor [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'as yet unclassified' }
+WDELevelElement >> addedToLevel: level [
+	level announceAddedElement: self.
+	self children do: [ :each | each addedToLevel: level ]
+]
+
 { #category : #accessing }
 WDELevelElement >> children [
 	^ #()
@@ -93,6 +99,11 @@ WDELevelElement >> isVisualComponent3D [
 ]
 
 { #category : #accessing }
+WDELevelElement >> level [
+	^ self parent ifNotNil: [ :p | p level ]
+]
+
+{ #category : #accessing }
 WDELevelElement >> name [
 	^ name ifNil: [ name := '' ]
 ]
@@ -100,6 +111,11 @@ WDELevelElement >> name [
 { #category : #accessing }
 WDELevelElement >> name: aString [
 	name := aString.
+]
+
+{ #category : #accessing }
+WDELevelElement >> parent [
+	^ nil
 ]
 
 { #category : #accessing }
@@ -117,13 +133,20 @@ WDELevelElement >> rayCast: ray [
 	^ nil
 ]
 
+{ #category : #'as yet unclassified' }
+WDELevelElement >> removedFromLevel: level [
+	self children do: [ :each | each removedFromLevel: level ].
+	level announceRemovedElement: self.
+
+]
+
 { #category : #memento }
 WDELevelElement >> restoreTransformStateMemento: memento [
 ]
 
 { #category : #accessing }
 WDELevelElement >> sectorLayer [
-	^ nil
+	^ self parent ifNotNil: [ :p | p sectorLayer ]
 ]
 
 { #category : #memento }

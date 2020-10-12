@@ -30,6 +30,11 @@ WDEEntityComponent >> isEntityComponent [
 ]
 
 { #category : #accessing }
+WDEEntityComponent >> parent [
+	^ parentEntity
+]
+
+{ #category : #accessing }
 WDEEntityComponent >> parentEntity [
 	^ parentEntity
 ]
@@ -37,11 +42,6 @@ WDEEntityComponent >> parentEntity [
 { #category : #accessing }
 WDEEntityComponent >> parentEntity: anObject [
 	parentEntity := anObject
-]
-
-{ #category : #accessing }
-WDEEntityComponent >> sectorLayer [
-	^ parentEntity sectorLayer
 ]
 
 { #category : #accessing }

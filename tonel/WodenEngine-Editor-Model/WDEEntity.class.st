@@ -3,7 +3,7 @@ Class {
 	#superclass : #WDELevelElement,
 	#instVars : [
 		'position',
-		'sectorLayer',
+		'parent',
 		'className',
 		'components',
 		'localSelectableBoundingBox',
@@ -25,7 +25,8 @@ WDEEntity >> accept: visitor [
 WDEEntity >> addComponent: aComponent [
 	self assert: aComponent parentEntity isNil.
 	components add: aComponent.
-	aComponent parentEntity: self
+	aComponent parentEntity: self.
+	self level ifNotNil: [ :level | aComponent addedToLevel: level ].
 ]
 
 { #category : #accessing }
@@ -98,7 +99,7 @@ WDEEntity >> isEntity [
 
 { #category : #testing }
 WDEEntity >> isInSector2D [
-	^ sectorLayer isInSector2D
+	^ self parent isInSector2D
 ]
 
 { #category : #testing }
@@ -153,6 +154,16 @@ WDEEntity >> localSelectableBoundingBox [
 ]
 
 { #category : #accessing }
+WDEEntity >> parent [
+	^ parent
+]
+
+{ #category : #accessing }
+WDEEntity >> parent: anObject [
+	parent := anObject
+]
+
+{ #category : #accessing }
 WDEEntity >> position [
 	^ position value
 ]
@@ -192,16 +203,6 @@ WDEEntity >> restoreTransformStateMemento: memento [
 	components doWithIndex: [ :eachComponent :index |
 		eachComponent restoreTransformStateMemento: (componentMementos at: index)
 	]
-]
-
-{ #category : #accessing }
-WDEEntity >> sectorLayer [
-	^ sectorLayer
-]
-
-{ #category : #accessing }
-WDEEntity >> sectorLayer: anObject [
-	sectorLayer := anObject
 ]
 
 { #category : #accessing }

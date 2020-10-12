@@ -19,7 +19,8 @@ WDESectorLayer >> accept: visitor [
 WDESectorLayer >> addEntity: anEntity [
 	self assert: anEntity sectorLayer isNil.
 	entities add: anEntity.
-	anEntity sectorLayer: self.
+	anEntity parent: self.
+	self level ifNotNil: [ :level | anEntity addedToLevel: level ].
 ]
 
 { #category : #accessing }
@@ -123,6 +124,11 @@ WDESectorLayer >> isInSector2D [
 { #category : #testing }
 WDESectorLayer >> isSectorLayer [
 	^ true
+]
+
+{ #category : #accessing }
+WDESectorLayer >> parent [
+	^ sector
 ]
 
 { #category : #accessing }

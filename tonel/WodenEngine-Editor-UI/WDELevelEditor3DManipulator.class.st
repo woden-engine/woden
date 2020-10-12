@@ -17,6 +17,11 @@ WDELevelEditor3DManipulator class >> for: aModel [
 	^ self new model: aModel; yourself
 ]
 
+{ #category : #'as yet unclassified' }
+WDELevelEditor3DManipulator >> activateAction [
+	"This activates and action associated with this manipulator"
+]
+
 { #category : #removing }
 WDELevelEditor3DManipulator >> addToScene: aScene [
 	sceneNode := self createSceneNode.
@@ -85,6 +90,16 @@ WDELevelEditor3DManipulator >> initialize [
 	highlighted := false.
 	boundingBox := BoxF32 empty.
 	children := #().
+]
+
+{ #category : #accessing }
+WDELevelEditor3DManipulator >> level [
+	^ model level
+]
+
+{ #category : #accessing }
+WDELevelEditor3DManipulator >> levelEditorSession [
+	^ model levelEditorSession
 ]
 
 { #category : #memento }
