@@ -25,8 +25,16 @@ WDERectangleVisualComponent >> color [
 
 { #category : #accessing }
 WDERectangleVisualComponent >> color: anObject [
-	color := anObject.
+	color := anObject asFloat32x4.
 	self changed.
+]
+
+{ #category : #serialization }
+WDERectangleVisualComponent >> encodeJsonKeyValues [
+	^ super encodeJsonKeyValues , {
+		#rectangle . rectangle encodeForJSON.
+		#color . color encodeForJSON.
+	}
 ]
 
 { #category : #initialization }
@@ -34,6 +42,21 @@ WDERectangleVisualComponent >> initialize [
 	super initialize.
 	color := Float32x4 ones.
 	rectangle := RectangleF32 unitRectangle.
+]
+
+{ #category : #testing }
+WDERectangleVisualComponent >> isRectangleVisualComponent [
+	^ true
+]
+
+{ #category : #serialization }
+WDERectangleVisualComponent >> loadFromJson: jsonData [
+	super loadFromJson: jsonData.
+	rectangle := RectangleF32 loadFromJson: (jsonData at: 'rectangle').
+	jsonData at: 'color' ifPresent: [ :data |
+		color := Float32x4 loadFromJson: data
+	].
+
 ]
 
 { #category : #accessing }

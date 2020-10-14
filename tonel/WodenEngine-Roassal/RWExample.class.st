@@ -4,6 +4,15 @@ Class {
 	#category : #'WodenEngine-Roassal-Examples'
 }
 
+{ #category : #'world menu' }
+RWExample class >> menuCommandOn: builder [
+	<worldMenu>
+	(builder item: #'Browse woden roassal scene examples')
+		parent: #Woden;
+		order: 401;
+		action: [ self class browse ].
+]
+
 { #category : #'as yet unclassified' }
 RWExample >> allClasses [
 	<script: 'self new allClasses openInVR'>

@@ -23,10 +23,28 @@ WDEBoxCollisionComponent >> box: anObject [
 	self changed.
 ]
 
+{ #category : #serialization }
+WDEBoxCollisionComponent >> encodeJsonKeyValues [
+	^ super encodeJsonKeyValues , {
+		#box . box encodeForJSON.
+	}
+]
+
 { #category : #initialization }
 WDEBoxCollisionComponent >> initialize [
 	super initialize.
 	box := BoxF32 unitBox.
+]
+
+{ #category : #testing }
+WDEBoxCollisionComponent >> isBoxCollisionComponent [
+	^ true
+]
+
+{ #category : #serialization }
+WDEBoxCollisionComponent >> loadFromJson: jsonData [
+	super loadFromJson: jsonData.
+	box := BoxF32 loadFromJson: (jsonData at: 'box').
 ]
 
 { #category : #memento }

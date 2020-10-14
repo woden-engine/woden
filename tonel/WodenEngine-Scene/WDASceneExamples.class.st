@@ -709,6 +709,15 @@ WDASceneExamples class >> exampleModelSponza [
 	sceneModel openWith: WDAFPSSceneView allowingVR.
 ]
 
+{ #category : #'world menu' }
+WDASceneExamples class >> menuCommandOn: builder [
+	<worldMenu>
+	(builder item: #'Browse scene examples')
+		parent: #Woden;
+		order: 400;
+		action: [ self class browse ].
+]
+
 { #category : #'as yet unclassified' }
 WDASceneExamples class >> proceduralSkySunDirection: sunDirection [
 	| horizonRamp sunColor sunAngleSizeCos sunAngleSizeOuterCos shader |

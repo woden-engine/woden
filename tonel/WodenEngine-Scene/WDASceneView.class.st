@@ -56,12 +56,7 @@ WDASceneView >> anaglyph [
 
 { #category : #accessing }
 WDASceneView >> camera [
-	^ camera ifNil: [camera := model camera]
-]
-
-{ #category : #accessing }
-WDASceneView >> camera: aCamera [
-	camera := aCamera
+	^ model camera
 ]
 
 { #category : #accessing }

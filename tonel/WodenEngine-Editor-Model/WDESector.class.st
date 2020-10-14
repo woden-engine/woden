@@ -28,6 +28,14 @@ WDESector >> children [
 	^ layers
 ]
 
+{ #category : #serialization }
+WDESector >> encodeJsonKeyValues [
+	^ super encodeJsonKeyValues , {
+		#isSector2D . isSector2D.
+		#layers . layers collect: [ :each | each encodeForJSON ].
+	}
+]
+
 { #category : #initialization }
 WDESector >> initialize [
 	super initialize.
@@ -68,6 +76,18 @@ WDESector >> level [
 { #category : #accessing }
 WDESector >> level: anObject [
 	level := anObject
+]
+
+{ #category : #serialization }
+WDESector >> loadFromJson: jsonData [
+	super loadFromJson: jsonData.
+	self isSector2D: (jsonData at: 'isSector2D' ifAbsent: [false]).
+
+	jsonData at: 'layers' ifPresent: [ :childrenData |
+		childrenData do: [ :each |
+			self addLayer: (WDELevelElement loadFromJson: each)
+		]
+	]
 ]
 
 { #category : #accessing }

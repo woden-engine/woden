@@ -5,7 +5,8 @@ Class {
 		'level',
 		'gridSize',
 		'selection',
-		'activeSectorLayer'
+		'activeSectorLayer',
+		'levelFileReference'
 	],
 	#category : #'WodenEngine-Editor-Model'
 }
@@ -47,6 +48,7 @@ WDELevelEditorSession >> gridSize: newValue [
 WDELevelEditorSession >> initialize [
 	super initialize.
 	level := nil asValueHolder.
+	levelFileReference := nil asValueHolder.
 	activeSectorLayer := nil asValueHolder.
 	gridSize := 10.0 asValueHolder.
 	selection := WDELevelEditorSelection empty asValueHolder.
@@ -59,7 +61,46 @@ WDELevelEditorSession >> level [
 
 { #category : #accessing }
 WDELevelEditorSession >> level: anObject [
-	level value: anObject
+	self selection: WDELevelEditorSelection empty.
+	level value: anObject.
+
+]
+
+{ #category : #accessing }
+WDELevelEditorSession >> levelFileReference [
+	^ levelFileReference value
+]
+
+{ #category : #accessing }
+WDELevelEditorSession >> levelFileReference: aFileReference [
+	levelFileReference value: aFileReference
+]
+
+{ #category : #serialization }
+WDELevelEditorSession >> loadJSONEncodedFrom: aFileReference [
+	| decodedLevel |
+	decodedLevel := WDELevel loadFromJsonString: aFileReference contents.
+	self
+		level: decodedLevel;
+		levelFileReference: aFileReference
+]
+
+{ #category : #serialization }
+WDELevelEditorSession >> loadMessagePackEncodedFrom: aFileReference [
+	| decodedLevel |
+	decodedLevel := WDELevel loadMessagePack: (aFileReference binaryReadStreamDo: [:in | in contents]).
+	self
+		level: decodedLevel;
+		levelFileReference: aFileReference
+]
+
+{ #category : #serialization }
+WDELevelEditorSession >> openFrom: aFileReference [
+	| extension |
+	aFileReference exists ifFalse: [ ^ self ].
+	extension := aFileReference extension asLowercase.
+	extension = 'wlevel' ifTrue: [ ^ self loadJSONEncodedFrom: aFileReference ].
+	extension = 'wblevel' ifTrue: [ ^ self loadMessagePackEncodedFrom: aFileReference ].
 ]
 
 { #category : #snapping }
@@ -70,6 +111,31 @@ WDELevelEditorSession >> round: value quantum: quantum [
 { #category : #snapping }
 WDELevelEditorSession >> roundFloor: value quantum: quantum [
 	^ ((value / quantum) floor) * quantum
+]
+
+{ #category : #serialization }
+WDELevelEditorSession >> saveJSONEncodedTo: aFileReference [
+	| encodedLevel |
+	encodedLevel := self level encodeAsJSONString.
+	aFileReference writeStreamDo: [ :out | out truncate; nextPutAll: encodedLevel ].
+	self levelFileReference: aFileReference
+]
+
+{ #category : #serialization }
+WDELevelEditorSession >> saveMessagePackEncodedTo: aFileReference [
+	| encodedLevel |
+	encodedLevel := self level encodeAsMessagePack.
+	aFileReference binaryWriteStreamDo: [ :out | out truncate; nextPutAll: encodedLevel ].
+	self levelFileReference: aFileReference
+]
+
+{ #category : #serialization }
+WDELevelEditorSession >> saveTo: aFileReference [
+	| extension |
+	self level ifNil: [ ^ self ].
+	extension := aFileReference extension asLowercase.
+	extension = 'wlevel' ifTrue: [ self saveJSONEncodedTo: aFileReference ].
+	extension = 'wblevel' ifTrue: [ self saveMessagePackEncodedTo: aFileReference ].
 ]
 
 { #category : #accessing }

@@ -267,7 +267,7 @@ RWView >> encodeAllElementsInSceneAsJSONPretty [
 ]
 
 { #category : #serialization }
-RWView >> encodeAsJSON [
+RWView >> encodeForJSON [
 	^ NeoJSONWriter toString: (Dictionary newFromPairs: {
 		#elements . RWJSONSerializeVisitor new visitAndCollectObjects: elements
 	})

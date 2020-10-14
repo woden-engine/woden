@@ -12,9 +12,7 @@ Class {
 WDELevel class >> empty [
 	^ self new
 		addSector: (WDESector new
-			name: 'Sector';
 				addLayer: (WDESectorLayer new
-					name: 'Layer';
 					yourself);
 			yourself);
 		yourself
@@ -75,6 +73,13 @@ WDELevel >> elementsInFrustum: frustum [
 	^ result asArray
 ]
 
+{ #category : #serialization }
+WDELevel >> encodeJsonKeyValues [
+	^ super encodeJsonKeyValues , {
+		#sectors . sectors collect: [ :each | each encodeForJSON ].
+	}
+]
+
 { #category : #initialization }
 WDELevel >> initialize [
 	super initialize.
@@ -90,6 +95,16 @@ WDELevel >> isLevel [
 { #category : #accessing }
 WDELevel >> level [
 	^ self
+]
+
+{ #category : #serialization }
+WDELevel >> loadFromJson: jsonData [
+	super loadFromJson: jsonData.
+	jsonData at: 'sectors' ifPresent: [ :childrenData |
+		childrenData do: [ :each |
+			self addSector: (WDELevelElement loadFromJson: each)
+		]
+	]
 ]
 
 { #category : #'instance creation' }

@@ -5,7 +5,7 @@ Class {
 		'sector',
 		'defaultMinZ',
 		'defaultMaxZ',
-		'entities'
+		'children'
 	],
 	#category : #'WodenEngine-Editor-Model'
 }
@@ -17,15 +17,16 @@ WDESectorLayer >> accept: visitor [
 
 { #category : #adding }
 WDESectorLayer >> addEntity: anEntity [
+	self assert: anEntity isEntity.
 	self assert: anEntity sectorLayer isNil.
-	entities add: anEntity.
+	children add: anEntity.
 	anEntity parent: self.
 	self level ifNotNil: [ :level | anEntity addedToLevel: level ].
 ]
 
 { #category : #accessing }
 WDESectorLayer >> children [
-	^ entities
+	^ children
 ]
 
 { #category : #'as yet unclassified' }
@@ -103,15 +104,22 @@ WDESectorLayer >> defaultZ [
 	^ defaultMinZ + ((defaultMaxZ  - defaultMinZ) /2)
 ]
 
+{ #category : #serialization }
+WDESectorLayer >> encodeJsonKeyValues [
+	^ super encodeJsonKeyValues , {
+		#children . children collect: [ :each | each encodeForJSON ].
+	}
+]
+
 { #category : #accessing }
 WDESectorLayer >> entities [
-	^ entities
+	^ children
 ]
 
 { #category : #initialization }
 WDESectorLayer >> initialize [
 	super initialize.
-	entities := OrderedCollection new.
+	children := OrderedCollection new.
 	defaultMinZ := -1.0.
 	defaultMaxZ := -1.0.
 ]
@@ -124,6 +132,20 @@ WDESectorLayer >> isInSector2D [
 { #category : #testing }
 WDESectorLayer >> isSectorLayer [
 	^ true
+]
+
+{ #category : #serialization }
+WDESectorLayer >> loadFromJson: jsonData [
+	super loadFromJson: jsonData.
+	self
+		defaultMinZ: (jsonData at: 'defaultMinZ' ifAbsent: [-1.0]);
+		defaultMaxZ: (jsonData at: 'defaultMaxZ' ifAbsent: [1.0]).
+
+	jsonData at: 'children' ifPresent: [ :childrenData |
+		childrenData do: [ :each |
+			self addEntity: (WDELevelElement loadFromJson: each)
+		]
+	]
 ]
 
 { #category : #accessing }

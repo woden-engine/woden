@@ -32,6 +32,86 @@ WDELevelEditor class >> defaultSpec [
 
 ]
 
+{ #category : #'world menu' }
+WDELevelEditor class >> menuCommandOn: builder [
+	<worldMenu>
+	(builder item: #'Open level editor')
+		parent: #Woden;
+		order: 0;
+		action: [ WDELevel empty openEditor  ].
+]
+
+{ #category : #'main actions' }
+WDELevelEditor >> actionAbout [
+	self inform: 'TODO: actionAbout'
+]
+
+{ #category : #'main actions' }
+WDELevelEditor >> actionCopy [
+	self inform: 'TODO: actionCopy'
+]
+
+{ #category : #'main actions' }
+WDELevelEditor >> actionCut [
+	self inform: 'TODO: actionCut'
+]
+
+{ #category : #'main actions' }
+WDELevelEditor >> actionExit [
+	self inform: 'TODO: actionExit'
+]
+
+{ #category : #'main actions' }
+WDELevelEditor >> actionOpenFile [
+	| dialog result |
+	dialog := self createLevelFileDialog.
+	dialog title: 'Select the level to open'; answerPathName.
+	result := dialog openModal answer.
+	self model openFrom: result asFileReference
+]
+
+{ #category : #'main actions' }
+WDELevelEditor >> actionPaste [
+	self inform: 'TODO: actionPaste'
+]
+
+{ #category : #'main actions' }
+WDELevelEditor >> actionRedo [
+	self inform: 'TODO: actionRedo'
+]
+
+{ #category : #'main actions' }
+WDELevelEditor >> actionSaveFile [
+	self model levelFileReference ifNotNil: [ :fileReference |
+		self model saveTo: fileReference
+	] ifNil: [
+		self actionSaveFileAs
+	]
+]
+
+{ #category : #'main actions' }
+WDELevelEditor >> actionSaveFileAs [
+	| dialog result |
+	dialog := self createLevelFileDialog.
+	dialog
+		title: 'Select the location to save the level';
+		fileNameText: 'level.wlevel';
+		answerSaveFile.
+	self model levelFileReference ifNotNil: [ :fileRef |
+		dialog
+			fileNameText: fileRef basename;
+			selectPath: fileRef parent
+	].
+
+	result := dialog openModal answer.
+	self model saveTo: result asFileReference
+]
+
+{ #category : #'main actions' }
+WDELevelEditor >> actionUndo [
+	self inform: 'TODO: actionUndo'
+]
+
 { #category : #menu }
 WDELevelEditor >> buildMainMenuBar [
 	^ self newMenuBar
@@ -120,6 +200,15 @@ WDELevelEditor >> content [
 { #category : #accessing }
 WDELevelEditor >> contentView [
 	^ content view
+]
+
+{ #category : #'main actions' }
+WDELevelEditor >> createLevelFileDialog [
+	^ FileDialogWindow basicNew
+		basicTheme: self theme;
+		initialize;
+		validExtensions: #(wlevel wblevel);
+		yourself
 ]
 
 { #category : #menu }
@@ -275,11 +364,16 @@ WDELevelEditor >> mainToolbar [
 { #category : #initialization }
 WDELevelEditor >> modelChanged [
 	levelTreeView roots: self model level children.
-	self model whenSelectionChangedDo: [ :selection |
-		levelTreeView selectedItems asSet = selection selectedItems asSet ifFalse: [
-			levelTreeView unselectAll; selectItems: selection selectedItems
+	self model
+		whenSelectionChangedDo: [ :selection |
+			levelTreeView selectedItems asSet = selection selectedItems asSet ifFalse: [
+				levelTreeView unselectAll; selectItems: selection selectedItems
+			]
+		];
+		whenLevelChangedDo: [ :newLevel |
+			levelTreeView roots: self model level children
 		]
-	]
+		
 ]
 
 { #category : #menu }
@@ -304,11 +398,6 @@ WDELevelEditor >> shadingMenu [
 			item
 				name: 'Shaded color';
 				action: [ self contentView activateShadedColor ]
-		];
-		addItem: [ :item |
-			item
-				name: 'Flat textured';
-				action: [ self contentView activateFlatTextured ]
 		];
 		addItem: [ :item |
 			item

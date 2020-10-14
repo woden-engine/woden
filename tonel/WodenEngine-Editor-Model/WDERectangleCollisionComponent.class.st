@@ -12,10 +12,28 @@ WDERectangleCollisionComponent >> accept: visitor [
 	^ visitor visitRectangleCollisionComponent: self
 ]
 
+{ #category : #serialization }
+WDERectangleCollisionComponent >> encodeJsonKeyValues [
+	^ super encodeJsonKeyValues , {
+		#rectangle . rectangle encodeForJSON.
+	}
+]
+
 { #category : #initialization }
 WDERectangleCollisionComponent >> initialize [
 	super initialize.
 	rectangle := RectangleF32 unitRectangle.
+]
+
+{ #category : #testing }
+WDERectangleCollisionComponent >> isRectangleCollisionComponent [
+	^ true
+]
+
+{ #category : #serialization }
+WDERectangleCollisionComponent >> loadFromJson: jsonData [
+	super loadFromJson: jsonData.
+	rectangle := RectangleF32 loadFromJson: (jsonData at: 'rectangle').
 ]
 
 { #category : #accessing }

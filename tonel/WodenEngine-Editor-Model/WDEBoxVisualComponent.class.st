@@ -38,11 +38,34 @@ WDEBoxVisualComponent >> color: anObject [
 	color := anObject
 ]
 
+{ #category : #serialization }
+WDEBoxVisualComponent >> encodeJsonKeyValues [
+	^ super encodeJsonKeyValues , {
+		#box . box encodeForJSON.
+		#color . color encodeForJSON.
+	}
+]
+
 { #category : #initialization }
 WDEBoxVisualComponent >> initialize [
 	super initialize.
 	color := Float32x4 ones.
 	box := BoxF32 unitBox.
+]
+
+{ #category : #testing }
+WDEBoxVisualComponent >> isBoxVisualComponent [
+	^ true
+]
+
+{ #category : #serialization }
+WDEBoxVisualComponent >> loadFromJson: jsonData [
+	super loadFromJson: jsonData.
+	box := BoxF32 loadFromJson: (jsonData at: 'box').
+	jsonData at: 'color' ifPresent: [ :data |
+		color := Float32x4 loadFromJson: data
+	].
+
 ]
 
 { #category : #memento }

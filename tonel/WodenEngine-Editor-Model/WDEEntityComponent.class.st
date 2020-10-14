@@ -2,8 +2,8 @@ Class {
 	#name : #WDEEntityComponent,
 	#superclass : #WDELevelElement,
 	#instVars : [
-		'parentEntity',
-		'changedEventHolder'
+		'changedEventHolder',
+		'parent'
 	],
 	#category : #'WodenEngine-Editor-Model'
 }
@@ -31,22 +31,12 @@ WDEEntityComponent >> isEntityComponent [
 
 { #category : #accessing }
 WDEEntityComponent >> parent [
-	^ parentEntity
+	^ parent
 ]
 
 { #category : #accessing }
-WDEEntityComponent >> parentEntity [
-	^ parentEntity
-]
-
-{ #category : #accessing }
-WDEEntityComponent >> parentEntity: anObject [
-	parentEntity := anObject
-]
-
-{ #category : #accessing }
-WDEEntityComponent >> treeDisplayName [
-	^ self class name , ': ', self name
+WDEEntityComponent >> parent: aParent [
+	parent := aParent
 ]
 
 { #category : #initialization }

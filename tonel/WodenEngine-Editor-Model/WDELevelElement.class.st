@@ -4,12 +4,49 @@ Class {
 	#instVars : [
 		'name'
 	],
+	#classVars : [
+		'JsonTypeNameDictionary'
+	],
 	#category : #'WodenEngine-Editor-Model'
 }
+
+{ #category : #'class initialization' }
+WDELevelElement class >> initialize [
+	JsonTypeNameDictionary := Dictionary new.
+	self withAllSubclassesDo: [ :each |
+		JsonTypeNameDictionary at: each jsonTypeName put: each
+	]
+]
 
 { #category : #testing }
 WDELevelElement class >> isAbstract [
 	^ self == WDELevelElement
+]
+
+{ #category : #serialization }
+WDELevelElement class >> jsonTypeName [
+	^ self name withoutPrefix: 'WDE'
+]
+
+{ #category : #serialization }
+WDELevelElement class >> loadFromJson: jsonData [
+	| elementClass |
+	elementClass := self.
+	jsonData at: 'type' ifPresent: [ :found |
+		elementClass := JsonTypeNameDictionary at: found
+	].
+
+	^ elementClass new loadFromJson: jsonData
+]
+
+{ #category : #serialization }
+WDELevelElement class >> loadFromJsonString: jsonString [
+	^ self loadFromJson: (NeoJSONReader fromString: jsonString)
+]
+
+{ #category : #serialization }
+WDELevelElement class >> loadMessagePack: messagePack [
+	^ self loadFromJson: (SLVMMessagePackDecoder decode: messagePack)
 ]
 
 { #category : #visiting }
@@ -28,6 +65,29 @@ WDELevelElement >> children [
 	^ #()
 ]
 
+{ #category : #serialization }
+WDELevelElement >> encodeAsJSONString [
+	^ (NeoJSONWriter toStringPretty: self encodeForJSON) withUnixLineEndings
+]
+
+{ #category : #serialization }
+WDELevelElement >> encodeAsMessagePack [
+	^ SLVMMessagePackEncoder encodeObject: self encodeForJSON
+]
+
+{ #category : #serialization }
+WDELevelElement >> encodeForJSON [
+	^ OrderedDictionary newFromPairs: self encodeJsonKeyValues
+]
+
+{ #category : #serialization }
+WDELevelElement >> encodeJsonKeyValues [
+	^ {
+		#type . self class jsonTypeName.
+		#name . self name.
+	}
+]
+
 { #category : #initialization }
 WDELevelElement >> initialize [
 	super initialize.
@@ -40,6 +100,16 @@ WDELevelElement >> intersectsFrustum: frustum [
 
 { #category : #testing }
 WDELevelElement >> is2DLevelElement [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isBoxCollisionComponent [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isBoxVisualComponent [
 	^ false
 ]
 
@@ -74,6 +144,16 @@ WDELevelElement >> isPointEntity [
 ]
 
 { #category : #testing }
+WDELevelElement >> isRectangleCollisionComponent [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isRectangleVisualComponent [
+	^ false
+]
+
+{ #category : #testing }
 WDELevelElement >> isSector [
 	^ false
 ]
@@ -101,6 +181,11 @@ WDELevelElement >> isVisualComponent3D [
 { #category : #accessing }
 WDELevelElement >> level [
 	^ self parent ifNotNil: [ :p | p level ]
+]
+
+{ #category : #serialization }
+WDELevelElement >> loadFromJson: jsonData [
+	name := jsonData at: 'name' ifAbsent: [ '' ].
 ]
 
 { #category : #accessing }
@@ -164,5 +249,5 @@ WDELevelElement >> translateBy: translation [
 
 { #category : #accessing }
 WDELevelElement >> treeDisplayName [
-	^ self name
+	^ self class jsonTypeName , ': ', self name
 ]

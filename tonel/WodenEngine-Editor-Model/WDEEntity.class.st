@@ -23,9 +23,9 @@ WDEEntity >> accept: visitor [
 
 { #category : #adding }
 WDEEntity >> addComponent: aComponent [
-	self assert: aComponent parentEntity isNil.
+	self assert: aComponent parent isNil.
 	components add: aComponent.
-	aComponent parentEntity: self.
+	aComponent parent: self.
 	self level ifNotNil: [ :level | aComponent addedToLevel: level ].
 ]
 
@@ -72,6 +72,17 @@ WDEEntity >> computeLocalSelecteableBoundingBox [
 	localSelectableBoundingBox := BoxF32 center: self localBoundingBoxWithDepth center halfExtent: (self localBoundingBoxWithDepth halfExtent max: 0.1)
 ]
 
+{ #category : #serialization }
+WDEEntity >> encodeJsonKeyValues [
+	^ super encodeJsonKeyValues , {
+		#className . self className.
+		#name . self name.
+		#position . self position encodeForJSON.
+		#localBoundingBox . self localBoundingBox encodeForJSON.
+		#components . self components collect: [ :each | each encodeForJSON ].
+	}
+]
+
 { #category : #initialization }
 WDEEntity >> initialize [
 	super initialize.
@@ -105,6 +116,39 @@ WDEEntity >> isInSector2D [
 { #category : #testing }
 WDEEntity >> isPointEntity [
 	^ self localBoundingBox min = self localBoundingBox max
+]
+
+{ #category : #serialization }
+WDEEntity >> loadFromJson: jsonData [
+	super loadFromJson: jsonData.
+	self
+		className: (jsonData at: 'className' ifAbsent: ['']);
+		name: (jsonData at: 'name' ifAbsent: ['']).
+	jsonData at: 'position' ifPresent: [ :data |
+		data size = 2 ifTrue: [
+			self position: (Float32x2 loadFromJson: data)
+		] ifFalse: [
+			self assert: data size = 3.
+			self position: (Float32x3 loadFromJson: data)
+		]
+	].
+
+	jsonData at: 'localBoundingBox' ifPresent: [ :data |
+		| minData |
+		minData := (data at: 'min').
+		minData size = 2 ifTrue: [
+			self localBoundingRectangle: (RectangleF32 loadFromJson: data)
+		] ifFalse: [
+			self assert: minData size = 3.
+			self localBoundingBox: (BoxF32 loadFromJson: data)
+		]
+	].
+
+	jsonData at: 'components' ifPresent: [ :componentData |
+		componentData do: [ :each |
+			self addComponent: (WDELevelElement loadFromJson: each)
+		]
+	]
 ]
 
 { #category : #accessing }

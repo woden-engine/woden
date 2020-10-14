@@ -219,6 +219,15 @@ WDAESProceduralSamples class >> example04BalloonVehicle [
 
 ]
 
+{ #category : #'world menu' }
+WDAESProceduralSamples class >> menuCommandOn: builder [
+	<worldMenu>
+	(builder item: #'Browse entity system examples')
+		parent: #Woden;
+		order: 402;
+		action: [ self class browse ].
+]
+
 { #category : #'see class side' }
 WDAESProceduralSamples >> seeClassSide [
 ]
