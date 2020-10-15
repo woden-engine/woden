@@ -11,15 +11,15 @@ WDELevelGenericElementTemplateProvider >> genericCategory [
 		name: 'World Entities'.
 		
 	{
-		'Point 2D' . WDEEntity point2DPrototype.
-		'Point 3D' . WDEEntity point3DPrototype.
+		'Point' . WDEEntity pointPrototype.
 		'Solid Wall 2D' . WDEEntity solidWall2DPrototype.
 		'Solid Wall 3D' . WDEEntity solidWall3DPrototype.
-	} pairsDo: [ :categoryName :prototype |
+	} pairsDo: [ :templateName :prototype |
 		category addTemplate: (
 		WDELevelElementEntityTemplate new
-			name: categoryName;
-			prototype: prototype
+			name: templateName;
+			prototype: prototype;
+			yourself
 		)
 	].
 	^ category

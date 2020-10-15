@@ -11,3 +11,13 @@ Class {
 WDELevelElementTemplate >> children [
 	^ #()
 ]
+
+{ #category : #accessing }
+WDELevelElementTemplate >> name [
+	^ name
+]
+
+{ #category : #accessing }
+WDELevelElementTemplate >> name: anObject [
+	name := anObject
+]
