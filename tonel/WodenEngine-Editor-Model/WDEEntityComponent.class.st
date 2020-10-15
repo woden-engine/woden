@@ -39,6 +39,18 @@ WDEEntityComponent >> parent: aParent [
 	parent := aParent
 ]
 
+{ #category : #copying }
+WDEEntityComponent >> postCopy [
+	super postCopy.
+	parent := nil.
+	changedEventHolder := false asValueHolder.
+]
+
+{ #category : #initialization }
+WDEEntityComponent >> setVisualColor: aColor [
+	"Nop by default"
+]
+
 { #category : #initialization }
 WDEEntityComponent >> whenChangedDo: aBlock [
 	changedEventHolder whenChangedDo: aBlock

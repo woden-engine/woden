@@ -11,10 +11,47 @@ Class {
 		'boundingBox',
 		'selectableBoundingBox',
 		'localBoundingRectangle',
-		'localBoundingBoxWithDepth'
+		'localBoundingBoxWithDepth',
+		'dimensionalityMode'
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
 }
+
+{ #category : #'basic entity prototypes' }
+WDEEntity class >> defaultColor [
+	^ Color r: 0.8 g: 0.8 b: 0.8
+]
+
+{ #category : #'basic entity prototypes' }
+WDEEntity class >> pointPrototype [
+	^ self new
+		className: #Point;
+		yourself
+]
+
+{ #category : #'basic entity prototypes' }
+WDEEntity class >> solidWall2DPrototype [
+	^ self new
+		makeEntity2D;
+		className: 'Wall';
+		localBoundingRectangle: RectangleF32 unitRectangle;
+		addComponent: (WDEVisualComponent rectangle: RectangleF32 unitRectangle color: self defaultColor);
+		addComponent: (WDECollisionComponent rectangle: RectangleF32 unitRectangle);
+		yourself
+
+]
+
+{ #category : #'basic entity prototypes' }
+WDEEntity class >> solidWall3DPrototype [
+	^ self new
+		makeEntity3D;
+		className: 'Wall';
+		localBoundingBox: BoxF32 unitBox;
+		addComponent: (WDEVisualComponent box: BoxF32 unitBox color: self defaultColor);
+		addComponent: (WDECollisionComponent box: BoxF32 unitBox);
+		yourself
+
+]
 
 { #category : #visiting }
 WDEEntity >> accept: visitor [
@@ -72,6 +109,16 @@ WDEEntity >> computeLocalSelecteableBoundingBox [
 	localSelectableBoundingBox := BoxF32 center: self localBoundingBoxWithDepth center halfExtent: (self localBoundingBoxWithDepth halfExtent max: 0.1)
 ]
 
+{ #category : #accessing }
+WDEEntity >> dimensionalityMode [
+	^ dimensionalityMode
+]
+
+{ #category : #accessing }
+WDEEntity >> dimensionalityMode: anObject [
+	dimensionalityMode := anObject
+]
+
 { #category : #serialization }
 WDEEntity >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
@@ -87,6 +134,7 @@ WDEEntity >> encodeJsonKeyValues [
 WDEEntity >> initialize [
 	super initialize.
 	components := OrderedCollection new asValueHolder.
+	dimensionalityMode := WDELevelElementDimensionalityMode mode3D.
 	position := Float32x3 zeros asValueHolder.
 	localBoundingBox := (BoxF32 point: Float32x3 zeros) asValueHolder.
 ]
@@ -100,7 +148,7 @@ WDEEntity >> intersectsFrustum: frustum [
 
 { #category : #transforms }
 WDEEntity >> is2DLevelElement [
-	^ self position class elements = 2
+	^ dimensionalityMode is2D
 ]
 
 { #category : #testing }
@@ -171,6 +219,16 @@ WDEEntity >> localBoundingBoxChanged [
 	boundingBox := nil.
 ]
 
+{ #category : #testing }
+WDEEntity >> localBoundingBoxHasValidArea [
+	^ self localBoundingBox width > 0 and: [ self localBoundingBox height > 0 ]
+]
+
+{ #category : #testing }
+WDEEntity >> localBoundingBoxHasValidVolume [
+	^ self localBoundingBoxHasValidArea and: [ self localBoundingBoxWithDepth depth > 0 ]
+]
+
 { #category : #accessing }
 WDEEntity >> localBoundingBoxWithDepth [
 	| rawBox |
@@ -197,6 +255,16 @@ WDEEntity >> localSelectableBoundingBox [
 	^ localSelectableBoundingBox
 ]
 
+{ #category : #'as yet unclassified' }
+WDEEntity >> makeEntity2D [
+	self dimensionalityMode: WDELevelElementDimensionalityMode mode2D
+]
+
+{ #category : #'as yet unclassified' }
+WDEEntity >> makeEntity3D [
+	self dimensionalityMode: WDELevelElementDimensionalityMode mode3D
+]
+
 { #category : #accessing }
 WDEEntity >> parent [
 	^ parent
@@ -207,21 +275,73 @@ WDEEntity >> parent: anObject [
 	parent := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDEEntity >> placeInBox: targetBox [
+	| transform |
+	(self isPointEntity or: [self localBoundingBoxHasValidArea not])
+		ifTrue: [ ^ self placeInPosition: targetBox center ].
+	(self is2DLevelElement or: [self localBoundingBoxHasValidVolume not])
+		ifTrue: [ ^ self placeInRectangle: targetBox asRectangleXY ].
+	transform := targetBox reversibleTransformToConvertToMe: self localBoundingBoxWithDepth.
+	self transformWith: transform
+]
+
+{ #category : #'as yet unclassified' }
+WDEEntity >> placeInPosition: newPosition [
+	newPosition class elements = self position class elements ifTrue: [ 
+		^ self position: newPosition
+	].
+
+	self is2DLevelElement ifTrue: [ 
+		self position: newPosition xy
+	] ifFalse: [ 
+		self position: (Float32x3 xy: newPosition z: 0)
+	].
+
+]
+
+{ #category : #'as yet unclassified' }
+WDEEntity >> placeInRectangle: targetRectangle [
+	| transform |
+	(self isPointEntity or: [self localBoundingBoxHasValidArea not])
+		ifTrue: [ ^ self placeInPosition: targetRectangle center ].
+
+	transform := targetRectangle reversibleTransform3dToConvertToMe: self localBoundingBox asRectangleXY.
+	self transformWith: transform
+]
+
 { #category : #accessing }
 WDEEntity >> position [
 	^ position value
 ]
 
 { #category : #accessing }
-WDEEntity >> position: anObject [
+WDEEntity >> position: newPosition [
+	| sanitizedPosition |
+	sanitizedPosition := (dimensionalityMode sanitizePosition: (newPosition implicitCastTo: Float32x3)).
 	self positionChanged.
-	position value: anObject
+	position value: sanitizedPosition
 ]
 
 { #category : #private }
 WDEEntity >> positionChanged [
 	selectableBoundingBox := nil.
 	boundingBox := nil.
+]
+
+{ #category : #copying }
+WDEEntity >> postCopy [
+	| oldComponents oldPosition oldLocalBoundingBox |
+	super postCopy.
+	parent := nil.
+	oldComponents := components value.
+	oldPosition := position value.
+	oldLocalBoundingBox := localBoundingBox value.
+	position := oldPosition asValueHolder.
+	localBoundingBox := oldLocalBoundingBox asValueHolder.
+	components := OrderedCollection new asValueHolder.
+	oldComponents do: [:each | self addComponent: each copy ]
+		
 ]
 
 { #category : #'ray casting' }
@@ -254,6 +374,13 @@ WDEEntity >> selectableBoundingBox [
 	^ selectableBoundingBox ifNil: [ selectableBoundingBox := self localSelectableBoundingBox translatedBy: self validPosition3D ]
 ]
 
+{ #category : #accessing }
+WDEEntity >> setVisualColor: aColor [
+	self components do: [ :each |
+		each setVisualColor: aColor
+	]
+]
+
 { #category : #memento }
 WDEEntity >> transformStateMemento [
 	^ { self position . self localBoundingBox . components collect: [:each | each transformStateMemento ]}
@@ -264,12 +391,8 @@ WDEEntity >> transformWith: transform [
 	| rawPosition oldPosition componentTransform |
 	rawPosition := self position.
 	oldPosition := self validPosition3D.
-	self is2DLevelElement ifTrue: [ 
-		self position: (transform transformPosition: self validPosition3D) xy
-	] ifFalse: [ 
-		self position: (transform transformPosition: rawPosition).
-	].
-
+	self position: (transform transformPosition: self validPosition3D).
+	
 	componentTransform := transform copy translation: Float32x3 zeros.
 	self localBoundingBox: (self localBoundingBox transformedWith: componentTransform).
 	components do: [ :each |
@@ -298,7 +421,7 @@ WDEEntity >> treeDisplayName [
 WDEEntity >> validPosition3D [
 	| rawPosition |
 	rawPosition := self position.
-	rawPosition class elements = 2 ifTrue: [ ^ Float32x3 xy: rawPosition z: self sectorLayer defaultZ ].
+	rawPosition class elements = 2 ifTrue: [ ^ Float32x3 xy: rawPosition z: (self sectorLayer ifNil: [0] ifNotNil: [:l | l defaultZ]) ].
 	^ rawPosition
 ]
 

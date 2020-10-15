@@ -56,3 +56,9 @@ WDERectangleCollisionComponent >> restoreTransformStateMemento: memento [
 WDERectangleCollisionComponent >> transformStateMemento [
 	^ self rectangle
 ]
+
+{ #category : #transforms }
+WDERectangleCollisionComponent >> transformWith: transform [
+	self rectangle: (self rectangle asBox transformedWith: transform) asRectangleXY.
+
+]

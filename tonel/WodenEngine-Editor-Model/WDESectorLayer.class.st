@@ -30,46 +30,22 @@ WDESectorLayer >> children [
 ]
 
 { #category : #'as yet unclassified' }
-WDESectorLayer >> createEntityWithClassName: className [
-	^ WDEEntity new
-		className: className;
-		yourself
-]
-
-{ #category : #'as yet unclassified' }
 WDESectorLayer >> createPointEntity: entityClassName at: entityLocation [
-	| entity |
-	entity := self createEntityWithClassName: entityClassName.
-	entity position: entityLocation.
-	self addEntity: entity
+	^ self instanceEntityPrototype: WDEEntity pointPrototype withClassName: entityClassName andPlaceAt: entityLocation
 ]
 
 { #category : #'as yet unclassified' }
 WDESectorLayer >> createSolidEntity: entityClassName box: box color: color [
-	| center localBox |
-	center := box center.
-	localBox := box translatedBy: center negated. 
-
-	self addEntity: ((self createEntityWithClassName: entityClassName)
-		position: center;
-		localBoundingBox: localBox;
-		addComponent: (WDEVisualComponent box: localBox color: color);
-		addComponent: (WDECollisionComponent box: localBox);
-		yourself)
+	^ (self instanceEntityPrototype: WDEEntity solidWall3DPrototype withClassName: entityClassName andPlaceInBox: box)
+		setVisualColor: color;
+		yourself
 ]
 
 { #category : #'as yet unclassified' }
 WDESectorLayer >> createSolidEntity: entityClassName rectangle: rectangle color: color [
-	| center localRectangle |
-	center := rectangle center.
-	localRectangle := rectangle translatedBy: center negated. 
-
-	self addEntity: ((self createEntityWithClassName: entityClassName)
-		position: center;
-		localBoundingRectangle: localRectangle;
-		addComponent: (WDEVisualComponent rectangle: localRectangle color: color);
-		addComponent: (WDECollisionComponent rectangle: localRectangle);
-		yourself)
+	^ (self instanceEntityPrototype: WDEEntity solidWall2DPrototype withClassName: entityClassName andPlaceInRectangle: rectangle)
+		setVisualColor: color;
+		yourself
 ]
 
 { #category : #accessing }
@@ -122,6 +98,45 @@ WDESectorLayer >> initialize [
 	children := OrderedCollection new.
 	defaultMinZ := -1.0.
 	defaultMaxZ := -1.0.
+]
+
+{ #category : #'as yet unclassified' }
+WDESectorLayer >> instanceEntityPrototype: entityPrototype [
+	^ entityPrototype copy
+]
+
+{ #category : #'as yet unclassified' }
+WDESectorLayer >> instanceEntityPrototype: entityPrototype withClassName: newClassName [
+	^ entityPrototype copy
+		className: newClassName;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
+WDESectorLayer >> instanceEntityPrototype: prototype withClassName: entityClassName andPlaceAt: entityLocation [
+	| entity |
+	entity := self instanceEntityPrototype: prototype withClassName: entityClassName.
+	entity placeInPosition: entityLocation.
+	self addEntity: entity.
+	^ entity
+]
+
+{ #category : #'as yet unclassified' }
+WDESectorLayer >> instanceEntityPrototype: prototype withClassName: entityClassName andPlaceInBox: placementBox [
+	| entity |
+	entity := self instanceEntityPrototype: prototype withClassName: entityClassName.
+	entity placeInBox: placementBox.
+	self addEntity: entity.
+	^ entity
+]
+
+{ #category : #'as yet unclassified' }
+WDESectorLayer >> instanceEntityPrototype: prototype withClassName: entityClassName andPlaceInRectangle: placementRectangle [
+	| entity |
+	entity := self instanceEntityPrototype: prototype withClassName: entityClassName.
+	entity placeInRectangle: placementRectangle.
+	self addEntity: entity.
+	^ entity
 ]
 
 { #category : #testing }

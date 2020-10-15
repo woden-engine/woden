@@ -14,7 +14,7 @@ Class {
 	#pools : [
 		'OSKeySymbols'
 	],
-	#category : 'WodenEngine-Core-Application'
+	#category : #'WodenEngine-Core-Application'
 }
 
 { #category : #'instance creation' }
@@ -97,7 +97,7 @@ WDAMorphicViewWindow >> handleKeyDown: evt [
 	view ifNotNil: [
 		event := OSKeyDownEvent new.
 		event repeat: 0.
-		event symbol: (self keySymbolFor: evt keyValue).
+		event symbol: (self keySymbolFor: evt key).
 		self mousePosition: evt putOn: event.
 		self modifiers: evt putOn: event.
 		self enqueueEvent: event.
@@ -110,7 +110,7 @@ WDAMorphicViewWindow >> handleKeyUp: evt [
 	view ifNotNil: [
 		event := OSKeyUpEvent new.
 		event repeat: 0.
-		event symbol: (self keySymbolFor: evt keyValue).
+		event symbol: (self keySymbolFor: evt key).
 		self mousePosition: evt putOn: event.
 		self modifiers: evt putOn: event.
 		self enqueueEvent: event.
@@ -153,13 +153,8 @@ WDAMorphicViewWindow >> hasStencil [
 ]
 
 { #category : #'event handling' }
-WDAMorphicViewWindow >> keyNameFor: keyValue [
-	^ (Smalltalk os keyForValue: keyValue) name asSymbol
-]
-
-{ #category : #'event handling' }
-WDAMorphicViewWindow >> keySymbolFor: keyValue [
-	^ KeySymbolMap at: (self keyNameFor: keyValue ) ifAbsent: [ OSK_UNKNOWN ]
+WDAMorphicViewWindow >> keySymbolFor: key [
+	^ KeySymbolMap at: key name ifAbsent: [ OSK_UNKNOWN ]
 ]
 
 { #category : #'event handling' }

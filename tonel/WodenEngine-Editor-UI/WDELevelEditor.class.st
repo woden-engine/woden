@@ -67,6 +67,7 @@ WDELevelEditor >> actionOpenFile [
 	dialog := self createLevelFileDialog.
 	dialog title: 'Select the level to open'; answerPathName.
 	result := dialog openModal answer.
+	result ifNil: [ ^ self ].
 	self model openFrom: result asFileReference
 ]
 
@@ -104,6 +105,7 @@ WDELevelEditor >> actionSaveFileAs [
 	].
 
 	result := dialog openModal answer.
+	result ifNil: [ ^ self ].
 	self model saveTo: result asFileReference
 ]
 

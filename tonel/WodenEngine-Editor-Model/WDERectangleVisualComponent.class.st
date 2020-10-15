@@ -75,6 +75,11 @@ WDERectangleVisualComponent >> restoreTransformStateMemento: memento [
 	self rectangle: memento
 ]
 
+{ #category : #initialization }
+WDERectangleVisualComponent >> setVisualColor: aColor [
+	self color: aColor
+]
+
 { #category : #memento }
 WDERectangleVisualComponent >> transformStateMemento [
 	^ self rectangle

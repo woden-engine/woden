@@ -73,6 +73,11 @@ WDEBoxVisualComponent >> restoreTransformStateMemento: memento [
 	self box: memento
 ]
 
+{ #category : #initialization }
+WDEBoxVisualComponent >> setVisualColor: aColor [
+	self color: aColor
+]
+
 { #category : #memento }
 WDEBoxVisualComponent >> transformStateMemento [
 	^ self box

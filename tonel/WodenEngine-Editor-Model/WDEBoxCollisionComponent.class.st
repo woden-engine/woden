@@ -56,3 +56,8 @@ WDEBoxCollisionComponent >> restoreTransformStateMemento: memento [
 WDEBoxCollisionComponent >> transformStateMemento [
 	^ self box
 ]
+
+{ #category : #transforms }
+WDEBoxCollisionComponent >> transformWith: transform [
+	self box: (self box transformedWith: transform)
+]
