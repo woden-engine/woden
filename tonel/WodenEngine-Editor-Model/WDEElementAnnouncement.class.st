@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'element'
 	],
-	#category : #'WodenEngine-Editor-Model'
+	#category : #'WodenEngine-Editor-Model-Events'
 }
 
 { #category : #accessing }

@@ -1,7 +1,7 @@
 Class {
 	#name : #WDELevelVisitor,
 	#superclass : #Object,
-	#category : #'WodenEngine-Editor-Model'
+	#category : #'WodenEngine-Editor-Model-Level'
 }
 
 { #category : #visiting }

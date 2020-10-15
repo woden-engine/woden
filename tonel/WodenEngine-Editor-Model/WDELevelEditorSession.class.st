@@ -8,7 +8,7 @@ Class {
 		'activeSectorLayer',
 		'levelFileReference'
 	],
-	#category : #'WodenEngine-Editor-Model'
+	#category : #'WodenEngine-Editor-Model-Session'
 }
 
 { #category : #accessing }

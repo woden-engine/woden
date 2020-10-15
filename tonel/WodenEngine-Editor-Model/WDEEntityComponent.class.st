@@ -5,7 +5,7 @@ Class {
 		'changedEventHolder',
 		'parent'
 	],
-	#category : #'WodenEngine-Editor-Model'
+	#category : #'WodenEngine-Editor-Model-Level'
 }
 
 { #category : #accessing }

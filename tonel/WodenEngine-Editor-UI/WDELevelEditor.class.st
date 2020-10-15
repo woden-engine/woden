@@ -19,13 +19,13 @@ WDELevelEditor class >> defaultSpec [
 		add: #mainMenuBar withConstraints: [ :constraints | constraints height: self toolbarHeight ];
 		add: #mainToolbar withConstraints: [ :constraints | constraints height: self toolbarHeight ];
 		add: (	SpPanedLayout newHorizontal
-			position: 2/3;
-			add: #content;
+			position: 1/5;
 			add: (SpPanedLayout newVertical
 				position: 2/3;
 				add: #levelTreeView;
 				add: #elementTemplateList;
-				yourself)
+				yourself);
+			add: #content;
 			yourself);
 		add: #mainStatusBar withConstraints: [ :constraints | constraints height: self toolbarHeight ];
 		yourself

@@ -6,7 +6,7 @@ Class {
 		'isSector2D',
 		'layers'
 	],
-	#category : #'WodenEngine-Editor-Model'
+	#category : #'WodenEngine-Editor-Model-Level'
 }
 
 { #category : #visiting }

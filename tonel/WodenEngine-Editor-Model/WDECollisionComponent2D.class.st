@@ -1,7 +1,7 @@
 Class {
 	#name : #WDECollisionComponent2D,
 	#superclass : #WDECollisionComponent,
-	#category : #'WodenEngine-Editor-Model'
+	#category : #'WodenEngine-Editor-Model-Level'
 }
 
 { #category : #testing }

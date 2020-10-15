@@ -7,7 +7,7 @@ Class {
 	#classVars : [
 		'JsonTypeNameDictionary'
 	],
-	#category : #'WodenEngine-Editor-Model'
+	#category : #'WodenEngine-Editor-Model-Level'
 }
 
 { #category : #'class initialization' }

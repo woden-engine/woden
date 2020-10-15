@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'boundingBox'
 	],
-	#category : #'WodenEngine-Editor-Model'
+	#category : #'WodenEngine-Editor-Model-Level'
 }
 
 { #category : #testing }

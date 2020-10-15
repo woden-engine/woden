@@ -4,7 +4,7 @@ A WDELevelElementTest is a test class for testing the behavior of WDELevelElemen
 Class {
 	#name : #WDELevelElementTest,
 	#superclass : #TestCase,
-	#category : #'WodenEngine-Editor-Model'
+	#category : #'WodenEngine-Editor-Model-Tests'
 }
 
 { #category : #tests }

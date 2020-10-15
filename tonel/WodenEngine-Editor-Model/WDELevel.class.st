@@ -5,7 +5,7 @@ Class {
 		'sectors',
 		'announcer'
 	],
-	#category : #'WodenEngine-Editor-Model'
+	#category : #'WodenEngine-Editor-Model-Level'
 }
 
 { #category : #requirements }

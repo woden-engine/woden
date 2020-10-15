@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'selectedItems'
 	],
-	#category : #'WodenEngine-Editor-Model'
+	#category : #'WodenEngine-Editor-Model-Level'
 }
 
 { #category : #requirements }

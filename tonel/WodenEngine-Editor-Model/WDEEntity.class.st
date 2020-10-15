@@ -13,7 +13,7 @@ Class {
 		'localBoundingRectangle',
 		'localBoundingBoxWithDepth'
 	],
-	#category : #'WodenEngine-Editor-Model'
+	#category : #'WodenEngine-Editor-Model-Level'
 }
 
 { #category : #visiting }

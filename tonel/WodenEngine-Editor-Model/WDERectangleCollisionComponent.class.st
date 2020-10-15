@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'rectangle'
 	],
-	#category : #'WodenEngine-Editor-Model'
+	#category : #'WodenEngine-Editor-Model-Level'
 }
 
 { #category : #visiting }
