@@ -6,10 +6,21 @@ Class {
 		'gridSize',
 		'selection',
 		'activeSectorLayer',
-		'levelFileReference'
+		'levelFileReference',
+		'activeLevelElementTemplate'
 	],
 	#category : #'WodenEngine-Editor-Model-Session'
 }
+
+{ #category : #accessing }
+WDELevelEditorSession >> activeLevelElementTemplate [
+	^ activeLevelElementTemplate value
+]
+
+{ #category : #accessing }
+WDELevelEditorSession >> activeLevelElementTemplate: aTemplate [
+	activeLevelElementTemplate value: aTemplate
+]
 
 { #category : #accessing }
 WDELevelEditorSession >> activeSectorLayer [
@@ -50,6 +61,7 @@ WDELevelEditorSession >> initialize [
 	level := nil asValueHolder.
 	levelFileReference := nil asValueHolder.
 	activeSectorLayer := nil asValueHolder.
+	activeLevelElementTemplate := nil asValueHolder.
 	gridSize := 10.0 asValueHolder.
 	selection := WDELevelEditorSelection empty asValueHolder.
 ]

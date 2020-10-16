@@ -31,7 +31,7 @@ WDAMorphicViewWindow class >> initialize [
 	self initialize
 	"
 	
-	KeySymbolMap := IdentityDictionary newFromPairs: { 
+	KeySymbolMap := Dictionary newFromPairs: { 
 		#A . OSK_a .
 		#B . OSK_b .
 		#C . OSK_c .
@@ -58,6 +58,7 @@ WDAMorphicViewWindow class >> initialize [
 		#Y . OSK_y .
 		#Z . OSK_z .
 		#SPACE . OSK_SPACE .
+		#RETURN . OSK_RETURN .
 		#KP_SPACE . OSK_SPACE .
 		#KP_UP . OSK_UP .
 		#KP_LEFT . OSK_LEFT .

@@ -174,7 +174,7 @@ WDEEntity >> loadFromJson: jsonData [
 		name: (jsonData at: 'name' ifAbsent: ['']).
 	jsonData at: 'position' ifPresent: [ :data |
 		data size = 2 ifTrue: [
-			self position: (Float32x2 loadFromJson: data)
+			self position: (Float32x3 xy: (Float32x2 loadFromJson: data) z: 0.0)
 		] ifFalse: [
 			self assert: data size = 3.
 			self position: (Float32x3 loadFromJson: data)

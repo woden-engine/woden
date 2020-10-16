@@ -334,7 +334,21 @@ WDELevelEditor >> initializePresenters [
 		].
 		"contextMenu: [ self treeViewMenu ];
 		whenActivatedDo: [ :selection | self treeViewItemActivated: selection selectedItem ]"
-	elementTemplateList := self newTable.
+	elementTemplateList := self newTreeTable.
+	elementTemplateList
+		addColumn: (SpCompositeTableColumn new
+			title: 'Name';
+			addColumn: (SpStringTableColumn evaluated: [ :node | node name ]);
+			yourself
+		);
+		hideColumnHeaders;
+		children: [ :node | node children ];
+		whenSelectionChangedDo: [ :selection |
+			self model activeLevelElementTemplate: selection selectedItem
+		].
+		"contextMenu: [ self treeViewMenu ];
+		whenActivatedDo: [ :selection | self treeViewItemActivated: selection selectedItem ]"
+
 ]
 
 { #category : #initialization }
@@ -366,6 +380,7 @@ WDELevelEditor >> mainToolbar [
 { #category : #initialization }
 WDELevelEditor >> modelChanged [
 	levelTreeView roots: self model level children.
+	elementTemplateList roots: WDELevelElementTemplateProvider allTopLevelTemplateCategories.
 	self model
 		whenSelectionChangedDo: [ :selection |
 			levelTreeView selectedItems asSet = selection selectedItems asSet ifFalse: [
