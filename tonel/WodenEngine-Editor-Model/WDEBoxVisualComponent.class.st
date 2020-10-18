@@ -25,7 +25,8 @@ WDEBoxVisualComponent >> box [
 
 { #category : #accessing }
 WDEBoxVisualComponent >> box: anObject [
-	box := anObject
+	box := anObject.
+	self changed.
 ]
 
 { #category : #accessing }
@@ -35,7 +36,8 @@ WDEBoxVisualComponent >> color [
 
 { #category : #accessing }
 WDEBoxVisualComponent >> color: anObject [
-	color := anObject
+	color := anObject asFloat32x4.
+	self changed.
 ]
 
 { #category : #serialization }

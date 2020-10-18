@@ -5,11 +5,28 @@ Class {
 }
 
 { #category : #'event handling' }
+WDELevelEditorViewPlacementMode >> onMouseButtonRelease: event [
+	self levelEditorSession activeSectorLayer ifNotNil: [ :sectorLayer |
+		self levelEditorSession activeLevelElementTemplate ifNotNil: [ :elementTemplate |
+			elementTemplate isPointElementTemplate ifTrue: [
+				| entityLocation |
+				entityLocation := self snapToSubGrid: (self cameraXYToWorld: event position distance: 5.0).
+				elementTemplate instantiateInSectorLayer: sectorLayer placingInPoint: entityLocation.
+			]
+		]
+	]
+]
+
+{ #category : #'event handling' }
 WDELevelEditorViewPlacementMode >> startActionDraggingWith: event [
-	self levelEditorSession activeSectorLayer ifNotNil: [ 
-		view activeToolMode: ((WDELevelEditorBrushDrawDragToolMode for: view)
-			dragStartedWith: event;
-			yourself)
+	self levelEditorSession activeSectorLayer ifNotNil: [
+		self levelEditorSession activeLevelElementTemplate ifNotNil: [ :elementTemplate |
+			elementTemplate isPointElementTemplate ifFalse: [
+				view activeToolMode: ((WDELevelEditorBrushDrawDragToolMode for: view)
+					dragStartedWith: event;
+					yourself)
+			]
+		]
 	].
 
 ]

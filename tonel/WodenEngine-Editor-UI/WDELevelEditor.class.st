@@ -344,7 +344,7 @@ WDELevelEditor >> initializePresenters [
 		hideColumnHeaders;
 		children: [ :node | node children ];
 		whenSelectionChangedDo: [ :selection |
-			self model activeLevelElementTemplate: selection selectedItem
+			self model activeLevelElementTemplate: (selection selectedItem ifNotNil: [:i | i asLevelElementTemplate])
 		].
 		"contextMenu: [ self treeViewMenu ];
 		whenActivatedDo: [ :selection | self treeViewItemActivated: selection selectedItem ]"

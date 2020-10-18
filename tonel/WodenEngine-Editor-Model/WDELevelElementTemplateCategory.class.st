@@ -19,6 +19,11 @@ WDELevelElementTemplateCategory >> addTemplate: aTemplate [
 	templates add: aTemplate
 ]
 
+{ #category : #converting }
+WDELevelElementTemplateCategory >> asLevelElementTemplate [
+	^ nil
+]
+
 { #category : #accessing }
 WDELevelElementTemplateCategory >> children [
 	^ subcategories , templates

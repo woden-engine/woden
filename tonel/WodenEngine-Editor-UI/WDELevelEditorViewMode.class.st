@@ -15,6 +15,31 @@ WDELevelEditorViewMode class >> for: aView [
 	^ self new view: aView; yourself
 ]
 
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewMode >> cameraXYDeltaToWorld: delta [
+	^ self view cameraXYDeltaToWorld: delta
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewMode >> cameraXYDeltaToWorld: delta distance: screenDistance [
+	^ self view cameraXYDeltaToWorld: delta distance: screenDistance
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewMode >> cameraXYToWorld: position distance: distance [
+	^ self view cameraXYToWorld: position distance: distance
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewMode >> cameraXZDeltaToWorld: delta [
+	^ self view cameraXZDeltaToWorld: delta
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewMode >> cameraXZDeltaToWorld: delta distance: screenDistance [
+	^ self view cameraXZDeltaToWorld: delta distance: screenDistance
+]
+
 { #category : #accessing }
 WDELevelEditorViewMode >> engine [
 	^ view engine
@@ -62,6 +87,11 @@ WDELevelEditorViewMode >> onMouseWheel: event [
 { #category : #accessing }
 WDELevelEditorViewMode >> scene [
 	^ self model scene
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewMode >> snapToSubGrid: vector [
+	^ view snapToSubGrid: vector
 ]
 
 { #category : #accessing }

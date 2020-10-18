@@ -106,6 +106,37 @@ WDESectorLayer >> instanceEntityPrototype: entityPrototype [
 ]
 
 { #category : #'as yet unclassified' }
+WDESectorLayer >> instanceEntityPrototype: prototype andPlaceAt: entityLocation [
+	| entity |
+	entity := self instanceEntityPrototype: prototype.
+	(entity isPointEntity and: [ self isInSector2D ]) ifTrue: [
+		entity makeEntity2D
+	].
+
+	entity placeInPosition: entityLocation.
+	self addEntity: entity.
+	^ entity
+]
+
+{ #category : #'as yet unclassified' }
+WDESectorLayer >> instanceEntityPrototype: prototype andPlaceInBox: placementBox [
+	| entity |
+	entity := self instanceEntityPrototype: prototype.
+	entity placeInBox: placementBox.
+	self addEntity: entity.
+	^ entity
+]
+
+{ #category : #'as yet unclassified' }
+WDESectorLayer >> instanceEntityPrototype: prototype andPlaceInRectangle: placementRectangle [
+	| entity |
+	entity := self instanceEntityPrototype: prototype.
+	entity placeInRectangle: placementRectangle.
+	self addEntity: entity.
+	^ entity
+]
+
+{ #category : #'as yet unclassified' }
 WDESectorLayer >> instanceEntityPrototype: entityPrototype withClassName: newClassName [
 	^ entityPrototype copy
 		className: newClassName;

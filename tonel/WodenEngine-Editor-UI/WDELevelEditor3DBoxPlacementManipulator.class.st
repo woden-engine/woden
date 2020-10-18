@@ -11,11 +11,9 @@ Class {
 WDELevelEditor3DBoxPlacementManipulator >> activateAction [
 	(boundingBox isEmpty not and: [ boundingBox width > 0 and: [ boundingBox height > 0 and: [ boundingBox depth > 0 ] ] ]) ifTrue: [
 		self levelEditorSession activeSectorLayer ifNotNil: [ :sectorLayer |
-			sectorLayer isInSector2D ifTrue: [ 
-				sectorLayer createSolidEntity: 'Wall' rectangle: boundingBox asRectangleXY color: (Color r: 0.8 g: 0.8 b: 0.8)
-			] ifFalse: [ 
-				sectorLayer createSolidEntity: 'Wall' box: boundingBox color: (Color r: 0.8 g: 0.8 b: 0.8)
-			]
+			self levelEditorSession activeLevelElementTemplate ifNotNil: [ :elementTemplate |
+				elementTemplate instantiateInSectorLayer: sectorLayer placingInBox: boundingBox
+			].
 		].
 	].
 
