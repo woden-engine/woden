@@ -271,7 +271,7 @@ code_block(fragment) depthNormal_fragment
 	// For double sided material.
 	if(isInBackFace())
 		N = -N;
-		
+
     encodeViewNormalOutput(N);
 }
 
@@ -286,12 +286,36 @@ code_block(fragment) depthNormalMask_fragment
 	// For double sided material.
 	if(isInBackFace())
 		N = -N;
-		
+
     encodeViewNormalOutput(N);
 }
 
 //==============================================================================
 // Forward lighting model.
+
+code_block(fragment) forwardFlat_color
+{
+    let N = normalize(FragmentInput.normal);
+    let V = normalize(-FragmentInput.position);
+
+	let albedo = FragmentInput.color;
+	if(albedo.a < MaterialState.alphaCutoff)
+		discard;
+
+    forwardFlatOutput color: albedo;
+}
+
+code_block(fragment) forwardFlat_albedo
+{
+    let N = normalize(FragmentInput.normal);
+    let V = normalize(-FragmentInput.position);
+
+    let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
+	if(albedo.a < MaterialState.alphaCutoff)
+		discard;
+
+    forwardFlatOutput color: albedo;
+}
 
 code_block(fragment) forward_color
 {
@@ -309,7 +333,7 @@ code_block(fragment) forward_color
 	let emission = MaterialState.emission*albedoSampler.sample(emissionTexture, FragmentInput.texcoord);
     forwardMetallicRoughnessLightingOutput
         emission: emission albedo: albedo occlusion: 1.0f
-        metallic: MaterialState.metallicFactor roughness: MaterialState.roughnessFactor		
+        metallic: MaterialState.metallicFactor roughness: MaterialState.roughnessFactor
         normal: N surfaceNormal: N viewVector: V position: FragmentInput.position;
 }
 
@@ -402,7 +426,7 @@ code_block(fragment) forward_albedoNormalMetallicRoughness
 	// For double sided material.
 	if(isInBackFace())
 		N = -N;
-		
+
     forwardMetallicRoughnessLightingOutput
         emission: emission albedo: albedo occlusion: aoRoughnessMetallic.r
         metallic: aoRoughnessMetallic.b*MaterialState.metallicFactor
