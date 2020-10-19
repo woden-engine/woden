@@ -443,6 +443,20 @@ WDCResourceCache >> flatShadedUnitCubeMesh [
 	]
 ]
 
+{ #category : #'special meshes' }
+WDCResourceCache >> flatShadedUnitDiameterSphere [
+	^ self resourceAt: #flatShadedUnitDiameterSphere ifAbsentPut: [
+		self unitDiameterSphereMesh copyWithMaterial: self whiteFlatColorMaterial
+	]
+]
+
+{ #category : #'special meshes' }
+WDCResourceCache >> flatShadedUnitDiameterZConeMesh [
+	^ self resourceAt: #flatShadedUnitDiameterZConeMesh ifAbsentPut: [
+		self unitDiameterZConeMesh copyWithMaterial: self whiteFlatColorMaterial
+	]
+]
+
 { #category : #'memory pools' }
 WDCResourceCache >> genericObjectStatePool [
 	^ self streamingUniformBufferPoolFor: WDCGenericObjectState
@@ -1019,6 +1033,27 @@ WDCResourceCache >> unitCubeMesh [
 	^ self resourceAt: #unitCubeMesh ifAbsentPut: [
 		(WDCGenericMeshBuilder for: engine)
 			addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+			computeBoundingBox;
+			mesh
+	]
+]
+
+{ #category : #'special meshes' }
+WDCResourceCache >> unitDiameterSphereMesh [
+	^ self resourceAt: #unitDiameterSphereMesh ifAbsentPut: [
+		(WDCGenericMeshBuilder for: engine)
+			addUVSphereRadius: 0.5 segments: 32 slices: 32;
+			computeBoundingBox;
+			mesh
+	]
+]
+
+{ #category : #'special meshes' }
+WDCResourceCache >> unitDiameterZConeMesh [
+	^ self resourceAt: #unitDiameterZConeMesh ifAbsentPut: [
+		(WDCComplexGenericMeshBuilder for: engine)
+			rotateDegreesOnX: 90;
+			addConeRadius: 0.5 height: 1.0 segments: 32 slices: 32;
 			computeBoundingBox;
 			mesh
 	]

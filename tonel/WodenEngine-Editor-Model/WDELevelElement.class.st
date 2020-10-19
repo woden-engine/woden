@@ -139,7 +139,17 @@ WDELevelElement >> isLevel [
 ]
 
 { #category : #testing }
+WDELevelElement >> isLightSourceVisualComponent [
+	^ false
+]
+
+{ #category : #testing }
 WDELevelElement >> isPointEntity [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isPunctualVisualComponent [
 	^ false
 ]
 

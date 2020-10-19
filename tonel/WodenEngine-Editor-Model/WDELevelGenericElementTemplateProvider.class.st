@@ -8,12 +8,15 @@ Class {
 WDELevelGenericElementTemplateProvider >> genericCategory [
 	| category |
 	category :=  WDELevelElementTemplateCategory new
-		name: 'World Entities'.
+		name: 'Basic Entities'.
 		
 	{
 		'Point' . WDEEntity pointPrototype.
 		'Solid Wall 2D' . WDEEntity solidWall2DPrototype.
 		'Solid Wall 3D' . WDEEntity solidWall3DPrototype.
+		'Point Light' . WDEEntity pointLightPrototype.
+		'Spot Light' . WDEEntity spotLightPrototype.
+		'Directional Light' . WDEEntity directionalLightPrototype.
 	} pairsDo: [ :templateName :prototype |
 		category addTemplate: (
 		WDELevelElementEntityTemplate new

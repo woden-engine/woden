@@ -12,9 +12,19 @@ WDEVisualComponent class >> box: box color: color [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+WDEVisualComponent class >> directionalLight [
+	^ WDEDirectionalLightSourceVisualComponent new
+]
+
 { #category : #testing }
 WDEVisualComponent class >> isAbstract [
 	^ self == WDEVisualComponent
+]
+
+{ #category : #'as yet unclassified' }
+WDEVisualComponent class >> pointLight [
+	^ WDEPointLightSourceVisualComponent new
 ]
 
 { #category : #'as yet unclassified' }
@@ -23,6 +33,11 @@ WDEVisualComponent class >> rectangle: rectangle color: color [
 		rectangle: rectangle;
 		color: color;
 		yourself
+]
+
+{ #category : #'as yet unclassified' }
+WDEVisualComponent class >> spotLight [
+	^ WDESpotLightSourceVisualComponent new
 ]
 
 { #category : #accessing }

@@ -7,6 +7,39 @@ Class {
 	#category : #'WodenEngine-Editor-UI'
 }
 
+{ #category : #'as yet unclassified' }
+WDELevelEditorElementSceneNodeBuilder >> createDirectionalLightVisualizationNodeFor: lightComponent [
+	| node |
+	node := WDSGSpatialObject new.
+	node renderable: self engine resourceCache flatShadedUnitCubeMesh.
+	node
+		color: self lightSourceDisplayMeshColor;
+		transform: (BoxF32 halfExtent: 0.1) reversibleTransformToConvertUnitBoxToMe.
+	^ node
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorElementSceneNodeBuilder >> createPointLightVisualizationNodeFor: component [
+	| node |
+	node := WDSGSpatialObject new.
+	node renderable: self engine resourceCache flatShadedUnitDiameterSphere.
+	node
+		color: self lightSourceDisplayMeshColor;
+		transform: (BoxF32 halfExtent: 0.1) reversibleTransformToConvertUnitBoxToMe.
+	^ node
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorElementSceneNodeBuilder >> createSpotLightVisualizationNodeFor: lightComponent [
+	| node |
+	node := WDSGSpatialObject new.
+	node renderable: self engine resourceCache flatShadedUnitDiameterZConeMesh.
+	node
+		color: self lightSourceDisplayMeshColor;
+		transform: (BoxF32 halfExtent: 0.1) reversibleTransformToConvertUnitBoxToMe.
+	^ node
+]
+
 { #category : #accessing }
 WDELevelEditorElementSceneNodeBuilder >> editorSceneModel [
 	^ editorSceneModel
@@ -20,6 +53,18 @@ WDELevelEditorElementSceneNodeBuilder >> editorSceneModel: anObject [
 { #category : #accessing }
 WDELevelEditorElementSceneNodeBuilder >> engine [
 	^ editorSceneModel engine
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorElementSceneNodeBuilder >> lightSourceDisplayMeshColor [
+	^ Color yellow darker muchLighter
+]
+
+{ #category : #'visual components' }
+WDELevelEditorElementSceneNodeBuilder >> setLightSource: node stateFromComponent: component [
+	node
+		intensity: (Float32x4 xyz: component intensity w: 1.0);
+		radius: component radius.
 ]
 
 { #category : #'collision components' }
@@ -44,11 +89,19 @@ WDELevelEditorElementSceneNodeBuilder >> visitBoxVisualComponent: component [
 ]
 
 { #category : #visiting }
+WDELevelEditorElementSceneNodeBuilder >> visitDirectionalLightSourceVisualComponent: component [
+	^ (super visitDirectionalLightSourceVisualComponent: component)
+		directional;
+		addChild: (self createDirectionalLightVisualizationNodeFor: component);
+		yourself
+]
+
+{ #category : #visiting }
 WDELevelEditorElementSceneNodeBuilder >> visitEntity: entity [
 	| node |
 	node := WDSGSpatialObject new.
-	node position: entity validPosition3D.
-	entity whenPositionChangedDo: [ :newPosition | node position: entity validPosition3D ].
+	node transform: entity transform.
+	entity whenTransformChangedDo: [ :newTransform | node transform: newTransform ].
 
 	editorSceneModel mapLevelElement: entity toSceneNode: node.
 	entity components do: [ :each |
@@ -59,6 +112,25 @@ WDELevelEditorElementSceneNodeBuilder >> visitEntity: entity [
 
 	editorSceneModel createEntityEditorSelectionBoxNode: entity.
 	^ node
+]
+
+{ #category : #'visual components' }
+WDELevelEditorElementSceneNodeBuilder >> visitLightSourceVisualComponent: component [
+	| node |
+	node := WDSGLightSource new.
+	self setLightSource: node stateFromComponent: component.
+	component whenChangedDo: [
+		self setLightSource: node stateFromComponent: component.
+	].
+	^ node
+]
+
+{ #category : #visiting }
+WDELevelEditorElementSceneNodeBuilder >> visitPointLightSourceVisualComponent: component [
+	^ (super visitPointLightSourceVisualComponent: component)
+		point;
+		addChild: (self createPointLightVisualizationNodeFor: component);
+		yourself
 ]
 
 { #category : #'collision components' }
@@ -95,4 +167,12 @@ WDELevelEditorElementSceneNodeBuilder >> visitSectorLayer: sectorLayer [
 		].
 	].
 	^ node
+]
+
+{ #category : #visiting }
+WDELevelEditorElementSceneNodeBuilder >> visitSpotLightSourceVisualComponent: component [
+	^ (super visitSpotLightSourceVisualComponent: component)
+		spot;
+		addChild: (self createSpotLightVisualizationNodeFor: component);
+		yourself
 ]

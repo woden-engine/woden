@@ -12,7 +12,9 @@ Class {
 		'selectableBoundingBox',
 		'localBoundingRectangle',
 		'localBoundingBoxWithDepth',
-		'dimensionalityMode'
+		'dimensionalityMode',
+		'orientation',
+		'transform'
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
 }
@@ -20,6 +22,23 @@ Class {
 { #category : #'basic entity prototypes' }
 WDEEntity class >> defaultColor [
 	^ Color r: 0.8 g: 0.8 b: 0.8
+]
+
+{ #category : #'basic entity prototypes' }
+WDEEntity class >> directionalLightPrototype [
+	^ self new
+		className: #DirectionalLight;
+		orientation: QuaternionF32 lookAtBottom;
+		addComponent: (WDEVisualComponent directionalLight);
+		yourself
+]
+
+{ #category : #'basic entity prototypes' }
+WDEEntity class >> pointLightPrototype [
+	^ self new
+		className: #PointLight;
+		addComponent: (WDEVisualComponent pointLight);
+		yourself
 ]
 
 { #category : #'basic entity prototypes' }
@@ -53,6 +72,15 @@ WDEEntity class >> solidWall3DPrototype [
 
 ]
 
+{ #category : #'basic entity prototypes' }
+WDEEntity class >> spotLightPrototype [
+	^ self new
+		className: #SpotLight;
+		orientation: QuaternionF32 lookAtBottom;
+		addComponent: (WDEVisualComponent spotLight);
+		yourself
+]
+
 { #category : #visiting }
 WDEEntity >> accept: visitor [
 	^ visitor visitEntity: self
@@ -68,7 +96,7 @@ WDEEntity >> addComponent: aComponent [
 
 { #category : #accessing }
 WDEEntity >> boundingBox [
-	^ boundingBox ifNil: [ boundingBox := self localBoundingBoxWithDepth translatedBy: self validPosition3D ]
+	^ boundingBox ifNil: [ boundingBox := self localBoundingBoxWithDepth transformedWith: self transform ]
 ]
 
 { #category : #accessing }
@@ -136,6 +164,7 @@ WDEEntity >> initialize [
 	components := OrderedCollection new asValueHolder.
 	dimensionalityMode := WDELevelElementDimensionalityMode mode3D.
 	position := Float32x3 zeros asValueHolder.
+	orientation := QuaternionF32 identity asValueHolder.
 	localBoundingBox := (BoxF32 point: Float32x3 zeros) asValueHolder.
 ]
 
@@ -266,6 +295,22 @@ WDEEntity >> makeEntity3D [
 ]
 
 { #category : #accessing }
+WDEEntity >> orientation [
+	^ orientation value
+]
+
+{ #category : #accessing }
+WDEEntity >> orientation: newOrientation [
+	self orientationChanged.
+	orientation value: newOrientation
+]
+
+{ #category : #private }
+WDEEntity >> orientationChanged [
+	self transformChanged
+]
+
+{ #category : #accessing }
 WDEEntity >> parent [
 	^ parent
 ]
@@ -325,8 +370,7 @@ WDEEntity >> position: newPosition [
 
 { #category : #private }
 WDEEntity >> positionChanged [
-	selectableBoundingBox := nil.
-	boundingBox := nil.
+	self transformChanged.
 ]
 
 { #category : #copying }
@@ -379,6 +423,21 @@ WDEEntity >> setVisualColor: aColor [
 	self components do: [ :each |
 		each setVisualColor: aColor
 	]
+]
+
+{ #category : #transforming }
+WDEEntity >> transform [
+	^ transform ifNil: [transform := ReversibleAffineTransform3dF32 new
+		orthonormal: self orientation asFloat32x3x3 translation: self validPosition3D;
+		yourself
+	]
+]
+
+{ #category : #private }
+WDEEntity >> transformChanged [
+	transform := nil.
+	selectableBoundingBox := nil.
+	boundingBox := nil.
 ]
 
 { #category : #memento }
@@ -441,6 +500,20 @@ WDEEntity >> whenLocalBoundingBoxChangedDo: aBlock [
 ]
 
 { #category : #enumerating }
+WDEEntity >> whenOrientationChangedDo: aBlock [
+	orientation whenChangedDo: aBlock
+]
+
+{ #category : #enumerating }
 WDEEntity >> whenPositionChangedDo: aBlock [
 	position whenChangedDo: aBlock
+]
+
+{ #category : #enumerating }
+WDEEntity >> whenTransformChangedDo: aBlock [
+	| adaptBlock |
+	adaptBlock := [ aBlock cull: self transform ].
+	self
+		whenOrientationChangedDo: adaptBlock;
+		whenPositionChangedDo: adaptBlock
 ]

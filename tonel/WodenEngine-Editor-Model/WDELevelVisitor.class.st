@@ -15,6 +15,11 @@ WDELevelVisitor >> visitBoxVisualComponent: component [
 ]
 
 { #category : #visiting }
+WDELevelVisitor >> visitDirectionalLightSourceVisualComponent: component [
+	^ self visitLightSourceVisualComponent: component
+]
+
+{ #category : #visiting }
 WDELevelVisitor >> visitEntity: entity [
 	self subclassResponsibility
 ]
@@ -27,6 +32,16 @@ WDELevelVisitor >> visitLevel: level [
 { #category : #visiting }
 WDELevelVisitor >> visitLevelElement: element [
 	^ element accept: self
+]
+
+{ #category : #visiting }
+WDELevelVisitor >> visitLightSourceVisualComponent: level [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
+WDELevelVisitor >> visitPointLightSourceVisualComponent: component [
+	^ self visitLightSourceVisualComponent: component
 ]
 
 { #category : #visiting }
@@ -47,4 +62,9 @@ WDELevelVisitor >> visitSector: sector [
 { #category : #visiting }
 WDELevelVisitor >> visitSectorLayer: sectorLayer [
 	self subclassResponsibility
+]
+
+{ #category : #visiting }
+WDELevelVisitor >> visitSpotLightSourceVisualComponent: component [
+	^ self visitLightSourceVisualComponent: component
 ]
