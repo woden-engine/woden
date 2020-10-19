@@ -4,9 +4,19 @@ Class {
 	#category : #'WodenEngine-Editor-Model-Level'
 }
 
+{ #category : #accessing }
+WDELevelElement2DDimensionalityMode >> dimensionalityMode [
+	^ '2D'
+]
+
 { #category : #testing }
 WDELevelElement2DDimensionalityMode >> is2D [
 	^ true
+]
+
+{ #category : #accessing }
+WDELevelElement2DDimensionalityMode >> name [
+	^ '2D'
 ]
 
 { #category : #'as yet unclassified' }

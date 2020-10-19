@@ -9,6 +9,11 @@ WDEDirectionalLightSourceVisualComponent >> accept: visitor [
 	^ visitor visitDirectionalLightSourceVisualComponent: self
 ]
 
+{ #category : #testing }
+WDEDirectionalLightSourceVisualComponent >> isDirectionalLightSourceVisualComponent [
+	^ true
+]
+
 { #category : #accessing }
 WDEDirectionalLightSourceVisualComponent >> radius [
 	^ 1.0

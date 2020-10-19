@@ -37,7 +37,9 @@ WDELevelEditorBrushDrawDragToolMode >> computeBoxWithScreenEndPoint: screenEndPo
 { #category : #'event handling' }
 WDELevelEditorBrushDrawDragToolMode >> createSceneNode [
 	sceneNode := WDSGSpatialObject new
-		renderable: self engine resourceCache flatShadedTranslucentUnitCubeMesh copy setFlatColorSubRenderMode;
+		renderable: (self engine resourceCache flatShadedTranslucentUnitCubeMesh copy 		setFlatColorSubRenderMode;
+		isOpaqueShadowCaster: false;
+		yourself);
 		color: (Float32x4 x: 1.0 y: 1.0 z: 1.0 w: 0.3);
 		yourself.
 	self scene add: sceneNode

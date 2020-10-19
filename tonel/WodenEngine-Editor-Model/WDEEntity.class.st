@@ -152,7 +152,9 @@ WDEEntity >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
 		#className . self className.
 		#name . self name.
+		#dimensions . self dimensionalityMode name.
 		#position . self position encodeForJSON.
+		#orientation . self orientation encodeForJSON.
 		#localBoundingBox . self localBoundingBox encodeForJSON.
 		#components . self components collect: [ :each | each encodeForJSON ].
 	}
@@ -201,6 +203,14 @@ WDEEntity >> loadFromJson: jsonData [
 	self
 		className: (jsonData at: 'className' ifAbsent: ['']);
 		name: (jsonData at: 'name' ifAbsent: ['']).
+	jsonData at: 'dimensions' ifPresent: [ :data |
+		self dimensionalityMode: (WDELevelElementDimensionalityMode named: data)
+	].
+
+	jsonData at: 'orientation' ifPresent: [ :data |
+		self orientation: (QuaternionF32 loadFromJson: data)
+	].
+
 	jsonData at: 'position' ifPresent: [ :data |
 		data size = 2 ifTrue: [
 			self position: (Float32x3 xy: (Float32x2 loadFromJson: data) z: 0.0)

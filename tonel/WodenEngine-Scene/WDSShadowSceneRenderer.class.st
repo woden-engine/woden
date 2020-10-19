@@ -4,12 +4,6 @@ Class {
 	#category : #'WodenEngine-Scene-Rendering'
 }
 
-{ #category : #'rendering preparations' }
-WDSShadowSceneRenderer >> collectVisibleObject: node [
-	node isOpaqueShadowCaster ifFalse: [ ^ self ].
-	^ super collectVisibleObject: node
-]
-
 { #category : #rendering }
 WDSShadowSceneRenderer >> renderMode [
 	^ WDCStateTrackerDepthOnlyRenderMode uniqueInstance
@@ -49,6 +43,11 @@ WDSShadowSceneRenderer >> sceneRendererViewportClass [
 { #category : #accessing }
 WDSShadowSceneRenderer >> shaderSignatureClass [
 	^ WDCSceneRenderingShaderSignature
+]
+
+{ #category : #asserting }
+WDSShadowSceneRenderer >> shouldRenderRenderingRenderable: renderingRenderable [
+	^ renderingRenderable isOpaqueShadowCaster
 ]
 
 { #category : #accessing }

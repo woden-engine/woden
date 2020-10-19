@@ -119,6 +119,11 @@ WDELevelElement >> isCollisionComponent [
 ]
 
 { #category : #testing }
+WDELevelElement >> isDirectionalLightSourceVisualComponent [
+	^ false
+]
+
+{ #category : #testing }
 WDELevelElement >> isEntity [
 	^ false
 ]
@@ -149,6 +154,11 @@ WDELevelElement >> isPointEntity [
 ]
 
 { #category : #testing }
+WDELevelElement >> isPointLightSourceVisualComponent [
+	^ false
+]
+
+{ #category : #testing }
 WDELevelElement >> isPunctualVisualComponent [
 	^ false
 ]
@@ -170,6 +180,11 @@ WDELevelElement >> isSector [
 
 { #category : #testing }
 WDELevelElement >> isSectorLayer [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isSpotLightSourceVisualComponent [
 	^ false
 ]
 

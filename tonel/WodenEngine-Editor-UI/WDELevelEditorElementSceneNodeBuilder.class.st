@@ -11,7 +11,9 @@ Class {
 WDELevelEditorElementSceneNodeBuilder >> createDirectionalLightVisualizationNodeFor: lightComponent [
 	| node |
 	node := WDSGSpatialObject new.
-	node renderable: self engine resourceCache flatShadedUnitCubeMesh.
+	node renderable: (self engine resourceCache flatShadedUnitCubeMesh copy
+		isOpaqueShadowCaster: false;
+		yourself).
 	node
 		color: self lightSourceDisplayMeshColor;
 		transform: (BoxF32 halfExtent: 0.1) reversibleTransformToConvertUnitBoxToMe.
@@ -22,7 +24,9 @@ WDELevelEditorElementSceneNodeBuilder >> createDirectionalLightVisualizationNode
 WDELevelEditorElementSceneNodeBuilder >> createPointLightVisualizationNodeFor: component [
 	| node |
 	node := WDSGSpatialObject new.
-	node renderable: self engine resourceCache flatShadedUnitDiameterSphere.
+	node renderable: (self engine resourceCache flatShadedUnitDiameterSphere copy 
+			isOpaqueShadowCaster: false;
+			yourself).
 	node
 		color: self lightSourceDisplayMeshColor;
 		transform: (BoxF32 halfExtent: 0.1) reversibleTransformToConvertUnitBoxToMe.
@@ -33,7 +37,9 @@ WDELevelEditorElementSceneNodeBuilder >> createPointLightVisualizationNodeFor: c
 WDELevelEditorElementSceneNodeBuilder >> createSpotLightVisualizationNodeFor: lightComponent [
 	| node |
 	node := WDSGSpatialObject new.
-	node renderable: self engine resourceCache flatShadedUnitDiameterZConeMesh.
+	node renderable: (self engine resourceCache flatShadedUnitDiameterZConeMesh copy
+		isOpaqueShadowCaster: false;
+		yourself).
 	node
 		color: self lightSourceDisplayMeshColor;
 		transform: (BoxF32 halfExtent: 0.1) reversibleTransformToConvertUnitBoxToMe.
@@ -64,7 +70,13 @@ WDELevelEditorElementSceneNodeBuilder >> lightSourceDisplayMeshColor [
 WDELevelEditorElementSceneNodeBuilder >> setLightSource: node stateFromComponent: component [
 	node
 		intensity: (Float32x4 xyz: component intensity w: 1.0);
+		castShadows: component castShadows;
 		radius: component radius.
+	component isSpotLightSourceVisualComponent ifTrue: [
+		node
+			innerSpotCutoff: component innerCutOffAngle;
+			outerSpotCutoff: component outerCutOffAngle
+	]
 ]
 
 { #category : #'collision components' }

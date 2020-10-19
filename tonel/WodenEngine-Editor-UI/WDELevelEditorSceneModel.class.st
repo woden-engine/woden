@@ -149,7 +149,9 @@ WDELevelEditorSceneModel >> createGridNode [
 { #category : #'instance creation' }
 WDELevelEditorSceneModel >> createHighlightBoxNode [
 	highlightBoxNode := WDSGSpatialObject new
-		renderable: engine resourceCache flatShadedTranslucentUnitCubeMesh copy setFlatColorSubRenderMode;
+		renderable: (engine resourceCache flatShadedTranslucentUnitCubeMesh copy 			setFlatColorSubRenderMode; 
+			isOpaqueShadowCaster: false;
+			yourself);
 		color: (Float32x4 x: 0.3 y: 0.3 z: 0.9 w: 0.5);
 		visible: false;
 		yourself.
@@ -172,7 +174,12 @@ WDELevelEditorSceneModel >> elementsInFrustum: frustum [
 
 { #category : #accessing }
 WDELevelEditorSceneModel >> entitySelectionBoxRenderable [
-	^ entitySelectionBoxRenderable ifNil: [ entitySelectionBoxRenderable := engine resourceCache flatShadedUnitCubeMesh copy setFlatColorSubRenderMode; yourself ]
+	^ entitySelectionBoxRenderable ifNil: [
+		entitySelectionBoxRenderable := engine resourceCache flatShadedUnitCubeMesh copy
+			setFlatColorSubRenderMode; 
+			isOpaqueShadowCaster: false;
+			yourself
+		]
 ]
 
 { #category : #accessing }

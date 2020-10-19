@@ -16,6 +16,11 @@ WDCRenderingSceneRenderableObject >> computeBoundingBox [
 	^ spatialObject computeBoundingBoxForRenderable: renderable
 ]
 
+{ #category : #testing }
+WDCRenderingSceneRenderableObject >> isOpaqueShadowCaster [
+	^ renderable isOpaqueShadowCaster
+]
+
 { #category : #accessing }
 WDCRenderingSceneRenderableObject >> renderOn: stateTracker [
 	self validateRenderable.

@@ -48,16 +48,6 @@ WDSGAbstractSpatialObject >> initialize [
 	self createSpatialObjectState
 ]
 
-{ #category : #accessing }
-WDSGAbstractSpatialObject >> isOpaqueShadowCaster [
-	^ objectState isOpaqueShadowCaster
-]
-
-{ #category : #accessing }
-WDSGAbstractSpatialObject >> isOpaqueShadowCaster: aBoolean [
-	objectState isOpaqueShadowCaster: aBoolean
-]
-
 { #category : #testing }
 WDSGAbstractSpatialObject >> isSpatialObject [
 	^ true

@@ -35,6 +35,11 @@ WDCAbstractRenderingSceneObject >> isLightSource [
 ]
 
 { #category : #testing }
+WDCAbstractRenderingSceneObject >> isOpaqueShadowCaster [
+	^ false
+]
+
+{ #category : #testing }
 WDCAbstractRenderingSceneObject >> isSpatialVolumeElement [
 	^ true
 ]

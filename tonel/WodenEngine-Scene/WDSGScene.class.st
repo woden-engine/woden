@@ -92,9 +92,10 @@ WDSGScene >> bakeLazyObjectStates [
 ]
 
 { #category : #'rendering phases' }
-WDSGScene >> collectVisibleObjectsAndLightIntoViewport: renderingViewport [
-	| frustumConvexHull boundingBox |
-	backgroundLayer renderingRenderables select: #visible thenDo: [ :rr |
+WDSGScene >> collectVisibleObjectsAndLightIntoViewport: renderingViewport forRenderer: renderer [
+	| frustumConvexHull boundingBox selectionPredicate |
+	selectionPredicate := [:each | each visible and: [ renderer shouldRenderRenderingRenderable: each ]].
+	backgroundLayer renderingRenderables select: selectionPredicate thenDo: [ :rr |
 		rr isLightSource ifTrue: [
 			renderingViewport addBackgroundLight: rr
 		] ifFalse: [ 
@@ -103,7 +104,7 @@ WDSGScene >> collectVisibleObjectsAndLightIntoViewport: renderingViewport [
 	].
 
 	frustumConvexHull := renderingViewport globalFrustumConvexHull.
-	normalLayer renderingRenderables select: #visible thenDo: [ :rr |
+	normalLayer renderingRenderables select: selectionPredicate thenDo: [ :rr |
 		boundingBox := rr boundingBox.
 		(renderingViewport shouldRenderObject: rr) ifTrue: [
 			rr isLightSource ifTrue: [
@@ -122,7 +123,7 @@ WDSGScene >> collectVisibleObjectsAndLightIntoViewport: renderingViewport [
 		].
 	].
 
-	foregroundLayer renderingRenderables select: #visible thenDo: [ :rr |
+	foregroundLayer renderingRenderables select: selectionPredicate thenDo: [ :rr |
 		rr isLightSource ifTrue: [
 			renderingViewport addForegroundLight: rr
 		] ifFalse: [ 

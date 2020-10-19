@@ -44,3 +44,8 @@ WDEVisualComponent class >> spotLight [
 WDEVisualComponent >> boundingBox [
 	^ self subclassResponsibility
 ]
+
+{ #category : #testing }
+WDEVisualComponent >> isVisualComponent [
+	^ true
+]

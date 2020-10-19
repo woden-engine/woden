@@ -17,6 +17,13 @@ WDELevelElementDimensionalityMode class >> mode3D [
 	^ WDELevelElement3DDimensionalityMode uniqueInstance
 ]
 
+{ #category : #'instance creation' }
+WDELevelElementDimensionalityMode class >> named: aName [
+	aName = '2D' ifTrue: [ ^ self mode2D ].
+	aName = '3D' ifTrue: [ ^ self mode3D ].
+	^ self mode3D
+]
+
 { #category : #accessing }
 WDELevelElementDimensionalityMode class >> uniqueInstance [
 	^ uniqueInstance ifNil: [ uniqueInstance := self new ]
@@ -30,6 +37,11 @@ WDELevelElementDimensionalityMode >> is2D [
 { #category : #testing }
 WDELevelElementDimensionalityMode >> is3D [
 	^ false
+]
+
+{ #category : #accessing }
+WDELevelElementDimensionalityMode >> name [
+	self subclassResponsibility
 ]
 
 { #category : #'as yet unclassified' }

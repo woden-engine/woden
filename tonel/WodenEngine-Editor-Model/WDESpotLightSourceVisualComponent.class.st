@@ -51,6 +51,11 @@ WDESpotLightSourceVisualComponent >> innerCutOffAngle: anObject [
 	innerCutOffAngle := anObject
 ]
 
+{ #category : #testing }
+WDESpotLightSourceVisualComponent >> isSpotLightSourceVisualComponent [
+	^ true
+]
+
 { #category : #initialization }
 WDESpotLightSourceVisualComponent >> loadFromJson: jsonData [
 	super loadFromJson: jsonData.

@@ -38,6 +38,7 @@ WDELevelEditor3DBoxCornerHandle >> createSceneNode [
 		renderable: (self engine resourceCache flatShadedUnitCubeMesh copy
 			depthTestingEnabled: false;
 			depthWriteMask: false;
+			isOpaqueShadowCaster: false;
 			renderPriority: WDCAbstractRenderable renderPriorityEditorTranslucentAfter + 1;
 			setFlatColorSubRenderMode);
 		color: self currentColor;

@@ -127,7 +127,7 @@ WDSSceneRenderer >> prepareSceneRenderingViewportFor: viewport [
 		viewport: viewport;
 		yourself.
 
-	sceneRenderingViewport scene collectVisibleObjectsAndLightIntoViewport: sceneRenderingViewport.
+	sceneRenderingViewport scene collectVisibleObjectsAndLightIntoViewport: sceneRenderingViewport forRenderer: self.
 	sceneRenderingViewport sortVisibleObjects.
 
 	^ sceneRenderingViewport
@@ -331,6 +331,11 @@ WDSSceneRenderer >> shaderSignature [
 { #category : #accessing }
 WDSSceneRenderer >> shaderSignatureClass [
 	self subclassResponsibility
+]
+
+{ #category : #asserting }
+WDSSceneRenderer >> shouldRenderRenderingRenderable: renderingRenderable [
+	^ true
 ]
 
 { #category : #accessing }

@@ -25,6 +25,11 @@ WDEPointLightSourceVisualComponent >> initialize [
 	radius := 10.0.
 ]
 
+{ #category : #testing }
+WDEPointLightSourceVisualComponent >> isPointLightSourceVisualComponent [
+	^ true
+]
+
 { #category : #serialization }
 WDEPointLightSourceVisualComponent >> loadFromJson: jsonData [
 	super loadFromJson: jsonData.

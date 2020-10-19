@@ -75,7 +75,9 @@ WDELevelEditor3DBoxManipulator >> computeManipulationPoints [
 WDELevelEditor3DBoxManipulator >> createSceneNode [
 	self displayBoundingBox isEmpty ifTrue: [ ^ nil ].
 	^ WDSGSpatialObject new
-		renderable: self engine resourceCache flatShadedTranslucentUnitCubeMesh copy setFlatColorSubRenderMode;
+		renderable: (self engine resourceCache flatShadedTranslucentUnitCubeMesh copy 			setFlatColorSubRenderMode; 
+			isOpaqueShadowCaster: false;
+			yourself);
 		color: self currentColor;
 		transform: self displayBoundingBox reversibleTransformToConvertUnitBoxToMe;
 		yourself.
