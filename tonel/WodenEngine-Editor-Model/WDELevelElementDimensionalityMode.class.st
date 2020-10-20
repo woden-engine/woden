@@ -7,6 +7,11 @@ Class {
 	#category : #'WodenEngine-Editor-Model-Level'
 }
 
+{ #category : #accessing }
+WDELevelElementDimensionalityMode class >> alternatives [
+	^ { self mode3D . self mode2D }
+]
+
 { #category : #'as yet unclassified' }
 WDELevelElementDimensionalityMode class >> mode2D [	
 	^ WDELevelElement2DDimensionalityMode uniqueInstance
@@ -42,6 +47,11 @@ WDELevelElementDimensionalityMode >> is3D [
 { #category : #accessing }
 WDELevelElementDimensionalityMode >> name [
 	self subclassResponsibility
+]
+
+{ #category : #printing }
+WDELevelElementDimensionalityMode >> printOn: aStream [
+	aStream nextPutAll: self name
 ]
 
 { #category : #'as yet unclassified' }

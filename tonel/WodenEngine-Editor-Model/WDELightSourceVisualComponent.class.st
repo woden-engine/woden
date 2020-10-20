@@ -14,13 +14,23 @@ WDELightSourceVisualComponent >> accept: visitor [
 ]
 
 { #category : #accessing }
+WDELightSourceVisualComponent >> buildLevelElementPropertyPageWith: builder [
+	super buildLevelElementPropertyPageWith: builder.
+	
+	builder
+		booleanPropertyNamed: 'Cast Shadows' selector: #castShadows;
+		vector3PropertyNamed: 'Intensity' selector: #intensity
+]
+
+{ #category : #accessing }
 WDELightSourceVisualComponent >> castShadows [
 	^ castShadows
 ]
 
 { #category : #accessing }
 WDELightSourceVisualComponent >> castShadows: anObject [
-	castShadows := anObject
+	castShadows := anObject.
+	self changed.
 ]
 
 { #category : #serialization }
@@ -45,7 +55,8 @@ WDELightSourceVisualComponent >> intensity [
 
 { #category : #accessing }
 WDELightSourceVisualComponent >> intensity: anObject [
-	intensity := anObject
+	intensity := anObject.
+	self changed.
 ]
 
 { #category : #testing }

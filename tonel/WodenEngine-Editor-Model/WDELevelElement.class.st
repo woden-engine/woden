@@ -61,6 +61,12 @@ WDELevelElement >> addedToLevel: level [
 ]
 
 { #category : #accessing }
+WDELevelElement >> buildLevelElementPropertyPageWith: builder [
+	builder
+		stringPropertyNamed: 'Name' selector: #name
+]
+
+{ #category : #accessing }
 WDELevelElement >> children [
 	^ #()
 ]
@@ -238,6 +244,14 @@ WDELevelElement >> position: aPosition [
 	"By default do nothing"
 ]
 
+{ #category : #accessing }
+WDELevelElement >> propertyPages [
+	^ {WDEPropertyPageBuilder for: self buildWith: [:builder |
+		builder title: self class jsonTypeName.
+		self buildLevelElementPropertyPageWith: builder
+	]}
+]
+
 { #category : #'ray casting' }
 WDELevelElement >> rayCast: ray [
 	^ nil
@@ -254,9 +268,19 @@ WDELevelElement >> removedFromLevel: level [
 WDELevelElement >> restoreTransformStateMemento: memento [
 ]
 
+{ #category : #'as yet unclassified' }
+WDELevelElement >> sectorDimensionalityChanged [
+	self children do: [ :each | each sectorDimensionalityChanged ]
+]
+
 { #category : #accessing }
 WDELevelElement >> sectorLayer [
 	^ self parent ifNotNil: [ :p | p sectorLayer ]
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelElement >> sectorLayerThicknessChanged [
+	self children do: [ :each | each sectorLayerThicknessChanged ]
 ]
 
 { #category : #memento }

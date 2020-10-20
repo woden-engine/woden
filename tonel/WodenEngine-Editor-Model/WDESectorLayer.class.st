@@ -25,6 +25,15 @@ WDESectorLayer >> addEntity: anEntity [
 ]
 
 { #category : #accessing }
+WDESectorLayer >> buildLevelElementPropertyPageWith: builder [
+	super buildLevelElementPropertyPageWith: builder.
+	
+	builder
+		scalarPropertyNamed: '2D Min Z' selector: #defaultMinZ;
+		scalarPropertyNamed: '2D Max Z' selector: #defaultMaxZ
+]
+
+{ #category : #accessing }
 WDESectorLayer >> children [
 	^ children
 ]
@@ -55,7 +64,8 @@ WDESectorLayer >> defaultMaxZ [
 
 { #category : #accessing }
 WDESectorLayer >> defaultMaxZ: anObject [
-	defaultMaxZ := anObject
+	defaultMaxZ := anObject.
+	self sectorLayerThicknessChanged
 ]
 
 { #category : #accessing }
@@ -65,14 +75,15 @@ WDESectorLayer >> defaultMinZ [
 
 { #category : #accessing }
 WDESectorLayer >> defaultMinZ: anObject [
-	defaultMinZ := anObject
+	defaultMinZ := anObject.
+	self sectorLayerThicknessChanged
 ]
 
 { #category : #'as yet unclassified' }
 WDESectorLayer >> defaultThickness: defaultThickness [
-	self
-		defaultMinZ: defaultThickness * -0.5;
-		defaultMaxZ: defaultThickness * 0.5
+	defaultMinZ := defaultThickness * -0.5.
+	defaultMaxZ := defaultThickness * 0.5.
+	self sectorLayerThicknessChanged
 ]
 
 { #category : #'as yet unclassified' }

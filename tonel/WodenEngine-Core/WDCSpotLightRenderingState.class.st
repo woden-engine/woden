@@ -12,7 +12,7 @@ WDCSpotLightRenderingState >> setupShadowMappingTransforms [
 	| fov lightSource |
 	lightSource := renderingLight lightSource.
 	renderTransform := lightSource transform.
-	fov := lightSource isSpotLight ifTrue: [ lightSource outerSpotCutoff ] ifFalse: [ 45.0 ].
-	shadowProjectionMatrix := (Float32x4x4 reverseDepthPerspectiveFovY: fov * 2.0 aspect: 1.0 near: 0.01 far: 30.0 invertedY: engine projectionInvertedY).
+	fov := lightSource isSpotLight ifTrue: [ lightSource outerSpotCutoff * 2.0 ] ifFalse: [ 90.0 ].
+	shadowProjectionMatrix := Float32x4x4 reverseDepthPerspectiveFovY: fov aspect: 1.0 near: 0.01 far: lightSource radius invertedY: engine projectionInvertedY.
 
 ]

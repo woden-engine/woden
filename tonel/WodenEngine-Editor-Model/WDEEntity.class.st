@@ -100,6 +100,17 @@ WDEEntity >> boundingBox [
 ]
 
 { #category : #accessing }
+WDEEntity >> buildLevelElementPropertyPageWith: builder [
+	super buildLevelElementPropertyPageWith: builder.
+	
+	builder
+		stringPropertyNamed: 'Class Name' selector: #className;
+		vector3PropertyNamed: 'Position' selector: #position;
+		quaternionPropertyNamed: 'Orientation' selector: #orientation;
+		propertyNamed: 'Dimensionality Mode' selector: #dimensionalityMode alternatives: [WDELevelElementDimensionalityMode alternatives]
+]
+
+{ #category : #accessing }
 WDEEntity >> children [
 	^ components
 ]
@@ -398,6 +409,11 @@ WDEEntity >> postCopy [
 		
 ]
 
+{ #category : #accessing }
+WDEEntity >> propertyPages [
+	^ (super propertyPages , (self components collect: #propertyPages)) flattened
+]
+
 { #category : #'ray casting' }
 WDEEntity >> rayCast: ray [
 	| distance |
@@ -421,6 +437,12 @@ WDEEntity >> restoreTransformStateMemento: memento [
 	components doWithIndex: [ :eachComponent :index |
 		eachComponent restoreTransformStateMemento: (componentMementos at: index)
 	]
+]
+
+{ #category : #'as yet unclassified' }
+WDEEntity >> sectorLayerThicknessChanged [
+	self is2DLevelElement ifTrue: [ self localBoundingBoxChanged; transformChanged ].
+	super sectorLayerThicknessChanged
 ]
 
 { #category : #accessing }

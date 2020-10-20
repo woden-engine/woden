@@ -14,6 +14,16 @@ WDESpotLightSourceVisualComponent >> accept: visitor [
 	^ visitor visitSpotLightSourceVisualComponent: self
 ]
 
+{ #category : #accessing }
+WDESpotLightSourceVisualComponent >> buildLevelElementPropertyPageWith: builder [
+	super buildLevelElementPropertyPageWith: builder.
+	
+	builder
+		scalarPropertyNamed: 'Spot Inner Angle' selector: #innerCutOffAngle;
+		scalarPropertyNamed: 'Spot Outer Angle' selector: #outerCutOffAngle;
+		scalarPropertyNamed: 'Spot Exponent' selector: #exponent
+]
+
 { #category : #serialization }
 WDESpotLightSourceVisualComponent >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
@@ -30,7 +40,8 @@ WDESpotLightSourceVisualComponent >> exponent [
 
 { #category : #accessing }
 WDESpotLightSourceVisualComponent >> exponent: anObject [
-	exponent := anObject
+	exponent := anObject.
+	self changed.
 ]
 
 { #category : #initialization }
@@ -48,7 +59,8 @@ WDESpotLightSourceVisualComponent >> innerCutOffAngle [
 
 { #category : #accessing }
 WDESpotLightSourceVisualComponent >> innerCutOffAngle: anObject [
-	innerCutOffAngle := anObject
+	innerCutOffAngle := anObject.
+	self changed.
 ]
 
 { #category : #testing }
@@ -71,5 +83,6 @@ WDESpotLightSourceVisualComponent >> outerCutOffAngle [
 
 { #category : #accessing }
 WDESpotLightSourceVisualComponent >> outerCutOffAngle: anObject [
-	outerCutOffAngle := anObject
+	outerCutOffAngle := anObject.
+	self changed.
 ]

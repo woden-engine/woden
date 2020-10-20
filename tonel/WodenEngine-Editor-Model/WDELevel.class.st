@@ -139,6 +139,13 @@ WDELevel >> whenAddedElementDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+WDELevel >> whenAddedOrRemovedElementDo: aBlock [
+	^ self
+		whenAddedElementDo: aBlock;
+		whenRemovedElementDo: aBlock
+]
+
+{ #category : #'as yet unclassified' }
 WDELevel >> whenRemovedElementDo: aBlock [
 	^ announcer when: WDERemovedElementAnnouncement do: [ :ann | aBlock cull: ann element ]
 ]

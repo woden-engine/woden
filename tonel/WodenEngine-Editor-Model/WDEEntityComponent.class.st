@@ -46,6 +46,18 @@ WDEEntityComponent >> postCopy [
 	changedEventHolder := false asValueHolder.
 ]
 
+{ #category : #'as yet unclassified' }
+WDEEntityComponent >> sectorDimensionalityChanged [
+	self changed.
+	super sectorDimensionalityChanged.
+]
+
+{ #category : #'as yet unclassified' }
+WDEEntityComponent >> sectorLayerThicknessChanged [
+	self changed.
+	super sectorLayerThicknessChanged.
+]
+
 { #category : #initialization }
 WDEEntityComponent >> setVisualColor: aColor [
 	"Nop by default"

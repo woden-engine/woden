@@ -12,6 +12,14 @@ WDEPointLightSourceVisualComponent >> accept: visitor [
 	^ visitor visitPointLightSourceVisualComponent: self
 ]
 
+{ #category : #accessing }
+WDEPointLightSourceVisualComponent >> buildLevelElementPropertyPageWith: builder [
+	super buildLevelElementPropertyPageWith: builder.
+	
+	builder
+		scalarPropertyNamed: 'Radius' selector: #radius
+]
+
 { #category : #serialization }
 WDEPointLightSourceVisualComponent >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
@@ -44,5 +52,6 @@ WDEPointLightSourceVisualComponent >> radius [
 
 { #category : #accessing }
 WDEPointLightSourceVisualComponent >> radius: anObject [
-	radius := anObject
+	radius := anObject.
+	self changed.
 ]

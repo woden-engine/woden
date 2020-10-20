@@ -24,6 +24,14 @@ WDESector >> addLayer: aLayer [
 ]
 
 { #category : #accessing }
+WDESector >> buildLevelElementPropertyPageWith: builder [
+	super buildLevelElementPropertyPageWith: builder.
+	
+	builder
+		booleanPropertyNamed: 'Is 2D' selector: #isSector2D
+]
+
+{ #category : #accessing }
 WDESector >> children [
 	^ layers
 ]
@@ -60,7 +68,8 @@ WDESector >> isSector2D [
 
 { #category : #accessing }
 WDESector >> isSector2D: anObject [
-	isSector2D := anObject
+	isSector2D := anObject.
+	self sectorDimensionalityChanged.
 ]
 
 { #category : #accessing }

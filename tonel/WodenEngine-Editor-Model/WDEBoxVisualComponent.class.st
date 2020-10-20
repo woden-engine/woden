@@ -30,6 +30,14 @@ WDEBoxVisualComponent >> box: anObject [
 ]
 
 { #category : #accessing }
+WDEBoxVisualComponent >> buildLevelElementPropertyPageWith: builder [
+	super buildLevelElementPropertyPageWith: builder.
+	
+	builder
+		linearColor4PropertyNamed: 'Color' selector: #color
+]
+
+{ #category : #accessing }
 WDEBoxVisualComponent >> color [
 	^ color
 ]

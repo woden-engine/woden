@@ -24,6 +24,12 @@ WDELevelEditorSelection >> initialize [
 ]
 
 { #category : #accessing }
+WDELevelEditorSelection >> propertyPages [
+	selectedItems size = 1 ifTrue: [ ^ selectedItems first propertyPages ].
+	^ #()
+]
+
+{ #category : #accessing }
 WDELevelEditorSelection >> selectedItems [
 	^ selectedItems
 ]

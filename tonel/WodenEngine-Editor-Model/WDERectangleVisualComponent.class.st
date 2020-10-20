@@ -19,6 +19,14 @@ WDERectangleVisualComponent >> boundingRectangle [
 ]
 
 { #category : #accessing }
+WDERectangleVisualComponent >> buildLevelElementPropertyPageWith: builder [
+	super buildLevelElementPropertyPageWith: builder.
+	
+	builder
+		linearColor4PropertyNamed: 'Color' selector: #color
+]
+
+{ #category : #accessing }
 WDERectangleVisualComponent >> color [
 	^ color
 ]

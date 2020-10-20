@@ -8,7 +8,8 @@ Class {
 		'wodenApplication',
 		'mainMenuBar',
 		'mainStatusBar',
-		'mainToolbar'
+		'mainToolbar',
+		'elementProperties'
 	],
 	#category : #'WodenEngine-Editor-UI'
 }
@@ -25,7 +26,11 @@ WDELevelEditor class >> defaultSpec [
 				add: #levelTreeView;
 				add: #elementTemplateList;
 				yourself);
-			add: #content;
+			add: (	SpPanedLayout newHorizontal
+				position: 4/5;
+				add: #content;
+				add: #elementProperties;
+				yourself)
 			yourself);
 		add: #mainStatusBar withConstraints: [ :constraints | constraints height: self toolbarHeight ];
 		yourself
@@ -254,6 +259,11 @@ WDELevelEditor >> editMenu [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+WDELevelEditor >> elementProperties [
+	^ elementProperties
+]
+
 { #category : #accessing }
 WDELevelEditor >> elementTemplateList [
 	^ elementTemplateList
@@ -319,6 +329,7 @@ WDELevelEditor >> initializePresenters [
 	content
 		wodenApplication: wodenApplication;
 		wodenViewClass: WDELevelEditorSceneView.
+	elementProperties := self instantiate: WDELevelElementPropertyEditor.
 	levelTreeView := self newTreeTable.
 	levelTreeView
 		addColumn: (SpCompositeTableColumn new
@@ -381,14 +392,18 @@ WDELevelEditor >> mainToolbar [
 WDELevelEditor >> modelChanged [
 	levelTreeView roots: self model level children.
 	elementTemplateList roots: WDELevelElementTemplateProvider allTopLevelTemplateCategories.
+	elementProperties model: self model selection.
 	self model
 		whenSelectionChangedDo: [ :selection |
 			levelTreeView selectedItems asSet = selection selectedItems asSet ifFalse: [
 				levelTreeView unselectAll; selectItems: selection selectedItems
-			]
+			].
+		
+			elementProperties model: selection
 		];
 		whenLevelChangedDo: [ :newLevel |
-			levelTreeView roots: self model level children
+			levelTreeView roots: self model level children.
+			self model level whenAddedOrRemovedElementDo: [levelTreeView roots: self model level children]
 		]
 		
 ]
