@@ -155,7 +155,11 @@ WDAMorphicViewWindow >> hasStencil [
 
 { #category : #'event handling' }
 WDAMorphicViewWindow >> keySymbolFor: key [
-	^ KeySymbolMap at: key name ifAbsent: [ OSK_UNKNOWN ]
+	^ (OSKeySymbols respondsTo: #mapKeySymbolNameToValue:) ifTrue: [
+		OSKeySymbols mapKeySymbolNameToValue: key name
+	] ifFalse: [
+		KeySymbolMap at: key name ifAbsent: [ OSK_UNKNOWN ]
+	] 
 ]
 
 { #category : #'event handling' }
