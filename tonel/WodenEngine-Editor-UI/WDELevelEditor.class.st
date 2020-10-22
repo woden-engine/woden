@@ -436,6 +436,11 @@ WDELevelEditor >> shadingMenu [
 		];
 		addItem: [ :item |
 			item
+				name: 'Material validation';
+				action: [ self contentView activateMaterialValidation ]
+		];
+		addItem: [ :item |
+			item
 				name: 'Shaded color';
 				action: [ self contentView activateShadedColor ]
 		];

@@ -35,6 +35,18 @@ WDCMetallicRoughnessMaterial >> forwardFragmentShaderFor: stateTracker [
 		^ self shaderLibrary getFragmentStage: #forwardFlat_color
 	].
 
+	stateTracker submode isMaterialValidation ifTrue: [
+		^ albedoTexture ifNotNil: [ 
+				metallicRoughnessTexture ifNotNil: [
+					self shaderLibrary getFragmentStage: #forwardValidation_albedoMetallic
+				] ifNil: [
+					self shaderLibrary getFragmentStage: #forwardValidation_albedo
+				]		
+		] ifNil: [
+			self shaderLibrary getFragmentStage: #forwardValidation_color
+		].
+	].
+
 	stateTracker submode isShaded ifFalse: [ 
 		(stateTracker submode hasNoTextures or: [ albedoTexture isNil ]) ifTrue: [
 			^ self shaderLibrary getFragmentStage: #forwardFlat_color

@@ -28,6 +28,11 @@ WDCStateTrackerSubRenderMode class >> isAbstract [
 ]
 
 { #category : #'as yet unclassified' }
+WDCStateTrackerSubRenderMode class >> materialValidation [
+	^ WDCStateTrackerMaterialValidationRenderMode uniqueInstance
+]
+
+{ #category : #'as yet unclassified' }
 WDCStateTrackerSubRenderMode class >> shadedColor [
 	^ WDCStateTrackerShadedColorRenderMode uniqueInstance
 ]
@@ -60,6 +65,11 @@ WDCStateTrackerSubRenderMode >> isFlatTextured [
 
 { #category : #testing }
 WDCStateTrackerSubRenderMode >> isFullShaded [
+	^ false
+]
+
+{ #category : #testing }
+WDCStateTrackerSubRenderMode >> isMaterialValidation [
 	^ false
 ]
 

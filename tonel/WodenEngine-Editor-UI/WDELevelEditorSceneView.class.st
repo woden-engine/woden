@@ -50,6 +50,11 @@ WDELevelEditorSceneView >> activateFullShaded [
 	^ self renderSubMode: WDCStateTrackerSubRenderMode fullShaded
 ]
 
+{ #category : #'sub render mode' }
+WDELevelEditorSceneView >> activateMaterialValidation [
+	^ self renderSubMode: WDCStateTrackerSubRenderMode materialValidation
+]
+
 { #category : #'editor modes' }
 WDELevelEditorSceneView >> activateObjectMode [
 	self activeEditionMode: (WDELevelEditorViewObjectEditionMode for: self)
