@@ -308,6 +308,11 @@ WDELevelElement >> sectorLayerThicknessChanged [
 	self children do: [ :each | each sectorLayerThicknessChanged ]
 ]
 
+{ #category : #initialization }
+WDELevelElement >> setVisualColor: aColor [
+	"By default do nothing here."
+]
+
 { #category : #memento }
 WDELevelElement >> transformStateMemento [
 	^ nil

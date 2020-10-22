@@ -1,9 +1,6 @@
 Class {
 	#name : #WDEPropertyPagePresenter,
 	#superclass : #SpPresenterWithModel,
-	#instVars : [
-		'title'
-	],
 	#category : #'WodenEngine-Editor-UI'
 }
 
@@ -11,21 +8,12 @@ Class {
 WDEPropertyPagePresenter class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		beNotHomogeneous;
-		add: #title expand: false;
 		yourself
 ]
 
 { #category : #initialization }
-WDEPropertyPagePresenter >> initializePresenters [
-	title := self newLabel.
-
-]
-
-{ #category : #initialization }
 WDEPropertyPagePresenter >> modelChanged [
-	| newLayout grid |
-	newLayout := self class defaultSpec.
-	title label: self model title.
+	| grid |
 	grid := SpGridLayout new
 		beColumnHomogeneous;
 		beRowNotHomogeneous;
@@ -36,6 +24,5 @@ WDEPropertyPagePresenter >> modelChanged [
 			add: (self newLabel label: each name) at: 1@row;
 			add: (each buildSpecPresenter) at: 2@row
 	].
-	newLayout add: grid.
-	self layout: newLayout
+	self layout: grid
 ]

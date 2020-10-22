@@ -1,13 +1,13 @@
 Class {
 	#name : #WDELevelGenericElementTemplateProvider,
 	#superclass : #WDELevelElementTemplateProvider,
-	#category : #'WodenEngine-Editor-Model-Templates'
+	#category : #'WodenEngine-Editor-Model-Palettes'
 }
 
 { #category : #'as yet unclassified' }
 WDELevelGenericElementTemplateProvider >> genericCategory [
 	| category |
-	category :=  WDELevelElementTemplateCategory new
+	category :=  WDEPaletteCategory new
 		name: 'Basic Entities'.
 		
 	{
@@ -29,7 +29,7 @@ WDELevelGenericElementTemplateProvider >> genericCategory [
 ]
 
 { #category : #'as yet unclassified' }
-WDELevelGenericElementTemplateProvider >> topLevelTemplateCategories [
+WDELevelGenericElementTemplateProvider >> topLevelPaletteCategories [
 	^ {
 		self genericCategory
 	}

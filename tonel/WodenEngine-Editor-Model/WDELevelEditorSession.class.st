@@ -242,6 +242,21 @@ WDELevelEditorSession >> toggleElementsFromSelection: elements [
 	self selection: (WDELevelEditorSelection for: newSelectedItems asArray)
 ]
 
+{ #category : #palettes }
+WDELevelEditorSession >> topLevelElementTemplateCategories [
+	^ WDELevelElementTemplateProvider allTopLevelPaletteCategories
+]
+
+{ #category : #palettes }
+WDELevelEditorSession >> topLevelLightSourcePaletteCategories [
+	^ WDELightSourcePaletteProvider allTopLevelPaletteCategories
+]
+
+{ #category : #palettes }
+WDELevelEditorSession >> topMaterialPaletteCategories [
+	^ WDEMaterialPaletteProvider allTopLevelPaletteCategories
+]
+
 { #category : #'undo-redo' }
 WDELevelEditorSession >> undo [
 	| operation |

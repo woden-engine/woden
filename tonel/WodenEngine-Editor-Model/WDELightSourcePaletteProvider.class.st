@@ -1,5 +1,5 @@
 Class {
-	#name : #WDELevelElementTemplateProvider,
+	#name : #WDELightSourcePaletteProvider,
 	#superclass : #WDEPaletteProvider,
 	#category : #'WodenEngine-Editor-Model-Palettes'
 }

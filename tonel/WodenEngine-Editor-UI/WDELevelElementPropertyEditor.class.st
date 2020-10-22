@@ -1,24 +1,39 @@
 Class {
 	#name : #WDELevelElementPropertyEditor,
 	#superclass : #SpPresenterWithModel,
+	#instVars : [
+		'propertiesNotebook'
+	],
 	#category : #'WodenEngine-Editor-UI'
 }
 
 { #category : #specs }
 WDELevelElementPropertyEditor class >> defaultSpec [
 	^ SpBoxLayout newVertical
-		beNotHomogeneous;
+		add: #propertiesNotebook;
 		yourself
 ]
 
 { #category : #initialization }
+WDELevelElementPropertyEditor >> initializePresenters [
+	propertiesNotebook := self newNotebook.
+]
+
+{ #category : #initialization }
 WDELevelElementPropertyEditor >> modelChanged [
-	| newLayout |
-	newLayout := self defaultSpec.
+	propertiesNotebook removeAll.
 	self propertyPages do: [ :each |
-		newLayout add: (WDEPropertyPagePresenter on: each)
+		propertiesNotebook addPageTitle: each title provider: [ WDEPropertyPagePresenter on: each].
 	].
-	self layout: newLayout
+
+	propertiesNotebook pages ifNotEmpty: [
+		propertiesNotebook selectPageIndex: 1
+	]
+]
+
+{ #category : #accessing }
+WDELevelElementPropertyEditor >> propertiesNotebook [
+	^ propertiesNotebook
 ]
 
 { #category : #initialization }

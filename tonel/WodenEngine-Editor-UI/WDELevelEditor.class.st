@@ -349,20 +349,12 @@ WDELevelEditor >> initializePresenters [
 			self model selection: (WDELevelEditorSelection for: selection selectedItems)
 		];
 		contextMenu: [ self treeViewMenu ].
-	elementTemplateList := self newTreeTable.
-	elementTemplateList
-		addColumn: (SpCompositeTableColumn new
-			title: 'Name';
-			addColumn: (SpStringTableColumn evaluated: [ :node | node name ]);
-			yourself
-		);
-		hideColumnHeaders;
-		children: [ :node | node children ];
-		whenSelectionChangedDo: [ :selection |
-			self model activeLevelElementTemplate: (selection selectedItem ifNotNil: [:i | i asLevelElementTemplate])
-		].
+	elementTemplateList := WDELevelEditorElementTemplatePalettePresenter on: self model.
+	
 	paletteNotebook := self newNotebook.
-
+	paletteNotebook
+		addPageTitle: 'Materials' provider: [ WDELevelEditorMaterialPalettePresenter on: self model];
+		addPageTitle: 'Light Sources' provider: [ WDELevelEditorLightSourcePalettePresenter on: self model].
 ]
 
 { #category : #initialization }
@@ -394,7 +386,6 @@ WDELevelEditor >> mainToolbar [
 { #category : #initialization }
 WDELevelEditor >> modelChanged [
 	levelTreeView roots: self model level children.
-	elementTemplateList roots: WDELevelElementTemplateProvider allTopLevelTemplateCategories.
 	elementProperties model: self model selection.
 	self model
 		whenSelectionChangedDo: [ :selection |

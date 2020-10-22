@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'prototype'
 	],
-	#category : #'WodenEngine-Editor-Model-Templates'
+	#category : #'WodenEngine-Editor-Model-Palettes'
 }
 
 { #category : #'as yet unclassified' }
