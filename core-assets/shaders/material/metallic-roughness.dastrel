@@ -295,9 +295,6 @@ code_block(fragment) depthNormalMask_fragment
 
 code_block(fragment) forwardFlat_color
 {
-    let N = normalize(FragmentInput.normal);
-    let V = normalize(-FragmentInput.position);
-
 	let albedo = FragmentInput.color;
 	if(albedo.a < MaterialState.alphaCutoff)
 		discard;
@@ -307,14 +304,39 @@ code_block(fragment) forwardFlat_color
 
 code_block(fragment) forwardFlat_albedo
 {
-    let N = normalize(FragmentInput.normal);
-    let V = normalize(-FragmentInput.position);
-
     let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
 	if(albedo.a < MaterialState.alphaCutoff)
 		discard;
 
     forwardFlatOutput color: albedo;
+}
+
+code_block(fragment) forwardValidation_color
+{
+	let albedo = FragmentInput.color;
+	if(albedo.a < MaterialState.alphaCutoff)
+		discard;
+
+    forwardValidationOutput albedo: albedo metallic: MaterialState.metallicFactor;
+}
+
+code_block(fragment) forwardValidation_albedo
+{
+    let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
+	if(albedo.a < MaterialState.alphaCutoff)
+		discard;
+
+    forwardValidationOutput albedo: albedo metallic: MaterialState.metallicFactor;
+}
+
+code_block(fragment) forwardValidation_albedoMetallic
+{
+    let albedo = FragmentInput.color * albedoSampler.sample(albedoTexture, FragmentInput.texcoord);
+    let metallic = MaterialState.metallicFactor * albedoSampler.sample(metallicRoughnessTexture, FragmentInput.texcoord).b;
+	if(albedo.a < MaterialState.alphaCutoff)
+		discard;
+
+    forwardValidationOutput albedo: albedo metallic: metallic;
 }
 
 code_block(fragment) forward_color

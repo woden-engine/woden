@@ -15,7 +15,7 @@ code_block forwardLightingOutput
 	in occlusion: float;
 
 	let Cdiff = albedo.rgb*(1.0f - max(fresnel.r, max(fresnel.g, fresnel.b)));
-	
+
     color: FragmentStage.colorOutput0 <== forwardLightingModel
         emission: emission albedo: albedo.rgb
         Cdiff: Cdiff
@@ -65,4 +65,32 @@ code_block forwardFlatOutput
     in color: float4;
 
     FragmentStage.colorOutput0 = color;
+}
+
+code_block forwardValidationOutput
+{
+    in albedo: float4;
+    in metallic: float;
+
+    let albedoLuma = dot(albedo.rgb, float3(0.2126f, 0.7152f, 0.0722f));
+    let result = float4(albedoLuma, albedoLuma, albedoLuma, albedo.a);
+    if(metallic == 0.0f) {
+        if (albedoLuma < 0.03189603307301152f)
+            result = float4(1.0f, 0.0f, 0.0f, albedo.a);
+        else if(albedoLuma > 0.8962693533742664f)
+            result = float4(0.0f, 0.0f, 1.0f, albedo.a);
+    }
+    else if(metallic == 1.0f)
+    {
+        if (albedoLuma < 0.49102084984783556f)
+            result = float4(1.0f, 0.0f, 0.0f, albedo.a);
+        else if(albedoLuma > 1.0f)
+            result = float4(0.0f, 0.0f, 1.0f, albedo.a);
+    }
+    else
+    {
+        result = float4(1.0f, 1.0f, 0.0f, albedo.a);
+    }
+
+    FragmentStage.colorOutput0 = result;
 }
