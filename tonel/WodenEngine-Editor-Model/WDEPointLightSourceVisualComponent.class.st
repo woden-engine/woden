@@ -17,7 +17,7 @@ WDEPointLightSourceVisualComponent >> buildLevelElementPropertyPageWith: builder
 	super buildLevelElementPropertyPageWith: builder.
 	
 	builder
-		scalarPropertyNamed: 'Radius' selector: #radius
+		scalarPropertyNamed: 'Radius' selector: #radius min: 0.0
 ]
 
 { #category : #serialization }

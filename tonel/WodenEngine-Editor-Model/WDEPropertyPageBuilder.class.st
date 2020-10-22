@@ -79,6 +79,21 @@ WDEPropertyPageBuilder >> scalarPropertyNamed: name selector: selector [
 ]
 
 { #category : #building }
+WDEPropertyPageBuilder >> scalarPropertyNamed: name selector: selector min: minValue [
+	^ self addProperty: ((WDEScalarProperty name: name selector: selector)
+		minimum: minValue;
+		yourself)
+]
+
+{ #category : #building }
+WDEPropertyPageBuilder >> scalarPropertyNamed: name selector: selector min: minValue max: maxValue [
+	^ self addProperty: ((WDEScalarProperty name: name selector: selector)
+		minimum: minValue;
+		maximum: maxValue;
+		yourself)
+]
+
+{ #category : #building }
 WDEPropertyPageBuilder >> stringPropertyNamed: name selector: selector [
 	^ self addProperty: (WDEStringProperty name: name selector: selector)
 ]

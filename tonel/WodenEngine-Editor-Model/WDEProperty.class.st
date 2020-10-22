@@ -52,6 +52,21 @@ WDEProperty >> object: anObject [
 	object := anObject
 ]
 
+{ #category : #parsing }
+WDEProperty >> parseText: text [
+	^ text
+]
+
+{ #category : #parsing }
+WDEProperty >> parseTextAndSetValue: text [
+	| parsedValue |
+	parsedValue :=  [
+		self parseText: text
+	] on: Error do: [ ^ self ].
+	
+	self setValue: parsedValue.
+]
+
 { #category : #'as yet unclassified' }
 WDEProperty >> readSelector [
 	^ self selector

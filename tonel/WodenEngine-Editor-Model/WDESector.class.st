@@ -14,6 +14,11 @@ WDESector >> accept: visitor [
 	^ visitor visitSector: self
 ]
 
+{ #category : #removing }
+WDESector >> addChild: aChild [
+	self addLayer: aChild
+]
+
 { #category : #adding }
 WDESector >> addLayer: aLayer [
 	self assert: aLayer sector isNil.
@@ -102,4 +107,18 @@ WDESector >> loadFromJson: jsonData [
 { #category : #accessing }
 WDESector >> parent [
 	^ level
+]
+
+{ #category : #removing }
+WDESector >> removeChild: aChild [
+	self removeLayer: aChild
+]
+
+{ #category : #adding }
+WDESector >> removeLayer: aLayer [
+	self assert: aLayer sector == self.
+	layers remove: aLayer.
+	level ifNotNil: [ aLayer removedFromLevel: level ].
+	aLayer sector: nil.
+
 ]

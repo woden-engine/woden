@@ -9,7 +9,8 @@ Class {
 		'mainMenuBar',
 		'mainStatusBar',
 		'mainToolbar',
-		'elementProperties'
+		'elementProperties',
+		'paletteNotebook'
 	],
 	#category : #'WodenEngine-Editor-UI'
 }
@@ -29,7 +30,11 @@ WDELevelEditor class >> defaultSpec [
 			add: (	SpPanedLayout newHorizontal
 				position: 4/5;
 				add: #content;
-				add: #elementProperties;
+				add: (SpPanedLayout newVertical
+					position: 2/3;
+					add: #elementProperties;
+					add: #paletteNotebook;
+					yourself)
 				yourself)
 			yourself);
 		add: #mainStatusBar withConstraints: [ :constraints | constraints height: self toolbarHeight ];
@@ -83,7 +88,7 @@ WDELevelEditor >> actionPaste [
 
 { #category : #'main actions' }
 WDELevelEditor >> actionRedo [
-	self inform: 'TODO: actionRedo'
+	self model redo
 ]
 
 { #category : #'main actions' }
@@ -116,7 +121,7 @@ WDELevelEditor >> actionSaveFileAs [
 
 { #category : #'main actions' }
 WDELevelEditor >> actionUndo [
-	self inform: 'TODO: actionUndo'
+	self model undo
 ]
 
 { #category : #menu }
@@ -342,9 +347,8 @@ WDELevelEditor >> initializePresenters [
 		beMultipleSelection;
 		whenSelectionChangedDo: [ :selection |
 			self model selection: (WDELevelEditorSelection for: selection selectedItems)
-		].
-		"contextMenu: [ self treeViewMenu ];
-		whenActivatedDo: [ :selection | self treeViewItemActivated: selection selectedItem ]"
+		];
+		contextMenu: [ self treeViewMenu ].
 	elementTemplateList := self newTreeTable.
 	elementTemplateList
 		addColumn: (SpCompositeTableColumn new
@@ -357,8 +361,7 @@ WDELevelEditor >> initializePresenters [
 		whenSelectionChangedDo: [ :selection |
 			self model activeLevelElementTemplate: (selection selectedItem ifNotNil: [:i | i asLevelElementTemplate])
 		].
-		"contextMenu: [ self treeViewMenu ];
-		whenActivatedDo: [ :selection | self treeViewItemActivated: selection selectedItem ]"
+	paletteNotebook := self newNotebook.
 
 ]
 
@@ -408,6 +411,11 @@ WDELevelEditor >> modelChanged [
 		
 ]
 
+{ #category : #accessing }
+WDELevelEditor >> paletteNotebook [
+	^ paletteNotebook
+]
+
 { #category : #menu }
 WDELevelEditor >> shadingMenu [
 	^ self newMenu
@@ -437,6 +445,11 @@ WDELevelEditor >> shadingMenu [
 				action: [ self contentView activateFullShaded ]
 		];
 		yourself
+]
+
+{ #category : #initialization }
+WDELevelEditor >> treeViewMenu [
+	^ self model buildSelectionContextMenu
 ]
 
 { #category : #menu }

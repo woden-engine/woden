@@ -69,7 +69,7 @@ WDELevelEditorElementSceneNodeBuilder >> lightSourceDisplayMeshColor [
 { #category : #'visual components' }
 WDELevelEditorElementSceneNodeBuilder >> setLightSource: node stateFromComponent: component [
 	node
-		intensity: (Float32x4 xyz: component intensity w: 1.0);
+		intensity: (Float32x4 xyz: component coloredIntensity w: 0.0);
 		castShadows: component castShadows;
 		radius: component radius.
 	component isSpotLightSourceVisualComponent ifTrue: [

@@ -54,6 +54,11 @@ WDELevelElement >> accept: visitor [
 	^ self subclassResponsibility
 ]
 
+{ #category : #adding }
+WDELevelElement >> addChild: aChild [
+	self subclassResponsibility
+]
+
 { #category : #'as yet unclassified' }
 WDELevelElement >> addedToLevel: level [
 	level announceAddedElement: self.
@@ -190,6 +195,11 @@ WDELevelElement >> isSectorLayer [
 ]
 
 { #category : #testing }
+WDELevelElement >> isSectorLayerChild [
+	^ (self isSector or: [ self isLevel or: [self isSectorLayer] ]) not
+]
+
+{ #category : #testing }
 WDELevelElement >> isSpotLightSourceVisualComponent [
 	^ false
 ]
@@ -257,6 +267,16 @@ WDELevelElement >> rayCast: ray [
 	^ nil
 ]
 
+{ #category : #removing }
+WDELevelElement >> removeChild: aChild [
+	self subclassResponsibility
+]
+
+{ #category : #removing }
+WDELevelElement >> removeFromParent [
+	^ self parent removeChild: self
+]
+
 { #category : #'as yet unclassified' }
 WDELevelElement >> removedFromLevel: level [
 	self children do: [ :each | each removedFromLevel: level ].
@@ -266,6 +286,11 @@ WDELevelElement >> removedFromLevel: level [
 
 { #category : #memento }
 WDELevelElement >> restoreTransformStateMemento: memento [
+]
+
+{ #category : #accessing }
+WDELevelElement >> sector [
+	^ self parent ifNotNil: [ :p | p sector ]
 ]
 
 { #category : #'as yet unclassified' }

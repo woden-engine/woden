@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'selectedItems'
 	],
-	#category : #'WodenEngine-Editor-Model-Level'
+	#category : #'WodenEngine-Editor-Model-Session'
 }
 
 { #category : #requirements }
@@ -15,6 +15,31 @@ WDELevelEditorSelection class >> empty [
 { #category : #'instance creation' }
 WDELevelEditorSelection class >> for: selectedItems [
 	^ self new selectedItems: selectedItems
+]
+
+{ #category : #actions }
+WDELevelEditorSelection >> deleteSelectedItemsInSession: levelSession [
+	| oldParents |
+	oldParents := selectedItems collect: [ :each | each parent ].
+	self assert: (oldParents allSatisfy: [ :each | each isNotNil ]).
+	levelSession
+		doWith: [
+			levelSession selection: self class empty.
+			selectedItems do: [ :each | each removeFromParent ]
+		]
+		undoWith: [
+			selectedItems doWithIndex: [:removedItem :parentIndex |
+				| oldParent |
+				oldParent := oldParents at: parentIndex.
+				oldParent addChild: removedItem
+			].
+			levelSession selection: self
+		]
+]
+
+{ #category : #actions }
+WDELevelEditorSelection >> duplicateSelectedItemsInSession: levelSession [
+	self inform: 'TODO: duplicateSelectedItemsInSession:'
 ]
 
 { #category : #initialization }

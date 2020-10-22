@@ -15,6 +15,11 @@ WDESectorLayer >> accept: visitor [
 	^ visitor visitSectorLayer: self
 ]
 
+{ #category : #removing }
+WDESectorLayer >> addChild: aChild [
+	self addEntity: aChild
+]
+
 { #category : #adding }
 WDESectorLayer >> addEntity: anEntity [
 	self assert: anEntity isEntity.
@@ -94,6 +99,8 @@ WDESectorLayer >> defaultZ [
 { #category : #serialization }
 WDESectorLayer >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
+		#defaultMinZ . self defaultMinZ.
+		#defaultMaxZ . self defaultMaxZ.
 		#children . children collect: [ :each | each encodeForJSON ].
 	}
 ]
@@ -108,7 +115,7 @@ WDESectorLayer >> initialize [
 	super initialize.
 	children := OrderedCollection new.
 	defaultMinZ := -1.0.
-	defaultMaxZ := -1.0.
+	defaultMaxZ := 1.0.
 ]
 
 { #category : #'as yet unclassified' }
@@ -195,8 +202,8 @@ WDESectorLayer >> isSectorLayer [
 WDESectorLayer >> loadFromJson: jsonData [
 	super loadFromJson: jsonData.
 	self
-		defaultMinZ: (jsonData at: 'defaultMinZ' ifAbsent: [-1.0]);
-		defaultMaxZ: (jsonData at: 'defaultMaxZ' ifAbsent: [1.0]).
+		defaultMinZ: (jsonData at: 'defaultMinZ' ifAbsent: [self defaultMinZ]);
+		defaultMaxZ: (jsonData at: 'defaultMaxZ' ifAbsent: [self defaultMaxZ]).
 
 	jsonData at: 'children' ifPresent: [ :childrenData |
 		childrenData do: [ :each |
@@ -208,6 +215,20 @@ WDESectorLayer >> loadFromJson: jsonData [
 { #category : #accessing }
 WDESectorLayer >> parent [
 	^ sector
+]
+
+{ #category : #removing }
+WDESectorLayer >> removeChild: aChild [
+	self removeEntity: aChild
+]
+
+{ #category : #adding }
+WDESectorLayer >> removeEntity: anEntity [
+	self assert: anEntity isEntity.
+	self assert: anEntity sectorLayer == self.
+	children remove: anEntity.
+	self level ifNotNil: [ :level | anEntity removedFromLevel: level ].
+	anEntity parent: nil.
 ]
 
 { #category : #accessing }

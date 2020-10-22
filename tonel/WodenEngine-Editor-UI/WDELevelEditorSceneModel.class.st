@@ -248,7 +248,10 @@ WDELevelEditorSceneModel >> levelChanged [
 	self level
 		whenAddedElementDo: [ :element |
 			self addElementToScene: element
-		].
+		];
+		whenRemovedElementDo: [ :element |
+			self removeElementFromScene: element
+		]
 ]
 
 { #category : #accessing }
@@ -310,6 +313,19 @@ WDELevelEditorSceneModel >> rayCastForManipulator: ray [
 	].
 
 	^ bestResult value
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneModel >> removeElementFromScene: element [
+	levelElementToSelectionBoxNode at: element ifPresent: [ :node |
+		node removeFromScene.
+		levelElementToSelectionBoxNode removeKey: element
+	].
+
+	levelElementToSceneNodeDictionary at: element ifPresent: [ :node |
+		node removeFromScene.
+		levelElementToSceneNodeDictionary removeKey: element
+	].
 ]
 
 { #category : #utiltity }

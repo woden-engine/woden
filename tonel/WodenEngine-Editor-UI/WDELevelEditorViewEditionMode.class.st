@@ -7,11 +7,27 @@ Class {
 { #category : #'event handling' }
 WDELevelEditorViewEditionMode >> onKeyDown: event [
 	self supportsManipulators ifTrue: [ 
-		(event symbol = OSK_RETURN or: [event symbol = OSK_i]) ifTrue: [ 
+		event symbol = OSK_RETURN ifTrue: [ 
 			self model activeToolManipulator ifNotNil: [ :manip |
 				manip activateAction
 			]
 		].
+	].
+
+	self flag: 'TODO: get rid of this harding ifs.'.
+	event modifiers ctrl ifTrue: [ 
+		event symbol = OSK_d ifTrue: [ self levelEditorSession deleteSelectedItems ].
+		event modifiers shift ifTrue: [ 
+			event symbol = OSK_z ifTrue: [ self levelEditorSession redo ].
+		] ifFalse: [ 
+			event symbol = OSK_z ifTrue: [ self levelEditorSession undo ].
+		].
+	] ifFalse: [ 
+		event symbol = OSK_KP_7 ifTrue: [ self view topView ].
+		event symbol = OSK_KP_1 ifTrue: [ self view frontView ].
+		event symbol = OSK_KP_5 ifTrue: [ self view togglePerspective ].
+		event symbol = OSK_KP_3 ifTrue: [ self view sideView ].
+		event symbol = OSK_DELETE ifTrue: [ self levelEditorSession deleteSelectedItems ].
 	].
 
 	^ super onKeyDown: event

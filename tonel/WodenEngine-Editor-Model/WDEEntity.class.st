@@ -87,7 +87,13 @@ WDEEntity >> accept: visitor [
 ]
 
 { #category : #adding }
+WDEEntity >> addChild: aChild [
+	self addComponent: aChild
+]
+
+{ #category : #adding }
 WDEEntity >> addComponent: aComponent [
+	self assert: aComponent isEntityComponent.
 	self assert: aComponent parent isNil.
 	components add: aComponent.
 	aComponent parent: self.
@@ -422,6 +428,21 @@ WDEEntity >> rayCast: ray [
 	distance := selectableBoundingBox intersectionWithRay: ray.
 	distance ifNil: [ ^ nil ].
 	^ distance -> self.
+]
+
+{ #category : #adding }
+WDEEntity >> removeChild: aChild [
+	self removeComponent: aChild
+]
+
+{ #category : #adding }
+WDEEntity >> removeComponent: aComponent [
+	self assert: aComponent isEntityComponent.
+	self assert: aComponent parent == self.
+	components remove: aComponent.
+	self level ifNotNil: [ :level | aComponent removedFromLevel: level ].
+	aComponent parent: nil.
+
 ]
 
 { #category : #memento }

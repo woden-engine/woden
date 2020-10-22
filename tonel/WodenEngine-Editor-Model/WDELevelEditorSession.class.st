@@ -7,7 +7,9 @@ Class {
 		'selection',
 		'activeSectorLayer',
 		'levelFileReference',
-		'activeLevelElementTemplate'
+		'activeLevelElementTemplate',
+		'undoOperationHistory',
+		'redoOperationHistory'
 	],
 	#category : #'WodenEngine-Editor-Model-Session'
 }
@@ -45,6 +47,25 @@ WDELevelEditorSession >> addElementsToSelection: elements [
 	self selection: (WDELevelEditorSelection for: newSelectedItems asArray)
 ]
 
+{ #category : #actions }
+WDELevelEditorSession >> deleteSelectedItems [
+	self selection deleteSelectedItemsInSession: self
+]
+
+{ #category : #'undo-redo' }
+WDELevelEditorSession >> doWith: doBlock undoWith: undoBlock [
+	| operation |
+	operation := WDELevelEditorOperation doWith: doBlock undoWith: undoBlock.
+	operation doIt.
+	undoOperationHistory add: operation.
+	redoOperationHistory removeAll.
+]
+
+{ #category : #actions }
+WDELevelEditorSession >> duplicateSelectedItems [
+	self selection duplicateSelectedItemsInSession: self
+]
+
 { #category : #accessing }
 WDELevelEditorSession >> gridSize [
 	^ gridSize value
@@ -64,6 +85,8 @@ WDELevelEditorSession >> initialize [
 	activeLevelElementTemplate := nil asValueHolder.
 	gridSize := 10.0 asValueHolder.
 	selection := WDELevelEditorSelection empty asValueHolder.
+	undoOperationHistory := OrderedCollection new.
+	redoOperationHistory := OrderedCollection new.
 ]
 
 { #category : #accessing }
@@ -74,6 +97,8 @@ WDELevelEditorSession >> level [
 { #category : #accessing }
 WDELevelEditorSession >> level: anObject [
 	self selection: WDELevelEditorSelection empty.
+	undoOperationHistory removeAll.
+	redoOperationHistory removeAll.
 	level value: anObject.
 
 ]
@@ -113,6 +138,16 @@ WDELevelEditorSession >> openFrom: aFileReference [
 	extension := aFileReference extension asLowercase.
 	extension = 'wlevel' ifTrue: [ ^ self loadJSONEncodedFrom: aFileReference ].
 	extension = 'wblevel' ifTrue: [ ^ self loadMessagePackEncodedFrom: aFileReference ].
+]
+
+{ #category : #'undo-redo' }
+WDELevelEditorSession >> redo [
+	| operation |
+	redoOperationHistory ifEmpty: [ ^ self ].
+	operation := redoOperationHistory first.
+	redoOperationHistory removeFirst.
+	operation doIt.
+	undoOperationHistory addLast: operation.
 ]
 
 { #category : #snapping }
@@ -205,6 +240,16 @@ WDELevelEditorSession >> toggleElementsFromSelection: elements [
 		]
 	].
 	self selection: (WDELevelEditorSelection for: newSelectedItems asArray)
+]
+
+{ #category : #'undo-redo' }
+WDELevelEditorSession >> undo [
+	| operation |
+	undoOperationHistory ifEmpty: [ ^ self ].
+	operation := undoOperationHistory last.
+	undoOperationHistory removeLast.
+	operation undoIt.
+	redoOperationHistory addFirst: operation.
 ]
 
 { #category : #enumerating }

@@ -24,7 +24,13 @@ WDELevel >> accept: visitor [
 ]
 
 { #category : #adding }
+WDELevel >> addChild: aChild [
+	self addSector: aChild
+]
+
+{ #category : #adding }
 WDELevel >> addSector: aSector [
+	self assert: aSector isSector.
 	self assert: aSector level isNil.
 	sectors add: aSector.
 	aSector level: self.
@@ -126,6 +132,21 @@ WDELevel >> rayCast: ray [
 		].
 	].
 	^ bestResult
+]
+
+{ #category : #removing }
+WDELevel >> removeChild: aChild [
+	self removeSector: aChild
+]
+
+{ #category : #adding }
+WDELevel >> removeSector: aSector [
+	self assert: aSector isSector.
+	self assert: aSector level == self.
+	sectors remove: aSector.
+	aSector removedFromLevel: self.
+	aSector level: nil.
+
 ]
 
 { #category : #accessing }

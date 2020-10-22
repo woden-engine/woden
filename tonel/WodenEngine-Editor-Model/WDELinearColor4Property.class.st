@@ -4,6 +4,11 @@ Class {
 	#category : #'WodenEngine-Editor-Model-Properties'
 }
 
+{ #category : #'as yet unclassified' }
+WDELinearColor4Property >> formatValue: value [
+	^ '{1} {2} {3} {4}' format: {value x . value y . value z . value w}
+]
+
 { #category : #parsing }
 WDELinearColor4Property >> parseText: text [
 	| components |

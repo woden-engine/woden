@@ -1,18 +1,31 @@
 Class {
 	#name : #WDEScalarProperty,
 	#superclass : #WDEStringProperty,
+	#instVars : [
+		'minimum',
+		'maximum'
+	],
 	#category : #'WodenEngine-Editor-Model-Properties'
 }
 
-{ #category : #'as yet unclassified' }
-WDEScalarProperty >> buildSpecPresenter [
-	^ SpNumberInputFieldPresenter new
-		beFloat;
-		number: self getValue;
-		whenNumberChangedDo: [ :newNumber |
-			self setValue: newNumber
-		];
-		yourself
+{ #category : #accessing }
+WDEScalarProperty >> maximum [
+	^ maximum
+]
+
+{ #category : #accessing }
+WDEScalarProperty >> maximum: anObject [
+	maximum := anObject
+]
+
+{ #category : #accessing }
+WDEScalarProperty >> minimum [
+	^ minimum
+]
+
+{ #category : #accessing }
+WDEScalarProperty >> minimum: anObject [
+	minimum := anObject
 ]
 
 { #category : #parsing }
