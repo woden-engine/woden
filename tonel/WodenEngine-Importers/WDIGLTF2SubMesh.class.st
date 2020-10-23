@@ -17,9 +17,11 @@ Class {
 WDIGLTF2SubMesh >> asWDCGenericSubmesh [
 	^ WDCGenericSubmesh new
 		material: material;
-		indexBuffer: indexBufferAccessor asIndexBuffer;
-		firstIndex: indexBufferAccessor asFirstIndexIndex;
-		indexCount: indexBufferAccessor count;
+		indexBuffer: (indexBufferAccessor ifNotNil: [indexBufferAccessor asIndexBuffer]);
+		firstIndex: (indexBufferAccessor
+			ifNotNil: [indexBufferAccessor asFirstIndexIndex]
+			ifNil: []);
+		indexCount: self indexCount;
 		primitiveType: primitiveType;
 		yourself
 ]
@@ -41,7 +43,9 @@ WDIGLTF2SubMesh >> indexBufferAccessor: anObject [
 
 { #category : #accessing }
 WDIGLTF2SubMesh >> indexCount [
-	^ indexBufferAccessor count
+	^ indexBufferAccessor
+		ifNil: [ vertexData vertexCount ]
+		ifNotNil: [ indexBufferAccessor count ]
 ]
 
 { #category : #accessing }

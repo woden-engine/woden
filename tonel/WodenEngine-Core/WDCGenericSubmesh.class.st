@@ -97,12 +97,23 @@ WDCGenericSubmesh >> primitiveType: anObject [
 ]
 
 { #category : #rendering }
-WDCGenericSubmesh >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
+WDCGenericSubmesh >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex objectIndexBuffer: objectIndexBuffer [
 	material ifNil: [ ^ self ].
 	(stateTracker activateMaterial: material) ifFalse: [ ^ self].
-	indexBuffer ifNotNil: [ stateTracker useIndexBuffer: indexBuffer ].
+	indexBuffer ifNotNil: [
+		stateTracker useIndexBuffer: indexBuffer
+	] ifNil: [ 
+		objectIndexBuffer ifNotNil: [
+			stateTracker useIndexBuffer: objectIndexBuffer
+		].
+	].
 	
-	stateTracker
-		primitiveType: primitiveType;
-		drawElements: indexCount instance_count: instanceCount first_index: firstIndex base_vertex: baseVertex base_instance: baseInstance
+	stateTracker primitiveType: primitiveType.
+	(indexBuffer isNotNil or: [ objectIndexBuffer isNotNil ]) ifTrue: [ 
+		stateTracker drawElements: indexCount instance_count: instanceCount first_index: firstIndex base_vertex: baseVertex base_instance: baseInstance
+	] ifFalse: [ 
+		stateTracker
+			drawArrays: indexCount instance_count: instanceCount first_vertex: baseVertex base_instance: baseInstance
+	].
+
 ]

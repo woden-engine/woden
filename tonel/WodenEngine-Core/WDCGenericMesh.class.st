@@ -54,9 +54,9 @@ WDCGenericMesh >> renderOn: stateTracker instanceCount: instanceCount baseInstan
 		self setupObjectRenderingStatesOn: stateTracker.
 		stateTracker
 			useVertexBinding: vertexBinding.
-		indexBuffer ifNotNil: [ stateTracker useIndexBuffer: indexBuffer ].
-		
-		submeshes do: [ :sm | sm renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex ]
+		submeshes do: [ :sm |
+			sm renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex objectIndexBuffer: indexBuffer.
+		]
 	]
 
 ]

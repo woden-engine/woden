@@ -364,6 +364,12 @@ WDSGNode >> rotateRadiansOnZ: radians [
 	self transformChanged
 ]
 
+{ #category : #transforming }
+WDSGNode >> scaleBy: scaleFactor [
+	transform scaleBy: scaleFactor.
+	self transformChanged
+]
+
 { #category : #accessing }
 WDSGNode >> scene [
 	^ scene

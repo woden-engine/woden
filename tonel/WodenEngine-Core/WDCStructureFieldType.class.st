@@ -158,8 +158,12 @@ WDCStructureFieldType class >> initializeFieldTypes [
 		float2 	(R32G32_FLOAT float 2 false 8 8 Float32x2)
 		float3 	(R32G32B32_FLOAT  float 3 false 16 16 Float32x3)
 		float4 	(R32G32B32A32_FLOAT  float 4 false 16 16 Float32x4)
+
+		float2x2 	(R32G32_FLOAT float 2 false 16 8 Float32x2x2 2)
+		float3x3 	(R32G32B32_FLOAT float 3 false 48 16 Float32x3x3 3)
+		float4x4 	(R32G32B32A32_FLOAT float 4 false 64 16 Float32x4x4 4)
 	) pairsDo: [ :formatName :spec |
-		| formatId componentType components normalized size alignment type sysmelType |
+		| formatId componentType components normalized size alignment type sysmelType rows |
 		formatId := (AGPUConstants bindingOf: (#AGPU_TEXTURE_FORMAT_ , spec first) asSymbol) value.
 		self assert: formatId isNotNil.
 		componentType := spec second.
@@ -167,14 +171,15 @@ WDCStructureFieldType class >> initializeFieldTypes [
 		normalized := spec fourth.
 		size := spec fifth.
 		alignment := spec sixth.
-		sysmelType := self parseOptionalSLVMType: (spec at: 7 ifAbsent: nil).
+		sysmelType := self parseOptionalSLVMType: (spec at: 7 ifAbsent: [nil]).
+		rows := spec at: 8 ifAbsent: [1].
 		type := self new
 			name: formatName asSymbol;
 			componentType: componentType;
 			components: components; 
 			format: formatId;
 			normalized: normalized;
-			rows: 1;
+			rows: rows;
 			size: size;
 			alignment: alignment;
 			sysmelType: sysmelType;

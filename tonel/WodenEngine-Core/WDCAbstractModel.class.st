@@ -10,6 +10,11 @@ WDCAbstractModel class >> loadFromFile: aFileName [
 ]
 
 { #category : #'as yet unclassified' }
-WDCAbstractModel >> openViewer [
+WDCAbstractModel >> createViewer [
 	self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+WDCAbstractModel >> openViewer [
+	^ self createViewer open
 ]

@@ -14,54 +14,10 @@ Class {
 
 { #category : #'as yet unclassified' }
 WDSSceneAssetModel >> createViewer [
-	| sceneModel camera hasLights sunLight skyTexture viewScene sceneBBox |
-	sceneModel := WDASampleSceneModel new.
-	viewScene := mainScene copy.
-	sceneModel
-		scene: viewScene.
-	viewScene backgroundColor: Color darkGray.
-	viewScene initializeWithEngine: sceneModel engine.
-	
-	"Try to find a camera."
-	hasLights := false.
-	viewScene allChildrenDo: [ :node |
-		hasLights := hasLights or: [node isLightSource].
-		node isCamera ifTrue: [
-			node isNotControlledByTheUser: true.
-			sceneModel camera: node
-		]
-	].
-
-	"If not camera is found, then we have to create a camera for the scene."
-	sceneModel camera ifNil: [ 
-		camera := WDSGCamera new.
-		sceneBBox := mainScene normalLayer globalBoundingBox.
-		camera position: (sceneBBox center + (Float32x3 z: sceneBBox depth)).
-		
-		viewScene add: camera.
-		sceneModel camera: camera.
-	].
-
-	hasLights ifFalse: [
-		"Add a light"
-		sunLight := WDSGLightSource new.
-		sunLight
-			directional; castShadows: false;
-			intensity: (Float32x4 x: 1.0 y: 1.0 z: 0.8) normalized * 0.6;
-			rotateDegreesOnX: -35.
-		
-		viewScene add: sunLight.
-
-		viewScene ambientLighting: Float32x4 ones*0.6.
-		
-		skyTexture := WDASceneExamples proceduralSkySunDirection: (sunLight transform
-				transformVector:(Float32x3 z: 1.0)
-			).
-		skyTexture := skyTexture asSRGBTextureFor: sceneModel engine.
-		viewScene createSkyWithCubeTexture: skyTexture.
-	].
-
-	^ sceneModel
+	^ WDA3DModelViewerModel new
+		newScene;
+		addSceneModel: mainScene;
+		yourself
 ]
 
 { #category : #'as yet unclassified' }
@@ -154,11 +110,6 @@ WDSSceneAssetModel >> mainScene [
 { #category : #accessing }
 WDSSceneAssetModel >> mainScene: anObject [
 	mainScene := anObject
-]
-
-{ #category : #'as yet unclassified' }
-WDSSceneAssetModel >> openViewer [
-	^ self createViewer openWith: WDAFPSSceneView allowingVR.
 ]
 
 { #category : #accessing }

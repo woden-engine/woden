@@ -666,6 +666,17 @@ WDASceneExamples class >> exampleModelDamagedHelmet [
 ]
 
 { #category : #'example models' }
+WDASceneExamples class >> exampleModelFox [
+	(WDCEngine default resourceCache load3DModel: 'models/glTF-Samples/Fox/Fox.gltf') createViewer
+		scaleBy: 0.015f;
+		setCameraPosition: (Float32x3 x: 0 y: 1.6 z: 3);
+		setCameraFarDistance: 50.0;
+		addCube: (BoxF32 center: (Float32x3 y: -0.25f) halfExtent: (Float32x3 x: 3 y: 0.25 z: 3)); playIndexedAnimation: 0;
+		castShadows: true;
+		open
+]
+
+{ #category : #'example models' }
 WDASceneExamples class >> exampleModelSponza [
 	| sceneModel sponzaModel scene camera light moonLight |
 	sceneModel := WDASampleSceneModel new.

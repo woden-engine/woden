@@ -59,30 +59,46 @@ WDIGLTF2Importer class >> initialize [
 		{GL_FLOAT . 'VEC2'} . #float2.
 		{GL_FLOAT . 'VEC3'} . #R32G32B32_FLOAT.
 		{GL_FLOAT . 'VEC4'} . #float4.
+
+		{GL_FLOAT . 'MAT2'} . #float2x2.
+		{GL_FLOAT . 'MAT3'} . #float3x3.
+		{GL_FLOAT . 'MAT4'} . #float4x4.
 	}
 ]
 
 { #category : #loading }
 WDIGLTF2Importer >> cleanupMeshes [
-	| indexBuffersToConvert indexCountToConvert indexBufferUsedByMesh haveTheSameIndexBuffer vertexDataToGenerateTangentSpace |
+	| indexBuffersToConvert indexCountToConvert indexBufferUsedByMesh haveTheSameIndexBuffer vertexDataToGenerateNormals vertexDataToGenerateTangentSpace |
 	"We may need to convert some index buffers"
 	indexBuffersToConvert := IdentitySet new.
+	vertexDataToGenerateNormals := IdentityDictionary new.
 	vertexDataToGenerateTangentSpace := IdentityDictionary new.
 	indexCountToConvert := 0.
 	meshesToCleanup do: [ :mesh |
 		mesh submeshes do: [ :submesh |
+			submesh vertexData hasVertexNormals ifFalse: [
+				(vertexDataToGenerateNormals at: submesh vertexData ifAbsentPut: [ OrderedCollection new ])
+					add: submesh
+			].
+		
 			(submesh material requiresTangentSpaceData and: [submesh vertexData hasVertexTangents not]) ifTrue: [
 				(vertexDataToGenerateTangentSpace at: submesh vertexData ifAbsentPut: [ OrderedCollection new ])
 					add: submesh
 			].
 		
-			submesh indexBufferAccessor type size < 2 ifTrue: [
-				(indexBuffersToConvert includes: submesh indexBufferAccessor) ifFalse: [ 
-					indexBuffersToConvert add: submesh indexBufferAccessor.
-					indexCountToConvert := indexCountToConvert + submesh indexBufferAccessor count
+			submesh indexBufferAccessor ifNotNil: [ 
+				submesh indexBufferAccessor type size < 2 ifTrue: [
+					(indexBuffersToConvert includes: submesh indexBufferAccessor) ifFalse: [ 
+						indexBuffersToConvert add: submesh indexBufferAccessor.
+						indexCountToConvert := indexCountToConvert + submesh indexBufferAccessor count
+					].
 				].
 			].
 		]
+	].
+
+	vertexDataToGenerateNormals ifNotEmpty: [ 
+		self generateMissingVertexNormals: vertexDataToGenerateNormals
 	].
 
 	vertexDataToGenerateTangentSpace ifNotEmpty: [ 
@@ -164,6 +180,32 @@ WDIGLTF2Importer >> convertIndices: indexCountToConvert withAccessors: indexBuff
 ]
 
 { #category : #'as yet unclassified' }
+WDIGLTF2Importer >> generateMissingVertexNormals: vertexDataWithSubmeshesDictionary [
+	| encodedNormal normalBufferView encodedNormalData |
+	encodedNormal := StdnVector newFor: CompactFloat32x3.
+	normalBufferView := WDCBufferView new.
+	
+	vertexDataWithSubmeshesDictionary keysAndValuesDo: [ :vertex :submeshes |
+		self generateVertexDataNormals: vertex submeshes: submeshes into: encodedNormal withBufferView: normalBufferView
+	].
+	
+	encodedNormalData := encodedNormal asByteArray.
+	normalBufferView 
+		buffer: (WDCBufferResource new
+			description: (AGPUBufferDescription new
+				size: encodedNormalData size;
+				heap_type: AGPU_MEMORY_HEAP_TYPE_DEVICE_LOCAL;
+				usage_modes: AGPU_ARRAY_BUFFER;
+				main_usage_mode: AGPU_ARRAY_BUFFER;
+				yourself);
+			data: encodedNormalData;
+			yourself);
+		offset: 0;
+		length: encodedNormalData size.
+
+]
+
+{ #category : #'as yet unclassified' }
 WDIGLTF2Importer >> generateMissingVertexTangentSpaceFrames: vertexDataWithSubmeshesDictionary [
 	| encodedTangent4 tangent4BufferView encodedTangent4Data |
 	encodedTangent4 := StdnVector newFor: Float32x4.
@@ -190,8 +232,57 @@ WDIGLTF2Importer >> generateMissingVertexTangentSpaceFrames: vertexDataWithSubme
 ]
 
 { #category : #'as yet unclassified' }
+WDIGLTF2Importer >> generateVertexDataNormals: vertexData submeshes: submeshes into: encodedNormals withBufferView: normalBufferView [
+	| positionChannel vertexCount normals triangleIterator normalAccessor channel |
+	positionChannel := vertexData positionsChannel asNativeArrayReference.
+	
+	vertexCount := positionChannel size.
+	normals := (Array new: vertexCount) atAllPut: Float32x3 new.
+	
+	triangleIterator := WDCSubmeshTriangleIterator new submeshes: submeshes.
+	triangleIterator do: [ :triangle |
+		|i1 i2 i3 p1 p2 p3 u v faceNormal |
+		i1 := triangle first + 1.
+		i2 := triangle second + 1.
+		i3 := triangle third + 1.
+		
+		p1 := (positionChannel at: i1) asFloat32x3.
+		p2 := (positionChannel at: i2) asFloat32x3.
+		p3 := (positionChannel at: i3) asFloat32x3.
+
+		u := p2 - p1.
+		v := p3 - p1.
+		faceNormal := (u cross: v).
+
+		normals at: i1 put: (normals at: i1) + faceNormal.
+		normals at: i2 put: (normals at: i2) + faceNormal.
+		normals at: i3 put: (normals at: i3) + faceNormal.
+	].
+
+	normalAccessor := WDCBufferAccessor new
+		type: (WDCStructureFieldType typeNamed: #R32G32B32_FLOAT);
+		bufferView: normalBufferView;
+		byteOffset: encodedNormals size * CompactFloat32x3 instanceSize;
+		count: vertexCount;
+		yourself.
+
+	channel := WDCMeshExplicitVertexChannel new
+		binding: NormalsVertexBindingLocation;
+		accessor: normalAccessor;
+		yourself.
+	vertexData addChannel: channel.
+
+	1 to: vertexCount do: [ :vertexIndex |
+		| normal |
+		normal := normals at: vertexIndex.
+		encodedNormals add: normal normalized asCompactFloat32x3
+	].
+
+]
+
+{ #category : #'as yet unclassified' }
 WDIGLTF2Importer >> generateVertexDataTangentSpaceFrame: vertexData submeshes: submeshes into: encodedTangents4 withBufferView: tangent4BufferView [
-	| positionChannel texcoordsChannel normalsChannel vertexCount tangents bitangents triangleIterator i1 i2 i3 p1 p2 p3 tc1 tc2 tc3 u v du1 dv1 du2 dv2 det den tangent bitangent normal tangent4Accessor channel |
+	| positionChannel texcoordsChannel normalsChannel vertexCount tangents bitangents triangleIterator  tangent4Accessor channel |
 	positionChannel := vertexData positionsChannel asNativeArrayReference.
 	texcoordsChannel := vertexData texcoordsChannel asNativeArrayReference.
 	normalsChannel := vertexData normalsChannel asNativeArrayReference.
@@ -205,6 +296,7 @@ WDIGLTF2Importer >> generateVertexDataTangentSpaceFrame: vertexData submeshes: s
 	
 	triangleIterator := WDCSubmeshTriangleIterator new submeshes: submeshes.
 	triangleIterator do: [ :triangle |
+		| i1 i2 i3 p1 p2 p3 tc1 tc2 tc3 u v du1 dv1 du2 dv2 det den tangent bitangent |
 		i1 := triangle first + 1.
 		i2 := triangle second + 1.
 		i3 := triangle third + 1.
@@ -257,6 +349,7 @@ WDIGLTF2Importer >> generateVertexDataTangentSpaceFrame: vertexData submeshes: s
 	vertexData addChannel: channel.
 
 	1 to: vertexCount do: [ :vertexIndex |
+		| tangent bitangent normal |
 		tangent := tangents at: vertexIndex.
 		bitangent := bitangents at: vertexIndex.
 		normal := (normalsChannel at: vertexIndex) asFloat32x3.
@@ -667,7 +760,10 @@ WDIGLTF2Importer >> loadScenesFrom: elements [
 WDIGLTF2Importer >> loadSubMeshFrom: submeshDescription [
 	| vertexChannels attributes channel vertexData indexBufferAccessor material |
 	attributes := submeshDescription at: 'attributes'.
-	indexBufferAccessor := accessors at: (submeshDescription at: 'indices') + 1.
+	indexBufferAccessor := nil.
+	submeshDescription at: 'indices' ifPresent: [ :indicesAccessorIndex |
+		indexBufferAccessor := accessors at: (submeshDescription at: 'indices') + 1.
+	].
 	submeshDescription at: 'material' ifPresent: [ :materialIndex |
 		material := materials at: materialIndex + 1.
 	] ifAbsent: [ 
