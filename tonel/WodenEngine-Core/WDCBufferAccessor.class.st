@@ -7,7 +7,8 @@ Class {
 		'count',
 		'byteOffset',
 		'min',
-		'max'
+		'max',
+		'decodedContent'
 	],
 	#category : #'WodenEngine-Core-GPU-Resources'
 }
@@ -63,6 +64,11 @@ WDCBufferAccessor >> count [
 { #category : #accessing }
 WDCBufferAccessor >> count: anObject [
 	count := anObject
+]
+
+{ #category : #'as yet unclassified' }
+WDCBufferAccessor >> decodeContentAsArray [
+	^ decodedContent ifNil: [ decodedContent := self asNativeArrayReference as: Array ]
 ]
 
 { #category : #'as yet unclassified' }

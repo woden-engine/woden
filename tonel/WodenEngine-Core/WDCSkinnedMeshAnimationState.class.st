@@ -7,9 +7,9 @@ Class {
 	#instVars : [
 		'mesh',
 		'poseBuffer',
-		'pose',
 		'poseMatrices',
-		'poseForwardMatrices'
+		'poseForwardMatrices',
+		'poseState'
 	],
 	#category : #'WodenEngine-Core-Mesh'
 }
@@ -40,7 +40,24 @@ WDCSkinnedMeshAnimationState >> addActionBone: actionBone repeated: repeated fra
 	ceilingFrame := actionBone keyframes at: ceilingFrameIndex.
 	
 	interpolatedFrame := self interpolateFrame: floorFrame with: ceilingFrame alpha: alpha.
-	pose at: actionBone boneIndex + 1 put: interpolatedFrame
+	poseState at: actionBone boneIndex + 1 put: interpolatedFrame
+]
+
+{ #category : #adding }
+WDCSkinnedMeshAnimationState >> applyAnimation: animation repeated: isRepeated inTime: animationTime [
+	animation channels do: [ :each | self applyAnimationChannel: each repeated: isRepeated inTime: animationTime ]
+]
+
+{ #category : #adding }
+WDCSkinnedMeshAnimationState >> applyAnimationChannel: channel repeated: isRepeated inTime: animationTime [
+	| bonePoseState |
+	bonePoseState := poseState at: channel targetBoneIndex + 1.
+	channel applyToBoneState: bonePoseState repeated: isRepeated inTime: animationTime.
+]
+
+{ #category : #accessing }
+WDCSkinnedMeshAnimationState >> armature [
+	^ mesh armature
 ]
 
 { #category : #adding }
@@ -54,25 +71,8 @@ WDCSkinnedMeshAnimationState >> computeFrameIndex: frame actionBone: actionBone 
 
 { #category : #'as yet unclassified' }
 WDCSkinnedMeshAnimationState >> computePoseMatrices [
-	| parents bone parentIndex forwardMatrix restPoseInverseMatrices restPoseInverseMatrix parentForwardMatrix |
-	parents := mesh armature boneParents. 
-	restPoseInverseMatrices := mesh armature restPoseInverseMatrices.
-	
-	1 to: pose size do: [ :i |
-		bone := pose at: i.
-		parentIndex := parents at: i.
-		forwardMatrix := bone forwardMatrix.
-		restPoseInverseMatrix := restPoseInverseMatrices at: i.
-		
-		parentIndex >= 0 ifTrue: [
-			parentForwardMatrix := poseForwardMatrices at: parentIndex + 1.
-			
-			forwardMatrix := parentForwardMatrix * forwardMatrix.
-		].
-	
-		poseForwardMatrices at: i put: forwardMatrix.
-		poseMatrices at: i put: forwardMatrix * restPoseInverseMatrix. 
-	].
+	poseForwardMatrices := self armature computeForwardMatricesWithPoseMatrices: (poseState collect: [:each | each matrix]).
+	poseMatrices := self armature computeSkinningMatricesWithForwardMatrices: poseForwardMatrices.
 ]
 
 { #category : #accessing }
@@ -98,7 +98,13 @@ WDCSkinnedMeshAnimationState >> interpolateFrame: a with: b alpha: alpha [
 	| translation rotation |
 	translation := (a translation * (1.0 - alpha)) + (b translation * alpha).
 	rotation := ((a rotation * (1.0 - alpha)) + (b rotation * alpha)) normalized.
-	^ WDCAnimationActionBoneFrame new translation: translation; rotation: rotation; yourself
+	^ WDCSkinnedModelBoneState new translation: translation; rotation: rotation; yourself
+]
+
+{ #category : #'as yet unclassified' }
+WDCSkinnedMeshAnimationState >> invalidateMatrices [
+	poseMatrices := nil.
+	poseForwardMatrices := nil.
 ]
 
 { #category : #testing }
@@ -117,15 +123,9 @@ WDCSkinnedMeshAnimationState >> mesh: anObject [
 ]
 
 { #category : #accessing }
-WDCSkinnedMeshAnimationState >> pose [
-	^ pose
-]
-
-{ #category : #accessing }
 WDCSkinnedMeshAnimationState >> pose: anObject [
-	pose := anObject.
-	poseMatrices := SLVMNativeArray for: Float32x4x4 new: pose size.
-	poseForwardMatrices := SLVMNativeArray for: Float32x4x4 new: pose size.
+	poseState := anObject.
+	self invalidateMatrices.
 ]
 
 { #category : #accessing }
@@ -144,6 +144,11 @@ WDCSkinnedMeshAnimationState >> poseMatrices [
 ]
 
 { #category : #accessing }
+WDCSkinnedMeshAnimationState >> poseState [
+	^ poseState
+]
+
+{ #category : #accessing }
 WDCSkinnedMeshAnimationState >> poseStateSize [
 	^ mesh poseStateSize
 ]
@@ -155,8 +160,7 @@ WDCSkinnedMeshAnimationState >> requiresAccessFromTheCPU [
 
 { #category : #'as yet unclassified' }
 WDCSkinnedMeshAnimationState >> setRestPose [
-	LibC memCopy: mesh armature bones rawData to: pose rawData size: pose rawDataSize.
-	
+	self pose: self armature restPoseState
 ]
 
 { #category : #'as yet unclassified' }
@@ -168,7 +172,8 @@ WDCSkinnedMeshAnimationState >> setRestPoseAndMatrices [
 
 { #category : #'as yet unclassified' }
 WDCSkinnedMeshAnimationState >> setRestPoseMatrices [
-	LibC memCopy: mesh armature restPoseMatrices rawData to: poseMatrices rawData size: poseMatrices rawDataSize.
+	poseMatrices := self armature restPoseMatrices.
+	poseForwardMatrices := self armature restPoseForwardMatrices.
 ]
 
 { #category : #'renderable state' }

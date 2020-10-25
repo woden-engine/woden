@@ -4,7 +4,9 @@ Extension { #name : #WDCSimpleModel }
 WDCSimpleModel >> createViewer [
 	| viewer |
 	viewer := WDA3DModelViewerModel new.
-	viewer newScene.
-	viewer addMeshModel: (self meshFor: viewer engine).
+	viewer 
+		modelAsset: self;
+		newScene;
+		addMeshModel: (self meshFor: viewer engine).
 	^ viewer
 ]

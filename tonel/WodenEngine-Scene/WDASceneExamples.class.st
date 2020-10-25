@@ -641,11 +641,6 @@ WDASceneExamples class >> example10ParticleSystem [
 ]
 
 { #category : #'example models' }
-WDASceneExamples class >> exampleModelBabyDragon [
-	(WDCEngine default resourceCache load3DModel: 'models/demos/baby_dragon.fmdl') openViewer
-]
-
-{ #category : #'example models' }
 WDASceneExamples class >> exampleModelBalloon [
 	(WDCEngine default resourceCache load3DModel: 'models/demos/decoration/foil-balloon.glb') openViewer
 ]
@@ -671,7 +666,8 @@ WDASceneExamples class >> exampleModelFox [
 		scaleBy: 0.015f;
 		setCameraPosition: (Float32x3 x: 0 y: 1.6 z: 3);
 		setCameraFarDistance: 50.0;
-		addCube: (BoxF32 center: (Float32x3 y: -0.25f) halfExtent: (Float32x3 x: 3 y: 0.25 z: 3)); playIndexedAnimation: 0;
+		addCube: (BoxF32 center: (Float32x3 y: -0.25f) halfExtent: (Float32x3 x: 3 y: 0.25 z: 3));
+		playAnimationNamed: 'Survey';
 		castShadows: true;
 		open
 ]

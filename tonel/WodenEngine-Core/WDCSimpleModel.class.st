@@ -11,8 +11,7 @@ Class {
 		'indices',
 		'submeshes',
 		'boundingBox',
-		'armature',
-		'actions'
+		'armature'
 	],
 	#classVars : [
 		'VertexChannelDescriptions'
@@ -46,16 +45,6 @@ WDCSimpleModel class >> modelConversionScript [
 		]
 	]
 
-]
-
-{ #category : #accessing }
-WDCSimpleModel >> actions [
-	^ actions
-]
-
-{ #category : #accessing }
-WDCSimpleModel >> actions: anObject [
-	actions := anObject
 ]
 
 { #category : #accessing }
@@ -134,7 +123,6 @@ WDCSimpleModel >> meshFor: anEngine [
 		^ WDCSkinnedRenderableMesh new
 			mesh: mesh;
 			armature: armature;
-			actions: actions;
 			yourself
 	].
 

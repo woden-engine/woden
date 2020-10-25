@@ -220,6 +220,11 @@ WDCAbstractRenderable >> isOpaqueShadowCaster: anObject [
 	isOpaqueShadowCaster := anObject
 ]
 
+{ #category : #testing }
+WDCAbstractRenderable >> isSkinnedRenderable [
+	^ false
+]
+
 { #category : #accessing }
 WDCAbstractRenderable >> makeBackgroundRenderable [
 	self

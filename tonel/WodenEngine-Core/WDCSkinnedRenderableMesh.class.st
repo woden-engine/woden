@@ -18,11 +18,6 @@ WDCSkinnedRenderableMesh >> actions [
 ]
 
 { #category : #accessing }
-WDCSkinnedRenderableMesh >> actions: anObject [
-	actions := anObject
-]
-
-{ #category : #accessing }
 WDCSkinnedRenderableMesh >> armature [
 	^ armature
 ]
@@ -36,7 +31,6 @@ WDCSkinnedRenderableMesh >> armature: anObject [
 WDCSkinnedRenderableMesh >> createDeformationState [
 	^ WDCSkinnedMeshAnimationState new
 		mesh: self;
-		pose: armature bones copy;
 		setRestPoseAndMatrices;
 		engine: engine;
 		yourself
@@ -52,6 +46,11 @@ WDCSkinnedRenderableMesh >> engine: newEngine [
 WDCSkinnedRenderableMesh >> initialize [
 	super initialize.
 	boundingBox := nil.
+]
+
+{ #category : #testing }
+WDCSkinnedRenderableMesh >> isSkinnedRenderable [
+	^ true
 ]
 
 { #category : #'extra per object rendering data' }

@@ -7,14 +7,30 @@ Class {
 	#instVars : [
 		'mainScene',
 		'scenes',
-		'sceneNodeNameDictionary'
+		'sceneNodeNameDictionary',
+		'animations',
+		'animationDictionary'
 	],
 	#category : #'WodenEngine-Scene-Asset'
 }
 
+{ #category : #adding }
+WDSSceneAssetModel >> addAnimation: anAnimation [
+	animations add: anAnimation.
+	anAnimation name ifNotNil: [
+		animationDictionary at: anAnimation name ifAbsentPut: [ anAnimation ]
+	]
+]
+
+{ #category : #accessing }
+WDSSceneAssetModel >> animations [
+	^ animations
+]
+
 { #category : #'as yet unclassified' }
 WDSSceneAssetModel >> createViewer [
 	^ WDA3DModelViewerModel new
+		modelAsset: self;
 		newScene;
 		addSceneModel: mainScene;
 		yourself
@@ -47,6 +63,11 @@ WDSSceneAssetModel >> extractConvexCollisionShapesFrom: node withTransform: node
 			into: convexComponents
 	].
 
+]
+
+{ #category : #accessing }
+WDSSceneAssetModel >> getAnimationNamed: animationName [
+	^ animationDictionary at: animationName
 ]
 
 { #category : #'as yet unclassified' }
@@ -87,6 +108,13 @@ WDSSceneAssetModel >> getNodeTransform: childNodeName relativeToNode: parentNode
 	childNode := sceneNodeNameDictionary at: childNodeName.
 	parentNode := sceneNodeNameDictionary at: parentNodeName.
 	^ parentNode globalTransform inverseTransformTransform: childNode globalTransform
+]
+
+{ #category : #initialization }
+WDSSceneAssetModel >> initialize [
+	super initialize.
+	animations := OrderedCollection new.
+	animationDictionary := Dictionary new.
 ]
 
 { #category : #'as yet unclassified' }

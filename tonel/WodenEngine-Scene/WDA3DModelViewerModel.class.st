@@ -6,7 +6,11 @@ Class {
 		'isCameraPositioned',
 		'hasBackgroundSetup',
 		'castShadows',
-		'mainLightSource'
+		'mainLightSource',
+		'modelNodes',
+		'currentAnimatedNodes',
+		'currentAnimation',
+		'currentAnimationTime'
 	],
 	#category : #'WodenEngine-Scene-Examples'
 }
@@ -27,13 +31,44 @@ WDA3DModelViewerModel >> addMeshModel: meshModel [
 	node := WDSGSpatialObject new.
 	node renderable: meshModel.
 	scene add: node.
+	modelNodes add: node.
 ]
 
 { #category : #adding }
 WDA3DModelViewerModel >> addSceneModel: sceneModel [
 	sceneModel normalLayer childrenDo: [ :each |
-		scene add: each copy
+		| instancedNode |
+		instancedNode := each copy.
+		modelNodes add: instancedNode.
+		scene add: instancedNode.
 	]
+]
+
+{ #category : #'rendering process stages' }
+WDA3DModelViewerModel >> advanceCurrentAnimation: delta [
+	currentAnimation ifNil: [ ^ self ].
+	currentAnimationTime := currentAnimationTime + delta.
+	
+	currentAnimatedNodes do: [ :each |
+		each renderable deformationState
+			setRestPose;
+			applyAnimation: currentAnimation repeated: true inTime: currentAnimationTime;
+			computePoseMatrices
+	]
+]
+
+{ #category : #'as yet unclassified' }
+WDA3DModelViewerModel >> animateableNodes [
+	| result |
+	result := OrderedCollection new.
+	modelNodes do: [ :each |
+		each withAllChildrenDo: [ :child |
+			(child renderable isNotNil and: [ child renderable isSkinnedRenderable ]) ifTrue: [
+				result add: child
+			]
+		]
+	].
+	^ result
 ]
 
 { #category : #accessing }
@@ -84,6 +119,9 @@ WDA3DModelViewerModel >> initialize [
 	hasBackgroundSetup := false.
 	isCameraPositioned := false.
 	castShadows := false.
+	modelNodes := OrderedCollection new.
+	currentAnimatedNodes := #().
+	currentAnimation := nil.
 ]
 
 { #category : #accessing }
@@ -108,7 +146,23 @@ WDA3DModelViewerModel >> openWith: aViewClass [
 ]
 
 { #category : #'as yet unclassified' }
+WDA3DModelViewerModel >> playAnimation: anAnimation [
+	self stopCurrentAnimation.
+
+	currentAnimatedNodes := self animateableNodes.
+	currentAnimatedNodes ifEmpty: [ ^ self ].
+	currentAnimation := anAnimation.
+	currentAnimationTime := 0.0.
+]
+
+{ #category : #'as yet unclassified' }
+WDA3DModelViewerModel >> playAnimationNamed: animationName [
+	self playAnimation: (modelAsset getAnimationNamed: animationName)
+]
+
+{ #category : #'as yet unclassified' }
 WDA3DModelViewerModel >> playIndexedAnimation: animationIndex [
+	self playAnimation: (modelAsset animations at: animationIndex + 1 ifAbsent: [ ^ self ])
 ]
 
 { #category : #transforming }
@@ -171,4 +225,17 @@ WDA3DModelViewerModel >> setDaylightBackground [
 { #category : #'instance creation' }
 WDA3DModelViewerModel >> setDefaultBackground [
 	self setDaylightBackground
+]
+
+{ #category : #'as yet unclassified' }
+WDA3DModelViewerModel >> stopCurrentAnimation [
+	currentAnimatedNodes do: [ :each | each deformationState setRestPoseAndMatrices ].
+	currentAnimatedNodes := #().
+	currentAnimation := nil.
+]
+
+{ #category : #'rendering process stages' }
+WDA3DModelViewerModel >> updateForFrameDelta: delta [.
+	super updateForFrameDelta: delta.
+	self advanceCurrentAnimation: delta.
 ]

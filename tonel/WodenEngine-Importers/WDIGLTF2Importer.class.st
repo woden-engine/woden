@@ -16,7 +16,13 @@ Class {
 		'images',
 		'samplers',
 		'textures',
-		'defaultMaterial'
+		'defaultMaterial',
+		'skins',
+		'nodeToBoneDictionary',
+		'boneToNodeDictionary',
+		'nodeBoneStates',
+		'nodeToBoneIndices',
+		'animations'
 	],
 	#classVars : [
 		'FullTypeToPixelName',
@@ -64,6 +70,11 @@ WDIGLTF2Importer class >> initialize [
 		{GL_FLOAT . 'MAT3'} . #float3x3.
 		{GL_FLOAT . 'MAT4'} . #float4x4.
 	}
+]
+
+{ #category : #accessing }
+WDIGLTF2Importer >> boneToNodeDictionary [
+	^ boneToNodeDictionary ifNil: [boneToNodeDictionary := IdentityDictionary new].
 ]
 
 { #category : #loading }
@@ -416,6 +427,61 @@ WDIGLTF2Importer >> loadAccessorsFrom: elements [
 	elements do: [ :el | self loadAccessorFrom: el ]
 ]
 
+{ #category : #'as yet unclassified' }
+WDIGLTF2Importer >> loadAnimationChannelFrom: channelDescription withSamplers: animationSamplers [
+	| channel targetDescription |
+	channel := WDIGLTF2AnimationChannel new.
+	channel sampler: (animationSamplers at: (channelDescription at: 'sampler') + 1).
+	targetDescription := channelDescription at: 'target'.
+	channel
+		targetBoneIndex: (nodeToBoneIndices at: (targetDescription at: 'node') + 1);
+		targetProperty: (targetDescription at: 'path') asSymbol.
+	^ channel
+]
+
+{ #category : #'as yet unclassified' }
+WDIGLTF2Importer >> loadAnimationFrom: animationDescription [
+	| animationSamplers animationChannels |
+	animationSamplers := OrderedCollection new.
+	animationDescription at: 'samplers' ifPresent: [ :elements |
+		elements do: [ :each |
+			animationSamplers add: (self loadAnimationSampler: each)
+		]
+	].
+
+	animationChannels := OrderedCollection new.
+	animationDescription at: 'channels' ifPresent: [ :elements |
+		elements do: [ :each |
+			animationChannels add: (self loadAnimationChannelFrom: each withSamplers: animationSamplers)
+		]
+	].
+
+	animations add: (WDIGLTF2Animation new
+		name: (animationDescription at: 'name' ifAbsent: [ nil ]);
+		samplers: animationSamplers asArray;
+		channels: animationChannels asArray;
+		yourself
+	)
+]
+
+{ #category : #'as yet unclassified' }
+WDIGLTF2Importer >> loadAnimationSampler: samplerDescription [
+	^ WDIGLTF2AnimationSampler new
+		inputAccessor: (accessors at: (samplerDescription at: 'input') + 1);
+		outputAccessor: (accessors at: (samplerDescription at: 'output') + 1);
+		interpolationAlgorithm: (samplerDescription at: 'interpolation' ifAbsent: ['LINEAR']) asSymbol;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
+WDIGLTF2Importer >> loadAnimationsFrom: elements [
+	animations := OrderedCollection new.
+	elements do: [ :each |
+		self loadAnimationFrom: each
+	].
+
+]
+
 { #category : #loading }
 WDIGLTF2Importer >> loadBinaryDataFromURI: uri [
 	| absolutePath |
@@ -675,10 +741,16 @@ WDIGLTF2Importer >> loadNode: node childrenFrom: nodeDescription [
 
 { #category : #loading }
 WDIGLTF2Importer >> loadNodeFrom: nodeDescription [
-	| node cameraDescription perspective matrix |
+	| node cameraDescription perspective boneState |
 	nodeDescription at: 'mesh' ifPresent: [ :meshIndex |
 		node := WDSGSpatialObject new.
-		node renderable: (meshes at: meshIndex + 1)
+		node renderable: (meshes at: meshIndex + 1).
+		nodeDescription at: 'skin' ifPresent: [ :skinIndex |
+			node renderable: (WDCSkinnedRenderableMesh new
+				armature: (skins at: skinIndex + 1) armature;
+				mesh: node renderable;
+				yourself)
+		]
 	].
 
 	nodeDescription at: 'camera' ifPresent: [ :cameraIndex |
@@ -692,34 +764,50 @@ WDIGLTF2Importer >> loadNodeFrom: nodeDescription [
 	].
 
 	node ifNil: [ node := WDSGSpatialObject new ].
-	
+
+	boneState := WDCSkinnedModelBoneState new.	
 	nodeDescription at: 'matrix' ifPresent: [ :matrixElements |
 		node transform: (ReversibleAffineTransform3dF32 fromInvertibleMatrix4: (Float32x4x4 columns: matrixElements)).
 	].
 
 	nodeDescription at: 'scale' ifPresent: [ :scaleComponent |
-		node transform scaleByX: scaleComponent first y: scaleComponent second z: scaleComponent third
+		| scale |
+		scale := Float32x3 x: scaleComponent first y: scaleComponent second z: scaleComponent third.
+		boneState scale: scale.
+		node transform scaleBy: scale
 	].
 
 	nodeDescription at: 'rotation' ifPresent: [ :rotationComponent |
-		node transform applyOrthonormalMatrix: (QuaternionF32 r: rotationComponent fourth i: rotationComponent first j: rotationComponent second k: rotationComponent third) asFloat32x3x3
+		| rotation |
+		rotation := QuaternionF32 r: rotationComponent fourth i: rotationComponent first j: rotationComponent second k: rotationComponent third.
+
+		boneState rotation: rotation.
+		node transform applyOrthonormalMatrix: rotation asFloat32x3x3
 	].
 
 	nodeDescription at: 'translation' ifPresent: [ :translationComponent |
-		node transform translateToX: translationComponent first y: translationComponent second z: translationComponent third
-	].
+		| translation |
+		translation := Float32x3 x: translationComponent first y: translationComponent second z: translationComponent third.
 
+		boneState translation: translation.
+		node transform translation: translation
+	].
 
 	node name: (nodeDescription at: 'name' ifAbsent: [ nil ]).
 	nodes add: node.
-
+	nodeBoneStates add: boneState
 ]
 
 { #category : #loading }
 WDIGLTF2Importer >> loadNodesFrom: elements [
 	nodes := OrderedCollection new.
+	nodeBoneStates := OrderedCollection new.
 	elements do: [ :el | self loadNodeFrom: el ].
-	elements doWithIndex: [ :el :index | self loadNode: (nodes at: index) childrenFrom: el]
+	elements doWithIndex: [ :el :index | self loadNode: (nodes at: index) childrenFrom: el].
+	nodeToBoneIndices := (Array new: nodes size) atAllPut: -1.
+	skins ifNotNil: [
+		skins do: [ :each | self loadSkinTopology: each ]
+	]
 ]
 
 { #category : #loading }
@@ -754,6 +842,84 @@ WDIGLTF2Importer >> loadSceneFrom: sceneDescription [
 WDIGLTF2Importer >> loadScenesFrom: elements [
 	scenes := OrderedCollection new.
 	elements do: [ :el | self loadSceneFrom: el ]
+]
+
+{ #category : #loading }
+WDIGLTF2Importer >> loadSkinFrom: skinDescription [
+	| skin |
+	skin := WDIGLTF2Skin new.
+	skin
+		name: (skinDescription at: 'name' ifAbsent: [ nil ]);
+		jointIndices: (skinDescription at: 'joints'	);
+		rootNodeIndex: (skinDescription at: 'skeleton' ifAbsent: [ nil ]).
+	skinDescription at: 'inverseBindMatrices' ifPresent: [ :accessorIndex |
+		skin inverseBindMatricesAccessor: (accessors at: accessorIndex + 1)
+	].
+	skins add: skin.
+
+]
+
+{ #category : #'as yet unclassified' }
+WDIGLTF2Importer >> loadSkinTopology: skin [
+	| jointNodes bones bonesSet visitedNodes sortedBones jointStates |
+	jointNodes := skin jointIndices collect: [ :each | nodes at: each + 1 ].
+	jointStates := skin jointIndices collect: [ :each | nodeBoneStates at: each + 1 ].
+	bones := jointNodes collectWithIndex: [ :node :index |
+		| bone |
+		
+		bone := WDCSkinnedModelBone new
+			name: node name;
+			loadStateFrom: (jointStates at: index);
+			yourself.
+		self nodeToBoneDictionary at: node put: bone.
+		self boneToNodeDictionary at: bone put: node.
+		bone.
+	].
+	
+	visitedNodes := IdentitySet new.
+	sortedBones := OrderedCollection new.
+	bonesSet := bones asIdentitySet.
+	skin rootNodeIndex ifNotNil: [:nodeIndex |
+		| rootNode |
+		rootNode := nodes at: nodeIndex + 1.
+		self topologicalSortBones: bonesSet from: rootNode into: sortedBones visited: visitedNodes.
+	].
+
+	jointNodes do: [ :node |
+		self topologicalSortBones: bonesSet from: node into: sortedBones visited: visitedNodes.
+	].
+
+	sortedBones doWithIndex: [ :bone :index |
+		bone index: index - 1
+	].
+	
+	sortedBones do: [ :bone |
+		| node |
+		node := boneToNodeDictionary at: bone.
+		bone parentIndex: -1.
+		nodeToBoneDictionary at: node parent ifPresent: [ :parentBone |
+			bone parentIndex: parentBone index
+		]
+	].
+
+	skin jointIndices doWithIndex: [ :nodeIndex :boneIndex |
+		nodeToBoneIndices at: nodeIndex + 1 put: (bones at: boneIndex) index
+	].
+
+	skin
+		jointIndexToBoneIndexPermutationTable: (bones collect: [ :each | each index ]) asArray.
+	
+	skin armature
+		bones: sortedBones asArray;
+		restPoseInverseMatrices: skin permutatedInverseBindMatrices;
+		computeRestPoseForwardMatrices.
+]
+
+{ #category : #loading }
+WDIGLTF2Importer >> loadSkinsFrom: elements [
+	skins := OrderedCollection new.
+	elements do: [ :el | self loadSkinFrom: el ].
+
 ]
 
 { #category : #loading }
@@ -838,6 +1004,11 @@ WDIGLTF2Importer >> loadingDirectory: anObject [
 	loadingDirectory := anObject
 ]
 
+{ #category : #accessing }
+WDIGLTF2Importer >> nodeToBoneDictionary [
+	^ nodeToBoneDictionary ifNil: [nodeToBoneDictionary := IdentityDictionary new].
+]
+
 { #category : #loading }
 WDIGLTF2Importer >> processGLTFJson: json [
 	| asset |
@@ -851,15 +1022,40 @@ WDIGLTF2Importer >> processGLTFJson: json [
 	json at: 'images' ifPresent: [ :elements | self loadImagesFrom: elements ].
 	json at: 'textures' ifPresent: [ :elements | self loadTexturesFrom: elements ].
 	json at: 'materials' ifPresent: [ :elements | self loadMaterialsFrom: elements ].
+	json at: 'skins' ifPresent: [ :elements | self loadSkinsFrom: elements ].
 	json at: 'meshes' ifPresent: [ :elements | self loadMeshesFrom: elements ].
 	json at: 'nodes' ifPresent: [ :elements | self loadNodesFrom: elements ].
+	json at: 'animations' ifPresent: [ :elements | self loadAnimationsFrom: elements ].	
 	json at: 'scenes' ifPresent: [ :elements | self loadScenesFrom: elements ].
 	
 	asset scenes: scenes asArray.
 	json at: 'scene' ifPresent: [ :mainSceneIndex |
 		asset mainScene: (scenes at: mainSceneIndex + 1)
 	].
+
+	animations ifNotNil: [
+		animations do: [ :each |
+			asset addAnimation: each asModelAssetAnimation
+		].
+	].
+
 	^ asset
+]
+
+{ #category : #'as yet unclassified' }
+WDIGLTF2Importer >> topologicalSortBones: bones from: startingNode into: sortedBones visited: visitedNodes [
+	(visitedNodes includes: startingNode) ifTrue: [ ^ self ].
+	visitedNodes add: startingNode.
+	
+	nodeToBoneDictionary at: startingNode ifPresent: [ :bone |
+		(bones includes: bone) ifTrue: [ 
+			sortedBones add: bone
+		].
+	].
+
+	startingNode childrenDo: [ :child |
+		self topologicalSortBones: bones from: child into: sortedBones visited: visitedNodes
+	].
 ]
 
 { #category : #'as yet unclassified' }
