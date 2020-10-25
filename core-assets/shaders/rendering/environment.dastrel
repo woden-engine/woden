@@ -37,7 +37,7 @@ uniform(binding=CameraState.ObjectState) CameraState
 	fogMode: uint;
 	fogFactor1: float;
 	fogFactor2: float;
-	
+
 	fogColor: float4;
 }
 
@@ -136,7 +136,7 @@ buffer(binding=RenderableState.DeformationState) PoseState
     matrices: float4x4[];
 }
 
-function skinPositionWithBones(position: float3, boneIndices: int4, boneWeights: float4) -> float3
+function skinPositionWithBones(position: float3, boneIndices: uint4, boneWeights: float4) -> float3
 {
     using PoseState;
 
@@ -148,7 +148,7 @@ function skinPositionWithBones(position: float3, boneIndices: int4, boneWeights:
     return result;
 }
 
-function skinVectorWithBones(vector: float3, boneIndices: int4, boneWeights: float4) -> float3
+function skinVectorWithBones(vector: float3, boneIndices: uint4, boneWeights: float4) -> float3
 {
     using PoseState;
 
