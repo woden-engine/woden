@@ -327,12 +327,14 @@ WDASceneExamples class >> example04ProceduralSky [
 
 { #category : #examples }
 WDASceneExamples class >> example05DangerousPool [
-	| model scene camera engine skyMaterial sunLight view magnumMesh pickedGun animationState gunAction gunActionFrame gunActionRepeated |
+	| model scene camera engine skyTexture sunLight view foxModel fox foxAnimationState walkAnimation animationTime foxScale movementTime animationDilationFactor |
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
-	camera farDistance: 100.0.
-	camera translateToX: 0.0 y: 1.0 z: -4.0.
+	camera
+		toneMappingOperator: #filmic;
+		farDistance: 100.0;
+		translateToX: 0.0 y: 1.0 z: -4.0.
 	engine := scene engine.
 	
 	self constructPoolSceneInto: scene.
@@ -347,34 +349,50 @@ WDASceneExamples class >> example05DangerousPool [
 		translateToX: 0.0 y: 1.5 z: 2.5.
 		
 	scene add: sunLight.
-		
-	"Add the sky box"
-	skyMaterial := engine resourceCache loadMaterial: 'materials/demos/skybox.json'.
-	scene createSkyWithCubeTexture: skyMaterial skyTexture.
 	scene ambientLighting: Float32x4 ones.
 		
-	magnumMesh := engine resourceCache loadMesh: 'models/demos/magnum_fps.fmdl'.
-	
-	pickedGun := WDSGSpatialObject new.
-	pickedGun renderable: magnumMesh.
-	camera addChild: pickedGun.
+	"Create the sky."
+	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector: (Float32x3 z: 1.0)).
+	skyTexture := skyTexture asTextureFor: engine.
+	scene createSkyWithCubeTexture: skyTexture.
+		
+	foxModel := engine resourceCache load3DModel: 'models/glTF-Samples/Fox/Fox.gltf'.
 
-	animationState := magnumMesh deformationState.
-	gunAction := animationState actionNamed: 'Draw'.
-	gunActionFrame := 0.0.
-	gunActionRepeated := false.
+	fox := foxModel instanceSceneNodeNamed: 'fox'.
+	foxScale := 0.015f.
+	fox scaleBy: foxScale.
+	scene add: fox.
 	
+	foxAnimationState := fox renderable deformationState.
+	walkAnimation := foxModel getAnimationNamed: 'Walk'.
+
+	movementTime := 0.0.
+	animationTime := 0.0.
 	model onDeltaTimeDo: [ :delta |
-		gunActionFrame := gunActionFrame + (delta *30.0).
-		animationState
+		| angle omega period speed radius animationWalkSpeed |
+
+		period := 30.0.
+		radius := 5.5.
+		omega := Float twoPi / period.
+
+		speed := omega * radius.
+		animationWalkSpeed := 2.0.
+		animationDilationFactor := speed / animationWalkSpeed.
+
+		movementTime := movementTime + delta.
+		animationTime := animationTime + (delta * animationDilationFactor).
+
+		angle := omega * movementTime.
+		fox transform: (ReversibleAffineTransform3dF32 identity
+			scaleBy: foxScale;
+			rotateRadiansOnY: angle + Float pi;
+			translation: (Float32x3 x: radius * angle cos y: 0 z: radius*angle sin negated);
+			yourself).
+
+		foxAnimationState
 			setRestPose;
-			addAction: gunAction repeated: gunActionRepeated frame: gunActionFrame;
+			applyAnimation: walkAnimation repeated: true inTime: animationTime;
 			computePoseMatrices.
-		(gunActionRepeated not and: [ gunActionFrame > 35 ]) ifTrue: [
-			gunAction := pickedGun renderable actions at: 'Idle'.
-			gunActionFrame := 0.
-			gunActionRepeated := true.
-		]
 	].
 	
 	view := WDAFPSSceneView allowingVR.

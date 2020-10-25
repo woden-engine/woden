@@ -14,35 +14,6 @@ Class {
 	#category : #'WodenEngine-Core-Mesh'
 }
 
-{ #category : #'as yet unclassified' }
-WDCSkinnedMeshAnimationState >> actionNamed: actionName [
-	^ mesh actions at: actionName
-]
-
-{ #category : #adding }
-WDCSkinnedMeshAnimationState >> addAction: action frame: frame [
-	^ self addAction: action repeated: false frame: frame
-]
-
-{ #category : #adding }
-WDCSkinnedMeshAnimationState >> addAction: action repeated: repeated frame: frame [
-	action bones do: [ :bone | self addActionBone: bone repeated: repeated frame: frame ]
-]
-
-{ #category : #adding }
-WDCSkinnedMeshAnimationState >> addActionBone: actionBone repeated: repeated frame: frame [
-	| floorFrameIndex ceilingFrameIndex alpha floorFrame ceilingFrame interpolatedFrame |
-	floorFrameIndex := self computeFrameIndex: frame floor asInteger actionBone: actionBone repeated: repeated.
-	ceilingFrameIndex := self computeFrameIndex: frame ceiling asInteger actionBone: actionBone repeated: repeated.
-	alpha := frame - floorFrameIndex min: 1.0 max: 0.0.
-	
-	floorFrame := actionBone keyframes at: floorFrameIndex.
-	ceilingFrame := actionBone keyframes at: ceilingFrameIndex.
-	
-	interpolatedFrame := self interpolateFrame: floorFrame with: ceilingFrame alpha: alpha.
-	poseState at: actionBone boneIndex + 1 put: interpolatedFrame
-]
-
 { #category : #adding }
 WDCSkinnedMeshAnimationState >> applyAnimation: animation repeated: isRepeated inTime: animationTime [
 	animation channels do: [ :each | self applyAnimationChannel: each repeated: isRepeated inTime: animationTime ]
@@ -91,14 +62,6 @@ WDCSkinnedMeshAnimationState >> createEngineDependantData [
 { #category : #accessing }
 WDCSkinnedMeshAnimationState >> destroyEngineDependantData [
 	poseBuffer := nil.
-]
-
-{ #category : #adding }
-WDCSkinnedMeshAnimationState >> interpolateFrame: a with: b alpha: alpha [
-	| translation rotation |
-	translation := (a translation * (1.0 - alpha)) + (b translation * alpha).
-	rotation := ((a rotation * (1.0 - alpha)) + (b rotation * alpha)) normalized.
-	^ WDCSkinnedModelBoneState new translation: translation; rotation: rotation; yourself
 ]
 
 { #category : #'as yet unclassified' }
