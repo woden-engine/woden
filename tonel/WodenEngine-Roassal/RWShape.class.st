@@ -144,7 +144,7 @@ RWShape >> buildRenderableFor: anElement view: aView parentSceneNode: sceneNode 
 			sceneNode color: (self colorFor: anElement)
 		].
 	
-		aView validScene add: sceneNode.
+		anElement parentGroup asSceneNode addChild: sceneNode.
 	].
 	^ renderable
 
@@ -191,7 +191,7 @@ RWShape >> elementOn: anObject [
 
 { #category : #public }
 RWShape >> elementsOn: objects [
-	^ (objects collect: [ :o | self elementOn: o ]) asRWGroup
+	^ (objects collect: [ :o | self elementOn: o ]) asRWElementList
 ]
 
 { #category : #accessing }

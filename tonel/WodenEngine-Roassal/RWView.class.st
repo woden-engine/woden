@@ -38,21 +38,24 @@ Internal Representation and Key Implementation Points.
 Class {
 	#name : #RWView,
 	#superclass : #WDASceneModel,
+	#traits : 'TRWInteractableObject',
+	#classTraits : 'TRWInteractableObject classTrait',
 	#instVars : [
-		'elements',
 		'cameraLight',
 		'baseShapes',
 		'dynamicsWorld',
 		'signalUpdateCallback',
 		'sceneRenderer',
 		'rigidBodies',
-		'internalElements',
 		'eventHandler',
 		'overlays',
 		'babylonDefaultFont',
 		'elementByIdDictionary',
 		'genidCount',
-		'interactions'
+		'activeGroup',
+		'internalElementsGroup',
+		'groups',
+		'tickingElements'
 	],
 	#category : #'WodenEngine-Roassal-Core'
 }
@@ -62,17 +65,9 @@ RWView class >> initializeWithEngine: anEngine [
 	^ self basicNew: anEngine
 ]
 
-{ #category : #interaction }
-RWView >> @ anInteraction [
-
-	self addInteraction: anInteraction
-]
-
 { #category : #adding }
 RWView >> add: anElement [
-	self assert: anElement isElement.
-	elements add: anElement.
-	anElement addedIn: self
+	activeGroup addChild: anElement
 ]
 
 { #category : #adding }
@@ -92,16 +87,15 @@ RWView >> addCameraLight: color [
 	camera sceneNode addChild: cameraLight.
 ]
 
-{ #category : #interaction }
-RWView >> addInteraction: anInteraction [
-	anInteraction installOnElement: self
+{ #category : #adding }
+RWView >> addGroup: aGroup [
+	groups add: aGroup.
+	aGroup addedInView: self.
 ]
 
 { #category : #adding }
 RWView >> addInternalElement: anElement [
-	self assert: anElement isElement.
-	internalElements add: anElement.
-	anElement addedIn: self
+	internalElementsGroup addChild: anElement
 ]
 
 { #category : #adding }
@@ -116,14 +110,35 @@ RWView >> addRigidBody: rigidBody [
 	rigidBodies add: rigidBody
 ]
 
+{ #category : #adding }
+RWView >> addTickingElement: anElement [
+	self assert: (tickingElements includes: anElement) not.
+	tickingElements add: anElement.
+]
+
 { #category : #accessing }
 RWView >> allElementsInScene [
-	^ internalElements , elements
+	| result |
+	result := OrderedCollection new.
+	self allElementsInSceneDo: [ :each |
+		result add: each.
+	].
+	^ result
+]
+
+{ #category : #accessing }
+RWView >> allElementsInSceneDo: aBlock [
+	groups do: [ :each | each allElementsDo: aBlock ]
 ]
 
 { #category : #interaction }
 RWView >> announce: eventOrClassEvent [
 	eventHandler announce: eventOrClassEvent
+]
+
+{ #category : #converting }
+RWView >> asSceneNode [
+	^ self validScene normalLayer
 ]
 
 { #category : #accessing }
@@ -156,6 +171,15 @@ RWView >> baseShapeNodeFor: baseShapeDescriptor ifAbsentPut: aBlock [
 	]
 ]
 
+{ #category : #'as yet unclassified' }
+RWView >> beginNewGroup [
+	| group |
+	group := RWGroup new.
+	self addGroup: group.
+	activeGroup := group.
+	^ group
+]
+
 { #category : #'background colors' }
 RWView >> blackBackground [
 	^ self backgroundColor: Color black
@@ -165,11 +189,9 @@ RWView >> blackBackground [
 RWView >> boundingBox [
 	"Return the bounding box of the view"
 	| aBox |
-	elements ifEmpty: [ ^ BoxF32 new ].
+	activeGroup ifEmpty: [ ^ BoxF32 new ].
 	
-	aBox := BoxF32 new.
-	elements do: [ :e | aBox insertBox: e boundingBox ].
-	^ aBox
+	^ activeGroup boundingBox
 ]
 
 { #category : #scene }
@@ -244,12 +266,12 @@ RWView >> element: element idChangedFrom: oldId into: newId [
 
 { #category : #accessing }
 RWView >> elementFromModel: aModel [
-	^ elements detect: [ :el | el model == aModel ] ifNone: [ nil ]
+	^ activeGroup children detect: [ :el | el model == aModel ] ifNone: [ nil ]
 ]
 
 { #category : #accessing }
 RWView >> elements [
-	^ elements
+	^ activeGroup children
 ]
 
 { #category : #serialization }
@@ -269,7 +291,7 @@ RWView >> encodeAllElementsInSceneAsJSONPretty [
 { #category : #serialization }
 RWView >> encodeForJSON [
 	^ NeoJSONWriter toString: (Dictionary newFromPairs: {
-		#elements . RWJSONSerializeVisitor new visitAndCollectObjects: elements
+		#elements . RWJSONSerializeVisitor new visitAndCollectObjects: self elements
 	})
 ]
 
@@ -308,14 +330,13 @@ RWView >> getElementById: id ifAbsent: aBlock [
 
 { #category : #initialization }
 RWView >> initializeModel [
-	elements := OrderedCollection new.
-	internalElements := OrderedCollection new.
+	groups := OrderedCollection new.
 	eventHandler := Announcer new.
 	baseShapes := Dictionary new.
 	rigidBodies := OrderedCollection new.
 	overlays := OrderedCollection new.
 	elementByIdDictionary := Dictionary new.
-	interactions := OrderedCollection new.
+	tickingElements := OrderedCollection new.
 	genidCount := 0.
 	self initializeScene.
 ]
@@ -328,31 +349,24 @@ RWView >> initializeScene [
 	scene backgroundColor: Color white.
 
 	"Add the camera"
+	internalElementsGroup := self beginNewGroup.
 	camera := RWCamera new.
 	camera translateByZ: 5.0.
 	self addInternalElement: camera.
 	self addCameraLight: Color lightGray.
-]
+	
+	self beginNewGroup.
 
-{ #category : #accessing }
-RWView >> interactions [
-	^ interactions
 ]
 
 { #category : #accessing }
 RWView >> numberOfElements [
-	^ elements size
+	^ activeGroup numberOfElements
 ]
 
 { #category : #accessing }
 RWView >> numberOfOverlays [
 	^ overlays size
-]
-
-{ #category : #interaction }
-RWView >> on: anEvent do: aBlock [
-	self deprecated: 'Please use when:do: instead of on:do'.
-	eventHandler when: anEvent do: aBlock.
 ]
 
 { #category : #accessing }
@@ -365,8 +379,8 @@ RWView >> rayCast: ray [
 	| bestDistance bestResult distanceResult distance result |
 	bestDistance := Float infinity.
 	bestResult := nil.
-	elements do: [ :element |
-		distanceResult := element rayCast: ray.
+	groups do: [ :group |
+		distanceResult := group rayCast: ray.
 		distance := distanceResult key.
 		result := distanceResult value.
 		(result notNil and: [ distance < bestDistance ]) ifTrue: [ 
@@ -383,16 +397,14 @@ RWView >> rayCast: ray satisfying: predicate [
 	| bestDistance bestResult distanceResult distance result |
 	bestDistance := Float infinity.
 	bestResult := nil.
-	elements do: [ :element |
-		(predicate value: element) ifTrue: [ 
-			distanceResult := element rayCast: ray.
-			distance := distanceResult key.
-			result := distanceResult value.
-			(result notNil and: [ distance < bestDistance ]) ifTrue: [
-				bestDistance := distance.
-				bestResult := result.
-			]
-		].
+	groups do: [ :group |
+		distanceResult := group rayCast: ray satisfying: predicate.
+		distance := distanceResult key.
+		result := distanceResult value.
+		(result notNil and: [ distance < bestDistance ]) ifTrue: [ 
+			bestDistance := distance.
+			bestResult := result.
+		]
 	].
 
 	^ bestDistance -> bestResult.
@@ -411,12 +423,18 @@ RWView >> rayPickNormalizedPosition: aPoint [
 
 { #category : #adding }
 RWView >> removeElement: anElement [
-	elements remove: anElement ifAbsent: [ internalElements remove: anElement ifAbsent: [ ] ]
+	self flag: 'TODO: Implement this properly'.
+	"elements remove: anElement ifAbsent: [ internalElements remove: anElement ifAbsent: [ ] ]"
 ]
 
 { #category : #adding }
 RWView >> removeOverlay: anOverlay [
 	overlays remove: anOverlay
+]
+
+{ #category : #adding }
+RWView >> removeTickingElement: anElement [
+	tickingElements remove: anElement.
 ]
 
 { #category : #rendering }
@@ -435,7 +453,7 @@ RWView >> render3DOnWindow: aWindow extraRenderTime: extraRenderTime [
 { #category : #path }
 RWView >> sessionChanged [
 	babylonDefaultFont := nil.
-	elements do: [ :each | each changed ].
+	groups do: [ :each | each changed ].
 	super sessionChanged.
 
 ]
@@ -469,8 +487,7 @@ RWView >> updateForFrameDelta: delta [
 	self flag: 'TODO: Use a deterministic timestep here!!!'.
 	delta > (1.0 / 10.0) ifTrue: [ ^ self ].
 	self simulatePhysics: delta.
-	elements do: [ :element | element simulateTime: delta ].
-	internalElements do: [ :element | element simulateTime: delta ].
+	tickingElements do: [ :each | each simulateTime: delta ].
 
 ]
 

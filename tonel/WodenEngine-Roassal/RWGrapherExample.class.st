@@ -71,7 +71,7 @@ RWGrapherExample >> example04 [
 	ds := RWData new.
 	ds dotShape sphere
 		size: 1;
-		color: [ colors removeFirst ].
+		color: [ :sample | colors at: sample fourth ].
 	ds points: points.
 	ds
 		x: #first;
@@ -93,6 +93,6 @@ RWGrapherExample >> sampleData [
 	res := OrderedCollection new.
 	1 to: 20 do: [ :x | 
 		1 to: 20 do: [ :z |
-			res add: { x. r next * 10 + 1. z } ] ].
+			res add: { x. r next * 10 + 1. z . res size + 1 } ] ].
 	^ res
 ]

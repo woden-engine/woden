@@ -64,7 +64,7 @@ RWEdgeBuilder >> initialize [
 
 { #category : #private }
 RWEdgeBuilder >> resetEdges [
-	createdEdges := RWGroup new
+	createdEdges := RWElementList new
 ]
 
 { #category : #accessing }

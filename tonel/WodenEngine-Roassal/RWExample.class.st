@@ -629,6 +629,145 @@ RWExample >> growingCubes [
 	^ v
 ]
 
+{ #category : #trees }
+RWExample >> helixExplicitCylinderLines [
+	<script: 'self new helixExplicitCylinderLines open'>
+	| view helixPoints |
+
+	view := RWView new.
+	
+	helixPoints := (1.0 to: 100.0 by: 0.25) collect: [ :t |
+		Float32x3 x: t cos * 10.0 y: t sin * 10.0 z: -1 * t
+	].
+
+	1 to: helixPoints size - 1 do: [ :i |
+		| edge |
+		edge := RWCylinderLine red
+			slices: 8;
+			radius: 1.0;
+			edgeFrom: (helixPoints at: i) to: (helixPoints at: i + 1).
+		view add: edge.
+	].
+
+	view addInteraction: RWOrbitController.
+	^ view
+]
+
+{ #category : #trees }
+RWExample >> helixExplicitLines [
+	<script: 'self new helixExplicitLines open'>
+	| view helixPoints |
+
+	view := RWView new.
+	
+	helixPoints := (1.0 to: 100.0 by: 0.25) collect: [ :t |
+		Float32x3 x: t cos * 10.0 y: t sin * 10.0 z: -1 * t
+	].
+
+	1 to: helixPoints size - 1 do: [ :i |
+		| edge |
+		edge := RWLine red edgeFrom: (helixPoints at: i) to: (helixPoints at: i + 1).
+		view add: edge.
+	].
+
+	view addInteraction: RWOrbitController.
+	^ view
+]
+
+{ #category : #trees }
+RWExample >> helixExplicitMeshCylinderColoredLines [
+	<script: 'self new helixExplicitMeshCylinderColoredLines open'>
+	| view helixPoints helix helixColors |
+
+	view := RWView new.
+	
+	helixPoints := (1.0 to: 100.0 by: 0.25) collect: [ :t |
+		Float32x3 x: t cos * 10.0 y: t sin * 10.0 z: -1 * t
+	].
+	helixColors := Color wheel: helixPoints size.
+
+	helix := (RWMeshShape for: view buildWith: [:meshBuilder |
+		meshBuilder
+			useDefaultMaterial;
+			addPolyLineWithPoints: helixPoints colors: helixColors radius: 1.0 slices: 8;
+			computeNormals
+	])
+		element.
+	view add: helix.
+	view addInteraction: RWOrbitController.
+	^ view
+]
+
+{ #category : #trees }
+RWExample >> helixExplicitMeshCylinderLines [
+	<script: 'self new helixExplicitMeshCylinderLines open'>
+	| view helixPoints helix |
+
+	view := RWView new.
+	
+	helixPoints := (1.0 to: 100.0 by: 0.25) collect: [ :t |
+		Float32x3 x: t cos * 10.0 y: t sin * 10.0 z: -1 * t
+	].
+
+	helix := (RWMeshShape for: view buildWith: [:meshBuilder |
+		meshBuilder
+			useDefaultMaterial;
+			addPolyLineWithPoints: helixPoints radius: 1.0 slices: 8;
+			computeNormals
+	])
+		color: Color red;
+		element.
+	view add: helix.
+	view addInteraction: RWOrbitController.
+	^ view
+]
+
+{ #category : #trees }
+RWExample >> helixExplicitMeshLines [
+	<script: 'self new helixExplicitMeshLines open'>
+	| view helixPoints helix |
+
+	view := RWView new.
+	
+	helixPoints := (1.0 to: 100.0 by: 0.25) collect: [ :t |
+		Float32x3 x: t cos * 10.0 y: t sin * 10.0 z: -1 * t
+	].
+
+	helix := (RWMeshShape for: view buildWith: [:meshBuilder |
+		meshBuilder
+			useFlatColorMaterial;
+			addPolyLineWithPoints: helixPoints
+	])
+		color: Color red;
+		element.
+	view add: helix.
+	view addInteraction: RWOrbitController.
+	^ view
+]
+
+{ #category : #trees }
+RWExample >> helixExplicitMeshLinesColored [
+	<script: 'self new helixExplicitMeshLinesColored open'>
+	| view helixPoints helix helixColors |
+
+	view := RWView new.
+	
+	helixPoints := (1.0 to: 100.0 by: 0.25) collect: [ :t |
+		Float32x3 x: t cos * 10.0 y: t sin * 10.0 z: -1 * t
+	].
+	helixColors := Color wheel: helixPoints size.
+
+	helix := (RWMeshShape for: view buildWith: [:meshBuilder |
+		meshBuilder
+			useFlatColorMaterial;
+			addPolyLineWithPoints: helixPoints colors: helixColors.
+	])
+		element.
+	view add: helix.
+	view addInteraction: RWOrbitController.
+	^ view
+]
+
 { #category : #'as yet unclassified' }
 RWExample >> highlighting [
 	<script: 'self new highlighting open'>

@@ -44,6 +44,15 @@ WDCComplexGenericMeshBuilder >> addP: position [
 ]
 
 { #category : #adding }
+WDCComplexGenericMeshBuilder >> addP: position C: color [
+	vertices add: (WDCGenericVertexF32 new
+		position: (transform transformPosition: position);
+		color: color asFloat32x4;
+		yourself)
+
+]
+
+{ #category : #adding }
 WDCComplexGenericMeshBuilder >> addP: position N: normal [
 	vertices add: (WDCGenericVertexF32 new
 		position: (transform transformPosition: position);
@@ -194,6 +203,11 @@ WDCComplexGenericMeshBuilder >> rotateRadiansOnZ: radians [
 	transform rotateRadiansOnZ: radians
 ]
 
+{ #category : #initialization }
+WDCComplexGenericMeshBuilder >> setIdentityTransform [
+	self transform: ReversibleAffineTransform3dF32 identity
+]
+
 { #category : #'as yet unclassified' }
 WDCComplexGenericMeshBuilder >> tangentForAxis: normalAxis [
 	^ NormalAxis at: ((normalAxis + 1) rem: NormalAxis size) + 1
@@ -212,4 +226,14 @@ WDCComplexGenericMeshBuilder >> transform: aTransform [
 { #category : #accessing }
 WDCComplexGenericMeshBuilder >> translateToX: tx y: ty z: tz [
 	transform translateToX: tx y: ty z: tz
+]
+
+{ #category : #accessing }
+WDCComplexGenericMeshBuilder >> withTransform: newTransform do: aBlock [
+	| oldTransform |
+	oldTransform := transform.
+	transform := newTransform.
+	[
+		aBlock cull: self
+	] ensure: [ transform := oldTransform ]
 ]

@@ -6,7 +6,7 @@ Class {
 		'from',
 		'to'
 	],
-	#category : 'WodenEngine-Roassal-Core'
+	#category : #'WodenEngine-Roassal-Core'
 }
 
 { #category : #constructions }
@@ -59,14 +59,14 @@ RWEdge >> from [
 ]
 
 { #category : #accessing }
-RWEdge >> from: anElement [
-	from := anElement.
-	anElement addConnectedEdge: self
+RWEdge >> from: anElementOrPoint [
+	from := anElementOrPoint.
+	anElementOrPoint isRWObject ifTrue: [ anElementOrPoint addConnectedEdge: self ]
 ]
 
 { #category : #accessing }
 RWEdge >> fromPosition [
-	^ from position
+	^ from asPositionRelativeToGroup: self parentGroup
 ]
 
 { #category : #testing }
@@ -97,12 +97,12 @@ RWEdge >> to [
 ]
 
 { #category : #accessing }
-RWEdge >> to: anElement [
-	to := anElement.
-	anElement addConnectedEdge: self
+RWEdge >> to: anElementOrPoint [
+	to := anElementOrPoint.
+	anElementOrPoint isRWObject ifTrue: [ anElementOrPoint addConnectedEdge: self ]
 ]
 
 { #category : #accessing }
 RWEdge >> toPosition [
-	^ from position
+	^ to asPositionRelativeToGroup: self parentGroup
 ]

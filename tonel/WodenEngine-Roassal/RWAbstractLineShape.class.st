@@ -5,7 +5,7 @@ Class {
 		'from',
 		'to'
 	],
-	#category : 'WodenEngine-Roassal-Core'
+	#category : #'WodenEngine-Roassal-Core'
 }
 
 { #category : #configuration }
@@ -26,8 +26,8 @@ RWAbstractLineShape >> baseShapeDescriptor [
 { #category : #computing }
 RWAbstractLineShape >> boundingBoxFor: element [
 	^ BoxF32 empty
-		insertPoint: element from position;
-		insertPoint: element to position;
+		insertPoint: element fromPosition;
+		insertPoint: element toPosition;
 		yourself
 ]
 

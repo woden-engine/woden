@@ -6,7 +6,7 @@ Class {
 		'createdElements',
 		'shapeInitializer'
 	],
-	#category : 'WodenEngine-Roassal-Builder'
+	#category : #'WodenEngine-Roassal-Builder'
 }
 
 { #category : #accessing }
@@ -46,7 +46,7 @@ RWShapeBuilder >> doesNotUnderstand: aMessage [
 
 { #category : #public }
 RWShapeBuilder >> elementOn: object [
-	^ (self elementsOn: (RWGroup with: object)) first
+	^ (self elementsOn: (RWElementList with: object)) first
 ]
 
 { #category : #public }

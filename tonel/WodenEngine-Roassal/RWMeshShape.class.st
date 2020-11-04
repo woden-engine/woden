@@ -84,6 +84,11 @@ RWMeshShape >> heightFor: anElement [
 	^ (super heightFor: anElement) * mesh boundingBox height
 ]
 
+{ #category : #computing }
+RWMeshShape >> localCenterFor: anElement [
+	^ (self rawExtentFor: anElement) * mesh boundingBox center
+]
+
 { #category : #accessing }
 RWMeshShape >> mesh [
 	^ mesh
@@ -92,6 +97,14 @@ RWMeshShape >> mesh [
 { #category : #accessing }
 RWMeshShape >> mesh: anObject [
 	mesh := anObject
+]
+
+{ #category : #computing }
+RWMeshShape >> rawExtentFor: element [
+	^ Float32x3
+		x: (super widthFor: element)
+		y: (super heightFor: element)
+		z: (super depthFor: element)
 ]
 
 { #category : #computing }

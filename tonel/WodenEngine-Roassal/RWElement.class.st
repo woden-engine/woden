@@ -1,22 +1,19 @@
 Class {
 	#name : #RWElement,
-	#superclass : #RWAnnounceableObject,
-	#traits : 'TWDCTransformationManipulationMethods',
-	#classTraits : 'TWDCTransformationManipulationMethods classTrait',
+	#superclass : #RWNode,
+	#traits : 'TRWInteractableObject',
+	#classTraits : 'TRWInteractableObject classTrait',
 	#instVars : [
 		'shape',
 		'model',
-		'sceneNode',
 		'renderable',
 		'mass',
 		'rigidBody',
 		'connectedEdges',
-		'view',
 		'behaviors',
-		'localBoundingBox',
-		'boundingBox',
 		'color',
-		'id'
+		'id',
+		'isTickingElement'
 	],
 	#category : #'WodenEngine-Roassal-Core'
 }
@@ -45,6 +42,7 @@ RWElement >> addBehavior: aBehavior [
 	behaviorObject := aBehavior asRWElementBehavior.
 	behaviors add: behaviorObject.
 	behaviorObject addedInElement: self.
+	self ensureIsTickingElement.
 ]
 
 { #category : #adding }
@@ -53,18 +51,14 @@ RWElement >> addConnectedEdge: anEdge [
 	self connectedEdges add: anEdge
 ]
 
-{ #category : #interaction }
-RWElement >> addInteraction: anInteraction [
-	anInteraction installOnElement: self
-]
-
 { #category : #adding }
-RWElement >> addedIn: aView [
+RWElement >> addedInView: aView [
+	super addedInView: aView.
 	renderable := shape buildRenderableFor: self view: aView parentSceneNode: sceneNode.
 	self buildRigidBodyForView: aView.
 
-	view := aView.
-	id ifNotNil: [ view element: self idChangedFrom: nil into: id ]
+	id ifNotNil: [ view element: self idChangedFrom: nil into: id ].
+	isTickingElement ifTrue: [ view addTickingElement: self ].
 ]
 
 { #category : #interaction }
@@ -72,19 +66,9 @@ RWElement >> announce: eventOrClassEvent [
 	announcer announce: eventOrClassEvent
 ]
 
-{ #category : #converting }
-RWElement >> asSceneNode [
-	^ sceneNode
-]
-
 { #category : #anchors }
 RWElement >> bottomAnchorPoint [
 	^ RWElementBottomAnchorPoint for: self
-]
-
-{ #category : #accessing }
-RWElement >> boundingBox [
-	^ boundingBox ifNil: [boundingBox := self localBoundingBox transformedWith: sceneNode transform ]
 ]
 
 { #category : #physics }
@@ -141,18 +125,20 @@ RWElement >> colorUsedForRendering [
 { #category : #'accessing - edges' }
 RWElement >> connectedEdges [
 	"Return the list of connected egdes (i.e., incoming and outgoing edges)"
-	connectedEdges ifNil: [ connectedEdges := RWGroup new ].
+	connectedEdges ifNil: [ connectedEdges := RWElementList new ].
 	^ connectedEdges
-]
-
-{ #category : #initialization }
-RWElement >> createSceneNode [
-	^ WDSGSpatialObject new
 ]
 
 { #category : #accessing }
 RWElement >> depth [
 	^ shape depthFor: self
+]
+
+{ #category : #'as yet unclassified' }
+RWElement >> ensureIsTickingElement [
+	isTickingElement ifTrue: [ ^ self ].
+	isTickingElement := true.
+	view ifNotNil: [ view addTickingElement: self ]
 ]
 
 { #category : #accessing }
@@ -192,20 +178,9 @@ RWElement >> incomingEdges [
 RWElement >> initialize [
 	super initialize.
 	behaviors := OrderedCollection new.
-	sceneNode := self createSceneNode.
 	shape := RWNullShape new.
 	color := Float32x4 x: 1.0 y: 1.0 z: 1.0 w: 1.0.
-]
-
-{ #category : #'as yet unclassified' }
-RWElement >> interactions [
-	^ self attributeAt: #interactions ifAbsentPut: [ OrderedCollection new ]
-]
-
-{ #category : #updating }
-RWElement >> invalidateBoundingBoxCache [
-	localBoundingBox := nil.
-	boundingBox := nil
+	isTickingElement := false.
 ]
 
 { #category : #testing }
@@ -273,35 +248,6 @@ RWElement >> notifyConnectedEdges [
 	connectedEdges do: [ :edge | edge connectedElementChanged: self ]
 ]
 
-{ #category : #accessing }
-RWElement >> orientation [
-	^ sceneNode transform matrix
-]
-
-{ #category : #accessing }
-RWElement >> orientation: anOrientation [
-	self notifyConnectedEdges.
-	self invalidateBoundingBoxCache.
-	sceneNode transform orthonormal: anOrientation asFloat32x3x3.
-	sceneNode transformChanged.
-]
-
-{ #category : #accessing }
-RWElement >> orientationMatrix [
-	^ sceneNode transform matrix
-]
-
-{ #category : #accessing }
-RWElement >> position [
-	^ sceneNode position
-]
-
-{ #category : #accessing }
-RWElement >> position: aPosition [
-	self invalidateBoundingBoxCache.
-	^ sceneNode position: aPosition
-]
-
 { #category : #'ray casting' }
 RWElement >> rayCast: ray [
 	| worldBoundingBox distance |
@@ -315,10 +261,16 @@ RWElement >> rayCast: ray [
 
 { #category : #adding }
 RWElement >> remove [
-	"Remove the element from the view it is contained in. Sending #remove to an element has the effect of making it diseapper from the screen. The Virtual Buffer are also correctly updated"
-    self view removeElement: self.
-    sceneNode removeFromScene.
-    view signalUpdate.
+	parentGroup ifNil: [ ^ self ].
+	parentGroup removeChild: self.
+
+]
+
+{ #category : #'as yet unclassified' }
+RWElement >> removedFromView: aView [
+	sceneNode removeFromScene.
+	isTickingElement ifTrue: [ aView removeTickingElement: self ].
+	super removedFromView: aView.
 ]
 
 { #category : #accessing }
@@ -335,42 +287,6 @@ RWElement >> replaceSceneNode: newNode [
 { #category : #physics }
 RWElement >> rigidBody [
 	^ rigidBody
-]
-
-{ #category : #orientation }
-RWElement >> rotateByX: angle [
-	sceneNode rotateRadiansOnX: angle.
-	self invalidateBoundingBoxCache.
-]
-
-{ #category : #orientation }
-RWElement >> rotateByXDegrees: angle [
-	sceneNode rotateDegreesOnX: angle.
-	self invalidateBoundingBoxCache.
-]
-
-{ #category : #orientation }
-RWElement >> rotateByY: angle [
-	sceneNode rotateRadiansOnY: angle.
-	self invalidateBoundingBoxCache.
-]
-
-{ #category : #orientation }
-RWElement >> rotateByYDegrees: angle [
-	sceneNode rotateDegreesOnY: angle.
-	self invalidateBoundingBoxCache.
-]
-
-{ #category : #orientation }
-RWElement >> rotateByZ: angle [
-	sceneNode rotateRadiansOnZ: angle.
-	self invalidateBoundingBoxCache.
-]
-
-{ #category : #orientation }
-RWElement >> rotateByZDegrees: angle [
-	sceneNode rotateDegreesOnZ: angle.
-	self invalidateBoundingBoxCache.
 ]
 
 { #category : #accessing }
@@ -422,29 +338,9 @@ RWElement >> trachelShape [
 ]
 
 { #category : #accessing }
-RWElement >> transform [
-	^ sceneNode transform
-]
-
-{ #category : #accessing }
-RWElement >> transform: aTransform [
+RWElement >> transformChanged [
+	super transformChanged.
 	self notifyConnectedEdges.
-	self invalidateBoundingBoxCache.
-	sceneNode transform: aTransform
-]
-
-{ #category : #translation }
-RWElement >> translateBy: translation [
-	sceneNode translateBy: translation.
-	self notifyConnectedEdges.
-	self invalidateBoundingBoxCache.
-]
-
-{ #category : #translation }
-RWElement >> translateTo: aWMVector3 [
-	sceneNode translateTo: aWMVector3.
-	self notifyConnectedEdges.
-	self invalidateBoundingBoxCache.
 ]
 
 { #category : #accessing }

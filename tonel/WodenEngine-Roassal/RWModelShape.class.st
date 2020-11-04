@@ -23,8 +23,18 @@ RWModelShape >> buildRenderableFor: anElement view: aView parentSceneNode: paren
 ]
 
 { #category : #computing }
+RWModelShape >> depthFor: anElement [
+	^ (super depthFor: anElement) * shapeNode localBoundingBox depth
+]
+
+{ #category : #computing }
 RWModelShape >> heightFor: anElement [
 	^ (super heightFor: anElement) * shapeNode localBoundingBox height
+]
+
+{ #category : #computing }
+RWModelShape >> localCenterFor: anElement [
+	^ (self rawExtentFor: anElement) * shapeNode localBoundingBox center
 ]
 
 { #category : #accessing }
@@ -47,7 +57,20 @@ RWModelShape >> nodeName: anObject [
 	nodeName := anObject
 ]
 
+{ #category : #computing }
+RWModelShape >> rawExtentFor: element [
+	^ Float32x3
+		x: (super widthFor: element)
+		y: (super heightFor: element)
+		z: (super depthFor: element)
+]
+
 { #category : #hooks }
 RWModelShape >> validModelLibraryFor: anEngine [
 	^ anEngine resourceCache load3DModel: modelName
+]
+
+{ #category : #computing }
+RWModelShape >> widthFor: anElement [
+	^ (super widthFor: anElement) * shapeNode localBoundingBox width
 ]

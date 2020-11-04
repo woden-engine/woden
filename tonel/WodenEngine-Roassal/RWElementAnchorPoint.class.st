@@ -18,6 +18,14 @@ RWElementAnchorPoint >> addConnectedEdge: anEdge [
 ]
 
 { #category : #accessing }
+RWElementAnchorPoint >> asPositionRelativeToGroup: targetParentGroup [
+	self assert: targetParentGroup isNotNil.
+	element parentGroup == targetParentGroup ifTrue: [ ^ self position ].
+	^ targetParentGroup globalTransform inverseTransformPosition: self position
+	
+]
+
+{ #category : #accessing }
 RWElementAnchorPoint >> element [
 	^ element
 ]

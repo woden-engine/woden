@@ -34,6 +34,11 @@ RWCamera >> isPerspective: trueOrFalse [
 	sceneNode isPerspective: trueOrFalse
 ]
 
+{ #category : #accessing }
+RWCamera >> projectionMatrix [
+	^ sceneNode projectionMatrix
+]
+
 { #category : #'camera projection' }
 RWCamera >> worldRayAtWindowCoordinate: point [
 	| ray |
