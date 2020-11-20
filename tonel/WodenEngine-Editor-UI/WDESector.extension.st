@@ -7,11 +7,19 @@ WDESector >> buildContextMenuFor: levelSession on: menuPresenter [
 			item
 				name: 'New sector layer';
 				action: [
-					| newLayer |
+					| newLayer oldSelection newSelection |
 					newLayer := WDESectorLayer new.
+					oldSelection := levelSession selection.
+					newSelection := WDELevelEditorSelection for: {newLayer}.
 					levelSession
-						doWith: [ self addLayer: newLayer ]
-						undoWith: [ self removeLayer: newLayer ]
+						doWith: [
+							self addLayer: newLayer.
+							levelSession selection: newSelection
+						]
+						undoWith: [
+							self removeLayer: newLayer.
+							levelSession selection: oldSelection
+						]
 				]
 		]
 ]

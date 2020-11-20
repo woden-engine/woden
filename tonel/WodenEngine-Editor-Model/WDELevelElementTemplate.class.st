@@ -5,11 +5,11 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-WDELevelElementTemplate >> instantiateInSectorLayer: sectorLayer placingInBox: box [
+WDELevelElementTemplate >> instantiateInSectorLayer: sectorLayer placingInBox: box session: levelEditorSession [
 ]
 
 { #category : #'as yet unclassified' }
-WDELevelElementTemplate >> instantiateInSectorLayer: sectorLayer placingInPoint: point [
+WDELevelElementTemplate >> instantiateInSectorLayer: sectorLayer placingInPoint: point session: levelEditorSession [
 ]
 
 { #category : #testing }

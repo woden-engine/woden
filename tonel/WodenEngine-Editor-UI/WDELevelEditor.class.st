@@ -204,6 +204,12 @@ WDELevelEditor >> cameraMenu [
 		yourself
 ]
 
+{ #category : #initialization }
+WDELevelEditor >> connectForNewLevel: level [
+	levelTreeView roots: {level}.
+	level whenAddedOrRemovedElementDo: [	levelTreeView roots: {level} ]
+]
+
 { #category : #accessing }
 WDELevelEditor >> content [
 	^ content
@@ -385,7 +391,6 @@ WDELevelEditor >> mainToolbar [
 
 { #category : #initialization }
 WDELevelEditor >> modelChanged [
-	levelTreeView roots: self model level children.
 	elementProperties model: self model selection.
 	self model
 		whenSelectionChangedDo: [ :selection |
@@ -396,9 +401,10 @@ WDELevelEditor >> modelChanged [
 			elementProperties model: selection
 		];
 		whenLevelChangedDo: [ :newLevel |
-			levelTreeView roots: self model level children.
-			self model level whenAddedOrRemovedElementDo: [levelTreeView roots: self model level children]
-		]
+			self connectForNewLevel: newLevel
+		].
+		self connectForNewLevel: self model level
+
 		
 ]
 

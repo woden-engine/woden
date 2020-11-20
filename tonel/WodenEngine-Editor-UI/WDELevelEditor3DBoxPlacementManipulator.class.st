@@ -12,7 +12,7 @@ WDELevelEditor3DBoxPlacementManipulator >> activateAction [
 	(boundingBox isEmpty not and: [ boundingBox width > 0 and: [ boundingBox height > 0 and: [ boundingBox depth > 0 ] ] ]) ifTrue: [
 		self levelEditorSession activeSectorLayer ifNotNil: [ :sectorLayer |
 			self levelEditorSession activeLevelElementTemplate ifNotNil: [ :elementTemplate |
-				elementTemplate instantiateInSectorLayer: sectorLayer placingInBox: boundingBox
+				elementTemplate instantiateInSectorLayer: sectorLayer placingInBox: boundingBox session: self levelEditorSession
 			].
 		].
 	].

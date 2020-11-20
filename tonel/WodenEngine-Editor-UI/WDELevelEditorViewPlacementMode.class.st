@@ -11,7 +11,7 @@ WDELevelEditorViewPlacementMode >> onMouseButtonRelease: event [
 			elementTemplate isPointElementTemplate ifTrue: [
 				| entityLocation |
 				entityLocation := self snapToSubGrid: (self cameraXYToWorld: event position distance: 5.0).
-				elementTemplate instantiateInSectorLayer: sectorLayer placingInPoint: entityLocation.
+				elementTemplate instantiateInSectorLayer: sectorLayer placingInPoint: entityLocation session: self levelEditorSession.
 			]
 		]
 	]
