@@ -11,7 +11,8 @@ Class {
 		'lastMousePosition',
 		'handledHere',
 		'eventQueue',
-		'displayFormMutex'
+		'displayFormMutex',
+		'textureSceneGraphNode'
 	],
 	#category : #'WodenEngine-Core-Window'
 }
@@ -22,6 +23,31 @@ WDCMorphicWindow >> announceDeleted [
 		self destroyRenderingResources
 	].
 	^ super announceDeleted
+]
+
+{ #category : #rendering }
+WDCMorphicWindow >> buildSceneGraphNodeWith: builder [
+	| texture textureExtent |
+	self checkSession.
+	(builder isFormSGAGPUBuilder not or: [ resolveRenderTarget isNil ]) ifTrue: [ 
+		^ builder rectangle: self bounds color: Color red
+	].
+
+	textureSceneGraphNode ifNil: [ textureSceneGraphNode := builder agpuTextureNode ].
+	framebuffer := resolveRenderTarget framebuffers first.
+	
+	textureExtent := framebuffer colorAttachments first extent.
+	texture := framebuffer colorAttachments first validHandle.
+	textureSceneGraphNode texture = texture ifFalse: [
+		textureSceneGraphNode
+			isFullyOpaque: true;
+			extent: textureExtent;
+			sourceRectangle: (0@0 extent: textureExtent);
+			texture: texture;
+			view: (builder createViewForTexture: texture)
+	].
+	textureSceneGraphNode rectangle: self innerBounds.
+	^ textureSceneGraphNode
 ]
 
 { #category : #'mouse capture' }
@@ -117,6 +143,13 @@ WDCMorphicWindow >> destroyRenderingResources [
 WDCMorphicWindow >> doCommitSurface [
 	| pitch slicePitch |
 	
+	self world ifNotNil: [:world |
+		world worldState worldRenderer isAGPUWorldRenderer ifTrue: [
+			self changed.
+			^ self
+		]
+	].
+
 	displayForm ifNil: [ ^ self ].
 	pitch := displayForm width * 4.
 	slicePitch := pitch * displayForm height.
@@ -140,8 +173,8 @@ WDCMorphicWindow >> drawOn: aCanvas [
 	displayFormMutex critical: [
 		displayForm ifNotNil: [ 
 			aCanvas
-				fillRectangle: self bounds color: Color black;
-				translucentImage: displayForm at: self bounds origin.
+				fillRectangle: self innerBounds color: Color black;
+				translucentImage: displayForm at: self innerBounds origin.
 		].
 	]
 
@@ -149,7 +182,7 @@ WDCMorphicWindow >> drawOn: aCanvas [
 
 { #category : #initialization }
 WDCMorphicWindow >> drawingSurfaceExtent [
-	^ self innerBounds extent asIntegerPoint
+	^ (self innerBounds extent * self worldRendererScaleFactor) ceiling
 ]
 
 { #category : #accessing }
@@ -198,6 +231,7 @@ WDCMorphicWindow >> initializeForNewSession [
 	engine checkSession.
 	renderTarget := nil.
 	lastMousePosition := 0@0.
+	textureSceneGraphNode := nil.
 	self checkRenderTarget.
 
 	session := Smalltalk session.
@@ -265,4 +299,10 @@ WDCMorphicWindow >> validRenderTarget [
 WDCMorphicWindow >> validResolveRenderTarget [
 	self checkSession; checkRenderTarget.
 	^ resolveRenderTarget
+]
+
+{ #category : #initialization }
+WDCMorphicWindow >> worldRendererScaleFactor [
+	^ self world ifNil: [ 1 ]
+		ifNotNil: [ :world | world worldState worldRenderer scaleFactor]
 ]

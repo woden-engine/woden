@@ -36,26 +36,6 @@ Class {
 	#category : #'WodenEngine-Core-Engine'
 }
 
-{ #category : #preferences }
-WDCEngine class >> allowVR [
-	^ AllowVR ifNil: [ AllowVR := false ]
-]
-
-{ #category : #preferences }
-WDCEngine class >> allowVR: aBoolean [
-	AllowVR := aBoolean
-]
-
-{ #category : #preferences }
-WDCEngine class >> debugLayerEnabled [
-	^ DebugLayerEnabled ifNil: [ DebugLayerEnabled := false ]
-]
-
-{ #category : #preferences }
-WDCEngine class >> debugLayerEnabled: aBoolean [
-	^ DebugLayerEnabled := aBoolean
-]
-
 { #category : #accessing }
 WDCEngine class >> default [
 	^ DefaultEngine ifNil: [ DefaultEngine := self new ]
@@ -157,12 +137,6 @@ WDCEngine class >> wodenSettingsOn: aBuilder [
 		label: 'Woden';
 		description: 'Woden Engine Settings';
 		with: [
-			(aBuilder setting: #debugLayerEnabled)
-				label: 'Debug Layer enabled';
-				description: 'This enables the graphics API debug layer (Vulkan Only).'.
-			(aBuilder setting: #allowVR)
-				label: 'Allow VR';
-				description: 'This enables the support for VR (OpenVR headers such as the HTC Vive).'.
 			(aBuilder setting: #tracingEnabled)
 				label: 'Tracing enabled';
 				description: 'This enables the support for tracing engine logs.'.
@@ -287,17 +261,10 @@ WDCEngine >> createBasicRenderPassWithOnlyColor: aColor [
 
 { #category : #initialization }
 WDCEngine >> createDevice [
-	| platform deviceOpenInfo |
-	platform := AGPU firstPlatform.
-	platform ifNil: [ self error: 'Failed to open the AGPU platform' ].
-
-	deviceOpenInfo := AGPUDeviceOpenInfo new debug_layer: self class debugLayerEnabled asBit.
-	self class allowVR ifTrue: [ 
-		deviceOpenInfo open_flags: AGPU_DEVICE_OPEN_FLAG_ALLOW_VR.
+	device ifNil: [ 
+		device := AGPU mainDevice.
+		device ifNil: [ self error: 'Failed to open the AGPU device' ].
 	].
-	
-	device := platform openDevice: deviceOpenInfo.
-	device ifNil: [ self error: 'Failed to open the AGPU device' ].
 	
 	vrSystem := (device isFeatureSupported: AGPU_FEATURE_VRDISPLAY) ~= 0
 		ifTrue: [ WDCAGPUVRSystem for: self ]
