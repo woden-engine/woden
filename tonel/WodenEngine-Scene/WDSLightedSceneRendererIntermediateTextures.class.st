@@ -19,7 +19,8 @@ Class {
 		'sceneLDRRenderPass',
 		'sceneLDRRenderTarget',
 		'sceneLuminanceComputationTextures',
-		'sceneLuminanceComputationPasses'
+		'sceneLuminanceComputationPasses',
+		'sceneHDRColorResolveTexture'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -55,6 +56,8 @@ WDSLightedSceneRendererIntermediateTextures >> applyToRenderingViewport: renderi
 
 	renderingViewport
 		sceneHDRRenderTarget: sceneHDRRenderTarget;
+		sceneHDRColorTexture: sceneHDRColorTexture;
+		sceneHDRColorResolveTexture: sceneHDRColorResolveTexture;
 		sceneHDRRenderPass: sceneHDRRenderPass;
 		sceneLDRRenderTarget: sceneLDRRenderTarget;
 		sceneLDRRenderPass: sceneLDRRenderPass;
@@ -77,8 +80,12 @@ WDSLightedSceneRendererIntermediateTextures >> createMainRenderTargets [
 			sample_count: sampleCount;
 			yourself).
 	normalTexture := engine createRenderTargetColorTextureWithExtent: extent sampleCount: sampleCount format: AGPU_TEXTURE_FORMAT_R10G10B10A2_UNORM.
-
+	
 	sceneHDRColorTexture := engine createRenderTargetColorTextureWithExtent: extent sampleCount: sampleCount format: AGPU_TEXTURE_FORMAT_R16G16B16A16_FLOAT.
+	sceneHDRColorResolveTexture := sampleCount = 1
+		ifTrue: [sceneHDRColorTexture]
+		ifFalse: [engine createRenderTargetColorTextureWithExtent: extent sampleCount: 1 format: AGPU_TEXTURE_FORMAT_R16G16B16A16_FLOAT].
+
 	sceneLDRColorTexture := engine createRenderTargetColorTextureWithExtent: extent sampleCount: sampleCount format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB.
 
 	sceneHDRRenderTarget := WDCRenderTarget for: engine colorAttachments: { sceneHDRColorTexture } depthStencilAttachment: depthStencilTexture.
@@ -96,7 +103,7 @@ WDSLightedSceneRendererIntermediateTextures >> createMainRenderTargets [
 		yourself.
 
 	hdrToneMappingFullscreenPass := (WDCToneMappingFullScreenPass for: engine)
-		sceneHDRColorTexture: sceneHDRColorTexture;
+		sceneHDRColorTexture: sceneHDRColorResolveTexture;
 		yourself.
 
 ]
@@ -123,6 +130,7 @@ WDSLightedSceneRendererIntermediateTextures >> createSSAORenderTargets [
 	ambientOcclusionIntermediateRenderTarget := WDCRenderTarget for: engine colorAttachments: { ambientOcclusionBlurIntermediateTexture }.
 	
 	ambientOcclusionComputationArguments := (WDCAmbientOcclusionComputationFullScreenPass for: engine)
+		sampleCount: sampleCount;
 		depthStencilTexture: depthStencilTexture;
 		surfaceNormalTexture: normalTexture;
 		destinationRenderTarget: ambientOcclusionRenderTarget;
@@ -155,7 +163,7 @@ WDSLightedSceneRendererIntermediateTextures >> createSceneLuminanceRenderTargets
 	sceneLuminanceComputationPasses := sceneLuminanceComputationTextures collectWithIndex: [ :targetTexture :index |
 		engine newCompositionFullScreenPass
 			sourceTexture: 	(index = 1
-					ifTrue: [sceneHDRColorTexture]
+					ifTrue: [sceneHDRColorResolveTexture]
 					ifFalse: [sceneLuminanceComputationTextures at: index - 1]);
 			destinationTexture: targetTexture;
 			fragmentShader: (index = 1

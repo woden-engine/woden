@@ -33,12 +33,25 @@ Class {
 	#pools : [
 		'AGPUConstants'
 	],
+	#classInstVars : [
+		'defaultSampleCount'
+	],
 	#category : #'WodenEngine-Core-Engine'
 }
 
 { #category : #accessing }
 WDCEngine class >> default [
 	^ DefaultEngine ifNil: [ DefaultEngine := self new ]
+]
+
+{ #category : #accessing }
+WDCEngine class >> defaultSampleCount [
+	^ defaultSampleCount ifNil: [ defaultSampleCount := 4 ]
+]
+
+{ #category : #accessing }
+WDCEngine class >> defaultSampleCount: anInteger [
+	^ defaultSampleCount := anInteger
 ]
 
 { #category : #preferences }
@@ -152,10 +165,14 @@ WDCEngine class >> wodenSettingsOn: aBuilder [
 			(aBuilder setting: #generateOfflineMipmapsGPU)
 				label: 'Generate mipmaps for offline textures with the GPU';
 				description: 'This enables using compute shaders for mipmap generation.'.
-			(aBuilder setting: #maxAnisotropy)
+			(aBuilder pickOne: #defaultSampleCount)
+				label: 'Multi Sample Count.';
+				description: 'This sets the number of samples taken for multi-sampling antialiasing.';
+				domainValues: #(1 2 4 8).
+			(aBuilder pickOne: #maxAnisotropy)
 				label: 'Max anisotropic filtering samples.';
-				description: 'This sets the max value for anisotropic filtering. Values <= 1 implies no anisotropic filtering. '
-
+				description: 'This sets the max value for anisotropic filtering. Values <= 1 implies no anisotropic filtering.';
+				domainValues: #(1 2 4 8 16)
 		]
 ]
 
@@ -214,49 +231,6 @@ WDCEngine >> checkSession [
 { #category : #'resource building' }
 WDCEngine >> createBGRAStorageImageWithExtent: anExtent [
 	^ self createStorageImageWithExtent: anExtent format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM
-]
-
-{ #category : #'resource building' }
-WDCEngine >> createBasicRenderPassWithColor: aColor [
-	| colorAttachments depthStencilAttachment |
-	colorAttachments := {
-		AGPURenderpassColorAttachmentDescription new
-			format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB;
-			begin_action: AGPU_ATTACHMENT_CLEAR;
-			end_action: AGPU_ATTACHMENT_KEEP;
-			clear_value: aColor asFloat32x4 asAGPUColor4f;
-			yourself
-	}.
-		
-	depthStencilAttachment := AGPURenderpassDepthStencilDescription new
-		format: self preferredDepthStencilFormat;
-		begin_action: AGPU_ATTACHMENT_CLEAR;
-		end_action: AGPU_ATTACHMENT_KEEP;
-		clear_value: (AGPUDepthStencilValue new depth: 0.0; stencil: 0; yourself);
-		yourself.
-		
-	^ (WDCRenderPass for: self)
-		colorAttachments: colorAttachments;
-		depthStencilAttachment: depthStencilAttachment;
-		checkSession;
-		yourself
-]
-
-{ #category : #'resource building' }
-WDCEngine >> createBasicRenderPassWithOnlyColor: aColor [
-	| colorAttachments |
-	colorAttachments := {
-		AGPURenderpassColorAttachmentDescription new
-			format: AGPU_TEXTURE_FORMAT_B8G8R8A8_UNORM_SRGB;
-			begin_action: AGPU_ATTACHMENT_CLEAR;
-			end_action: AGPU_ATTACHMENT_KEEP;
-			clear_value: aColor asFloat32x4 asAGPUColor4f;
-			yourself
-	}.
-	^ (WDCRenderPass for: self)
-		colorAttachments: colorAttachments;
-		checkSession;
-		yourself
 ]
 
 { #category : #initialization }

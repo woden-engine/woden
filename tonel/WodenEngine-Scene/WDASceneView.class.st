@@ -207,3 +207,8 @@ WDASceneView >> vr [
 	model isInVirtualReality: true.
 	self screenDisplayMode: WDASceneViewVRDisplayMode new
 ]
+
+{ #category : #'framebuffer description' }
+WDASceneView >> windowSampleCount [
+	^ 1
+]

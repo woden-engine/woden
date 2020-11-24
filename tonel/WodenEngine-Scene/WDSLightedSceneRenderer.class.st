@@ -295,6 +295,10 @@ WDSLightedSceneRenderer >> renderViewport: renderingViewport index: viewportInde
 	camera isLdrToneMapping ifFalse: [ 
 		stateTracker
 			endRenderPass.
+		renderingViewport sceneHDRColorTexture ~~ renderingViewport sceneHDRColorResolveTexture ifTrue: [
+			stateTracker
+				resolveTexture: renderingViewport sceneHDRColorTexture into: renderingViewport sceneHDRColorResolveTexture aspect: AGPU_TEXTURE_ASPECT_COLOR
+		].
 
 		renderingViewport hdrToneMappingFullscreenPass
 			toneMappingOperator: camera toneMappingOperatorShaderName.

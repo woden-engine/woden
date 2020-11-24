@@ -269,7 +269,7 @@ WDAMorphicViewWindow >> processOSWindowEvent: anEvent [
 
 { #category : #'framebuffer description' }
 WDAMorphicViewWindow >> sampleCount [
-	^ view sampleCount
+	^ view windowSampleCount
 ]
 
 { #category : #accessing }

@@ -6,8 +6,6 @@ Class {
 		'selectedLights',
 		'lightRenderingStates',
 		'gbufferRenderTarget',
-		'hdrSceneRenderPass',
-		'hdrSceneRenderTarget',
 		'ldrSceneRenderPass',
 		'ldrSceneRenderTarget',
 		'hdrToneMappingFullscreenPass',
@@ -20,7 +18,11 @@ Class {
 		'skyLighting',
 		'groundLighting',
 		'sunDirection',
-		'sceneLuminanceComputationPasses'
+		'sceneLuminanceComputationPasses',
+		'sceneHDRRenderPass',
+		'sceneHDRRenderTarget',
+		'sceneHDRColorTexture',
+		'sceneHDRColorResolveTexture'
 	],
 	#category : #'WodenEngine-Scene-Rendering'
 }
@@ -131,23 +133,43 @@ WDSLightedSceneRendererViewport >> lightRenderingStates: anObject [
 ]
 
 { #category : #accessing }
+WDSLightedSceneRendererViewport >> sceneHDRColorResolveTexture [
+	^ sceneHDRColorResolveTexture
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> sceneHDRColorResolveTexture: anObject [
+	sceneHDRColorResolveTexture := anObject
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> sceneHDRColorTexture [
+	^ sceneHDRColorTexture
+]
+
+{ #category : #accessing }
+WDSLightedSceneRendererViewport >> sceneHDRColorTexture: anObject [
+	sceneHDRColorTexture := anObject
+]
+
+{ #category : #accessing }
 WDSLightedSceneRendererViewport >> sceneHDRRenderPass [
-	^ hdrSceneRenderPass
+	^ sceneHDRRenderPass
 ]
 
 { #category : #accessing }
 WDSLightedSceneRendererViewport >> sceneHDRRenderPass: anObject [
-	hdrSceneRenderPass := anObject
+	sceneHDRRenderPass := anObject
 ]
 
 { #category : #accessing }
 WDSLightedSceneRendererViewport >> sceneHDRRenderTarget [
-	^ hdrSceneRenderTarget
+	^ sceneHDRRenderTarget
 ]
 
 { #category : #accessing }
 WDSLightedSceneRendererViewport >> sceneHDRRenderTarget: anObject [
-	hdrSceneRenderTarget := anObject
+	sceneHDRRenderTarget := anObject
 ]
 
 { #category : #accessing }
@@ -233,8 +255,8 @@ WDSLightedSceneRendererViewport >> validGBufferRenderPass [
 { #category : #accessing }
 WDSLightedSceneRendererViewport >> validSceneHDRRenderPass [
 	self flag: 'TODO: Check this MT correctness.'.
-	hdrSceneRenderPass setColorClearValue: 0 value: (self camera backgroundColor ifNil: [self scene backgroundColor]) asFloat32x4 asAGPUColor4f.
-	^ hdrSceneRenderPass
+	sceneHDRRenderPass setColorClearValue: 0 value: (self camera backgroundColor ifNil: [self scene backgroundColor]) asFloat32x4 asAGPUColor4f.
+	^ sceneHDRRenderPass
 ]
 
 { #category : #accessing }

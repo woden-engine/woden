@@ -12,7 +12,8 @@ Class {
 		'window',
 		'fullscreen',
 		'subViews',
-		'hasMouseCapture'
+		'hasMouseCapture',
+		'sampleCount'
 	],
 	#pools : [
 		'AGPUConstants',
@@ -20,6 +21,11 @@ Class {
 	],
 	#category : #'WodenEngine-Core-Application'
 }
+
+{ #category : #construction }
+WDAView class >> defaultSampleCount [
+	^ WDCEngine defaultSampleCount
+]
 
 { #category : #'as yet unclassified' }
 WDAView class >> engine: engine model: aModel [
@@ -214,7 +220,12 @@ WDAView >> renderingGraphDependencies [
 
 { #category : #'framebuffer description' }
 WDAView >> sampleCount [
-	^ 1
+	^ sampleCount ifNil: [sampleCount := self class defaultSampleCount]
+]
+
+{ #category : #'framebuffer description' }
+WDAView >> sampleCount: aSampleCount [
+	^ sampleCount := aSampleCount
 ]
 
 { #category : #path }
@@ -255,4 +266,9 @@ WDAView >> window [
 { #category : #accessing }
 WDAView >> window: anObject [
 	window := anObject
+]
+
+{ #category : #'framebuffer description' }
+WDAView >> windowSampleCount [
+	^ self sampleCount
 ]

@@ -46,7 +46,7 @@ WDAVirtualWindowViewWindow >> processEvent: anEvent [
 
 { #category : #'framebuffer description' }
 WDAVirtualWindowViewWindow >> sampleCount [
-	^ view sampleCount
+	^ view windowSampleCount
 ]
 
 { #category : #accessing }

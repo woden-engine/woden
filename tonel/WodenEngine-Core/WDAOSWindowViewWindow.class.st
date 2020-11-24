@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'view'
 	],
-	#category : 'WodenEngine-Core-Application'
+	#category : #'WodenEngine-Core-Application'
 }
 
 { #category : #'instance creation' }
@@ -54,7 +54,7 @@ WDAOSWindowViewWindow >> processEvent: anEvent [
 
 { #category : #'framebuffer description' }
 WDAOSWindowViewWindow >> sampleCount [
-	^ view sampleCount
+	^ view windowSampleCount
 ]
 
 { #category : #accessing }

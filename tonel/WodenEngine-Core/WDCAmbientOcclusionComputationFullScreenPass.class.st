@@ -2,6 +2,7 @@ Class {
 	#name : #WDCAmbientOcclusionComputationFullScreenPass,
 	#superclass : #WDCAbstractFullScreenPass,
 	#instVars : [
+		'sampleCount',
 		'depthStencilTexture',
 		'destinationRenderTarget',
 		'shaderSignature',
@@ -53,7 +54,17 @@ WDCAmbientOcclusionComputationFullScreenPass >> destinationRenderTarget: anObjec
 { #category : #accessing }
 WDCAmbientOcclusionComputationFullScreenPass >> fragmentShader [
 	^ fragmentShader ifNil: [ fragmentShader := (engine resourceCache loadShaderLibrary: 'shaders/lighting/ambientOcclusionFragment.dastrel')
-		getFragmentStage: #ssao]
+		getFragmentStage: (sampleCount > 1 ifTrue: [#ssaoMS] ifFalse: [#ssao])]
+]
+
+{ #category : #accessing }
+WDCAmbientOcclusionComputationFullScreenPass >> sampleCount [
+	^ sampleCount
+]
+
+{ #category : #accessing }
+WDCAmbientOcclusionComputationFullScreenPass >> sampleCount: anObject [
+	sampleCount := anObject
 ]
 
 { #category : #accessing }
