@@ -34,7 +34,7 @@ BaselineOfWodenEngine >> baseline: spec [
 			package: #'WodenEngine-NativeDastrelBindings' with: [
 				spec requires: #(#'Dastrel' #'WodenEngine-NativeStructures')];
 			package: #'WodenEngine-Core' with: [
-				spec requires: #(#'NeoJSON' #'AbstractGPU' #'Dastrel' #'Sysmel' #''FormSceneGraph'' #'WodenEngine-NativeStructures' #'WodenEngine-NativeDastrelBindings')];
+				spec requires: #(#'NeoJSON' #'AbstractGPU' #'Dastrel' #'Sysmel' #'FormSceneGraph' #'WodenEngine-NativeStructures' #'WodenEngine-NativeDastrelBindings')];
 			package: #'WodenEngine-Babylon' with: [
 				spec requires: #('WodenEngine-Core' 'BabylonGraphics' 'CyrusToolkit')];
 			package: #'WodenEngine-Scene' with: [
