@@ -109,12 +109,9 @@ WDCDDSTextureReader class >> initialize [
 
 { #category : #loading }
 WDCDDSTextureReader class >> loadFromFileReference: fileName withQuery: textureFileAndQuery [
-	| stream |
-	stream := FileStream readOnlyFileNamed: fileName.
-	[
-		stream binary.
-		^ self loadFromStream: stream
-	] ensure: [ stream close ]
+	^ fileName asFileReference binaryReadStreamDo: [:in |
+		self loadFromStream: in
+	]
 ]
 
 { #category : #reading }
