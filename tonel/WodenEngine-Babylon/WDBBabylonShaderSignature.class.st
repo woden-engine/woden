@@ -135,7 +135,7 @@ WDBBabylonShaderSignature >> defaultSamplers [
 		address_v: AGPU_TEXTURE_ADDRESS_MODE_WRAP;
 		address_w: AGPU_TEXTURE_ADDRESS_MODE_WRAP;
 		max_lod: 10000.0;
-		maxanisotropy: engine maxAnisotropy;
+		maxanisotropy: engine maxAnisotropy asFloat;
 		yourself.
 		
 	bindings := self newSamplers.

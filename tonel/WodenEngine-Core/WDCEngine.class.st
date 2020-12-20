@@ -748,7 +748,7 @@ WDCEngine >> resourceCache [
 WDCEngine >> setupAnisotropicSampler: sampler [
 	sampler
 		filter: self anisotropicFilter;
-		maxanisotropy: self maxAnisotropy
+		maxanisotropy: self maxAnisotropy asFloat
 ]
 
 { #category : #accessing }
