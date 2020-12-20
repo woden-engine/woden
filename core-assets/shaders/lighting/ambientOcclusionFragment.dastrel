@@ -43,6 +43,9 @@ uniform(binding = Samplers.Samplers) aoNormalSampler : sampler;
 uniform(binding = ComputeBuffers.DepthBuffer) depthTexture : texture2D;
 uniform(binding = ComputeBuffers.NormalBuffer) normalTexture : texture2D;
 
+uniform(binding = ComputeBuffers.DepthBuffer) depthTextureMS : texture2DMS;
+uniform(binding = ComputeBuffers.NormalBuffer) normalTextureMS : texture2DMS;
+
 constant SamplingDistributionSize : int = 8;
 constant SamplingDistribution : float3[8] = {
     { -0.6877715587615967f, -0.506843626499176f, 0.5196920037269592f },
@@ -172,6 +175,54 @@ code_block(fragment) ssao
     {
         let delta = sampleTangentToView*(SamplingDistribution[i]*0.1f);
         outSampleCount += sampleAmbientOcclusionAt(eyeDepth, eyePosition + delta);
+    }
+
+	let value = 1.0f - outSampleCount / float(SamplingDistributionSize);
+    FragmentStage.colorOutput0 = float4(value, 0.0f, 0.0f, 0.0f);
+}
+
+function sampleAmbientOcclusionAtMS(eyeDepth: float, position: float3) -> float
+{
+    let projectedPosition = CameraState.projectionMatrix * float4(position, 1.0f);
+    let samplePoint = projectedPosition.xyz / projectedPosition.w;
+    let sampleDepth = texelFetch(depthTextureMS, uint2((samplePoint.xy*0.5f + 0.5f)*CameraState.screenSize), 0u).r;
+
+    // Large variations of depth can introduce some false positives.
+    let threshold = fabs(eyeDepth - samplePoint.z)*10.0f;
+    let attenuation = 1.0f - smoothstep(threshold, threshold*2.0f, fabs(sampleDepth - samplePoint.z));
+    return (sampleDepth - 0.00001f < samplePoint.z ? 0.0f : 1.0f)*attenuation;
+}
+
+code_block(fragment) ssaoMS
+{
+    let uv = FragmentInput.texcoord;
+
+    // Compute the eye position, in view space.
+    let eyeDepth = texelFetch(depthTextureMS, uint2(uv*CameraState.screenSize), 0u).r;
+    let screenPosition = float4(uv*2.0f - 1.0f, eyeDepth, 1.0f);
+
+    let eyePosition4 = CameraState.inverseProjectionMatrix *screenPosition;
+    let eyePosition = eyePosition4.xyz/eyePosition4.w;
+
+    // Read the normal
+    let eyeNormal = normalize(texelFetch(normalTextureMS, uint2(uv*CameraState.screenSize), 0u).rgb*2.0f - 1.0f);
+
+    // Compute the TBN matrix.
+    let normalAxis = findBestAxisFor(eyeNormal);
+    let TBN = computeTBNForNormal(eyeNormal);
+
+    // Compute a noise rotation matrix
+    let noiseRotation = rotationMatrixFor(signedRandomNoise(uv*123456.0f));
+
+    // Compute the full sample tangent to view matrix.
+    let sampleTangentToView = TBN*noiseRotation;
+
+	let outSampleCount = 0.0f;
+
+    for(let i = 0; i < SamplingDistributionSize; i += 1)
+    {
+        let delta = sampleTangentToView*(SamplingDistribution[i]*0.1f);
+        outSampleCount += sampleAmbientOcclusionAtMS(eyeDepth, eyePosition + delta);
     }
 
 	let value = 1.0f - outSampleCount / float(SamplingDistributionSize);
