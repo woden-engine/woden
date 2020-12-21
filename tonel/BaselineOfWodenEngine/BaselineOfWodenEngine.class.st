@@ -21,10 +21,6 @@ BaselineOfWodenEngine >> baseline: spec [
 				spec repository: 'github://ronsaldo/dastrel/tonel' ];
 			baseline: #'FormSceneGraph' with: [
 				spec repository: 'github://ronsaldo/form-scene-graph'; loads: #(AcceleratedAbstractGPU) ];
-			baseline: #'BabylonGraphics' with: [
-				spec repository: 'github://ronsaldo/babylon-graphics/tonel'; loads: #(API) ];
-			baseline: #'CyrusToolkit' with: [
-				spec repository: 'github://ronsaldo/babylon-graphics/tonel' ];
 			baseline: #'OpenAL' with: [
 				spec repository: 'github://ronsaldo/pharo-openal/tonel' ];
 			baseline: #'Sysmel' with: [
@@ -35,24 +31,22 @@ BaselineOfWodenEngine >> baseline: spec [
 				spec requires: #(#'Dastrel' #'WodenEngine-NativeStructures')];
 			package: #'WodenEngine-Core' with: [
 				spec requires: #(#'NeoJSON' #'AbstractGPU' #'Dastrel' #'Sysmel' #'FormSceneGraph' #'WodenEngine-NativeStructures' #'WodenEngine-NativeDastrelBindings')];
-			package: #'WodenEngine-Babylon' with: [
-				spec requires: #('WodenEngine-Core' 'BabylonGraphics' 'CyrusToolkit')];
 			package: #'WodenEngine-Scene' with: [
 				spec requires: #('WodenEngine-Core')];
 			package: #'WodenEngine-Importers' with: [
 				spec requires: #('WodenEngine-Core' #'WodenEngine-Scene')];
 			package: #'WodenEngine-Samples' with: [
-				spec requires: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Scene' 'WodenEngine-EntitySystem' 'WodenEngine-OldGameSystem' #'WodenEngine-Importers')];
+				spec requires: #('WodenEngine-Core' 'WodenEngine-Scene' 'WodenEngine-EntitySystem' 'WodenEngine-OldGameSystem' #'WodenEngine-Importers')];
 			package: #'WodenEngine-Physics' with: [
 				spec requires: #('WodenEngine-Core' 'AbstractPhysics')];
 			package: #'WodenEngine-OpenAL' with: [
 				spec requires: #('WodenEngine-Core' 'OpenAL')];
 			package: #'WodenEngine-EntitySystem' with: [
-				spec requires: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL')];
+				spec requires: #('WodenEngine-Core' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL')];
 			package: #'WodenEngine-OldGameSystem' with: [
-				spec requires: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL')];
+				spec requires: #('WodenEngine-Core' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL')];
 			package: #'WodenEngine-OldLevelEditor' with: [
-				spec requires: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL' 'WodenEngine-OldGameSystem')];
+				spec requires: #('WodenEngine-Core' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL' 'WodenEngine-OldGameSystem')];
 			package: #'WodenEngine-Spec2' with: [
 				spec requires: #(#'WodenEngine-Core')];
 			package: #'WodenEngine-Editor-Model' with: [
@@ -60,10 +54,10 @@ BaselineOfWodenEngine >> baseline: spec [
 			package: #'WodenEngine-Editor-UI' with: [
 				spec requires: #(#'WodenEngine-Core' #'WodenEngine-Spec2' #'WodenEngine-Editor-Model')];
 			package: #'WodenEngine-Roassal' with: [
-				spec requires: #('WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Scene' 'WodenEngine-Physics')];
+				spec requires: #('WodenEngine-Core'  'WodenEngine-Scene' 'WodenEngine-Physics')];
 
 			group: 'default' with: #(
-				'WodenEngine-Core' 'WodenEngine-Babylon' 'WodenEngine-Samples'
+				'WodenEngine-Core'  'WodenEngine-Samples'
 				'WodenEngine-EntitySystem' 'WodenEngine-OldGameSystem'
 				'WodenEngine-OldLevelEditor' 'WodenEngine-Roassal' #'WodenEngine-Editor-UI'
 			)

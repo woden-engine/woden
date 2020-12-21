@@ -1,6 +1,6 @@
 Class {
 	#name : #WDGSLevelEditorViewComponent,
-	#superclass : #CyTkPanelWidget,
+	#superclass : #AnObsoleteCyTkPanelWidget,
 	#instVars : [
 		'mainFrame'
 	],

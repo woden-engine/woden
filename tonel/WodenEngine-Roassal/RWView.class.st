@@ -142,11 +142,6 @@ RWView >> asSceneNode [
 ]
 
 { #category : #accessing }
-RWView >> babylonDefaultFont [
-	^ babylonDefaultFont ifNil: [ babylonDefaultFont := engine babylonDriver font: (LogicalFont familyName: 'DejaVu Sans' pointSize: 12) ]
-]
-
-{ #category : #accessing }
 RWView >> backgroundColor [
 	^ scene backgroundColor
 ]

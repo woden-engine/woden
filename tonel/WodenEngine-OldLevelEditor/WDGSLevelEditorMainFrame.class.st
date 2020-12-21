@@ -1,6 +1,6 @@
 Class {
 	#name : #WDGSLevelEditorMainFrame,
-	#superclass : #WDAViewWithCyrusToolkit,
+	#superclass : #WDAView,
 	#instVars : [
 		'levelViews'
 	],
