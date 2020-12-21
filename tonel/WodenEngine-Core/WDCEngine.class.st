@@ -17,7 +17,8 @@ Class {
 		'hasBottomLeftTextureCoordinates',
 		'projectiveTextureBiasMatrix',
 		'vrSystem',
-		'frameRenderingMetrics'
+		'frameRenderingMetrics',
+		'formSceneGraphDrawCommandProcessorContext'
 	],
 	#classVars : [
 		'AllowVR',
@@ -557,6 +558,11 @@ WDCEngine >> engine [
 	^ self
 ]
 
+{ #category : #accessing }
+WDCEngine >> formSceneGraphDrawCommandProcessorContext [
+	^ formSceneGraphDrawCommandProcessorContext
+]
+
 { #category : #enumerating }
 WDCEngine >> frameBufferingCollect: aBlock [
 	^ frameBufferingDriver frameBufferingCollect: aBlock
@@ -631,7 +637,7 @@ WDCEngine >> initializeForNewSession [
 	] ifNil: [ 
 		frameBufferingDriver := WDCFrameBufferingDriver for: self.
 	].
-	babylonDriver ifNotNil: [ babylonDriver sessionChanged ].
+	formSceneGraphDrawCommandProcessorContext := FormSGAGPUDrawCommandProcessorContext for: device withColorCorrection: true.
 
 ]
 

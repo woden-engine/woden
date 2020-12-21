@@ -1,5 +1,5 @@
 Class {
 	#name : #WDAESUniverseView,
-	#superclass : #WDASceneViewWithBabylon,
+	#superclass : #WDASceneViewWith2DOverlay,
 	#category : #'WodenEngine-EntitySystem-Application'
 }

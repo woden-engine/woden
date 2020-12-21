@@ -1,6 +1,6 @@
 Class {
 	#name : #WDAGSLevelPlayerView,
-	#superclass : #WDASceneViewWithBabylon,
+	#superclass : #WDASceneViewWith2DOverlay,
 	#instVars : [
 		'playerEntity',
 		'playerEventHandler'

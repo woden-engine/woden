@@ -3,7 +3,7 @@ I am a sample scene view that uses first person shooter game style controls for 
 "
 Class {
 	#name : #WDAFPSSceneView,
-	#superclass : #WDASceneViewWithBabylon,
+	#superclass : #WDASceneViewWith2DOverlay,
 	#instVars : [
 		'cameraVelocity',
 		'cameraSpeed',

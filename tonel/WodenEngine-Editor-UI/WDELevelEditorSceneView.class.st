@@ -1,6 +1,6 @@
 Class {
 	#name : #WDELevelEditorSceneView,
-	#superclass : #WDASceneViewWithBabylon,
+	#superclass : #WDASceneViewWith2DOverlay,
 	#instVars : [
 		'activeToolMode',
 		'activeEditionMode',

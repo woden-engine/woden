@@ -1,6 +1,6 @@
 Class {
 	#name : #RWSceneView,
-	#superclass : #WDASceneViewWithBabylon,
+	#superclass : #WDASceneViewWith2DOverlay,
 	#instVars : [
 		'dragElement',
 		'mouseFocusElement',

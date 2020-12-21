@@ -115,7 +115,7 @@ WDCRenderTarget >> createFramebufferWithColorAttachments: colorAttachments views
 
 { #category : #accessing }
 WDCRenderTarget >> createFramebuffers [
-	^ self createFramebuffers: self framebufferingCount
+	^ self createFramebuffers: self frameBufferingCount
 ]
 
 { #category : #accessing }
@@ -186,7 +186,7 @@ WDCRenderTarget >> explicitSynchronization: anObject [
 ]
 
 { #category : #accessing }
-WDCRenderTarget >> framebufferingCount [
+WDCRenderTarget >> frameBufferingCount [
 	^ ((gpuOnly or: [ explicitSynchronization ]) ifTrue: [ 1 ] ifFalse: [engine frameBufferingCount])
 ]
 

@@ -9,7 +9,8 @@ Class {
 		'shaderLibrary',
 		'colorTexture',
 		'resourceBindingsAreUpdated',
-		'resourceBinding'
+		'resourceBinding',
+		'hasPremultipliedAlpha'
 	],
 	#category : #'WodenEngine-Core-Material'
 }
@@ -41,7 +42,9 @@ WDCFlatColorMaterial >> activateForwardOn: stateTracker [
 		vertexShader: self vertexShader;
 		fragmentShader: self fragmentShader;
 		useShaderResources: resourceBinding;
-		materialBlendingMode: WDCBlendingMode alphaOver.
+		materialBlendingMode: (hasPremultipliedAlpha
+			ifTrue: [ WDCBlendingMode premultipliedAlphaOver ]
+			ifFalse:  [WDCBlendingMode alphaOver]).
 		
 	useDepth ifFalse: [ 
 		stateTracker
@@ -86,6 +89,18 @@ WDCFlatColorMaterial >> fragmentShader [
 				ifNil: [self shaderLibrary getFragmentStage: #flat] ]
 ]
 
+{ #category : #accessing }
+WDCFlatColorMaterial >> hasPremultipliedAlpha [
+
+	^ hasPremultipliedAlpha
+]
+
+{ #category : #accessing }
+WDCFlatColorMaterial >> hasPremultipliedAlpha: anObject [
+
+	hasPremultipliedAlpha := anObject
+]
+
 { #category : #initialization }
 WDCFlatColorMaterial >> initialize [
 	super initialize.
@@ -93,6 +108,7 @@ WDCFlatColorMaterial >> initialize [
 	useDepth := true.
 	writeDepth := true.
 	resourceBindingsAreUpdated := false.
+	hasPremultipliedAlpha := false.
 ]
 
 { #category : #'as yet unclassified' }
