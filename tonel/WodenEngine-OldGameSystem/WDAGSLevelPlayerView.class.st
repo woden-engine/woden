@@ -9,29 +9,6 @@ Class {
 }
 
 { #category : #'drawing 2d' }
-WDAGSLevelPlayerView >> drawFrameRateOn: canvas [
-	| deltaTime builder mesh |
-	deltaTime := engine frameBufferingDriver currentFrameCPUDeltaTime.
-	
-	builder := canvas driver mesh2DBuilder.
-	builder text
-		color: Color green;
-		font: self babylonDefaultFont;
-			position: (0 @ self babylonDefaultFont getPreciseAscent);
-			draw: ('CPU Frame Rate {1} ms / {2} FPS' format: {
-				(deltaTime*1000.0) printShowingDecimalPlaces: 3 .
-				1.0 / (deltaTime max: 0.01) printShowingDecimalPlaces: 3.
-				engine frameBufferingDriver lastFrameCPUConsumption * 1000.0 printShowingDecimalPlaces: 3});
-			newline;
-			draw: ('CPU Consumption {1} ms' format: {
-				engine frameBufferingDriver lastFrameCPUConsumption * 1000.0 printShowingDecimalPlaces: 3}).
-				
-	mesh := builder mesh.
-	
-	canvas draw: mesh.
-]
-
-{ #category : #'drawing 2d' }
 WDAGSLevelPlayerView >> drawOnScaledBabylonCanvas: canvas [
 	self drawFrameRateOn: canvas
 ]

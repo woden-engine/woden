@@ -9,12 +9,10 @@ Class {
 }
 
 { #category : #rendering }
-RWPopupOverlay >> drawOnScaledBabylonCanvas: canvas [
-	canvas transform restoreAfter: [
-		canvas transform translateBy: (canvas physicalToLogicalTransformPoint: position).
-		drawingBlock cull: canvas
+RWPopupOverlay >> buildScaledUISceneGraphWith: builder [
+	^ builder withTranslation: position build: [ 
+		drawingBlock cull: builder cull: self
 	]
-
 ]
 
 { #category : #accessing }

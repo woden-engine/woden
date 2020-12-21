@@ -194,6 +194,20 @@ RWView >> boundingBox [
 	^ activeGroup boundingBox
 ]
 
+{ #category : #overlays }
+RWView >> buildRawUISceneGraphWith: builder [
+	^ builder containerWith: (overlays collect: [ :overlay |
+		overlay buildRawUISceneGraphWith: builder
+	])
+]
+
+{ #category : #overlays }
+RWView >> buildScaledUISceneGraphWith: builder [
+	^ builder containerWith: (overlays collect: [ :overlay |
+		overlay buildScaledUISceneGraphWith: builder
+	])
+]
+
 { #category : #scene }
 RWView >> cameraLightColor [
 	^ self cameraLightIntensity 
@@ -237,20 +251,6 @@ RWView >> createPopupAtViewPosition: viewPosition drawingWith: aBlock [
 { #category : #accessing }
 RWView >> defaultViewClass [
 	^ RWSceneView
-]
-
-{ #category : #overlays }
-RWView >> drawOverlaysOnBabylonCanvas: canvas [
-	overlays do: [ :overlay |
-		overlay drawOnBabylonCanvas: canvas
-	]
-]
-
-{ #category : #overlays }
-RWView >> drawOverlaysOnScaledBabylonCanvas: canvas [
-	overlays do: [ :overlay |
-		overlay drawOnScaledBabylonCanvas: canvas
-	]
 ]
 
 { #category : #internal }

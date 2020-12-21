@@ -18,6 +18,18 @@ WDAESPlayerView >> attachCameraToPlayerEntity [
 	playerEntity addComponent: cameraComponent.
 ]
 
+{ #category : #rendering }
+WDAESPlayerView >> buildRawUISceneGraphWith: builder [
+	"Allow the game logic to draw an overlay."
+	^ (model gameLogic buildRawUISceneGraphWith: builder) , (super buildRawUISceneGraphWith: builder)
+]
+
+{ #category : #rendering }
+WDAESPlayerView >> buildScaledUISceneGraphWith: builder [
+	"Allow the game logic to draw an overlay."
+	^ (model gameLogic buildScaledUISceneGraphWith: builder) , (super buildScaledUISceneGraphWith: builder)
+]
+
 { #category : #accessing }
 WDAESPlayerView >> camera [
 	camera ifNil: [ self createCamera ].
@@ -44,15 +56,6 @@ WDAESPlayerView >> createCamera [
 WDAESPlayerView >> detachCameraToPlayerEntity [
 	cameraComponent ifNil: [ ^ self ].
 	playerEntity removeComponent: cameraComponent.
-
-]
-
-{ #category : #rendering }
-WDAESPlayerView >> drawOnBabylonCanvas: canvas [
-	"Allow the game logic to draw an overlay."
-	model gameLogic drawOnBabylonCanvas: canvas.
-	
-	super drawOnBabylonCanvas: canvas.
 
 ]
 

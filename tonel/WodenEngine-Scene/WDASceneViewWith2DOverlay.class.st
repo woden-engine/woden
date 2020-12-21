@@ -70,41 +70,8 @@ WDASceneViewWith2DOverlay >> defaultFont [
 	^ TextStyle defaultFont
 ]
 
-{ #category : #'drawing 2d' }
-WDASceneViewWith2DOverlay >> drawFrameRateOn: canvas [
-	| deltaTime builder mesh |
-	deltaTime := engine frameBufferingDriver currentFrameCPUDeltaTime.
-	
-	builder := canvas driver mesh2DBuilder.
-	builder text
-		color: Color green;
-		font: self babylonDefaultFont;
-			position: (0 @ self babylonDefaultFont getPreciseAscent);
-			draw: ('CPU Frame Rate {1} ms / {2} FPS' format: {
-				(deltaTime*1000.0) printShowingDecimalPlaces: 3 .
-				1.0 / (deltaTime max: 0.01) printShowingDecimalPlaces: 3.
-				engine frameBufferingDriver lastFrameCPUConsumption * 1000.0 printShowingDecimalPlaces: 3});
-			newline;
-			draw: ('CPU Consumption {1} ms' format: {
-				engine frameBufferingDriver lastFrameCPUConsumption * 1000.0 printShowingDecimalPlaces: 3});
-			newline;
-			draw: ('Rendered object count {1}' format: {engine frameRenderingMetrics renderedObjectCount asString}).
-				
-	mesh := builder mesh.
-	
-	canvas draw: mesh.
-]
-
 { #category : #rendering }
 WDASceneViewWith2DOverlay >> drawOnBabylonCanvas: canvas [
-]
-
-{ #category : #rendering }
-WDASceneViewWith2DOverlay >> drawOnScaledBabylonCanvas: canvas [
-	WDCEngine displayFrameRate ifTrue: [ 
-		self drawFrameRateOn: canvas
-	].
-
 ]
 
 { #category : #'drawing 2d' }
@@ -133,42 +100,6 @@ WDASceneViewWith2DOverlay >> overlaySpatialObject [
 		overlaySpatialObject := WDCSpatialObject new engine: engine
 	].
 	^ overlaySpatialObject
-]
-
-{ #category : #rendering }
-WDASceneViewWith2DOverlay >> renderBabylonViewport: viewport overlayRenderTargetWith: stateTracker [
-	hasRenderedOverlayTargets ifTrue: [ ^ self ].
-
-	self validBabylonSurface withStateTracker: stateTracker drawDuring: [ :canvas |
-		canvas clear.
-		
-		canvas transform restoreAfter: [
-			babylonOverlay applyLogicalHeightTransformTo: canvas.
-			self drawOnScaledBabylonCanvas: canvas.
-			sceneRenderer ifNotNil: [ sceneRenderer debugDrawOnBabylonCanvas: canvas ]
-		].
-		self drawOnBabylonCanvas: canvas.
-	].
-	hasRenderedOverlayTargets := true.
-
-	self isMultiEyeView ifTrue: [ 
-		| extent aspectRatio overlayHeight overlayDistance |
-		extent := self drawingSurfaceExtent.
-		aspectRatio := extent x asFloat / extent y asFloat.
-		overlayHeight := 0.1.
-		overlayDistance := 0.2.
-		self overlaySpatialObject
-			transform: (ReversibleAffineTransform3dF32 identity
-				scaleByX: aspectRatio * overlayHeight y: overlayHeight z: 1.0;
-				translateByZ: overlayDistance negated)
-	] ifFalse: [
-		self overlaySpatialObject
-			transform: (ReversibleAffineTransform3dF32 identity)
-	].
-
-	overlaySpatialObject
-			updateCommonGpuStateForFrame: engine frameBufferingDriver frameIndex
-
 ]
 
 { #category : #rendering }
@@ -219,20 +150,6 @@ WDASceneViewWith2DOverlay >> renderViewport: viewport overlayWith: stateTracker 
 WDASceneViewWith2DOverlay >> sessionChanged [
 	babylonOverlay := nil.
 	super sessionChanged
-]
-
-{ #category : #'as yet unclassified' }
-WDASceneViewWith2DOverlay >> validBabylonOverlay [
-	babylonOverlay ifNil: [ babylonOverlay := WDCBabylonOverlay for: engine ].
-	babylonOverlay drawingSurfaceExtent: self drawingSurfaceExtent.
-	^ babylonOverlay 
-]
-
-{ #category : #'as yet unclassified' }
-WDASceneViewWith2DOverlay >> validBabylonSurface [
-	^ self validBabylonOverlay
-		drawingSurfaceExtent: self drawingSurfaceExtent;
-		validSurface
 ]
 
 { #category : #'as yet unclassified' }

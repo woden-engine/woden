@@ -14,8 +14,17 @@ WDAESGameLogic >> addGlobalOverlay: anOverlay [
 ]
 
 { #category : #rendering }
-WDAESGameLogic >> drawOnBabylonCanvas: aCanvas [
-	globalOverlays do: [ :overlay | overlay drawOnBabylonCanvas: aCanvas ]
+WDAESGameLogic >> buildRawUISceneGraphWith: builder [
+	^ builder containerWith: (globalOverlays collect: [ :overlay |
+		overlay buildRawUISceneGraphWith: builder
+	])
+]
+
+{ #category : #rendering }
+WDAESGameLogic >> buildScaledUISceneGraphWith: builder [
+	^ builder containerWith: (globalOverlays collect: [ :overlay |
+		overlay buildScaledUISceneGraphWith: builder
+	])
 ]
 
 { #category : #accessing }

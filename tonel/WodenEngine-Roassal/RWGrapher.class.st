@@ -262,16 +262,8 @@ RWGrapher >> renderAxis [
 	mesh := nil.
 	textElement := view 
 		createBillboardAtWorldPosition: e2 position
-		drawingWith: [ :canvas |
-			mesh ifNil: [ | builder |
-				builder := canvas driver mesh2DBuilder.
-				builder text
-					color: theme textColor;
-					font: view babylonDefaultFont;
-					draw: 'Y' onRectangleCenter: (0@0 corner: 20@20).
-				mesh := builder mesh.
-			].
-			canvas draw: mesh.
+		drawingWith: [ :builder |	
+			builder string: 'Y' in: (0@0 corner: 20@20) font: TextStyle defaultFont color: theme textColor
 		 ].
 	
 ]

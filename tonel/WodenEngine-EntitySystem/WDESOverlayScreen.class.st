@@ -2,20 +2,19 @@ Class {
 	#name : #WDESOverlayScreen,
 	#superclass : #Object,
 	#instVars : [
-		'babylonDefaultFont',
 		'engine'
 	],
 	#category : #'WodenEngine-EntitySystem-Overlays'
 }
 
-{ #category : #accessing }
-WDESOverlayScreen >> babylonDefaultFont [
-	^ babylonDefaultFont ifNil: [ babylonDefaultFont := engine babylonDriver font: (LogicalFont familyName: 'DejaVu Sans' pointSize: 12) ]
+{ #category : #testing }
+WDESOverlayScreen >> buildRawUISceneGraphWith: builder [
+	^ builder null
 ]
 
 { #category : #testing }
-WDESOverlayScreen >> drawOnBabylonCanvas: canvas [
-	"This is the place for rendering the overlay screen."
+WDESOverlayScreen >> buildScaledUISceneGraphWith: builder [
+	^ builder null
 ]
 
 { #category : #accessing }

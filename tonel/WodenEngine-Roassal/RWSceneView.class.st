@@ -21,6 +21,26 @@ RWSceneView >> applyVRCameraTransform [
 	self camera transform: cameraTransform
 ]
 
+{ #category : #rendering }
+RWSceneView >> buildRawUISceneGraphWith: builder [
+	| result |
+	result := super buildRawUISceneGraphWith: builder.
+	model ifNotNil: [
+		result := result , (model buildRawUISceneGraphWith: builder)
+	].
+	^ result
+]
+
+{ #category : #rendering }
+RWSceneView >> buildScaledUISceneGraphWith: builder [
+	| result |
+	result := super buildScaledUISceneGraphWith: builder.
+	model ifNotNil: [
+		result := result , (model buildScaledUISceneGraphWith: builder)
+	].
+	^ result
+]
+
 { #category : #'rendering process stages' }
 RWSceneView >> createVRTrackedDeviceModelFor: vrTrackedDevice [
 	vrTrackedDevice isController ifTrue: [ ^ (RWVRTrackedController for: self device: vrTrackedDevice) ].
@@ -50,22 +70,6 @@ RWSceneView >> dispatchMouseOverElementsEvent: event newElement: elementBeingPoi
 			sendToElement.
 	].
 	model signalUpdate
-]
-
-{ #category : #rendering }
-RWSceneView >> drawOnBabylonCanvas: canvas [
-	super drawOnBabylonCanvas: canvas.
-	model ifNotNil: [
-		model drawOverlaysOnBabylonCanvas: canvas
-	]
-]
-
-{ #category : #rendering }
-RWSceneView >> drawOnScaledBabylonCanvas: canvas [
-	super drawOnScaledBabylonCanvas: canvas.
-	model ifNotNil: [
-		model drawOverlaysOnScaledBabylonCanvas: canvas
-	]
 ]
 
 { #category : #selection }

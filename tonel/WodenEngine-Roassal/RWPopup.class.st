@@ -26,6 +26,24 @@ RWPopup >> accept: aVisitor [
 	^ aVisitor visitPopupInteraction: self
 ]
 
+{ #category : #hooks }
+RWPopup >> buildUISceneGraphWith: builder for: anElement [
+	| textExtent textRectangle backgroundRectangle |
+
+	text := self textFor: anElement.
+	textExtent := ((font widthOfString: text) @ font getPreciseHeight).
+
+	textRectangle := borderExtent + marginExtent extent: textExtent.
+	backgroundRectangle := 0@0 extent: textExtent + ((borderExtent + marginExtent) * 2).
+
+	^ (builder rectangle: backgroundRectangle color: Color white) ,
+	(builder string: text in: textRectangle font: font color: color) ,
+	(builder borderRectangle: backgroundRectangle color: (Color black alpha: 0.5)
+		leftWidth: borderExtent x rightWidth: borderExtent x
+		bottomWidth: borderExtent y topWidth: borderExtent y)
+
+]
+
 { #category : #accessing }
 RWPopup >> color [
 	^ color
@@ -45,39 +63,22 @@ RWPopup >> defaultPopupColor [
 RWPopup >> initialize [
 	super initialize.
 	color := self defaultPopupColor.
-	text := #yourself
+	text := #yourself.
+	
+	font := TextStyle defaultFont.
+	borderExtent := 2@2.
+	marginExtent := 4@4.
+
 ]
 
 { #category : #hooks }
 RWPopup >> initializeElement: anElement [
-	| popupElement popupMesh builder font extent rectangle |
+	| popupElement |
 	popupElement := nil.
-	popupMesh := nil.
 	anElement
 		when: RWMouseEnter do: [ :evt |
-			popupMesh := nil.
-			popupElement := anElement view createPopupAtViewPosition: evt position drawingWith: [ :canvas |
-				popupMesh ifNil: [
-					text := self textFor: anElement.
-					font := anElement view babylonDefaultFont.
-					extent := ((font widthOfString: text) @ font getPreciseAscent) + (20@10).
-					rectangle := 0@0 extent: extent.
-					builder := canvas driver mesh2DBuilder.
-					builder fill
-						color: Color white;
-						rectangle: rectangle round: 4.
-					builder stroke
-						color: (Color black alpha: 0.5);
-						width: 2;
-						rectangle: rectangle round: 4.
-					builder text
-						color: color;
-						font: font;
-						draw: text onRectangleCenter: rectangle.
-					popupMesh := builder mesh
-				].
-				
-				canvas draw: popupMesh
+			popupElement := anElement view createPopupAtViewPosition: evt position drawingWith: [ :builder |
+				self buildUISceneGraphWith: builder for: anElement
 			].
 		];
 		when: RWMouseMove do: [ :evt | popupElement view isInVirtualReality ifTrue: [popupElement position: evt position ]];

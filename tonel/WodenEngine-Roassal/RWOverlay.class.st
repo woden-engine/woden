@@ -13,8 +13,13 @@ RWOverlay >> addedIn: aView [
 ]
 
 { #category : #rendering }
-RWOverlay >> drawOnBabylonCanvas: canvas [
-	"This is the place for drawing the overlay."
+RWOverlay >> buildRawUISceneGraphWith: builder [
+	^ builder null
+]
+
+{ #category : #rendering }
+RWOverlay >> buildScaledUISceneGraphWith: builder [
+	^ builder null
 ]
 
 { #category : #rendering }

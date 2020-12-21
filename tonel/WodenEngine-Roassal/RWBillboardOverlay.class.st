@@ -9,6 +9,25 @@ Class {
 }
 
 { #category : #rendering }
+RWBillboardOverlay >> buildScaledUISceneGraphWith: builder [
+	| viewPos4 projectedPosition ndcPosition surfaceExtent x y |
+	viewPos4 := view camera transform inverseMatrix4 * (Float32x4 xyz: position w: 1.0).
+	projectedPosition := view camera projectionMatrix * viewPos4.
+	projectedPosition w <= 0.0 ifTrue: [ ^ self ].
+	ndcPosition := (Float32x2 x: projectedPosition x y: projectedPosition y) / projectedPosition w.
+	surfaceExtent := builder clippingBounds extent.
+	x := (ndcPosition x * 0.5 + 0.5) * surfaceExtent x.
+	y := (ndcPosition y * 0.5 + 0.5).
+	view engine hasTopLeftNDCOrigin ifFalse: [
+		y := 1.0 - y
+	].
+	y := y * surfaceExtent y.
+	^ builder withTranslation: x@y build: [ 
+		drawingBlock cull: builder cull: self
+	]
+]
+
+{ #category : #rendering }
 RWBillboardOverlay >> drawOnScaledBabylonCanvas: canvas [
 	| viewPos4 projectedPosition ndcPosition surfaceExtent x y |
 	viewPos4 := view camera transform inverseMatrix4 * (Float32x4 xyz: position w: 1.0).

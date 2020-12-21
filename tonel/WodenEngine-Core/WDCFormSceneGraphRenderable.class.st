@@ -174,7 +174,7 @@ WDCFormSceneGraphRenderable >> validLogicalHeight [
 
 { #category : #accessing }
 WDCFormSceneGraphRenderable >> validScaleFactor [
-	^ scaleFactor ifNil: [ drawingSurfaceExtent y / self validLogicalHeight ]
+	^ scaleFactor ifNil: [ (drawingSurfaceExtent y / self validLogicalHeight roundTo: 0.05) max: 0.25 ]
 ]
 
 { #category : #'as yet unclassified' }
