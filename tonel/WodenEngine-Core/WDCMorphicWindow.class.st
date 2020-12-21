@@ -182,7 +182,7 @@ WDCMorphicWindow >> drawOn: aCanvas [
 
 { #category : #initialization }
 WDCMorphicWindow >> drawingSurfaceExtent [
-	^ (self innerBounds extent * self worldRendererScaleFactor) ceiling
+	^ (self innerBounds extent * self uiScaleFactor) ceiling
 ]
 
 { #category : #accessing }
@@ -287,6 +287,11 @@ WDCMorphicWindow >> sampleCount [
 { #category : #path }
 WDCMorphicWindow >> sessionChanged [
 	self checkSession.
+]
+
+{ #category : #initialization }
+WDCMorphicWindow >> uiScaleFactor [
+	^ self worldRendererScaleFactor
 ]
 
 { #category : #rendering }

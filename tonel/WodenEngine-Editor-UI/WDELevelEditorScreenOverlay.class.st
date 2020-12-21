@@ -5,5 +5,6 @@ Class {
 }
 
 { #category : #rendering }
-WDELevelEditorScreenOverlay >> drawOnBabylonCanvas: canvas [
+WDELevelEditorScreenOverlay >> buildUISceneGraphWith: builder [
+	^ builder null
 ]

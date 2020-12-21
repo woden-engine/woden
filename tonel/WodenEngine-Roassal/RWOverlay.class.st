@@ -13,12 +13,7 @@ RWOverlay >> addedIn: aView [
 ]
 
 { #category : #rendering }
-RWOverlay >> buildRawUISceneGraphWith: builder [
-	^ builder null
-]
-
-{ #category : #rendering }
-RWOverlay >> buildScaledUISceneGraphWith: builder [
+RWOverlay >> buildUISceneGraphWith: builder [
 	^ builder null
 ]
 

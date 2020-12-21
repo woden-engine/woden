@@ -195,16 +195,9 @@ RWView >> boundingBox [
 ]
 
 { #category : #overlays }
-RWView >> buildRawUISceneGraphWith: builder [
+RWView >> buildUISceneGraphWith: builder [
 	^ builder containerWith: (overlays collect: [ :overlay |
-		overlay buildRawUISceneGraphWith: builder
-	])
-]
-
-{ #category : #overlays }
-RWView >> buildScaledUISceneGraphWith: builder [
-	^ builder containerWith: (overlays collect: [ :overlay |
-		overlay buildScaledUISceneGraphWith: builder
+		overlay buildUISceneGraphWith: builder
 	])
 ]
 

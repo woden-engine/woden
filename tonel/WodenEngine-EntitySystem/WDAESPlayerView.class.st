@@ -19,15 +19,9 @@ WDAESPlayerView >> attachCameraToPlayerEntity [
 ]
 
 { #category : #rendering }
-WDAESPlayerView >> buildRawUISceneGraphWith: builder [
+WDAESPlayerView >> buildUISceneGraphWith: builder [
 	"Allow the game logic to draw an overlay."
-	^ (model gameLogic buildRawUISceneGraphWith: builder) , (super buildRawUISceneGraphWith: builder)
-]
-
-{ #category : #rendering }
-WDAESPlayerView >> buildScaledUISceneGraphWith: builder [
-	"Allow the game logic to draw an overlay."
-	^ (model gameLogic buildScaledUISceneGraphWith: builder) , (super buildScaledUISceneGraphWith: builder)
+	^ (model gameLogic buildUISceneGraphWith: builder) , (super buildUISceneGraphWith: builder)
 ]
 
 { #category : #accessing }

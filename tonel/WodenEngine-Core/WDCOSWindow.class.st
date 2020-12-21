@@ -199,6 +199,11 @@ WDCOSWindow >> sessionChanged [
 	self open
 ]
 
+{ #category : #'instance creation' }
+WDCOSWindow >> uiScaleFactor [
+	^ window screenScaleFactor
+]
+
 { #category : #rendering }
 WDCOSWindow >> validRenderTarget [
 	self checkRenderTargets.

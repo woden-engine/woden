@@ -100,6 +100,14 @@ WDELevelEditorSceneView >> addElementsToSelection: elements [
 	^ model levelEditorSession addElementsToSelection: elements
 ]
 
+{ #category : #rendering }
+WDELevelEditorSceneView >> buildUISceneGraphWith: builder [
+	| result |
+	result := builder null.
+	dragToolScreenOverlay ifNotNil: [ result := result , (dragToolScreenOverlay buildUISceneGraphWith: builder) ].
+	^ result , (super buildUISceneGraphWith: builder)
+]
+
 { #category : #'as yet unclassified' }
 WDELevelEditorSceneView >> cameraXYDeltaToWorld: screenDelta [
 	^ self cameraXYDeltaToWorld: screenDelta distance: 3.0

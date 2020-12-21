@@ -8,6 +8,11 @@ Class {
 	#category : #'WodenEngine-Editor-UI-Overlays'
 }
 
+{ #category : #rendering }
+WDELevelEditorDragRectangleOverlay >> buildUISceneGraphWith: builder [
+	^ builder borderRectangle: rectangle color: color width: 1
+]
+
 { #category : #accessing }
 WDELevelEditorDragRectangleOverlay >> color [
 	^ color
@@ -16,17 +21,6 @@ WDELevelEditorDragRectangleOverlay >> color [
 { #category : #accessing }
 WDELevelEditorDragRectangleOverlay >> color: anObject [
 	color := anObject
-]
-
-{ #category : #rendering }
-WDELevelEditorDragRectangleOverlay >> drawOnBabylonCanvas: canvas [
-	| builder |
-	builder := canvas driver mesh2DBuilder.
-	builder stroke
-		color: color;
-		width: 1;
-		rectangle: rectangle.
-	canvas draw: builder mesh
 ]
 
 { #category : #accessing }

@@ -22,21 +22,11 @@ RWSceneView >> applyVRCameraTransform [
 ]
 
 { #category : #rendering }
-RWSceneView >> buildRawUISceneGraphWith: builder [
+RWSceneView >> buildUISceneGraphWith: builder [
 	| result |
-	result := super buildRawUISceneGraphWith: builder.
+	result := super buildUISceneGraphWith: builder.
 	model ifNotNil: [
-		result := result , (model buildRawUISceneGraphWith: builder)
-	].
-	^ result
-]
-
-{ #category : #rendering }
-RWSceneView >> buildScaledUISceneGraphWith: builder [
-	| result |
-	result := super buildScaledUISceneGraphWith: builder.
-	model ifNotNil: [
-		result := result , (model buildScaledUISceneGraphWith: builder)
+		result := result , (model buildUISceneGraphWith: builder)
 	].
 	^ result
 ]

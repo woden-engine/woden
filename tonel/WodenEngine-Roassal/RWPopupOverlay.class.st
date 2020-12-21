@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #rendering }
-RWPopupOverlay >> buildScaledUISceneGraphWith: builder [
+RWPopupOverlay >> buildUISceneGraphWith: builder [
 	^ builder withTranslation: position build: [ 
 		drawingBlock cull: builder cull: self
 	]

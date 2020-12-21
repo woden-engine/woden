@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #rendering }
-RWBillboardOverlay >> buildScaledUISceneGraphWith: builder [
+RWBillboardOverlay >> buildUISceneGraphWith: builder [
 	| viewPos4 projectedPosition ndcPosition surfaceExtent x y |
 	viewPos4 := view camera transform inverseMatrix4 * (Float32x4 xyz: position w: 1.0).
 	projectedPosition := view camera projectionMatrix * viewPos4.

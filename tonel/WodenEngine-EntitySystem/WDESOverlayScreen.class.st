@@ -8,12 +8,7 @@ Class {
 }
 
 { #category : #testing }
-WDESOverlayScreen >> buildRawUISceneGraphWith: builder [
-	^ builder null
-]
-
-{ #category : #testing }
-WDESOverlayScreen >> buildScaledUISceneGraphWith: builder [
+WDESOverlayScreen >> buildUISceneGraphWith: builder [
 	^ builder null
 ]
 

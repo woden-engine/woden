@@ -14,16 +14,9 @@ WDAESGameLogic >> addGlobalOverlay: anOverlay [
 ]
 
 { #category : #rendering }
-WDAESGameLogic >> buildRawUISceneGraphWith: builder [
+WDAESGameLogic >> buildUISceneGraphWith: builder [
 	^ builder containerWith: (globalOverlays collect: [ :overlay |
-		overlay buildRawUISceneGraphWith: builder
-	])
-]
-
-{ #category : #rendering }
-WDAESGameLogic >> buildScaledUISceneGraphWith: builder [
-	^ builder containerWith: (globalOverlays collect: [ :overlay |
-		overlay buildScaledUISceneGraphWith: builder
+		overlay buildUISceneGraphWith: builder
 	])
 ]
 

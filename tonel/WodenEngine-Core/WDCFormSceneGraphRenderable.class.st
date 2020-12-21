@@ -126,9 +126,9 @@ WDCFormSceneGraphRenderable >> scaleFactor [
 ]
 
 { #category : #accessing }
-WDCFormSceneGraphRenderable >> scaleFactor: anObject [
-
-	scaleFactor := anObject
+WDCFormSceneGraphRenderable >> scaleFactor: newScaleFactor [
+	hasValidSurfaceContent := hasValidSurfaceContent and: [scaleFactor = newScaleFactor].
+	scaleFactor := newScaleFactor
 ]
 
 { #category : #accessing }

@@ -43,12 +43,7 @@ WDASceneViewWith2DOverlay >> buildFrameRateUISceneGraphNodeWith: builder [
 ]
 
 { #category : #rendering }
-WDASceneViewWith2DOverlay >> buildRawUISceneGraphWith: builder [
-	^ builder null
-]
-
-{ #category : #rendering }
-WDASceneViewWith2DOverlay >> buildScaledUISceneGraphWith: builder [
+WDASceneViewWith2DOverlay >> buildUISceneGraphWith: builder [
 	| result |
 	result := builder null.
 	WDCEngine displayFrameRate ifTrue: [ 
@@ -68,10 +63,6 @@ WDASceneViewWith2DOverlay >> constructRenderingCommandLists [
 { #category : #rendering }
 WDASceneViewWith2DOverlay >> defaultFont [
 	^ TextStyle defaultFont
-]
-
-{ #category : #rendering }
-WDASceneViewWith2DOverlay >> drawOnBabylonCanvas: canvas [
 ]
 
 { #category : #'drawing 2d' }
@@ -107,11 +98,14 @@ WDASceneViewWith2DOverlay >> renderViewport: viewport overlayRenderTargetWith: s
 	hasRenderedOverlayTargets ifTrue: [ ^ self ].
 
 	self validFormSceneGraphOverlay
+		scaleFactor: (self isMultiEyeView
+			ifTrue: [ nil ]
+			ifFalse: [window uiScaleFactor]);
 		drawingSurfaceExtent: self drawingSurfaceExtent;
 		buildSceneGraphWith: [ :builder :overlay |
-			(builder withTransform: (FormSGAffineTransform scale: overlay validScaleFactor) build: [
-				self buildScaledUISceneGraphWith: builder
-			]) , (self buildRawUISceneGraphWith: builder)
+			builder withTransform: (FormSGAffineTransform scale: overlay validScaleFactor) build: [
+				self buildUISceneGraphWith: builder
+			]
 		];
 		validateSurfaceContentWithStateTracker: stateTracker.
 	
