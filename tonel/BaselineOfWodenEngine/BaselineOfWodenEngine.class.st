@@ -53,6 +53,10 @@ BaselineOfWodenEngine >> baseline: spec [
 				spec requires: #(#'WodenEngine-Core')];
 			package: #'WodenEngine-Editor-UI' with: [
 				spec requires: #(#'WodenEngine-Core' #'WodenEngine-Spec2' #'WodenEngine-Editor-Model')];
+			package: #'WodenEngine-CAD' with: [
+				spec requires: #(#'Sysmel')];
+			package: #'WodenEngine-CAD-Tests' with: [
+				spec requires: #(#'WodenEngine-CAD')];
 			package: #'WodenEngine-Roassal' with: [
 				spec requires: #('WodenEngine-Core'  'WodenEngine-Scene' 'WodenEngine-Physics')];
 
