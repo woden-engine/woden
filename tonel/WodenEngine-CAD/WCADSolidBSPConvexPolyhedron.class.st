@@ -50,6 +50,17 @@ WCADSolidBSPConvexPolyhedron class >> box: bbox [
 ]
 
 { #category : #'as yet unclassified' }
+WCADSolidBSPConvexPolyhedron class >> cubeEllipsoidWithRadiuses: radiuses subdivisions: subdivisions [
+	^ (self box: (BoxF64 halfExtent: radiuses))
+		subdivide: subdivisions transformingVerticesWith: [ :vertex |
+			(vertex / radiuses) normalized  * radiuses
+		] computingNormalsWith: [ :face :centroid |
+			(centroid / radiuses) normalized * radiuses
+		]
+
+]
+
+{ #category : #'as yet unclassified' }
 WCADSolidBSPConvexPolyhedron class >> cubeSphereWithRadius: radius subdivisions: subdivisions [
 	^ (self box: (BoxF64 halfExtent: radius))
 		subdivide: subdivisions transformingVerticesWith: [ :vertex |

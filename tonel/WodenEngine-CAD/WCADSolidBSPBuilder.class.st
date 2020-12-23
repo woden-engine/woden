@@ -15,6 +15,11 @@ WCADSolidBSPBuilder >> visitBox: box [
 ]
 
 { #category : #visiting }
+WCADSolidBSPBuilder >> visitEllipsoid: ellipsoid [
+	^ (WCADSolidBSPConvexPolyhedron cubeEllipsoidWithRadiuses: ellipsoid radiuses subdivisions: 2) bspTree
+]
+
+{ #category : #visiting }
 WCADSolidBSPBuilder >> visitOperation: operation [
 	self error: 'Unsupported operation for BSP construction.'.
 ]
