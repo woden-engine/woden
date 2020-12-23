@@ -27,7 +27,32 @@ WCADSolidNullBSPNode >> faces [
 	^ #()
 ]
 
+{ #category : #accessing }
+WCADSolidNullBSPNode >> inside [
+	^ self
+]
+
 { #category : #testing }
 WCADSolidNullBSPNode >> isNullNode [
 	^ true
+]
+
+{ #category : #accessing }
+WCADSolidNullBSPNode >> outside [
+	^ self
+]
+
+{ #category : #'as yet unclassified' }
+WCADSolidNullBSPNode >> partitionWithPlane: partitionPlane [
+	^ self
+]
+
+{ #category : #'as yet unclassified' }
+WCADSolidNullBSPNode >> transformNodesWith: aBlock [
+	^ self
+]
+
+{ #category : #building }
+WCADSolidNullBSPNode >> unionWith: otherTree [
+	^ otherTree
 ]

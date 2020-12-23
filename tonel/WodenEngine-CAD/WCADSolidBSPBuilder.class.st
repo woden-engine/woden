@@ -28,3 +28,8 @@ WCADSolidBSPBuilder >> visitOperation: operation [
 WCADSolidBSPBuilder >> visitSphere: sphere [
 	^ (WCADSolidBSPConvexPolyhedron icoSphereWithRadius: sphere radius subdivisions: sphere subdivisions) bspTree
 ]
+
+{ #category : #visiting }
+WCADSolidBSPBuilder >> visitUnionOperation: operation [
+	^ (self visitSolid: operation leftOperand) unionWith: (self visitSolid: operation rightOperand)
+]

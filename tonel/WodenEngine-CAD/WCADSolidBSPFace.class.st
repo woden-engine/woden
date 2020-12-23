@@ -150,6 +150,59 @@ WCADSolidBSPFace >> plane: anObject [
 	plane := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WCADSolidBSPFace >> splitWithPlane: splitPlane [
+	| frontVertices backVertices lastVertexSide lastVertex vertexCount sides |
+	self assert: (splitPlane closeTo: plane) not.
+	self assert: (splitPlane closeTo: plane negated) not.
+
+	frontVertices := OrderedCollection new.
+	backVertices := OrderedCollection new.
+
+	vertexCount := vertices size.
+	sides := vertices collect: [ :vertex | (splitPlane pointDistance: vertex) sign ].
+	0 to: vertexCount - 1 do: [ :i |
+		| vi nvi side nextSide vertex |
+		vi := i + 1.
+		nvi := (i + 1) % vertexCount + 1.
+		side := sides at: vi.
+		nextSide := sides at: nvi.
+		vertex := vertices at: vi.
+		
+		side = 0 ifTrue: [ 
+			frontVertices add: vertex.
+			backVertices add: vertex.
+		] ifFalse: [
+			side < 0 ifTrue: [ 
+				backVertices add: vertex.
+			] ifFalse: [ 
+				frontVertices add: vertex.
+			]
+		].
+	
+		(side ~= 0 and: [side = nextSide negated]) ifTrue: [ 
+			| ray splitPoint nextVertex |
+			nextVertex := vertices at: nvi.
+			ray := Ray3dF64 from: vertex to: nextVertex.
+			splitPoint := ray pointAtDistance: (splitPlane intersectionWithRay: ray).
+			frontVertices add: splitPoint.
+			backVertices add: splitPoint.
+		].
+	].
+ 
+	frontVertices ifEmpty: [ ^ { self . nil } ].
+	backVertices ifEmpty: [ ^ { nil . self } ].
+	
+	self assert: frontVertices size = 4.
+	self assert: backVertices size = 4.
+	^ {
+		self copy
+			vertices: backVertices asArray .
+		self copy
+			vertices: frontVertices asArray
+	}
+]
+
 { #category : #accessing }
 WCADSolidBSPFace >> vertices [
 

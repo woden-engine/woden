@@ -61,6 +61,11 @@ WCADSolidAbstractBSPNode >> faces [
 	self subclassResponsibility
 ]
 
+{ #category : #'as yet unclassified' }
+WCADSolidAbstractBSPNode >> fullTreeCopy [
+	^ self transformNodesWith: [ :node | node ]
+]
+
 { #category : #testing }
 WCADSolidAbstractBSPNode >> isNullNode [
 	^ false
@@ -71,10 +76,25 @@ WCADSolidAbstractBSPNode >> mesh [
 	^ WCADSolidBSPMeshBuilder new addFaces: self allFaces; yourself
 ]
 
+{ #category : #'as yet unclassified' }
+WCADSolidAbstractBSPNode >> partitionWithPlane: partitionPlane [
+	self subclassResponsibility
+]
+
 { #category : #exporting }
 WCADSolidAbstractBSPNode >> saveWaveFrontObjTo: outputFileName [
 	^ outputFileName asFileReference writeStreamDo: [ :out |
 		out truncate.
 		self encodeWaveFrontObjInto: out
 	]
+]
+
+{ #category : #'as yet unclassified' }
+WCADSolidAbstractBSPNode >> transformNodesWith: aBlock [
+	self subclassResponsibility
+]
+
+{ #category : #building }
+WCADSolidAbstractBSPNode >> unionWith: otherTree [
+	self subclassResponsibility
 ]

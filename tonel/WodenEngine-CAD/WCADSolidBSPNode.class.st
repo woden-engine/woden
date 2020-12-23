@@ -2,8 +2,8 @@ Class {
 	#name : #WCADSolidBSPNode,
 	#superclass : #WCADSolidAbstractBSPNode,
 	#instVars : [
-		'plane',
 		'faces',
+		'plane',
 		'inside',
 		'outside'
 	],
@@ -34,6 +34,11 @@ WCADSolidBSPNode >> addFace: face [
 	faces add: face
 ]
 
+{ #category : #adding }
+WCADSolidBSPNode >> addFaces: newFaces [
+	faces addAll: newFaces
+]
+
 { #category : #'as yet unclassified' }
 WCADSolidBSPNode >> allFacesDo: aBlock [
 	inside allFacesDo: aBlock.
@@ -45,12 +50,6 @@ WCADSolidBSPNode >> allFacesDo: aBlock [
 WCADSolidBSPNode >> faces [
 
 	^ faces
-]
-
-{ #category : #accessing }
-WCADSolidBSPNode >> faces: anObject [
-
-	faces := anObject
 ]
 
 { #category : #initialization }
@@ -85,6 +84,50 @@ WCADSolidBSPNode >> outside: anObject [
 	outside := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WCADSolidBSPNode >> partitionWithPlane: partitionPlane [
+	"Parallel case."
+	| insidePartition outsidePartition |
+	(plane closeTo: partitionPlane) ifTrue: [
+		^ self
+	].
+
+	"Anti parallel case."
+	(plane closeTo: partitionPlane) ifTrue: [
+		^ self copy
+			plane: plane negated;
+			inside: outside;
+			outside: inside;
+			yourself
+	].
+
+	insidePartition := inside partitionWithPlane: partitionPlane.
+	outsidePartition := outside partitionWithPlane: partitionPlane.
+	
+	faces do: [ :each |
+		| facePartition |
+		facePartition := each splitWithPlane: partitionPlane.
+		facePartition first ifNotNil: [ :insideFace | 
+			insidePartition isNullNode ifTrue: [
+				insidePartition := self class new plane: plane
+			].			
+			insidePartition addFace: insideFace
+		].
+		facePartition second ifNotNil: [ :outsideFace |
+			outsidePartition isNullNode ifTrue: [
+				outsidePartition := self class new plane: plane
+			].
+			outsidePartition addFace: outsideFace
+		].
+	].
+	
+	^ self class new
+		plane: partitionPlane;
+		inside: insidePartition;
+		outside: outsidePartition;
+		yourself
+]
+
 { #category : #accessing }
 WCADSolidBSPNode >> plane [
 
@@ -93,6 +136,35 @@ WCADSolidBSPNode >> plane [
 
 { #category : #accessing }
 WCADSolidBSPNode >> plane: anObject [
+	plane := anObject.
+]
 
-	plane := anObject
+{ #category : #copying }
+WCADSolidBSPNode >> postCopy [
+	super postCopy.
+	faces := faces copy.
+]
+
+{ #category : #'as yet unclassified' }
+WCADSolidBSPNode >> transformNodesWith: aBlock [
+	^ aBlock value: (self copy
+		inside: (inside transformNodesWith: aBlock);
+		outside: (outside transformNodesWith: aBlock);
+		yourself)
+]
+
+{ #category : #building }
+WCADSolidBSPNode >> unionWith: otherTree [
+	| otherTreePartition insideUnion outsideUnion |
+	otherTree isNullNode ifTrue: [ ^ self ].
+	otherTreePartition := otherTree partitionWithPlane: plane.
+	insideUnion := inside unionWith: otherTreePartition inside.
+	outsideUnion := outside unionWith: otherTreePartition outside.	
+	^ self class new
+		plane: plane;
+		addFaces: faces;
+		addFaces: otherTreePartition faces;
+		inside: insideUnion;
+		outside: outsideUnion;
+		yourself
 ]

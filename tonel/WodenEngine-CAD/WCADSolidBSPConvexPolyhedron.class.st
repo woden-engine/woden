@@ -13,7 +13,7 @@ WCADSolidBSPConvexPolyhedron class >> box: bbox [
 		"Left"
 		(WCADSolidBSPFace
 			vertices: { bbox nearBottomLeft . bbox nearTopLeft . bbox farTopLeft . bbox farBottomLeft }
-			normal: (Float64x3 x: -1) distance: bbox min x)
+			normal: (Float64x3 x: -1) distance: bbox min x negated)
 			fixVerticesOrientationAlongNormal.
 		
 		"Right"
@@ -25,7 +25,7 @@ WCADSolidBSPConvexPolyhedron class >> box: bbox [
 		"Bottom"
 		(WCADSolidBSPFace
 			vertices: { bbox nearBottomLeft . bbox nearBottomRight  . bbox farBottomRight . bbox farBottomLeft }
-			normal: (Float64x3 y: -1) distance: bbox min y)
+			normal: (Float64x3 y: -1) distance: bbox min y negated)
 			fixVerticesOrientationAlongNormal.
 
 		"Top"
@@ -37,7 +37,7 @@ WCADSolidBSPConvexPolyhedron class >> box: bbox [
 		"Near"
 		(WCADSolidBSPFace
 			vertices: { bbox nearBottomLeft . bbox nearBottomRight  . bbox nearTopRight . bbox nearTopLeft }
-			normal: (Float64x3 z: -1) distance: bbox min z)
+			normal: (Float64x3 z: -1) distance: bbox min z negated)
 			fixVerticesOrientationAlongNormal.
 
 		"Far"
