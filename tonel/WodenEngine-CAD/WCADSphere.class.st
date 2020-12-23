@@ -5,7 +5,8 @@ Class {
 	#name : #WCADSphere,
 	#superclass : #WCADBasicSolid,
 	#instVars : [
-		'radius'
+		'radius',
+		'subdivisions'
 	],
 	#category : #'WodenEngine-CAD-CSG'
 }
@@ -35,6 +36,7 @@ WCADSphere >> diameter: diameter [
 WCADSphere >> initialize [
 	super initialize.
 	radius := 1.0.
+	subdivisions := 1.
 ]
 
 { #category : #testing }
@@ -52,4 +54,16 @@ WCADSphere >> radius [
 WCADSphere >> radius: anObject [
 
 	radius := anObject
+]
+
+{ #category : #accessing }
+WCADSphere >> subdivisions [
+
+	^ subdivisions
+]
+
+{ #category : #accessing }
+WCADSphere >> subdivisions: anObject [
+
+	subdivisions := anObject
 ]

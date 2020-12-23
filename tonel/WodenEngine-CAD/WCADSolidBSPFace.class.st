@@ -30,6 +30,15 @@ WCADSolidBSPFace >> centroid [
 ]
 
 { #category : #'as yet unclassified' }
+WCADSolidBSPFace >> computePlane [
+	| u v |
+	u := vertices second - vertices first.
+	v := vertices third - vertices first.
+	self computePlaneWithNormal: (u cross: v) normalized.
+	
+]
+
+{ #category : #'as yet unclassified' }
 WCADSolidBSPFace >> computePlaneWithNormal: normal [
 	plane := PlaneF64 normal: normal distance: (normal dot: vertices first)
 ]
@@ -37,8 +46,37 @@ WCADSolidBSPFace >> computePlaneWithNormal: normal [
 { #category : #'as yet unclassified' }
 WCADSolidBSPFace >> computeSubdivisionsInto: output [
 	| centroid vertexCount |
-	centroid := self centroid.
 	vertexCount := vertices size.
+
+	"Subdivide only into 4 triangles."
+	vertexCount = 3 ifTrue: [
+		| m1 m2 m3 |
+		m1 := (vertices first + vertices second) / 2.
+		m2 := (vertices second + vertices third) / 2.
+		m3 := (vertices third + vertices first) / 2.
+
+		output
+			add: (self class new
+				vertices: { m3 . vertices first . m1 };
+				plane: plane;
+				yourself);
+
+			add: (self class new
+				vertices: { m1 . vertices second . m2 };
+				plane: plane;
+				yourself);
+			add: (self class new
+				vertices: { m2 . vertices third . m3 };
+				plane: plane;
+				yourself);
+			add: (self class new
+				vertices: { m1 . m2 . m3 };
+				plane: plane;
+				yourself).		
+		^ self
+	].
+
+	centroid := self centroid.
 
 	"Handle the quad case specially."
 	vertexCount = 4 ifTrue: [ 

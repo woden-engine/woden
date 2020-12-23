@@ -16,7 +16,7 @@ WCADSolidBSPBuilder >> visitBox: box [
 
 { #category : #visiting }
 WCADSolidBSPBuilder >> visitEllipsoid: ellipsoid [
-	^ (WCADSolidBSPConvexPolyhedron cubeEllipsoidWithRadiuses: ellipsoid radiuses subdivisions: 2) bspTree
+	^ (WCADSolidBSPConvexPolyhedron cubeEllipsoidWithRadiuses: ellipsoid radiuses subdivisions: ellipsoid subdivisions + 1) bspTree
 ]
 
 { #category : #visiting }
@@ -26,5 +26,5 @@ WCADSolidBSPBuilder >> visitOperation: operation [
 
 { #category : #visiting }
 WCADSolidBSPBuilder >> visitSphere: sphere [
-	^ (WCADSolidBSPConvexPolyhedron cubeSphereWithRadius: sphere radius subdivisions: 2) bspTree
+	^ (WCADSolidBSPConvexPolyhedron icoSphereWithRadius: sphere radius subdivisions: sphere subdivisions) bspTree
 ]

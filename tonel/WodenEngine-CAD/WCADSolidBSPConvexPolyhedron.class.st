@@ -71,6 +71,58 @@ WCADSolidBSPConvexPolyhedron class >> cubeSphereWithRadius: radius subdivisions:
 
 ]
 
+{ #category : #'as yet unclassified' }
+WCADSolidBSPConvexPolyhedron class >> icoEllipsoidWithRadiuses: radiuses subdivisions: subdivisions [
+	^ self icosahedron
+		subdivide: subdivisions transformingVerticesWith: [ :vertex |
+			(vertex / radiuses) normalized  * radiuses
+		] computingNormalsWith: [ :face :centroid |
+			(centroid / radiuses) normalized * radiuses
+		]
+
+]
+
+{ #category : #'as yet unclassified' }
+WCADSolidBSPConvexPolyhedron class >> icoSphereWithRadius: radius subdivisions: subdivisions [
+	^ self icosahedron
+		subdivide: subdivisions transformingVerticesWith: [ :vertex |
+			vertex * (radius / vertex length)
+		] computingNormalsWith: [ :face :centroid |
+			centroid normalized
+		]
+
+]
+
+{ #category : #'as yet unclassified' }
+WCADSolidBSPConvexPolyhedron class >> icosahedron [
+	"Icosahedron mesh from: https://schneide.blog/2016/07/15/generating-an-icosphere-in-c/"
+	| x z n vertices triangles |
+	x:=0.525731112119133606.
+	z:=0.850650808352039932.
+	n:=0.0.
+	
+	vertices := {
+		{x negated.n.z}. {x.n.z}. 	{x negated.n.z negated}. {x.n.z negated}.
+		{n.z.x}. {n.z.x negated}. {n.z negated.x}. {n.z negated.x negated}.
+		{z.x.n}. {z negated.x. n}. {z.x negated.n}. {z negated.x negated. n}
+	} collect: [:each | Float64x3 loadFromJson: each ].
+
+	triangles := #(
+		(0 4 1) (0 9 4) (9 5 4) (4 5 8) (4 8 1)
+		(8 10 1) (8 3 10) (5 3 8) (5 2 3) (2 7 3)
+		(7 10 3) (7 6 10) (7 11 6) (11 0 6) (0 1 6)
+		(6 1 10) (9 0 11) (9 11 2) (9 2 5) (7 2 11)
+	).	
+	
+	^ self new faces: (triangles collect: [ :each |
+		WCADSolidBSPFace new
+			vertices: (each reversed collect: [:vi | vertices at: vi + 1]);
+			computePlane;
+			yourself
+		]
+	)
+]
+
 { #category : #testing }
 WCADSolidBSPConvexPolyhedron >> bspTree [
 	^ WCADSolidBSPNode fromConvexFaces: faces

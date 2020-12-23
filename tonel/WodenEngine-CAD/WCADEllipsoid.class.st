@@ -5,7 +5,8 @@ Class {
 	#name : #WCADEllipsoid,
 	#superclass : #WCADBasicSolid,
 	#instVars : [
-		'radiuses'
+		'radiuses',
+		'subdivisions'
 	],
 	#category : #'WodenEngine-CAD-CSG'
 }
@@ -34,6 +35,7 @@ WCADEllipsoid >> diameters: newDiameters [
 WCADEllipsoid >> initialize [
 	super initialize.
 	radiuses := Float64x3 ones.
+	subdivisions := 1.
 ]
 
 { #category : #testing }
@@ -51,4 +53,16 @@ WCADEllipsoid >> radiuses [
 WCADEllipsoid >> radiuses: anObject [
 
 	radiuses := anObject castTo: Float64x3
+]
+
+{ #category : #accessing }
+WCADEllipsoid >> subdivisions [
+
+	^ subdivisions
+]
+
+{ #category : #accessing }
+WCADEllipsoid >> subdivisions: anObject [
+
+	subdivisions := anObject
 ]
