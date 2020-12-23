@@ -12,7 +12,7 @@ Class {
 WCADSolidBSPFace class >> vertices: vertices normal: normal [
 	^ self new
 		vertices: vertices;
-		plane: (PlaneF64 normal: normal distance: (normal dot: vertices first));
+		computePlaneWithNormal: normal;
 		yourself
 ]
 
@@ -22,6 +22,69 @@ WCADSolidBSPFace class >> vertices: vertices normal: normal distance: distance [
 		vertices: vertices;
 		plane: (PlaneF64 normal: normal distance: distance);
 		yourself
+]
+
+{ #category : #sorting }
+WCADSolidBSPFace >> centroid [
+	^ vertices sum / vertices size
+]
+
+{ #category : #'as yet unclassified' }
+WCADSolidBSPFace >> computePlaneWithNormal: normal [
+	plane := PlaneF64 normal: normal distance: (normal dot: vertices first)
+]
+
+{ #category : #'as yet unclassified' }
+WCADSolidBSPFace >> computeSubdivisionsInto: output [
+	| centroid vertexCount |
+	centroid := self centroid.
+	vertexCount := vertices size.
+
+	"Handle the quad case specially."
+	vertexCount = 4 ifTrue: [ 
+		| bottom right top left |
+		bottom := (vertices first + vertices second) / 2.
+		right := (vertices second + vertices third) / 2.
+		top := (vertices third + vertices fourth) / 2.
+		left := (vertices fourth + vertices first) / 2.
+
+		output
+			add: (self class new
+				vertices: { left . vertices first . bottom . centroid };
+				plane: plane;
+				yourself);
+			add: (self class new
+				vertices: { bottom . vertices second . right . centroid };
+				plane: plane;
+				yourself);
+			add: (self class new
+				vertices: { right . vertices third .  top . centroid};
+				plane: plane;
+				yourself);
+			add: (self class new
+				vertices: { top . vertices fourth . left . centroid };
+				plane: plane;
+				yourself).
+		
+		^ self.
+	].
+
+	0 to: vertexCount - 1 do: [ :i |
+		| leftVertex rightVertex middleVertex |
+		leftVertex := vertices at: i + 1.
+		rightVertex := vertices at: (i + 1) % vertexCount + 1.
+		middleVertex := (leftVertex + rightVertex) / 2.
+		
+		output
+			add: (self class new
+				vertices: { leftVertex . middleVertex . centroid };
+				plane: plane;
+				yourself);
+			add: (self class new
+				vertices: { middleVertex . rightVertex . centroid };
+				plane: plane;
+				yourself)
+	]
 ]
 
 { #category : #sorting }
