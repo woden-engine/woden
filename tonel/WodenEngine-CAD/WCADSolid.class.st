@@ -42,6 +42,12 @@ WCADSolid >> boundingBox [
 	self subclassResponsibility
 ]
 
+{ #category : #testing }
+WCADSolid >> bspTree [
+	self assert: self hasValidBSPTree.
+	^ WCADSolidBSPBuilder new visitSolid: self
+]
+
 { #category : #accessing }
 WCADSolid >> children [
 	^ #()
@@ -55,6 +61,16 @@ WCADSolid >> depth [
 { #category : #boolean }
 WCADSolid >> difference: other [
 	^ WCADDifferenceOperation new leftOperand: self; rightOperand: other; yourself
+]
+
+{ #category : #accessing }
+WCADSolid >> extent [
+	^ self boundingBox extent
+]
+
+{ #category : #testing }
+WCADSolid >> hasValidBSPTree [
+	^ WCADSolidBSPExistenceChecker new visitSolid: self
 ]
 
 { #category : #accessing }

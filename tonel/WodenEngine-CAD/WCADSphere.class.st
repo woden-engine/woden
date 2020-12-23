@@ -20,6 +20,17 @@ WCADSphere >> boundingBox [
 	^ BoxF64 halfExtent: radius
 ]
 
+{ #category : #accessing }
+WCADSphere >> diameter [
+
+	^ radius * 2
+]
+
+{ #category : #accessing }
+WCADSphere >> diameter: diameter [
+	self radius: diameter / 2
+]
+
 { #category : #initialization }
 WCADSphere >> initialize [
 	super initialize.
