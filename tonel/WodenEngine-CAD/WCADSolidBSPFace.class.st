@@ -152,7 +152,7 @@ WCADSolidBSPFace >> plane: anObject [
 
 { #category : #'as yet unclassified' }
 WCADSolidBSPFace >> splitWithPlane: splitPlane [
-	| frontVertices backVertices lastVertexSide lastVertex vertexCount sides |
+	| frontVertices backVertices vertexCount sides minSide maxSide |
 	self assert: (splitPlane closeTo: plane) not.
 	self assert: (splitPlane closeTo: plane negated) not.
 
@@ -161,6 +161,12 @@ WCADSolidBSPFace >> splitWithPlane: splitPlane [
 
 	vertexCount := vertices size.
 	sides := vertices collect: [ :vertex | (splitPlane pointDistance: vertex) sign ].
+	minSide := sides min.
+	maxSide := sides max.
+	self assert: (minSide ~= 0 or: [maxSide ~= 0]).
+	(minSide = -1 and: [maxSide <= 0]) ifTrue: [ ^ { self . nil } ].
+	(minSide >= 0 and: [maxSide = 1]) ifTrue: [ ^ { nil . self } ].
+
 	0 to: vertexCount - 1 do: [ :i |
 		| vi nvi side nextSide vertex |
 		vi := i + 1.
@@ -189,10 +195,7 @@ WCADSolidBSPFace >> splitWithPlane: splitPlane [
 			backVertices add: splitPoint.
 		].
 	].
- 
-	frontVertices ifEmpty: [ ^ { self . nil } ].
-	backVertices ifEmpty: [ ^ { nil . self } ].
-	
+ 	
 	self assert: frontVertices size = 4.
 	self assert: backVertices size = 4.
 	^ {

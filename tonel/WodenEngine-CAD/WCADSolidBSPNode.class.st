@@ -13,8 +13,8 @@ Class {
 { #category : #'instance creation' }
 WCADSolidBSPNode class >> fromConvexFaces: convexFaces [
 	| result |
-	result := self null.
-	convexFaces do: [ :each |
+	result := self inSetLeaf.
+	convexFaces reverseDo: [ :each |
 		result := self new
 			inside: result;
 			plane: each plane;
@@ -25,8 +25,13 @@ WCADSolidBSPNode class >> fromConvexFaces: convexFaces [
 ]
 
 { #category : #'instance creation' }
-WCADSolidBSPNode class >> null [
-	^ WCADSolidNullBSPNode uniqueInstance
+WCADSolidBSPNode class >> inSetLeaf [
+	^ WCADSolidBSPInSetLeafNode uniqueInstance
+]
+
+{ #category : #'instance creation' }
+WCADSolidBSPNode class >> notInSetLeaf [
+	^ WCADSolidBSPNotInSetLeafNode uniqueInstance
 ]
 
 { #category : #adding }
@@ -46,6 +51,12 @@ WCADSolidBSPNode >> allFacesDo: aBlock [
 	outside allFacesDo: aBlock.
 ]
 
+{ #category : #'as yet unclassified' }
+WCADSolidBSPNode >> condensed [
+	(inside isLeaf and: [ inside == outside and: [ faces isEmpty ] ]) ifTrue: [ ^ inside ].
+	^ self
+]
+
 { #category : #accessing }
 WCADSolidBSPNode >> faces [
 
@@ -56,8 +67,8 @@ WCADSolidBSPNode >> faces [
 WCADSolidBSPNode >> initialize [
 	super initialize.
 	faces := OrderedCollection new.
-	inside := self class null.
-	outside := self class null.
+	inside := self class notInSetLeaf.
+	outside := self class notInSetLeaf.
 ]
 
 { #category : #accessing }
@@ -70,6 +81,25 @@ WCADSolidBSPNode >> inside [
 WCADSolidBSPNode >> inside: anObject [
 
 	inside := anObject
+]
+
+{ #category : #building }
+WCADSolidBSPNode >> mergeWith: otherTree operateLeafWith: aBlock [
+	| otherTreePartition insideMerged outsideMerged |
+	otherTree isLeaf ifTrue: [ ^ aBlock value: otherTree value: self ].
+	
+	otherTreePartition := otherTree partitionWithPlane: plane operateLeafWith: aBlock.
+	otherTreePartition isLeaf ifTrue: [ ^ aBlock value: otherTreePartition value: self ].
+	
+	insideMerged := inside mergeWith: otherTreePartition inside operateLeafWith: aBlock.
+	outsideMerged := outside mergeWith: otherTreePartition outside operateLeafWith: aBlock.	
+	^ self class new
+		plane: plane;
+		addFaces: faces;
+		addFaces: otherTreePartition faces;
+		inside: insideMerged;
+		outside: outsideMerged;
+		yourself
 ]
 
 { #category : #accessing }
@@ -85,46 +115,54 @@ WCADSolidBSPNode >> outside: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-WCADSolidBSPNode >> partitionWithPlane: partitionPlane [
+WCADSolidBSPNode >> partitionWithPlane: partitionPlane operateLeafWith: aBlock [
 	"Parallel case."
-	| insidePartition outsidePartition |
+	| insidePartitioned outsidePartitioned insideFaces outsideFaces |
 	(plane closeTo: partitionPlane) ifTrue: [
+		self halt.
 		^ self
 	].
 
 	"Anti parallel case."
-	(plane closeTo: partitionPlane) ifTrue: [
+	(plane negated closeTo: partitionPlane) ifTrue: [
+		self halt.
 		^ self copy
-			plane: plane negated;
+			plane: partitionPlane;
 			inside: outside;
 			outside: inside;
 			yourself
 	].
 
-	insidePartition := inside partitionWithPlane: partitionPlane.
-	outsidePartition := outside partitionWithPlane: partitionPlane.
+	insidePartitioned := inside partitionWithPlane: partitionPlane operateLeafWith: aBlock.
+	outsidePartitioned := outside partitionWithPlane: partitionPlane operateLeafWith: aBlock.
 	
+	insideFaces := OrderedCollection new.
+	outsideFaces := OrderedCollection new.
 	faces do: [ :each |
 		| facePartition |
 		facePartition := each splitWithPlane: partitionPlane.
-		facePartition first ifNotNil: [ :insideFace | 
-			insidePartition isNullNode ifTrue: [
-				insidePartition := self class new plane: plane
-			].			
-			insidePartition addFace: insideFace
+		facePartition first ifNotNil: [ :face | 
+			insideFaces add: face
 		].
-		facePartition second ifNotNil: [ :outsideFace |
-			outsidePartition isNullNode ifTrue: [
-				outsidePartition := self class new plane: plane
-			].
-			outsidePartition addFace: outsideFace
+		facePartition second ifNotNil: [ :face |
+			outsideFaces add: face
 		].
 	].
 	
 	^ self class new
 		plane: partitionPlane;
-		inside: insidePartition;
-		outside: outsidePartition;
+		inside: (self class new
+			plane: plane;
+			addFaces: insideFaces;
+			inside: insidePartitioned inside;
+			outside: outsidePartitioned inside;
+			condensed);
+		outside: (self class new
+			plane: plane;
+			addFaces: outsideFaces;
+			inside: insidePartitioned outside;
+			outside: outsidePartitioned outside;
+			condensed);
 		yourself
 ]
 
@@ -151,20 +189,4 @@ WCADSolidBSPNode >> transformNodesWith: aBlock [
 		inside: (inside transformNodesWith: aBlock);
 		outside: (outside transformNodesWith: aBlock);
 		yourself)
-]
-
-{ #category : #building }
-WCADSolidBSPNode >> unionWith: otherTree [
-	| otherTreePartition insideUnion outsideUnion |
-	otherTree isNullNode ifTrue: [ ^ self ].
-	otherTreePartition := otherTree partitionWithPlane: plane.
-	insideUnion := inside unionWith: otherTreePartition inside.
-	outsideUnion := outside unionWith: otherTreePartition outside.	
-	^ self class new
-		plane: plane;
-		addFaces: faces;
-		addFaces: otherTreePartition faces;
-		inside: insideUnion;
-		outside: outsideUnion;
-		yourself
 ]

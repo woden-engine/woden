@@ -67,8 +67,23 @@ WCADSolidAbstractBSPNode >> fullTreeCopy [
 ]
 
 { #category : #testing }
-WCADSolidAbstractBSPNode >> isNullNode [
+WCADSolidAbstractBSPNode >> isInSetLeaf [
 	^ false
+]
+
+{ #category : #testing }
+WCADSolidAbstractBSPNode >> isLeaf [
+	^ false
+]
+
+{ #category : #testing }
+WCADSolidAbstractBSPNode >> isNotInSetLeaf [
+	^ false
+]
+
+{ #category : #building }
+WCADSolidAbstractBSPNode >> mergeWith: otherTree operateLeafWith: aBlock [
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
@@ -77,8 +92,8 @@ WCADSolidAbstractBSPNode >> mesh [
 ]
 
 { #category : #'as yet unclassified' }
-WCADSolidAbstractBSPNode >> partitionWithPlane: partitionPlane [
-	self subclassResponsibility
+WCADSolidAbstractBSPNode >> partitionWithPlane: partitionPlane operateLeafWith: aBlock [
+	self subclassResponsibility operateLeafWith: aBlock
 ]
 
 { #category : #exporting }
@@ -96,5 +111,5 @@ WCADSolidAbstractBSPNode >> transformNodesWith: aBlock [
 
 { #category : #building }
 WCADSolidAbstractBSPNode >> unionWith: otherTree [
-	self subclassResponsibility
+	^ self mergeWith: otherTree operateLeafWith: [:leaf :tree | leaf unionWith: tree ]
 ]

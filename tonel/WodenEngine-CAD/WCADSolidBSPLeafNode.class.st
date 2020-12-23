@@ -1,5 +1,5 @@
 Class {
-	#name : #WCADSolidNullBSPNode,
+	#name : #WCADSolidBSPLeafNode,
 	#superclass : #WCADSolidAbstractBSPNode,
 	#classInstVars : [
 		'uniqueInstance'
@@ -8,51 +8,56 @@ Class {
 }
 
 { #category : #accessing }
-WCADSolidNullBSPNode class >> new [
+WCADSolidBSPLeafNode class >> new [
 	self error: 'Only a single null instance is allowed.'
 ]
 
 { #category : #accessing }
-WCADSolidNullBSPNode class >> uniqueInstance [
+WCADSolidBSPLeafNode class >> uniqueInstance [
 	^ uniqueInstance ifNil: [ uniqueInstance := self basicNew ]
 ]
 
 { #category : #'as yet unclassified' }
-WCADSolidNullBSPNode >> allFacesDo: aBlock [
+WCADSolidBSPLeafNode >> allFacesDo: aBlock [
 	"Nothing is required here."
 ]
 
 { #category : #accessing }
-WCADSolidNullBSPNode >> faces [
+WCADSolidBSPLeafNode >> faces [
 	^ #()
 ]
 
 { #category : #accessing }
-WCADSolidNullBSPNode >> inside [
+WCADSolidBSPLeafNode >> inside [
 	^ self
 ]
 
 { #category : #testing }
-WCADSolidNullBSPNode >> isNullNode [
+WCADSolidBSPLeafNode >> isLeaf [
 	^ true
 ]
 
+{ #category : #building }
+WCADSolidBSPLeafNode >> mergeWith: otherTree operateLeafWith: aBlock [
+	^ aBlock value: self value: otherTree
+]
+
 { #category : #accessing }
-WCADSolidNullBSPNode >> outside [
+WCADSolidBSPLeafNode >> outside [
 	^ self
 ]
 
 { #category : #'as yet unclassified' }
-WCADSolidNullBSPNode >> partitionWithPlane: partitionPlane [
+WCADSolidBSPLeafNode >> partitionWithPlane: partitionPlane operateLeafWith: aBlock [
 	^ self
 ]
 
 { #category : #'as yet unclassified' }
-WCADSolidNullBSPNode >> transformNodesWith: aBlock [
+WCADSolidBSPLeafNode >> transformNodesWith: aBlock [
 	^ self
 ]
 
 { #category : #building }
-WCADSolidNullBSPNode >> unionWith: otherTree [
-	^ otherTree
+WCADSolidBSPLeafNode >> unionWith: otherTree [
+	self subclassResponsibility
 ]
