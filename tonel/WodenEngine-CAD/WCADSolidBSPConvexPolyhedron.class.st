@@ -54,8 +54,6 @@ WCADSolidBSPConvexPolyhedron class >> cubeEllipsoidWithRadiuses: radiuses subdiv
 	^ (self box: (BoxF64 halfExtent: radiuses))
 		subdivide: subdivisions transformingVerticesWith: [ :vertex |
 			(vertex / radiuses) normalized  * radiuses
-		] computingNormalsWith: [ :face :centroid |
-			(centroid / radiuses) normalized * radiuses
 		]
 
 ]
@@ -65,10 +63,7 @@ WCADSolidBSPConvexPolyhedron class >> cubeSphereWithRadius: radius subdivisions:
 	^ (self box: (BoxF64 halfExtent: radius))
 		subdivide: subdivisions transformingVerticesWith: [ :vertex |
 			vertex * (radius / vertex length)
-		] computingNormalsWith: [ :face :centroid |
-			centroid normalized
 		]
-
 ]
 
 { #category : #'as yet unclassified' }
@@ -76,10 +71,7 @@ WCADSolidBSPConvexPolyhedron class >> icoEllipsoidWithRadiuses: radiuses subdivi
 	^ self icosahedron
 		subdivide: subdivisions transformingVerticesWith: [ :vertex |
 			(vertex / radiuses) normalized  * radiuses
-		] computingNormalsWith: [ :face :centroid |
-			(centroid / radiuses) normalized * radiuses
 		]
-
 ]
 
 { #category : #'as yet unclassified' }
@@ -87,10 +79,7 @@ WCADSolidBSPConvexPolyhedron class >> icoSphereWithRadius: radius subdivisions: 
 	^ self icosahedron
 		subdivide: subdivisions transformingVerticesWith: [ :vertex |
 			vertex * (radius / vertex length)
-		] computingNormalsWith: [ :face :centroid |
-			centroid normalized
 		]
-
 ]
 
 { #category : #'as yet unclassified' }
@@ -141,7 +130,7 @@ WCADSolidBSPConvexPolyhedron >> faces: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-WCADSolidBSPConvexPolyhedron >> subdivide: subdivisions transformingVerticesWith: vertexTransformationBlock computingNormalsWith: normalComputationBlock [
+WCADSolidBSPConvexPolyhedron >> subdivide: subdivisions transformingVerticesWith: vertexTransformationBlock [
 	| subdividedFaces |
 	subdivisions <= 0 ifTrue: [ ^ self ].
 	
@@ -154,12 +143,10 @@ WCADSolidBSPConvexPolyhedron >> subdivide: subdivisions transformingVerticesWith
 	subdividedFaces do: [ :each |
 		each
 			vertices: (each vertices collect: vertexTransformationBlock);
-			computePlaneWithNormal: (normalComputationBlock cull: each cull: each centroid);
-			fixVerticesOrientationAlongNormal
+			computePlane
 	].
 
 	^ self class new
 		faces: subdividedFaces;
-		subdivide: subdivisions - 1 transformingVerticesWith: vertexTransformationBlock computingNormalsWith: normalComputationBlock
-	
+		subdivide: subdivisions - 1 transformingVerticesWith: vertexTransformationBlock
 ]

@@ -30,12 +30,17 @@ WCADSolidBSPFace >> centroid [
 ]
 
 { #category : #'as yet unclassified' }
-WCADSolidBSPFace >> computePlane [
+WCADSolidBSPFace >> computeNormal [
 	| u v |
 	u := vertices second - vertices first.
 	v := vertices third - vertices first.
-	self computePlaneWithNormal: (u cross: v) normalized.
+	^ (u cross: v) normalized.
 	
+]
+
+{ #category : #'as yet unclassified' }
+WCADSolidBSPFace >> computePlane [
+	self computePlaneWithNormal: self computeNormal
 ]
 
 { #category : #'as yet unclassified' }
