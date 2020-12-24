@@ -38,8 +38,8 @@ WCADSolidBSPLeafNode >> isLeaf [
 ]
 
 { #category : #building }
-WCADSolidBSPLeafNode >> mergeWith: otherTree operateLeafWith: aBlock [
-	^ aBlock value: self value: otherTree
+WCADSolidBSPLeafNode >> mergeWith: otherTree operateLeafWith: leafBlock [
+	^ leafBlock value: self value: otherTree
 ]
 
 { #category : #accessing }
@@ -48,7 +48,7 @@ WCADSolidBSPLeafNode >> outside [
 ]
 
 { #category : #'as yet unclassified' }
-WCADSolidBSPLeafNode >> partitionWithPlane: partitionPlane operateLeafWith: aBlock [
+WCADSolidBSPLeafNode >> partitionWithPlane: partitionPlane [
 	^ self
 ]
 

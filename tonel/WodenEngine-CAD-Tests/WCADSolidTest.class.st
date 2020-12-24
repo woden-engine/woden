@@ -24,6 +24,17 @@ WCADSolidTest >> testBox [
 ]
 
 { #category : #tests }
+WCADSolidTest >> testBoxComplement [
+	| box boxComplement |
+	box := WCADSolid box.
+	self assert: box boundingBox extent equals: Float64x3 ones.
+	
+	boxComplement := box complement.
+	self assert: boxComplement boundingBox equals: BoxF64 fullSpace.
+	self assert: box complement complement equals: box
+]
+
+{ #category : #tests }
 WCADSolidTest >> testDefaultBox [
 	| box |
 	box := WCADSolid box.
@@ -145,6 +156,19 @@ WCADSolidTest >> testSphere [
 	self assert: sphere width equals: 6.0.
 	self assert: sphere height equals: 6.0.
 	self assert: sphere depth equals: 6.0.
+
+]
+
+{ #category : #tests }
+WCADSolidTest >> testSymmetricDifference [
+	| leftBox rightBox difference |
+	leftBox := WCADSolid box width: 3.0; height: 3.0; translatedByX: -1.
+	rightBox := WCADSolid box width: 3.0; height: 1.0; translatedByX: 1.
+	difference := leftBox symmetricDifference: rightBox.
+	
+	self assert: difference isOperation.
+	self assert: difference isSymmetricDifferenceOperation.
+	self assert: difference boundingBox equals: (leftBox boundingBox unionWith: rightBox boundingBox).
 
 ]
 

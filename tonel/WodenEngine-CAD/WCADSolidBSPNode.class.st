@@ -51,10 +51,80 @@ WCADSolidBSPNode >> allFacesDo: aBlock [
 	outside allFacesDo: aBlock.
 ]
 
+{ #category : #building }
+WCADSolidBSPNode >> complement [
+	^ self class new
+		plane: plane negated;
+		addFaces: (faces collect: [:each | each flipped ]);
+		inside: outside complement;
+		outside: inside complement;
+		yourself
+]
+
 { #category : #'as yet unclassified' }
 WCADSolidBSPNode >> condensed [
-	(inside isLeaf and: [ inside == outside and: [ faces isEmpty ] ]) ifTrue: [ ^ inside ].
+	(inside isLeaf and: [ inside == outside ]) ifTrue: [ ^ inside ].
 	^ self
+]
+
+{ #category : #'as yet unclassified' }
+WCADSolidBSPNode >> extractExteriorBoundaryFacesOf: listOfFaces [
+	| facePlane insideFaces outsideFaces |
+	listOfFaces ifEmpty: [ ^ #() ].
+	
+	facePlane := listOfFaces first plane.
+	(facePlane closeTo: plane negated) ifTrue: [
+		^ self extractExteriorBoundaryFacesOf: (listOfFaces collect: [:each | each flipped ])
+	].
+
+	(facePlane closeTo: plane) ifTrue: [
+		^ (inside extractInteriorBoundaryFacesOf: (outside extractExteriorBoundaryFacesOf: listOfFaces))
+	].
+
+	insideFaces := OrderedCollection new.
+	outsideFaces := OrderedCollection new.
+	listOfFaces do: [ :each |
+		| facePartition |
+		facePartition := each splitWithPlane: plane.
+		facePartition first ifNotNil: [ :exteriorFace |
+			insideFaces add: exteriorFace
+		].
+		facePartition second ifNotNil: [ :exteriorFace |
+			outsideFaces add: exteriorFace
+		]
+	].
+
+	^ (inside extractExteriorBoundaryFacesOf: insideFaces) , (outside extractExteriorBoundaryFacesOf: outsideFaces)
+]
+
+{ #category : #'as yet unclassified' }
+WCADSolidBSPNode >> extractInteriorBoundaryFacesOf: listOfFaces [
+	| facePlane insideFaces outsideFaces |
+	listOfFaces ifEmpty: [ ^ #() ].
+	
+	facePlane := listOfFaces first plane.
+	(facePlane closeTo: plane negated) ifTrue: [
+		^ self extractInteriorBoundaryFacesOf: (listOfFaces collect: [:each | each flipped ])
+	].
+
+	(facePlane closeTo: plane) ifTrue: [
+		^ (inside extractInteriorBoundaryFacesOf: (outside extractInteriorBoundaryFacesOf: listOfFaces))
+	].
+
+	insideFaces := OrderedCollection new.
+	outsideFaces := OrderedCollection new.
+	listOfFaces do: [ :each |
+		| facePartition |
+		facePartition := each splitWithPlane: plane.
+		facePartition first ifNotNil: [ :exteriorFace |
+			insideFaces add: exteriorFace
+		].
+		facePartition second ifNotNil: [ :exteriorFace |
+			outsideFaces add: exteriorFace
+		]
+	].
+
+	^ (inside extractInteriorBoundaryFacesOf: insideFaces) , (outside extractInteriorBoundaryFacesOf: outsideFaces)
 ]
 
 { #category : #accessing }
@@ -84,22 +154,26 @@ WCADSolidBSPNode >> inside: anObject [
 ]
 
 { #category : #building }
-WCADSolidBSPNode >> mergeWith: otherTree operateLeafWith: aBlock [
-	| otherTreePartition insideMerged outsideMerged |
-	otherTree isLeaf ifTrue: [ ^ aBlock value: otherTree value: self ].
+WCADSolidBSPNode >> mergeWith: otherTree operateLeafWith: leafBlock [
+	| otherTreePartition insideMerged outsideMerged result rawFaces |
+	otherTree isLeaf ifTrue: [ ^ leafBlock value: otherTree value: self ].
 	
-	otherTreePartition := otherTree partitionWithPlane: plane operateLeafWith: aBlock.
-	otherTreePartition isLeaf ifTrue: [ ^ aBlock value: otherTreePartition value: self ].
+	otherTreePartition := otherTree partitionWithPlane: plane.
+	otherTreePartition isLeaf ifTrue: [ ^ leafBlock value: otherTreePartition value: self ].
 	
-	insideMerged := inside mergeWith: otherTreePartition inside operateLeafWith: aBlock.
-	outsideMerged := outside mergeWith: otherTreePartition outside operateLeafWith: aBlock.	
-	^ self class new
+	insideMerged := inside mergeWith: otherTreePartition inside operateLeafWith: leafBlock.
+	outsideMerged := outside mergeWith: otherTreePartition outside operateLeafWith: leafBlock.
+	result := self class new
 		plane: plane;
-		addFaces: faces;
-		addFaces: otherTreePartition faces;
 		inside: insideMerged;
 		outside: outsideMerged;
-		yourself
+		yourself.
+		
+	rawFaces := faces , otherTreePartition faces.
+	^ result
+		addFaces: (result extractExteriorBoundaryFacesOf: rawFaces);
+		condensed
+
 ]
 
 { #category : #accessing }
@@ -115,26 +189,25 @@ WCADSolidBSPNode >> outside: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-WCADSolidBSPNode >> partitionWithPlane: partitionPlane operateLeafWith: aBlock [
+WCADSolidBSPNode >> partitionWithPlane: partitionPlane [
 	"Parallel case."
 	| insidePartitioned outsidePartitioned insideFaces outsideFaces |
 	(plane closeTo: partitionPlane) ifTrue: [
-		self halt.
 		^ self
 	].
 
 	"Anti parallel case."
-	(plane negated closeTo: partitionPlane) ifTrue: [
-		self halt.
-		^ self copy
-			plane: partitionPlane;
+	(plane closeTo: partitionPlane negated) ifTrue: [
+		^ self class new
+			plane: plane negated;
 			inside: outside;
 			outside: inside;
+			addFaces: (faces collect: [:f | f flipped]);
 			yourself
 	].
 
-	insidePartitioned := inside partitionWithPlane: partitionPlane operateLeafWith: aBlock.
-	outsidePartitioned := outside partitionWithPlane: partitionPlane operateLeafWith: aBlock.
+	insidePartitioned := inside partitionWithPlane: partitionPlane.
+	outsidePartitioned := outside partitionWithPlane: partitionPlane.
 	
 	insideFaces := OrderedCollection new.
 	outsideFaces := OrderedCollection new.
@@ -163,7 +236,7 @@ WCADSolidBSPNode >> partitionWithPlane: partitionPlane operateLeafWith: aBlock [
 			inside: insidePartitioned outside;
 			outside: outsidePartitioned outside;
 			condensed);
-		yourself
+		condensed
 ]
 
 { #category : #accessing }

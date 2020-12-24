@@ -15,8 +15,23 @@ WCADSolidBSPBuilder >> visitBox: box [
 ]
 
 { #category : #visiting }
+WCADSolidBSPBuilder >> visitComplementOperation: operation [
+	^ (self visitSolid: operation operand) complement
+]
+
+{ #category : #visiting }
+WCADSolidBSPBuilder >> visitDifferenceOperation: operation [
+	^ (self visitSolid: operation leftOperand) differenceWith: (self visitSolid: operation rightOperand)
+]
+
+{ #category : #visiting }
 WCADSolidBSPBuilder >> visitEllipsoid: ellipsoid [
 	^ (WCADSolidBSPConvexPolyhedron cubeEllipsoidWithRadiuses: ellipsoid radiuses subdivisions: ellipsoid subdivisions + 1) bspTree
+]
+
+{ #category : #visiting }
+WCADSolidBSPBuilder >> visitIntersectionOperation: operation [
+	^ (self visitSolid: operation leftOperand) intersectionWith: (self visitSolid: operation rightOperand)
 ]
 
 { #category : #visiting }
@@ -27,6 +42,11 @@ WCADSolidBSPBuilder >> visitOperation: operation [
 { #category : #visiting }
 WCADSolidBSPBuilder >> visitSphere: sphere [
 	^ (WCADSolidBSPConvexPolyhedron icoSphereWithRadius: sphere radius subdivisions: sphere subdivisions) bspTree
+]
+
+{ #category : #visiting }
+WCADSolidBSPBuilder >> visitSymmetricDifferenceOperation: operation [
+	^ (self visitSolid: operation leftOperand) symmetricDifferenceWith: (self visitSolid: operation rightOperand)
 ]
 
 { #category : #visiting }

@@ -20,6 +20,11 @@ WCADSolidVisitor >> visitBox: box [
 ]
 
 { #category : #visiting }
+WCADSolidVisitor >> visitComplementOperation: operation [
+	^ self visitOperation: operation
+]
+
+{ #category : #visiting }
 WCADSolidVisitor >> visitDifferenceOperation: operation [
 	^ self visitBooleanOperation: operation
 ]
@@ -57,6 +62,11 @@ WCADSolidVisitor >> visitSolid: solid [
 { #category : #visiting }
 WCADSolidVisitor >> visitSphere: sphere [
 	^ self visitBasicSolid: sphere
+]
+
+{ #category : #visiting }
+WCADSolidVisitor >> visitSymmetricDifferenceOperation: operation [
+	^ self visitBooleanOperation: operation
 ]
 
 { #category : #visiting }

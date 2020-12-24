@@ -20,6 +20,11 @@ WCADSolidBSPExistenceChecker >> visitBox: box [
 ]
 
 { #category : #visiting }
+WCADSolidBSPExistenceChecker >> visitComplementOperation: node [
+	^ true
+]
+
+{ #category : #visiting }
 WCADSolidBSPExistenceChecker >> visitEllipsoid: box [
 	^ true
 ]

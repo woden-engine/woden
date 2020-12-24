@@ -138,6 +138,11 @@ WCADSolidBSPFace >> fixVerticesOrientationAlongNormal [
 	]
 ]
 
+{ #category : #properties }
+WCADSolidBSPFace >> flipped [
+	^ self copy plane: plane negated; vertices: vertices reversed; yourself
+]
+
 { #category : #accessing }
 WCADSolidBSPFace >> plane [
 
@@ -196,8 +201,6 @@ WCADSolidBSPFace >> splitWithPlane: splitPlane [
 		].
 	].
  	
-	self assert: frontVertices size = 4.
-	self assert: backVertices size = 4.
 	^ {
 		self copy
 			vertices: backVertices asArray .
@@ -216,4 +219,13 @@ WCADSolidBSPFace >> vertices [
 WCADSolidBSPFace >> vertices: anObject [
 
 	vertices := anObject
+]
+
+{ #category : #sorting }
+WCADSolidBSPFace >> withSameNormalOfPlane: expectedPlane [
+	^ (plane normal dot: expectedPlane normal) < 0 ifTrue: [
+		self flipped
+	] ifFalse: [
+		self
+	]
 ]

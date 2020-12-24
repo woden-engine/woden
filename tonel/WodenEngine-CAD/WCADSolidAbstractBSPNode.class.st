@@ -17,6 +17,16 @@ WCADSolidAbstractBSPNode >> allFacesDo: aBlock [
 	self subclassResponsibility
 ]
 
+{ #category : #building }
+WCADSolidAbstractBSPNode >> complement [
+	self subclassResponsibility
+]
+
+{ #category : #building }
+WCADSolidAbstractBSPNode >> differenceWith: otherTree [
+	^ self mergeWith: otherTree operateLeafWith: [:leaf :tree | leaf differenceWith: tree ]
+]
+
 { #category : #exporting }
 WCADSolidAbstractBSPNode >> encodeWaveFrontObj [
 	^ ByteString streamContents: [ :out |
@@ -56,6 +66,16 @@ WCADSolidAbstractBSPNode >> encodeWaveFrontObjInto: out [
 	]
 ]
 
+{ #category : #'as yet unclassified' }
+WCADSolidAbstractBSPNode >> extractExteriorBoundaryFacesOf: listOfFaces [
+	self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+WCADSolidAbstractBSPNode >> extractInteriorBoundaryFacesOf: listOfFaces [
+	self subclassResponsibility
+]
+
 { #category : #accessing }
 WCADSolidAbstractBSPNode >> faces [
 	self subclassResponsibility
@@ -64,6 +84,11 @@ WCADSolidAbstractBSPNode >> faces [
 { #category : #'as yet unclassified' }
 WCADSolidAbstractBSPNode >> fullTreeCopy [
 	^ self transformNodesWith: [ :node | node ]
+]
+
+{ #category : #building }
+WCADSolidAbstractBSPNode >> intersectionWith: otherTree [
+	^ self mergeWith: otherTree operateLeafWith: [:leaf :tree | leaf intersectionWith: tree ]
 ]
 
 { #category : #testing }
@@ -82,7 +107,7 @@ WCADSolidAbstractBSPNode >> isNotInSetLeaf [
 ]
 
 { #category : #building }
-WCADSolidAbstractBSPNode >> mergeWith: otherTree operateLeafWith: aBlock [
+WCADSolidAbstractBSPNode >> mergeWith: otherTree operateLeafWith: leafBlock [
 	^ self subclassResponsibility
 ]
 
@@ -92,8 +117,8 @@ WCADSolidAbstractBSPNode >> mesh [
 ]
 
 { #category : #'as yet unclassified' }
-WCADSolidAbstractBSPNode >> partitionWithPlane: partitionPlane operateLeafWith: aBlock [
-	self subclassResponsibility operateLeafWith: aBlock
+WCADSolidAbstractBSPNode >> partitionWithPlane: partitionPlane [
+	self subclassResponsibility
 ]
 
 { #category : #exporting }
@@ -102,6 +127,12 @@ WCADSolidAbstractBSPNode >> saveWaveFrontObjTo: outputFileName [
 		out truncate.
 		self encodeWaveFrontObjInto: out
 	]
+]
+
+{ #category : #building }
+WCADSolidAbstractBSPNode >> symmetricDifferenceWith: otherTree [
+	"^ (self differenceWith: otherTree) unionWith: (otherTree differenceWith: self)"
+	^ self mergeWith: otherTree operateLeafWith: [:leaf :tree | leaf symmetricDifferenceWith: tree ]
 ]
 
 { #category : #'as yet unclassified' }

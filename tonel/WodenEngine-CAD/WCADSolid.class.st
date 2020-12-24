@@ -53,6 +53,11 @@ WCADSolid >> children [
 	^ #()
 ]
 
+{ #category : #boolean }
+WCADSolid >> complement [
+	^ WCADComplementOperation new operand: self; yourself
+]
+
 { #category : #accessing }
 WCADSolid >> depth [
 	^ self boundingBox depth
@@ -99,6 +104,11 @@ WCADSolid >> isBox [
 ]
 
 { #category : #testing }
+WCADSolid >> isComplementOperation [
+	^ false
+]
+
+{ #category : #testing }
 WCADSolid >> isDifferenceOperation [
 	^ false
 ]
@@ -124,6 +134,11 @@ WCADSolid >> isSphere [
 ]
 
 { #category : #testing }
+WCADSolid >> isSymmetricDifferenceOperation [
+	^ false
+]
+
+{ #category : #testing }
 WCADSolid >> isTransformOperation [
 	^ false
 ]
@@ -143,6 +158,11 @@ WCADSolid >> name [
 WCADSolid >> name: anObject [
 
 	name := anObject
+]
+
+{ #category : #boolean }
+WCADSolid >> symmetricDifference: other [
+	^ WCADSymmetricDifferenceOperation new leftOperand: self; rightOperand: other; yourself
 ]
 
 { #category : #transformations }
