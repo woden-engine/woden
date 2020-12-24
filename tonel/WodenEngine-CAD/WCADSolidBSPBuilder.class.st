@@ -65,6 +65,11 @@ WCADSolidBSPBuilder >> visitSymmetricDifferenceOperation: operation [
 ]
 
 { #category : #visiting }
+WCADSolidBSPBuilder >> visitTranslationOperation: operation [
+	^ (self visitSolid: operation operand) transformedWithMatrix: (Float64x4x4 translation: operation translation)
+]
+
+{ #category : #visiting }
 WCADSolidBSPBuilder >> visitUnionOperation: operation [
 	^ (self visitSolid: operation leftOperand) unionWith: (self visitSolid: operation rightOperand)
 ]

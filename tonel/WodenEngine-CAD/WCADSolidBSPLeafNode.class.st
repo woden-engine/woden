@@ -57,6 +57,11 @@ WCADSolidBSPLeafNode >> transformNodesWith: aBlock [
 	^ self
 ]
 
+{ #category : #'as yet unclassified' }
+WCADSolidBSPLeafNode >> transformedWithMatrix: matrix [
+	^ self
+]
+
 { #category : #building }
 WCADSolidBSPLeafNode >> unionWith: otherTree [
 	self subclassResponsibility

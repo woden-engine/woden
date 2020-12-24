@@ -169,7 +169,7 @@ WCADSolidBSPNode >> mergeWith: otherTree operateLeafWith: leafBlock [
 		outside: outsideMerged;
 		yourself.
 		
-	rawFaces := faces , otherTreePartition faces.
+	rawFaces := faces, otherTreePartition faces.
 	^ result
 		addFaces: (result extractExteriorBoundaryFacesOf: rawFaces);
 		condensed
@@ -262,4 +262,19 @@ WCADSolidBSPNode >> transformNodesWith: aBlock [
 		inside: (inside transformNodesWith: aBlock);
 		outside: (outside transformNodesWith: aBlock);
 		yourself)
+]
+
+{ #category : #'as yet unclassified' }
+WCADSolidBSPNode >> transformedWithMatrix: matrix [
+	| transformedPlane |
+	transformedPlane := plane transformedWithAffineMatrix: matrix.
+	^ self class new
+		plane: transformedPlane;
+		inside: (inside transformedWithMatrix: matrix);
+		outside: (outside transformedWithMatrix: matrix);
+		addFaces: (faces collect: [:f | f copy
+			vertices: (f vertices collect: [:v | (matrix * (Float64x4 xyz: v w: 1.0)) xyz ]);
+			plane: transformedPlane;
+			yourself])
+		yourself
 ]
