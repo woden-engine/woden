@@ -1,6 +1,6 @@
 Class {
 	#name : #WCADSolidBSPFace,
-	#superclass : #Object,
+	#superclass : #WCADObject,
 	#instVars : [
 		'vertices',
 		'plane'
@@ -158,14 +158,24 @@ WCADSolidBSPFace >> plane: anObject [
 { #category : #'as yet unclassified' }
 WCADSolidBSPFace >> splitWithPlane: splitPlane [
 	| frontVertices backVertices vertexCount sides minSide maxSide |
-	self assert: (splitPlane closeTo: plane) not.
-	self assert: (splitPlane closeTo: plane negated) not.
+	self assert: (splitPlane closeTo: plane precision: Epsilon) not.
+	self assert: (splitPlane closeTo: plane negated precision: Epsilon) not.
 
 	frontVertices := OrderedCollection new.
 	backVertices := OrderedCollection new.
 
 	vertexCount := vertices size.
-	sides := vertices collect: [ :vertex | (splitPlane pointDistance: vertex) sign ].
+	sides := vertices collect: [ :vertex |
+		| distance |
+		distance := (splitPlane pointDistance: vertex).
+		distance > Epsilon
+			ifTrue: [ 1 ]
+			ifFalse: [
+				distance < Epsilon negated
+					ifTrue: [ -1 ]
+					ifFalse: [ 0 ]
+				]
+	].
 	minSide := sides min.
 	maxSide := sides max.
 	self assert: (minSide ~= 0 or: [maxSide ~= 0]).
@@ -195,6 +205,7 @@ WCADSolidBSPFace >> splitWithPlane: splitPlane [
 			| ray splitPoint nextVertex |
 			nextVertex := vertices at: nvi.
 			ray := Ray3dF64 from: vertex to: nextVertex.
+			ray tmax: ray tmax + Epsilon.
 			splitPoint := ray pointAtDistance: (splitPlane intersectionWithRay: ray).
 			frontVertices add: splitPoint.
 			backVertices add: splitPoint.

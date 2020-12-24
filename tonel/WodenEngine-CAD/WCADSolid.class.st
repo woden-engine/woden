@@ -1,6 +1,6 @@
 Class {
 	#name : #WCADSolid,
-	#superclass : #Object,
+	#superclass : #WCADObject,
 	#instVars : [
 		'name'
 	],

@@ -73,11 +73,11 @@ WCADSolidBSPNode >> extractExteriorBoundaryFacesOf: listOfFaces [
 	listOfFaces ifEmpty: [ ^ #() ].
 	
 	facePlane := listOfFaces first plane.
-	(facePlane closeTo: plane negated) ifTrue: [
+	(facePlane closeTo: plane negated precision: Epsilon) ifTrue: [
 		^ self extractExteriorBoundaryFacesOf: (listOfFaces collect: [:each | each flipped ])
 	].
 
-	(facePlane closeTo: plane) ifTrue: [
+	(facePlane closeTo: plane precision: Epsilon) ifTrue: [
 		^ (inside extractInteriorBoundaryFacesOf: (outside extractExteriorBoundaryFacesOf: listOfFaces))
 	].
 
@@ -103,11 +103,11 @@ WCADSolidBSPNode >> extractInteriorBoundaryFacesOf: listOfFaces [
 	listOfFaces ifEmpty: [ ^ #() ].
 	
 	facePlane := listOfFaces first plane.
-	(facePlane closeTo: plane negated) ifTrue: [
+	(facePlane closeTo: plane negated precision: Epsilon) ifTrue: [
 		^ self extractInteriorBoundaryFacesOf: (listOfFaces collect: [:each | each flipped ])
 	].
 
-	(facePlane closeTo: plane) ifTrue: [
+	(facePlane closeTo: plane precision: Epsilon) ifTrue: [
 		^ (inside extractInteriorBoundaryFacesOf: (outside extractInteriorBoundaryFacesOf: listOfFaces))
 	].
 
@@ -192,12 +192,12 @@ WCADSolidBSPNode >> outside: anObject [
 WCADSolidBSPNode >> partitionWithPlane: partitionPlane [
 	"Parallel case."
 	| insidePartitioned outsidePartitioned insideFaces outsideFaces |
-	(plane closeTo: partitionPlane) ifTrue: [
+	(plane closeTo: partitionPlane precision: Epsilon) ifTrue: [
 		^ self
 	].
 
 	"Anti parallel case."
-	(plane closeTo: partitionPlane negated) ifTrue: [
+	(plane closeTo: partitionPlane negated precision: Epsilon) ifTrue: [
 		^ self class new
 			plane: plane negated;
 			inside: outside;

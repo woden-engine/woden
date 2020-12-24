@@ -1,6 +1,6 @@
 Class {
 	#name : #WCADSolidAbstractBSPNode,
-	#superclass : #Object,
+	#superclass : #WCADObject,
 	#category : #'WodenEngine-CAD-CSG-BSP'
 }
 
