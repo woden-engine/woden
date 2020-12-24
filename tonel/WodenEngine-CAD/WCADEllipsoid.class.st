@@ -52,7 +52,7 @@ WCADEllipsoid >> radiuses [
 { #category : #accessing }
 WCADEllipsoid >> radiuses: anObject [
 
-	radiuses := anObject castTo: Float64x3
+	radiuses := anObject implicitCastTo: Float64x3
 ]
 
 { #category : #accessing }

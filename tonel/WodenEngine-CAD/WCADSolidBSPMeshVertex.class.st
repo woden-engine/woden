@@ -27,7 +27,7 @@ WCADSolidBSPMeshVertex >> normal [
 { #category : #accessing }
 WCADSolidBSPMeshVertex >> normal: anObject [
 
-	normal := anObject castTo: Float64x3
+	normal := anObject implicitCastTo: Float64x3
 ]
 
 { #category : #accessing }
@@ -39,5 +39,5 @@ WCADSolidBSPMeshVertex >> position [
 { #category : #accessing }
 WCADSolidBSPMeshVertex >> position: anObject [
 
-	position := anObject castTo: Float64x3
+	position := anObject implicitCastTo: Float64x3
 ]

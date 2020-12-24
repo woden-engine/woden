@@ -25,6 +25,26 @@ WCADSolidVisitor >> visitComplementOperation: operation [
 ]
 
 { #category : #visiting }
+WCADSolidVisitor >> visitCylinder: solid [
+	^ self visitBasicSolid: solid
+]
+
+{ #category : #visiting }
+WCADSolidVisitor >> visitCylinderX: solid [
+	^ self visitCylinder: solid
+]
+
+{ #category : #visiting }
+WCADSolidVisitor >> visitCylinderY: solid [
+	^ self visitCylinder: solid
+]
+
+{ #category : #visiting }
+WCADSolidVisitor >> visitCylinderZ: solid [
+	^ self visitCylinder: solid
+]
+
+{ #category : #visiting }
 WCADSolidVisitor >> visitDifferenceOperation: operation [
 	^ self visitBooleanOperation: operation
 ]

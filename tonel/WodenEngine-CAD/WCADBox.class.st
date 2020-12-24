@@ -33,7 +33,7 @@ WCADBox >> extent [
 
 { #category : #accessing }
 WCADBox >> extent: anObject [
-	extent := anObject castTo: Float64x3
+	extent := anObject implicitCastTo: Float64x3
 ]
 
 { #category : #accessing }

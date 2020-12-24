@@ -47,6 +47,45 @@ WCADSolidTest >> testDefaultBox [
 ]
 
 { #category : #tests }
+WCADSolidTest >> testDefaultCylinderX [
+	| cylinder |
+	cylinder := WCADSolid cylinderX.
+	self assert: cylinder isCylinderX.
+	self assert: cylinder diameter equals: 2.
+	self assert: cylinder length equals: 1.
+
+	self assert: cylinder width equals: 1.
+	self assert: cylinder height equals: 2.
+	self assert: cylinder depth equals: 2.
+]
+
+{ #category : #tests }
+WCADSolidTest >> testDefaultCylinderY [
+	| cylinder |
+	cylinder := WCADSolid cylinderY.
+	self assert: cylinder isCylinderY.
+	self assert: cylinder diameter equals: 2.
+	self assert: cylinder length equals: 1.
+
+	self assert: cylinder width equals: 2.
+	self assert: cylinder height equals: 1.
+	self assert: cylinder depth equals: 2.
+]
+
+{ #category : #tests }
+WCADSolidTest >> testDefaultCylinderZ [
+	| cylinder |
+	cylinder := WCADSolid cylinderZ.
+	self assert: cylinder isCylinderZ.
+	self assert: cylinder diameter equals: 2.
+	self assert: cylinder length equals: 1.
+
+	self assert: cylinder width equals: 2.
+	self assert: cylinder height equals: 2.
+	self assert: cylinder depth equals: 1.
+]
+
+{ #category : #tests }
 WCADSolidTest >> testDefaultEllipsoid [
 	| ellipsoid |
 	ellipsoid := WCADSolid ellipsoid.

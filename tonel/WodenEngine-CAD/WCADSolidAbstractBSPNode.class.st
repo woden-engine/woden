@@ -36,34 +36,53 @@ WCADSolidAbstractBSPNode >> encodeWaveFrontObj [
 
 { #category : #exporting }
 WCADSolidAbstractBSPNode >> encodeWaveFrontObjInto: out [
-	| faceIndex baseVertex |
-	faceIndex := 1.
-	baseVertex := 1.
+	| vertices normals faces vertexDictionary normalDictionary |
+	vertices := OrderedCollection new.
+	normals := OrderedCollection new.
+	faces := OrderedCollection new.
+	vertexDictionary := Dictionary new.
+	normalDictionary := Dictionary new.
 	
-	self allFacesDo: [ :each |
-		| normal |
-		normal := each plane normal.
-		out nextPutAll: 'vn '; nextPutAll: normal x asString;
-			space; nextPutAll: normal y asString;
-			space; nextPutAll: normal z asString;
-			lf.
-			
-		each vertices do: [ :vertex |
-			out nextPutAll: 'v '; nextPutAll: vertex x asString;
-				space; nextPutAll: vertex y asString;
-				space; nextPutAll: vertex z asString;
-				lf.
+	self allFacesDo: [ :face |
+		| faceIndices normal normalIndex |
+		faceIndices := face vertices collect: [ :v |
+			| roundedVertex |
+			roundedVertex := (v / Epsilon) floor * Epsilon.
+			vertexDictionary at: roundedVertex ifAbsentPut: [
+				vertices
+					add: roundedVertex;
+					size
+			]
 		].
+	
+		normal := face plane normal.
+		normalIndex := normalDictionary at: normal ifAbsentPut: [
+			normals add: normal; size
+		].
+	
+		faces add: { faceIndices . normalIndex }
+	].
+
+	vertices do: [ :v |
+		out nextPutAll: 'v '; print: v x; space; print: v y; space; print: v z; lf
+	].
+
+	normals do: [ :n |
+		out nextPutAll: 'vn '; print: n x; space; print: n y; space; print: n z; lf
+	].
+
+	faces do: [ :f |
+		| faceVertices normal |
+		faceVertices := f first.
+		normal := f second.
 		
-		out nextPut: $f.
-		0 to: each vertices size - 1 do: [ :i |
-			out space; nextPutAll: (i + baseVertex) asString; nextPutAll: '//'; nextPutAll: faceIndex asString
+		out nextPut: $f. 
+		faceVertices do: [ :v |
+			 out space; print: v; nextPutAll: '//'; print: normal
 		].
-		out lf; lf.
-			
-		baseVertex := baseVertex + each vertices size.
-		faceIndex := faceIndex + 1.
-	]
+		out lf
+	].
+
 ]
 
 { #category : #'as yet unclassified' }

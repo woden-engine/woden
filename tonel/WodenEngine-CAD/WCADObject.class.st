@@ -9,5 +9,5 @@ Class {
 
 { #category : #'class initialization' }
 WCADObject class >> initialize [
-	Epsilon := 1e-16.
+	Epsilon := 1e-10.
 ]

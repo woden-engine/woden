@@ -37,5 +37,5 @@ WCADTranslationOperation >> translation [
 { #category : #accessing }
 WCADTranslationOperation >> translation: anObject [
 
-	translation := anObject castTo: Float64x3
+	translation := anObject implicitCastTo: Float64x3
 ]

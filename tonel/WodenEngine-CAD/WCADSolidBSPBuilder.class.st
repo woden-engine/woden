@@ -20,13 +20,28 @@ WCADSolidBSPBuilder >> visitComplementOperation: operation [
 ]
 
 { #category : #visiting }
+WCADSolidBSPBuilder >> visitCylinderX: cylinder [
+	^ (WCADSolidBSPConvexPolyhedron cylinderWithRadius: cylinder radius width: cylinder length slices: cylinder slices) bspTree
+]
+
+{ #category : #visiting }
+WCADSolidBSPBuilder >> visitCylinderY: cylinder [
+	^ (WCADSolidBSPConvexPolyhedron cylinderWithRadius: cylinder radius height: cylinder length slices: cylinder slices) bspTree
+]
+
+{ #category : #visiting }
+WCADSolidBSPBuilder >> visitCylinderZ: cylinder [
+	^ (WCADSolidBSPConvexPolyhedron cylinderWithRadius: cylinder radius depth: cylinder length slices: cylinder slices) bspTree
+]
+
+{ #category : #visiting }
 WCADSolidBSPBuilder >> visitDifferenceOperation: operation [
 	^ (self visitSolid: operation leftOperand) differenceWith: (self visitSolid: operation rightOperand)
 ]
 
 { #category : #visiting }
 WCADSolidBSPBuilder >> visitEllipsoid: ellipsoid [
-	^ (WCADSolidBSPConvexPolyhedron cubeEllipsoidWithRadiuses: ellipsoid radiuses subdivisions: ellipsoid subdivisions + 1) bspTree
+	^ (WCADSolidBSPConvexPolyhedron icoEllipsoidWithRadiuses: ellipsoid radiuses subdivisions: ellipsoid subdivisions + 1) bspTree
 ]
 
 { #category : #visiting }

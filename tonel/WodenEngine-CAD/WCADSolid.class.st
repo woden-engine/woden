@@ -13,6 +13,21 @@ WCADSolid class >> box [
 ]
 
 { #category : #accessing }
+WCADSolid class >> cylinderX [
+	^ WCADCylinderX new
+]
+
+{ #category : #accessing }
+WCADSolid class >> cylinderY [
+	^ WCADCylinderY new
+]
+
+{ #category : #accessing }
+WCADSolid class >> cylinderZ [
+	^ WCADCylinderZ new
+]
+
+{ #category : #accessing }
 WCADSolid class >> ellipsoid [
 	^ WCADEllipsoid new
 ]
@@ -105,6 +120,26 @@ WCADSolid >> isBox [
 
 { #category : #testing }
 WCADSolid >> isComplementOperation [
+	^ false
+]
+
+{ #category : #testing }
+WCADSolid >> isCylinder [
+	^ false
+]
+
+{ #category : #testing }
+WCADSolid >> isCylinderX [
+	^ false
+]
+
+{ #category : #testing }
+WCADSolid >> isCylinderY [
+	^ false
+]
+
+{ #category : #testing }
+WCADSolid >> isCylinderZ [
 	^ false
 ]
 

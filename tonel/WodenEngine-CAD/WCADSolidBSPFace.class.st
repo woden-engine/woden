@@ -24,6 +24,15 @@ WCADSolidBSPFace class >> vertices: vertices normal: normal distance: distance [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+WCADSolidBSPFace >> allVerticesAreInPlane [
+	^ vertices allSatisfy: [ :v |
+		|distance |
+		distance := plane pointDistance: v.
+		Epsilon negated < distance and: [ distance < Epsilon ] 
+	]
+]
+
 { #category : #sorting }
 WCADSolidBSPFace >> centroid [
 	^ vertices sum / vertices size
@@ -160,14 +169,40 @@ WCADSolidBSPFace >> plane: anObject [
 	plane := anObject
 ]
 
+{ #category : #sorting }
+WCADSolidBSPFace >> sortVerticesAlongNormal [
+	| centroid normal |
+	centroid := self centroid.
+	normal := plane normal.
+	vertices sort: [ :a :b |
+		| u v |
+		u := a - centroid.
+		v := b - centroid.
+		((u cross: v) dot: normal) >= Epsilon negated
+	]
+]
+
+{ #category : #'as yet unclassified' }
+WCADSolidBSPFace >> splitInTriangleFanInto: output [
+	vertices size <= 3 ifTrue: [ output add: self. ^ self ].
+	
+	2 to: vertices size - 1 do: [ :i |
+		output add: (self class new
+			vertices: {vertices first . vertices at: i . vertices at: i + 1};
+			computePlane;
+			yourself)
+	]
+]
+
 { #category : #'as yet unclassified' }
 WCADSolidBSPFace >> splitWithPlane: splitPlane [
-	| frontVertices backVertices vertexCount sides minSide maxSide |
+	| frontVertices backVertices vertexCount sides minSide maxSide planeVertices |
 	self assert: (splitPlane closeTo: plane precision: Epsilon) not.
 	self assert: (splitPlane closeTo: plane negated precision: Epsilon) not.
 
 	frontVertices := OrderedCollection new.
 	backVertices := OrderedCollection new.
+	planeVertices := OrderedCollection new.
 
 	vertexCount := vertices size.
 	sides := vertices collect: [ :vertex |
@@ -184,8 +219,8 @@ WCADSolidBSPFace >> splitWithPlane: splitPlane [
 	minSide := sides min.
 	maxSide := sides max.
 	self assert: (minSide ~= 0 or: [maxSide ~= 0]).
-	(minSide = -1 and: [maxSide <= 0]) ifTrue: [ ^ { self . nil } ].
-	(minSide >= 0 and: [maxSide = 1]) ifTrue: [ ^ { nil . self } ].
+	(minSide = -1 and: [maxSide <= 0]) ifTrue: [ ^ { self . nil . #() } ].
+	(minSide >= 0 and: [maxSide = 1]) ifTrue: [ ^ { nil . self . #() } ].
 
 	0 to: vertexCount - 1 do: [ :i |
 		| vi nvi side nextSide vertex |
@@ -198,6 +233,7 @@ WCADSolidBSPFace >> splitWithPlane: splitPlane [
 		side = 0 ifTrue: [ 
 			frontVertices add: vertex.
 			backVertices add: vertex.
+			planeVertices add: vertex.
 		] ifFalse: [
 			side < 0 ifTrue: [ 
 				backVertices add: vertex.
@@ -214,6 +250,7 @@ WCADSolidBSPFace >> splitWithPlane: splitPlane [
 			splitPoint := ray pointAtDistance: (splitPlane intersectionWithRay: ray).
 			frontVertices add: splitPoint.
 			backVertices add: splitPoint.
+			planeVertices add: splitPoint.
 		].
 	].
  	
@@ -221,7 +258,8 @@ WCADSolidBSPFace >> splitWithPlane: splitPlane [
 		self copy
 			vertices: backVertices asArray .
 		self copy
-			vertices: frontVertices asArray
+			vertices: frontVertices asArray.
+		planeVertices asArray.
 	}
 ]
 
