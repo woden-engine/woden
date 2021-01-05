@@ -3,7 +3,8 @@ Class {
 	#superclass : #WDCAbstractRenderTarget,
 	#instVars : [
 		'windowHandle',
-		'swapChain'
+		'swapChain',
+		'isOutOfDate'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -41,6 +42,7 @@ WDCSwapChainRenderTarget >> createFramebuffers: bufferCount [
 	].
 
 	swapChain := engine device createSwapChain: engine graphicsQueue swapChainInfo: swapChainInfo.
+	isOutOfDate := false.
 	oldSwapChain ifNotNil: [ oldSwapChain release ].
 	
 	oldFramebuffers := framebuffers.
@@ -58,9 +60,21 @@ WDCSwapChainRenderTarget >> createFramebuffers: bufferCount [
 { #category : #accessing }
 WDCSwapChainRenderTarget >> currentFramebuffer [
 	| result |
+	self assert: isOutOfDate not.
 	result := framebuffers at: swapChain getCurrentBackBufferIndex + 1.
 	result handle ifNil: [ result handle: swapChain getCurrentBackBuffer ].
 	^ result
+]
+
+{ #category : #testing }
+WDCSwapChainRenderTarget >> initialize [
+	super initialize.
+	isOutOfDate := true.
+]
+
+{ #category : #testing }
+WDCSwapChainRenderTarget >> isOutOfDate [
+	^ isOutOfDate
 ]
 
 { #category : #dependencies }
@@ -73,13 +87,15 @@ WDCSwapChainRenderTarget >> release [
 
 { #category : #accessing }
 WDCSwapChainRenderTarget >> swapBuffers [
+	(swapChain isNil or: [isOutOfDate]) ifTrue: [ ^ self ].
+
 	[ 
 		swapChain swapBuffers
 	] on: AGPUError do: [ :ex |
 		| errorCode |
 		errorCode := ex errorCode.
 		(errorCode = AGPU_OUT_OF_DATE or: [ errorCode = AGPU_SUBOPTIMAL ]) ifTrue: [
-			
+			errorCode = AGPU_OUT_OF_DATE ifTrue: [ isOutOfDate := true].
 		] ifFalse: [ 
 			ex signal
 		]

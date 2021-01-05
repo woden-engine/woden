@@ -40,6 +40,11 @@ WDCAbstractRenderTarget >> createFramebuffers [
 	self subclassResponsibility
 ]
 
+{ #category : #accessing }
+WDCAbstractRenderTarget >> createFramebuffers: framebufferCount [
+	self subclassResponsibility
+]
+
 { #category : #'render pass creation' }
 WDCAbstractRenderTarget >> createRenderPassDescription [
 	| passColorAttachments passDepthStencilAttachment |
@@ -170,7 +175,7 @@ WDCAbstractRenderTarget >> extent [
 WDCAbstractRenderTarget >> extent: anExtent [
 	| extentChanged frameBufferCount |
 	engine renderingProcessCritical: [ 
-		extentChanged := (width ~= anExtent x) or: [height ~= anExtent y].
+		extentChanged := (width ~= anExtent x) or: [height ~= anExtent y or: [self isOutOfDate]].
 		width := anExtent x.
 		height := anExtent y.
 	
@@ -231,6 +236,11 @@ WDCAbstractRenderTarget >> isDepthReaded [
 { #category : #accessing }
 WDCAbstractRenderTarget >> isDepthReaded: anObject [
 	isDepthReaded := anObject
+]
+
+{ #category : #testing }
+WDCAbstractRenderTarget >> isOutOfDate [
+	^ false
 ]
 
 { #category : #accessing }
