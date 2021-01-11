@@ -36,17 +36,13 @@ BaselineOfWodenEngine >> baseline: spec [
 			package: #'WodenEngine-Importers' with: [
 				spec requires: #('WodenEngine-Core' #'WodenEngine-Scene')];
 			package: #'WodenEngine-Samples' with: [
-				spec requires: #('WodenEngine-Core' 'WodenEngine-Scene' 'WodenEngine-EntitySystem' 'WodenEngine-OldGameSystem' #'WodenEngine-Importers')];
+				spec requires: #('WodenEngine-Core' 'WodenEngine-Scene' 'WodenEngine-EntitySystem' #'WodenEngine-Importers')];
 			package: #'WodenEngine-Physics' with: [
 				spec requires: #('WodenEngine-Core' 'AbstractPhysics')];
 			package: #'WodenEngine-OpenAL' with: [
 				spec requires: #('WodenEngine-Core' 'OpenAL')];
 			package: #'WodenEngine-EntitySystem' with: [
 				spec requires: #('WodenEngine-Core' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL')];
-			package: #'WodenEngine-OldGameSystem' with: [
-				spec requires: #('WodenEngine-Core' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL')];
-			package: #'WodenEngine-OldLevelEditor' with: [
-				spec requires: #('WodenEngine-Core' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL' 'WodenEngine-OldGameSystem')];
 			package: #'WodenEngine-Spec2' with: [
 				spec requires: #(#'WodenEngine-Core')];
 			package: #'WodenEngine-Editor-Model' with: [
@@ -62,8 +58,7 @@ BaselineOfWodenEngine >> baseline: spec [
 
 			group: 'default' with: #(
 				'WodenEngine-Core'  'WodenEngine-Samples'
-				'WodenEngine-EntitySystem' 'WodenEngine-OldGameSystem'
-				'WodenEngine-OldLevelEditor' 'WodenEngine-Roassal' #'WodenEngine-Editor-UI'
+				'WodenEngine-EntitySystem' 'WodenEngine-Roassal' #'WodenEngine-Editor-UI'
 			)
 	]
 
