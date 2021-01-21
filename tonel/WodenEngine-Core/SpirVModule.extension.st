@@ -1,6 +1,6 @@
 Extension { #name : #SpirVModule }
 
 { #category : #'*WodenEngine-Core' }
-SpirVModule >> asShaderCode [
-	^ self bytes
+SpirVModule >> asWDCShaderCode [
+	^ WDCShaderCode new data: self bytes; entryPoints: entryPoints; yourself
 ]

@@ -11,8 +11,7 @@ Class {
 		'libraries',
 		'entryFile',
 		'dependencies',
-		'librariesMutex',
-		'entryPoints'
+		'librariesMutex'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -22,13 +21,13 @@ Class {
 
 { #category : #compiling }
 WDCLowLevelShaderSource >> applySourceToShaderHandle: shaderHandle [
-	shaderHandle setShaderSource: AGPU_SHADER_LANGUAGE_SPIR_V sourceText: source sourceTextLength: source size
+	source applySourceToShaderHandle: shaderHandle
 ]
 
 { #category : #compiling }
 WDCLowLevelShaderSource >> asShaderLibrary [
 	| library |
-	library := (WDCShaderLibrary for: engine)
+	library := (self shaderLibraryClass for: engine)
 		source: self;
 		checkSession;
 		yourself.
@@ -44,14 +43,14 @@ WDCLowLevelShaderSource >> asShaderLibrary [
 WDCLowLevelShaderSource >> compile [
 	| compiler newSource newDependencies oldDependencies newModule |
 	compiler := 	DASLCompiler new.
-	newModule := compiler 
+	newModule := compiler
+		explicitMultiShader;
 		target: target;
 		addIncludeDirectory: WodenCoreAssets location / #shaders;
 		sourceFromFileNamed: entryFile;
 		compile;
 		generatedCode.
-	newSource := newModule asShaderCode.
-	entryPoints := newModule entryPoints.
+	newSource := newModule asWDCShaderCode.
 		
 	oldDependencies := dependencies ifNil: [ #() ].
 	newDependencies := compiler processedDependencies collect: #asFileReference.
@@ -103,12 +102,7 @@ WDCLowLevelShaderSource >> entryFile: anObject [
 
 { #category : #accessing }
 WDCLowLevelShaderSource >> entryPoints [
-	^ entryPoints
-]
-
-{ #category : #accessing }
-WDCLowLevelShaderSource >> entryPoints: anObject [
-	entryPoints := anObject
+	^ source entryPoints
 ]
 
 { #category : #initialization }
@@ -116,6 +110,11 @@ WDCLowLevelShaderSource >> initialize [
 	super initialize.
 	librariesMutex := Semaphore forMutualExclusion.
 	libraries := WeakSet new.
+]
+
+{ #category : #accessing }
+WDCLowLevelShaderSource >> modules [
+	^ source modules
 ]
 
 { #category : #accessing }
@@ -132,6 +131,14 @@ WDCLowLevelShaderSource >> reload [
 
 { #category : #path }
 WDCLowLevelShaderSource >> sessionChanged [
+]
+
+{ #category : #compiling }
+WDCLowLevelShaderSource >> shaderLibraryClass [
+	^ source isMultiShaderSource
+		ifTrue: [ WDCMultiShaderLibrary ]
+		ifFalse: [ WDCTargetShaderLibrary ]
+	
 ]
 
 { #category : #accessing }

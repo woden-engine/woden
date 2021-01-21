@@ -6,6 +6,6 @@ String >> asColor [
 ]
 
 { #category : #'*WodenEngine-Core' }
-String >> asShaderCode [
+String >> asWDCShaderCode [
 	^ self utf8Encoded
 ]

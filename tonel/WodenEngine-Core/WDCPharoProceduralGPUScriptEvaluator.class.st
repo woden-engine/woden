@@ -63,7 +63,7 @@ WDCPharoProceduralGPUScriptEvaluator >> compileShader: shaderFileName injectingN
 		generatedCode.
 		
 	compiler ssaModule globalNamed: #main.
-	spirv saveTo: 'test.spv'.
+	"spirv saveTo: 'test.spv'."
 	"self halt."
 	
 	^ spirv
@@ -154,8 +154,7 @@ WDCPharoProceduralGPUScriptEvaluator >> getMainFragmentStageFrom: spirvShader [
 	lowLevelShader := WDCLowLevelShaderSource new
 		engine: self validEngine;
 		entryFile: 'generated shader' asFileReference;
-		source: spirvShader asShaderCode;
-		entryPoints: spirvShader entryPoints;
+		source: spirvShader asWDCShaderCode;
 		yourself.
 		
 	^ lowLevelShader asShaderLibrary getFragmentStage: #main

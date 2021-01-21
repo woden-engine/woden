@@ -45,8 +45,7 @@ WDCSimpleParticleMaterial >> createProceduralRenderingFragmentShader [
 	lowLevelShader := WDCLowLevelShaderSource new
 		engine: engine;
 		entryFile: 'generated shader' asFileReference;
-		source: spirvShader asShaderCode;
-		entryPoints: spirvShader entryPoints;
+		source: spirvShader asWDCShaderCode;
 		yourself.
 		
 	particleRenderingShaderLibrary := lowLevelShader asShaderLibrary.
