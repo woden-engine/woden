@@ -23,7 +23,7 @@ WDCStreamingBufferPoolHeap >> allocate [
 	
 	elementIndex := nil.
 	freeIndexList ifEmpty: [
-		elementIndex := size + 1.
+		elementIndex := size.
 		size := size + 1.
 	] ifNotEmpty: [
 		elementIndex := freeIndexList last.
