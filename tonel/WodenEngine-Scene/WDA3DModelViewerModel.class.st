@@ -106,13 +106,6 @@ WDA3DModelViewerModel >> ensureCameraSetup [
 	isCameraPositioned := true.
 ]
 
-{ #category : #opening }
-WDA3DModelViewerModel >> ensureViewSetup [
-	self
-		ensureBackgroundSetup;
-		ensureCameraSetup.
-]
-
 { #category : #initialization }
 WDA3DModelViewerModel >> initialize [
 	super initialize.
@@ -139,12 +132,6 @@ WDA3DModelViewerModel >> newScene [
 	scene := WDSGScene for: engine
 ]
 
-{ #category : #opening }
-WDA3DModelViewerModel >> openWith: aViewClass [
-	self ensureViewSetup.
-	^ super openWith: aViewClass
-]
-
 { #category : #'as yet unclassified' }
 WDA3DModelViewerModel >> playAnimation: anAnimation [
 	self stopCurrentAnimation.
@@ -163,6 +150,13 @@ WDA3DModelViewerModel >> playAnimationNamed: animationName [
 { #category : #'as yet unclassified' }
 WDA3DModelViewerModel >> playIndexedAnimation: animationIndex [
 	self playAnimation: (modelAsset animations at: animationIndex + 1 ifAbsent: [ ^ self ])
+]
+
+{ #category : #opening }
+WDA3DModelViewerModel >> prepareToOpenView [
+	self
+		ensureBackgroundSetup;
+		ensureCameraSetup.
 ]
 
 { #category : #transforming }

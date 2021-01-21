@@ -347,6 +347,14 @@ RWView >> initializeScene [
 
 ]
 
+{ #category : #'as yet unclassified' }
+RWView >> inspectionView [
+	"This is the most basic presentation showing the state of the object"
+	<inspectorPresentationOrder: 0 title: 'Woden Roassal View'>
+
+	^ super inspectionView
+]
+
 { #category : #accessing }
 RWView >> numberOfElements [
 	^ activeGroup numberOfElements

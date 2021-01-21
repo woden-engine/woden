@@ -30,7 +30,7 @@ SpWodenViewPresenter >> wodenApplication: anObject [
 
 { #category : #accessing }
 SpWodenViewPresenter >> wodenViewClass [
-	^ wodenViewClass
+	^ wodenViewClass ifNil: [ wodenViewClass := wodenApplication ifNotNil: [wodenApplication defaultViewClass ] ]
 ]
 
 { #category : #accessing }

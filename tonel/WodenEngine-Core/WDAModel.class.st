@@ -59,6 +59,7 @@ WDAModel >> continousUpdating [
 { #category : #opening }
 WDAModel >> createWidgetInMorphicWith: aView [
 	| view widget |
+	self prepareToOpenView.
 	view := aView engine: engine model: self.
 	widget := view createWidgetInMorphic.
 	self addView: view.
@@ -168,11 +169,16 @@ WDAModel >> openOnRenderTargetTexture: screenTexture with: aView [
 
 { #category : #opening }
 WDAModel >> openWith: aView [
+	self prepareToOpenView.
 	"self isOSWindowBlacklisted ifTrue: [
 		^ self openInMorphicWith: aView
 	]."
  
 	^ self openInOSWindowWith: aView
+]
+
+{ #category : #hooks }
+WDAModel >> prepareToOpenView [
 ]
 
 { #category : #'rendering process stages' }
