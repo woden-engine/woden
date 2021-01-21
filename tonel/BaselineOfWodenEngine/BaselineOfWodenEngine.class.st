@@ -76,4 +76,6 @@ BaselineOfWodenEngine >> postLoadActions [
 	self flag: 'FIXME: Remove this hack when is not required anymore in Pharo'.
 	FFIExternalStructure allSubclassesDo: #rebuildFieldAccessors.
 
+	self class environment at: #SpNullApplication ifPresent: [ :found | found reset ].
+	self class environment at: #StPharoApplication ifPresent: [ :found | found current reset ]
 ]
