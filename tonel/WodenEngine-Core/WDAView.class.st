@@ -107,6 +107,11 @@ WDAView >> engineChanged [
 	
 ]
 
+{ #category : #accessing }
+WDAView >> extent [
+	^ window extent
+]
+
 { #category : #'window handling' }
 WDAView >> fullscreen [
 	^ fullscreen

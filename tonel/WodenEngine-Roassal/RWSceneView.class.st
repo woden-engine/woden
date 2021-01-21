@@ -71,7 +71,7 @@ RWSceneView >> elementInPosition: aPoint [
 { #category : #selection }
 RWSceneView >> elementInPositionWithRayPicking: aPoint [
 	| nx ny extent |
-	extent := self drawingSurfaceExtent.
+	extent := self extent.
 	nx := aPoint x / extent x asFloat.
 	ny := 1.0 - (aPoint y / extent y).
 	^ model rayPickNormalizedPosition: nx @ ny.
@@ -136,7 +136,7 @@ RWSceneView >> projectPointToScreen: aPoint [
 	ndcPoint := projectedPoint xyz / projectedPoint w.
 	ndcX := ndcPoint x * 0.5 + 0.5.
 	ndcY := ndcPoint y * 0.5 + 0.5.
-	extent := self drawingSurfaceExtent.
+	extent := self extent.
 	x := ndcX * extent x.
 	y := ndcY * extent y.
 

@@ -91,6 +91,15 @@ WDASceneView >> engineChanged [
 	
 ]
 
+{ #category : #accessing }
+WDASceneView >> extent [
+	self isInVirtualReality ifTrue: [
+		^ engine vrSystem leftEyeRenderTargetExtent
+	].
+
+	^ super extent
+]
+
 { #category : #'as yet unclassified' }
 WDASceneView >> filterForCameraViewport: aCamera [
 	^ [ :o | true ]

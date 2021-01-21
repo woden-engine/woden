@@ -252,7 +252,7 @@ WDELevelEditorSceneView >> manipulatorInScreenPosition: aPoint [
 { #category : #visiting }
 WDELevelEditorSceneView >> normalizeScreenPosition: aPoint [
 	| nx ny extent |
-	extent := self drawingSurfaceExtent.
+	extent := self extent.
 	nx := aPoint x / extent x asFloat.
 	ny := 1.0 - (aPoint y / extent y).
 	^ nx @ ny
