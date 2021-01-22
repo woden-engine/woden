@@ -160,7 +160,7 @@ RWExample class >> clickGreen [
 
 { #category : #'as yet unclassified' }
 RWExample class >> clickLeds [
-	<script: 'new clickLeds openInVR'>
+	<script: 'self clickLeds openInVR'>
 	| v e colors cube |
 	colors := {  Color gray . Color red . Color green . Color blue . Color yellow . Color white}.
 	cube := RWCube new.
@@ -192,7 +192,7 @@ RWExample class >> clickLeds [
 
 { #category : #trees }
 RWExample class >> collectionSubclassesTree [
-	<script: 'self new collectionSubclassesTree openInVR'>
+	<script: 'self collectionSubclassesTree openInVR'>
 	| view  objects associations elements assocWithElements shape |
 	view := RWView new.
 	objects := Collection withAllSubclasses.
@@ -215,7 +215,7 @@ RWExample class >> collectionSubclassesTree [
 
 { #category : #'as yet unclassified' }
 RWExample class >> cubeLayout [
-	<script: 'self new cubeLayout openInVR'>
+	<script: 'self cubeLayout openInVR'>
 	| v  |
 	v := RWView new.
 	1 to: 1000 do: [ :i |
@@ -231,7 +231,7 @@ RWExample class >> cubeLayout [
 
 { #category : #trees }
 RWExample class >> differentShapes [
-	<script: 'self new differentShapes openInVR'>
+	<script: 'self differentShapes openInVR'>
 	| view  |
 	view := RWView new.
 	view addAll: ( RWCylinder elementsOn: (1 to: 4)).
@@ -246,7 +246,7 @@ RWExample class >> differentShapes [
 
 { #category : #'as yet unclassified' }
 RWExample class >> edges [
-	<script: 'self new edges openInVR'>
+	<script: 'self edges openInVR'>
 
 	| v el1 el2 |
 	v := RWView new.
@@ -266,7 +266,7 @@ RWExample class >> edges [
 
 { #category : #'as yet unclassified' }
 RWExample class >> eventHandling [
-	<script: 'self new eventHandling openInVR'>
+	<script: 'self eventHandling openInVR'>
 
 	| v cube |
 	v := RWView new.
@@ -294,7 +294,7 @@ RWExample class >> eventHandling [
 
 { #category : #layout }
 RWExample class >> exampleBalloonSimulation [
-	<script: 'self new exampleBalloonSimulation openInVR'>
+	<script: 'self exampleBalloonSimulation openInVR'>
 | view floor weightRadius weight balloonRadius balloon balloonBottomAnchor string balloonMass balloonInertiaDiag balloonInertia balloonInverseInertia balloonLinearDamping balloonAngularDamping stringLength stringRigidity balloonVelocity balloonAngularVelocity balloonOrientation |
 view := RWView new.
 
@@ -395,7 +395,7 @@ view addInteraction: RWOrbitController.
 
 { #category : #layout }
 RWExample class >> exampleBalloonSimulation2 [
-	<script: 'self new exampleBalloonSimulation2 openInVR'>
+	<script: 'self exampleBalloonSimulation2 openInVR'>
 | view floor weightRadius weight balloonRadius balloon balloonBottomAnchor string balloonMass balloonInertiaDiag balloonInertia balloonInverseInertia balloonLinearDamping balloonAngularDamping stringLength stringRigidity balloonVelocity balloonAngularVelocity balloonOrientation |
 view := RWView new.
 
@@ -495,7 +495,7 @@ view addInteraction: RWOrbitController.
 
 { #category : #layout }
 RWExample class >> exampleForceBasedLayout [
-	<script: 'self new exampleForceBasedLayout openInVR'>
+	<script: 'self exampleForceBasedLayout openInVR'>
 	| v boxes |
 	v := RWView new.
 	boxes := RWCube new
@@ -513,7 +513,7 @@ RWExample class >> exampleForceBasedLayout [
 
 { #category : #layout }
 RWExample class >> exampleForceBasedLayoutXY [
-	<script: 'self new exampleForceBasedLayoutXY openInVR'>
+	<script: 'self exampleForceBasedLayoutXY openInVR'>
 	| v boxes |
 	v := RWView new.
 	boxes := RWCube new
@@ -531,7 +531,7 @@ RWExample class >> exampleForceBasedLayoutXY [
 
 { #category : #layout }
 RWExample class >> exampleForceBasedLayoutXZ [
-	<script: 'self new exampleForceBasedLayoutXZ openInVR'>
+	<script: 'self exampleForceBasedLayoutXZ openInVR'>
 	| v boxes |
 	v := RWView new.
 	boxes := RWCube new
@@ -549,7 +549,7 @@ RWExample class >> exampleForceBasedLayoutXZ [
 
 { #category : #layout }
 RWExample class >> exampleForceBasedLayoutYZ [
-	<script: 'self new exampleForceBasedLayoutYZ openInVR'>
+	<script: 'self exampleForceBasedLayoutYZ openInVR'>
 	| v boxes |
 	v := RWView new.
 	boxes := RWCube new
@@ -567,7 +567,7 @@ RWExample class >> exampleForceBasedLayoutYZ [
 
 { #category : #'as yet unclassified' }
 RWExample class >> fallingCubeLayout [
-	<script: 'self new fallingCubeLayout openInVR'>
+	<script: 'self fallingCubeLayout openInVR'>
 	| v floor |
 	v := RWView new.
 	1 to: 300 do: [ :i |
@@ -589,7 +589,7 @@ RWExample class >> fallingCubeLayout [
 
 { #category : #'as yet unclassified' }
 RWExample class >> fallingLineLayout [
-	<script: 'self new fallingLineLayout openInVR'>
+	<script: 'self fallingLineLayout openInVR'>
 	| v floor |
 	v := RWView new.
 	1 to: 300 do: [ :i |
@@ -611,7 +611,7 @@ RWExample class >> fallingLineLayout [
 
 { #category : #layout }
 RWExample class >> gridLayout [
-	<script: 'self new gridLayout openInVR'>
+	<script: 'self gridLayout openInVR'>
 	| v  |
 	v := RWView new.
 	1 to: 1000 do: [ :i |
@@ -627,7 +627,7 @@ RWExample class >> gridLayout [
 
 { #category : #mesh }
 RWExample class >> gridMesh [
-	<script: 'self new gridMesh openInVR'>
+	<script: 'self gridMesh openInVR'>
 	| view shape elements |
 	view := RWView new.
 	view
@@ -647,7 +647,7 @@ RWExample class >> gridMesh [
 
 { #category : #'as yet unclassified' }
 RWExample class >> growingCubes [
-	<script: 'self new growingCubes openInVR'>
+	<script: 'self growingCubes openInVR'>
 	| v shape es |
 	v := RWView new.
 	shape := RWCube new size: #yourself.
@@ -661,7 +661,7 @@ RWExample class >> growingCubes [
 
 { #category : #trees }
 RWExample class >> helixExplicitCylinderLines [
-	<script: 'self new helixExplicitCylinderLines open'>
+	<script: 'self helixExplicitCylinderLines open'>
 	| view helixPoints |
 
 	view := RWView new.
@@ -685,7 +685,7 @@ RWExample class >> helixExplicitCylinderLines [
 
 { #category : #trees }
 RWExample class >> helixExplicitLines [
-	<script: 'self new helixExplicitLines open'>
+	<script: 'self helixExplicitLines open'>
 	| view helixPoints |
 
 	view := RWView new.
@@ -706,7 +706,7 @@ RWExample class >> helixExplicitLines [
 
 { #category : #trees }
 RWExample class >> helixExplicitMeshCylinderColoredLines [
-	<script: 'self new helixExplicitMeshCylinderColoredLines open'>
+	<script: 'self helixExplicitMeshCylinderColoredLines open'>
 	| view helixPoints helix helixColors |
 
 	view := RWView new.
@@ -730,7 +730,7 @@ RWExample class >> helixExplicitMeshCylinderColoredLines [
 
 { #category : #trees }
 RWExample class >> helixExplicitMeshCylinderLines [
-	<script: 'self new helixExplicitMeshCylinderLines open'>
+	<script: 'self helixExplicitMeshCylinderLines open'>
 	| view helixPoints helix |
 
 	view := RWView new.
@@ -754,7 +754,7 @@ RWExample class >> helixExplicitMeshCylinderLines [
 
 { #category : #trees }
 RWExample class >> helixExplicitMeshLines [
-	<script: 'self new helixExplicitMeshLines open'>
+	<script: 'self helixExplicitMeshLines open'>
 	| view helixPoints helix |
 
 	view := RWView new.
@@ -777,7 +777,7 @@ RWExample class >> helixExplicitMeshLines [
 
 { #category : #trees }
 RWExample class >> helixExplicitMeshLinesColored [
-	<script: 'self new helixExplicitMeshLinesColored open'>
+	<script: 'self helixExplicitMeshLinesColored open'>
 	| view helixPoints helix helixColors |
 
 	view := RWView new.
@@ -800,7 +800,7 @@ RWExample class >> helixExplicitMeshLinesColored [
 
 { #category : #'as yet unclassified' }
 RWExample class >> highlighting [
-	<script: 'self new highlighting open'>
+	<script: 'self highlighting open'>
 	| v es |
 	v := RWView new.
 	es := ((RWCube new size: 1)) elementsOn: (1 to: 16).
@@ -822,7 +822,7 @@ RWExample class >> highlighting [
 
 { #category : #'as yet unclassified' }
 RWExample class >> manyCubeLayout [
-	<script: 'self new manyCubeLayout open'>
+	<script: 'self manyCubeLayout open'>
 	| v  |
 	v := RWView new.
 	1 to: 100000 do: [ :i |
@@ -838,7 +838,7 @@ RWExample class >> manyCubeLayout [
 
 { #category : #'as yet unclassified' }
 RWExample class >> mediumCubeLayout [
-	<script: 'self new mediumCubeLayout open'>
+	<script: 'self mediumCubeLayout open'>
 	| v  |
 	v := RWView new.
 	1 to: 9261 do: [ :i |
@@ -863,7 +863,7 @@ RWExample class >> menuCommandOn: builder [
 
 { #category : #shapes }
 RWExample class >> oneCone [
-	<script: 'self new oneCone open'>
+	<script: 'self oneCone open'>
 	| v |
 	v := RWView new.
 	v add: RWCone element.
@@ -874,7 +874,7 @@ RWExample class >> oneCone [
 
 { #category : #shapes }
 RWExample class >> oneCube [
-	<script: 'self new oneCube open'>
+	<script: 'self oneCube open'>
 	| v |
 	v := RWView new.
 	v add: RWCube element.
@@ -883,7 +883,7 @@ RWExample class >> oneCube [
 
 { #category : #shapes }
 RWExample class >> oneCylinder [
-	<script: 'self new oneCylinder open'>
+	<script: 'self oneCylinder open'>
 	| v |
 	v := RWView new.
 	v add: RWCylinder element.
@@ -893,7 +893,7 @@ RWExample class >> oneCylinder [
 
 { #category : #shapes }
 RWExample class >> onePyramid [
-	<script: 'self new onePyramid open'>
+	<script: 'self onePyramid open'>
 	| v |
 	v := RWView new.
 	v add: RWPyramid element.
@@ -903,7 +903,7 @@ RWExample class >> onePyramid [
 
 { #category : #shapes }
 RWExample class >> oneRedCube [
-	<script: 'self new oneRedCube open'>
+	<script: 'self oneRedCube open'>
 	| v |
 	v := RWView new.
 	v add: RWCube red element.
@@ -913,7 +913,7 @@ RWExample class >> oneRedCube [
 
 { #category : #shapes }
 RWExample class >> oneUVSphere [
-	<script: 'self new oneUVSphere open'>
+	<script: 'self oneUVSphere open'>
 	| v |
 	v := RWView new.
 	v add: RWUVSphere element.
@@ -923,7 +923,7 @@ RWExample class >> oneUVSphere [
 
 { #category : #'as yet unclassified' }
 RWExample class >> someEdges [
-	<script: 'self new someEdges open'>
+	<script: 'self someEdges open'>
 	| v els |
 	v := RWView new.
 
@@ -944,7 +944,7 @@ RWExample class >> someEdges [
 
 { #category : #trees }
 RWExample class >> spheroids [
-	<script: 'self new spheroids open'>
+	<script: 'self spheroids open'>
 	| view shape |
 	view := RWView new.
 	shape := RWUVSphere new .
@@ -961,7 +961,7 @@ RWExample class >> spheroids [
 
 { #category : #shapes }
 RWExample class >> threeCubes [
-	<script: 'self new threeCubes open'>
+	<script: 'self threeCubes open'>
 	| v |
 	v := RWView new.
 	v add: (RWCube element).
@@ -974,7 +974,7 @@ RWExample class >> threeCubes [
 
 { #category : #'as yet unclassified' }
 RWExample class >> threeCubesAndLight [
-	<script: 'self new threeCubesAndLight open'>
+	<script: 'self threeCubesAndLight open'>
 	| v |
 	v := RWView new.
 	v blackBackground.
@@ -989,7 +989,7 @@ RWExample class >> threeCubesAndLight [
 
 { #category : #'as yet unclassified' }
 RWExample class >> threeCubesAndLightWithShadows [
-	<script: 'self new threeCubesAndLightWithShadows open'>
+	<script: 'self threeCubesAndLightWithShadows open'>
 	| v floor light|
 	v := RWView new.
 	v blackBackground.
@@ -1016,7 +1016,7 @@ RWExample class >> threeCubesAndLightWithShadows [
 
 { #category : #'as yet unclassified' }
 RWExample class >> threeCubesAndLightWithShadowsAndPhysics [
-	<script: 'self new threeCubesAndLightWithShadowsAndPhysics open'>
+	<script: 'self threeCubesAndLightWithShadowsAndPhysics open'>
 	| v floor light|
 	v := RWView new.
 	v blackBackground.
@@ -1047,7 +1047,7 @@ RWExample class >> threeCubesAndLightWithShadowsAndPhysics [
 
 { #category : #trees }
 RWExample class >> translucentAlphaOverShape [
-	<script: 'self new translucentAlphaOverShape open'>
+	<script: 'self translucentAlphaOverShape open'>
 	| view translucentShape opaqueShape elements |
 	view := RWView new.
 
@@ -1067,7 +1067,7 @@ RWExample class >> translucentAlphaOverShape [
 
 { #category : #trees }
 RWExample class >> translucentShape [
-	<script: 'self new translucentShape open'>
+	<script: 'self translucentShape open'>
 	| view translucentShape opaqueShape elements |
 	view := RWView new.
 
@@ -1087,7 +1087,7 @@ RWExample class >> translucentShape [
 
 { #category : #trees }
 RWExample class >> treeSimple [
-	<script: 'self new treeSimple open'>
+	<script: 'self treeSimple open'>
 	| view  objects associations elements assocWithElements|
 	view := RWView new.
 	objects := { 1 . 2 . 3 . 4 }.
