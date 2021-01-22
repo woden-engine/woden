@@ -16,7 +16,10 @@ Class {
 	#superclass : #RWElementInteraction,
 	#instVars : [
 		'text',
-		'color'
+		'color',
+		'font',
+		'borderExtent',
+		'marginExtent'
 	],
 	#category : #'WodenEngine-Roassal-Interaction'
 }

@@ -151,6 +151,10 @@ WDCVirtualWindow >> initializeForNewSession [
 WDCVirtualWindow >> open [
 ]
 
+{ #category : #'rendering process stages' }
+WDCVirtualWindow >> prepareRendering [
+]
+
 { #category : #'event processing' }
 WDCVirtualWindow >> processEvent: anEvent [
 ]

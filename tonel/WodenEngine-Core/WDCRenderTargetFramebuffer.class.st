@@ -123,6 +123,13 @@ WDCRenderTargetFramebuffer >> height: anObject [
 ]
 
 { #category : #initialization }
+WDCRenderTargetFramebuffer >> initialize [
+	super initialize.
+	colorAttachments := #().
+	colorAttachmentViews := #().
+]
+
+{ #category : #initialization }
 WDCRenderTargetFramebuffer >> initializeExtraStateFrom: previousFramebuffer [
 	previousFramebuffer ifNil: [ ^ self ].
 	

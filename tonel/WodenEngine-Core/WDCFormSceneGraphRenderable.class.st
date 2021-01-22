@@ -157,12 +157,19 @@ WDCFormSceneGraphRenderable >> validDrawCommandProcessor [
 { #category : #'as yet unclassified' }
 WDCFormSceneGraphRenderable >> validFormSceneGraphRenderTarget [
 	^ formSceneGraphRenderTarget ifNil: [
-		| surfaceFramebuffer |
+		| surfaceFramebuffer colorBuffer colorBufferView |
 		surfaceFramebuffer := drawingSurface framebuffers first.
+		colorBuffer := nil.
+		colorBufferView := nil.
+		surfaceFramebuffer colorAttachments ifNotEmpty: [
+			colorBuffer := surfaceFramebuffer colorAttachments first validHandle.
+			colorBufferView := surfaceFramebuffer colorAttachmentViews first asValidTextureViewHandle.
+		].
+	
 		formSceneGraphRenderTarget := self validDrawCommandProcessor
 			createRenderTargetWithExtent: self drawingSurfaceExtent
-			colorBuffer: surfaceFramebuffer colorAttachments first validHandle
-			colorBufferView: surfaceFramebuffer colorAttachmentViews first asValidTextureViewHandle
+			colorBuffer: colorBuffer
+			colorBufferView: colorBufferView
 			framebuffer: surfaceFramebuffer validHandle
 	]
 ]

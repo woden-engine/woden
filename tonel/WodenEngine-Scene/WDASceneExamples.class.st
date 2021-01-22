@@ -531,8 +531,8 @@ WDASceneExamples class >> example08MediumTerrain [
 ]
 
 { #category : #examples }
-WDASceneExamples class >> example09DragonIsland [
-	| model terrain scene camera water dragonMesh dragon dragonAction dragonActionRepeated dragonActionFrame sunLight skyTexture dragonAnimationState |
+WDASceneExamples class >> example09Island [
+	| model terrain scene camera water sunLight skyTexture |
 	
 	model := WDASampleSceneModel new.
 	scene := model newScene.
@@ -561,28 +561,6 @@ WDASceneExamples class >> example09DragonIsland [
 	water := self createIslandWaterObjectFor: scene engine.
 	scene add: water.
 	
-	"dragonMesh := scene engine resourceCache loadMesh: 'models/demos/baby_dragon.fmdl'.
-	dragon := WDSGSpatialObject new.
-	dragon renderable: dragonMesh.
-	dragon transform
-		rotateDegreesOnY: -45.0; 
-		translateByZ: 70.0;
-		translateByY: 3.0.
-
-	scene add: dragon.
-	
-	dragonAnimationState := dragonMesh deformationState.
-	dragonAction := dragonAnimationState actionNamed: 'Idle'.
-	dragonActionRepeated := true.
-	dragonActionFrame := 0.0.
-	model onDeltaTimeDo: [ :delta |
-		dragonActionFrame := dragonActionFrame + (delta *30.0).
-		dragonAnimationState
-			setRestPose;
-			addAction: dragonAction repeated: dragonActionRepeated frame: dragonActionFrame;
-			computePoseMatrices.
-	]."
-
 	model open
 ]
 
