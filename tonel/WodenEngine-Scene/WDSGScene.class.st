@@ -238,6 +238,17 @@ WDSGScene >> initializeWithEngine: anEngine shaderSignatureClass: shaderSignatur
 	self rootsDo: #engineChanged.
 ]
 
+{ #category : #'as yet unclassified' }
+WDSGScene >> inspectionTree [
+	<inspectorPresentationOrder: 0 title: 'Tree'>
+
+	^ SpTreePresenter new 
+		roots: { backgroundLayer . normalLayer . foregroundLayer };
+		children: [ :aNode | aNode children ];
+		display: [ :each | each printString ];
+		yourself
+]
+
 { #category : #accessing }
 WDSGScene >> lightingProbe [
 	^ lightingProbe

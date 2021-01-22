@@ -65,10 +65,17 @@ RWNode >> initialize [
 { #category : #updating }
 RWNode >> invalidateBoundingBoxCache [
 	| oldBoundingBox |
+	"Cancel propagation if already invalidated."
+	(localBoundingBox isNil and: [boundingBox isNil]) ifTrue: [ ^ self ].
 	oldBoundingBox := boundingBox.
 	localBoundingBox := nil.
 	boundingBox := nil.
 	parentGroup ifNotNil: [ parentGroup child: self boundingChangedFrom: oldBoundingBox ].
+]
+
+{ #category : #accessing }
+RWNode >> localBoundingBox [
+	self subclassResponsibility
 ]
 
 { #category : #accessing }
@@ -164,6 +171,12 @@ RWNode >> rotateByZ: angle [
 RWNode >> rotateByZDegrees: angle [
 	sceneNode rotateDegreesOnZ: angle.
 	self invalidateBoundingBoxCache.
+]
+
+{ #category : #translation }
+RWNode >> scaleBy: scaleFactor [
+	sceneNode scaleBy: scaleFactor.
+	self transformChanged.
 ]
 
 { #category : #accessing }

@@ -6,3 +6,23 @@ Class {
 	#superclass : #WDSGAbstractLocalSpatialObject,
 	#category : #'WodenEngine-Scene-Graph'
 }
+
+{ #category : #'rendering phases' }
+WDSGLocalSpatialInstanceObject >> bakeLazyObjectStates [
+	objectState transform: self instanceTransform
+]
+
+{ #category : #caching }
+WDSGLocalSpatialInstanceObject >> globalTransformValidated [
+]
+
+{ #category : #'as yet unclassified' }
+WDSGLocalSpatialInstanceObject >> instanceTransform [
+	^ transform
+]
+
+{ #category : #'rendering phases' }
+WDSGLocalSpatialInstanceObject >> transformChanged [
+	super transformChanged.
+	objectState transform: self instanceTransform
+]

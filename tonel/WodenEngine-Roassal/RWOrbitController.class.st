@@ -49,22 +49,23 @@ RWOrbitController >> front [
 
 { #category : #hooks }
 RWOrbitController >> initializeElement: aView [
-	| r |
+	| r boundingBox |
 	camera := aView camera.
 	orbitMovement := RWOrbitMovement new
 		enabledWhen: [aView isInVirtualReality not];
 		yourself.
 	camera addBehavior: orbitMovement.
 	
-	orbitMovement center: aView boundingBox center.
+	boundingBox := aView boundingBox.
+	orbitMovement center: boundingBox center.
 	
 	orbitMovement theta: 0.0.
 	orbitMovement phi: (Float pi)/2.0.
 	
-	r := ((aView boundingBox width) + (aView boundingBox height) + (aView boundingBox depth )) /3.0.
-	r := r*1.7.
+	r := (boundingBox width max: boundingBox height) max: boundingBox depth.
+	r := r * 1.7.
 	orbitMovement r: r.
-		
+
 	aView when: RWKeyDown do: [ :evt |
 		self onKeyDown: evt.
 	].
@@ -145,15 +146,6 @@ RWOrbitController >> onMouseDrag: event [
 { #category : #accessing }
 RWOrbitController >> orbitMovement [
 	^orbitMovement
-]
-
-{ #category : #accessing }
-RWOrbitController >> recenterCamera [
-	| tmp |
-	orbitMovement center: center.
-	
-	tmp := (orbitMovement camera position) - center.
-	orbitMovement r: (tmp length)
 ]
 
 { #category : #defaults }

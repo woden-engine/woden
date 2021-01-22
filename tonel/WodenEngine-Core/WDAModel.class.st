@@ -112,6 +112,11 @@ WDAModel >> isOSWindowBlacklisted [
 ]
 
 { #category : #testing }
+WDAModel >> isOpened [
+	^ views isNotEmpty
+]
+
+{ #category : #testing }
 WDAModel >> needsToRender [
 	^ views isNotEmpty
 

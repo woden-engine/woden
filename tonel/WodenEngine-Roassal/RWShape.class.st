@@ -131,25 +131,6 @@ RWShape >> buildRenderableFor: anElement view: aView [
 	self subclassResponsibility
 ]
 
-{ #category : #hooks }
-RWShape >> buildRenderableFor: anElement view: aView parentSceneNode: sceneNode [
-	| renderable |
-	renderable := self buildRenderableFor: anElement view: aView.
-	sceneNode isLocalSpatialNode ifFalse: [
-		self flag: 'TODO: Refactor this part'.
-		(renderable isNotNil and: [sceneNode isSpatialObject ]) ifTrue: [ 
-			sceneNode renderable: renderable. 
-		].
-		sceneNode isSpatialObject ifTrue: [ 
-			sceneNode color: (self colorFor: anElement)
-		].
-	
-		anElement parentGroup asSceneNode addChild: sceneNode.
-	].
-	^ renderable
-
-]
-
 { #category : #'changing shape' }
 RWShape >> changedElement: element sceneNode: sceneNode renderable: renderable [
 	"This is used to change an element shape."

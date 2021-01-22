@@ -172,6 +172,17 @@ WDSGNode >> initialize [
 	visible := true.
 ]
 
+{ #category : #'as yet unclassified' }
+WDSGNode >> inspectionTree [
+	<inspectorPresentationOrder: 0 title: 'Tree'>
+
+	^ SpTreePresenter new 
+		roots: { self };
+		children: [ :aNode | aNode children ];
+		display: [ :each | each printString ];
+		yourself
+]
+
 { #category : #testing }
 WDSGNode >> isCamera [
 	^ false

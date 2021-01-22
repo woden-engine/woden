@@ -9,6 +9,31 @@ TWDCTransformationManipulationMethods >> position [
 ]
 
 { #category : #transforming }
+TWDCTransformationManipulationMethods >> scaleBy: scaleFactor [
+	self explicitRequirement
+]
+
+{ #category : #transforming }
+TWDCTransformationManipulationMethods >> scaleByX: scaleFactor [
+	self scaleBy: (Float32x3 x: scaleFactor)
+]
+
+{ #category : #transforming }
+TWDCTransformationManipulationMethods >> scaleByX: sx y: sy z: sz [
+	self scaleBy: (Float32x3 x: sx y: sy z: sz)
+]
+
+{ #category : #transforming }
+TWDCTransformationManipulationMethods >> scaleByY: scaleFactor [
+	self scaleBy: (Float32x3 y: scaleFactor)
+]
+
+{ #category : #transforming }
+TWDCTransformationManipulationMethods >> scaleByZ: scaleFactor [
+	self scaleBy: (Float32x3 z: scaleFactor)
+]
+
+{ #category : #transforming }
 TWDCTransformationManipulationMethods >> translateBy: translation [
 	self translateTo: self position + translation
 ]

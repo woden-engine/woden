@@ -17,7 +17,7 @@ RWSimpleShape >> baseShapeDescriptor [
 { #category : #hooks }
 RWSimpleShape >> buildRenderableFor: anElement view: aView [
 	| baseShape instance |
-	baseShape := aView baseShapeNodeFor: self baseShapeDescriptor ifAbsentPut: [ self createBaseShapeNodeForView: aView ].
+	baseShape := anElement parentGroup baseShapeNodeFor: self baseShapeDescriptor ifAbsentPut: [ self createBaseShapeNodeForView: aView ].
 	instance := WDSGLocalShapedSpatialInstanceObject new.
 	instance shapeTransform: (self shapeTransformFor: anElement);
 		color: (self colorFor: anElement).

@@ -42,7 +42,6 @@ Class {
 	#classTraits : 'TRWInteractableObject classTrait',
 	#instVars : [
 		'cameraLight',
-		'baseShapes',
 		'dynamicsWorld',
 		'signalUpdateCallback',
 		'sceneRenderer',
@@ -149,21 +148,6 @@ RWView >> backgroundColor [
 { #category : #accessing }
 RWView >> backgroundColor: aWDColor [
 	scene backgroundColor: aWDColor
-]
-
-{ #category : #'base shapes' }
-RWView >> baseShapeNodeFor: baseShapeDescriptor [
-	^ baseShapes at: baseShapeDescriptor ifAbsent: [ nil ]
-]
-
-{ #category : #'base shapes' }
-RWView >> baseShapeNodeFor: baseShapeDescriptor ifAbsentPut: aBlock [
-	|node |
-	^ baseShapes at: baseShapeDescriptor ifAbsentPut: [
-		node := aBlock value.
-		scene add: node.
-		node
-	]
 ]
 
 { #category : #'as yet unclassified' }
@@ -320,7 +304,6 @@ RWView >> getElementById: id ifAbsent: aBlock [
 RWView >> initializeModel [
 	groups := OrderedCollection new.
 	eventHandler := Announcer new.
-	baseShapes := Dictionary new.
 	rigidBodies := OrderedCollection new.
 	overlays := OrderedCollection new.
 	elementByIdDictionary := Dictionary new.

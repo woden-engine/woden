@@ -34,7 +34,7 @@ RWAbstractLineShape >> boundingBoxFor: element [
 { #category : #hooks }
 RWAbstractLineShape >> buildRenderableFor: anElement view: aView [
 	| baseShape componentNode meshComponent |
-	baseShape := aView baseShapeNodeFor: self baseShapeDescriptor ifAbsentPut: [ self createBaseShapeNodeForView: aView ].
+	baseShape := anElement parentGroup baseShapeNodeFor: self baseShapeDescriptor ifAbsentPut: [ self createBaseShapeNodeForView: aView ].
 
 	componentNode := WDSGLocalSpatialComponentObject new.
 	componentNode 

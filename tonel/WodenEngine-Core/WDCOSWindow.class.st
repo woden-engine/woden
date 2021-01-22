@@ -111,6 +111,11 @@ WDCOSWindow >> enqueueEvent: anEvent [
 	eventQueue nextPut: anEvent
 ]
 
+{ #category : #'instance creation' }
+WDCOSWindow >> extent [
+	^ window extent
+]
+
 { #category : #accessing }
 WDCOSWindow >> fullscreen: aBoolean [
 	window fullscreen: aBoolean

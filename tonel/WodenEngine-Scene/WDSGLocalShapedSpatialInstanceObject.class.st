@@ -21,6 +21,11 @@ WDSGLocalShapedSpatialInstanceObject >> initialize [
 	shapeTransform := ReversibleAffineTransform3dF32 identity.
 ]
 
+{ #category : #'as yet unclassified' }
+WDSGLocalShapedSpatialInstanceObject >> instanceTransform [
+	^ transform transformTransform: shapeTransform
+]
+
 { #category : #accessing }
 WDSGLocalShapedSpatialInstanceObject >> shapeTransform [
 	^ shapeTransform

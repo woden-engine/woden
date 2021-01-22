@@ -54,7 +54,8 @@ RWElement >> addConnectedEdge: anEdge [
 { #category : #adding }
 RWElement >> addedInView: aView [
 	super addedInView: aView.
-	renderable := shape buildRenderableFor: self view: aView parentSceneNode: sceneNode.
+	renderable := shape buildRenderableFor: self view: aView.
+	self setRenderableInDefaultNode.
 	self buildRigidBodyForView: aView.
 
 	id ifNotNil: [ view element: self idChangedFrom: nil into: id ].
@@ -281,6 +282,7 @@ RWElement >> renderable [
 { #category : #adding }
 RWElement >> replaceSceneNode: newNode [
 	newNode transform: sceneNode transform.
+	sceneNode removeFromScene.
 	sceneNode := newNode.
 ]
 
@@ -298,6 +300,20 @@ RWElement >> sceneNode [
 RWElement >> setBehavior: aBehavior [
 	behaviors removeAll.
 	self addBehavior: aBehavior
+]
+
+{ #category : #initialization }
+RWElement >> setRenderableInDefaultNode [
+	sceneNode isLocalSpatialNode ifTrue: [^ self].
+	(renderable isNotNil and: [sceneNode isSpatialObject ]) ifTrue: [ 
+		sceneNode renderable: renderable. 
+	].
+	sceneNode isSpatialObject ifTrue: [ 
+		sceneNode color: (shape colorFor: self)
+	].
+
+	parentGroup asSceneNode addChild: sceneNode.
+
 ]
 
 { #category : #accessing }

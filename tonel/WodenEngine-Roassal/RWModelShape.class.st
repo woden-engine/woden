@@ -18,7 +18,7 @@ RWModelShape class >> modelNamed: modelName node: nodeName [
 RWModelShape >> buildRenderableFor: anElement view: aView parentSceneNode: parentSceneNode [
 	shapeNode := ((self validModelLibraryFor: aView engine) instanceSceneNodeNamed: nodeName).
 	parentSceneNode addChild: shapeNode.
-	aView validScene add: parentSceneNode.
+	anElement parentGroup asSceneNode add: parentSceneNode.
 	^ WDCNullRenderable new
 ]
 

@@ -2,7 +2,8 @@ Class {
 	#name : #RWGroup,
 	#superclass : #RWNode,
 	#instVars : [
-		'children'
+		'children',
+		'baseShapes'
 	],
 	#category : #'WodenEngine-Roassal-Core'
 }
@@ -14,7 +15,7 @@ RWGroup class >> withAll: aCollection [
 
 { #category : #adding }
 RWGroup >> addAll: aCollectionOfElements [
-	aCollectionOfElements do: [ :each | self add: each ]
+	aCollectionOfElements do: [ :each | self addChild: each ]
 ]
 
 { #category : #adding }
@@ -22,14 +23,6 @@ RWGroup >> addChild: aChild [
 	children add: aChild.
 	aChild addedInGroup: self.
 	view ifNotNil: [ aChild addedInView: view ].
-]
-
-{ #category : #adding }
-RWGroup >> addElement: anElement [
-	self assert: anElement isElement.
-	children add: anElement.
-	anElement addedInGroup: self.
-	view ifNotNil: [ anElement addedInView: self ].
 ]
 
 { #category : #private }
@@ -40,7 +33,7 @@ RWGroup >> addToParentSceneNode: newParentSceneNode [
 { #category : #adding }
 RWGroup >> addedInGroup: aGroup [
 	super addedInGroup: aGroup.
-	parentGroup ifNil: [ self addToParentSceneNode: aGroup asSceneNode ].
+	parentGroup ifNotNil: [ self addToParentSceneNode: aGroup asSceneNode ].
 ]
 
 { #category : #adding }
@@ -54,6 +47,21 @@ RWGroup >> addedInView: aView [
 { #category : #enumerating }
 RWGroup >> allElementsDo: aBlock [
 	children do: aBlock
+]
+
+{ #category : #'base shapes' }
+RWGroup >> baseShapeNodeFor: baseShapeDescriptor [
+	^ baseShapes at: baseShapeDescriptor ifAbsent: [ nil ]
+]
+
+{ #category : #'base shapes' }
+RWGroup >> baseShapeNodeFor: baseShapeDescriptor ifAbsentPut: aBlock [
+	|node |
+	^ baseShapes at: baseShapeDescriptor ifAbsentPut: [
+		node := aBlock value.
+		sceneNode ifNotNil: [ sceneNode addChild: node ].
+		node
+	]
 ]
 
 { #category : #updating }
@@ -74,6 +82,7 @@ RWGroup >> children [
 { #category : #accessing }
 RWGroup >> computeLocalBoundingBox [
 	| result |
+	children ifEmpty: [ ^ BoxF32 new ].
 	result := BoxF32 empty.
 	children do: [ :each | result insertBox: each boundingBox ].
 	^ result
@@ -93,6 +102,7 @@ RWGroup >> ifNotEmpty: aBlock [
 RWGroup >> initialize [
 	super initialize.
 	children := OrderedCollection new.
+	baseShapes := Dictionary new.
 ]
 
 { #category : #'as yet unclassified' }

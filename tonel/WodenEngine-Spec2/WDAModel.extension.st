@@ -8,3 +8,8 @@ WDAModel >> inspectionView [
 		wodenApplication: self;
 		yourself
 ]
+
+{ #category : #'*WodenEngine-Spec2' }
+WDAModel >> inspectionViewContext: aContext [
+	aContext active: self isOpened not
+]
