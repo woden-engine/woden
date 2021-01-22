@@ -78,6 +78,14 @@ RWNode >> localBoundingBox [
 	self subclassResponsibility
 ]
 
+{ #category : #'as yet unclassified' }
+RWNode >> makeDefaultView [
+	^ RWView new
+		add: self;
+		addInteraction: RWOrbitController;
+		yourself
+]
+
 { #category : #accessing }
 RWNode >> orientation [
 	^ sceneNode transform matrix

@@ -1,6 +1,6 @@
 Class {
 	#name : #WDASceneExamples,
-	#superclass : #Object,
+	#superclass : #WDAExamples,
 	#category : #'WodenEngine-Scene-Examples'
 }
 
@@ -162,6 +162,7 @@ WDASceneExamples class >> createIslandWaterObjectFor: engine [
 
 { #category : #examples }
 WDASceneExamples class >> example01Cube [
+	<example>
 	| model meshBuilder mesh cube light scene camera |
 	model := WDASampleSceneModel new.
 	scene := model newScene.
@@ -184,11 +185,12 @@ WDASceneExamples class >> example01Cube [
 		translateByX: -1.5 y: 1.5 z: 1.6.
 	scene add: light.
 
-	model openWith: WDAFPSSceneView allowingVR.
+	model open
 ]
 
 { #category : #examples }
 WDASceneExamples class >> example02TextureCube [
+	<example>
 	| model meshBuilder mesh cube light scene camera material |
 	model := WDASampleSceneModel new.
 	scene := model newScene.
@@ -214,7 +216,7 @@ WDASceneExamples class >> example02TextureCube [
 		translateByX: -1.5 y: 1.5 z: 1.6.
 	scene add: light.
 
-	model openWith: WDAFPSSceneView.
+	model open
 ]
 
 { #category : #examples }
@@ -246,7 +248,7 @@ WDASceneExamples class >> example03Floor [
 		translateByX: -1.5 y: 1.5 z: 1.6.
 	scene add: light.
 
-	model openWith: WDAFPSSceneView.
+	model open
 ]
 
 { #category : #examples }
@@ -283,7 +285,7 @@ WDASceneExamples class >> example04Pool [
 	scene createSkyWithCubeTexture: skyTexture.
 
 	view := WDAFPSSceneView allowingVR.
-	model openWith: view.
+	model open
 ]
 
 { #category : #examples }
@@ -321,7 +323,7 @@ WDASceneExamples class >> example04ProceduralSky [
 	scene createSkyWithCubeTexture: skyTexture.
 	scene ambientLighting: Float32x4 ones.
 		
-	model openWith: WDAFPSSceneView.
+	model open
 
 ]
 
@@ -397,7 +399,7 @@ WDASceneExamples class >> example05DangerousPool [
 	
 	view := WDAFPSSceneView allowingVR.
 	view cameraAngle: (Float32x3 y: Float pi).
-	model openWith: view.
+	model open
 ]
 
 { #category : #examples }
@@ -427,7 +429,7 @@ WDASceneExamples class >> example06MeshGrid [
 		translateByX: -1.5 y: 1.5 z: 1.6.
 	scene add: light.
 
-	model openWith: WDAFPSSceneView.
+	model open
 ]
 
 { #category : #examples }
@@ -479,7 +481,7 @@ WDASceneExamples class >> example07SmallTerrain [
 		translateToX: 0.0 y: 1.5 z: 2.5.
 	scene add: light.
 
-	model openWith: WDAFPSSceneView.
+	model open
 ]
 
 { #category : #examples }
@@ -525,7 +527,7 @@ WDASceneExamples class >> example08MediumTerrain [
 		translateToX: 0.0 y: 1.5 z: 2.5.
 	scene add: light.
 
-	model openWith: WDAFPSSceneView allowingVR.
+	model open
 ]
 
 { #category : #examples }
@@ -581,7 +583,7 @@ WDASceneExamples class >> example09DragonIsland [
 			computePoseMatrices.
 	]."
 
-	model openWith: WDAFPSSceneView allowingVR
+	model open
 ]
 
 { #category : #examples }
@@ -655,7 +657,7 @@ WDASceneExamples class >> example10ParticleSystem [
 	particleSystem translateByY: 0.5.
 	scene add: particleSystem.
 
-	model openWith: WDAFPSSceneView.
+	model open
 ]
 
 { #category : #'example models' }

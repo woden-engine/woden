@@ -83,11 +83,6 @@ WDA3DModelViewerModel >> castShadows: aBoolean [
 ]
 
 { #category : #opening }
-WDA3DModelViewerModel >> defaultViewClass [
-	^ WDAFPSSceneView allowingVR
-]
-
-{ #category : #opening }
 WDA3DModelViewerModel >> ensureBackgroundSetup [
 	hasBackgroundSetup ifTrue: [ ^ self ].
 	self setDefaultBackground

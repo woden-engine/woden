@@ -238,7 +238,7 @@ RWView >> element: element idChangedFrom: oldId into: newId [
 
 { #category : #accessing }
 RWView >> elementFromModel: aModel [
-	^ activeGroup children detect: [ :el | el model == aModel ] ifNone: [ nil ]
+	^ activeGroup elementFromModel: aModel
 ]
 
 { #category : #accessing }

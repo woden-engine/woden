@@ -5,10 +5,7 @@ RWNode >> inspectionView [
 	"This is the most basic presentation showing the state of the object"
 	<inspectorPresentationOrder: 0 title: 'Roassal View'>
 
-	^ RWView new
-		add: self;
-		addInteraction: RWOrbitController;
-		inspectionView
+	^ self makeDefaultView inspectionView
 ]
 
 { #category : #'*WodenEngine-Spec2' }

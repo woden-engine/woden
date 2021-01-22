@@ -4,8 +4,13 @@ Class {
 	#instVars : [
 		'deltaTimeBlock'
 	],
-	#category : 'WodenEngine-Scene-Examples'
+	#category : #'WodenEngine-Scene-Examples'
 }
+
+{ #category : #opening }
+WDASampleSceneModel >> defaultViewClass [
+	^ WDAFPSSceneView allowingVR
+]
 
 { #category : #enumerating }
 WDASampleSceneModel >> onDeltaTimeDo: aBlock [

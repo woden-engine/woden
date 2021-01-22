@@ -88,6 +88,16 @@ RWGroup >> computeLocalBoundingBox [
 	^ result
 ]
 
+{ #category : #enumerating }
+RWGroup >> do: aBlock [
+	^ children do: aBlock
+]
+
+{ #category : #accessing }
+RWGroup >> elementFromModel: aModel [
+	^ children detect: [ :el | el model == aModel ] ifNone: [ nil ]
+]
+
 { #category : #'as yet unclassified' }
 RWGroup >> ifEmpty: aBlock [
 	^ children ifEmpty: aBlock
