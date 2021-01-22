@@ -196,7 +196,6 @@ WDESGenericEntity >> buildGenericMeshWith: aBlock [
 { #category : #building }
 WDESGenericEntity >> buildParticleSystemWith: aBlock [
 	| renderable component |
-	true ifTrue: [ ^ WDESStaticRenderableSceneNodeComponent new ].
 	renderable := WDCParticleSystemRenderable new.
 	aBlock value: renderable.
 	

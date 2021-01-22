@@ -608,8 +608,8 @@ WDASceneExamples class >> example10ParticleSystem [
 	particleSystemRenderable simulationBlock: [ :particleState :index :delta |
 		| lifeTime color flickering |
 		lifeTime := particleState lifeTime  - delta.
-		lifeTime <= 0.0 ifTrue:[
-			lifeTime := 1.7 + particleState nextRandom*1.5.
+		lifeTime <= 0.0 ifTrue: [
+			lifeTime := 1.7 + (particleState nextRandom*1.5).
 			particleState
 				startingUp: false;
 				position: particleState nextRandomVector3F * 0.25;

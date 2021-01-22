@@ -33,7 +33,7 @@ WDCParticleSystemRenderableAnimationState >> createCPUParticleSimulationBuffer [
 	particleCount := particleSystem particleCount.
 	startupTime := particleSystem startupTime.
 	
-	cpuParticleSimulationBuffer := SLVMNativeArray for: WDCParticleState new: particleCount.
+	cpuParticleSimulationBuffer := (StdnVector for: WDCParticleState) new: particleCount.
 	initialParticleState := WDCParticleState new
 		size: (Float32x3 x: 0.2 y: 0.2 z: 0.2);
 		color: Color black asFloat32x4;
@@ -44,7 +44,7 @@ WDCParticleSystemRenderableAnimationState >> createCPUParticleSimulationBuffer [
 			lifeTime: (index - 1) * (startupTime / particleCount);
 			setInitialSeedForIndex: index.
 		
-		cpuParticleSimulationBuffer at: index put: initialParticleState
+		cpuParticleSimulationBuffer add: initialParticleState copy
 	].
 ]
 
