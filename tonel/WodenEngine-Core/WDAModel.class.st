@@ -253,3 +253,8 @@ WDAModel >> updateViewsForFrameDelta: delta [
 WDAModel >> views [
 	^ views
 ]
+
+{ #category : #hooks }
+WDAModel >> whenTransmissibleItemActivatedDo: aBlock [
+	"Hook for transmiting an activated element through Spec2 and the new inspector."
+]

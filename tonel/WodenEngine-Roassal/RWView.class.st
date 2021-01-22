@@ -54,7 +54,8 @@ Class {
 		'activeGroup',
 		'internalElementsGroup',
 		'groups',
-		'tickingElements'
+		'tickingElements',
+		'transmissibleItemActivationBlock'
 	],
 	#category : #'WodenEngine-Roassal-Core'
 }
@@ -62,6 +63,11 @@ Class {
 { #category : #initialization }
 RWView class >> initializeWithEngine: anEngine [
 	^ self basicNew: anEngine
+]
+
+{ #category : #hooks }
+RWView >> activateTransmissibleItem: item [
+	transmissibleItemActivationBlock cull: item
 ]
 
 { #category : #adding }
@@ -302,6 +308,7 @@ RWView >> getElementById: id ifAbsent: aBlock [
 
 { #category : #initialization }
 RWView >> initializeModel [
+	transmissibleItemActivationBlock := [].
 	groups := OrderedCollection new.
 	eventHandler := Announcer new.
 	rigidBodies := OrderedCollection new.
@@ -328,14 +335,6 @@ RWView >> initializeScene [
 	
 	self beginNewGroup.
 
-]
-
-{ #category : #'as yet unclassified' }
-RWView >> inspectionView [
-	"This is the most basic presentation showing the state of the object"
-	<inspectorPresentationOrder: 0 title: 'Woden Roassal View'>
-
-	^ super inspectionView
 ]
 
 { #category : #accessing }
@@ -479,6 +478,11 @@ RWView >> validScene [
 { #category : #interaction }
 RWView >> when: anEvent do: aBlock [
 	eventHandler when: anEvent do: aBlock.
+]
+
+{ #category : #hooks }
+RWView >> whenTransmissibleItemActivatedDo: aBlock [
+	transmissibleItemActivationBlock := aBlock
 ]
 
 { #category : #physics }
