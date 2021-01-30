@@ -24,13 +24,11 @@ WDELevelEditorViewDragToolMode >> finishDraggingWith: event [
 ]
 
 { #category : #'event handling' }
-WDELevelEditorViewDragToolMode >> onMouseButtonRelease: event [
-	event button = dragStartButton ifTrue: [
-		self finishDraggingWith: event.
-		(event button = 3 and:
-		[(dragStartPosition closeTo: dragEndPosition) and:
-		[self levelEditorSession selection selectedItems isNotEmpty]]) ifTrue: [
-			^ self levelEditorSession buildSelectionContextMenu openWithSpecAt: self currentHand position
-		].
+WDELevelEditorViewDragToolMode >> onMouseDragEnd: event [
+	self finishDraggingWith: event.
+	(event button = 3 and:
+	[(dragStartPosition closeTo: dragEndPosition) and:
+	[self levelEditorSession selection selectedItems isNotEmpty]]) ifTrue: [
+		^ self levelEditorSession buildSelectionContextMenu openWithSpecAt: self currentHand position
 	].
 ]

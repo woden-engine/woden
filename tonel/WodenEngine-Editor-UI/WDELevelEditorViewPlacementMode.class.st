@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'event handling' }
-WDELevelEditorViewPlacementMode >> onMouseButtonRelease: event [
+WDELevelEditorViewPlacementMode >> onLeftClick: event [
 	self levelEditorSession activeSectorLayer ifNotNil: [ :sectorLayer |
 		self levelEditorSession activeLevelElementTemplate ifNotNil: [ :elementTemplate |
 			elementTemplate isPointElementTemplate ifTrue: [
@@ -19,6 +19,12 @@ WDELevelEditorViewPlacementMode >> onMouseButtonRelease: event [
 
 { #category : #'event handling' }
 WDELevelEditorViewPlacementMode >> startActionDraggingWith: event [
+	| manipulator |
+	manipulator := view manipulatorInScreenPosition: event position.
+	manipulator ifNotNil: [
+		^ manipulator startDragToolWithEvent: event on: view
+	].
+
 	self levelEditorSession activeSectorLayer ifNotNil: [
 		self levelEditorSession activeLevelElementTemplate ifNotNil: [ :elementTemplate |
 			elementTemplate isPointElementTemplate ifFalse: [

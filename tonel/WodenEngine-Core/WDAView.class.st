@@ -3,7 +3,7 @@ I am a Woden application view.
 "
 Class {
 	#name : #WDAView,
-	#superclass : #OSWindowEventVisitor,
+	#superclass : #WDAEventVisitor,
 	#traits : 'TWDCRenderingDependencyGraphNode',
 	#classTraits : 'TWDCRenderingDependencyGraphNode classTrait',
 	#instVars : [
@@ -13,7 +13,8 @@ Class {
 		'fullscreen',
 		'subViews',
 		'hasMouseCapture',
-		'sampleCount'
+		'sampleCount',
+		'eventFilter'
 	],
 	#pools : [
 		'AGPUConstants',
@@ -108,6 +109,11 @@ WDAView >> engineChanged [
 ]
 
 { #category : #accessing }
+WDAView >> eventFilter [
+	^ eventFilter ifNil: [ eventFilter := WDADefaultEventFilter new view: self ]
+]
+
+{ #category : #accessing }
 WDAView >> extent [
 	^ window extent
 ]
@@ -122,6 +128,11 @@ WDAView >> fullscreen: aBoolean [
 	window ifNotNil: [ window fullscreen: aBoolean ].
 	fullscreen := aBoolean.
 
+]
+
+{ #category : #events }
+WDAView >> handleEvent: anEvent [
+	^ self eventFilter handleEvent: anEvent
 ]
 
 { #category : #'framebuffer description' }

@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'event handling' }
-WDELevelEditorViewTranslateManipulatorDragToolMode >> onMouseMove: event [
+WDELevelEditorViewTranslateManipulatorDragToolMode >> onMouseDrag: event [
 	| mouseDelta worldDelta |
 	mouseDelta := event position - dragStartPosition.
 	

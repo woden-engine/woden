@@ -61,11 +61,30 @@ WDELevelEditorViewMode >> model [
 ]
 
 { #category : #'event handling' }
+WDELevelEditorViewMode >> onClick: event [
+	event button = 1 ifTrue: [ self onLeftClick: event ].
+	event button = 2 ifTrue: [ self onMiddleClick: event ].
+	event button = 3 ifTrue: [ self onRightClick: event ].
+]
+
+{ #category : #'event handling' }
+WDELevelEditorViewMode >> onDoubleClick: event [
+]
+
+{ #category : #'event handling' }
 WDELevelEditorViewMode >> onKeyDown: event [
 ]
 
 { #category : #'event handling' }
 WDELevelEditorViewMode >> onKeyUp: event [
+]
+
+{ #category : #'event handling' }
+WDELevelEditorViewMode >> onLeftClick: event [
+]
+
+{ #category : #'event handling' }
+WDELevelEditorViewMode >> onMiddleClick: event [
 ]
 
 { #category : #'event handling' }
@@ -77,11 +96,27 @@ WDELevelEditorViewMode >> onMouseButtonRelease: event [
 ]
 
 { #category : #'event handling' }
+WDELevelEditorViewMode >> onMouseDrag: event [
+]
+
+{ #category : #'event handling' }
+WDELevelEditorViewMode >> onMouseDragEnd: event [
+]
+
+{ #category : #'event handling' }
+WDELevelEditorViewMode >> onMouseDragStart: event [
+]
+
+{ #category : #'event handling' }
 WDELevelEditorViewMode >> onMouseMove: event [
 ]
 
 { #category : #'event handling' }
 WDELevelEditorViewMode >> onMouseWheel: event [
+]
+
+{ #category : #'event handling' }
+WDELevelEditorViewMode >> onRightClick: event [
 ]
 
 { #category : #accessing }

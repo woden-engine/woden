@@ -11,8 +11,7 @@ Class {
 		'cameraAngularVelocity',
 		'cameraAngularSpeed',
 		'cameraPosition',
-		'trackedDevicesDisplay',
-		'dragging'
+		'trackedDevicesDisplay'
 	],
 	#category : #'WodenEngine-Scene-Application'
 }
@@ -108,7 +107,6 @@ WDAFPSSceneView >> initialize [
 	cameraAngle := Float32x3 new.
 	cameraAngularVelocity := Float32x3 new.
 	cameraAngularSpeed := 1.0.
-	dragging := false.
 ]
 
 { #category : #'rendering process stages' }
@@ -183,19 +181,6 @@ WDAFPSSceneView >> visitKeyUpEvent: anEvent [
 ]
 
 { #category : #visiting }
-WDAFPSSceneView >> visitMouseButtonPressEvent: anEvent [
-	dragging := true
-]
-
-{ #category : #visiting }
-WDAFPSSceneView >> visitMouseButtonReleaseEvent: anEvent [
-	dragging := false
-]
-
-{ #category : #visiting }
-WDAFPSSceneView >> visitMouseMoveEvent: anEvent [
-	dragging ifTrue: [ 
-		cameraAngle := cameraAngle + ((Float32x3 x: anEvent delta y negated asFloat y: anEvent delta negated x asFloat z: 0.0) * 0.01)
-	].
-
+WDAFPSSceneView >> visitMouseDragEvent: anEvent [
+	cameraAngle := cameraAngle + ((Float32x3 x: anEvent delta y negated asFloat y: anEvent delta negated x asFloat z: 0.0) * 0.01)
 ]

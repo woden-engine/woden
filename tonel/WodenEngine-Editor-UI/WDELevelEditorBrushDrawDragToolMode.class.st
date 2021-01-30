@@ -63,9 +63,9 @@ WDELevelEditorBrushDrawDragToolMode >> finishDraggingWith: event [
 ]
 
 { #category : #'event handling' }
-WDELevelEditorBrushDrawDragToolMode >> onMouseMove: event [
+WDELevelEditorBrushDrawDragToolMode >> onMouseDrag: event [
 	| box |
-	super onMouseMove: event.
+	super onMouseDrag: event.
 	box := self computeBoxWithScreenEndPoint: event position.
 	self applyBoxToSceneNode: box.
 

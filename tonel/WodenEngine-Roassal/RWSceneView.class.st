@@ -102,26 +102,6 @@ RWSceneView >> mouseFocusElement [
 	^ mouseFocusElement ifNil: [ mouseFocusElement := model ]
 ]
 
-{ #category : #visiting }
-RWSceneView >> onMouseDrag: event [
-	| r3Event |
-	r3Event := RWMouseDrag new buttons: event buttons;
-		position: event position asFloat32x2;
-		delta: event delta asFloat32x2;
-		"element: dragElement."
-		element: model.
-	r3Event sendToElement.
-	model signalUpdate
-
-]
-
-{ #category : #visiting }
-RWSceneView >> onMouseOverElements: event [
-	| elementBeingPointed |
-	elementBeingPointed := self elementInPosition: event position.
-	self dispatchMouseOverElementsEvent: event newElement: elementBeingPointed
-]
-
 { #category : #'as yet unclassified' }
 RWSceneView >> projectPointToScreen: aPoint [
 	| viewPoint projectionMatrix projectedPoint ndcPoint ndcX ndcY extent x y |
@@ -236,7 +216,6 @@ RWSceneView >> visitMouseButtonPressEvent: event [
 		button: event button;
 		position: event position;
 		element: (self elementInPosition: event position).
-	dragElement := r3Event element.
 	r3Event sendToElement.
 	
 	model signalUpdate
@@ -251,17 +230,62 @@ RWSceneView >> visitMouseButtonReleaseEvent: event [
 		position: event position asFloat32x2;
 		button: event button.
 	r3Event element: (self elementInPosition: event position).
-	dragElement := nil.
 	self sendMouseEvent: r3Event.
 	model signalUpdate
 ]
 
 { #category : #visiting }
-RWSceneView >> visitMouseMoveEvent: event [
+RWSceneView >> visitMouseDragEndEvent: event [
+	"event is an OSMouseButtonPressEvent"
+	| r3Event |
+	self isInVirtualReality ifTrue: [ ^ self ].
+	
+	r3Event := RWMouseDragEnd new
+		button: event button;
+		position: event position;
+		element: dragElement.
+	r3Event sendToElement.
+	
+	model signalUpdate
+]
+
+{ #category : #visiting }
+RWSceneView >> visitMouseDragEvent: event [
+	| r3Event |
 	"Disable mouse move in VR mode."
 	self isInVirtualReality ifTrue: [ ^ self ].
-	dragElement ifNotNil: [ self onMouseDrag: event ]
-		ifNil: [ self onMouseOverElements: event ]
+	r3Event := RWMouseDrag new buttons: event buttons;
+		position: event position asFloat32x2;
+		delta: event delta asFloat32x2;
+		element: dragElement.
+	r3Event sendToElement.
+	model signalUpdate
+
+]
+
+{ #category : #visiting }
+RWSceneView >> visitMouseDragStartEvent: event [
+	"event is an OSMouseButtonPressEvent"
+	| r3Event |
+	self isInVirtualReality ifTrue: [ ^ self ].
+	
+	r3Event := RWMouseDragStart new
+		button: event button;
+		position: event position;
+		element: (self elementInPosition: event position).
+	dragElement := r3Event element.
+	r3Event sendToElement.
+	
+	model signalUpdate
+]
+
+{ #category : #visiting }
+RWSceneView >> visitMouseMoveEvent: event [
+	| elementBeingPointed |
+	"Disable mouse move in VR mode."
+	self isInVirtualReality ifTrue: [ ^ self ].
+	elementBeingPointed := self elementInPosition: event position.
+	self dispatchMouseOverElementsEvent: event newElement: elementBeingPointed
 ]
 
 { #category : #accessing }

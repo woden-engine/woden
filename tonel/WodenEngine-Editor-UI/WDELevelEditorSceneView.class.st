@@ -472,6 +472,16 @@ WDELevelEditorSceneView >> viewScale: anObject [
 ]
 
 { #category : #visiting }
+WDELevelEditorSceneView >> visitClickEvent: event [
+	^ self activeToolModeOrEditionMode onClick: event
+]
+
+{ #category : #visiting }
+WDELevelEditorSceneView >> visitDoubleClickEvent: event [
+	^ self activeToolModeOrEditionMode onDoubleClick: event
+]
+
+{ #category : #visiting }
 WDELevelEditorSceneView >> visitKeyDownEvent: event [
 	^ self activeToolModeOrEditionMode onKeyDown: event
 ]
@@ -489,6 +499,21 @@ WDELevelEditorSceneView >> visitMouseButtonPressEvent: event [
 { #category : #visiting }
 WDELevelEditorSceneView >> visitMouseButtonReleaseEvent: event [
 	^ self activeToolModeOrEditionMode onMouseButtonRelease: event
+]
+
+{ #category : #visiting }
+WDELevelEditorSceneView >> visitMouseDragEndEvent: event [
+	^ self activeToolModeOrEditionMode onMouseDragEnd: event
+]
+
+{ #category : #visiting }
+WDELevelEditorSceneView >> visitMouseDragEvent: event [
+	^ self activeToolModeOrEditionMode onMouseDrag: event
+]
+
+{ #category : #visiting }
+WDELevelEditorSceneView >> visitMouseDragStartEvent: event [
+	^ self activeToolModeOrEditionMode onMouseDragStart: event
 ]
 
 { #category : #visiting }

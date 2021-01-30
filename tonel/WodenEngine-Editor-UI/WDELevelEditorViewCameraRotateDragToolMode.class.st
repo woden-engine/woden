@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'event handling' }
-WDELevelEditorViewCameraRotateDragToolMode >> onMouseMove: event [
+WDELevelEditorViewCameraRotateDragToolMode >> onMouseDrag: event [
 	^ view rotateCameraWithAngles: ((Float32x3 x: event delta y negated asFloat y: event delta x negated asFloat z: 0.0) * 0.01).
 
 ]

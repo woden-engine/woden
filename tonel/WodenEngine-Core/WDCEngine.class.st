@@ -236,7 +236,7 @@ WDCEngine >> createBGRAStorageImageWithExtent: anExtent [
 
 { #category : #initialization }
 WDCEngine >> createDevice [
-	device ifNil: [ 
+	(device isNil or: [device isNull]) ifTrue: [ 
 		device := AGPU mainDevice.
 		device ifNil: [ self error: 'Failed to open the AGPU device' ].
 	].

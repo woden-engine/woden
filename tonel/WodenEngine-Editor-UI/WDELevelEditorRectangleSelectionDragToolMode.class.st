@@ -8,11 +8,7 @@ Class {
 WDELevelEditorRectangleSelectionDragToolMode >> finishDraggingWith: event [
 	| elements |
 	super finishDraggingWith: event.
-	elements := ((dragStartPosition closeTo: dragEndPosition) ifTrue: [ 
-		(view elementInScreenPosition: dragEndPosition) ifNil: [#()] ifNotNil: [ :e | { e } ]
-	] ifFalse: [ 
-		view elementsInScreenRectangle: (dragStartPosition corner: dragEndPosition)
-	]).
+	elements := view elementsInScreenRectangle: (dragStartPosition corner: dragEndPosition).
 
 	event modifiers shift ifTrue: [
 		^ view addElementsToSelection: elements
@@ -24,8 +20,8 @@ WDELevelEditorRectangleSelectionDragToolMode >> finishDraggingWith: event [
 ]
 
 { #category : #'event handling' }
-WDELevelEditorRectangleSelectionDragToolMode >> onMouseMove: event [
-	super onMouseMove: event.
+WDELevelEditorRectangleSelectionDragToolMode >> onMouseDrag: event [
+	super onMouseDrag: event.
 	view dragToolScreenOverlay: (WDELevelEditorDragRectangleOverlay new
 		color: Color blue muchLighter;
 		rectangle: (dragStartPosition corner: event position);

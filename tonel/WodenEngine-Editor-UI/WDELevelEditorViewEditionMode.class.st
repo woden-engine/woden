@@ -34,8 +34,23 @@ WDELevelEditorViewEditionMode >> onKeyDown: event [
 ]
 
 { #category : #'event handling' }
-WDELevelEditorViewEditionMode >> onMouseButtonPress: event [
-	event button = 1 ifTrue: [ ^ self selectPointedElementOrStartSelectionDraggingWith: event ].
+WDELevelEditorViewEditionMode >> onLeftClick: event [
+	| elements |
+	self supportsElementSelection ifFalse: [ ^ self ].
+	elements := (view elementInScreenPosition: event position) ifNil: [ #() ] ifNotNil: [ :e | { e } ].
+	event modifiers shift ifTrue: [
+		^ view addElementsToSelection: elements
+	].
+	event modifiers ctrl ifTrue: [ 
+		^ view toggleElementsFromSelection: elements
+	].
+
+	^ view setSelectedElements: elements
+]
+
+{ #category : #'event handling' }
+WDELevelEditorViewEditionMode >> onMouseDragStart: event [
+	event button = 1 ifTrue: [ ^ self startManipulatorOrActionDraggingWith: event ].
 	event button = 2 ifTrue: [ ^ self startCameraRotateDraggingWith: event ].
 	event button = 3 ifTrue: [ ^ self startCameraDraggingWith: event ].
 ]
@@ -74,17 +89,6 @@ WDELevelEditorViewEditionMode >> onMouseWheel: event [
 ]
 
 { #category : #'event handling' }
-WDELevelEditorViewEditionMode >> selectPointedElementOrStartSelectionDraggingWith: event [
-	| manipulator |
-	manipulator := view manipulatorInScreenPosition: event position.
-	manipulator ifNotNil: [
-		^ manipulator startDragToolWithEvent: event on: view
-	].
-
-	^ self startActionDraggingWith: event
-]
-
-{ #category : #'event handling' }
 WDELevelEditorViewEditionMode >> startActionDraggingWith: event [
 ]
 
@@ -100,6 +104,19 @@ WDELevelEditorViewEditionMode >> startCameraRotateDraggingWith: event [
 	view activeToolMode: ((WDELevelEditorViewCameraRotateDragToolMode for: view)
 		dragStartedWith: event;
 		yourself)
+]
+
+{ #category : #'event handling' }
+WDELevelEditorViewEditionMode >> startManipulatorOrActionDraggingWith: event [
+	self supportsManipulators ifTrue: [
+		| manipulator |
+		manipulator := view manipulatorInScreenPosition: event position.
+		manipulator ifNotNil: [
+			^ manipulator startDragToolWithEvent: event on: view
+		].
+	].
+
+	^ self startActionDraggingWith: event
 ]
 
 { #category : #'as yet unclassified' }
