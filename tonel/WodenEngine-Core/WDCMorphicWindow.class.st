@@ -115,8 +115,7 @@ WDCMorphicWindow >> createRenderTarget [
 		hasDepth: self hasDepth;
 		hasStencil: self hasStencil;
 		sampleCount: self sampleCount.
-	gpuOnlyResolveTarget := self isUsingAGPUWorldRenderer. 
-	Transcript show: gpuOnlyResolveTarget; cr.
+	gpuOnlyResolveTarget := self isUsingAGPUWorldRenderer.
 		
 	self sampleCount > 1 ifTrue: [ 
 		renderTarget createFramebuffers.

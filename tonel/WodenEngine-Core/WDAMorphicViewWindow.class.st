@@ -266,6 +266,21 @@ WDAMorphicViewWindow >> needsDirectRenderTarget [
 ]
 
 { #category : #'events-processing' }
+WDAMorphicViewWindow >> processEvents [
+	super processEvents.
+	view ifNotNil: [
+		self isUsingAGPUWorldRenderer ifTrue: [ 
+			displayMutex critical: [
+				(textureSceneGraphNode isNotNil and: [ displayTextureExtent ~= self drawingSurfaceExtent ]) ifTrue: [
+					view changed.
+				]
+			].
+		].
+	].
+
+]
+
+{ #category : #'events-processing' }
 WDAMorphicViewWindow >> processOSWindowEvent: anEvent [
 	super processOSWindowEvent: anEvent.
 	handledHere ifTrue: [ ^ self ].

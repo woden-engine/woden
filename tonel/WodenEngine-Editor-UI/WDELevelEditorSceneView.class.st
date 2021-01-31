@@ -497,7 +497,8 @@ WDELevelEditorSceneView >> viewScale [
 
 { #category : #accessing }
 WDELevelEditorSceneView >> viewScale: anObject [
-	viewScale := anObject
+	viewScale := anObject.
+	self cameraChanged.
 ]
 
 { #category : #visiting }
