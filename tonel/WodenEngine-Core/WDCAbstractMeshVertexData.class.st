@@ -146,6 +146,11 @@ WDCAbstractMeshVertexData >> createVertexBufferFor: engine [
 WDCAbstractMeshVertexData >> engine: anEngine [
 ]
 
+{ #category : #'as yet unclassified' }
+WDCAbstractMeshVertexData >> exportModelWith: exporter [
+	self subclassResponsibility
+]
+
 { #category : #testing }
 WDCAbstractMeshVertexData >> hasVertexColors [
 	^ false

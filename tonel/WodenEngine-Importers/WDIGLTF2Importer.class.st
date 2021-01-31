@@ -158,7 +158,7 @@ WDIGLTF2Importer >> convertIndices: indexCountToConvert withAccessors: indexBuff
 		ifTrue: [ WDCStructureFieldType typeNamed: #uint ]
 		ifFalse: [ WDCStructureFieldType typeNamed: #ushort ].
 
-	newIndexDataArray := SLVMNativeArray for: newIndexType sysmelType new: indexCountToConvert.
+	newIndexDataArray := (StdnVector for: newIndexType sysmelType) new: indexCountToConvert.
 	newIndexBuffer := WDCBufferResource new
 		description: (AGPUBufferDescription new
 			size: newIndexDataArray rawData size;
@@ -175,7 +175,7 @@ WDIGLTF2Importer >> convertIndices: indexCountToConvert withAccessors: indexBuff
 		startOffset := destIndex - 1.
 		sourceIndices := accessor asNativeArrayReference.
 		sourceIndices do: [ :index |
-			newIndexDataArray at: destIndex put: index.
+			newIndexDataArray add: index.
 			destIndex := destIndex + 1
 		].
 	

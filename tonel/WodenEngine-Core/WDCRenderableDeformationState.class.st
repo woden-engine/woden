@@ -11,6 +11,7 @@ Class {
 { #category : #accessing }
 WDCRenderableDeformationState >> createEngineDependantData [
 	| shaderSignature |
+	engine isDummyEngine ifTrue: [ ^ self ].
 	shaderSignature := WDCSceneRenderingShaderSignature for: engine.
 	renderableStateBindings := self requiresAccessFromTheCPU ifTrue: [
 		engine frameBufferingCollect: [ :i |

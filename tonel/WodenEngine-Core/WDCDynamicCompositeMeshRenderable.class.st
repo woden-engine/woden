@@ -25,6 +25,11 @@ WDCDynamicCompositeMeshRenderable >> builder: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+WDCDynamicCompositeMeshRenderable >> exportModelWith: exporter [
+	^ concreteRenderable exportModelWith: exporter
+]
+
+{ #category : #'as yet unclassified' }
 WDCDynamicCompositeMeshRenderable >> initialize [
 	super initialize.
 	isValid := false

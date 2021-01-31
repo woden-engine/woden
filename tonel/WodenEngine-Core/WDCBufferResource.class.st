@@ -14,6 +14,17 @@ WDCBufferResource >> applyAsIndexBufferToCommandList: commandListBuilder [
 	commandListBuilder useIndexBuffer: self validHandle
 ]
 
+{ #category : #'as yet unclassified' }
+WDCBufferResource >> asIndexBufferAccessor [
+	^ WDCBufferAccessor new
+		bufferView: self fullView;
+		type: self indexBufferElementType;
+		count: data size // description stride;
+		byteOffset: 0;
+		computeMinAndMax;
+		yourself
+]
+
 { #category : #'resource building' }
 WDCBufferResource >> buildHandle [
 	self assert: description isNotNil.
@@ -78,6 +89,16 @@ WDCBufferResource >> fullView [
 		offset: 0;
 		length: description size;
 		yourself
+]
+
+{ #category : #'as yet unclassified' }
+WDCBufferResource >> indexBufferElementType [
+	| stride |
+	stride := description stride.
+	stride = 1 ifTrue: [ ^ WDCStructureFieldType typeNamed: #byte ].
+	stride = 2 ifTrue: [ ^ WDCStructureFieldType typeNamed: #ushort ].
+	stride = 4 ifTrue: [ ^ WDCStructureFieldType typeNamed: #uint ].
+	self error: 'Unsupported index type.'
 ]
 
 { #category : #'resource building' }

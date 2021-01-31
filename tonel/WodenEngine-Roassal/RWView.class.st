@@ -279,6 +279,11 @@ RWView >> eventHandler [
 ]
 
 { #category : #'as yet unclassified' }
+RWView >> exportModelToFileNamed: aFileName [
+	scene exportModelToFileNamed: aFileName
+]
+
+{ #category : #'as yet unclassified' }
 RWView >> generateIdForElement: anElement [
 	| id |
 	id := genidCount.

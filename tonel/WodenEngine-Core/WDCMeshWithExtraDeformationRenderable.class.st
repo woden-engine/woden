@@ -18,6 +18,11 @@ WDCMeshWithExtraDeformationRenderable >> engine: anEngine [
 	mesh engine: anEngine
 ]
 
+{ #category : #'as yet unclassified' }
+WDCMeshWithExtraDeformationRenderable >> exportModelWith: exporter [
+	^ mesh exportModelWith: exporter
+]
+
 { #category : #accessing }
 WDCMeshWithExtraDeformationRenderable >> mesh [
 	^ mesh

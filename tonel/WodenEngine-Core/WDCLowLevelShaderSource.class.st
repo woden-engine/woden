@@ -46,7 +46,7 @@ WDCLowLevelShaderSource >> compile [
 	newModule := compiler
 		explicitMultiShader;
 		target: target;
-		addIncludeDirectory: WodenCoreAssets location / #shaders;
+		addIncludeDirectory: WodenCoreAssets coreAssetsLocation / #shaders;
 		sourceFromFileNamed: entryFile;
 		compile;
 		generatedCode.

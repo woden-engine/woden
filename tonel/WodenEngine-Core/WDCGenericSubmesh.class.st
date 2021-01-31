@@ -32,6 +32,20 @@ WDCGenericSubmesh >> engine: newEngine [
 	material ifNotNil: [ material := material engineChangedTo: newEngine ]
 ]
 
+{ #category : #'as yet unclassified' }
+WDCGenericSubmesh >> exportModelWith: exporter [
+	exporter submeshWith: [ :submeshExporter |
+		indexBuffer ifNotNil: [
+			submeshExporter indices: indexBuffer asIndexBufferAccessor asNativeArrayReference
+		].
+	
+		submeshExporter
+			primitiveType: primitiveType;
+			firstIndex: firstIndex;
+			indexCount: indexCount
+	]
+]
+
 { #category : #accessing }
 WDCGenericSubmesh >> firstIndex [
 	^ firstIndex

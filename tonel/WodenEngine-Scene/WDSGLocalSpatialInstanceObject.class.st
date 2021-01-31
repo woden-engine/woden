@@ -12,6 +12,12 @@ WDSGLocalSpatialInstanceObject >> bakeLazyObjectStates [
 	objectState transform: self instanceTransform
 ]
 
+{ #category : #'as yet unclassified' }
+WDSGLocalSpatialInstanceObject >> exportNodeElementsWith: exporter [
+	super exportNodeElementsWith: exporter.
+	exporter transform: self instanceTransform
+]
+
 { #category : #caching }
 WDSGLocalSpatialInstanceObject >> globalTransformValidated [
 ]

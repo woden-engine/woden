@@ -30,6 +30,11 @@ WDCRenderableWithAlternatives >> defaultAlternative [
 	^ alternatives at: #default ifAbsentPut: [ WDCNullRenderable new ]
 ]
 
+{ #category : #'as yet unclassified' }
+WDCRenderableWithAlternatives >> exportModelWith: exporter [
+	^ self defaultAlternative exportModelWith: exporter
+]
+
 { #category : #initialization }
 WDCRenderableWithAlternatives >> initialize [
 	super initialize.

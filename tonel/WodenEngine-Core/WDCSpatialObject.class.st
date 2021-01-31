@@ -12,6 +12,7 @@ WDCSpatialObject >> createEngineDependantData [
 	| shaderSignature |
 	gpuObjectStates ifNotNil: [ ^ self ].
 	self assert: engine isNotNil.
+	engine isDummyEngine ifTrue: [ ^ self ].
 	
 	gpuObjectStates := engine resourceCache genericObjectStatePool allocate: engine frameBufferingCount.
 	shaderSignature := WDCSceneRenderingShaderSignature for: engine. 

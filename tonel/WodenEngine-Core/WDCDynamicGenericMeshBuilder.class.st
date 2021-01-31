@@ -14,12 +14,17 @@ Class {
 
 { #category : #'as yet unclassified' }
 WDCDynamicGenericMeshBuilder >> createIndexBuffer [
+	| encodedData |
 	(indexBuffer isNil or: [ indexBufferCapacity < indices size ]) ifTrue: [
 		indexBufferCapacity := indices capacity.
 		indexBuffer := engine createIndex: indices elementSize streamingElements: indexBufferCapacity.
 	].
 
-	LibC memCopy: indices rawData to: indexBuffer validPointer size: indices rawDataSize.
+	encodedData := indices rawData.
+	indexBuffer data: encodedData.
+	engine isDummyEngine ifFalse: [ 
+		LibC memCopy: encodedData to: indexBuffer validPointer size: indices rawDataSize.
+	].
 	^ indexBuffer
 ]
 

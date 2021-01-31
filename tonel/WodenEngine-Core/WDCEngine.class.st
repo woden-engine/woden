@@ -1,16 +1,13 @@
 Class {
 	#name : #WDCEngine,
-	#superclass : #Object,
+	#superclass : #WDCDummyEngine,
 	#instVars : [
 		'frameBufferingDriver',
-		'projectionInvertedY',
-		'assetSearchPaths',
 		'session',
 		'device',
 		'graphicsQueue',
 		'preferredDepthFormat',
 		'preferredDepthStencilFormat',
-		'resourceCache',
 		'soundDevice',
 		'babylonDriver',
 		'hasTopLeftNDCOrigin',
@@ -197,11 +194,6 @@ WDCEngine >> anisotropicFilter [
 		ifFalse: [ AGPU_FILTER_MIN_LINEAR_MAG_LINEAR_MIPMAP_LINEAR ]
 ]
 
-{ #category : #assets }
-WDCEngine >> assetSearchPaths [
-	^ assetSearchPaths
-]
-
 { #category : #accessing }
 WDCEngine >> autoReloadChanges [
 	^ true
@@ -338,16 +330,6 @@ WDCEngine >> createRenderTargetColorTextureWithExtent: anExtent sampleCount: sam
 		main_usage_mode: AGPU_TEXTURE_USAGE_SAMPLED
 		yourself.
 	^ self createTexture: description
-]
-
-{ #category : #initialization }
-WDCEngine >> createResourceCache [
-	resourceCache ifNil: [
-		resourceCache := WDCResourceCache new.
-		resourceCache initializeForEngine: self.
- 	].
-
-	resourceCache sessionChanged
 ]
 
 { #category : #'resource building' }
@@ -544,11 +526,6 @@ WDCEngine >> createVertexBindingForLayout: vertexLayout [
 ]
 
 { #category : #accessing }
-WDCEngine >> defaultMaterial [
-	^ resourceCache defaultMaterial
-]
-
-{ #category : #accessing }
 WDCEngine >> device [
 	^ device
 ]
@@ -583,9 +560,19 @@ WDCEngine >> frameRenderingMetrics [
 	^ frameRenderingMetrics ifNil: [ frameRenderingMetrics := WDCFrameRenderingMetrics new ]
 ]
 
-{ #category : #accessing }
-WDCEngine >> getOrCreateShaderSignature: aShaderSignatureClass [
-	^ resourceCache getOrCreateShaderSignature: aShaderSignatureClass
+{ #category : #wrappers }
+WDCEngine >> getPreferredHighLevelShaderLanguage [
+	^ device getPreferredHighLevelShaderLanguage
+]
+
+{ #category : #wrappers }
+WDCEngine >> getPreferredIntermediateShaderLanguage [
+	^ device getPreferredIntermediateShaderLanguage
+]
+
+{ #category : #wrappers }
+WDCEngine >> getPreferredShaderLanguage [
+	^ device getPreferredShaderLanguage
 ]
 
 { #category : #accessing }
@@ -614,18 +601,6 @@ WDCEngine >> hasTopLeftTextureCoordinates [
 ]
 
 { #category : #initialization }
-WDCEngine >> initialize [
-	super initialize.
-	projectionInvertedY := false.
-	assetSearchPaths ifNil: [ 
-		assetSearchPaths := OrderedCollection new.
-		assetSearchPaths add: WodenCoreAssets location.
-		assetSearchPaths add: Smalltalk imageDirectory / #assets.
-	].
-	self initializeForNewSession.
-]
-
-{ #category : #initialization }
 WDCEngine >> initializeForNewSession [
 	session := Smalltalk session.
 	self
@@ -639,6 +614,11 @@ WDCEngine >> initializeForNewSession [
 	].
 	formSceneGraphDrawCommandProcessorContext := FormSGAGPUDrawCommandProcessorContext for: device withColorCorrection: true.
 
+]
+
+{ #category : #testing }
+WDCEngine >> isDummyEngine [
+	^ false
 ]
 
 { #category : #'resource loading' }
@@ -670,12 +650,6 @@ WDCEngine >> maxAnisotropy [
 WDCEngine >> minimalAlignmentForStorageBufferElement [
 	self flag: 'FIXME: Ask this to the graphics backend'.
 	^ 32
-]
-
-{ #category : #'as yet unclassified' }
-WDCEngine >> minimalAlignmentForUniformBufferElement [
-	self flag: 'FIXME: Ask this to the graphics backend'.
-	^ 256
 ]
 
 { #category : #'resource building' }
@@ -743,11 +717,6 @@ WDCEngine >> queryDeviceCapabilities [
 { #category : #'as yet unclassified' }
 WDCEngine >> renderingProcessCritical: aBlock [
 	^ frameBufferingDriver renderingProcessCritical: aBlock
-]
-
-{ #category : #accessing }
-WDCEngine >> resourceCache [
-	^ resourceCache
 ]
 
 { #category : #'as yet unclassified' }

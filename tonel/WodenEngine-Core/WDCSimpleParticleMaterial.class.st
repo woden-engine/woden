@@ -95,7 +95,7 @@ WDCSimpleParticleMaterial >> shaderLibrary [
 
 { #category : #accessing }
 WDCSimpleParticleMaterial >> shadersDirectory [
-	^ WodenCoreAssets location / #shaders
+	^ WodenCoreAssets coreAssetsLocation / #shaders
 ]
 
 { #category : #accessing }

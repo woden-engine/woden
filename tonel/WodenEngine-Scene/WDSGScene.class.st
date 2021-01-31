@@ -192,6 +192,29 @@ WDSGScene >> engine [
 	^ engine
 ]
 
+{ #category : #'as yet unclassified' }
+WDSGScene >> exportModelToFileNamed: aFileName [
+	| fileReference exporter extension exporterClass |
+	fileReference := aFileName asFileReference.
+	extension := fileReference extension asLowercase.
+	exporterClass := WDCAbstractModelExporter exporterForExtension: extension.
+	exporterClass ifNil: [ self error: ('Unsupported extension for exporting models (.{1})' format: { extension }) ].
+	exporter := exporterClass new.
+	
+	self exportModelWith: exporter.
+	exporter writeToFileNamed: fileReference
+]
+
+{ #category : #'as yet unclassified' }
+WDSGScene >> exportModelWith: exporter [
+	exporter sceneWith: [ :sceneExporter |
+		sceneExporter name: name.
+		normalLayer childrenDo: [ :child |
+			child exportModelWith: sceneExporter
+		]
+	]
+]
+
 { #category : #accessing }
 WDSGScene >> foregroundLayer [
 	^ foregroundLayer

@@ -51,6 +51,7 @@ WDCParticleSystemRenderableAnimationState >> createCPUParticleSimulationBuffer [
 { #category : #accessing }
 WDCParticleSystemRenderableAnimationState >> createEngineDependantData [
 	| stateBufferSize |
+	engine isDummyEngine ifTrue: [ ^ self ].
 	super createEngineDependantData.
 
 	stateBufferSize := self cpuParticleSimulationBuffer rawDataSize.
@@ -120,7 +121,7 @@ WDCParticleSystemRenderableAnimationState >> requiresAccessFromTheCPU [
 
 { #category : #'as yet unclassified' }
 WDCParticleSystemRenderableAnimationState >> shadersDirectory [
-	^ WodenCoreAssets location / #shaders
+	^ WodenCoreAssets coreAssetsLocation / #shaders
 ]
 
 { #category : #'as yet unclassified' }

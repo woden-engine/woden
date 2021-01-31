@@ -191,6 +191,13 @@ RWGroup >> remove [
 	]
 ]
 
+{ #category : #adding }
+RWGroup >> removeChild: aChild [
+	children remove: aChild.
+	aChild removedFromGroup: self.
+	view ifNotNil: [ aChild removedFromView: view ].
+]
+
 { #category : #private }
 RWGroup >> removeFromScene [
 	sceneNode removeFromScene

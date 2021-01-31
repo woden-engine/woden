@@ -30,6 +30,12 @@ WDSGSpatialObject >> engineChanged [
 	].
 ]
 
+{ #category : #'as yet unclassified' }
+WDSGSpatialObject >> exportNodeElementsWith: exporter [
+	super exportNodeElementsWith: exporter.
+	exporter renderable: renderable.
+]
+
 { #category : #initialization }
 WDSGSpatialObject >> initialize [
 	super initialize.

@@ -130,6 +130,37 @@ WDSGNode >> engineChanged [
 ]
 
 { #category : #'as yet unclassified' }
+WDSGNode >> exportModelToFileNamed: aFileName [
+	| fileReference exporter extension exporterClass |
+	fileReference := aFileName asFileReference.
+	extension := fileReference extension asLowercase.
+	exporterClass := WDCAbstractModelExporter exporterForExtension: extension.
+	exporterClass ifNil: [ self error: ('Unsupported extension for exporting models (.{1})' format: { extension }) ].
+	exporter := exporterClass new.
+	
+	self exportModelWith: exporter.
+	exporter writeToFileNamed: fileReference
+]
+
+{ #category : #'as yet unclassified' }
+WDSGNode >> exportModelWith: exporter [
+	exporter nodeWith: [ :nodeExporter |
+		nodeExporter name: name.
+		self exportNodeElementsWith: nodeExporter.
+		self childrenDo: [ :each |
+			each exportModelWith: nodeExporter
+		]
+	]
+]
+
+{ #category : #'as yet unclassified' }
+WDSGNode >> exportNodeElementsWith: exporter [
+	exporter
+		visible: self visible;
+		transform: self transform
+]
+
+{ #category : #'as yet unclassified' }
 WDSGNode >> findChildNodeNamed: childName ifAbsent: aBlock [
 	self allChildrenDo: [ :child |
 		child name = childName ifTrue: [ ^ child ]

@@ -33,6 +33,7 @@ WDCTerrainMeshDeformationState >> clipMapPeriod: clipMapPeriod [
 
 { #category : #resources }
 WDCTerrainMeshDeformationState >> createEngineDependantData [
+	engine isDummyEngine ifTrue: [ ^ self ].
 	super createEngineDependantData.
 	gpuTerrainState := (engine resourceCache streamingStorageBufferPoolFor: WDCTerrainDeformationStateStructure) allocate.
 	gpuTerrainState value: terrainStateData.

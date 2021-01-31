@@ -56,6 +56,23 @@ WDCBufferAccessor >> byteOffset: anObject [
 	byteOffset := anObject
 ]
 
+{ #category : #'private computation' }
+WDCBufferAccessor >> computeMinAndMax [
+	| reference |
+	count = 0 ifTrue: [
+		min := max := 0.
+		^ self
+	].
+
+	reference := self asNativeArrayReference.
+	min := max := reference at: 1.
+	reference do: [ :each |
+		min := min min: each.
+		max := max max: each.
+	].
+
+]
+
 { #category : #accessing }
 WDCBufferAccessor >> count [
 	^ count

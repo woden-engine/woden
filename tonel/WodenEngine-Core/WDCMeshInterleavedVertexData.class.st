@@ -41,6 +41,11 @@ WDCMeshInterleavedVertexData >> data: anObject [
 	data := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDCMeshInterleavedVertexData >> exportModelWith: exporter [
+	data do: [ :each | each exportModelWith: exporter ]
+]
+
 { #category : #testing }
 WDCMeshInterleavedVertexData >> hasVertexColors [
 	^ hasVertexColors ifNil: [ hasVertexColors := (vertexClass lookupSelector: #color) isNotNil ]

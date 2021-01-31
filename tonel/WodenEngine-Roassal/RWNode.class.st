@@ -46,6 +46,19 @@ RWNode >> createSceneNode [
 	^ WDSGSpatialObject new
 ]
 
+{ #category : #'as yet unclassified' }
+RWNode >> exportModelToFileNamed: aFileName [
+	view ifNotNil: [
+		sceneNode exportModelToFileNamed: aFileName
+	] ifNil: [
+		self makeDefaultView.
+		[
+			sceneNode exportModelToFileNamed: aFileName
+		] ensure: [ self remove ]
+	].
+
+]
+
 { #category : #accessing }
 RWNode >> globalPosition [
 	^ sceneNode globalTransform translation

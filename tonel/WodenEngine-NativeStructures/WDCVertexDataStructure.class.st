@@ -31,3 +31,8 @@ WDCVertexDataStructure class >> asWodenVertexStructureDescription [
 WDCVertexDataStructure class >> isAbstract [
 	^ self == WDCVertexDataStructure
 ]
+
+{ #category : #'as yet unclassified' }
+WDCVertexDataStructure >> exportModelWith: exporter [
+	self subclassResponsibility
+]

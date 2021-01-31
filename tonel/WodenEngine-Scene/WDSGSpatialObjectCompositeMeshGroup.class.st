@@ -10,6 +10,12 @@ WDSGSpatialObjectCompositeMeshGroup >> addChild: aChild [
 	self invalidateRenderable
 ]
 
+{ #category : #'as yet unclassified' }
+WDSGSpatialObjectCompositeMeshGroup >> exportNodeElementsWith: exporter [
+	self validateRenderable.
+	super exportNodeElementsWith: exporter.
+]
+
 { #category : #rendering }
 WDSGSpatialObjectCompositeMeshGroup >> invalidateRenderable [
 	renderable ifNotNil: #invalidate.

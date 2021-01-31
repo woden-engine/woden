@@ -21,6 +21,18 @@ WDCGenericVertexF32 >> color: anObject [
 	color := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDCGenericVertexF32 >> exportModelWith: exporter [
+	exporter vertexWith: [ :vertexExporter |
+		vertexExporter
+			position: position;
+			color: color;
+			texcoord: texcoord;
+			normal: normal;
+			tangent4: tangent4
+	]
+]
+
 { #category : #accessing }
 WDCGenericVertexF32 >> normal [
 	^ normal

@@ -15,6 +15,7 @@ WDCWaterMeshDeformationState >> clipMapPeriod: clipMapPeriod [
 
 { #category : #accessing }
 WDCWaterMeshDeformationState >> createEngineDependantData [
+	engine isDummyEngine ifTrue: [ ^ self ].
 	super createEngineDependantData.
 	gpuWaterStates := (engine resourceCache streamingStorageBufferPoolFor: WDCWaterDeformationStateStructure)
 		allocate: renderableStateBindings size.

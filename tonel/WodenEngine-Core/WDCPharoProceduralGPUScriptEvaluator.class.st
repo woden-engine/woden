@@ -367,7 +367,7 @@ WDCPharoProceduralGPUScriptEvaluator >> shader: spirvShader toTextureDataExtent:
 
 { #category : #'rendering helpers' }
 WDCPharoProceduralGPUScriptEvaluator >> shadersDirectory [
-	^ WodenCoreAssets location / #shaders
+	^ WodenCoreAssets coreAssetsLocation / #shaders
 ]
 
 { #category : #'rendering helpers' }

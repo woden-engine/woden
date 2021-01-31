@@ -29,6 +29,11 @@ WDCCompositeRenderable >> engine: newEngine [
 ]
 
 { #category : #'as yet unclassified' }
+WDCCompositeRenderable >> exportModelWith: exporter [
+	renderables do: [ :each | each exportModelWith: exporter ]
+]
+
+{ #category : #'as yet unclassified' }
 WDCCompositeRenderable >> extractConvexCollisionShapesWithTransform: nodeGlobalTransform into: convexComponents [
 	renderables do: [ :renderable | renderable extractConvexCollisionShapesWithTransform: nodeGlobalTransform into: convexComponents ]
 ]

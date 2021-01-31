@@ -49,6 +49,7 @@ WDCSkinnedMeshAnimationState >> computePoseMatrices [
 { #category : #accessing }
 WDCSkinnedMeshAnimationState >> createEngineDependantData [
 	| stateSize |
+	engine isDummyEngine ifTrue: [ ^ self ].
 	super createEngineDependantData.
 	stateSize := self poseStateSize.
 	poseBuffer := engine createStreamingStorageBuffer: stateSize * renderableStateBindings size.

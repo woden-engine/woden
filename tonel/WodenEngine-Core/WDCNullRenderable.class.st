@@ -12,6 +12,11 @@ WDCNullRenderable >> createRenderingRenderablesFor: spatialObject [
 	^ #().
 ]
 
+{ #category : #'as yet unclassified' }
+WDCNullRenderable >> exportModelWith: exporter [
+	"Nothing is required here."
+]
+
 { #category : #rendering }
 WDCNullRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	"Do nothing"

@@ -983,8 +983,8 @@ WDCGenericMeshBuilder >> engine [
 ]
 
 { #category : #accessing }
-WDCGenericMeshBuilder >> engine: anObject [
-	engine := anObject.
+WDCGenericMeshBuilder >> engine: anEngine [
+	engine := anEngine ifNil: [WDCDummyEngine new].
 	currentMaterial ifNil: [ self defaultMaterial ]
 ]
 
@@ -999,6 +999,7 @@ WDCGenericMeshBuilder >> finishSubmesh [
 { #category : #initialization }
 WDCGenericMeshBuilder >> initialize [
 	super initialize.
+	engine := WDCDummyEngine new.
 	vertices := StdnVector newFor: self vertexClass.
 	indices := StdnVector newFor: Int32.
 	self createVertexData.

@@ -52,6 +52,7 @@ WDCInstanceGroupSpatialObject >> computeBoundingBoxForRenderable: renderable [
 WDCInstanceGroupSpatialObject >> createEngineDependantData [
 	| instanceBuffer shaderSignature |
 	gpuObjectStates ifNotNil: [ ^ self ].
+	engine isDummyEngine ifTrue: [ ^ self ].
 	
 	instanceBuffer := updatedPerFrame ifFalse: [ self createInstanceStateBuffer ].
 	gpuObjectStates := engine frameBufferingCollect: [:frameIndex | {

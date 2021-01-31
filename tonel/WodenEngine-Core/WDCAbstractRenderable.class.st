@@ -191,6 +191,11 @@ WDCAbstractRenderable >> engine: newEngine [
 ]
 
 { #category : #'as yet unclassified' }
+WDCAbstractRenderable >> exportModelWith: exporter [
+	self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
 WDCAbstractRenderable >> extractConvexCollisionShapesWithTransform: nodeGlobalTransform into: convexComponents [
 	"By default, do nothing."
 ]

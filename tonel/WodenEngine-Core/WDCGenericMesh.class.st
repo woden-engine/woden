@@ -32,6 +32,17 @@ WDCGenericMesh >> engine: newEngine [
 	submeshes do: [ :sm | sm engine: newEngine ]
 ]
 
+{ #category : #'as yet unclassified' }
+WDCGenericMesh >> exportModelWith: exporter [
+	exporter meshWith: [ :meshExporter |
+		vertexData exportModelWith: meshExporter.
+		meshExporter indices: indexBuffer asIndexBufferAccessor asNativeArrayReference.
+		submeshes do: [ :each |
+			each exportModelWith: exporter
+		]
+	]
+]
+
 { #category : #accessing }
 WDCGenericMesh >> indexBuffer [
 	^ indexBuffer

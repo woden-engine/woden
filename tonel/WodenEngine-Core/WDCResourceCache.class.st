@@ -508,7 +508,9 @@ WDCResourceCache >> getOrCreateShaderSignature: aShaderSignatureClass [
 	| instance |
 	^ shaderSignatures at: aShaderSignatureClass ifAbsentPut: [
 		instance := aShaderSignatureClass new engine: engine.
-		instance handle: (instance createHandleForDevice: engine device).
+		engine isDummyEngine ifFalse: [ 
+			instance handle: (instance createHandleForDevice: engine device).
+		].
 		instance
 	]
 ]
@@ -986,11 +988,11 @@ WDCResourceCache >> screenQuadVertexShader [
 
 { #category : #path }
 WDCResourceCache >> sessionChanged [
-	shaderLanguageTarget := engine device getPreferredIntermediateShaderLanguage.
+	shaderLanguageTarget := engine getPreferredIntermediateShaderLanguage.
 	shaderLanguageTarget = AGPU_SHADER_LANGUAGE_NONE ifTrue: [ 
-		shaderLanguageTarget := engine device getPreferredHighLevelShaderLanguage.
+		shaderLanguageTarget := engine getPreferredHighLevelShaderLanguage.
 		shaderLanguageTarget = AGPU_SHADER_LANGUAGE_NONE ifTrue: [
-			shaderLanguageTarget := engine device getPreferredShaderLanguage
+			shaderLanguageTarget := engine getPreferredShaderLanguage
 		].
 	].
 	shaderLanguageTargetName := ShaderLanguageTargetMap at: shaderLanguageTarget.
