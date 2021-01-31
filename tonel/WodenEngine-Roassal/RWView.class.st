@@ -323,7 +323,7 @@ RWView >> initializeModel [
 RWView >> initializeScene [
 
 	"Create the scene."
-	scene := WDSGScene for: engine.
+	self newScene.
 	scene backgroundColor: Color white.
 
 	"Add the camera"
@@ -335,6 +335,11 @@ RWView >> initializeScene [
 	
 	self beginNewGroup.
 
+]
+
+{ #category : #testing }
+RWView >> isAnimated [
+	^ false
 ]
 
 { #category : #accessing }
@@ -440,17 +445,8 @@ RWView >> sessionChanged [
 RWView >> signalUpdate [
 	"Call this method when you wish to update the view"
 "	self elements do: #signalUpdate."
-	signalUpdateCallback value
-]
-
-{ #category : #accessing }
-RWView >> signalUpdateCallback [
-	^ signalUpdateCallback
-]
-
-{ #category : #accessing }
-RWView >> signalUpdateCallback: anObject [
-	signalUpdateCallback := anObject
+	signalUpdateCallback value.
+	self changed.
 ]
 
 { #category : #rendering }

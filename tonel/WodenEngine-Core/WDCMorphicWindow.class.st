@@ -5,14 +5,15 @@ Class {
 		'engine',
 		'renderTarget',
 		'session',
-		'framebuffer',
 		'displayForm',
 		'resolveRenderTarget',
 		'lastMousePosition',
 		'handledHere',
 		'eventQueue',
-		'displayFormMutex',
-		'textureSceneGraphNode'
+		'textureSceneGraphNode',
+		'displayMutex',
+		'displayTexture',
+		'displayTextureExtent'
 	],
 	#category : #'WodenEngine-Core-Window'
 }
@@ -27,27 +28,31 @@ WDCMorphicWindow >> announceDeleted [
 
 { #category : #rendering }
 WDCMorphicWindow >> buildSceneGraphNodeWith: builder [
-	| texture textureExtent |
 	self checkSession.
-	(builder isFormSGAGPUBuilder not or: [ resolveRenderTarget isNil ]) ifTrue: [ 
-		^ builder rectangle: self bounds color: Color red
-	].
+	^ displayMutex critical: [ 
+		| texture textureExtent result |
+		(builder isFormSGAGPUBuilder not or:
+		[ displayTexture isNil or: [ displayTexture isNull ] ]) ifTrue: [ 
+			^ builder rectangle: self bounds color: Color black
+		].
 
-	textureSceneGraphNode ifNil: [ textureSceneGraphNode := builder agpuTextureNode ].
-	framebuffer := resolveRenderTarget framebuffers first.
-	
-	textureExtent := framebuffer colorAttachments first extent.
-	texture := framebuffer colorAttachments first validHandle.
-	textureSceneGraphNode texture = texture ifFalse: [
-		textureSceneGraphNode
-			isFullyOpaque: true;
-			extent: textureExtent;
-			sourceRectangle: (0@0 extent: textureExtent);
-			texture: texture;
-			view: (builder createViewForTexture: texture)
-	].
-	textureSceneGraphNode rectangle: self innerBounds.
-	^ textureSceneGraphNode
+		result := textureSceneGraphNode.
+		textureExtent := displayTextureExtent.
+		texture := displayTexture.
+		(result isNil or: [textureSceneGraphNode texture ~= texture]) ifTrue: [
+			textureSceneGraphNode := builder agpuTextureNode.
+			textureSceneGraphNode
+				isFullyOpaque: true;
+				extent: textureExtent;
+				sourceRectangle: (0@0 extent: textureExtent);
+				texture: texture;
+				view: (builder createViewForTexture: texture);
+				rectangle: self innerBounds
+		].
+		result ifNil: [ result := textureSceneGraphNode ].
+		result rectangle: self innerBounds.
+		result
+	]
 ]
 
 { #category : #'mouse capture' }
@@ -57,27 +62,14 @@ WDCMorphicWindow >> captureMouse [
 { #category : #initialization }
 WDCMorphicWindow >> checkRenderTarget [
 	| innerExtent |
+	self world ifNil: [ ^ self ].
+
 	renderTarget ifNil: [
 		self createRenderTarget
 	].
 
 	innerExtent := self drawingSurfaceExtent.
 	renderTarget ifNotNil: [renderTarget extent: innerExtent].
-	resolveRenderTarget extent: innerExtent.
-	(displayForm isNil or: [ displayForm extent ~= innerExtent ]) ifTrue: [
-		displayForm := Form extent: innerExtent depth: 32
-	]
-]
-
-{ #category : #initialization }
-WDCMorphicWindow >> checkRenderTargets [
-	| innerExtent |
-	resolveRenderTarget ifNil: [
-		self createRenderTarget
-	].
-
-	innerExtent := self drawingSurfaceExtent.
-	renderTarget extent: innerExtent.
 	resolveRenderTarget extent: innerExtent.
 	(displayForm isNil or: [ displayForm extent ~= innerExtent ]) ifTrue: [
 		displayForm := Form extent: innerExtent depth: 32
@@ -99,20 +91,32 @@ WDCMorphicWindow >> close [
 
 { #category : #rendering }
 WDCMorphicWindow >> commitSurface [
-	displayFormMutex critical: [
-		self doCommitSurface
+	displayMutex critical: [
+		self isUsingAGPUWorldRenderer ifTrue: [
+			| framebuffer colorAttachment |
+			framebuffer := resolveRenderTarget framebuffers first.
+			colorAttachment := framebuffer colorAttachments first.
+			displayTexture := colorAttachment validHandle.
+			displayTextureExtent := colorAttachment extent.
+		] ifFalse: [ 
+			self doCommitSurface
+		].
+
+		self changed
 	].
 
-	self changed
 ]
 
 { #category : #initialization }
 WDCMorphicWindow >> createRenderTarget [
+	| gpuOnlyResolveTarget |
 	renderTarget := WDCRenderTarget for: engine extent: self drawingSurfaceExtent.
 	renderTarget
 		hasDepth: self hasDepth;
 		hasStencil: self hasStencil;
 		sampleCount: self sampleCount.
+	gpuOnlyResolveTarget := self isUsingAGPUWorldRenderer. 
+	Transcript show: gpuOnlyResolveTarget; cr.
 		
 	self sampleCount > 1 ifTrue: [ 
 		renderTarget createFramebuffers.
@@ -122,10 +126,10 @@ WDCMorphicWindow >> createRenderTarget [
 			hasDepth: false;
 			hasStencil: false;
 			sampleCount: 1;
-			gpuOnly: false;
+			gpuOnly: gpuOnlyResolveTarget;
 			createFramebuffers.
 	] ifFalse: [
-		renderTarget gpuOnly: false; createFramebuffers.
+		renderTarget gpuOnly: gpuOnlyResolveTarget; createFramebuffers.
 		resolveRenderTarget := renderTarget
 	].
 ]
@@ -143,13 +147,6 @@ WDCMorphicWindow >> destroyRenderingResources [
 WDCMorphicWindow >> doCommitSurface [
 	| pitch slicePitch |
 	
-	self world ifNotNil: [:world |
-		world worldState worldRenderer isAGPUWorldRenderer ifTrue: [
-			self changed.
-			^ self
-		]
-	].
-
 	displayForm ifNil: [ ^ self ].
 	pitch := displayForm width * 4.
 	slicePitch := pitch * displayForm height.
@@ -163,14 +160,13 @@ WDCMorphicWindow >> doCommitSurface [
 		displayForm flipHorizontally
 	].
 
-	self changed
 ]
 
 { #category : #initialization }
 WDCMorphicWindow >> drawOn: aCanvas [
 	engine ifNil: [ ^ self ].
 	
-	displayFormMutex critical: [
+	displayMutex critical: [
 		displayForm ifNotNil: [ 
 			aCanvas
 				fillRectangle: self innerBounds color: Color black;
@@ -221,7 +217,7 @@ WDCMorphicWindow >> initialize [
 	super initialize.
 	
 	eventQueue := WaitfreeQueue new.
-	displayFormMutex := Semaphore forMutualExclusion.
+	displayMutex := Semaphore forMutualExclusion.
 	self extent: self defaultExtent.
 	self clipSubmorphs: true.
 ]
@@ -230,12 +226,22 @@ WDCMorphicWindow >> initialize [
 WDCMorphicWindow >> initializeForNewSession [
 	engine checkSession.
 	renderTarget := nil.
+	resolveRenderTarget := nil.
 	lastMousePosition := 0@0.
 	textureSceneGraphNode := nil.
+	displayTexture := nil.
+	displayTextureExtent := 1@1.
 	self checkRenderTarget.
 
 	session := Smalltalk session.
 	
+]
+
+{ #category : #testing }
+WDCMorphicWindow >> isUsingAGPUWorldRenderer [
+	| world |
+	world := self world.
+	^ world isNotNil and: [ world worldState worldRenderer isAGPUWorldRenderer ]
 ]
 
 { #category : #'framebuffer description' }
@@ -245,7 +251,7 @@ WDCMorphicWindow >> needsDirectRenderTarget [
 
 { #category : #'rendering process stages' }
 WDCMorphicWindow >> prepareRendering [
-	displayFormMutex critical: [
+	displayMutex critical: [
 		self checkSession; checkRenderTarget
 	]
 ]
@@ -298,12 +304,6 @@ WDCMorphicWindow >> uiScaleFactor [
 WDCMorphicWindow >> validRenderTarget [
 	self checkSession; checkRenderTarget.
 	^ renderTarget
-]
-
-{ #category : #rendering }
-WDCMorphicWindow >> validResolveRenderTarget [
-	self checkSession; checkRenderTarget.
-	^ resolveRenderTarget
 ]
 
 { #category : #initialization }

@@ -51,8 +51,8 @@ WDAViewWithFormSceneGraph >> newSceneGraphBuilder [
 
 { #category : #'rendering process stages' }
 WDAViewWithFormSceneGraph >> prepareRendering [
-	renderTarget := window validRenderTarget.
-	resolveTarget := window validResolveRenderTarget.
+	renderTarget := window validRenderTarget ifNil: [ ^ self ]..
+	resolveTarget := window resolveRenderTarget.
 	sceneGraph := self buildUISceneGraphWith: self newSceneGraphBuilder.
 
 	sceneGraphCommandList := FormSGAGPUCommandListBuilder new.

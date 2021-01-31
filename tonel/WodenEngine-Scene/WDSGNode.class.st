@@ -44,6 +44,7 @@ WDSGNode >> addedToScene: aScene [
 	newEngine := self engine.
 	oldEngine ~~ newEngine ifTrue: [ self engineChanged ].
 	self sceneLayer addRenderingRenderables: self renderingRenderables.
+	aScene changed.
 	children do: [ :child | child addedToScene: scene ].
 ]
 
@@ -394,6 +395,7 @@ WDSGNode >> sceneLayer [
 { #category : #changing }
 WDSGNode >> stateChanged [
 	stateChangeListeners ifNotNil: [ stateChangeListeners do: [ :handler | handler value: self ] ].
+	scene ifNotNil: [ scene nodeStateChanged: self ]
 ]
 
 { #category : #accessing }
@@ -408,8 +410,13 @@ WDSGNode >> transform [
 
 { #category : #accessing }
 WDSGNode >> transform: aTransform [
-	transform := aTransform asReversibleAffineTransform3dF32.
-	self transformChanged
+	| newTransform |
+	newTransform := aTransform asReversibleAffineTransform3dF32.
+	transform = newTransform ifFalse: [ 
+		transform := newTransform.
+		self transformChanged
+	].
+
 ]
 
 { #category : #caching }

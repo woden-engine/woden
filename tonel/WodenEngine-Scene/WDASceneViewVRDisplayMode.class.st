@@ -48,7 +48,7 @@ WDASceneViewVRDisplayMode >> leftRenderTargetRequiredExtent [
 { #category : #'rendering process stages' }
 WDASceneViewVRDisplayMode >> renderSceneViewports [
 	| windowTarget |
-	windowTarget := view window validResolveRenderTarget.
+	windowTarget := view window resolveRenderTarget.
 	
 	^ view sceneRenderer renderSceneViewportsThenDo: [ :stateTracker |
 

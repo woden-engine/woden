@@ -208,7 +208,7 @@ WDCFrameBufferingDriver >> mainRenderingProcessIteration [
 WDCFrameBufferingDriver >> renderForDeltaMicroseconds: delta [
 	"Always update the simulations"
 	| renderingGraph |
-	frontRenderingProcesses reject: #suspended thenDo: #processEvents.
+	frontRenderingProcesses reject: [:each | each suspended] thenDo: [:each | each processEvents ].
 
 	currentVRLeftEyeTexture := nil.
 	currentVRRightEyeTexture := nil.
@@ -221,7 +221,7 @@ WDCFrameBufferingDriver >> renderForDeltaMicroseconds: delta [
 	].
 
 	"Only perform rendering if there is at least one process that needs to perform rendering."
-	frontRenderingProcesses detect: #needsToRender ifNone: [^ self].
+	frontRenderingProcesses detect: [:each | each needsToRender ] ifNone: [^ self].
 
 	self
 		beginFrame.
@@ -233,18 +233,18 @@ WDCFrameBufferingDriver >> renderForDeltaMicroseconds: delta [
 	].
 
 	renderingGraph
-		sortedNodesDo: #prepareRendering.
+		sortedNodesDo: [:each | each prepareRendering ].
 
 	engine frameRenderingMetrics reset.		
 	renderingGraph
-		sortedNodesDo: #constructRenderingCommandLists;
-		sortedNodesDo: #sendRenderingCommands.
+		sortedNodesDo: [:each | each constructRenderingCommandLists];
+		sortedNodesDo: [:each | each sendRenderingCommands].
 	
 	(currentVRLeftEyeTexture isNotNil and: [ currentVRRightEyeTexture isNotNil ]) ifTrue: [ 
 		engine vrSystem submitLeftEye: currentVRLeftEyeTexture rightEye: currentVRRightEyeTexture
 	].
 
-	renderingGraph sortedNodesDo: #commitSurfaces.
+	renderingGraph sortedNodesDo: [:each | each commitSurfaces].
 	
 	self
 		endFrame.

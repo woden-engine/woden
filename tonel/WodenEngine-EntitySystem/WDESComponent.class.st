@@ -12,7 +12,7 @@ WDESComponent >> addedToPhysicsWorld: physicsWorld [
 ]
 
 { #category : #notifications }
-WDESComponent >> addedToScene: scene [
+WDESComponent >> addedToScene: anScene [
 ]
 
 { #category : #accessing }

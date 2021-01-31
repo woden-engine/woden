@@ -78,6 +78,9 @@ WDSGAbstractSpatialObject >> stateChanged [
 { #category : #'as yet unclassified' }
 WDSGAbstractSpatialObject >> visible: aBoolean [
 	super visible: aBoolean.
-	objectState visible: aBoolean asBit.
-	self stateChanged.
+	objectState visible = aBoolean asBit ifFalse: [ 
+		objectState visible: aBoolean asBit.
+		self stateChanged.
+	].
+
 ]

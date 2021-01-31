@@ -36,7 +36,6 @@ WDESSector >> addTickingEntity: anEntity [
 WDESSector >> addedToScene: anScene [
 	sceneNode ifNotNil: [ sceneNode removeFromScene ].
 	anScene add: self validSceneNode.
-	super addedToScene: anScene.
 	
 ]
 

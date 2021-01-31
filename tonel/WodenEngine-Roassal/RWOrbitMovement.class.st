@@ -29,7 +29,7 @@ RWOrbitMovement >> applyPositionToElement: anElement [
 	
 	anElement
 		orientation: rotation;
-		position: (disp + center)
+		position: (disp + center).
 	"camera distance: r."
 ]
 

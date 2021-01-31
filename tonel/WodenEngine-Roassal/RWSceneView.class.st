@@ -59,7 +59,6 @@ RWSceneView >> dispatchMouseOverElementsEvent: event newElement: elementBeingPoi
 			delta: event delta;
 			sendToElement.
 	].
-	model signalUpdate
 ]
 
 { #category : #selection }
@@ -217,8 +216,6 @@ RWSceneView >> visitMouseButtonPressEvent: event [
 		position: event position;
 		element: (self elementInPosition: event position).
 	r3Event sendToElement.
-	
-	model signalUpdate
 ]
 
 { #category : #visiting }
@@ -231,7 +228,6 @@ RWSceneView >> visitMouseButtonReleaseEvent: event [
 		button: event button.
 	r3Event element: (self elementInPosition: event position).
 	self sendMouseEvent: r3Event.
-	model signalUpdate
 ]
 
 { #category : #visiting }
@@ -245,8 +241,6 @@ RWSceneView >> visitMouseDragEndEvent: event [
 		position: event position;
 		element: dragElement.
 	r3Event sendToElement.
-	
-	model signalUpdate
 ]
 
 { #category : #visiting }
@@ -259,7 +253,6 @@ RWSceneView >> visitMouseDragEvent: event [
 		delta: event delta asFloat32x2;
 		element: dragElement.
 	r3Event sendToElement.
-	model signalUpdate
 
 ]
 
@@ -275,8 +268,6 @@ RWSceneView >> visitMouseDragStartEvent: event [
 		element: (self elementInPosition: event position).
 	dragElement := r3Event element.
 	r3Event sendToElement.
-	
-	model signalUpdate
 ]
 
 { #category : #visiting }

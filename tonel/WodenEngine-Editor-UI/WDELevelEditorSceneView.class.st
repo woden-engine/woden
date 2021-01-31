@@ -10,7 +10,8 @@ Class {
 		'gridOrientation',
 		'isPerspective',
 		'viewScale',
-		'dragToolScreenOverlay'
+		'dragToolScreenOverlay',
+		'cameraChanged'
 	],
 	#category : #'WodenEngine-Editor-UI'
 }
@@ -109,6 +110,12 @@ WDELevelEditorSceneView >> buildUISceneGraphWith: builder [
 ]
 
 { #category : #'as yet unclassified' }
+WDELevelEditorSceneView >> cameraChanged [
+	cameraChanged := true.
+	self changed.
+]
+
+{ #category : #'as yet unclassified' }
 WDELevelEditorSceneView >> cameraXYDeltaToWorld: screenDelta [
 	^ self cameraXYDeltaToWorld: screenDelta distance: 3.0
 ]
@@ -162,7 +169,8 @@ WDELevelEditorSceneView >> dragToolScreenOverlay [
 
 { #category : #accessing }
 WDELevelEditorSceneView >> dragToolScreenOverlay: anObject [
-	dragToolScreenOverlay := anObject
+	dragToolScreenOverlay := anObject.
+	self changed
 ]
 
 { #category : #rendering }
@@ -204,6 +212,7 @@ WDELevelEditorSceneView >> elementsInScreenRectangle: screenRectangle [
 WDELevelEditorSceneView >> freePerspectiveView [
 	gridOrientation := self topGridOrientation.
 	editorViewType := #free.
+	self cameraChanged.
 ]
 
 { #category : #'view perspective' }
@@ -211,6 +220,7 @@ WDELevelEditorSceneView >> frontView [
 	cameraAngle := Float32x3 zeros.
 	gridOrientation := Float32x3x3 lookAtFront.
 	editorViewType := #front.
+	self cameraChanged.
 ]
 
 { #category : #snapping }
@@ -222,6 +232,7 @@ WDELevelEditorSceneView >> gridSize [
 WDELevelEditorSceneView >> initialize [
 	super initialize.
 
+	cameraChanged := true.
 	cameraAngle := Float32x3 new.
 	isPerspective := true.
 	viewScale := 3.0.
@@ -235,7 +246,8 @@ WDELevelEditorSceneView >> isPerspective [
 
 { #category : #accessing }
 WDELevelEditorSceneView >> isPerspective: anObject [
-	isPerspective := anObject
+	isPerspective := anObject.
+	self cameraChanged.
 ]
 
 { #category : #visiting }
@@ -275,7 +287,8 @@ WDELevelEditorSceneView >> orthographicNearDistance [
 
 { #category : #'view perspective' }
 WDELevelEditorSceneView >> orthographicView [
-	isPerspective := false
+	isPerspective := false.
+	self cameraChanged.
 ]
 
 { #category : #accessing }
@@ -290,7 +303,8 @@ WDELevelEditorSceneView >> perspectiveNearDistance [
 
 { #category : #'view perspective' }
 WDELevelEditorSceneView >> perspectiveView [
-	isPerspective := true
+	isPerspective := true.
+	self cameraChanged.
 ]
 
 { #category : #visiting }
@@ -331,6 +345,7 @@ WDELevelEditorSceneView >> renderSubMode: aMode [
 { #category : #'as yet unclassified' }
 WDELevelEditorSceneView >> rotateCameraWithAngles: deltaAngles [
 	cameraAngle := cameraAngle + deltaAngles.
+	self cameraChanged.
 ]
 
 { #category : #utiltity }
@@ -348,6 +363,7 @@ WDELevelEditorSceneView >> sideView [
 	cameraAngle := Float32x3 y: Float halfPi.
 	gridOrientation := Float32x3x3 lookAtLeft.
 	editorViewType := #side.
+	self cameraChanged.
 ]
 
 { #category : #snapping }
@@ -372,7 +388,8 @@ WDELevelEditorSceneView >> toggleElementsFromSelection: elements [
 
 { #category : #'projection mode' }
 WDELevelEditorSceneView >> togglePerspective [
-	isPerspective := isPerspective not
+	isPerspective := isPerspective not.
+	self cameraChanged.
 ]
 
 { #category : #'view perspective' }
@@ -385,28 +402,18 @@ WDELevelEditorSceneView >> topView [
 	cameraAngle := Float32x3 x: Float halfPi negated.
 	gridOrientation := self topGridOrientation.
 	editorViewType := #top.
+	self cameraChanged.
 ]
 
 { #category : #'as yet unclassified' }
 WDELevelEditorSceneView >> translateCameraBy: translation [
-	self camera translateBy: translation
+	self camera translateBy: translation.
+	self cameraChanged.
 ]
 
 { #category : #updating }
-WDELevelEditorSceneView >> updateCameraProjection [
-	camera isPerspective: isPerspective.
-	camera focalDistance: (viewScale / ((camera fieldOfView * 0.5) degreesToRadians tan)).
-	isPerspective ifTrue: [
-		camera nearDistance: self perspectiveNearDistance; farDistance: self perspectiveFarDistance
-	] ifFalse: [
-		camera nearDistance: self orthographicNearDistance; farDistance: self orthographicFarDistance.
-	]
-]
-
-{ #category : #updating }
-WDELevelEditorSceneView >> updateForFrameDelta: delta [
+WDELevelEditorSceneView >> updateCameraForFrameDelta: delta [
 	| orientation cameraTransform cameraPosition |
-	super updateForFrameDelta: delta.
 	camera := self camera.
 	cameraPosition := self camera transform translation.
 
@@ -422,6 +429,28 @@ WDELevelEditorSceneView >> updateForFrameDelta: delta [
 	self
 		updateCameraProjection;
 		updateGridsForCamera.
+	cameraChanged := false
+]
+
+{ #category : #updating }
+WDELevelEditorSceneView >> updateCameraProjection [
+	camera isPerspective: isPerspective.
+	camera focalDistance: (viewScale / ((camera fieldOfView * 0.5) degreesToRadians tan)).
+	isPerspective ifTrue: [
+		camera nearDistance: self perspectiveNearDistance; farDistance: self perspectiveFarDistance
+	] ifFalse: [
+		camera nearDistance: self orthographicNearDistance; farDistance: self orthographicFarDistance.
+	]
+]
+
+{ #category : #updating }
+WDELevelEditorSceneView >> updateForFrameDelta: delta [
+	super updateForFrameDelta: delta.
+
+	cameraChanged ifTrue: [ 
+		self updateCameraForFrameDelta: delta
+	].
+
 ]
 
 { #category : #updating }

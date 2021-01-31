@@ -49,6 +49,11 @@ WDAView >> captureMouse [
 	hasMouseCapture := true.
 ]
 
+{ #category : #updating }
+WDAView >> changed [
+	model changed
+]
+
 { #category : #opening }
 WDAView >> close [
 	window ifNotNil: [ window close ]
@@ -167,6 +172,11 @@ WDAView >> model: anObject [
 { #category : #'framebuffer description' }
 WDAView >> needsDirectRenderTarget [
 	^ true
+]
+
+{ #category : #testing }
+WDAView >> needsToRender [
+	^ false
 ]
 
 { #category : #opening }

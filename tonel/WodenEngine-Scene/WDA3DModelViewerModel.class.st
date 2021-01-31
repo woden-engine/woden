@@ -124,7 +124,7 @@ WDA3DModelViewerModel >> modelAsset: anObject [
 
 { #category : #'instance creation' }
 WDA3DModelViewerModel >> newScene [
-	scene := WDSGScene for: engine
+	self scene: (WDSGScene for: engine)
 ]
 
 { #category : #'as yet unclassified' }

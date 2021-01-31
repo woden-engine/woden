@@ -16,11 +16,12 @@ Class {
 { #category : #'instance creation' }
 WDASceneViewStereoScreenDisplayMode >> checkRenderTargets [
 	| mainTarget extent extentChanged |
+	view window validRenderTarget ifNil: [ ^ self ].
 	leftRenderTarget ifNil: [ 
 		self createRenderTargets.
 	].
 
-	mainTarget := view window validResolveRenderTarget.
+	mainTarget := view window resolveRenderTarget.
 	extent := mainTarget extent.
 
 	extentChanged := extent ~= leftRenderTarget extent.
@@ -45,7 +46,7 @@ WDASceneViewStereoScreenDisplayMode >> checkRenderTargets [
 { #category : #'viewport composition' }
 WDASceneViewStereoScreenDisplayMode >> composeEyesIn: stateTracker [
 	| resolveTarget renderPass |
-	resolveTarget := view window validResolveRenderTarget.
+	resolveTarget := view window resolveRenderTarget.
 
 	renderPass := resolveTarget validMainRenderPass.
 

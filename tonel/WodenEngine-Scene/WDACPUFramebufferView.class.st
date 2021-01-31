@@ -7,7 +7,7 @@ Class {
 { #category : #'rendering process stages' }
 WDACPUFramebufferView >> doRenderingWith: stateTracker [
 	| effectPass |
-	effectPass := model formEffectFullscreenPass destinationRenderTarget: window validRenderTarget.
+	effectPass := model formEffectFullscreenPass destinationRenderTarget: window renderTarget.
 	stateTracker
 		applyFullScreenPass: model currentFormDecodeFullscreenPass;
 		applyFullScreenPass: effectPass

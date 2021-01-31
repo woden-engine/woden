@@ -11,7 +11,7 @@ Class {
 WDELevelEditorBrushDrawDragToolMode >> applyBoxToSceneNode: box [
 	sceneNode ifNil: [ self createSceneNode ].
 	sceneNode
-		transform: box reversibleTransformToConvertUnitBoxToMe
+		transform: box reversibleTransformToConvertUnitBoxToMe.
 ]
 
 { #category : #'event handling' }

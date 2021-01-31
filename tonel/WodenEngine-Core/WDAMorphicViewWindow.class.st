@@ -162,6 +162,12 @@ WDAMorphicViewWindow >> keySymbolFor: key [
 	] 
 ]
 
+{ #category : #recategorized }
+WDAMorphicViewWindow >> layoutChanged [
+	super layoutChanged.
+	view changed
+]
+
 { #category : #'event handling' }
 WDAMorphicViewWindow >> mapMouseButton: button [
 	^ MouseButtonMap at: button

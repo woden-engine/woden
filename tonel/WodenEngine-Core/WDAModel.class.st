@@ -13,7 +13,8 @@ Class {
 		'engine',
 		'started',
 		'session',
-		'renderingDependencies'
+		'renderingDependencies',
+		'needsToRender'
 	],
 	#category : #'WodenEngine-Core-Application'
 }
@@ -42,6 +43,7 @@ WDAModel >> addRenderingElementsToGraph: renderingDependencyGraph [
 WDAModel >> addView: aView [
 	engine renderingProcessCritical: [
 		views add: aView.
+		needsToRender := true
 	]
 ]
 
@@ -49,6 +51,11 @@ WDAModel >> addView: aView [
 WDAModel >> allViewsAreClosed [
 	"Stop the process by default"
 	self stop
+]
+
+{ #category : #updating }
+WDAModel >> changed [
+	needsToRender := true.
 ]
 
 { #category : #accessing }
@@ -85,6 +92,7 @@ WDAModel >> initialize [
 	views := OrderedCollection new.
 	renderingDependencies := OrderedCollection new.
 	started := false.
+	needsToRender := false.
 	self initializeModel.
 	self initializeForNewSession.
 ]
@@ -105,6 +113,16 @@ WDAModel >> initializeWithEngine: anEngine [
 	self initialize
 ]
 
+{ #category : #testing }
+WDAModel >> isAnimated [
+	^ true
+]
+
+{ #category : #testing }
+WDAModel >> isInVirtualReality [
+	^ false
+]
+
 { #category : #opening }
 WDAModel >> isOSWindowBlacklisted [
 	(#(null sdl2) includes: Smalltalk os windowSystemName) ifTrue: [ ^ false ].
@@ -118,7 +136,12 @@ WDAModel >> isOpened [
 
 { #category : #testing }
 WDAModel >> needsToRender [
-	^ views isNotEmpty
+	^ views isNotEmpty and: [ 
+		needsToRender or: [
+		self isAnimated or: [
+		self isInVirtualReality or: [
+		views anySatisfy: [ :each | each needsToRender ]]]]
+	]
 
 ]
 
@@ -180,6 +203,11 @@ WDAModel >> openWith: aView [
 	]."
  
 	^ self openInOSWindowWith: aView
+]
+
+{ #category : #'rendering process stages' }
+WDAModel >> prepareRendering [
+	needsToRender := false.
 ]
 
 { #category : #hooks }

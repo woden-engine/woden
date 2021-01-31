@@ -232,6 +232,11 @@ WDELevelEditorSceneModel >> initializeModel [
 	baseGridSize := 10.0.
 ]
 
+{ #category : #testing }
+WDELevelEditorSceneModel >> isAnimated [
+	^ false
+]
+
 { #category : #accessing }
 WDELevelEditorSceneModel >> level [
 	^ levelEditorSession level
@@ -243,7 +248,7 @@ WDELevelEditorSceneModel >> levelChanged [
 	levelElementToSceneNodeDictionary := IdentityDictionary new.
 	levelElementToSelectionBoxNode := IdentityDictionary new.
 	self level sectors do: [ :each |
-			self addElementToScene: each
+		self addElementToScene: each
 		].
 	self level
 		whenAddedElementDo: [ :element |
@@ -281,6 +286,7 @@ WDELevelEditorSceneModel >> newScene [
 	camera
 		hasAutoExposure: false;
 		translateByX: 0 y: 3 z: 10.
+	views do: [ :each | each cameraChanged ].
 		
 	self
 		createHighlightBoxNode;
@@ -317,6 +323,7 @@ WDELevelEditorSceneModel >> rayCastForManipulator: ray [
 
 { #category : #accessing }
 WDELevelEditorSceneModel >> removeElementFromScene: element [
+	self changed.
 	levelElementToSelectionBoxNode at: element ifPresent: [ :node |
 		node removeFromScene.
 		levelElementToSelectionBoxNode removeKey: element

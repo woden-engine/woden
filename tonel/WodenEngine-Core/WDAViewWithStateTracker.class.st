@@ -17,7 +17,7 @@ WDAViewWithStateTracker >> constructRenderingCommandLists [
 	currentCommandLists := perFrameCommandLists currentList.
 	
 	renderTarget := window validRenderTarget.
-	resolveTarget := window validResolveRenderTarget.
+	resolveTarget := window resolveRenderTarget.
 
 	currentCommandLists validCommandAllocator reset.
 	
@@ -44,7 +44,7 @@ WDAViewWithStateTracker >> doRenderingComputePassWith: stateTracker [
 { #category : #'rendering process stages' }
 WDAViewWithStateTracker >> doRenderingWith: stateTracker [
 	stateTracker
-		beginRenderPass: renderPass renderTarget: window validRenderTarget;
+		beginRenderPass: renderPass renderTarget: window renderTarget;
 		endRenderPass.
 
 ]
@@ -59,7 +59,7 @@ WDAViewWithStateTracker >> sendRenderingCommands [
 
 { #category : #'rendering process stages' }
 WDAViewWithStateTracker >> setupMainRenderpass [
-	renderPass ifNil: [ renderPass := window validRenderTarget createRenderPassWithColor: Color black ].
+	renderPass ifNil: [ renderPass := window renderTarget createRenderPassWithColor: Color black ].
 ]
 
 { #category : #'rendering process stages' }

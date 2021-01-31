@@ -18,7 +18,9 @@ Class {
 		'groundLighting',
 		'sunDirection',
 		'lightingProbe',
-		'nodesWithPendingStates'
+		'nodesWithPendingStates',
+		'changedBlock',
+		'nodeStateChangedBlock'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
@@ -89,6 +91,11 @@ WDSGScene >> backgroundLayer [
 WDSGScene >> bakeLazyObjectStates [
 	nodesWithPendingStates do: [ :node | node bakeLazyObjectStates ].
 	nodesWithPendingStates removeAll.
+]
+
+{ #category : #'as yet unclassified' }
+WDSGScene >> changed [
+	changedBlock value
 ]
 
 { #category : #'rendering phases' }
@@ -219,6 +226,9 @@ WDSGScene >> initialize [
 	sunDirection := (Float32x3 y: 1.0).
 
 	nodesWithPendingStates := IdentitySet new.
+
+	changedBlock := [].
+	nodeStateChangedBlock := [:node |].
 	
 	backgroundLayer := WDSGSceneLayer new addedToScene: self.
 	normalLayer := WDSGSceneLayer new addedToScene: self.
@@ -272,6 +282,12 @@ WDSGScene >> name [
 { #category : #accessing }
 WDSGScene >> name: anObject [
 	name := anObject
+]
+
+{ #category : #'as yet unclassified' }
+WDSGScene >> nodeStateChanged: aNode [
+	self changed.
+	nodeStateChangedBlock cull: aNode.
 ]
 
 { #category : #accessing }
@@ -361,4 +377,14 @@ WDSGScene >> updateCommonGPUState [
 	self rootsDo: [ :root |
 		root updateCommonGpuStateForFrame: fullFrameIndex
 	]
+]
+
+{ #category : #enumerating }
+WDSGScene >> whenChangedDo: aBlock [
+	changedBlock := aBlock
+]
+
+{ #category : #enumerating }
+WDSGScene >> whenNodeStateChangedDo: aBlock [
+	nodeStateChangedBlock := aBlock
 ]

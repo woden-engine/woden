@@ -169,6 +169,7 @@ WDACPUFramebufferModel >> initializeWithEngine: aWDCEngine withForm: aForm [
 
 { #category : #'rendering process stages' }
 WDACPUFramebufferModel >> prepareRendering [
+	super prepareRendering.
 	form unhibernate.
 	LibC memCopy: form bits to: self currentGPUBuffer validPointer size: gpuBufferSize.
 ]

@@ -88,14 +88,12 @@ RWNode >> makeDefaultView [
 
 { #category : #accessing }
 RWNode >> orientation [
-	^ sceneNode transform matrix
+	^ sceneNode orientation
 ]
 
 { #category : #accessing }
 RWNode >> orientation: anOrientation [
-	sceneNode transform orthonormal: anOrientation asFloat32x3x3.
-	sceneNode transformChanged.
-	self transformChanged
+	self transform: (self transform copy orthonormal: anOrientation asFloat32x3x3)
 ]
 
 { #category : #accessing }
@@ -115,8 +113,7 @@ RWNode >> position [
 
 { #category : #accessing }
 RWNode >> position: aPosition [
-	sceneNode position: aPosition.
-	self transformChanged
+	self transform: (self transform copy translation: aPosition)
 ]
 
 { #category : #'ray casting' }
@@ -194,8 +191,11 @@ RWNode >> transform [
 
 { #category : #accessing }
 RWNode >> transform: aTransform [
-	sceneNode transform: aTransform.
-	self transformChanged.
+	sceneNode transform = aTransform ifFalse: [ 
+		sceneNode transform: aTransform.
+		self transformChanged.
+	].
+
 ]
 
 { #category : #accessing }

@@ -71,3 +71,13 @@ WDAOSWindowViewWindow >> view: anObject [
 WDAOSWindowViewWindow >> visitWindowCloseEvent: anEvent [
 	view ifNil: [ ^ super visitWindowCloseEvent: anEvent ]
 ]
+
+{ #category : #'event processing' }
+WDAOSWindowViewWindow >> visitWindowExposeEvent: anEvent [
+	view ifNotNil: [ view changed ]
+]
+
+{ #category : #'event processing' }
+WDAOSWindowViewWindow >> visitWindowResizeEvent: anEvent [
+	view ifNotNil: [ view changed ]
+]

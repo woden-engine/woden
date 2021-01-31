@@ -33,7 +33,7 @@ WDAESAbstractUniverseModel >> initializeScene [
 
 { #category : #'instance creation' }
 WDAESAbstractUniverseModel >> newScene [
-	scene := WDSGScene for: engine.
+	self scene: (WDSGScene for: engine).
 	^ scene
 ]
 

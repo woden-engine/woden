@@ -172,6 +172,11 @@ WDCVirtualWindow >> processEvents [
 WDCVirtualWindow >> releaseMouse [
 ]
 
+{ #category : #rendering }
+WDCVirtualWindow >> resolveRenderTarget [
+	^ resolveRenderTarget
+]
+
 { #category : #'framebuffer description' }
 WDCVirtualWindow >> sampleCount [
 	^ 1
@@ -201,10 +206,4 @@ WDCVirtualWindow >> surfaceDrawingExtent [
 WDCVirtualWindow >> validRenderTarget [
 	self checkSession; checkRenderTarget.
 	^ renderTarget
-]
-
-{ #category : #rendering }
-WDCVirtualWindow >> validResolveRenderTarget [
-	self checkSession; checkRenderTarget.
-	^ resolveRenderTarget
 ]

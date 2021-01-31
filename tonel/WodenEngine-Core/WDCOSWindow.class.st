@@ -191,6 +191,11 @@ WDCOSWindow >> releaseMouse [
 	window releaseMouse
 ]
 
+{ #category : #rendering }
+WDCOSWindow >> resolveRenderTarget [
+	^ resolveRenderTarget
+]
+
 { #category : #'framebuffer description' }
 WDCOSWindow >> sampleCount [
 	^ 1
@@ -212,13 +217,7 @@ WDCOSWindow >> uiScaleFactor [
 { #category : #rendering }
 WDCOSWindow >> validRenderTarget [
 	self checkRenderTargets.
-	^ renderTarget
-]
-
-{ #category : #rendering }
-WDCOSWindow >> validResolveRenderTarget [
-	self checkRenderTargets.
-	^ resolveRenderTarget
+	^ renderTarget ifNil: [ resolveRenderTarget ]
 ]
 
 { #category : #'event processing' }

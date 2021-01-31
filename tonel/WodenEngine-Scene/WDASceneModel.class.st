@@ -29,7 +29,8 @@ WDASceneModel >> camera [
 
 { #category : #accessing }
 WDASceneModel >> camera: anObject [
-	camera := anObject
+	camera := anObject.
+	self changed.
 ]
 
 { #category : #accessing }
@@ -61,7 +62,7 @@ WDASceneModel >> isInVirtualReality: anObject [
 
 { #category : #'instance creation' }
 WDASceneModel >> newScene [
-	scene := WDSGScene for: engine.
+	self scene: (WDSGScene for: engine).
 
 	camera := WDSGCamera new.
 	scene add: camera.
@@ -85,7 +86,11 @@ WDASceneModel >> scene [
 
 { #category : #accessing }
 WDASceneModel >> scene: anObject [
-	scene := anObject
+	scene := anObject.
+	scene ifNotNil: [ 
+		scene whenChangedDo: [ self changed ].
+	].
+	self changed.
 ]
 
 { #category : #'rendering process stages' }

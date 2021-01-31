@@ -58,8 +58,8 @@ WDASceneViewScreenDisplayMode >> prepareRendering [
 WDASceneViewScreenDisplayMode >> prepareSceneRenderer [
 	| renderTarget resolveTarget |
 	view cameraSceneNode ifNil: [ ^ self ].
-	renderTarget := view window validRenderTarget.
-	resolveTarget := view window validResolveRenderTarget.
+	renderTarget := view window validRenderTarget ifNil: [ ^ self ].
+	resolveTarget := view window resolveRenderTarget.
 	view sceneRenderer
 		useLateLatching: self useLateLatching;
 		currentTime: view model currentTime;
