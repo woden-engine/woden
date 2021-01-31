@@ -339,7 +339,8 @@ WDELevelEditorSceneView >> renderSubMode [
 
 { #category : #accessing }
 WDELevelEditorSceneView >> renderSubMode: aMode [
-	renderSubMode := aMode
+	renderSubMode := aMode.
+	self changed
 ]
 
 { #category : #'as yet unclassified' }
