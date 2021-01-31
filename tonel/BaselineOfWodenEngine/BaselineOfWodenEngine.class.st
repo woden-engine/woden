@@ -44,7 +44,7 @@ BaselineOfWodenEngine >> baseline: spec [
 			package: #'WodenEngine-EntitySystem' with: [
 				spec requires: #('WodenEngine-Core' 'WodenEngine-Scene' 'WodenEngine-Physics' 'WodenEngine-OpenAL')];
 			package: #'WodenEngine-Spec2' with: [
-				spec requires: #(#'WodenEngine-Core')];
+				spec requires: #(#'WodenEngine-Core' #'WodenEngine-Roassal')];
 			package: #'WodenEngine-Editor-Model' with: [
 				spec requires: #(#'WodenEngine-Core')];
 			package: #'WodenEngine-Editor-UI' with: [
