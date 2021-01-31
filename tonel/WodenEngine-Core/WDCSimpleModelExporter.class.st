@@ -125,7 +125,7 @@ WDCSimpleModelExporter >> endVertex [
 
 { #category : #accessing }
 WDCSimpleModelExporter >> firstIndex: firstIndex [
-	currentSubmesh firstIndex: firstIndex
+	currentSubmesh firstIndex: firstIndex + baseIndex
 ]
 
 { #category : #accessing }

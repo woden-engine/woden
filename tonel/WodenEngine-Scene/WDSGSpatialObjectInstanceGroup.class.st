@@ -23,6 +23,13 @@ WDSGSpatialObjectInstanceGroup >> depthSorted: aBoolean [
 	objectState depthSorted: aBoolean
 ]
 
+{ #category : #'as yet unclassified' }
+WDSGSpatialObjectInstanceGroup >> exportNodeElementsWith: exporter [
+	exporter
+		visible: self visible;
+		transform: self transform
+]
+
 { #category : #testing }
 WDSGSpatialObjectInstanceGroup >> isInstanceGroup [
 	^ true

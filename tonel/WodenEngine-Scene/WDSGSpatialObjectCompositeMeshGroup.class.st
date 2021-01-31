@@ -11,6 +11,14 @@ WDSGSpatialObjectCompositeMeshGroup >> addChild: aChild [
 ]
 
 { #category : #'as yet unclassified' }
+WDSGSpatialObjectCompositeMeshGroup >> exportModelWith: exporter [
+	exporter nodeWith: [ :nodeExporter |
+		nodeExporter name: name.
+		self exportNodeElementsWith: nodeExporter.
+	]
+]
+
+{ #category : #'as yet unclassified' }
 WDSGSpatialObjectCompositeMeshGroup >> exportNodeElementsWith: exporter [
 	self validateRenderable.
 	super exportNodeElementsWith: exporter.

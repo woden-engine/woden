@@ -12,9 +12,18 @@ Class {
 
 { #category : #enumerating }
 WDCSimpleModelExporterSubmesh >> facesDo: aBlock [
+	primitiveType == #lines ifTrue: [ 
+		| nextIndex |
+		nextIndex := firstIndex.
+		1 to: indexCount // 2 do: [ :i |
+			aBlock value: { nextIndex . nextIndex + 1 }.
+			nextIndex := nextIndex + 2
+		].
+		^ self
+	].
 	primitiveType == #triangles ifTrue: [ 
 		| nextIndex |
-		nextIndex := 0.
+		nextIndex := firstIndex.
 		1 to: indexCount // 3 do: [ :i |
 			aBlock value: { nextIndex . nextIndex + 1 . nextIndex + 2 }.
 			nextIndex := nextIndex + 3
