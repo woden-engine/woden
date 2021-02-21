@@ -143,8 +143,12 @@ code_block forwardLightingModel
 	let ambientReflectionFactors = brdfLutSampler.sample(imageBasedLightingBRDFLut, float2(NdotV, roughness));
 	let translucencyWithFresnel = fresnelSchlick(translucencyFactor, NdotV);
 
-	accumulatedColor += hemiLightingFactor*(diffuseLightProbeSample*diff +
-		specularLightProbeSample*(F0*ambientReflectionFactors.x + ambientReflectionFactors.y));
+    // Hemisphere ambient lighting.
+    let materialAmbientSpecularFactor = F0*ambientReflectionFactors.x + ambientReflectionFactors.y;
+	accumulatedColor += hemiLightingFactor*(diff + materialAmbientSpecularFactor);
+
+    // Light probe.
+	accumulatedColor += diffuseLightProbeSample*diff + specularLightProbeSample*materialAmbientSpecularFactor;
 
 	// Apply ambient occlusion.
 	accumulatedColor *= occlusion*sampleScreenSpaceAmbientOcclusion();
