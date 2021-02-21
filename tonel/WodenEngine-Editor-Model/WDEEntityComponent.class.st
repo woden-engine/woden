@@ -59,11 +59,12 @@ WDEEntityComponent >> sectorLayerThicknessChanged [
 ]
 
 { #category : #initialization }
-WDEEntityComponent >> setVisualColor: aColor [
-	"Nop by default"
+WDEEntityComponent >> whenChangedDo: aBlock [
+	changedEventHolder whenChangedDo: aBlock
 ]
 
 { #category : #initialization }
-WDEEntityComponent >> whenChangedDo: aBlock [
-	changedEventHolder whenChangedDo: aBlock
+WDEEntityComponent >> whenChangedDoNow: aBlock [
+	self whenChangedDo: aBlock.
+	aBlock value
 ]

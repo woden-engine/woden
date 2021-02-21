@@ -98,21 +98,6 @@ WDCMaterial >> isTranslucentMaterial [
 ]
 
 { #category : #parsing }
-WDCMaterial >> parse: data at: materialFileReference array: name size: size nativeType: nativeType ifAbsent: ifAbsentBlock [
-	| result |
-	result := SLVMNativeArray for: nativeType new: size.
-	result atAllPut: ifAbsentBlock value.
-	data at: name ifPresent: [ :array |
-		array withIndexDo: [ :element :index |
-			index <= size ifTrue: [
-				result at: index put: (nativeType loadFromJson: element)
-			]
-		]
-	].
-	^ result
-]
-
-{ #category : #parsing }
 WDCMaterial >> parse: data at: materialFileReference array: name type: nativeType ifAbsent: ifAbsentBlock [
 	| result |
 	result := nativeType new.

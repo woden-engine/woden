@@ -250,6 +250,11 @@ WDELevelEditorSceneView >> isPerspective: anObject [
 	self cameraChanged.
 ]
 
+{ #category : #accessing }
+WDELevelEditorSceneView >> levelEditorSession [
+	^ model levelEditorSession
+]
+
 { #category : #visiting }
 WDELevelEditorSceneView >> manipulatorInPositionWithRayPicking: aPoint [
 	^ self rayPickManipulator: (self rayForScreenPosition: aPoint)

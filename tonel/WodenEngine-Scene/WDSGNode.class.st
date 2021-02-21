@@ -345,6 +345,7 @@ WDSGNode >> precacheResources [
 WDSGNode >> removeChild: node [
 	children remove: node.
 	node removedFromNode: self.
+	self stateChanged
 ]
 
 { #category : #adding }

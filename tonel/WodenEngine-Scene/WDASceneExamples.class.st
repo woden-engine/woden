@@ -244,7 +244,8 @@ WDASceneExamples class >> example03Floor [
 	light := WDSGLightSource new.
 	light
 		point;
-		intensity: (Float32x4 x: 1.0 y: 1.0 z: 0.3 w: 1.0) * 0.8;
+		radius: 4.0;
+		intensity: (Float32x4 x: 1.0 y: 1.0 z: 0.3 w: 1.0) * 4.0;
 		translateByX: -1.5 y: 1.5 z: 1.6.
 	scene add: light.
 
@@ -259,6 +260,7 @@ WDASceneExamples class >> example04Pool [
 	engine := model engine.
 	camera := model camera.
 	camera
+		withAutoExposure;
 		toneMappingOperator: #filmic;
 		farDistance: 100.0.
 	camera translateToX: 0.0 y: 1.0 z: -4.0.
@@ -277,7 +279,7 @@ WDASceneExamples class >> example04Pool [
 
 	scene add: sunLight.
 
-	scene ambientLighting: Float32x4 ones.
+	scene ambientLighting: Float32x4 zeros.
 
 	"Create the sky."
 	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector: (Float32x3 z: 1.0)).
@@ -321,7 +323,7 @@ WDASceneExamples class >> example04ProceduralSky [
 	skyTexture := self proceduralSkySunDirection: sunDirection.
 	skyTexture := skyTexture asTextureFor: scene engine.
 	scene createSkyWithCubeTexture: skyTexture.
-	scene ambientLighting: Float32x4 ones.
+	scene ambientLighting: Float32x4 zeros.
 		
 	model open
 
@@ -334,6 +336,7 @@ WDASceneExamples class >> example05DangerousPool [
 	scene := model newScene.
 	camera := model camera.
 	camera
+		withAutoExposure;
 		toneMappingOperator: #filmic;
 		farDistance: 100.0;
 		translateToX: 0.0 y: 1.0 z: -4.0.
@@ -351,7 +354,7 @@ WDASceneExamples class >> example05DangerousPool [
 		translateToX: 0.0 y: 1.5 z: 2.5.
 		
 	scene add: sunLight.
-	scene ambientLighting: Float32x4 ones.
+	scene ambientLighting: Float32x4 zeros.
 		
 	"Create the sky."
 	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector: (Float32x3 z: 1.0)).
@@ -553,7 +556,7 @@ WDASceneExamples class >> example09Island [
 	skyTexture := self proceduralSkySunDirection: (sunLight transform transformVector: (Float32x3 z: 1.0)).
 	skyTexture := skyTexture asTextureFor: model engine.
 	scene createSkyWithCubeTexture: skyTexture.
-	scene ambientLighting: Float32x4 ones.
+	scene ambientLighting: Float32x4 zeros.
 
 	terrain := self createIslandTerrainObjectFor: scene engine.
 	scene add: terrain.

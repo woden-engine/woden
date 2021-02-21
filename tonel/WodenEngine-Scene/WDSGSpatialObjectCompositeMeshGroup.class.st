@@ -44,7 +44,7 @@ WDSGSpatialObjectCompositeMeshGroup >> postCopy [
 { #category : #adding }
 WDSGSpatialObjectCompositeMeshGroup >> removeChild: aChild [
 	super removeChild: aChild.
-	self invalidateRenderable
+	self invalidateRenderable.
 ]
 
 { #category : #changing }

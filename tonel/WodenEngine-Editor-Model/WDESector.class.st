@@ -93,13 +93,13 @@ WDESector >> level: anObject [
 ]
 
 { #category : #serialization }
-WDESector >> loadFromJson: jsonData [
-	super loadFromJson: jsonData.
+WDESector >> loadFromJson: jsonData context: context [
+	super loadFromJson: jsonData context: context.
 	self isSector2D: (jsonData at: 'isSector2D' ifAbsent: [false]).
 
 	jsonData at: 'layers' ifPresent: [ :childrenData |
 		childrenData do: [ :each |
-			self addLayer: (WDELevelElement loadFromJson: each)
+			self addLayer: (WDELevelElement loadFromJson: each context: context)
 		]
 	]
 ]
@@ -121,4 +121,9 @@ WDESector >> removeLayer: aLayer [
 	level ifNotNil: [ aLayer removedFromLevel: level ].
 	aLayer sector: nil.
 
+]
+
+{ #category : #'as yet unclassified' }
+WDESector >> validateMaterialList [
+	layers do: [ :each | each validateMaterialList ]
 ]

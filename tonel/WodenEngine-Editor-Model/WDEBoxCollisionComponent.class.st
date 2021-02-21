@@ -42,8 +42,8 @@ WDEBoxCollisionComponent >> isBoxCollisionComponent [
 ]
 
 { #category : #serialization }
-WDEBoxCollisionComponent >> loadFromJson: jsonData [
-	super loadFromJson: jsonData.
+WDEBoxCollisionComponent >> loadFromJson: jsonData context: context [
+	super loadFromJson: jsonData context: context.
 	box := BoxF32 loadFromJson: (jsonData at: 'box').
 ]
 

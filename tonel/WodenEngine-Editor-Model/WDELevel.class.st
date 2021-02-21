@@ -3,7 +3,11 @@ Class {
 	#superclass : #WDELevelElement,
 	#instVars : [
 		'sectors',
-		'announcer'
+		'announcer',
+		'materials',
+		'textures',
+		'textureSet',
+		'materialSet'
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
 }
@@ -16,6 +20,21 @@ WDELevel class >> empty [
 					yourself);
 			yourself);
 		yourself
+]
+
+{ #category : #serialization }
+WDELevel class >> loadFromJson: jsonData [
+	^ self new loadFromJson: jsonData
+]
+
+{ #category : #serialization }
+WDELevel class >> loadFromJsonString: jsonString [
+	^ self loadFromJson: (NeoJSONReader fromString: jsonString)
+]
+
+{ #category : #serialization }
+WDELevel class >> loadMessagePack: messagePack [
+	^ self loadFromJson: (SLVMMessagePackDecoder decode: messagePack)
 ]
 
 { #category : #visiting }
@@ -81,9 +100,24 @@ WDELevel >> elementsInFrustum: frustum [
 
 { #category : #serialization }
 WDELevel >> encodeJsonKeyValues [
+	self validateMaterialList.
 	^ super encodeJsonKeyValues , {
+		#textures . textures collect: [ :each | each encodeForJSON ].
+		#materials . materials collect: [ :each | each encodeForJSON ].
 		#sectors . sectors collect: [ :each | each encodeForJSON ].
 	}
+]
+
+{ #category : #serialization }
+WDELevel >> getMaterialWithIndex: index [
+	(index isNil or: [ index < 1 ]) ifTrue: [ ^ nil ].
+	^ materials at: index
+]
+
+{ #category : #serialization }
+WDELevel >> getTextureWithIndex: index [
+	(index isNil or: [ index < 1 ]) ifTrue: [ ^ nil ].
+	^ textures at: index
 ]
 
 { #category : #initialization }
@@ -105,10 +139,26 @@ WDELevel >> level [
 
 { #category : #serialization }
 WDELevel >> loadFromJson: jsonData [
-	super loadFromJson: jsonData.
+	^ self loadFromJson: jsonData context: self
+]
+
+{ #category : #serialization }
+WDELevel >> loadFromJson: jsonData context: context [
+	super loadFromJson: jsonData context: context.
+
+	textures := #().
+	jsonData at: 'textures' ifPresent: [ :textureData |
+		textures := textureData collect: [ :each | WDELevelElement loadFromJson: each context: context ]
+	].
+
+	materials := #().
+	jsonData at: 'materials' ifPresent: [ :materialData |
+		materials := materialData collect: [ :each | WDELevelElement loadFromJson: each context: context ]		
+	].
+
 	jsonData at: 'sectors' ifPresent: [ :childrenData |
 		childrenData do: [ :each |
-			self addSector: (WDELevelElement loadFromJson: each)
+			self addSector: (WDELevelElement loadFromJson: each context: context)
 		]
 	]
 ]
@@ -152,6 +202,39 @@ WDELevel >> removeSector: aSector [
 { #category : #accessing }
 WDELevel >> sectors [
 	^ sectors
+]
+
+{ #category : #'as yet unclassified' }
+WDELevel >> validateMaterial: material [
+	material ifNil: [ ^ self ].
+	
+	materialSet at: material ifPresent: [ :index |
+		material materialIndex: index
+	] ifAbsentPut: [
+		materials add: material.
+		material materialIndex: materials size.
+		materials size
+	]
+]
+
+{ #category : #'as yet unclassified' }
+WDELevel >> validateMaterialList [
+	textures := OrderedCollection new.
+	textureSet := Dictionary new.
+
+	materials := OrderedCollection new.
+	materialSet := Dictionary new.
+	sectors do: [ :sector | sector validateMaterialList  ].
+]
+
+{ #category : #'as yet unclassified' }
+WDELevel >> validateTexture: texture [
+	textureSet at: texture ifPresent: [ :index |
+		texture textureIndex: index
+	] ifAbsentPut: [
+		texture textureIndex: materials size.
+		texture textureIndex
+	]
 ]
 
 { #category : #'as yet unclassified' }

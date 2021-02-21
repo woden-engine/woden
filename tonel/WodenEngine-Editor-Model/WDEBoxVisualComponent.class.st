@@ -3,7 +3,7 @@ Class {
 	#superclass : #WDEVisualComponent3D,
 	#instVars : [
 		'box',
-		'color'
+		'material'
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
 }
@@ -29,37 +29,17 @@ WDEBoxVisualComponent >> box: anObject [
 	self changed.
 ]
 
-{ #category : #accessing }
-WDEBoxVisualComponent >> buildLevelElementPropertyPageWith: builder [
-	super buildLevelElementPropertyPageWith: builder.
-	
-	builder
-		linearColor4PropertyNamed: 'Color' selector: #color
-]
-
-{ #category : #accessing }
-WDEBoxVisualComponent >> color [
-	^ color
-]
-
-{ #category : #accessing }
-WDEBoxVisualComponent >> color: anObject [
-	color := anObject asFloat32x4.
-	self changed.
-]
-
 { #category : #serialization }
 WDEBoxVisualComponent >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
 		#box . box encodeForJSON.
-		#color . color encodeForJSON.
+		#material . material ifNil: [0] ifNotNil: [material materialIndex].
 	}
 ]
 
 { #category : #initialization }
 WDEBoxVisualComponent >> initialize [
 	super initialize.
-	color := Float32x4 ones.
 	box := BoxF32 unitBox.
 ]
 
@@ -69,13 +49,36 @@ WDEBoxVisualComponent >> isBoxVisualComponent [
 ]
 
 { #category : #serialization }
-WDEBoxVisualComponent >> loadFromJson: jsonData [
-	super loadFromJson: jsonData.
+WDEBoxVisualComponent >> loadFromJson: jsonData context: context [
+	super loadFromJson: jsonData context: context.
 	box := BoxF32 loadFromJson: (jsonData at: 'box').
-	jsonData at: 'color' ifPresent: [ :data |
-		color := Float32x4 loadFromJson: data
+	jsonData at: 'material' ifPresent: [ :index |
+		material := context getMaterialWithIndex: index
 	].
 
+]
+
+{ #category : #accessing }
+WDEBoxVisualComponent >> material [
+
+	^ material
+]
+
+{ #category : #accessing }
+WDEBoxVisualComponent >> material: anObject [
+
+	material := anObject.
+	self changed.
+]
+
+{ #category : #memento }
+WDEBoxVisualComponent >> materialStateMemento [
+	^ material
+]
+
+{ #category : #memento }
+WDEBoxVisualComponent >> restoreMaterialStateMemento: memento [
+	self material: memento
 ]
 
 { #category : #memento }
@@ -84,8 +87,8 @@ WDEBoxVisualComponent >> restoreTransformStateMemento: memento [
 ]
 
 { #category : #initialization }
-WDEBoxVisualComponent >> setVisualColor: aColor [
-	self color: aColor
+WDEBoxVisualComponent >> setMaterial: newMaterial [
+	self material: newMaterial
 ]
 
 { #category : #memento }
@@ -96,4 +99,9 @@ WDEBoxVisualComponent >> transformStateMemento [
 { #category : #transforms }
 WDEBoxVisualComponent >> transformWith: transform [
 	self box: (self box transformedWith: transform)
+]
+
+{ #category : #'as yet unclassified' }
+WDEBoxVisualComponent >> validateMaterialList [
+	self level validateMaterial: material
 ]

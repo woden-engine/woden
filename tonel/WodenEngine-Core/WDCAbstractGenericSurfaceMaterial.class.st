@@ -207,7 +207,7 @@ WDCAbstractGenericSurfaceMaterial >> emissionColor [
 
 { #category : #accessing }
 WDCAbstractGenericSurfaceMaterial >> emissionColor: aColor [
-	materialState emission: aColor asFloat32x4.
+	materialState emission: (Float32x4 xyz: aColor asFloat32x3 w: 0.0).
 	self uploadMaterialStateData.
 ]
 
@@ -261,6 +261,10 @@ WDCAbstractGenericSurfaceMaterial >> normalTexture: anObject [
 	normalTexture := anObject.
 	self invalidateCache.
 
+]
+
+{ #category : #accessing }
+WDCAbstractGenericSurfaceMaterial >> occlusionFactor: occlusionFactor [
 ]
 
 { #category : #parsing }

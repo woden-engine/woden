@@ -48,10 +48,25 @@ WDELevelEditorSelection >> initialize [
 	selectedItems := #().
 ]
 
+{ #category : #memento }
+WDELevelEditorSelection >> materialStateMemento [
+	^ selectedItems collect: [ :each | each materialStateMemento ]
+]
+
 { #category : #accessing }
 WDELevelEditorSelection >> propertyPages [
 	selectedItems size = 1 ifTrue: [ ^ selectedItems first propertyPages ].
 	^ #()
+]
+
+{ #category : #memento }
+WDELevelEditorSelection >> restoreMaterialStateMemento: memento [
+	selectedItems doWithIndex: [ :each :index | each restoreMaterialStateMemento: (memento at: index) ]
+]
+
+{ #category : #memento }
+WDELevelEditorSelection >> restoreTransformStateMemento: memento [
+	selectedItems doWithIndex: [ :each :index | each restoreTransformStateMemento: (memento at: index) ]
 ]
 
 { #category : #accessing }
@@ -62,4 +77,9 @@ WDELevelEditorSelection >> selectedItems [
 { #category : #accessing }
 WDELevelEditorSelection >> selectedItems: anObject [
 	selectedItems := anObject
+]
+
+{ #category : #memento }
+WDELevelEditorSelection >> transformStateMemento [
+	^ selectedItems collect: [ :each | each transformStateMemento ]
 ]

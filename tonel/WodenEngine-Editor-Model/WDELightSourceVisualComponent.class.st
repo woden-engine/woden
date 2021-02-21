@@ -85,8 +85,8 @@ WDELightSourceVisualComponent >> isLightSourceVisualComponent [
 ]
 
 { #category : #serialization }
-WDELightSourceVisualComponent >> loadFromJson: jsonData [
-	super loadFromJson: jsonData.
+WDELightSourceVisualComponent >> loadFromJson: jsonData context: context [
+	super loadFromJson: jsonData context: context.
 	color := Float32x3 loadFromJson: (jsonData at: 'color').
 	intensity := (jsonData at: 'intensity' ifAbsent: [intensity]) asFloat.
 	castShadows := jsonData at: 'castShadows' ifAbsent: [castShadows].

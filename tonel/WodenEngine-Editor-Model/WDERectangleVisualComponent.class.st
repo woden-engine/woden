@@ -3,7 +3,7 @@ Class {
 	#superclass : #WDEVisualComponent2D,
 	#instVars : [
 		'rectangle',
-		'color'
+		'material'
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
 }
@@ -18,37 +18,17 @@ WDERectangleVisualComponent >> boundingRectangle [
 	^ rectangle
 ]
 
-{ #category : #accessing }
-WDERectangleVisualComponent >> buildLevelElementPropertyPageWith: builder [
-	super buildLevelElementPropertyPageWith: builder.
-	
-	builder
-		linearColor4PropertyNamed: 'Color' selector: #color
-]
-
-{ #category : #accessing }
-WDERectangleVisualComponent >> color [
-	^ color
-]
-
-{ #category : #accessing }
-WDERectangleVisualComponent >> color: anObject [
-	color := anObject asFloat32x4.
-	self changed.
-]
-
 { #category : #serialization }
 WDERectangleVisualComponent >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
 		#rectangle . rectangle encodeForJSON.
-		#color . color encodeForJSON.
+		#material . material ifNil: [0] ifNotNil: [material materialIndex].
 	}
 ]
 
 { #category : #initialization }
 WDERectangleVisualComponent >> initialize [
 	super initialize.
-	color := Float32x4 ones.
 	rectangle := RectangleF32 unitRectangle.
 ]
 
@@ -58,13 +38,29 @@ WDERectangleVisualComponent >> isRectangleVisualComponent [
 ]
 
 { #category : #serialization }
-WDERectangleVisualComponent >> loadFromJson: jsonData [
-	super loadFromJson: jsonData.
+WDERectangleVisualComponent >> loadFromJson: jsonData context: context [
+	super loadFromJson: jsonData context: context.
 	rectangle := RectangleF32 loadFromJson: (jsonData at: 'rectangle').
-	jsonData at: 'color' ifPresent: [ :data |
-		color := Float32x4 loadFromJson: data
+	jsonData at: 'material' ifPresent: [ :index |
+		material := context getMaterialWithIndex: index
 	].
 
+]
+
+{ #category : #accessing }
+WDERectangleVisualComponent >> material [
+	^ material
+]
+
+{ #category : #accessing }
+WDERectangleVisualComponent >> material: aMaterial [
+	material := aMaterial.
+	self changed
+]
+
+{ #category : #memento }
+WDERectangleVisualComponent >> materialStateMemento [
+	^ material
 ]
 
 { #category : #accessing }
@@ -79,13 +75,18 @@ WDERectangleVisualComponent >> rectangle: anObject [
 ]
 
 { #category : #memento }
+WDERectangleVisualComponent >> restoreMaterialStateMemento: memento [
+	self material: memento
+]
+
+{ #category : #memento }
 WDERectangleVisualComponent >> restoreTransformStateMemento: memento [
 	self rectangle: memento
 ]
 
 { #category : #initialization }
-WDERectangleVisualComponent >> setVisualColor: aColor [
-	self color: aColor
+WDERectangleVisualComponent >> setMaterial: newMaterial [
+	self material: newMaterial
 ]
 
 { #category : #memento }
@@ -97,4 +98,9 @@ WDERectangleVisualComponent >> transformStateMemento [
 WDERectangleVisualComponent >> transformWith: transform [
 	self rectangle: (self rectangle asBox transformedWith: transform) asRectangleXY.
 
+]
+
+{ #category : #'as yet unclassified' }
+WDERectangleVisualComponent >> validateMaterialList [
+	self level validateMaterial: material
 ]

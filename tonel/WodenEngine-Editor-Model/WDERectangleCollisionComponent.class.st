@@ -31,8 +31,8 @@ WDERectangleCollisionComponent >> isRectangleCollisionComponent [
 ]
 
 { #category : #serialization }
-WDERectangleCollisionComponent >> loadFromJson: jsonData [
-	super loadFromJson: jsonData.
+WDERectangleCollisionComponent >> loadFromJson: jsonData context: context [
+	super loadFromJson: jsonData context: context.
 	rectangle := RectangleF32 loadFromJson: (jsonData at: 'rectangle').
 ]
 

@@ -29,24 +29,14 @@ WDELevelElement class >> jsonTypeName [
 ]
 
 { #category : #serialization }
-WDELevelElement class >> loadFromJson: jsonData [
+WDELevelElement class >> loadFromJson: jsonData context: context [
 	| elementClass |
 	elementClass := self.
 	jsonData at: 'type' ifPresent: [ :found |
 		elementClass := JsonTypeNameDictionary at: found
 	].
 
-	^ elementClass new loadFromJson: jsonData
-]
-
-{ #category : #serialization }
-WDELevelElement class >> loadFromJsonString: jsonString [
-	^ self loadFromJson: (NeoJSONReader fromString: jsonString)
-]
-
-{ #category : #serialization }
-WDELevelElement class >> loadMessagePack: messagePack [
-	^ self loadFromJson: (SLVMMessagePackDecoder decode: messagePack)
+	^ elementClass new loadFromJson: jsonData context: context
 ]
 
 { #category : #visiting }
@@ -225,8 +215,13 @@ WDELevelElement >> level [
 ]
 
 { #category : #serialization }
-WDELevelElement >> loadFromJson: jsonData [
+WDELevelElement >> loadFromJson: jsonData context: context [
 	name := jsonData at: 'name' ifAbsent: [ '' ].
+]
+
+{ #category : #memento }
+WDELevelElement >> materialStateMemento [
+	^ nil
 ]
 
 { #category : #accessing }
@@ -285,6 +280,10 @@ WDELevelElement >> removedFromLevel: level [
 ]
 
 { #category : #memento }
+WDELevelElement >> restoreMaterialStateMemento: memento [
+]
+
+{ #category : #memento }
 WDELevelElement >> restoreTransformStateMemento: memento [
 ]
 
@@ -309,7 +308,7 @@ WDELevelElement >> sectorLayerThicknessChanged [
 ]
 
 { #category : #initialization }
-WDELevelElement >> setVisualColor: aColor [
+WDELevelElement >> setMaterial: aMaterial [
 	"By default do nothing here."
 ]
 
@@ -329,4 +328,9 @@ WDELevelElement >> translateBy: translation [
 { #category : #accessing }
 WDELevelElement >> treeDisplayName [
 	^ self class jsonTypeName , ': ', self name
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelElement >> validateMaterialList [
+	"By default do nothing"
 ]

@@ -24,7 +24,8 @@ WDSGLightSource >> castShadows [
 
 { #category : #accessing }
 WDSGLightSource >> castShadows: aBoolean [
-	objectState castShadows: aBoolean
+	objectState castShadows: aBoolean.
+	self stateChanged
 ]
 
 { #category : #initialization }
@@ -42,7 +43,8 @@ WDSGLightSource >> createSpatialObjectState [
 
 { #category : #'light type' }
 WDSGLightSource >> directional [
-	objectState directional
+	objectState directional.
+	self stateChanged
 ]
 
 { #category : #accessing }
@@ -52,7 +54,8 @@ WDSGLightSource >> extraShadowDistanceFactor [
 
 { #category : #accessing }
 WDSGLightSource >> extraShadowDistanceFactor: aNumber [
-	objectState extraShadowDistanceFactor: aNumber
+	objectState extraShadowDistanceFactor: aNumber.
+	self stateChanged
 ]
 
 { #category : #initialization }
@@ -68,7 +71,8 @@ WDSGLightSource >> innerSpotCutoff [
 
 { #category : #accessing }
 WDSGLightSource >> innerSpotCutoff: aNumber [
-	objectState innerSpotCutoff: aNumber
+	objectState innerSpotCutoff: aNumber.
+	self stateChanged
 ]
 
 { #category : #accessing }
@@ -78,7 +82,8 @@ WDSGLightSource >> intensity [
 
 { #category : #accessing }
 WDSGLightSource >> intensity: aLightIntensity [
-	^ objectState intensity: aLightIntensity
+	objectState intensity: aLightIntensity.
+	self stateChanged
 ]
 
 { #category : #testing }
@@ -113,12 +118,14 @@ WDSGLightSource >> outerSpotCutoff [
 
 { #category : #accessing }
 WDSGLightSource >> outerSpotCutoff: aNumber [
-	objectState outerSpotCutoff: aNumber
+	objectState outerSpotCutoff: aNumber.
+	self stateChanged
 ]
 
 { #category : #'light type' }
 WDSGLightSource >> point [
-	objectState point
+	objectState point.
+	self stateChanged
 ]
 
 { #category : #copying }
@@ -129,7 +136,8 @@ WDSGLightSource >> postCopy [
 
 { #category : #accessing }
 WDSGLightSource >> radius: aNumber [
-	objectState radius: aNumber
+	objectState radius: aNumber.
+	self stateChanged.
 ]
 
 { #category : #accessing }
@@ -159,5 +167,6 @@ WDSGLightSource >> shadowMapDepthBiasSlope: aNumber [
 
 { #category : #'light type' }
 WDSGLightSource >> spot [
-	objectState spot
+	objectState spot.
+	self stateChanged
 ]

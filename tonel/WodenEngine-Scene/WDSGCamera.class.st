@@ -266,7 +266,7 @@ WDSGCamera >> initialize [
 	isNotControlledByTheUser := false.
 	frustum := FrustumF32 new.
 	exposure := 1.0.
-	hasAutoExposure := true.
+	hasAutoExposure := false.
 	toneMappingOperator := #linear.
 	cascadeSplitDistribution := 0.5.
 	fogMode := FogModeNone.
@@ -462,6 +462,11 @@ WDSGCamera >> viewportForRenderTarget: aRenderTarget resolveRenderTarget: aResol
 { #category : #'viewport construction' }
 WDSGCamera >> viewportsForRenderTarget: aRenderTarget resolveRenderTarget: aResolveRenderTarget submode: submode [
 	^ { self viewportForRenderTarget: aRenderTarget resolveRenderTarget: aResolveRenderTarget submode: submode }
+]
+
+{ #category : #'as yet unclassified' }
+WDSGCamera >> withAutoExposure [
+	hasAutoExposure := true
 ]
 
 { #category : #fog }

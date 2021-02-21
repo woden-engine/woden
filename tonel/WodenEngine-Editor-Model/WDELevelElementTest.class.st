@@ -19,12 +19,20 @@ WDELevelElementTest class >> createTestLevel [
 				createPointEntity: 'Player.Start' at: (Float32x2 y: 5.0f);
 				createPointEntity: 'Enemy' at: (Float32x2 x: 4.0f y: 7.0f);
 				createPointEntity: 'Enemy' at: (Float32x2 x: 15.0f y: 5.0f);
-				createSolidEntity: 'Wall' rectangle: (RectangleF32 min: (Float32x2 x: -5.0f y: 0.0f) max: (Float32x2 x: 20.0f y: 1.0f))
-					color: (Float32x4 x: 0.2 y: 0.2 z: 0.2 w: 1.0);
-				createSolidEntity: 'Wall' rectangle: (RectangleF32 min: (Float32x2 x: 3.0f y: 4.0f) max: (Float32x2 x: 8.0f y: 5.0f))
-					color: (Float32x4 x: 0.2 y: 0.2 z: 0.2 w: 1.0);
+				createSolidEntity: 'Wall' rectangle: (RectangleF32 min: (Float32x2 x: -5.0f y: 0.0f) max: (Float32x2 x: 20.0f y: 1.0f)) material: self redMaterial;
+				createSolidEntity: 'Wall' rectangle: (RectangleF32 min: (Float32x2 x: 3.0f y: 4.0f) max: (Float32x2 x: 8.0f y: 5.0f)) material: self greenMaterial;
 				yourself);
 		yourself)
+]
+
+{ #category : #tests }
+WDELevelElementTest class >> greenMaterial [
+	^ WDEMetallicRoughnessMaterial new baseColor: Color green; yourself
+]
+
+{ #category : #tests }
+WDELevelElementTest class >> redMaterial [
+	^ WDEMetallicRoughnessMaterial new baseColor: Color red; yourself
 ]
 
 { #category : #tests }
@@ -91,6 +99,7 @@ WDELevelElementTest >> validateTestLevel: decodedLevel [
 	component := entity components first.
 	self assert: component isRectangleVisualComponent.
 	self assert: component rectangle equals: (RectangleF32 halfExtent: (Float32x2 x: 12.5f y: 0.5f)).
+	self assert: component material equals: self class redMaterial.
 	
 	component := entity components second.
 	self assert: component isRectangleCollisionComponent.
@@ -105,6 +114,7 @@ WDELevelElementTest >> validateTestLevel: decodedLevel [
 	component := entity components first.
 	self assert: component isRectangleVisualComponent.
 	self assert: component rectangle equals: (RectangleF32 halfExtent: (Float32x2 x: 2.5f y: 0.5f)).
+	self assert: component material equals: self class greenMaterial.
 	
 	component := entity components second.
 	self assert: component isRectangleCollisionComponent.

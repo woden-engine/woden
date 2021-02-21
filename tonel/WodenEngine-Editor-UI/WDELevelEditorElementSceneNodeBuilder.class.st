@@ -88,14 +88,14 @@ WDELevelEditorElementSceneNodeBuilder >> visitBoxCollisionComponent: component [
 WDELevelEditorElementSceneNodeBuilder >> visitBoxVisualComponent: component [
 	| node |
 	node := WDSGSpatialObject new.
-	node renderable: self engine resourceCache unitCubeMesh.
-	node
-		color: component color;
-		transform: component boundingBox reversibleTransformToConvertUnitBoxToMe.
-	component whenChangedDo: [
+	node renderable: self engine resourceCache unitCubeMesh copy.
+	component whenChangedDoNow: [
+		node renderable setMaterial: (component material
+			ifNotNil: [ :mat | mat asRenderingMaterialFor: self engine ]
+			ifNil: [self engine resourceCache defaultMaterial]).
 		node
-			color: component color;
-			transform: component boundingBox reversibleTransformToConvertUnitBoxToMe
+			transform: component boundingBox reversibleTransformToConvertUnitBoxToMe;
+			stateChanged
 	].
 	^ node
 ]

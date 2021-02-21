@@ -49,16 +49,26 @@ WDESectorLayer >> createPointEntity: entityClassName at: entityLocation [
 ]
 
 { #category : #'as yet unclassified' }
-WDESectorLayer >> createSolidEntity: entityClassName box: box color: color [
-	^ (self instanceEntityPrototype: WDEEntity solidWall3DPrototype withClassName: entityClassName andPlaceInBox: box)
-		setVisualColor: color;
+WDESectorLayer >> createSolidEntity: entityClassName box: entityLocation [
+	^ self instanceEntityPrototype: WDEEntity solidWall3DPrototype withClassName: entityClassName andPlaceInBox: entityLocation
+]
+
+{ #category : #'as yet unclassified' }
+WDESectorLayer >> createSolidEntity: entityClassName box: entityLocation material: material [
+	^ (self createSolidEntity: entityClassName box: entityLocation)
+		setMaterial: material;
 		yourself
 ]
 
 { #category : #'as yet unclassified' }
-WDESectorLayer >> createSolidEntity: entityClassName rectangle: rectangle color: color [
-	^ (self instanceEntityPrototype: WDEEntity solidWall2DPrototype withClassName: entityClassName andPlaceInRectangle: rectangle)
-		setVisualColor: color;
+WDESectorLayer >> createSolidEntity: entityClassName rectangle: entityLocation [
+	^ self instanceEntityPrototype: WDEEntity solidWall2DPrototype withClassName: entityClassName andPlaceInRectangle: entityLocation
+]
+
+{ #category : #'as yet unclassified' }
+WDESectorLayer >> createSolidEntity: entityClassName rectangle: entityLocation material: material [
+	^ (self createSolidEntity: entityClassName rectangle: entityLocation)
+		setMaterial: material;
 		yourself
 ]
 
@@ -199,15 +209,15 @@ WDESectorLayer >> isSectorLayer [
 ]
 
 { #category : #serialization }
-WDESectorLayer >> loadFromJson: jsonData [
-	super loadFromJson: jsonData.
+WDESectorLayer >> loadFromJson: jsonData context: context [
+	super loadFromJson: jsonData context: context.
 	self
 		defaultMinZ: (jsonData at: 'defaultMinZ' ifAbsent: [self defaultMinZ]);
 		defaultMaxZ: (jsonData at: 'defaultMaxZ' ifAbsent: [self defaultMaxZ]).
 
 	jsonData at: 'children' ifPresent: [ :childrenData |
 		childrenData do: [ :each |
-			self addEntity: (WDELevelElement loadFromJson: each)
+			self addEntity: (WDELevelElement loadFromJson: each context: context)
 		]
 	]
 ]
@@ -244,4 +254,9 @@ WDESectorLayer >> sector: anObject [
 { #category : #accessing }
 WDESectorLayer >> sectorLayer [
 	^ self
+]
+
+{ #category : #'as yet unclassified' }
+WDESectorLayer >> validateMaterialList [
+	children do: [ :each | each validateMaterialList ]
 ]

@@ -54,7 +54,7 @@ WDEEntity class >> solidWall2DPrototype [
 		makeEntity2D;
 		className: 'Wall';
 		localBoundingRectangle: RectangleF32 unitRectangle;
-		addComponent: (WDEVisualComponent rectangle: RectangleF32 unitRectangle color: self defaultColor);
+		addComponent: (WDEVisualComponent rectangle: RectangleF32 unitRectangle);
 		addComponent: (WDECollisionComponent rectangle: RectangleF32 unitRectangle);
 		yourself
 
@@ -66,7 +66,7 @@ WDEEntity class >> solidWall3DPrototype [
 		makeEntity3D;
 		className: 'Wall';
 		localBoundingBox: BoxF32 unitBox;
-		addComponent: (WDEVisualComponent box: BoxF32 unitBox color: self defaultColor);
+		addComponent: (WDEVisualComponent box: BoxF32 unitBox);
 		addComponent: (WDECollisionComponent box: BoxF32 unitBox);
 		yourself
 
@@ -215,8 +215,8 @@ WDEEntity >> isPointEntity [
 ]
 
 { #category : #serialization }
-WDEEntity >> loadFromJson: jsonData [
-	super loadFromJson: jsonData.
+WDEEntity >> loadFromJson: jsonData context: context [
+	super loadFromJson: jsonData context: context.
 	self
 		className: (jsonData at: 'className' ifAbsent: ['']);
 		name: (jsonData at: 'name' ifAbsent: ['']).
@@ -250,7 +250,7 @@ WDEEntity >> loadFromJson: jsonData [
 
 	jsonData at: 'components' ifPresent: [ :componentData |
 		componentData do: [ :each |
-			self addComponent: (WDELevelElement loadFromJson: each)
+			self addComponent: (WDELevelElement loadFromJson: each context: context)
 		]
 	]
 ]
@@ -319,6 +319,11 @@ WDEEntity >> makeEntity2D [
 { #category : #'as yet unclassified' }
 WDEEntity >> makeEntity3D [
 	self dimensionalityMode: WDELevelElementDimensionalityMode mode3D
+]
+
+{ #category : #memento }
+WDEEntity >> materialStateMemento [
+	^ components collect: [:each | each transformStateMemento ]
 ]
 
 { #category : #accessing }
@@ -446,6 +451,14 @@ WDEEntity >> removeComponent: aComponent [
 ]
 
 { #category : #memento }
+WDEEntity >> restoreMaterialStateMemento: memento [
+	self assert: memento size = components size.
+	components doWithIndex: [ :eachComponent :index |
+		eachComponent restoreMaterialStateMemento: (memento at: index)
+	]
+]
+
+{ #category : #memento }
 WDEEntity >> restoreTransformStateMemento: memento [
 	| componentMementos |
 	self assert: memento size = 3.
@@ -472,9 +485,9 @@ WDEEntity >> selectableBoundingBox [
 ]
 
 { #category : #accessing }
-WDEEntity >> setVisualColor: aColor [
+WDEEntity >> setMaterial: aMaterial [
 	self components do: [ :each |
-		each setVisualColor: aColor
+		each setMaterial: aMaterial
 	]
 ]
 
@@ -535,6 +548,11 @@ WDEEntity >> validPosition3D [
 	rawPosition := self position.
 	rawPosition class elements = 2 ifTrue: [ ^ Float32x3 xy: rawPosition z: (self sectorLayer ifNil: [0] ifNotNil: [:l | l defaultZ]) ].
 	^ rawPosition
+]
+
+{ #category : #'as yet unclassified' }
+WDEEntity >> validateMaterialList [
+	components do: [ :each | each validateMaterialList ]
 ]
 
 { #category : #events }

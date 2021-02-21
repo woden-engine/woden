@@ -39,8 +39,8 @@ WDEPointLightSourceVisualComponent >> isPointLightSourceVisualComponent [
 ]
 
 { #category : #serialization }
-WDEPointLightSourceVisualComponent >> loadFromJson: jsonData [
-	super loadFromJson: jsonData.
+WDEPointLightSourceVisualComponent >> loadFromJson: jsonData context: context [
+	super loadFromJson: jsonData context: context.
 	radius := jsonData at: 'radius' ifAbsent: [radius].
 
 ]

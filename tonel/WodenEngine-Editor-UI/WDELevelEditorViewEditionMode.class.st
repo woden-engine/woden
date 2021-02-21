@@ -89,6 +89,15 @@ WDELevelEditorViewEditionMode >> onMouseWheel: event [
 ]
 
 { #category : #'event handling' }
+WDELevelEditorViewEditionMode >> onRightClick: event [
+	| elements |
+	self supportsElementSelection ifFalse: [ ^ self ].
+	elements := (view elementInScreenPosition: event position) ifNil: [ #() ] ifNotNil: [ :e | { e } ].
+	view setSelectedElements: elements.
+	view levelEditorSession buildSelectionContextMenu openWithSpecAtPointer
+]
+
+{ #category : #'event handling' }
 WDELevelEditorViewEditionMode >> startActionDraggingWith: event [
 ]
 

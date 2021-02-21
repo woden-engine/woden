@@ -26,7 +26,7 @@ WDSForwardSceneRenderer >> ensureLightingStatesFor: requiredNumberOfCameras [
 				bind: 0 uniformBufferElement: bufferElement;
 				bind: 1 texture: self shadowMapBuffer;
 				bind: 4 texture: engine resourceCache imageBasedLightingBRDFLut;
-				bind: 5 texture: engine resourceCache whiteRGBMCubeMap;
+				bind: 5 texture: engine resourceCache blackRGBMCubeMap;
 				bind: 6 texture: engine resourceCache blackRGBMCubeMap;
 				yourself
 		])
@@ -71,7 +71,7 @@ WDSForwardSceneRenderer >> updateFrameLightingStates [
 			lightSources at: lightIndex put: (lightSource viewStateForCameraTransform: transform).
 		].
 		lightingState := WDCGlobalLightingState new.
-		ambientLightingFactor := scene lightingProbe ifNil: [ Float pi ] ifNotNil: [ 1.0 ]. 
+		ambientLightingFactor := Float pi.
 		lightingState
 			skyLighting: scene skyLighting*ambientLightingFactor;
 			groundLighting: scene groundLighting*ambientLightingFactor;

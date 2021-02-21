@@ -16,7 +16,7 @@ Class {
 { #category : #copying }
 WDCGenericMesh >> copyWithMaterial: newMaterial [
 	^ self copy
-		submeshes: (submeshes collect: [:each | each copy material: newMaterial]);
+		setMaterial: newMaterial;
 		yourself
 ]
 
@@ -53,6 +53,12 @@ WDCGenericMesh >> indexBuffer: anObject [
 	indexBuffer := anObject
 ]
 
+{ #category : #copying }
+WDCGenericMesh >> postCopy [
+	super postCopy.
+	submeshes := submeshes collect: [ :sm | sm copy ].
+]
+
 { #category : #enumerating }
 WDCGenericMesh >> precacheResources [
 	super precacheResources.
@@ -70,6 +76,11 @@ WDCGenericMesh >> renderOn: stateTracker instanceCount: instanceCount baseInstan
 		]
 	]
 
+]
+
+{ #category : #initialization }
+WDCGenericMesh >> setMaterial: newMaterial [
+	submeshes do: [:each | each material: newMaterial]
 ]
 
 { #category : #accessing }

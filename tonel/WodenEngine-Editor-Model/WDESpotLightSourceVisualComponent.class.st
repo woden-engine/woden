@@ -69,8 +69,8 @@ WDESpotLightSourceVisualComponent >> isSpotLightSourceVisualComponent [
 ]
 
 { #category : #initialization }
-WDESpotLightSourceVisualComponent >> loadFromJson: jsonData [
-	super loadFromJson: jsonData.
+WDESpotLightSourceVisualComponent >> loadFromJson: jsonData context: context [
+	super loadFromJson: jsonData context: context.
 	outerCutOffAngle := jsonData at: 'outerCutOffAngle' ifAbsent: [ outerCutOffAngle ].
 	innerCutOffAngle := jsonData at: 'innerCutOffAngle' ifAbsent: [ innerCutOffAngle ].
 	exponent := jsonData at: 'exponent' ifAbsent: [ exponent ].

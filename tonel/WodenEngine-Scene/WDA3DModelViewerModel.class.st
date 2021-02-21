@@ -202,7 +202,7 @@ WDA3DModelViewerModel >> setDaylightBackground [
 	
 	scene add: mainLightSource.
 
-	scene ambientLighting: Float32x4 ones*0.6.
+	scene ambientLighting: Float32x4 zeros.
 	
 	skyTexture := WDASceneExamples
 		proceduralSkySunDirection: (mainLightSource transform transformVector:(Float32x3 z: 1.0)).

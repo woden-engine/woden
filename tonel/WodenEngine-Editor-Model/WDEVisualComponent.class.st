@@ -5,10 +5,9 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-WDEVisualComponent class >> box: box color: color [
+WDEVisualComponent class >> box: box [
 	^ WDEBoxVisualComponent new
 		box: box;
-		color: color;
 		yourself
 ]
 
@@ -28,10 +27,9 @@ WDEVisualComponent class >> pointLight [
 ]
 
 { #category : #'as yet unclassified' }
-WDEVisualComponent class >> rectangle: rectangle color: color [
+WDEVisualComponent class >> rectangle: rectangle [
 	^ WDERectangleVisualComponent new
 		rectangle: rectangle;
-		color: color;
 		yourself
 ]
 
