@@ -55,6 +55,11 @@ WDELevelEditorViewMode >> levelEditorSession [
 	^ self model levelEditorSession
 ]
 
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewMode >> modeName [
+	self subclassResponsibility
+]
+
 { #category : #accessing }
 WDELevelEditorViewMode >> model [
 	^ view model

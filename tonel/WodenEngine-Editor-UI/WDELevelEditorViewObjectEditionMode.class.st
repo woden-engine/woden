@@ -4,6 +4,11 @@ Class {
 	#category : #'WodenEngine-Editor-UI-ViewMode'
 }
 
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewObjectEditionMode >> modeName [
+	^ 'Object Mode'
+]
+
 { #category : #'event handling' }
 WDELevelEditorViewObjectEditionMode >> onMouseMove: event [
 	| elementBeingPointed manipulatorBeingPointed |

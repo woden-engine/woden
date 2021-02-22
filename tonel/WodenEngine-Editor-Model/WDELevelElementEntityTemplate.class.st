@@ -38,7 +38,8 @@ WDELevelElementEntityTemplate >> instantiateInSectorLayer: sectorLayer placingIn
 		undoWith: [
 			levelSession selection: oldSelection.
 			element removeFromParent.
-		]
+		].
+	^ true
 ]
 
 { #category : #testing }

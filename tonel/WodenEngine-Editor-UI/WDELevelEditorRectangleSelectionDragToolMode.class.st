@@ -19,6 +19,11 @@ WDELevelEditorRectangleSelectionDragToolMode >> finishDraggingWith: event [
 	^ view setSelectedElements: elements
 ]
 
+{ #category : #'as yet unclassified' }
+WDELevelEditorRectangleSelectionDragToolMode >> modeName [
+	^ 'Rectangle selection'
+]
+
 { #category : #'event handling' }
 WDELevelEditorRectangleSelectionDragToolMode >> onMouseDrag: event [
 	super onMouseDrag: event.

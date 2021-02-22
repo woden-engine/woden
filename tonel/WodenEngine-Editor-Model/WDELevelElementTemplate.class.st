@@ -10,6 +10,7 @@ WDELevelElementTemplate >> instantiateInSectorLayer: sectorLayer placingInBox: b
 
 { #category : #'as yet unclassified' }
 WDELevelElementTemplate >> instantiateInSectorLayer: sectorLayer placingInPoint: point session: levelEditorSession [
+	^ false
 ]
 
 { #category : #testing }

@@ -63,6 +63,12 @@ WDELevelEditorSceneModel >> addElementToScene: element [
 	]
 ]
 
+{ #category : #adding }
+WDELevelEditorSceneModel >> addView: aView [
+	super addView: aView.
+	views size = 1 ifTrue: [ self initialCameraSetupForView: aView ].
+]
+
 { #category : #accessing }
 WDELevelEditorSceneModel >> applyNewSelection: newSelection [
 	| selectedEntities |
@@ -227,6 +233,13 @@ WDELevelEditorSceneModel >> highlightManipulator: aManipulator [
 	highlightedManipulator ifNotNil: [ highlightedManipulator highlighted: true ].
 ]
 
+{ #category : #adding }
+WDELevelEditorSceneModel >> initialCameraSetupForView: aView [
+	camera position: (Float32x3 z: aView cameraFocalPointDistance).
+	aView frontView.
+
+]
+
 { #category : #initialization }
 WDELevelEditorSceneModel >> initializeModel [
 	baseGridSize := 10.0.
@@ -284,8 +297,10 @@ WDELevelEditorSceneModel >> newScene [
 	super newScene.
 	scene backgroundColor: (Float32x4 xyz: (0.015 implicitCastTo: Float32x3) w: 1.0).
 	camera
-		hasAutoExposure: false;
-		translateByX: 0 y: 3 z: 10.
+		hasAutoExposure: false.
+	views ifNotEmpty: [
+		self initialCameraSetupForView: views first
+	].
 	views do: [ :each | each cameraChanged ].
 		
 	self

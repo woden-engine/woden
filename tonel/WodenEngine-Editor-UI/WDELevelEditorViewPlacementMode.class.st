@@ -4,6 +4,17 @@ Class {
 	#category : #'WodenEngine-Editor-UI-ViewMode'
 }
 
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewPlacementMode >> modeName [
+	^ 'Placement Mode'
+]
+
+{ #category : #'event handling' }
+WDELevelEditorViewPlacementMode >> onKeyDown: event [
+	event symbol = OSK_ESCAPE ifTrue: [ ^ view activateObjectMode ].
+	super onKeyDown: event
+]
+
 { #category : #'event handling' }
 WDELevelEditorViewPlacementMode >> onLeftClick: event [
 	self levelEditorSession activeSectorLayer ifNotNil: [ :sectorLayer |
@@ -12,6 +23,7 @@ WDELevelEditorViewPlacementMode >> onLeftClick: event [
 				| entityLocation |
 				entityLocation := self snapToSubGrid: (self cameraXYToWorld: event position distance: 5.0).
 				elementTemplate instantiateInSectorLayer: sectorLayer placingInPoint: entityLocation session: self levelEditorSession.
+				view activateObjectMode
 			]
 		]
 	]

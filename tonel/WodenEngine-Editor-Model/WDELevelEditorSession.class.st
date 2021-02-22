@@ -9,7 +9,9 @@ Class {
 		'levelFileReference',
 		'activeLevelElementTemplate',
 		'undoOperationHistory',
-		'redoOperationHistory'
+		'redoOperationHistory',
+		'statusMessage',
+		'activeToolModeOrEditionModeName'
 	],
 	#category : #'WodenEngine-Editor-Model-Session'
 }
@@ -32,6 +34,17 @@ WDELevelEditorSession >> activeSectorLayer [
 { #category : #accessing }
 WDELevelEditorSession >> activeSectorLayer: newLayer [
 	activeSectorLayer value: newLayer
+]
+
+{ #category : #accessing }
+WDELevelEditorSession >> activeToolModeOrEditionModeName [
+	^ activeToolModeOrEditionModeName ifNil: [ activeToolModeOrEditionModeName := '' ]
+]
+
+{ #category : #accessing }
+WDELevelEditorSession >> activeToolModeOrEditionModeName: anObject [
+	activeToolModeOrEditionModeName := anObject.
+	self updateStatusMessage
 ]
 
 { #category : #adding }
@@ -83,6 +96,7 @@ WDELevelEditorSession >> initialize [
 	levelFileReference := nil asValueHolder.
 	activeSectorLayer := nil asValueHolder.
 	activeLevelElementTemplate := nil asValueHolder.
+	statusMessage := '' asValueHolder.
 	gridSize := 10.0 asValueHolder.
 	selection := WDELevelEditorSelection empty asValueHolder.
 	undoOperationHistory := OrderedCollection new.
@@ -215,6 +229,16 @@ WDELevelEditorSession >> snapToSubGrid: vector [
 	^ self round: vector quantum: self subGridSize
 ]
 
+{ #category : #accessing }
+WDELevelEditorSession >> statusMessage [
+	^ statusMessage value
+]
+
+{ #category : #accessing }
+WDELevelEditorSession >> statusMessage: newMessage [
+	statusMessage value: newMessage
+]
+
 { #category : #snapping }
 WDELevelEditorSession >> subGridSize [
 	^ self gridSize * 0.1
@@ -267,6 +291,11 @@ WDELevelEditorSession >> undo [
 	redoOperationHistory addFirst: operation.
 ]
 
+{ #category : #accessing }
+WDELevelEditorSession >> updateStatusMessage [
+	self statusMessage: self activeToolModeOrEditionModeName
+]
+
 { #category : #enumerating }
 WDELevelEditorSession >> whenGridSizeChangedDo: aBlock [
 	gridSize whenChangedDo: aBlock
@@ -278,6 +307,17 @@ WDELevelEditorSession >> whenLevelChangedDo: aBlock [
 ]
 
 { #category : #enumerating }
+WDELevelEditorSession >> whenLevelChangedDoNow: aBlock [
+	self whenLevelChangedDo: aBlock.
+	aBlock cull: self level
+]
+
+{ #category : #enumerating }
 WDELevelEditorSession >> whenSelectionChangedDo: aBlock [
 	selection whenChangedDo: aBlock
+]
+
+{ #category : #enumerating }
+WDELevelEditorSession >> whenStatusMessageChangedDo: aBlock [
+	statusMessage whenChangedDo: aBlock
 ]

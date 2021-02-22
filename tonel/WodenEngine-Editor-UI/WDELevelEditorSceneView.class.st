@@ -78,17 +78,20 @@ WDELevelEditorSceneView >> activateWireFrame [
 
 { #category : #accessing }
 WDELevelEditorSceneView >> activeEditionMode [
-	^ activeEditionMode ifNil: [ activeEditionMode := WDELevelEditorViewObjectEditionMode for: self  ]
+	activeEditionMode ifNil: [ self activateObjectMode ].
+	^ activeEditionMode
 ]
 
 { #category : #accessing }
 WDELevelEditorSceneView >> activeEditionMode: newEditionMode [
-	^ activeEditionMode := newEditionMode
+	activeEditionMode := newEditionMode.
+	self updateActiveToolStatusBarIndicator.
 ]
 
 { #category : #accessing }
 WDELevelEditorSceneView >> activeToolMode: anObject [
-	activeToolMode := anObject
+	activeToolMode := anObject.
+	self updateActiveToolStatusBarIndicator.
 ]
 
 { #category : #accessing }
@@ -113,6 +116,18 @@ WDELevelEditorSceneView >> buildUISceneGraphWith: builder [
 WDELevelEditorSceneView >> cameraChanged [
 	cameraChanged := true.
 	self changed.
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneView >> cameraFocalPoint [
+	^ self validCameraTransform transformPosition: (Float32x3 z: self cameraFocalPointDistance negated)
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneView >> cameraFocalPointDistance [
+	| fov |
+	fov := model ifNil: [ WDSGCamera new fieldOfView ] ifNotNil: [ self camera fieldOfView ].
+	^ (viewScale / ((fov * 0.5) degreesToRadians tan))
 ]
 
 { #category : #'as yet unclassified' }
@@ -217,10 +232,11 @@ WDELevelEditorSceneView >> freePerspectiveView [
 
 { #category : #'view perspective' }
 WDELevelEditorSceneView >> frontView [
-	cameraAngle := Float32x3 zeros.
+	isPerspective := false.
 	gridOrientation := Float32x3x3 lookAtFront.
 	editorViewType := #front.
-	self cameraChanged.
+	self rotateCameraToAngles: Float32x3 zeros.
+
 ]
 
 { #category : #snapping }
@@ -234,8 +250,8 @@ WDELevelEditorSceneView >> initialize [
 
 	cameraChanged := true.
 	cameraAngle := Float32x3 new.
-	isPerspective := true.
-	viewScale := 3.0.
+	isPerspective := false.
+	viewScale := 20.0.
 	self frontView.
 ]
 
@@ -349,9 +365,25 @@ WDELevelEditorSceneView >> renderSubMode: aMode [
 ]
 
 { #category : #'as yet unclassified' }
-WDELevelEditorSceneView >> rotateCameraWithAngles: deltaAngles [
+WDELevelEditorSceneView >> rotateCameraInPlaceWithAngles: deltaAngles [
 	cameraAngle := cameraAngle + deltaAngles.
 	self cameraChanged.
+]
+
+{ #category : #'view perspective' }
+WDELevelEditorSceneView >> rotateCameraToAngles: newAngles [
+	self rotateCameraToAngles: newAngles withFocalPoint: self cameraFocalPoint distance: self cameraFocalPointDistance
+]
+
+{ #category : #'view perspective' }
+WDELevelEditorSceneView >> rotateCameraToAngles: newAngles withFocalPoint: focalPoint distance: focalPointDistance [
+	cameraAngle := newAngles.
+	
+	model ifNotNil: [ 
+		self camera position: (focalPoint + (self validCameraOrientation * (Float32x3 z: focalPointDistance))).
+	].
+	self cameraChanged.
+
 ]
 
 { #category : #utiltity }
@@ -366,10 +398,10 @@ WDELevelEditorSceneView >> setSelectedElements: elements [
 
 { #category : #'view perspective' }
 WDELevelEditorSceneView >> sideView [
-	cameraAngle := Float32x3 y: Float halfPi.
+	isPerspective := false.
 	gridOrientation := Float32x3x3 lookAtLeft.
 	editorViewType := #side.
-	self cameraChanged.
+	self rotateCameraToAngles: (Float32x3 y: Float halfPi)
 ]
 
 { #category : #snapping }
@@ -405,10 +437,10 @@ WDELevelEditorSceneView >> topGridOrientation [
 
 { #category : #'view perspective' }
 WDELevelEditorSceneView >> topView [
-	cameraAngle := Float32x3 x: Float halfPi negated.
+	isPerspective := false.
 	gridOrientation := self topGridOrientation.
 	editorViewType := #top.
-	self cameraChanged.
+	self rotateCameraToAngles: (Float32x3 x: Float halfPi negated).
 ]
 
 { #category : #'as yet unclassified' }
@@ -417,20 +449,15 @@ WDELevelEditorSceneView >> translateCameraBy: translation [
 	self cameraChanged.
 ]
 
+{ #category : #accessing }
+WDELevelEditorSceneView >> updateActiveToolStatusBarIndicator [
+	self levelEditorSession activeToolModeOrEditionModeName: self activeToolModeOrEditionMode modeName
+]
+
 { #category : #updating }
 WDELevelEditorSceneView >> updateCameraForFrameDelta: delta [
-	| orientation cameraTransform cameraPosition |
 	camera := self camera.
-	cameraPosition := self camera transform translation.
-
-	orientation := screenDisplayMode isVR ifTrue: [ 
-		Float32x3x3 yRotation: cameraAngle y.
-	] ifFalse: [ 
-		(Float32x3x3 yRotation: cameraAngle y) * (Float32x3x3 xRotation: cameraAngle x).
-	].
-	cameraTransform := ReversibleAffineTransform3dF32 identity orthonormal: orientation translation: cameraPosition.
-	
-	self camera transform: cameraTransform.
+	camera transform: self validCameraTransform.
 	
 	self
 		updateCameraProjection;
@@ -441,7 +468,7 @@ WDELevelEditorSceneView >> updateCameraForFrameDelta: delta [
 { #category : #updating }
 WDELevelEditorSceneView >> updateCameraProjection [
 	camera isPerspective: isPerspective.
-	camera focalDistance: (viewScale / ((camera fieldOfView * 0.5) degreesToRadians tan)).
+	camera focalDistance: self cameraFocalPointDistance.
 	isPerspective ifTrue: [
 		camera nearDistance: self perspectiveNearDistance; farDistance: self perspectiveFarDistance
 	] ifFalse: [
@@ -496,15 +523,36 @@ WDELevelEditorSceneView >> updateGridsForCamera [
 	].
 ]
 
+{ #category : #updating }
+WDELevelEditorSceneView >> validCameraOrientation [
+	^ screenDisplayMode isVR ifTrue: [ 
+		Float32x3x3 yRotation: cameraAngle y.
+	] ifFalse: [ 
+		(Float32x3x3 yRotation: cameraAngle y) * (Float32x3x3 xRotation: cameraAngle x).
+	].
+]
+
+{ #category : #updating }
+WDELevelEditorSceneView >> validCameraTransform [
+	| cameraTransform cameraPosition |
+	cameraPosition := model
+		ifNil: [ Float32x3 zeros ]
+		ifNotNil: [self camera transform translation].
+
+	^ cameraTransform := ReversibleAffineTransform3dF32 identity orthonormal: self validCameraOrientation translation: cameraPosition
+]
+
 { #category : #accessing }
 WDELevelEditorSceneView >> viewScale [
 	^ viewScale
 ]
 
 { #category : #accessing }
-WDELevelEditorSceneView >> viewScale: anObject [
-	viewScale := anObject.
-	self cameraChanged.
+WDELevelEditorSceneView >> viewScale: newViewScale [
+	| oldFocalPoint |
+	oldFocalPoint := self cameraFocalPoint.
+	viewScale := newViewScale.
+	self rotateCameraToAngles: cameraAngle withFocalPoint: oldFocalPoint distance: self cameraFocalPointDistance
 ]
 
 { #category : #visiting }

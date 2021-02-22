@@ -23,6 +23,10 @@ WDELevelEditorViewEditionMode >> onKeyDown: event [
 			event symbol = OSK_z ifTrue: [ self levelEditorSession undo ].
 		].
 	] ifFalse: [ 
+		event modifiers shift ifTrue: [
+			event symbol = OSK_a ifTrue: [ view activatePlacementMode ].
+		].
+
 		event symbol = OSK_KP_7 ifTrue: [ self view topView ].
 		event symbol = OSK_KP_1 ifTrue: [ self view frontView ].
 		event symbol = OSK_KP_5 ifTrue: [ self view togglePerspective ].

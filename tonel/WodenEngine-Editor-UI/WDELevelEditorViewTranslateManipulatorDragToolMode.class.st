@@ -4,6 +4,11 @@ Class {
 	#category : #'WodenEngine-Editor-UI-ViewMode'
 }
 
+{ #category : #'as yet unclassified' }
+WDELevelEditorViewTranslateManipulatorDragToolMode >> modeName [
+	^ 'Translate'
+]
+
 { #category : #'event handling' }
 WDELevelEditorViewTranslateManipulatorDragToolMode >> onMouseDrag: event [
 	| mouseDelta worldDelta |

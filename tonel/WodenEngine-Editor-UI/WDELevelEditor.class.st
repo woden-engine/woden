@@ -393,6 +393,7 @@ WDELevelEditor >> mainToolbar [
 WDELevelEditor >> modelChanged [
 	elementProperties model: self model selection.
 	self model
+		whenStatusMessageChangedDo: [ :message | mainStatusBar popMessage; pushMessage: message ];
 		whenSelectionChangedDo: [ :selection |
 			levelTreeView selectedItems asSet = selection selectedItems asSet ifFalse: [
 				levelTreeView unselectAll; selectItems: selection selectedItems
@@ -400,12 +401,9 @@ WDELevelEditor >> modelChanged [
 		
 			elementProperties model: selection
 		];
-		whenLevelChangedDo: [ :newLevel |
+		whenLevelChangedDoNow: [ :newLevel |
 			self connectForNewLevel: newLevel
 		].
-		self connectForNewLevel: self model level
-
-		
 ]
 
 { #category : #accessing }

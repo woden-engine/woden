@@ -58,8 +58,14 @@ WDELevelEditorBrushDrawDragToolMode >> finishDraggingWith: event [
 			yourself)
 	] ifFalse: [
 		self model activeToolManipulator: nil
-	]
+	].
+	view activateObjectMode
 
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorBrushDrawDragToolMode >> modeName [
+	^ 'Brush drawing'
 ]
 
 { #category : #'event handling' }
