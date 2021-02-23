@@ -15,7 +15,7 @@ WDELevelElementTest class >> createTestLevel [
 		name: 'Sector';
 			addLayer: (WDESectorLayer new
 				name: 'Layer';
-				defaultThickness: 2.0f;
+				layerThickness: 2.0f;
 				createPointEntity: 'Player.Start' at: (Float32x2 y: 5.0f);
 				createPointEntity: 'Enemy' at: (Float32x2 x: 4.0f y: 7.0f);
 				createPointEntity: 'Enemy' at: (Float32x2 x: 15.0f y: 5.0f);
@@ -74,8 +74,8 @@ WDELevelElementTest >> validateTestLevel: decodedLevel [
 	self assert: sector layers size equals: 1.
 	
 	layer := sector layers first.
-	self assert: layer defaultMinZ equals: -1.
-	self assert: layer defaultMaxZ equals: 1.
+	self assert: layer layerMinZ equals: -1.
+	self assert: layer layerMaxZ equals: 1.
 	self assert: layer children size = 5.
 
 	entities := layer children.

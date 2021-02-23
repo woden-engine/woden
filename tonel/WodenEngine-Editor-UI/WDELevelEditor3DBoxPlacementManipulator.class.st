@@ -18,6 +18,7 @@ WDELevelEditor3DBoxPlacementManipulator >> activateAction [
 	].
 
 	model activeToolManipulator: nil.
+	model activateObjectMode.
 ]
 
 { #category : #accessing }

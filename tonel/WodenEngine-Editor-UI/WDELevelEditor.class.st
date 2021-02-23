@@ -42,6 +42,41 @@ WDELevelEditor class >> defaultSpec [
 
 ]
 
+{ #category : #'as yet unclassified' }
+WDELevelEditor class >> fillShadingMenu: menu viewBlock: viewBlock [
+	^ menu addItem: [ :item |
+			item
+				name: 'Wireframe';
+				action: [  viewBlock value activateWireFrame ]
+		];
+		addItem: [ :item |
+			item
+				name: 'Flat color';
+				action: [  viewBlock value activateFlatColor ]
+		];
+		addItem: [ :item |
+			item
+				name: 'Flat textured';
+				action: [  viewBlock value activateFlatTextured ]
+		];
+		addItem: [ :item |
+			item
+				name: 'Material validation';
+				action: [  viewBlock value activateMaterialValidation ]
+		];
+		addItem: [ :item |
+			item
+				name: 'Shaded color';
+				action: [  viewBlock value activateShadedColor ]
+		];
+		addItem: [ :item |
+			item
+				name: 'Full shaded';
+				action: [  viewBlock value activateFullShaded ]
+		];
+		yourself
+]
+
 { #category : #'world menu' }
 WDELevelEditor class >> menuCommandOn: builder [
 	<worldMenu>
@@ -58,12 +93,22 @@ WDELevelEditor >> actionAbout [
 
 { #category : #'main actions' }
 WDELevelEditor >> actionCopy [
-	self inform: 'TODO: actionCopy'
+	self model copySelectedItems
 ]
 
 { #category : #'main actions' }
 WDELevelEditor >> actionCut [
-	self inform: 'TODO: actionCut'
+	self model cutSelectedItems
+]
+
+{ #category : #'main actions' }
+WDELevelEditor >> actionDelete [
+	self model deleteSelectedItems
+]
+
+{ #category : #'main actions' }
+WDELevelEditor >> actionDuplicate [
+	self model duplicateSelectedItems
 ]
 
 { #category : #'main actions' }
@@ -125,6 +170,11 @@ WDELevelEditor >> actionUndo [
 ]
 
 { #category : #menu }
+WDELevelEditor >> bindKeyCombination: aShortcut toAction: aBlock [
+	super bindKeyCombination: aShortcut toAction: aBlock
+]
+
+{ #category : #menu }
 WDELevelEditor >> buildMainMenuBar [
 	^ self newMenuBar
 		addGroup: [ :group |
@@ -172,20 +222,41 @@ WDELevelEditor >> cameraMenu [
 	^ self newMenu
 		addGroup: [ :group |
 			group
-				addItem: [ :item |
+			addItem: [ :item |
 				item
 					name: 'Top';
+					shortcut: (KeyboardKey named: #KP_7) asKeyCombination;
 					action: [ self contentView topView ]
 			];
 			addItem: [ :item |
 				item
+					name: 'Bottom';
+					shortcut: (KeyboardKey named: #KP_7) command mac | (KeyboardKey named: #KP_7) control unix | (KeyboardKey named: #KP_7) control win;
+					action: [ self contentView bottomView ]
+			];
+			addItem: [ :item |
+				item
 					name: 'Front';
+					shortcut: (KeyboardKey named: #KP_1) asKeyCombination;
 					action: [ self contentView frontView ]
 			];
 			addItem: [ :item |
 				item
-					name: 'Side';
-					action: [ self contentView sideView ]
+					name: 'Back';
+					shortcut: (KeyboardKey named: #KP_1) command mac | (KeyboardKey named: #KP_1) control unix | (KeyboardKey named: #KP_1) control win;
+					action: [ self contentView backView ]
+			];
+			addItem: [ :item |
+				item
+					name: 'Left';
+					shortcut: (KeyboardKey named: #KP_3) asKeyCombination;
+					action: [ self contentView leftView ]
+			];
+			addItem: [ :item |
+				item
+					name: 'Right';
+					shortcut: (KeyboardKey named: #KP_3) command mac | (KeyboardKey named: #KP_3) control unix | (KeyboardKey named: #KP_3) control win;
+					action: [ self contentView rightView ]
 			]
 		];
 		addGroup: [ :group |
@@ -199,6 +270,12 @@ WDELevelEditor >> cameraMenu [
 				item
 					name: 'Orthographic';
 					action: [ self contentView orthographicView ]
+			];
+			addItem: [ :item |
+				item
+					name: 'Toggle Perspective/Orthographics';
+					shortcut: (KeyboardKey named: #KP_5) asKeyCombination;
+					action: [ self contentView togglePerspective ]
 			]
 		];
 		yourself
@@ -208,6 +285,11 @@ WDELevelEditor >> cameraMenu [
 WDELevelEditor >> connectForNewLevel: level [
 	levelTreeView roots: {level}.
 	level whenAddedOrRemovedElementDo: [	levelTreeView roots: {level} ]
+]
+
+{ #category : #initialization }
+WDELevelEditor >> connectPresenters [
+	mainMenuBar applyTo: self.
 ]
 
 { #category : #accessing }
@@ -238,12 +320,14 @@ WDELevelEditor >> editMenu [
 					item
 						name: 'Undo';
 						icon: (self iconNamed: #smallUndoIcon);
+						shortcut: $z command mac | $z control unix | $z control win;
 						action: [ self actionUndo ].
 				];
 				addItem: [ :item |
 					item
 						name: 'Redo';
 						icon: (self iconNamed: #smallRedoIcon);
+						shortcut: $z command shift mac | $z control shift unix | $z control shift win;
 						action: [ self actionRedo ].
 				]
 		];
@@ -252,19 +336,35 @@ WDELevelEditor >> editMenu [
 				item
 					name: 'Cut';
 					icon: (self iconNamed: #smallCutIcon);
+					shortcut: $x command mac | $x control unix | $x control win;
 					action: [ self actionCut ]
 			].
 			group addItem: [ :item |
 				item
 					name: 'Copy';
 					icon: (self iconNamed: #smallCopyIcon);
+					shortcut: $c command mac | $c control unix | $c control win;
 					action: [ self actionCopy ]
+			].
+			group addItem: [ :item |
+				item
+					name: 'Duplicate';
+					shortcut: $d command mac | $d control unix | $d control win;
+					action: [ self actionDuplicate ]
 			].
 			group addItem: [ :item |
 				item
 					name: 'Paste';
 					icon: (self iconNamed: #smallPasteIcon);
+					shortcut: $v command mac | $v control unix | $v control win;
 					action: [ self actionPaste ]
+			].
+			group addItem: [ :item |
+				item
+					name: 'Delete';
+					icon: (self iconNamed: #smallDeleteIcon);
+					shortcut: KeyboardKey delete asKeyCombination;
+					action: [ self actionDelete ]
 			].
 		];
 		yourself
@@ -289,12 +389,14 @@ WDELevelEditor >> fileMenu [
 					item
 						name: 'Open File...';
 						icon: (self iconNamed: #openIcon);
+						shortcut: $o command mac | $o control unix | $o control win;
 						action: [ self actionOpenFile ].
 				];
 				addItem: [ :item |
 					item
 						name: 'Save';
 						icon: (self iconNamed: #smallSaveIcon);
+						shortcut: $s command mac | $s control unix | $s control win;
 						action: [ self actionSaveFile ].
 				];
 				addItem: [ :item |
@@ -361,6 +463,7 @@ WDELevelEditor >> initializePresenters [
 	paletteNotebook
 		addPageTitle: 'Materials' provider: [ WDELevelEditorMaterialPalettePresenter on: self model];
 		addPageTitle: 'Light Sources' provider: [ WDELevelEditorLightSourcePalettePresenter on: self model].
+
 ]
 
 { #category : #initialization }
@@ -413,38 +516,11 @@ WDELevelEditor >> paletteNotebook [
 
 { #category : #menu }
 WDELevelEditor >> shadingMenu [
-	^ self newMenu
-		addItem: [ :item |
-			item
-				name: 'Wireframe';
-				action: [ self contentView activateWireFrame ]
-		];
-		addItem: [ :item |
-			item
-				name: 'Flat color';
-				action: [ self contentView activateFlatColor ]
-		];
-		addItem: [ :item |
-			item
-				name: 'Flat textured';
-				action: [ self contentView activateFlatTextured ]
-		];
-		addItem: [ :item |
-			item
-				name: 'Material validation';
-				action: [ self contentView activateMaterialValidation ]
-		];
-		addItem: [ :item |
-			item
-				name: 'Shaded color';
-				action: [ self contentView activateShadedColor ]
-		];
-		addItem: [ :item |
-			item
-				name: 'Full shaded';
-				action: [ self contentView activateFullShaded ]
-		];
-		yourself
+	| menu |
+	menu := self newMenu.
+	self class fillShadingMenu: menu viewBlock: [self contentView].
+	^ menu
+		
 ]
 
 { #category : #initialization }

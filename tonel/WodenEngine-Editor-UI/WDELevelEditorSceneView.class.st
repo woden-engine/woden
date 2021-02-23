@@ -104,6 +104,23 @@ WDELevelEditorSceneView >> addElementsToSelection: elements [
 	^ model levelEditorSession addElementsToSelection: elements
 ]
 
+{ #category : #'view perspective' }
+WDELevelEditorSceneView >> backView [
+	isPerspective := false.
+	gridOrientation := Float32x3x3 lookAtBack.
+	editorViewType := #back.
+	self rotateCameraToAngles: (Float32x3 y: Float pi).
+
+]
+
+{ #category : #'view perspective' }
+WDELevelEditorSceneView >> bottomView [
+	isPerspective := false.
+	gridOrientation := self topGridOrientation.
+	editorViewType := #bottom.
+	self rotateCameraToAngles: (Float32x3 x: Float halfPi).
+]
+
 { #category : #rendering }
 WDELevelEditorSceneView >> buildUISceneGraphWith: builder [
 	| result |
@@ -266,9 +283,22 @@ WDELevelEditorSceneView >> isPerspective: anObject [
 	self cameraChanged.
 ]
 
+{ #category : #'view perspective' }
+WDELevelEditorSceneView >> leftView [
+	isPerspective := false.
+	gridOrientation := Float32x3x3 lookAtLeft.
+	editorViewType := #left.
+	self rotateCameraToAngles: (Float32x3 y: Float halfPi)
+]
+
 { #category : #accessing }
 WDELevelEditorSceneView >> levelEditorSession [
 	^ model levelEditorSession
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneView >> levelElementTemplateSelected: template [
+	self activatePlacementMode
 ]
 
 { #category : #visiting }
@@ -294,6 +324,14 @@ WDELevelEditorSceneView >> normalizeScreenPosition: aPoint [
 { #category : #'as yet unclassified' }
 WDELevelEditorSceneView >> normalizedToLocal: aPosition depth: aDepth [
 	^ self camera frustum normalizedPoint: aPosition linearDepth: aDepth
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneView >> openShadingMenu [
+	| menu |
+	menu := SpMenuPresenter new.
+	WDELevelEditor fillShadingMenu: menu viewBlock: [self].
+	^ menu openWithSpecAtPointer
 ]
 
 { #category : #accessing }
@@ -355,13 +393,21 @@ WDELevelEditorSceneView >> rayPickManipulator: ray [
 
 { #category : #accessing }
 WDELevelEditorSceneView >> renderSubMode [
-	^ renderSubMode ifNil: [ renderSubMode := WDCStateTrackerSubRenderMode fullShaded ]
+	^ renderSubMode ifNil: [ renderSubMode := WDCStateTrackerSubRenderMode wireframe ]
 ]
 
 { #category : #accessing }
 WDELevelEditorSceneView >> renderSubMode: aMode [
 	renderSubMode := aMode.
 	self changed
+]
+
+{ #category : #'view perspective' }
+WDELevelEditorSceneView >> rightView [
+	isPerspective := false.
+	gridOrientation := Float32x3x3 lookAtRight.
+	editorViewType := #right.
+	self rotateCameraToAngles: (Float32x3 y: Float halfPi negated)
 ]
 
 { #category : #'as yet unclassified' }

@@ -297,6 +297,11 @@ WDELevelEditorSession >> updateStatusMessage [
 ]
 
 { #category : #enumerating }
+WDELevelEditorSession >> whenActiveLevelElementTemplateDo: aBlock [
+	activeLevelElementTemplate whenChangedDo: aBlock
+]
+
+{ #category : #enumerating }
 WDELevelEditorSession >> whenGridSizeChangedDo: aBlock [
 	gridSize whenChangedDo: aBlock
 ]

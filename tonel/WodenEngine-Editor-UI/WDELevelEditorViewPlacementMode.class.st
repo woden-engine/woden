@@ -4,15 +4,14 @@ Class {
 	#category : #'WodenEngine-Editor-UI-ViewMode'
 }
 
+{ #category : #'event handling' }
+WDELevelEditorViewPlacementMode >> cancelAction [
+	view activateObjectMode
+]
+
 { #category : #'as yet unclassified' }
 WDELevelEditorViewPlacementMode >> modeName [
 	^ 'Placement Mode'
-]
-
-{ #category : #'event handling' }
-WDELevelEditorViewPlacementMode >> onKeyDown: event [
-	event symbol = OSK_ESCAPE ifTrue: [ ^ view activateObjectMode ].
-	super onKeyDown: event
 ]
 
 { #category : #'event handling' }

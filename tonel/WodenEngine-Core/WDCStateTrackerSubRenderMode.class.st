@@ -54,6 +54,11 @@ WDCStateTrackerSubRenderMode >> hasNoTextures [
 ]
 
 { #category : #testing }
+WDCStateTrackerSubRenderMode >> isColorMode [
+	^ false
+]
+
+{ #category : #testing }
 WDCStateTrackerSubRenderMode >> isFlatColor [
 	^ false
 ]

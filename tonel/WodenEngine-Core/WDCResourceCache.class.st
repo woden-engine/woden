@@ -1075,6 +1075,17 @@ WDCResourceCache >> unitDiameterZConeMesh [
 	]
 ]
 
+{ #category : #'special meshes' }
+WDCResourceCache >> unitWireCubeMesh [
+	^ self resourceAt: #unitWireCubeMesh ifAbsentPut: [
+		(WDCGenericMeshBuilder for: engine)
+			material: self whiteFlatColorMaterial;
+			addWireCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+			computeBoundingBox;
+			mesh
+	]
+]
+
 { #category : #'resource loading' }
 WDCResourceCache >> vertexLayoutFor: aVertexClass [
 	^ vertexLayouts at: aVertexClass ifAbsentPut: [ self loadVertexLayoutFrom: aVertexClass ]

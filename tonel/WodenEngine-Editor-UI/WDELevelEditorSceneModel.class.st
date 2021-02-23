@@ -16,10 +16,16 @@ Class {
 		'axisMesh',
 		'baseGridSize',
 		'highlightedManipulator',
-		'activeToolManipulator'
+		'activeToolManipulator',
+		'levelSceneNodeBuilder'
 	],
 	#category : #'WodenEngine-Editor-UI'
 }
+
+{ #category : #'editor modes' }
+WDELevelEditorSceneModel >> activateObjectMode [
+	views do: [ :v | v activateObjectMode ]
+]
 
 { #category : #'ray casting' }
 WDELevelEditorSceneModel >> activeManipulatorsDo: aBlock [
@@ -50,7 +56,7 @@ WDELevelEditorSceneModel >> addElementToScene: element [
 	| elementNode |
 	(levelElementToSceneNodeDictionary includesKey: element) ifTrue: [ ^ self ].
 
-	elementNode := (WDELevelEditorElementSceneNodeBuilder new editorSceneModel: self)
+	elementNode := self levelSceneNodeBuilder
 		visitLevelElement: element.
 	elementNode ifNil: [ ^ self ].
 	element isSector ifTrue: [
@@ -282,9 +288,15 @@ WDELevelEditorSceneModel >> levelEditorSession: anObject [
 	levelEditorSession := anObject.
 	
 	levelEditorSession
+		whenActiveLevelElementTemplateDo: [ :template | views do: [ :v | v levelElementTemplateSelected: template ] ];
 		whenLevelChangedDo: [ self levelChanged ];
 		whenSelectionChangedDo: [ :newSelection | self applyNewSelection: newSelection ].
 	self levelChanged.
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneModel >> levelSceneNodeBuilder [
+	^ levelSceneNodeBuilder ifNil: [levelSceneNodeBuilder := WDELevelEditorElementSceneNodeBuilder new editorSceneModel: self]
 ]
 
 { #category : #accessing }

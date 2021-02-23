@@ -3,9 +3,9 @@ Class {
 	#superclass : #WDELevelElement,
 	#instVars : [
 		'sector',
-		'defaultMinZ',
-		'defaultMaxZ',
-		'children'
+		'children',
+		'layerMaxZ',
+		'layerMinZ'
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
 }
@@ -33,9 +33,15 @@ WDESectorLayer >> addEntity: anEntity [
 WDESectorLayer >> buildLevelElementPropertyPageWith: builder [
 	super buildLevelElementPropertyPageWith: builder.
 	
-	builder
-		scalarPropertyNamed: '2D Min Z' selector: #defaultMinZ;
-		scalarPropertyNamed: '2D Max Z' selector: #defaultMaxZ
+	sector isSector2D ifTrue: [ 
+		builder
+			scalarPropertyNamed: '2D Layer Thickness' selector: #layerThickness;
+			scalarPropertyNamed: '2D Layer Z' selector: #layerZ;
+
+			scalarPropertyNamed: '2D Layer Min Z' selector: #layerMinZ;
+			scalarPropertyNamed: '2D Layer Max Z' selector: #layerMaxZ
+	].
+
 ]
 
 { #category : #accessing }
@@ -72,45 +78,11 @@ WDESectorLayer >> createSolidEntity: entityClassName rectangle: entityLocation m
 		yourself
 ]
 
-{ #category : #accessing }
-WDESectorLayer >> defaultMaxZ [
-	^ defaultMaxZ
-]
-
-{ #category : #accessing }
-WDESectorLayer >> defaultMaxZ: anObject [
-	defaultMaxZ := anObject.
-	self sectorLayerThicknessChanged
-]
-
-{ #category : #accessing }
-WDESectorLayer >> defaultMinZ [
-	^ defaultMinZ
-]
-
-{ #category : #accessing }
-WDESectorLayer >> defaultMinZ: anObject [
-	defaultMinZ := anObject.
-	self sectorLayerThicknessChanged
-]
-
-{ #category : #'as yet unclassified' }
-WDESectorLayer >> defaultThickness: defaultThickness [
-	defaultMinZ := defaultThickness * -0.5.
-	defaultMaxZ := defaultThickness * 0.5.
-	self sectorLayerThicknessChanged
-]
-
-{ #category : #'as yet unclassified' }
-WDESectorLayer >> defaultZ [
-	^ defaultMinZ + ((defaultMaxZ  - defaultMinZ) /2)
-]
-
 { #category : #serialization }
 WDESectorLayer >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
-		#defaultMinZ . self defaultMinZ.
-		#defaultMaxZ . self defaultMaxZ.
+		#layerMinZ . self layerMinZ.
+		#layerMaxZ . self layerMaxZ.
 		#children . children collect: [ :each | each encodeForJSON ].
 	}
 ]
@@ -124,13 +96,13 @@ WDESectorLayer >> entities [
 WDESectorLayer >> initialize [
 	super initialize.
 	children := OrderedCollection new.
-	defaultMinZ := -1.0.
-	defaultMaxZ := 1.0.
+	layerMinZ := -1.0.
+	layerMaxZ := 1.0.
 ]
 
 { #category : #'as yet unclassified' }
 WDESectorLayer >> instanceEntityPrototype: entityPrototype [
-	^ entityPrototype copy
+	^ entityPrototype copy setupForNewInstance; yourself
 ]
 
 { #category : #'as yet unclassified' }
@@ -208,12 +180,68 @@ WDESectorLayer >> isSectorLayer [
 	^ true
 ]
 
+{ #category : #accessing }
+WDESectorLayer >> layerHalfThickness [
+	^ self layerThickness * 0.5
+]
+
+{ #category : #accessing }
+WDESectorLayer >> layerMaxZ [
+	^ layerMaxZ
+]
+
+{ #category : #accessing }
+WDESectorLayer >> layerMaxZ: anObject [
+	layerMaxZ := anObject.
+	self sectorLayerThicknessChanged
+]
+
+{ #category : #accessing }
+WDESectorLayer >> layerMinZ [
+	^ layerMinZ
+]
+
+{ #category : #accessing }
+WDESectorLayer >> layerMinZ: anObject [
+	layerMinZ := anObject.
+	self sectorLayerThicknessChanged
+]
+
+{ #category : #accessing }
+WDESectorLayer >> layerThickness [
+	^ layerMaxZ - layerMinZ
+]
+
+{ #category : #accessing }
+WDESectorLayer >> layerThickness: newLayerThickness [
+	self layerZ: self layerZ thickness: newLayerThickness
+]
+
+{ #category : #accessing }
+WDESectorLayer >> layerZ [
+	^ layerMinZ + ((layerMaxZ  - layerMinZ) * 0.5)
+]
+
+{ #category : #accessing }
+WDESectorLayer >> layerZ: newZ [
+	self layerZ: newZ thickness: self layerThickness
+]
+
+{ #category : #accessing }
+WDESectorLayer >> layerZ: newZ thickness: thickness [
+	| halfThickness |
+	halfThickness := thickness * 0.5.
+	layerMinZ := newZ - halfThickness.
+	layerMaxZ := newZ + halfThickness.
+	self sectorLayerThicknessChanged
+]
+
 { #category : #serialization }
 WDESectorLayer >> loadFromJson: jsonData context: context [
 	super loadFromJson: jsonData context: context.
 	self
-		defaultMinZ: (jsonData at: 'defaultMinZ' ifAbsent: [self defaultMinZ]);
-		defaultMaxZ: (jsonData at: 'defaultMaxZ' ifAbsent: [self defaultMaxZ]).
+		layerMinZ: (jsonData at: 'layerMinZ' ifAbsent: [self layerMinZ]);
+		layerMaxZ: (jsonData at: 'layerMaxZ' ifAbsent: [self layerMaxZ]).
 
 	jsonData at: 'children' ifPresent: [ :childrenData |
 		childrenData do: [ :each |

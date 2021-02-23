@@ -2,7 +2,8 @@ Class {
 	#name : #WDELevelEditorViewMode,
 	#superclass : #Object,
 	#instVars : [
-		'view'
+		'view',
+		'shortcutList'
 	],
 	#pools : [
 		'OSKeySymbols'
@@ -78,6 +79,13 @@ WDELevelEditorViewMode >> onDoubleClick: event [
 
 { #category : #'event handling' }
 WDELevelEditorViewMode >> onKeyDown: event [
+	| eventCombination |
+	eventCombination := event asKeyCombination.
+	self shortcutList pairsDo: [ :shortcut :action |
+		(shortcut matchesCompletely: eventCombination) ifTrue: [
+			^ action value
+		]
+	]
 ]
 
 { #category : #'event handling' }
@@ -127,6 +135,16 @@ WDELevelEditorViewMode >> onRightClick: event [
 { #category : #accessing }
 WDELevelEditorViewMode >> scene [
 	^ self model scene
+]
+
+{ #category : #accessing }
+WDELevelEditorViewMode >> shortcutList [
+	^ shortcutList ifNil: [ shortcutList := self shortcuts ]
+]
+
+{ #category : #accessing }
+WDELevelEditorViewMode >> shortcuts [
+	^ #()
 ]
 
 { #category : #'as yet unclassified' }

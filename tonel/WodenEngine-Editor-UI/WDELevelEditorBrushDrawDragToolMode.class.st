@@ -25,8 +25,8 @@ WDELevelEditorBrushDrawDragToolMode >> computeBoxWithScreenEndPoint: screenEndPo
 
 	self levelEditorSession activeSectorLayer ifNotNil: [ :sectorLayer |
 		sectorLayer isInSector2D ifTrue: [
-			box min z: sectorLayer defaultMinZ.
-			box max z: sectorLayer defaultMaxZ.
+			box min z: sectorLayer layerMinZ.
+			box max z: sectorLayer layerMaxZ.
 		]
 	].
 	box min: (view snapToSubGrid: box min).
@@ -59,7 +59,6 @@ WDELevelEditorBrushDrawDragToolMode >> finishDraggingWith: event [
 	] ifFalse: [
 		self model activeToolManipulator: nil
 	].
-	view activateObjectMode
 
 ]
 

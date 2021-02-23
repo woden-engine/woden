@@ -80,7 +80,7 @@ WDCTerrainMaterial >> activateForwardOn: stateTracker [
 		vertexShader: self vertexShader;
 		fragmentShader: self fragmentShader.
 
-	(#(top front side) includes: stateTracker editorViewType) ifTrue: [
+	(#(top bottom front back left right) includes: stateTracker editorViewType) ifTrue: [
 		stateTracker
 			fragmentShader: self isolinesFragmentShader;
 			materialBlendingMode: WDCBlendingMode alphaOver 

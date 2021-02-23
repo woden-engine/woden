@@ -14,7 +14,13 @@ Class {
 		'localBoundingBoxWithDepth',
 		'dimensionalityMode',
 		'orientation',
-		'transform'
+		'transform',
+		'editorColor'
+	],
+	#classVars : [
+		'EditorColorPalette',
+		'EditorColorPaletteLastGeneratedColor',
+		'EditorColorPaletteRandomGenerator'
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
 }
@@ -31,6 +37,22 @@ WDEEntity class >> directionalLightPrototype [
 		orientation: QuaternionF32 lookAtBottom;
 		addComponent: (WDEVisualComponent directionalLight);
 		yourself
+]
+
+{ #category : #serialization }
+WDEEntity class >> generateEditorColor [
+	| newColor |
+	[
+		newColor := EditorColorPalette atRandom: EditorColorPaletteRandomGenerator
+	] doWhileTrue: [ EditorColorPaletteLastGeneratedColor = newColor ].
+	^ (EditorColorPaletteLastGeneratedColor := newColor) asFloat32x4
+]
+
+{ #category : #serialization }
+WDEEntity class >> initialize [
+	EditorColorPalette := Color wheel: 13.
+	EditorColorPaletteRandomGenerator := Random seed: 1.
+	EditorColorPaletteLastGeneratedColor := nil.
 ]
 
 { #category : #'basic entity prototypes' }
@@ -113,7 +135,8 @@ WDEEntity >> buildLevelElementPropertyPageWith: builder [
 		stringPropertyNamed: 'Class Name' selector: #className;
 		vector3PropertyNamed: 'Position' selector: #position;
 		quaternionPropertyNamed: 'Orientation' selector: #orientation;
-		propertyNamed: 'Dimensionality Mode' selector: #dimensionalityMode alternatives: [WDELevelElementDimensionalityMode alternatives]
+		propertyNamed: 'Dimensionality Mode' selector: #dimensionalityMode alternatives: [WDELevelElementDimensionalityMode alternatives];
+		linearColor4PropertyNamed: 'Editor color' selector: #editorColor.
 ]
 
 { #category : #accessing }
@@ -164,6 +187,23 @@ WDEEntity >> dimensionalityMode: anObject [
 	dimensionalityMode := anObject
 ]
 
+{ #category : #accessing }
+WDEEntity >> editorColor [
+
+	^ editorColor
+]
+
+{ #category : #accessing }
+WDEEntity >> editorColor: aColor [
+	editorColor := aColor asFloat32x4.
+	self editorColorChanged.
+	
+]
+
+{ #category : #private }
+WDEEntity >> editorColorChanged [
+]
+
 { #category : #serialization }
 WDEEntity >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
@@ -173,8 +213,14 @@ WDEEntity >> encodeJsonKeyValues [
 		#position . self position encodeForJSON.
 		#orientation . self orientation encodeForJSON.
 		#localBoundingBox . self localBoundingBox encodeForJSON.
+		#editorColor . editorColor encodeForJSON.
 		#components . self components collect: [ :each | each encodeForJSON ].
 	}
+]
+
+{ #category : #serialization }
+WDEEntity >> generateEditorColor [
+	editorColor := self class generateEditorColor
 ]
 
 { #category : #initialization }
@@ -185,6 +231,7 @@ WDEEntity >> initialize [
 	position := Float32x3 zeros asValueHolder.
 	orientation := QuaternionF32 identity asValueHolder.
 	localBoundingBox := (BoxF32 point: Float32x3 zeros) asValueHolder.
+	editorColor := Float32x4 ones.
 ]
 
 { #category : #'ray casting' }
@@ -248,11 +295,17 @@ WDEEntity >> loadFromJson: jsonData context: context [
 		]
 	].
 
+	self generateEditorColor.
+	jsonData at: 'editorColor' ifPresent: [ :data |
+		editorColor := Float32x4 loadFromJson: data
+	].
+
 	jsonData at: 'components' ifPresent: [ :componentData |
 		componentData do: [ :each |
 			self addComponent: (WDELevelElement loadFromJson: each context: context)
 		]
-	]
+	].
+
 ]
 
 { #category : #accessing }
@@ -291,8 +344,10 @@ WDEEntity >> localBoundingBoxWithDepth [
 	localBoundingBoxWithDepth ifNil: [ 
 		rawBox := self localBoundingBox.
 		(rawBox min ~= rawBox max and: [ rawBox min z = 0 and: [ rawBox max z = 0 ] ]) ifTrue: [
-			localBoundingBoxWithDepth := BoxF32 min: (rawBox min copy z: self sectorLayer defaultMinZ)
-				max: (rawBox max copy z: self sectorLayer defaultMaxZ)
+			| halfThickness |
+			halfThickness := self sectorLayer layerHalfThickness.
+			localBoundingBoxWithDepth := BoxF32 min: (rawBox min copy z: halfThickness negated)
+				max: (rawBox max copy z: halfThickness)
 		] ifFalse: [
 			localBoundingBoxWithDepth := rawBox
 		]
@@ -475,7 +530,10 @@ WDEEntity >> restoreTransformStateMemento: memento [
 
 { #category : #'as yet unclassified' }
 WDEEntity >> sectorLayerThicknessChanged [
-	self is2DLevelElement ifTrue: [ self localBoundingBoxChanged; transformChanged ].
+	self is2DLevelElement ifTrue: [
+		self localBoundingBoxChanged; transformChanged.
+		position valueChanged.
+	].
 	super sectorLayerThicknessChanged
 ]
 
@@ -489,6 +547,11 @@ WDEEntity >> setMaterial: aMaterial [
 	self components do: [ :each |
 		each setMaterial: aMaterial
 	]
+]
+
+{ #category : #serialization }
+WDEEntity >> setupForNewInstance [
+	self generateEditorColor
 ]
 
 { #category : #transforming }
@@ -512,13 +575,13 @@ WDEEntity >> transformStateMemento [
 ]
 
 { #category : #transforms }
-WDEEntity >> transformWith: transform [
+WDEEntity >> transformWith: transformToApply [
 	| rawPosition oldPosition componentTransform |
 	rawPosition := self position.
 	oldPosition := self validPosition3D.
-	self position: (transform transformPosition: self validPosition3D).
+	self position: (transformToApply transformPosition: self validPosition3D).
 	
-	componentTransform := transform copy translation: Float32x3 zeros.
+	componentTransform := transformToApply copy translation: Float32x3 zeros.
 	self localBoundingBox: (self localBoundingBox transformedWith: componentTransform).
 	components do: [ :each |
 		each transformWith: componentTransform
@@ -546,7 +609,7 @@ WDEEntity >> treeDisplayName [
 WDEEntity >> validPosition3D [
 	| rawPosition |
 	rawPosition := self position.
-	rawPosition class elements = 2 ifTrue: [ ^ Float32x3 xy: rawPosition z: (self sectorLayer ifNil: [0] ifNotNil: [:l | l defaultZ]) ].
+	self is2DLevelElement ifTrue: [ ^ Float32x3 xy: rawPosition xy z: (self sectorLayer ifNil: [0] ifNotNil: [:l | l layerZ]) ].
 	^ rawPosition
 ]
 

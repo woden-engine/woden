@@ -18,6 +18,11 @@ WDEEntityComponent >> changed [
 	changedEventHolder value: changedEventHolder value not
 ]
 
+{ #category : #accessing }
+WDEEntityComponent >> entity [
+	^ parent
+]
+
 { #category : #initialization }
 WDEEntityComponent >> initialize [
 	super initialize.

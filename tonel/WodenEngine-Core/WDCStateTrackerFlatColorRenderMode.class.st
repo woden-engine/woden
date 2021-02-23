@@ -10,6 +10,11 @@ WDCStateTrackerFlatColorRenderMode >> hasNoTextures [
 ]
 
 { #category : #testing }
+WDCStateTrackerFlatColorRenderMode >> isColorMode [
+	^ true
+]
+
+{ #category : #testing }
 WDCStateTrackerFlatColorRenderMode >> isFlatColor [
 	^ true
 ]

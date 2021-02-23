@@ -14,11 +14,14 @@ WDEVisualComponent2D class >> isAbstract [
 
 { #category : #accessing }
 WDEVisualComponent2D >> boundingBox [
-	^ boundingBox ifNil: [ boundingBox :=
-			BoxF32
-				min: (Float32x3 xy: self boundingRectangle min z: self sectorLayer defaultMinZ)
-				max: (Float32x3 xy: self boundingRectangle max z: self sectorLayer defaultMaxZ)
-		]
+	^ boundingBox ifNil: [
+		| halfThickness |
+		halfThickness := self sectorLayer layerHalfThickness.
+		boundingBox :=
+		BoxF32
+			min: (Float32x3 xy: self boundingRectangle min z: halfThickness negated)
+			max: (Float32x3 xy: self boundingRectangle max z: halfThickness)
+	]
 ]
 
 { #category : #accessing }

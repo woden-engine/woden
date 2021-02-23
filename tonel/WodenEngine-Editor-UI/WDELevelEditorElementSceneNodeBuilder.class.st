@@ -2,7 +2,8 @@ Class {
 	#name : #WDELevelEditorElementSceneNodeBuilder,
 	#superclass : #WDELevelVisitor,
 	#instVars : [
-		'editorSceneModel'
+		'editorSceneModel',
+		'editorColorMaterials'
 	],
 	#category : #'WodenEngine-Editor-UI'
 }
@@ -61,9 +62,26 @@ WDELevelEditorElementSceneNodeBuilder >> engine [
 	^ editorSceneModel engine
 ]
 
+{ #category : #initialization }
+WDELevelEditorElementSceneNodeBuilder >> initialize [
+	super initialize.
+	editorColorMaterials := Dictionary new.
+]
+
 { #category : #'as yet unclassified' }
 WDELevelEditorElementSceneNodeBuilder >> lightSourceDisplayMeshColor [
 	^ Color yellow darker muchLighter
+]
+
+{ #category : #'visual components' }
+WDELevelEditorElementSceneNodeBuilder >> makeEditorColorMaterialFor: component [
+	| color |
+	color := component entity editorColor.
+	^ editorColorMaterials at: color ifAbsentPut: [
+		(WDCMetallicRoughnessMaterial for: self engine)
+			baseColor: color;
+			yourself
+	]
 ]
 
 { #category : #'visual components' }
@@ -86,11 +104,18 @@ WDELevelEditorElementSceneNodeBuilder >> visitBoxCollisionComponent: component [
 
 { #category : #'visual components' }
 WDELevelEditorElementSceneNodeBuilder >> visitBoxVisualComponent: component [
-	| node |
+	| node renderable editorColorMaterial |
+	renderable := WDERenderableWithEditorAlternatives new.
+	editorColorMaterial := self makeEditorColorMaterialFor: component.
+	renderable
+		wireFrameRenderable: (self engine resourceCache unitWireCubeMesh copy setMaterial: editorColorMaterial);
+		colorRenderable: (self engine resourceCache unitCubeMesh copy setMaterial: editorColorMaterial);
+		shadedRenderable: self engine resourceCache unitCubeMesh copy.
+	
 	node := WDSGSpatialObject new.
-	node renderable: self engine resourceCache unitCubeMesh copy.
+	node renderable: renderable.
 	component whenChangedDoNow: [
-		node renderable setMaterial: (component material
+		renderable shadedRenderable setMaterial: (component material
 			ifNotNil: [ :mat | mat asRenderingMaterialFor: self engine ]
 			ifNil: [self engine resourceCache defaultMaterial]).
 		node

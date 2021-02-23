@@ -138,6 +138,16 @@ WDCAbstractGenericSurfaceMaterial >> alphaCutoff: aFloat [
 	self uploadMaterialStateData.
 ]
 
+{ #category : #accessing }
+WDCAbstractGenericSurfaceMaterial >> baseColor [
+	^ self albedoColor
+]
+
+{ #category : #accessing }
+WDCAbstractGenericSurfaceMaterial >> baseColor: aColor [
+	self albedoColor: aColor
+]
+
 { #category : #'state binding' }
 WDCAbstractGenericSurfaceMaterial >> bindResources [
 	| signature |

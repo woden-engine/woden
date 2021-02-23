@@ -10,6 +10,11 @@ WDCStateTrackerShadedColorRenderMode >> hasNoTextures [
 ]
 
 { #category : #testing }
+WDCStateTrackerShadedColorRenderMode >> isColorMode [
+	^ true
+]
+
+{ #category : #testing }
 WDCStateTrackerShadedColorRenderMode >> isShaded [
 	^ true
 ]
