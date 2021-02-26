@@ -14,6 +14,11 @@ RWInteraction >> accept: aVisitor [
 	self subclassResponsibility
 ]
 
+{ #category : #initialization }
+RWInteraction >> initializeElement: element [
+	self subclassResponsibility
+]
+
 { #category : #hooks }
 RWInteraction >> installOnElement: anElement [
 	self

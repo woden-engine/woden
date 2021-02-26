@@ -2,6 +2,7 @@ Class {
 	#name : #RWVRTrackedController,
 	#superclass : #RWVRTrackedDevice,
 	#instVars : [
+		'element',
 		'cursorColor',
 		'triggerPressed',
 		'triggerTouched',
@@ -126,6 +127,12 @@ RWVRTrackedController >> sendCursorOverElements: moveEvent [
 { #category : #accessing }
 RWVRTrackedController >> sendDragElementEvent: moveEvent [
 	Transcript show: 'TODO: sendDragElementEvent '; cr.
+]
+
+{ #category : #accessing }
+RWVRTrackedController >> transform: newTransform [
+	element transform: newTransform.
+	super transform: newTransform.
 ]
 
 { #category : #accessing }

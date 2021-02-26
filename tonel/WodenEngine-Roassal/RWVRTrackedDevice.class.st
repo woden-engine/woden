@@ -3,7 +3,6 @@ Class {
 	#superclass : #WDCVREventHandler,
 	#instVars : [
 		'deviceHandle',
-		'element',
 		'shape',
 		'sceneView'
 	],
@@ -23,9 +22,7 @@ RWVRTrackedDevice >> addToSceneView: anSceneView [
 
 { #category : #adding }
 RWVRTrackedDevice >> addToView: aView [
-	shape := RWCube new size: 0.1.
-	element := shape elementOn: self.
-	aView addInternalElement: element.
+	"Hook for connecting with a view."
 ]
 
 { #category : #accessing }
@@ -40,18 +37,7 @@ RWVRTrackedDevice >> deviceHandle: anObject [
 ]
 
 { #category : #accessing }
-RWVRTrackedDevice >> element [
-	^ element
-]
-
-{ #category : #accessing }
-RWVRTrackedDevice >> element: anObject [
-	element := anObject
-]
-
-{ #category : #accessing }
 RWVRTrackedDevice >> transform: newTransform [
-	element transform: newTransform.
 	self transformChanged
 ]
 

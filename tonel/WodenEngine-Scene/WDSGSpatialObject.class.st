@@ -43,6 +43,11 @@ WDSGSpatialObject >> initialize [
 	renderingRenderables := #().
 ]
 
+{ #category : #rendering }
+WDSGSpatialObject >> invalidateRenderable [
+	"Null action"
+]
+
 { #category : #'as yet unclassified' }
 WDSGSpatialObject >> localBoundingBox [
 	^ renderable boundingBox

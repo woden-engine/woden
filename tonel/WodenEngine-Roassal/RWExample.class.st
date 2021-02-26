@@ -73,7 +73,7 @@ RWExample class >> classBars [
 { #category : #'as yet unclassified' }
 RWExample class >> classBars2 [
 	<script: 'self classBars2 openInVR'>
-	| shape classElements boundingBox base visualization |
+	| shape classElements boundingBox base visualization trackedVisualization |
 	shape := RWCube new height: [ :cls | cls numberOfMethods sqrt + 0.1 ].
 	classElements := shape elementsOn: Collection withAllSubclasses.
 	classElements do: [ :each |
@@ -101,12 +101,23 @@ RWExample class >> classBars2 [
 			visualization addChild: (RWLine blue edgeFrom: el topAnchorPoint to: parentElement topAnchorPoint )
 		]
 	].
-	
-	^ visualization
-		scaleBy: 0.01;
+
+	visualization scaleBy: 0.01.
+		
+	trackedVisualization := RWGroup new
+		addChild: visualization;
+		attachTrackerAt: (RWVRTrackerAttachment new
+			attachmentPointTransform: (ReversibleAffineTransform3dF32 new
+				lookAtRight;
+				yourself)
+			);
+		
+		"Initial position in case we do not have a tracker."
 		translateByY: 1.0;
 		translateByZ: -0.5;
-		makeDefaultView
+		yourself.
+	^ trackedVisualization
+		makeDefaultView	
 ]
 
 { #category : #'as yet unclassified' }

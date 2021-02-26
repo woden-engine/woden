@@ -55,7 +55,9 @@ Class {
 		'internalElementsGroup',
 		'groups',
 		'tickingElements',
-		'transmissibleItemActivationBlock'
+		'transmissibleItemActivationBlock',
+		'genericTrackedDevices',
+		'nodeWithTrackerAttachments'
 	],
 	#category : #'WodenEngine-Roassal-Core'
 }
@@ -93,6 +95,12 @@ RWView >> addCameraLight: color [
 ]
 
 { #category : #adding }
+RWView >> addGenericTrackedDevice: device [
+	genericTrackedDevices add: device.
+	device index: genericTrackedDevices size
+]
+
+{ #category : #adding }
 RWView >> addGroup: aGroup [
 	groups add: aGroup.
 	aGroup addedInView: self.
@@ -101,6 +109,11 @@ RWView >> addGroup: aGroup [
 { #category : #adding }
 RWView >> addInternalElement: anElement [
 	internalElementsGroup addChild: anElement
+]
+
+{ #category : #adding }
+RWView >> addNodeWithTrackerAttachment: nodeWithAttachment [
+	(nodeWithTrackerAttachments at: nodeWithAttachment trackerAttachment trackerIndex ifAbsentPut: [ OrderedCollection new ]) add: nodeWithAttachment
 ]
 
 { #category : #adding }
@@ -139,6 +152,13 @@ RWView >> allElementsInSceneDo: aBlock [
 { #category : #interaction }
 RWView >> announce: eventOrClassEvent [
 	eventHandler announce: eventOrClassEvent
+]
+
+{ #category : #vr }
+RWView >> applyGenericTrackedDevice: trackedDevice transform: newTransform [
+	(nodeWithTrackerAttachments at: trackedDevice index ifAbsent: [ #() ]) do: [ :eachNode |
+		eachNode trackerAttachment applyTransform: newTransform to: eachNode
+	]
 ]
 
 { #category : #converting }
@@ -320,6 +340,8 @@ RWView >> initializeModel [
 	overlays := OrderedCollection new.
 	elementByIdDictionary := Dictionary new.
 	tickingElements := OrderedCollection new.
+	genericTrackedDevices := OrderedCollection new.
+	nodeWithTrackerAttachments := Dictionary new.
 	genidCount := 0.
 	self initializeScene.
 ]

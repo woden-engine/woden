@@ -8,7 +8,8 @@ Class {
 		'parentGroup',
 		'sceneNode',
 		'localBoundingBox',
-		'boundingBox'
+		'boundingBox',
+		'trackerAttachment'
 	],
 	#category : #'WodenEngine-Roassal-Core'
 }
@@ -22,6 +23,7 @@ RWNode >> addedInGroup: aGroup [
 { #category : #adding }
 RWNode >> addedInView: aView [
 	view := aView.
+	trackerAttachment ifNotNil: [ view addNodeWithTrackerAttachment: self ].
 ]
 
 { #category : #converting }
@@ -34,6 +36,12 @@ RWNode >> asPositionRelativeToGroup: targetParentGroup [
 { #category : #converting }
 RWNode >> asSceneNode [
 	^ sceneNode
+]
+
+{ #category : #accessing }
+RWNode >> attachTrackerAt: attachment [
+	trackerAttachment := attachment.
+	view ifNotNil: [ view addNodeWithTrackerAttachment: self ].
 ]
 
 { #category : #accessing }
@@ -101,7 +109,7 @@ RWNode >> makeDefaultView [
 
 { #category : #accessing }
 RWNode >> orientation [
-	^ sceneNode orientation
+	^ sceneNode transform matrix
 ]
 
 { #category : #accessing }
@@ -195,6 +203,11 @@ RWNode >> rotateByZDegrees: angle [
 RWNode >> scaleBy: scaleFactor [
 	sceneNode scaleBy: scaleFactor.
 	self transformChanged.
+]
+
+{ #category : #accessing }
+RWNode >> trackerAttachment [
+	^ trackerAttachment
 ]
 
 { #category : #accessing }
