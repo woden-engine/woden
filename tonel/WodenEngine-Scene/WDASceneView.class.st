@@ -65,6 +65,14 @@ WDASceneView >> cameraSceneNode [
 ]
 
 { #category : #'rendering process stages' }
+WDASceneView >> commitSurfaces [
+	commandList ifNil: [ ^ self ].
+	super commitSurfaces.
+	commandList := nil.
+	
+]
+
+{ #category : #'rendering process stages' }
 WDASceneView >> constructRenderingCommandLists [
 	super constructRenderingCommandLists.
 	commandList := screenDisplayMode renderSceneViewports.
