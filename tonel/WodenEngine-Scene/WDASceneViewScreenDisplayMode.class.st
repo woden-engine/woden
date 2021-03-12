@@ -91,7 +91,7 @@ WDASceneViewScreenDisplayMode >> updateCameraFrustum [
 	| camera extent aspect |
 	camera := view cameraSceneNode.
 	camera ifNil: [ ^ self ].
-	extent := view window drawingSurfaceExtent.
+	extent := view window drawingSurfaceExtent max: 1@1.
 	aspect := extent x asFloat / extent y asFloat.
 	camera updateFrustumWithAspectRatio: aspect projectionInvertedY: engine projectionInvertedY
 ]

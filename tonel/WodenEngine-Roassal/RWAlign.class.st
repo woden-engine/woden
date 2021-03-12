@@ -7,6 +7,6 @@ Class {
 { #category : #'as yet unclassified' }
 RWAlign class >> elements: aCollectionOfElements abovePoint: aPoint [
 	aCollectionOfElements do: [ :element |
-		element translateToY: element height * 0.5 + aPoint y
+		element translateByY: aPoint y - element boundingBox min y
 	]
 ]

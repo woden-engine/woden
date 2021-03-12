@@ -9,6 +9,13 @@ Class {
 	#category : #'WodenEngine-Roassal-Core'
 }
 
+{ #category : #'as yet unclassified' }
+RWAbstractSolidShape >> areaFor: anElement [
+	| extent |
+	extent := anElement boundingBox extent.
+	^ 2*((extent x*extent y) + (extent y * extent z) + (extent y*extent z))
+]
+
 { #category : #computing }
 RWAbstractSolidShape >> boundingBoxFor: element [
 	^ BoxF32
@@ -86,6 +93,13 @@ RWAbstractSolidShape >> size: aBlockOrASymbolOrAValue [
 	self height: aBlockOrASymbolOrAValue.
 	self width: aBlockOrASymbolOrAValue.
 	self depth: aBlockOrASymbolOrAValue.
+]
+
+{ #category : #'as yet unclassified' }
+RWAbstractSolidShape >> volumeFor: anElement [
+	| extent |
+	extent := anElement boundingBox extent.
+	^ extent x * extent y * extent z
 ]
 
 { #category : #accessing }

@@ -23,6 +23,7 @@ RWGroup >> addChild: aChild [
 	children add: aChild.
 	aChild addedInGroup: self.
 	view ifNotNil: [ aChild addedInView: view ].
+	self invalidateBoundingBoxCache.
 ]
 
 { #category : #private }
@@ -47,6 +48,11 @@ RWGroup >> addedInView: aView [
 { #category : #enumerating }
 RWGroup >> allElementsDo: aBlock [
 	children do: aBlock
+]
+
+{ #category : #accessing }
+RWGroup >> area [
+	^ children inject: 0 into: [ :area :child | area + child area ]
 ]
 
 { #category : #'base shapes' }
@@ -88,6 +94,11 @@ RWGroup >> computeLocalBoundingBox [
 	^ result
 ]
 
+{ #category : #accessing }
+RWGroup >> depth [
+	^ self boundingBox depth
+]
+
 { #category : #enumerating }
 RWGroup >> do: aBlock [
 	^ children do: aBlock
@@ -96,6 +107,16 @@ RWGroup >> do: aBlock [
 { #category : #accessing }
 RWGroup >> elementFromModel: aModel [
 	^ children detect: [ :el | el model == aModel ] ifNone: [ nil ]
+]
+
+{ #category : #accessing }
+RWGroup >> extent [
+	^ self boundingBox extent
+]
+
+{ #category : #accessing }
+RWGroup >> height [
+	^ self boundingBox height
 ]
 
 { #category : #'as yet unclassified' }
@@ -214,4 +235,14 @@ RWGroup >> removedFromView: aView [
 { #category : #'as yet unclassified' }
 RWGroup >> size [
 	^ children size
+]
+
+{ #category : #accessing }
+RWGroup >> volume [
+	^ children inject: 0 into: [ :volume :child | volume + child volume ]
+]
+
+{ #category : #accessing }
+RWGroup >> width [
+	^ self boundingBox width
 ]

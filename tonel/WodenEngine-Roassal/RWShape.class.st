@@ -115,6 +115,11 @@ RWShape >> alphaOverTranslucent [
 	self transparencyMode: WDCBlendingMode alphaOver
 ]
 
+{ #category : #'as yet unclassified' }
+RWShape >> areaFor: anElement [
+	^ 0
+]
+
 { #category : #computing }
 RWShape >> boundingBoxFor: element [
 	self subclassResponsibility
@@ -253,4 +258,9 @@ RWShape >> transparencyMode: aTransparencyMode [
 RWShape >> validIdForView: aView [
 	id ifNil: [ aView generateIdForShape: self ].
 	^ id
+]
+
+{ #category : #'as yet unclassified' }
+RWShape >> volumeFor: anElement [
+	^ 0
 ]

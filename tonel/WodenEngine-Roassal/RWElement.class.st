@@ -67,6 +67,11 @@ RWElement >> announce: eventOrClassEvent [
 	announcer announce: eventOrClassEvent
 ]
 
+{ #category : #accessing }
+RWElement >> area [
+	^ shape areaFor: self
+]
+
 { #category : #anchors }
 RWElement >> bottomAnchorPoint [
 	^ RWElementBottomAnchorPoint for: self
@@ -370,6 +375,11 @@ RWElement >> validId [
 { #category : #accessing }
 RWElement >> view [
 	^ view
+]
+
+{ #category : #accessing }
+RWElement >> volume [
+	^ shape volumeFor: self
 ]
 
 { #category : #physics }
