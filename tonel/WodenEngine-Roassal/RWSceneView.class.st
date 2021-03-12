@@ -279,6 +279,20 @@ RWSceneView >> visitMouseMoveEvent: event [
 	self dispatchMouseOverElementsEvent: event newElement: elementBeingPointed
 ]
 
+{ #category : #visiting }
+RWSceneView >> visitMouseWheelEvent: event [
+	| r3Event |
+	"Disable mouse move in VR mode."
+	self isInVirtualReality ifTrue: [ ^ self ].
+	r3Event := RWMouseWheel new buttons: event buttons;
+		position: event position asFloat32x2;
+		scrollHorizontal: event scrollHorizontal;
+		scrollVertical: event scrollVertical;
+		element: dragElement.
+	r3Event sendToElement.
+
+]
+
 { #category : #accessing }
 RWSceneView >> vrCameraBaseTransform [
 	^ vrCameraBaseTransform

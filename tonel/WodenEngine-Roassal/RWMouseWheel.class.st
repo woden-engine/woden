@@ -2,19 +2,32 @@ Class {
 	#name : #RWMouseWheel,
 	#superclass : #RWMouseEvent,
 	#instVars : [
-		'delta'
+		'scrollVertical',
+		'scrollHorizontal'
 	],
-	#category : 'WodenEngine-Roassal-Events'
+	#category : #'WodenEngine-Roassal-Events'
 }
 
 { #category : #accessing }
-RWMouseWheel >> delta [
-	
-	^ delta
+RWMouseWheel >> scrollHorizontal [
+
+	^ scrollHorizontal
 ]
 
 { #category : #accessing }
-RWMouseWheel >> delta: anObject [
-	
-	delta := anObject
+RWMouseWheel >> scrollHorizontal: anObject [
+
+	scrollHorizontal := anObject
+]
+
+{ #category : #accessing }
+RWMouseWheel >> scrollVertical [
+
+	^ scrollVertical
+]
+
+{ #category : #accessing }
+RWMouseWheel >> scrollVertical: anObject [
+
+	scrollVertical := anObject
 ]

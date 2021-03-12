@@ -75,6 +75,9 @@ RWOrbitController >> initializeElement: aView [
 	aView when: RWMouseDrag do: [ :evt |
 		evt isLeftButton ifTrue: [ self onMouseDrag: evt ].
 	].
+	aView when: RWMouseWheel do: [ :evt |
+		self onMouseWheel: evt
+	].
 
 ]
 
@@ -141,6 +144,13 @@ RWOrbitController >> onMouseDrag: event [
 	orbitMovement
 		deltaPhi: ((event delta y)/100.0) negated;
 		deltaTheta: ((event delta x)/100.0) negated
+]
+
+{ #category : #'event handling' }
+RWOrbitController >> onMouseWheel: event [
+	
+	orbitMovement
+		deltaR: event scrollVertical negated
 ]
 
 { #category : #accessing }

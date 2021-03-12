@@ -61,6 +61,11 @@ RWOrbitMovement >> deltaPhi: anAngle [
 ]
 
 { #category : #updating }
+RWOrbitMovement >> deltaR: aDistance [
+	r := r + aDistance max: 0.01.
+]
+
+{ #category : #updating }
 RWOrbitMovement >> deltaTheta: anAngle [
 	theta := theta + anAngle
 ]

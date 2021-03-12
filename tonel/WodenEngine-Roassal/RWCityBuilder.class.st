@@ -46,7 +46,7 @@ RWCityBuilder class >> exampleCollections [
 			neighbor
 				sortByVolume;
 				highlightable;
-				tooltip;
+				tooltip: #name;
 				inspectable;
 				buildingsFor: package classes with: [ :building |
 					building
