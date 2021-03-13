@@ -166,6 +166,11 @@ WDCAbstractModelExporter >> renderable: aRenderable [
 	self subclassResponsibility
 ]
 
+{ #category : #accessing }
+WDCAbstractModelExporter >> scaleFactor: scaleFactor [
+	self subclassResponsibility
+]
+
 { #category : #'as yet unclassified' }
 WDCAbstractModelExporter >> sceneWith: aBlock [
 	self beginScene.

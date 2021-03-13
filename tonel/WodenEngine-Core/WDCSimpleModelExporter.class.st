@@ -192,6 +192,11 @@ WDCSimpleModelExporter >> renderable: aRenderable [
 ]
 
 { #category : #accessing }
+WDCSimpleModelExporter >> scaleFactor: scaleFactor [
+	currentTransform scaleBy: scaleFactor
+]
+
+{ #category : #accessing }
 WDCSimpleModelExporter >> tangent4: tangent4 [
 	tangents4 add: (Float32x4 xyz: ((currentInverseTransposed * tangent4 xyz) normalized) w: tangent4 w)
 ]

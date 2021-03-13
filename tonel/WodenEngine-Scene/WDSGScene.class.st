@@ -194,12 +194,17 @@ WDSGScene >> engine [
 
 { #category : #'as yet unclassified' }
 WDSGScene >> exportModelToFileNamed: aFileName [
+	^ self exportModelToFileNamed: aFileName withScaleFactor: 1.0
+]
+
+{ #category : #'as yet unclassified' }
+WDSGScene >> exportModelToFileNamed: aFileName withScaleFactor: scaleFactor [
 	| fileReference exporter extension exporterClass |
 	fileReference := aFileName asFileReference.
 	extension := fileReference extension asLowercase.
 	exporterClass := WDCAbstractModelExporter exporterForExtension: extension.
 	exporterClass ifNil: [ self error: ('Unsupported extension for exporting models (.{1})' format: { extension }) ].
-	exporter := exporterClass new.
+	exporter := exporterClass new scaleFactor: scaleFactor.
 	
 	self exportModelWith: exporter.
 	exporter writeToFileNamed: fileReference

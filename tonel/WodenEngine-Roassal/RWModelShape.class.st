@@ -4,10 +4,16 @@ Class {
 	#instVars : [
 		'modelName',
 		'nodeName',
-		'shapeNode'
+		'shapeNode',
+		'engine'
 	],
 	#category : #'WodenEngine-Roassal-Core'
 }
+
+{ #category : #'as yet unclassified' }
+RWModelShape class >> modelNamed: modelName [
+	^ self new modelName: modelName; yourself
+]
 
 { #category : #'as yet unclassified' }
 RWModelShape class >> modelNamed: modelName node: nodeName [
@@ -16,8 +22,9 @@ RWModelShape class >> modelNamed: modelName node: nodeName [
 
 { #category : #hooks }
 RWModelShape >> buildRenderableFor: anElement view: aView [
-	shapeNode := ((self validModelLibraryFor: aView engine) instanceSceneNodeNamed: nodeName).
-	anElement sceneNode addChild: shapeNode.
+	self assert: (engine isNil or: [engine == aView engine]).
+	engine := aView engine.
+	anElement sceneNode addChild: self validShapeNode.
 	^ WDCNullRenderable new
 ]
 
@@ -33,7 +40,7 @@ RWModelShape >> heightFor: anElement [
 
 { #category : #computing }
 RWModelShape >> localCenterFor: anElement [
-	^ (self rawExtentFor: anElement) * shapeNode localBoundingBox center
+	^ (self rawExtentFor: anElement) * self validShapeNode localBoundingBox center
 ]
 
 { #category : #accessing }
@@ -64,9 +71,25 @@ RWModelShape >> rawExtentFor: element [
 		z: (super depthFor: element)
 ]
 
+{ #category : #'as yet unclassified' }
+RWModelShape >> validEngine [
+	^ engine ifNil: [engine := WDCEngine default]
+]
+
 { #category : #hooks }
 RWModelShape >> validModelLibraryFor: anEngine [
 	^ anEngine resourceCache load3DModel: modelName
+]
+
+{ #category : #'as yet unclassified' }
+RWModelShape >> validShapeNode [
+	| modelLibrary |
+	shapeNode ifNotNil: [ ^ shapeNode ].
+	modelLibrary := self validModelLibraryFor: self validEngine. 
+	^ shapeNode := nodeName
+		ifNil: [ modelLibrary instanceDefaultSceneNode ]
+		ifNotNil: [ modelLibrary instanceSceneNodeNamed: nodeName ].
+	
 ]
 
 { #category : #computing }

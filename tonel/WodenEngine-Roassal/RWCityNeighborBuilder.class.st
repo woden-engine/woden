@@ -6,7 +6,11 @@ Class {
 		'baseHeight',
 		'baseBorder',
 		'baseColor',
-		'buildingSortBlock'
+		'buildingSortBlock',
+		'shouldAttachVRTracker',
+		'scaleMaxWidth',
+		'scaleMaxHeight',
+		'scaleMaxDepth'
 	],
 	#category : #'WodenEngine-Roassal-Builder-CityBuilder'
 }
@@ -26,10 +30,46 @@ RWCityNeighborBuilder class >> defaultBaseHeight [
 	^ 0.25
 ]
 
+{ #category : #building }
+RWCityNeighborBuilder >> applyScaleFactor [
+	| extent currentScaleFactor |
+	extent := buildingGroup boundingBox extent.
+	
+	currentScaleFactor := 1.0.
+	scaleMaxWidth ifNotNil: [
+		currentScaleFactor := currentScaleFactor max: (extent x / scaleMaxWidth)
+	].
+	scaleMaxHeight ifNotNil: [
+		currentScaleFactor := currentScaleFactor max: (extent y / scaleMaxHeight)
+	].
+	scaleMaxDepth ifNotNil: [
+		currentScaleFactor := currentScaleFactor max: (extent z / scaleMaxDepth)
+	].
+
+	buildingGroup scaleBy: 1.0 / currentScaleFactor 
+]
+
+{ #category : #'as yet unclassified' }
+RWCityNeighborBuilder >> attachVRTracker [
+	shouldAttachVRTracker := true
+]
+
+{ #category : #accessing }
+RWCityNeighborBuilder >> baseBorder [
+
+	^ baseBorder rwValue: element
+]
+
+{ #category : #accessing }
+RWCityNeighborBuilder >> baseBorder: anObject [
+
+	baseBorder := anObject
+]
+
 { #category : #accessing }
 RWCityNeighborBuilder >> baseColor [
 
-	^ baseColor
+	^ baseColor rwValue: element
 ]
 
 { #category : #accessing }
@@ -38,10 +78,24 @@ RWCityNeighborBuilder >> baseColor: anObject [
 	baseColor := anObject
 ]
 
+{ #category : #accessing }
+RWCityNeighborBuilder >> baseHeight [
+
+	^ baseHeight rwValue: element
+]
+
+{ #category : #accessing }
+RWCityNeighborBuilder >> baseHeight: anObject [
+
+	baseHeight := anObject
+]
+
 { #category : #building }
 RWCityNeighborBuilder >> build [
 	self buildBuildingGroup.
 	self buildBase.
+	self applyScaleFactor.
+	self buildVRTrackerAttachment.
 
 	^ buildingGroup
 ]
@@ -52,14 +106,15 @@ RWCityNeighborBuilder >> buildBase [
 	baseHeight <= 0 ifTrue: [ ^ self ].
 	
 	boundingBox := RWBoundingBox for: buildingGroup children.
-	base := (RWCube new
-		color: baseColor;
-		height: baseHeight;
-		width: boundingBox width + baseBorder;
-		depth: boundingBox depth + baseBorder;
-		elementOn: element)
-			addInteractions: interactions;
-			translateToY: baseHeight * -0.5.
+	base := RWCube new
+		color: self baseColor;
+		height: self baseHeight;
+		width: boundingBox width + self baseBorder;
+		depth: boundingBox depth + self baseBorder;
+		elementOn: element.
+	base
+        addInteractions: interactions;
+		translateToY: base height * -0.5.
 	buildingGroup addChild: base
 ]
 
@@ -70,6 +125,33 @@ RWCityNeighborBuilder >> buildBuildingGroup [
 	buildingSortBlock ifNotNil: [ sortedBuildings := buildingGroup children sorted: buildingSortBlock ].
 	RWXZGridLayout on: sortedBuildings.
 	RWAlign elements: sortedBuildings abovePoint: Float32x3 zeros.
+]
+
+{ #category : #'as yet unclassified' }
+RWCityNeighborBuilder >> buildVRTrackerAttachment [
+	| attachment groupWithAttachment attachmentBase attachmentBbox attachmentHeightOffset |
+	shouldAttachVRTracker ifFalse: [ ^ self ].
+	attachment := (RWModelShape modelNamed: 'models/vr/tracker-mount.obj') element.
+	attachmentBbox := attachment localBoundingBox.
+	attachmentHeightOffset := (attachmentBbox min y min: 0.0) negated.
+	attachmentBase := RWCube new
+		width: attachmentBbox width;
+		height: buildingGroup height - attachmentHeightOffset;
+		depth: attachmentBbox depth / 2;
+		element.
+	RWAlign elements: {buildingGroup . attachmentBase} abovePoint: Float32x3 zeros.
+	attachment
+		translateToY: attachmentBase height + attachmentHeightOffset;
+		translateToZ: (buildingGroup depth /2) negated - attachmentBbox min z - attachment depth.
+	attachmentBase
+		translateToZ: (buildingGroup depth /2) negated - (attachmentBase depth / 2).
+
+	groupWithAttachment := RWGroup new
+		addChild: buildingGroup;
+		addChild: attachment;
+		addChild: attachmentBase.
+	
+	buildingGroup := groupWithAttachment.
 ]
 
 { #category : #'as yet unclassified' }
@@ -103,6 +185,21 @@ RWCityNeighborBuilder >> initialize [
 	baseHeight := self class defaultBaseHeight.
 	baseBorder := self class defaultBaseBorder.
 	buildingSortBlock := nil.
+	scaleMaxWidth := nil.
+	scaleMaxHeight := nil.
+	scaleMaxDepth := nil.
+	shouldAttachVRTracker := false.
+]
+
+{ #category : #'as yet unclassified' }
+RWCityNeighborBuilder >> scaleToFitInMaxBaseSize: maxBaseSize [
+	scaleMaxWidth := maxBaseSize.
+	scaleMaxDepth := maxBaseSize.
+]
+
+{ #category : #'as yet unclassified' }
+RWCityNeighborBuilder >> scaleToFitInMaxHeight: maxBaseSize [
+	scaleMaxHeight := maxBaseSize.
 ]
 
 { #category : #sorting }

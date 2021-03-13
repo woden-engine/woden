@@ -56,15 +56,25 @@ RWNode >> createSceneNode [
 
 { #category : #'as yet unclassified' }
 RWNode >> exportModelToFileNamed: aFileName [
+	^ self exportModelToFileNamed: aFileName withScaleFactor: 1.0
+]
+
+{ #category : #'as yet unclassified' }
+RWNode >> exportModelToFileNamed: aFileName withScaleFactor: scaleFactor [
 	view ifNotNil: [
-		sceneNode exportModelToFileNamed: aFileName
+		sceneNode exportModelToFileNamed: aFileName withScaleFactor: scaleFactor
 	] ifNil: [
 		self makeDefaultView.
 		[
-			sceneNode exportModelToFileNamed: aFileName
+			sceneNode exportModelToFileNamed: aFileName withScaleFactor: scaleFactor
 		] ensure: [ self remove ]
 	].
 
+]
+
+{ #category : #'as yet unclassified' }
+RWNode >> exportPrintableModelToFileNamed: aFileName [
+	^ self exportModelToFileNamed: aFileName withScaleFactor: 1000.0
 ]
 
 { #category : #accessing }

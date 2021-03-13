@@ -288,7 +288,7 @@ RWSceneView >> visitMouseWheelEvent: event [
 		position: event position asFloat32x2;
 		scrollHorizontal: event scrollHorizontal;
 		scrollVertical: event scrollVertical;
-		element: dragElement.
+		element: (self elementInPosition: event position).
 	r3Event sendToElement.
 
 ]

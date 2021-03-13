@@ -42,8 +42,10 @@ RWCityBuilder class >> exampleCollections [
 	packages := RPackage organizer packages select: [ :each | each name beginsWith: 'Collections-' ].
 	b
 		sortByVolume;
+		baseHeight: 3;
 		neighborsFor: packages with: [ :neighbor :package |
 			neighbor
+				baseHeight: 1.5;
 				sortByVolume;
 				highlightable;
 				tooltip: #name;
@@ -56,7 +58,12 @@ RWCityBuilder class >> exampleCollections [
 						inspectable
 		]
 	].
-	b build inspect
+	b
+		scaleToFitInMaxBaseSize: 0.15;
+		attachVRTracker.
+	b build
+		"exportPrintableModelToFileNamed: 'collections.obj';"
+		inspect
 ]
 
 { #category : #'element building' }

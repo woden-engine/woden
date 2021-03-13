@@ -304,6 +304,11 @@ RWView >> exportModelToFileNamed: aFileName [
 ]
 
 { #category : #'as yet unclassified' }
+RWView >> exportModelToFileNamed: aFileName withScaleFactor: scaleFactor [
+	scene exportModelToFileNamed: aFileName withScaleFactor: scaleFactor
+]
+
+{ #category : #'as yet unclassified' }
 RWView >> generateIdForElement: anElement [
 	| id |
 	id := genidCount.

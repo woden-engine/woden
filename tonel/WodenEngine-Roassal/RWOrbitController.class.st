@@ -150,7 +150,7 @@ RWOrbitController >> onMouseDrag: event [
 RWOrbitController >> onMouseWheel: event [
 	
 	orbitMovement
-		deltaR: event scrollVertical negated
+		deltaR: orbitMovement r * (event scrollVertical negated / 10)
 ]
 
 { #category : #accessing }

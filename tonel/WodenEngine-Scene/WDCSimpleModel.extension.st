@@ -10,3 +10,10 @@ WDCSimpleModel >> createViewer [
 		addMeshModel: (self meshFor: viewer engine).
 	^ viewer
 ]
+
+{ #category : #'*WodenEngine-Scene' }
+WDCSimpleModel >> instanceDefaultSceneNode [
+	^ WDSGSpatialObject new
+		renderable: (self meshFor: WDCEngine default);
+		yourself
+]
