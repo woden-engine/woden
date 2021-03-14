@@ -16,7 +16,8 @@ Class {
 		'hasNormals'
 	],
 	#classVars : [
-		'VertexChannelDescriptions'
+		'VertexChannelDescriptions',
+		'VertexChannelExporters'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -39,7 +40,17 @@ WDCMeshImplicitSeparatedVertexData class >> initialize [
 		WDCStructureField name: #boneIndices typeNamed: #R16G16B16A16_SINT binding: 6.
 	} do: [ :field |
 		VertexChannelDescriptions at: field name put: field
-	]
+	].
+
+	VertexChannelExporters := {
+		[ :exporter :data | exporter position: data ].
+		[ :exporter :data | exporter texcoord: data ].
+		[ :exporter :data | exporter color: data ].
+		[ :exporter :data | exporter normal: data ].
+		[ :exporter :data | exporter tangent4: data ].
+		[ :exporter :data | exporter boneWeights: data ].
+		[ :exporter :data | exporter boneIndices data ].
+	}
 ]
 
 { #category : #'as yet unclassified' }
@@ -113,6 +124,17 @@ WDCMeshImplicitSeparatedVertexData >> createVertexsBufferFor: anEngine [
 	data := self packedDataInSingleBuffer.
 	packedBuffer := anEngine createVertex: 1 elements: data size immutableBuffer: data.
 	^ packedBufferOffsets collect: [ :o | packedBuffer ]
+]
+
+{ #category : #'as yet unclassified' }
+WDCMeshImplicitSeparatedVertexData >> exportModelWith: exporter [
+	1 to: vertexCount do: [ :i |
+		exporter vertexWith: [ :vertexExporter |
+			channels do: [ :channel |
+				(VertexChannelExporters at: (channel binding + 1)) value: vertexExporter value: (channel at: i)
+			]
+		]
+	].
 ]
 
 { #category : #'channel accessing' }

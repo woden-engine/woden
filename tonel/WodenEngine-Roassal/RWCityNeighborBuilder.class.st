@@ -150,6 +150,8 @@ RWCityNeighborBuilder >> buildVRTrackerAttachment [
 		addChild: buildingGroup;
 		addChild: attachment;
 		addChild: attachmentBase.
+		
+	groupWithAttachment attachTrackerAt: (RWVRTrackerAttachment new attachmentPointTransform: attachment transform).
 	
 	buildingGroup := groupWithAttachment.
 ]
@@ -210,6 +212,11 @@ RWCityNeighborBuilder >> sortBy: attributeBlock [
 { #category : #sorting }
 RWCityNeighborBuilder >> sortByArea [
 	self sortBy: [ :each | each area ]
+]
+
+{ #category : #sorting }
+RWCityNeighborBuilder >> sortByBaseArea [
+	self sortBy: [ :each | each width * each depth ]
 ]
 
 { #category : #'as yet unclassified' }

@@ -42,10 +42,57 @@ RWCityBuilder class >> exampleCollections [
 	packages := RPackage organizer packages select: [ :each | each name beginsWith: 'Collections-' ].
 	b
 		sortByVolume;
-		baseHeight: 3;
+		baseHeight: 2;
 		neighborsFor: packages with: [ :neighbor :package |
 			neighbor
-				baseHeight: 1.5;
+				baseHeight: 1.0;
+				sortByVolume;
+				highlightable;
+				tooltip: #name;
+				inspectable;
+				buildingsFor: package classes with: [ :building |
+					building
+						height: [ :cls | cls numberOfMethods sqrt + 0.1 ];
+						highlightable;
+						tooltip;
+						inspectable
+		]
+	].
+	b build inspect
+]
+
+{ #category : #examples }
+RWCityBuilder class >> examplePrintableCollectionWithAllSubclasses [
+	| b |
+	b := RWCityBuilder new.
+	b
+		sortByVolume;
+		buildingsFor: Collection withAllSubclasses with: [ :building |
+			building
+				height: [ :cls | cls numberOfMethods sqrt + 0.1 ];
+				highlightable;
+				tooltip;
+				inspectable
+	].
+	b
+		scaleToFitInMaxBaseSize: 0.10;
+		attachVRTracker.
+	true
+		ifTrue: [ b build exportPrintableModelToFileNamed: 'collection-subclasses.obj' ]
+		ifFalse: [ b build inspect ]
+]
+
+{ #category : #examples }
+RWCityBuilder class >> examplePrintableCollections [
+	| b packages |
+	b := RWCityBuilder new.
+	packages := RPackage organizer packages select: [ :each | each name beginsWith: 'Collections-' ].
+	b
+		sortByBaseArea;
+		baseHeight: 2;
+		neighborsFor: packages with: [ :neighbor :package |
+			neighbor
+				baseHeight: 1.0;
 				sortByVolume;
 				highlightable;
 				tooltip: #name;
@@ -61,9 +108,9 @@ RWCityBuilder class >> exampleCollections [
 	b
 		scaleToFitInMaxBaseSize: 0.15;
 		attachVRTracker.
-	b build
-		"exportPrintableModelToFileNamed: 'collections.obj';"
-		inspect
+	true
+		ifTrue: [ b build exportPrintableModelToFileNamed: 'collections.obj' ]
+		ifFalse: [ b build inspect ]
 ]
 
 { #category : #'element building' }

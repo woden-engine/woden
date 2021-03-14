@@ -114,6 +114,7 @@ WDCSimpleModel >> meshFor: anEngine [
 	| mesh |
 	mesh := WDCGenericMesh new.
 	mesh
+		vertexData: vertices;
 		boundingBox: boundingBox copy;
 		vertexBinding: (self createVertexBindingFor: anEngine);
 		indexBuffer: (self createIndexBufferFor: anEngine);
