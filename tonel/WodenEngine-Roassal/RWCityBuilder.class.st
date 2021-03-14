@@ -28,6 +28,10 @@ RWCityBuilder class >> exampleCollectionWithAllSubclasses [
 		buildingsFor: Collection withAllSubclasses with: [ :building |
 			building
 				height: [ :cls | cls numberOfMethods sqrt + 0.1 ];
+				width: [ :cls | cls slots size/5.0 + 1 ];
+				depth: [ :cls | cls slots size/5.0 + 1 ];
+					color: [ :cls | Color green lighter interpolateTo: Color red lighter at:
+						(cls linesOfCode / (cls numberOfMethods * 12 max: 1) min: 1.0)];
 				highlightable;
 				tooltip;
 				inspectable
@@ -46,6 +50,8 @@ RWCityBuilder class >> exampleCollections [
 		neighborsFor: packages with: [ :neighbor :package |
 			neighbor
 				baseHeight: 1.0;
+				baseColor: [:p | Color green lighter interpolateTo: Color red lighter at:
+							((p linesOfCode + 1) log / 5 min: 1.0)];
 				sortByVolume;
 				highlightable;
 				tooltip: #name;
@@ -53,6 +59,10 @@ RWCityBuilder class >> exampleCollections [
 				buildingsFor: package classes with: [ :building |
 					building
 						height: [ :cls | cls numberOfMethods sqrt + 0.1 ];
+						width: [ :cls | cls slots size/10.0 + 1 ];
+						depth: [ :cls | cls slots size/10.0 + 1 ];
+						color: [ :cls | Color green lighter interpolateTo: Color red lighter at:
+							(cls linesOfCode / (cls numberOfMethods * 12 max: 1) min: 1.0)];
 						highlightable;
 						tooltip;
 						inspectable
@@ -70,6 +80,10 @@ RWCityBuilder class >> examplePrintableCollectionWithAllSubclasses [
 		buildingsFor: Collection withAllSubclasses with: [ :building |
 			building
 				height: [ :cls | cls numberOfMethods sqrt + 0.1 ];
+				width: [ :cls | cls slots size/5.0 + 1 ];
+				depth: [ :cls | cls slots size/5.0 + 1 ];
+				color: [ :cls | Color green lighter interpolateTo: Color red lighter at:
+					(cls linesOfCode / (cls numberOfMethods * 12 max: 1) min: 1.0)];
 				highlightable;
 				tooltip;
 				inspectable
@@ -93,6 +107,8 @@ RWCityBuilder class >> examplePrintableCollections [
 		neighborsFor: packages with: [ :neighbor :package |
 			neighbor
 				baseHeight: 1.0;
+				baseColor: [:p | Color green lighter interpolateTo: Color red lighter at:
+							((p linesOfCode + 1) log / 5 min: 1.0)];
 				sortByVolume;
 				highlightable;
 				tooltip: #name;
@@ -100,6 +116,10 @@ RWCityBuilder class >> examplePrintableCollections [
 				buildingsFor: package classes with: [ :building |
 					building
 						height: [ :cls | cls numberOfMethods sqrt + 0.1 ];
+						width: [ :cls | cls slots size/10.0 + 1 ];
+						depth: [ :cls | cls slots size/10.0 + 1 ];
+						color: [ :cls | Color green lighter interpolateTo: Color red lighter at:
+							(cls linesOfCode / (cls numberOfMethods * 12 max: 1) min: 1.0)];
 						highlightable;
 						tooltip;
 						inspectable

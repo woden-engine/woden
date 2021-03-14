@@ -137,7 +137,7 @@ RWCityNeighborBuilder >> buildVRTrackerAttachment [
 	attachmentBase := RWCube new
 		width: attachmentBbox width;
 		height: buildingGroup height - attachmentHeightOffset;
-		depth: attachmentBbox depth / 2;
+		depth: attachmentBbox depth / 3;
 		element.
 	RWAlign elements: {buildingGroup . attachmentBase} abovePoint: Float32x3 zeros.
 	attachment
