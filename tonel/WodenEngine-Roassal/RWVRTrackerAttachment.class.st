@@ -3,14 +3,20 @@ Class {
 	#superclass : #RWObject,
 	#instVars : [
 		'trackerIndex',
-		'attachmentPointTransform'
+		'attachmentPointTransform',
+		'attachmentPointInverseTransform'
 	],
 	#category : #'WodenEngine-Roassal-Interaction'
 }
 
 { #category : #'element manipulation' }
 RWVRTrackerAttachment >> applyTransform: newTransform to: node [
-	node transform: (newTransform transformTransform: self attachmentPointTransform)
+	node transform: (newTransform transformTransform: self attachmentPointInverseTransform)
+]
+
+{ #category : #accessing }
+RWVRTrackerAttachment >> attachmentPointInverseTransform [
+	^ attachmentPointInverseTransform ifNil: [ attachmentPointInverseTransform := self attachmentPointTransform inverse ]
 ]
 
 { #category : #accessing }
@@ -20,8 +26,8 @@ RWVRTrackerAttachment >> attachmentPointTransform [
 
 { #category : #accessing }
 RWVRTrackerAttachment >> attachmentPointTransform: anObject [
-
-	attachmentPointTransform := anObject
+	attachmentPointTransform := anObject.
+	attachmentPointInverseTransform := nil
 ]
 
 { #category : #initialization }

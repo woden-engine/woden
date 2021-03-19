@@ -151,7 +151,10 @@ RWCityNeighborBuilder >> buildVRTrackerAttachment [
 		addChild: attachment;
 		addChild: attachmentBase.
 		
-	groupWithAttachment attachTrackerAt: (RWVRTrackerAttachment new attachmentPointTransform: attachment transform).
+	groupWithAttachment attachTrackerAt: (RWVRTrackerAttachment new attachmentPointTransform:
+		(attachment transform copy
+			orthonormal: (Float32x3x3 yRotation: Float pi) * (Float32x3x3 xRotation: Float halfPi);
+			yourself)).
 	
 	buildingGroup := groupWithAttachment.
 ]
