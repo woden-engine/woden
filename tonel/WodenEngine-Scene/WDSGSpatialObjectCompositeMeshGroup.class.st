@@ -36,8 +36,8 @@ WDSGSpatialObjectCompositeMeshGroup >> isCompositeGroup [
 ]
 
 { #category : #copying }
-WDSGSpatialObjectCompositeMeshGroup >> postCopyCommon [
-	super postCopyCommon.
+WDSGSpatialObjectCompositeMeshGroup >> postCopy [
+	super postCopy.
 	self invalidateRenderable.
 ]
 

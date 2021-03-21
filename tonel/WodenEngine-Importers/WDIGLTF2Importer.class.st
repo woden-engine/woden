@@ -21,7 +21,8 @@ Class {
 		'nodeBoneStates',
 		'nodeToBoneIndices',
 		'animations',
-		'nodeToArmature'
+		'nodeToArmature',
+		'nodesUsingSkin'
 	],
 	#classVars : [
 		'FullTypeToPixelName',
@@ -775,8 +776,11 @@ WDIGLTF2Importer >> loadNodeFrom: nodeDescription [
 		node := WDSGSpatialObject new.
 		node renderable: (meshes at: meshIndex + 1).
 		nodeDescription at: 'skin' ifPresent: [ :skinIndex |
+			| skin |
+			skin := (skins at: skinIndex + 1).
+			nodesUsingSkin at: skin put: node.
 			node renderable: (WDCSkinnedRenderableMesh new
-				armature: (skins at: skinIndex + 1) armature;
+				armature: skin armature;
 				mesh: node renderable;
 				yourself)
 		]
@@ -831,6 +835,7 @@ WDIGLTF2Importer >> loadNodeFrom: nodeDescription [
 WDIGLTF2Importer >> loadNodesFrom: elements [
 	nodes := OrderedCollection new.
 	nodeBoneStates := OrderedCollection new.
+	nodesUsingSkin := Dictionary new.
 	elements do: [ :el | self loadNodeFrom: el ].
 	elements doWithIndex: [ :el :index | self loadNode: (nodes at: index) childrenFrom: el].
 	
@@ -940,10 +945,11 @@ WDIGLTF2Importer >> loadSkinTopology: skin [
 		self topologicalSortBoneGraphNode: boneGraphNode into: sortedBones visited: visitedNodes.
 	].
 	self assert: sortedBones isNotEmpty.
-	rootMatrix := Float32x4x4 identity.
-	(boneToNodeDictionary at: sortedBones first) parent ifNotNil: [ :rootParent |
-		rootMatrix := rootParent globalTransform matrix4
-	].
+	skin rootNode: (boneToNodeDictionary at: sortedBones first).
+
+	rootMatrix := skin rootNode parent
+		ifNil: [ Float32x4x4 identity ]
+		ifNotNil: [ :p | p globalTransform matrix4 ].
 
 	sortedBones doWithIndex: [ :bone :index |
 		bone index: index - 1
@@ -1100,6 +1106,7 @@ WDIGLTF2Importer >> processGLTFJson: json [
 	json at: 'nodes' ifPresent: [ :elements | self loadNodesFrom: elements ].
 	json at: 'animations' ifPresent: [ :elements | self loadAnimationsFrom: elements ].	
 	json at: 'scenes' ifPresent: [ :elements | self loadScenesFrom: elements ].
+	skins do: [ :each | each rootNode removeFromScene ].
 	
 	asset scenes: scenes asArray.
 	json at: 'scene' ifPresent: [ :mainSceneIndex |

@@ -8,7 +8,9 @@ Class {
 		'rootNodeIndex',
 		'inverseBindMatricesAccessor',
 		'armature',
-		'jointIndexToBoneIndexPermutationTable'
+		'jointIndexToBoneIndexPermutationTable',
+		'actualBoneCount',
+		'rootNode'
 	],
 	#pools : [
 		'WDIGLTF2Constants'
@@ -80,6 +82,18 @@ WDIGLTF2Skin >> permutatedInverseBindMatrices [
 		permutatedMatrices at: (jointIndexToBoneIndexPermutationTable at: index) + 1 put: each
 	].
 	^ permutatedMatrices
+]
+
+{ #category : #accessing }
+WDIGLTF2Skin >> rootNode [
+
+	^ rootNode
+]
+
+{ #category : #accessing }
+WDIGLTF2Skin >> rootNode: anObject [
+
+	rootNode := anObject
 ]
 
 { #category : #accessing }

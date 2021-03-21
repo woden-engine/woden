@@ -14,12 +14,17 @@ Class {
 }
 
 { #category : #initialization }
-WDCSkinnedModelBoneState >> initialize [
-	super initialize.
+WDCSkinnedModelBoneState >> clearState [
 	rotation := QuaternionF32 identity.
 	scale := Float32x3 ones.
 	translation := Float32x3 zeros.
 	matrix := Float32x4x4 identity.
+]
+
+{ #category : #initialization }
+WDCSkinnedModelBoneState >> initialize [
+	super initialize.
+	self clearState
 ]
 
 { #category : #'as yet unclassified' }

@@ -145,11 +145,6 @@ WDSGScene >> commonGPUStateRenderingComponent [
 	^ commonGPUStateRenderingComponent ifNil: [commonGPUStateRenderingComponent := WDSGSceneCommonGPUStateRenderingComponent for: self]
 ]
 
-{ #category : #copying }
-WDSGScene >> copyExcludingNullNodes [
-	^ self shallowCopy postCopyExcludingNullNodes; yourself
-]
-
 { #category : #building }
 WDSGScene >> createSkyBoxWithMaterial: skyMaterial [
 	| meshBuilder skyBox |
@@ -341,17 +336,6 @@ WDSGScene >> postCopy [
 	backgroundLayer := backgroundLayer copy addedToScene: self.
 	normalLayer := 	normalLayer copy addedToScene: self.
 	foregroundLayer := foregroundLayer copy addedToScene: self.
-	commonGPUStateRenderingComponent := nil.
-]
-
-{ #category : #copying }
-WDSGScene >> postCopyExcludingNullNodes [
-	super postCopy.
-	nodesWithPendingStates := IdentitySet new.
-
-	backgroundLayer := backgroundLayer copyExcludingNullNodes addedToScene: self.
-	normalLayer := 	normalLayer copyExcludingNullNodes addedToScene: self.
-	foregroundLayer := foregroundLayer copyExcludingNullNodes addedToScene: self.
 	commonGPUStateRenderingComponent := nil.
 ]
 
