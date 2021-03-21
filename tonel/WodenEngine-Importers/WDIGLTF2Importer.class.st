@@ -18,11 +18,10 @@ Class {
 		'textures',
 		'defaultMaterial',
 		'skins',
-		'nodeToBoneDictionary',
-		'boneToNodeDictionary',
 		'nodeBoneStates',
 		'nodeToBoneIndices',
-		'animations'
+		'animations',
+		'nodeToArmature'
 	],
 	#classVars : [
 		'FullTypeToPixelName',
@@ -70,11 +69,6 @@ WDIGLTF2Importer class >> initialize [
 		{GL_FLOAT . 'MAT3'} . #float3x3.
 		{GL_FLOAT . 'MAT4'} . #float4x4.
 	}
-]
-
-{ #category : #accessing }
-WDIGLTF2Importer >> boneToNodeDictionary [
-	^ boneToNodeDictionary ifNil: [boneToNodeDictionary := IdentityDictionary new].
 ]
 
 { #category : #loading }
@@ -186,6 +180,39 @@ WDIGLTF2Importer >> convertIndices: indexCountToConvert withAccessors: indexBuff
 				length: (destIndex - startOffset) * newIndexType size;
 				yourself);
 				type: newIndexType.
+	].
+
+]
+
+{ #category : #'as yet unclassified' }
+WDIGLTF2Importer >> extractBoneGraph: nodeToBoneGraphDictionary topologyFrom: startingNode parent: parentNode visited: visitedNodes nodeToBoneDictionary: nodeToBoneDictionary boneToNodeDictionary: boneToNodeDictionary [
+	| newParentNode boneGraphNode |
+	newParentNode := parentNode.
+	nodeToBoneGraphDictionary at: startingNode ifAbsentPut: [ 
+		| extraNonJointBone |
+		extraNonJointBone := WDCSkinnedModelBone new
+			name: startingNode name;
+			loadStateFrom: (nodeBoneStates at: (nodes indexOf: startingNode));
+			yourself.
+		nodeToBoneDictionary at: startingNode put: extraNonJointBone.
+		boneToNodeDictionary at: extraNonJointBone put: startingNode.
+		WDIGLTF2SkeletonGraphNode new
+			bone: extraNonJointBone;
+			yourself
+	].
+	
+	boneGraphNode := nodeToBoneGraphDictionary at: startingNode.
+	parentNode ifNotNil: [
+		self assert: (boneGraphNode parent isNil or: [boneGraphNode parent == parentNode]).
+		boneGraphNode parent: parentNode
+	].
+	newParentNode := boneGraphNode.
+
+	(visitedNodes includes: startingNode) ifTrue: [ ^ self ].
+	visitedNodes add: startingNode.
+
+	startingNode childrenDo: [ :child |
+		self extractBoneGraph: nodeToBoneGraphDictionary topologyFrom: child parent: newParentNode visited: visitedNodes nodeToBoneDictionary: nodeToBoneDictionary boneToNodeDictionary: boneToNodeDictionary
 	].
 
 ]
@@ -434,6 +461,7 @@ WDIGLTF2Importer >> loadAnimationChannelFrom: channelDescription withSamplers: a
 	channel sampler: (animationSamplers at: (channelDescription at: 'sampler') + 1).
 	targetDescription := channelDescription at: 'target'.
 	channel
+		targetArmature: (nodeToArmature at: (targetDescription at: 'node') + 1);
 		targetBoneIndex: (nodeToBoneIndices at: (targetDescription at: 'node') + 1);
 		targetProperty: (targetDescription at: 'path') asSymbol.
 	^ channel
@@ -485,6 +513,7 @@ WDIGLTF2Importer >> loadAnimationsFrom: elements [
 { #category : #loading }
 WDIGLTF2Importer >> loadBinaryDataFromURI: uri [
 	| absolutePath |
+	(uri beginsWith: 'data:') ifTrue: [ ^ self parseDataURI: uri ].
 	absolutePath := loadingDirectory resolve: uri asFileReference.
 	^ absolutePath binaryReadStreamDo: [ :in | in contents ]
 ]
@@ -804,6 +833,8 @@ WDIGLTF2Importer >> loadNodesFrom: elements [
 	nodeBoneStates := OrderedCollection new.
 	elements do: [ :el | self loadNodeFrom: el ].
 	elements doWithIndex: [ :el :index | self loadNode: (nodes at: index) childrenFrom: el].
+	
+	nodeToArmature := Array new: nodes size.
 	nodeToBoneIndices := (Array new: nodes size) atAllPut: -1.
 	skins ifNotNil: [
 		skins do: [ :each | self loadSkinTopology: each ]
@@ -861,9 +892,12 @@ WDIGLTF2Importer >> loadSkinFrom: skinDescription [
 
 { #category : #'as yet unclassified' }
 WDIGLTF2Importer >> loadSkinTopology: skin [
-	| jointNodes bones bonesSet visitedNodes sortedBones jointStates |
+	| jointNodes bones visitedNodes sortedBones jointStates boneGraphNodes nodeToBoneGraphDictionary nodeToBoneDictionary boneToNodeDictionary rootMatrix |
 	jointNodes := skin jointIndices collect: [ :each | nodes at: each + 1 ].
 	jointStates := skin jointIndices collect: [ :each | nodeBoneStates at: each + 1 ].
+	nodeToBoneDictionary := IdentityDictionary new.
+	boneToNodeDictionary := IdentityDictionary new.
+	
 	bones := jointNodes collectWithIndex: [ :node :index |
 		| bone |
 		
@@ -871,22 +905,44 @@ WDIGLTF2Importer >> loadSkinTopology: skin [
 			name: node name;
 			loadStateFrom: (jointStates at: index);
 			yourself.
-		self nodeToBoneDictionary at: node put: bone.
-		self boneToNodeDictionary at: bone put: node.
+		nodeToBoneDictionary at: node put: bone.
+		boneToNodeDictionary at: bone put: node.
 		bone.
 	].
+
+	"We need to sort bone in a way such as parent bones always precede their children. This sorting
+	is required to facilitate skinning via a single linear iteration. For correctly achieving this sorting, it is required to perform a topological sort in the transpose graph."
 	
+	nodeToBoneGraphDictionary := IdentityDictionary new.
+	boneGraphNodes := jointNodes collect: [ :node |
+		| graphNode |
+		graphNode := WDIGLTF2SkeletonGraphNode new
+			bone: (nodeToBoneDictionary at: node);
+			yourself.
+		nodeToBoneGraphDictionary at: node put: graphNode.
+		graphNode
+	].
+
 	visitedNodes := IdentitySet new.
-	sortedBones := OrderedCollection new.
-	bonesSet := bones asIdentitySet.
 	skin rootNodeIndex ifNotNil: [:nodeIndex |
 		| rootNode |
 		rootNode := nodes at: nodeIndex + 1.
-		self topologicalSortBones: bonesSet from: rootNode into: sortedBones visited: visitedNodes.
+		self extractBoneGraph: nodeToBoneGraphDictionary topologyFrom: rootNode parent: nil visited: visitedNodes nodeToBoneDictionary: nodeToBoneDictionary boneToNodeDictionary: boneToNodeDictionary
 	].
 
 	jointNodes do: [ :node |
-		self topologicalSortBones: bonesSet from: node into: sortedBones visited: visitedNodes.
+		self extractBoneGraph: nodeToBoneGraphDictionary topologyFrom: node parent: nil visited: visitedNodes nodeToBoneDictionary: nodeToBoneDictionary boneToNodeDictionary: boneToNodeDictionary
+	].
+
+	visitedNodes := IdentitySet new.
+	sortedBones := OrderedCollection new.
+	boneGraphNodes do: [ :boneGraphNode |
+		self topologicalSortBoneGraphNode: boneGraphNode into: sortedBones visited: visitedNodes.
+	].
+	self assert: sortedBones isNotEmpty.
+	rootMatrix := Float32x4x4 identity.
+	(boneToNodeDictionary at: sortedBones first) parent ifNotNil: [ :rootParent |
+		rootMatrix := rootParent globalTransform matrix4
 	].
 
 	sortedBones doWithIndex: [ :bone :index |
@@ -897,21 +953,28 @@ WDIGLTF2Importer >> loadSkinTopology: skin [
 		| node |
 		node := boneToNodeDictionary at: bone.
 		bone parentIndex: -1.
-		nodeToBoneDictionary at: node parent ifPresent: [ :parentBone |
+		(nodeToBoneGraphDictionary at: node) parent ifNotNil: [ :parentBoneGraphNode |
+			| parentBone |
+			parentBone := parentBoneGraphNode bone.
+			self assert: parentBone index isNotNil.
+			self assert: parentBone index < bone index.
 			bone parentIndex: parentBone index
 		]
 	].
 
 	skin jointIndices doWithIndex: [ :nodeIndex :boneIndex |
+		nodeToArmature at: nodeIndex + 1 put: skin armature.
 		nodeToBoneIndices at: nodeIndex + 1 put: (bones at: boneIndex) index
 	].
 
 	skin
 		jointIndexToBoneIndexPermutationTable: (bones collect: [ :each | each index ]) asArray.
-	
+
 	skin armature
+		rootMatrix: rootMatrix;
 		bones: sortedBones asArray;
 		restPoseInverseMatrices: skin permutatedInverseBindMatrices;
+		jointIndexToBoneIndexPermutationTable: skin jointIndexToBoneIndexPermutationTable;
 		computeRestPoseForwardMatrices.
 ]
 
@@ -1004,9 +1067,19 @@ WDIGLTF2Importer >> loadingDirectory: anObject [
 	loadingDirectory := anObject
 ]
 
-{ #category : #accessing }
-WDIGLTF2Importer >> nodeToBoneDictionary [
-	^ nodeToBoneDictionary ifNil: [nodeToBoneDictionary := IdentityDictionary new].
+{ #category : #loading }
+WDIGLTF2Importer >> parseDataURI: uri [
+	| dataStartIndex metadata data mediaTypeAndEncoding mediaType encoding |
+	dataStartIndex := uri indexOf: $,.
+	metadata := uri copyFrom: 'data:' size + 1 to: dataStartIndex - 1.
+	data := uri allButFirst: dataStartIndex.
+	mediaTypeAndEncoding := metadata splitOn: $;.
+	mediaType := mediaTypeAndEncoding first.
+	encoding := mediaTypeAndEncoding second.
+	encoding = 'base64' ifFalse: [ 
+		self error: 'Unsupported encoding for data uri: ' , encoding
+	].
+	^ data base64Decoded
 ]
 
 { #category : #loading }
@@ -1043,19 +1116,15 @@ WDIGLTF2Importer >> processGLTFJson: json [
 ]
 
 { #category : #'as yet unclassified' }
-WDIGLTF2Importer >> topologicalSortBones: bones from: startingNode into: sortedBones visited: visitedNodes [
-	(visitedNodes includes: startingNode) ifTrue: [ ^ self ].
-	visitedNodes add: startingNode.
-	
-	nodeToBoneDictionary at: startingNode ifPresent: [ :bone |
-		(bones includes: bone) ifTrue: [ 
-			sortedBones add: bone
-		].
+WDIGLTF2Importer >> topologicalSortBoneGraphNode: boneGraphNode into: sortedBones visited: visitedNodes [
+	(visitedNodes includes: boneGraphNode) ifTrue: [ ^ self ].
+	visitedNodes add: boneGraphNode.
+
+	boneGraphNode parent ifNotNil: [ :parent |
+		self topologicalSortBoneGraphNode: parent into: sortedBones visited: visitedNodes
 	].
 
-	startingNode childrenDo: [ :child |
-		self topologicalSortBones: bones from: child into: sortedBones visited: visitedNodes
-	].
+	sortedBones add: boneGraphNode bone
 ]
 
 { #category : #'as yet unclassified' }

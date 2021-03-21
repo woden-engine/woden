@@ -48,17 +48,22 @@ WDSGSpatialObject >> invalidateRenderable [
 	"Null action"
 ]
 
+{ #category : #testing }
+WDSGSpatialObject >> isRecursivelyNullNode [
+	^ renderable isNullRenderable and: [ super isRecursivelyNullNode ]
+]
+
 { #category : #'as yet unclassified' }
 WDSGSpatialObject >> localBoundingBox [
 	^ renderable boundingBox
 ]
 
 { #category : #copying }
-WDSGSpatialObject >> postCopy [
+WDSGSpatialObject >> postCopyCommon [
 	| oldRenderable |
 	oldRenderable := renderable.
 	renderingRenderables := #().
-	super postCopy.
+	super postCopyCommon.
 	self renderable: oldRenderable copyForResourceCacheInstancing.
 ]
 

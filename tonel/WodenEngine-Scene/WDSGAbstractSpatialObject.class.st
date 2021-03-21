@@ -59,9 +59,9 @@ WDSGAbstractSpatialObject >> objectState [
 ]
 
 { #category : #copying }
-WDSGAbstractSpatialObject >> postCopy [
+WDSGAbstractSpatialObject >> postCopyCommon [
 	objectState := objectState copy.
-	super postCopy.
+	super postCopyCommon.
 ]
 
 { #category : #accessing }

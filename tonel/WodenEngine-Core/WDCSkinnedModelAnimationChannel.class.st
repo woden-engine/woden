@@ -2,6 +2,7 @@ Class {
 	#name : #WDCSkinnedModelAnimationChannel,
 	#superclass : #Object,
 	#instVars : [
+		'targetArmature',
 		'targetBoneIndex',
 		'inputMinValue',
 		'inputMaxValue',
@@ -14,6 +15,11 @@ Class {
 	],
 	#category : #'WodenEngine-Core-Asset'
 }
+
+{ #category : #'as yet unclassified' }
+WDCSkinnedModelAnimationChannel >> appliesToArmature: anArmature [
+	^ targetArmature isNil or: [ targetArmature == anArmature ]
+]
 
 { #category : #'as yet unclassified' }
 WDCSkinnedModelAnimationChannel >> applyInterpolatedState: interpolatedState toBoneState: bonePoseState [
@@ -103,6 +109,18 @@ WDCSkinnedModelAnimationChannel >> outputSamples [
 { #category : #accessing }
 WDCSkinnedModelAnimationChannel >> outputSamples: anObject [
 	outputSamples := anObject
+]
+
+{ #category : #accessing }
+WDCSkinnedModelAnimationChannel >> targetArmature [
+
+	^ targetArmature
+]
+
+{ #category : #accessing }
+WDCSkinnedModelAnimationChannel >> targetArmature: anObject [
+
+	targetArmature := anObject
 ]
 
 { #category : #accessing }

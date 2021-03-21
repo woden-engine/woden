@@ -102,6 +102,11 @@ WDSGNode >> computeGlobalTransform [
 ]
 
 { #category : #copying }
+WDSGNode >> copyExcludingNullNodes [
+	^ self shallowCopy postCopyExcludingNullNodes; yourself
+]
+
+{ #category : #copying }
 WDSGNode >> copyForResourceCacheInstancing [
 	^ self copy
 ]
@@ -251,6 +256,11 @@ WDSGNode >> isMultiEyeCamera [
 ]
 
 { #category : #testing }
+WDSGNode >> isRecursivelyNullNode [
+	^ children allSatisfy: [ :each | each isRecursivelyNullNode ]
+]
+
+{ #category : #testing }
 WDSGNode >> isSpatialObject [
 	^ false
 ]
@@ -330,15 +340,33 @@ WDSGNode >> position: aPosition [
 { #category : #copying }
 WDSGNode >> postCopy [
 	| oldChildren |
+	oldChildren := children.
+	self postCopyCommon.
+	oldChildren do: [ :child |
+		self addChild: child copy
+	]
+]
+
+{ #category : #copying }
+WDSGNode >> postCopyCommon [
 	super postCopy.
 	scene := nil.
 	parent := nil.
 	stateChangeListeners := nil.
-	oldChildren := children.
 	globalTransform := nil.
 	children := OrderedCollection new.
+
+]
+
+{ #category : #copying }
+WDSGNode >> postCopyExcludingNullNodes [
+	| oldChildren |
+	oldChildren := children.
+	self postCopyCommon.
 	oldChildren do: [ :child |
-		self addChild: child copy
+		child isRecursivelyNullNode ifFalse: [ 
+			self addChild: child copy
+		]
 	]
 ]
 

@@ -74,7 +74,8 @@ WDIGLTF2Skin >> name: anObject [
 { #category : #'as yet unclassified' }
 WDIGLTF2Skin >> permutatedInverseBindMatrices [
 	| permutatedMatrices |
-	permutatedMatrices := Array new: jointIndices size.
+	permutatedMatrices := Array new: armature bones size.
+	permutatedMatrices atAllPut: Float32x4x4 identity.
 	self inverseBindMatrices doWithIndex: [ :each :index |
 		permutatedMatrices at: (jointIndexToBoneIndexPermutationTable at: index) + 1 put: each
 	].

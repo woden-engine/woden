@@ -20,9 +20,9 @@ WDSGSceneLayer >> initialize [
 ]
 
 { #category : #initialization }
-WDSGSceneLayer >> postCopy [
+WDSGSceneLayer >> postCopyCommon [
 	renderingRenderables := OrderedCollection new.
-	super postCopy.
+	super postCopyCommon.
 
 ]
 

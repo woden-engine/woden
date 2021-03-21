@@ -38,7 +38,7 @@ WDA3DModelViewerModel >> addMeshModel: meshModel [
 WDA3DModelViewerModel >> addSceneModel: sceneModel [
 	sceneModel normalLayer childrenDo: [ :each |
 		| instancedNode |
-		instancedNode := each copy.
+		instancedNode := each copyExcludingNullNodes.
 		modelNodes add: instancedNode.
 		scene add: instancedNode.
 	]

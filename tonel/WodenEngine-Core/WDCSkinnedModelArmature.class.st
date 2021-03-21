@@ -6,7 +6,9 @@ Class {
 		'bones',
 		'restPoseMatrices',
 		'restPoseInverseMatrices',
-		'restPoseForwardMatrices'
+		'restPoseForwardMatrices',
+		'jointIndexToBoneIndexPermutationTable',
+		'rootMatrix'
 	],
 	#pools : [
 		'AGPUConstants'
@@ -38,6 +40,8 @@ WDCSkinnedModelArmature >> computeForwardMatricesWithPoseMatrices: poseMatrices 
 		matrix := poseMatrices at: boneIndex.
 		bone parentIndex >= 0 ifTrue: [
 			matrix := (result at: bone parentIndex + 1) * matrix
+		] ifFalse: [ 
+			matrix := rootMatrix * matrix
 		].
 	
 		result at: boneIndex put: matrix
@@ -59,14 +63,35 @@ WDCSkinnedModelArmature >> computeRestPoseForwardMatrices [
 
 { #category : #'as yet unclassified' }
 WDCSkinnedModelArmature >> computeSkinningMatricesWithForwardMatrices: forwardMatrices [
-	| result |
+	| result permutation |
 	self assert: forwardMatrices size = bones size.
-	result := (StdnVector for: Float32x4x4) new: bones size.
-	forwardMatrices doWithIndex: [:forwardMatrix :index |
-		result add: (forwardMatrix * (restPoseInverseMatrices at: index))
+	permutation := self jointIndexToBoneIndexPermutationTable.
+	result := (StdnVector for: Float32x4x4) new: permutation size.
+	permutation do: [ :boneIndex |
+		| permuttedIndex |
+		permuttedIndex := boneIndex + 1.
+		result add: (forwardMatrices at: permuttedIndex) * (restPoseInverseMatrices at: permuttedIndex)
 	].
 
 	^ result
+]
+
+{ #category : #initialization }
+WDCSkinnedModelArmature >> initialize [
+	super initialize.
+	rootMatrix := Float32x4x4 identity.
+]
+
+{ #category : #accessing }
+WDCSkinnedModelArmature >> jointIndexToBoneIndexPermutationTable [
+
+	^ jointIndexToBoneIndexPermutationTable ifNil: [ ^ 0 to: bones size ]
+]
+
+{ #category : #accessing }
+WDCSkinnedModelArmature >> jointIndexToBoneIndexPermutationTable: anObject [
+
+	jointIndexToBoneIndexPermutationTable := anObject
 ]
 
 { #category : #accessing }
@@ -112,4 +137,21 @@ WDCSkinnedModelArmature >> restPoseMatrices: anObject [
 { #category : #'as yet unclassified' }
 WDCSkinnedModelArmature >> restPoseState [
 	^ bones collect: [ :each | WDCSkinnedModelBoneState new loadStateFrom: each ]
+]
+
+{ #category : #accessing }
+WDCSkinnedModelArmature >> rootMatrix [
+
+	^ rootMatrix
+]
+
+{ #category : #accessing }
+WDCSkinnedModelArmature >> rootMatrix: anObject [
+
+	rootMatrix := anObject
+]
+
+{ #category : #'as yet unclassified' }
+WDCSkinnedModelArmature >> skinJointCount [
+	^ jointIndexToBoneIndexPermutationTable size
 ]

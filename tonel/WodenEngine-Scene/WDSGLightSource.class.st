@@ -129,8 +129,8 @@ WDSGLightSource >> point [
 ]
 
 { #category : #copying }
-WDSGLightSource >> postCopy [
-	super postCopy.
+WDSGLightSource >> postCopyCommon [
+	super postCopyCommon.
 	self createRenderingRenderable
 ]
 
