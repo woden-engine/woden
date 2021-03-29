@@ -83,7 +83,38 @@ WDELevelEditor class >> menuCommandOn: builder [
 	(builder item: #'Open level editor')
 		parent: #Woden;
 		order: 0;
-		action: [ WDELevel empty openEditor  ].
+		action: [ self openEditorWorldMenuCommand  ].
+]
+
+{ #category : #'world menu' }
+WDELevelEditor class >> openEditorWithGameSettings: gameSettings [
+	WDELevel empty newEditorSession
+		gameSettings: gameSettings;
+		openEditor
+]
+
+{ #category : #'world menu' }
+WDELevelEditor class >> openEditorWorldMenuCommand [
+	| availableSettings |
+	availableSettings := WDEGameSettings allSettings.
+	
+	availableSettings size > 1 ifTrue: [
+		|gameMenu |
+		gameMenu := SpMenuPresenter new.
+		availableSettings do: [ :gameSetting |
+			gameMenu
+				addItem: [ :item |
+					item
+						name: gameSetting name;
+						action: [ self openEditorWithGameSettings: gameSetting ]
+				]
+		].
+	
+		gameMenu openWithSpecAtPointer
+	] ifFalse: [
+		self openEditorWithGameSettings: availableSettings first.
+	].
+
 ]
 
 { #category : #'main actions' }
@@ -129,6 +160,11 @@ WDELevelEditor >> actionOpenFile [
 { #category : #'main actions' }
 WDELevelEditor >> actionPaste [
 	self inform: 'TODO: actionPaste'
+]
+
+{ #category : #'main actions' }
+WDELevelEditor >> actionPlayLevel [
+	self model playLevel
 ]
 
 { #category : #'main actions' }
@@ -191,6 +227,11 @@ WDELevelEditor >> buildMainMenuBar [
 				];
 				addItem: [ :item |
 					item
+						name: 'Game';
+						subMenu: self gameMenu
+				];
+				addItem: [ :item |
+					item
 						name: 'View';
 						subMenu: self viewMenu
 				];
@@ -206,6 +247,7 @@ WDELevelEditor >> buildMainMenuBar [
 { #category : #initialization }
 WDELevelEditor >> buildMainToolbar [
 	^ self newToolbar
+		
 		addItem: (SpToolbarButtonPresenter new
 			label: 'Object';
 			action: [ content view activateObjectMode ];
@@ -213,6 +255,10 @@ WDELevelEditor >> buildMainToolbar [
 		addItem: (SpToolbarButtonPresenter new
 			label: 'Placement';
 			action: [ content view activatePlacementMode ];
+			yourself);
+		addItem: (SpToolbarButtonPresenter new
+			icon: (self iconNamed: #glamorousGo);
+			action: [ self actionPlayLevel ];
 			yourself);
 		yourself
 ]
@@ -307,7 +353,7 @@ WDELevelEditor >> createLevelFileDialog [
 	^ FileDialogWindow basicNew
 		basicTheme: self theme;
 		initialize;
-		validExtensions: #(wlevel wblevel);
+		validExtensions: #(wtlevel wlevel);
 		yourself
 ]
 
@@ -412,6 +458,21 @@ WDELevelEditor >> fileMenu [
 					item
 						name: 'Exit';
 						action: [ self actionExit ].
+				]
+		];
+		yourself
+]
+
+{ #category : #menu }
+WDELevelEditor >> gameMenu [
+	^ self newMenu
+		addGroup: [ :group |
+			group
+				addItem: [ :item |
+					item
+						name: 'Play level';
+						shortcut: $p command mac | $p control unix | $p control win;
+						action: [self actionPlayLevel].
 				]
 		];
 		yourself

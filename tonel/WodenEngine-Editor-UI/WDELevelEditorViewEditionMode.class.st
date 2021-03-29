@@ -91,6 +91,7 @@ WDELevelEditorViewEditionMode >> shortcuts [
 		$z command shift mac | $z control shift unix | $z control shift win . [ self levelEditorSession redo ].
 
 		$d command mac | $d control unix | $d control win . [ self levelEditorSession duplicateSelectedItems  ].
+		$p command mac | $p control unix | $p control win . [ self levelEditorSession playLevel ].
 
 		KeyboardKey delete asKeyCombination . [ self levelEditorSession deleteSelectedItems  ].
 

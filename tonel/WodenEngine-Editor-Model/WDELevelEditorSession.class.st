@@ -11,7 +11,8 @@ Class {
 		'undoOperationHistory',
 		'redoOperationHistory',
 		'statusMessage',
-		'activeToolModeOrEditionModeName'
+		'activeToolModeOrEditionModeName',
+		'gameSettings'
 	],
 	#category : #'WodenEngine-Editor-Model-Session'
 }
@@ -80,6 +81,18 @@ WDELevelEditorSession >> duplicateSelectedItems [
 ]
 
 { #category : #accessing }
+WDELevelEditorSession >> gameSettings [
+
+	^ gameSettings
+]
+
+{ #category : #accessing }
+WDELevelEditorSession >> gameSettings: anObject [
+
+	gameSettings := anObject
+]
+
+{ #category : #accessing }
 WDELevelEditorSession >> gridSize [
 	^ gridSize value
 ]
@@ -92,6 +105,7 @@ WDELevelEditorSession >> gridSize: newValue [
 { #category : #initialization }
 WDELevelEditorSession >> initialize [
 	super initialize.
+	gameSettings := WDEGameSettings default.
 	level := nil asValueHolder.
 	levelFileReference := nil asValueHolder.
 	activeSectorLayer := nil asValueHolder.
@@ -150,8 +164,13 @@ WDELevelEditorSession >> openFrom: aFileReference [
 	| extension |
 	aFileReference exists ifFalse: [ ^ self ].
 	extension := aFileReference extension asLowercase.
-	extension = 'wlevel' ifTrue: [ ^ self loadJSONEncodedFrom: aFileReference ].
-	extension = 'wblevel' ifTrue: [ ^ self loadMessagePackEncodedFrom: aFileReference ].
+	extension = 'wtlevel' ifTrue: [ ^ self loadJSONEncodedFrom: aFileReference ].
+	extension = 'wlevel' ifTrue: [ ^ self loadMessagePackEncodedFrom: aFileReference ].
+]
+
+{ #category : #'play testing' }
+WDELevelEditorSession >> playLevel [
+	^ gameSettings playLevelInSession: self
 ]
 
 { #category : #'undo-redo' }
@@ -195,8 +214,8 @@ WDELevelEditorSession >> saveTo: aFileReference [
 	| extension |
 	self level ifNil: [ ^ self ].
 	extension := aFileReference extension asLowercase.
-	extension = 'wlevel' ifTrue: [ self saveJSONEncodedTo: aFileReference ].
-	extension = 'wblevel' ifTrue: [ self saveMessagePackEncodedTo: aFileReference ].
+	extension = 'wtlevel' ifTrue: [ self saveJSONEncodedTo: aFileReference ].
+	extension = 'wlevel' ifTrue: [ self saveMessagePackEncodedTo: aFileReference ].
 ]
 
 { #category : #accessing }
@@ -278,7 +297,7 @@ WDELevelEditorSession >> topLevelLightSourcePaletteCategories [
 
 { #category : #palettes }
 WDELevelEditorSession >> topMaterialPaletteCategories [
-	^ WDEMaterialPaletteProvider allTopLevelPaletteCategories
+	^ WDEMaterialPaletteProvider allTopLevelPaletteCategories , gameSettings topMaterialPaletteCategories
 ]
 
 { #category : #'undo-redo' }
