@@ -228,25 +228,25 @@ WDCTerrainMaterial >> normalTextures: anArray [
 
 { #category : #parsing }
 WDCTerrainMaterial >> parse: materialFileReference data: data [
-	albedoTextures := self parse: data at: materialFileReference srgbTexture: 'albedo-textures' arrayOfSize: 5.
-	normalTextures := self parse: data at: materialFileReference texture: 'normal-textures' arrayOfSize: 5.
-	metallicRoughnessTextures := self parse: data at: materialFileReference texture: 'metallic-roughness-textures' arrayOfSize: 5.
-	triplanar := data at: 'triplanar' ifAbsent: [ false ].
+	albedoTextures := self parse: data at: materialFileReference srgbTexture: #baseColorTextures arrayOfSize: 5.
+	normalTextures := self parse: data at: materialFileReference texture: #normalTextures arrayOfSize: 5.
+	metallicRoughnessTextures := self parse: data at: materialFileReference texture: #occlusionMetallicRoughnessTextures arrayOfSize: 5.
+	triplanar := data at: #triplanar ifAbsent: [ false ].
 
 	materialState
-		albedo: (self parse: data at: materialFileReference srgbColor: 'albedo-color' ifAbsent: [ Color white ]);
-		roughnessFactor: (data at: 'roughness-factor' ifAbsent: [
+		albedo: (self parse: data at: materialFileReference srgbColor: #baseColorFactor ifAbsent: [ Color white ]);
+		roughnessFactor: (data at: #roughnessFactor ifAbsent: [
 			metallicRoughnessTextures first
 				ifNil: [ self class defaultRoughnessFactor ]
 				ifNotNil: [ 1.0 ]
 		]);
-		metallicFactor: (data at: 'metallic-factor' ifAbsent: [
+		metallicFactor: (data at: #metallicFactor ifAbsent: [
 			metallicRoughnessTextures first
 				ifNil: [ self class defaultMetallicFactor ]
 				ifNotNil: [ 1.0 ]
 		]);
 		
-		textureScaleAndOffset: (self parse: data at: materialFileReference array: 'texture-scales-offsets' type: (Float32x4 array: 5) ifAbsent: [ Float32x4 x: 1.0 y: 1.0 z: 0.0 w: 0.0]).
+		textureScaleAndOffset: (self parse: data at: materialFileReference array: #textureScalesOffsets type: (Float32x4 array: 5) ifAbsent: [ Float32x4 x: 1.0 y: 1.0 z: 0.0 w: 0.0]).
 
 	self invalidateCache.
 ]

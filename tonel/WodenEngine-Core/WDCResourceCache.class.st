@@ -1103,7 +1103,7 @@ WDCResourceCache >> whiteCubeMap [
 
 { #category : #'as yet unclassified' }
 WDCResourceCache >> whiteFlatColorMaterial [
-	^ self resourceAt: #whiteFlatColorMaterial ifAbsentPut: [ WDCFlatColorMaterial for: engine]
+	^ self resourceAt: #whiteFlatColorMaterial ifAbsentPut: [ WDCUnlitMaterial for: engine]
 ]
 
 { #category : #textures }

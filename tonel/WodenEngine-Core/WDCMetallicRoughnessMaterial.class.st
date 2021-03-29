@@ -117,7 +117,7 @@ WDCMetallicRoughnessMaterial >> metallicRoughnessTexture: anObject [
 { #category : #parsing }
 WDCMetallicRoughnessMaterial >> parse: materialFileReference data: data [
 	super parse: materialFileReference data: data.
-	metallicRoughnessTexture := self parse: data at: materialFileReference optionalTexture: 'metallic-roughness-texture'.
+	metallicRoughnessTexture := self parse: data at: materialFileReference optionalTexture: #occlusionMetallicRoughnessTexture.
 
 	materialState
 		roughnessFactor: (data at: 'roughness-factor' ifAbsent: [

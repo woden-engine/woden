@@ -23,7 +23,7 @@ RWVRTrackedController >> addToView: aView [
 	aView addInternalElement: element.
 	
 	cursorMesh := (WDCComplexGenericMeshBuilder for: aView engine)
-		material: WDCFlatColorMaterial new;
+		material: WDCUnlitMaterial new;
 		translateToX: 0.0 y: 0.0 z: -50.0;
 		addCubeWithWidth: 0.02 height: 0.02 depth: 100.0;
 		computeBoundingBox;

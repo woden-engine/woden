@@ -279,11 +279,11 @@ WDCAbstractGenericSurfaceMaterial >> occlusionFactor: occlusionFactor [
 
 { #category : #parsing }
 WDCAbstractGenericSurfaceMaterial >> parse: materialFileReference data: data [
-	materialState albedo: (self parse: data at: materialFileReference srgbColor: 'albedo-color' ifAbsent: [ Color white ]).
-	albedoTexture := self parse: data at: materialFileReference optionalSRGBTexture: 'albedo-texture'.
-	normalTexture := self parse: data at: materialFileReference optionalTexture: 'normal-texture'.
+	materialState albedo: (self parse: data at: materialFileReference srgbColor: #baseColorFactor ifAbsent: [ Color white ]).
+	albedoTexture := self parse: data at: materialFileReference optionalSRGBTexture: #baseColorTexture.
+	normalTexture := self parse: data at: materialFileReference optionalTexture: #normalTexture.
 	materialState
-		alphaCutoff: (data at: 'alpha-cutoff' ifAbsent: [ materialState alphaCutoff ]).
+		alphaCutoff: (data at: #alphaCutoff ifAbsent: [ materialState alphaCutoff ]).
 ]
 
 { #category : #enumerating }

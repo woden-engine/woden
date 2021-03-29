@@ -75,7 +75,7 @@ WDCFormSceneGraphRenderable >> initialize [
 { #category : #accessing }
 WDCFormSceneGraphRenderable >> material [
 	material ifNil: [ 
-		material := (WDCFlatColorMaterial for: engine)
+		material := (WDCUnlitMaterial for: engine)
 			useDepth: false;
 			writeDepth: false;
 			hasPremultipliedAlpha: true;

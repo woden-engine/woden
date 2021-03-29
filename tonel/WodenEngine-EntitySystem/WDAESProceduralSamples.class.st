@@ -89,7 +89,7 @@ WDAESProceduralSamples class >> example02PoolLevel [
 			addWaterVolumeAt: (Float32x3 y: -0.3) with: [ :waterVolume |
 				(waterVolume buildWaterMeshWith: [ :meshBuilder |
 				
-					waterMaterial := engine resourceCache loadMaterial: 'materials/demos/water.json'.
+					waterMaterial := engine resourceCache loadMaterial: 'materials/demos/water.wtmat'.
 					meshBuilder
 						material: waterMaterial;
 						heightScale: 0.1;
@@ -130,7 +130,7 @@ WDAESProceduralSamples class >> example02PoolLevel [
 WDAESProceduralSamples class >> example03Island [
 	| engine universe terrainMaterial waterMaterial terrainData |
 	engine := WDCEngine default.
-	terrainMaterial := engine resourceCache loadMaterial: 'materials/demos/island.json'.
+	terrainMaterial := engine resourceCache loadMaterial: 'materials/demos/island.wtmat'.
 	terrainData := engine resourceCache loadTerrain: 'terrains/demos/procedural/island.stterrain'.
 
 	universe := WDESSimpleUniverse for: engine.
@@ -143,7 +143,7 @@ WDAESProceduralSamples class >> example03Island [
 		
 		sector addWaterVolumeAt: Float32x3 zeros with: [ :waterVolume |
 			(waterVolume buildWaterMeshWith: [ :meshBuilder |
-				waterMaterial := engine resourceCache loadMaterial: 'materials/demos/ocean.json'.
+				waterMaterial := engine resourceCache loadMaterial: 'materials/demos/ocean.wtmat'.
 				meshBuilder material: waterMaterial.
 				terrainData buildWaterMeshWith: meshBuilder.
 				meshBuilder
@@ -184,7 +184,7 @@ WDAESProceduralSamples class >> example04BalloonVehicle [
 	universe buildSector: [ :sector |
 		sector buildGenericMeshWith: [ :meshBuilder |
 			meshBuilder
-				currentMaterial: (universe engine resourceCache loadMaterial: 'materials/procedural/terrain/sand.json');
+				currentMaterial: (universe engine resourceCache loadMaterial: 'materials/procedural/terrain/sand.wtmat');
 				translateToX: 0.0 y: -1.0 z: 0.0;
 				addCubeWithWidth: 500.0 height: 2.0 depth: 500.0;
 				planeTextureScale: (Float32x2 x: 0.1 y: 0.1) offset: (Float32x2 x: 0.0 y: 0.0);

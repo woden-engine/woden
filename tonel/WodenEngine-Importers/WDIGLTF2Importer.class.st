@@ -1106,7 +1106,9 @@ WDIGLTF2Importer >> processGLTFJson: json [
 	json at: 'nodes' ifPresent: [ :elements | self loadNodesFrom: elements ].
 	json at: 'animations' ifPresent: [ :elements | self loadAnimationsFrom: elements ].	
 	json at: 'scenes' ifPresent: [ :elements | self loadScenesFrom: elements ].
-	skins do: [ :each | each rootNode removeFromScene ].
+	skins ifNotNil: [ 
+		skins do: [ :each | each rootNode removeFromScene ].
+	].
 	
 	asset scenes: scenes asArray.
 	json at: 'scene' ifPresent: [ :mainSceneIndex |

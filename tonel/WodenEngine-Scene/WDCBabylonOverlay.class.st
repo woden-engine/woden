@@ -78,7 +78,7 @@ WDCBabylonOverlay >> logicalHeight [
 { #category : #accessing }
 WDCBabylonOverlay >> overlayMaterial [
 	overlayMaterial ifNil: [ 
-		overlayMaterial := (WDCFlatColorMaterial for: engine)
+		overlayMaterial := (WDCUnlitMaterial for: engine)
 			useDepth: false;
 			writeDepth: false;
 			yourself

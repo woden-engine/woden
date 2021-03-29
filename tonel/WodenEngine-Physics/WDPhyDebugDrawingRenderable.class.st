@@ -46,7 +46,7 @@ WDPhyDebugDrawingRenderable >> meshBuilder [
 		^ meshBuilder
 	].
 
-	meshMaterial := engine resourceCache loadMaterial: 'materials/basic/flat-xray.json'.
+	meshMaterial := engine resourceCache loadMaterial: 'materials/basic/flat-xray.wtmat'.
 	meshBuilder := WDCDynamicGenericMeshBuilder for: engine.
 	meshBuilder currentMaterial: meshMaterial.
 	^ meshBuilder
