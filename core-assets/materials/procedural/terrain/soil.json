@@ -1,6 +1,0 @@
-{
-    "type" : "MetallicRoughness",
-    "albedo-texture" : "textures/procedural/terrain/soil.sttex",
-    "normal-texture" : "textures/procedural/terrain/soil.sttex?texture=normal",
-    "metallic-roughness-texture" : "textures/procedural/terrain/soil.sttex?texture=rma"
-}

@@ -1,6 +1,0 @@
-{
-    "type" : "MetallicRoughness",
-    "albedo-texture" : "textures/procedural/terrain/sand.sttex",
-    "normal-texture" : "textures/procedural/terrain/sand.sttex?texture=normal",
-    "metallic-roughness-texture" : "textures/procedural/terrain/sand.sttex?texture=rma"
-}

@@ -3,28 +3,28 @@
 
 	"triplanar" : false,
 
-    "albedo-textures" : [
+    "baseColorTextures" : [
         "textures/procedural/terrain/sand.sttex",
         "textures/procedural/terrain/grass.sttex",
         "textures/procedural/terrain/rock.sttex",
         "textures/procedural/terrain/snow.sttex"
     ],
 
-    "normal-textures" : [
+    "normalTextures" : [
         "textures/procedural/terrain/sand.sttex?texture=normal",
         "textures/procedural/terrain/grass.sttex?texture=normal",
         "textures/procedural/terrain/rock.sttex?texture=normal",
         "textures/procedural/terrain/snow.sttex?texture=normal"
     ],
 
-    "metallic-roughness-textures" : [
+    "occlusionMetallicRoughnessTextures" : [
         "textures/procedural/terrain/sand.sttex?texture=rma",
         "textures/procedural/terrain/grass.sttex?texture=rma",
         "textures/procedural/terrain/rock.sttex?texture=rma",
         "textures/procedural/terrain/snow.sttex?texture=rma"
     ],
 
-    "texture-scales-offsets" : [
+    "textureScalesOffsets" : [
         [0.125, 0.125, 0.0, 0.0],
         [0.125, 0.125, 0.0, 0.0],
         [0.3, 0.3, 0.0, 0.0],

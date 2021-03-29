@@ -1,0 +1,6 @@
+{
+    "type" : "MetallicRoughness",
+    "baseColorTexture" : "textures/demos/esug-floor.dds",
+
+    "roughnessFactor" : 0.70
+}

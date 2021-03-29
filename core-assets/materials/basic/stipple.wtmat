@@ -1,0 +1,8 @@
+{
+    "type" : "Unlit",
+
+    "stipple" : true,
+
+    "useDepth" : false,
+    "thumbnailType" : "no-editor"
+}

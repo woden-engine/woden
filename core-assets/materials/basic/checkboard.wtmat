@@ -1,0 +1,4 @@
+{
+    "type" : "MetallicRoughness",
+    "baseColorTexture" : "textures/basic/checkboard.dds"
+}

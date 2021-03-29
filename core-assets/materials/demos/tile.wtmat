@@ -1,0 +1,8 @@
+{
+    "type" : "MetallicRoughness",
+    "baseColorTexture" : "textures/demos/tile-albedo.dds",
+    "normalTexture" : "textures/demos/tile-normal.dds",
+
+	"metallicFactor" : 0.0,
+    "roughnessFactor" : 0.45
+}

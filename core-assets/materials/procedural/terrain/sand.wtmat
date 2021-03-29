@@ -1,0 +1,6 @@
+{
+    "type" : "MetallicRoughness",
+    "baseColorTexture" : "textures/procedural/terrain/sand.sttex",
+    "normalTexture" : "textures/procedural/terrain/sand.sttex?texture=normal",
+    "occlusionMetallicRoughnessTexture" : "textures/procedural/terrain/sand.sttex?texture=rma"
+}

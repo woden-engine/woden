@@ -1,6 +1,0 @@
-{
-    "type" : "MetallicRoughness",
-    "albedo-texture" : "textures/demos/esug-floor.dds",
-
-    "roughness-factor" : 0.70
-}

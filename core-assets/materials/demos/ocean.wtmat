@@ -1,0 +1,10 @@
+{
+    "type" : "Water",
+    "useClipMap" : true,
+    "baseColorTexture" : "textures/procedural/water/ocean.sttex?texture=albedo",
+    "normalTexture" : "textures/procedural/water/ocean.sttex?texture=normal",
+    "textureScale": [0.5, 0.5],
+
+    "fresnel" : [0.04, 0.04, 0.04],
+    "roughness" : 0.04
+}
