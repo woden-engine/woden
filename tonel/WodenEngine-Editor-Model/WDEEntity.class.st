@@ -381,6 +381,11 @@ WDEEntity >> materialStateMemento [
 	^ components collect: [:each | each transformStateMemento ]
 ]
 
+{ #category : #private }
+WDEEntity >> notifyComponentsAboutTransformChange [
+	components do: [ :each | each entityTransformChanged ].
+]
+
 { #category : #accessing }
 WDEEntity >> orientation [
 	^ orientation value
@@ -389,7 +394,8 @@ WDEEntity >> orientation [
 { #category : #accessing }
 WDEEntity >> orientation: newOrientation [
 	self orientationChanged.
-	orientation value: newOrientation
+	orientation value: newOrientation.
+	self notifyComponentsAboutTransformChange.
 ]
 
 { #category : #private }
@@ -452,7 +458,8 @@ WDEEntity >> position: newPosition [
 	| sanitizedPosition |
 	sanitizedPosition := (dimensionalityMode sanitizePosition: (newPosition implicitCastTo: Float32x3)).
 	self positionChanged.
-	position value: sanitizedPosition
+	position value: sanitizedPosition.
+	self notifyComponentsAboutTransformChange.
 ]
 
 { #category : #private }

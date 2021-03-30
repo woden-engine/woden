@@ -139,16 +139,26 @@ WDCComplexGenericMeshBuilder >> initialize [
 
 { #category : #'as yet unclassified' }
 WDCComplexGenericMeshBuilder >> planeTextureScale: texScale offset: texOffset [
+	self planeTextureScale: texScale offset: texOffset withModelTransform: ReversibleAffineTransform3dF32 identity
+]
+
+{ #category : #'as yet unclassified' }
+WDCComplexGenericMeshBuilder >> planeTextureScale: texScale offset: texOffset withModelTransform: modelTransform [
 	self planeTextureTransform: (Float32x3x3 texScale: texScale offset: texOffset).
 ]
 
 { #category : #'as yet unclassified' }
 WDCComplexGenericMeshBuilder >> planeTextureTransform: textureMatrix [
+	self planeTextureTransform: textureMatrix withModelTransform: ReversibleAffineTransform3dF32 identity
+]
+
+{ #category : #'as yet unclassified' }
+WDCComplexGenericMeshBuilder >> planeTextureTransform: textureMatrix withModelTransform: modelTransform [
 	| vertex normal position normalAxis tangent bitangent uv |
 	1 to: vertices size do: [ :vi |
 		vertex := vertices at: vi.
-		normal := vertex normal asFloat32x3.
-		position := vertex position asFloat32x3.
+		normal := modelTransform transformVector: vertex normal asFloat32x3.
+		position := modelTransform transformPosition: vertex position asFloat32x3.
 		
 		"Compute the predominant normal plane."
 		normalAxis := self computeNormalAxis: normal.

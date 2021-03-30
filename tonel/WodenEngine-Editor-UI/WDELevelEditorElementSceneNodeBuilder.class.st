@@ -109,22 +109,43 @@ WDELevelEditorElementSceneNodeBuilder >> visitBoxCollisionComponent: component [
 
 { #category : #'visual components' }
 WDELevelEditorElementSceneNodeBuilder >> visitBoxVisualComponent: component [
-	| node renderable editorColorMaterial |
-	renderable := WDERenderableWithEditorAlternatives new.
-	editorColorMaterial := self makeEditorColorMaterialFor: component.
-	renderable
-		wireFrameRenderable: (self engine resourceCache unitWireCubeMesh copy setMaterial: editorColorMaterial);
-		colorRenderable: (self engine resourceCache unitCubeMesh copy setMaterial: editorColorMaterial);
-		shadedRenderable: self engine resourceCache unitCubeMesh copy.
-	
+	| node |
 	node := WDSGSpatialObject new.
-	node renderable: renderable.
 	component whenChangedDoNow: [
-		renderable shadedRenderable setMaterial: (component material
+		| renderable editorColorMaterial material wireMesh solidMesh transform parentTransform |
+		renderable := WDERenderableWithEditorAlternatives new.
+		material := (component material
 			ifNotNil: [ :mat | mat asRenderingMaterialForSession: self levelEditorSession engine: self engine ]
 			ifNil: [self engine resourceCache defaultMaterial]).
+		editorColorMaterial := self makeEditorColorMaterialFor: component.
+		transform := component boundingBox reversibleTransformToConvertUnitBoxToMe.
+		parentTransform := component entity transform.
+
+		wireMesh :=
+			(WDCComplexGenericMeshBuilder for: self engine)
+				currentMaterial: editorColorMaterial;
+				transform: transform;
+				addWireCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+				computeBoundingBox;
+				mesh.
+			
+		solidMesh :=
+			(WDCComplexGenericMeshBuilder for: self engine)
+				transform: transform;
+				currentMaterial: material;
+				addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+				planeTextureScale: component textureScale offset: component textureOffset withModelTransform: parentTransform;
+				computeTangentsBitangents;
+				computeBoundingBox;
+				mesh.
+
+		renderable
+			wireFrameRenderable: wireMesh;
+			colorRenderable: (solidMesh copy setMaterial: editorColorMaterial);
+			shadedRenderable: solidMesh.
+
 		node
-			transform: component boundingBox reversibleTransformToConvertUnitBoxToMe;
+			renderable: renderable;
 			stateChanged
 	].
 	^ node

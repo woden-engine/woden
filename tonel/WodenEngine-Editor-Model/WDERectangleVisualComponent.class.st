@@ -3,7 +3,9 @@ Class {
 	#superclass : #WDEVisualComponent2D,
 	#instVars : [
 		'rectangle',
-		'material'
+		'material',
+		'textureOffset',
+		'textureScale'
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
 }
@@ -18,18 +20,36 @@ WDERectangleVisualComponent >> boundingRectangle [
 	^ rectangle
 ]
 
+{ #category : #accessing }
+WDERectangleVisualComponent >> buildLevelElementPropertyPageWith: builder [
+	super buildLevelElementPropertyPageWith: builder.
+	
+	builder
+		vector2PropertyNamed: 'Texture Scale' selector: #textureScale;
+		vector2PropertyNamed: 'Texture Offset' selector: #textureOffset
+]
+
 { #category : #serialization }
 WDERectangleVisualComponent >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
 		#rectangle . rectangle encodeForJSON.
 		#material . material ifNil: [0] ifNotNil: [material materialIndex].
+		#textureScale . textureScale encodeForJSON.
+		#textureOffset . textureOffset encodeForJSON.
 	}
+]
+
+{ #category : #accessing }
+WDERectangleVisualComponent >> entityTransformChanged [
+	self raiseChangedEvent
 ]
 
 { #category : #initialization }
 WDERectangleVisualComponent >> initialize [
 	super initialize.
 	rectangle := RectangleF32 unitRectangle.
+	textureScale := Float32x2 ones.
+	textureOffset := Float32x2 zeros.
 ]
 
 { #category : #testing }
@@ -44,7 +64,12 @@ WDERectangleVisualComponent >> loadFromJson: jsonData context: context [
 	jsonData at: 'material' ifPresent: [ :index |
 		material := context getMaterialWithIndex: index
 	].
-
+	jsonData at: 'textureScale' ifPresent: [ :scale |
+		textureScale := Float32x2 loadFromJson: scale.
+	].
+	jsonData at: 'textureOffset' ifPresent: [ :offset |
+		textureOffset := Float32x2 loadFromJson: offset.
+	].
 ]
 
 { #category : #accessing }
@@ -87,6 +112,30 @@ WDERectangleVisualComponent >> restoreTransformStateMemento: memento [
 { #category : #initialization }
 WDERectangleVisualComponent >> setMaterial: newMaterial [
 	self material: newMaterial
+]
+
+{ #category : #accessing }
+WDERectangleVisualComponent >> textureOffset [
+
+	^ textureOffset
+]
+
+{ #category : #accessing }
+WDERectangleVisualComponent >> textureOffset: anObject [
+	textureOffset := anObject.
+	self changed
+]
+
+{ #category : #accessing }
+WDERectangleVisualComponent >> textureScale [
+
+	^ textureScale
+]
+
+{ #category : #accessing }
+WDERectangleVisualComponent >> textureScale: anObject [
+	textureScale := anObject.
+	self changed
 ]
 
 { #category : #memento }

@@ -3,7 +3,9 @@ Class {
 	#superclass : #WDEVisualComponent3D,
 	#instVars : [
 		'box',
-		'material'
+		'material',
+		'textureOffset',
+		'textureScale'
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
 }
@@ -29,18 +31,36 @@ WDEBoxVisualComponent >> box: anObject [
 	self changed.
 ]
 
+{ #category : #accessing }
+WDEBoxVisualComponent >> buildLevelElementPropertyPageWith: builder [
+	super buildLevelElementPropertyPageWith: builder.
+	
+	builder
+		vector2PropertyNamed: 'Texture Scale' selector: #textureScale;
+		vector2PropertyNamed: 'Texture Offset' selector: #textureOffset
+]
+
 { #category : #serialization }
 WDEBoxVisualComponent >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
 		#box . box encodeForJSON.
 		#material . material ifNil: [0] ifNotNil: [material materialIndex].
+		#textureScale . textureScale encodeForJSON.
+		#textureOffset . textureOffset encodeForJSON.
 	}
+]
+
+{ #category : #accessing }
+WDEBoxVisualComponent >> entityTransformChanged [
+	"self changed"
 ]
 
 { #category : #initialization }
 WDEBoxVisualComponent >> initialize [
 	super initialize.
 	box := BoxF32 unitBox.
+	textureScale := Float32x2 ones.
+	textureOffset := Float32x2 zeros.
 ]
 
 { #category : #testing }
@@ -55,7 +75,12 @@ WDEBoxVisualComponent >> loadFromJson: jsonData context: context [
 	jsonData at: 'material' ifPresent: [ :index |
 		material := context getMaterialWithIndex: index
 	].
-
+	jsonData at: 'textureScale' ifPresent: [ :scale |
+		textureScale := Float32x2 loadFromJson: scale.
+	].
+	jsonData at: 'textureOffset' ifPresent: [ :offset |
+		textureOffset := Float32x2 loadFromJson: offset.
+	].
 ]
 
 { #category : #accessing }
@@ -89,6 +114,30 @@ WDEBoxVisualComponent >> restoreTransformStateMemento: memento [
 { #category : #initialization }
 WDEBoxVisualComponent >> setMaterial: newMaterial [
 	self material: newMaterial
+]
+
+{ #category : #accessing }
+WDEBoxVisualComponent >> textureOffset [
+
+	^ textureOffset
+]
+
+{ #category : #accessing }
+WDEBoxVisualComponent >> textureOffset: anObject [
+	textureOffset := anObject.
+	self changed
+]
+
+{ #category : #accessing }
+WDEBoxVisualComponent >> textureScale [
+
+	^ textureScale
+]
+
+{ #category : #accessing }
+WDEBoxVisualComponent >> textureScale: anObject [
+	textureScale := anObject.
+	self changed
 ]
 
 { #category : #memento }
