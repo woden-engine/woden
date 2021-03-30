@@ -747,9 +747,9 @@ WDIGLTF2Importer >> loadMetallicRoughnessMaterial: description commonDescription
 	].
 
 	commonDescription at: 'emissiveFactor' ifPresent: [ :factor |
-		material emissionColor: (Float32x3 x: factor first y: factor second z: factor third)
+		material emissionFactor: (Float32x3 x: factor first y: factor second z: factor third)
 	] ifAbsent: [
-		material emissionColor: Float32x3 zeros
+		material emissionFactor: Float32x3 zeros
 	].
 
 	commonDescription at: 'emissiveTexture' ifPresent: [ :textureDescription |

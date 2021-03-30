@@ -139,12 +139,12 @@ WDCAbstractGenericSurfaceMaterial >> alphaCutoff: aFloat [
 ]
 
 { #category : #accessing }
-WDCAbstractGenericSurfaceMaterial >> baseColor [
+WDCAbstractGenericSurfaceMaterial >> baseColorFactor [
 	^ self albedoColor
 ]
 
 { #category : #accessing }
-WDCAbstractGenericSurfaceMaterial >> baseColor: aColor [
+WDCAbstractGenericSurfaceMaterial >> baseColorFactor: aColor [
 	self albedoColor: aColor
 ]
 
@@ -211,12 +211,12 @@ WDCAbstractGenericSurfaceMaterial >> doubleSided: anObject [
 ]
 
 { #category : #accessing }
-WDCAbstractGenericSurfaceMaterial >> emissionColor [
+WDCAbstractGenericSurfaceMaterial >> emissionFactor [
 	^ materialState emission
 ]
 
 { #category : #accessing }
-WDCAbstractGenericSurfaceMaterial >> emissionColor: aColor [
+WDCAbstractGenericSurfaceMaterial >> emissionFactor: aColor [
 	materialState emission: (Float32x4 xyz: aColor asFloat32x3 w: 0.0).
 	self uploadMaterialStateData.
 ]

@@ -27,12 +27,12 @@ WDELevelElementTest class >> createTestLevel [
 
 { #category : #tests }
 WDELevelElementTest class >> greenMaterial [
-	^ WDEMetallicRoughnessMaterial new baseColor: Color green; yourself
+	^ WDEMetallicRoughnessMaterial new baseColorFactor: Color green; yourself
 ]
 
 { #category : #tests }
 WDELevelElementTest class >> redMaterial [
-	^ WDEMetallicRoughnessMaterial new baseColor: Color red; yourself
+	^ WDEMetallicRoughnessMaterial new baseColorFactor: Color red; yourself
 ]
 
 { #category : #tests }

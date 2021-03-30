@@ -84,7 +84,7 @@ WDELevelEditorElementSceneNodeBuilder >> makeEditorColorMaterialFor: component [
 	color := component entity editorColor.
 	^ editorColorMaterials at: color ifAbsentPut: [
 		(WDCMetallicRoughnessMaterial for: self engine)
-			baseColor: color;
+			baseColorFactor: color;
 			yourself
 	]
 ]
