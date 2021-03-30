@@ -51,8 +51,8 @@ WDELevelEditor3DSelectionManipulator >> computeManipulationPoints [
 { #category : #accessing }
 WDELevelEditor3DSelectionManipulator >> currentColor [
 	^ highlighted
-		ifTrue: [ (Float32x4 x: 0.9 y: 0.9 z: 0.3 w: 0.3)  ]
-		ifFalse: [ (Float32x4 x: 0.9 y: 0.7 z: 0.3 w: 0.3) ]
+		ifTrue: [ self theme highlightedSelectionManipulatorColor ]
+		ifFalse: [ self theme selectionManipulatorColor ]
 ]
 
 { #category : #accessing }

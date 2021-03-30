@@ -164,7 +164,6 @@ WDELevelEditorSceneModel >> createHighlightBoxNode [
 		renderable: (engine resourceCache flatShadedTranslucentUnitCubeMesh copy 			setFlatColorSubRenderMode; 
 			isOpaqueShadowCaster: false;
 			yourself);
-		color: (Float32x4 x: 0.3 y: 0.3 z: 0.9 w: 0.5);
 		visible: false;
 		yourself.
 	scene add: highlightBoxNode.
@@ -228,6 +227,7 @@ WDELevelEditorSceneModel >> highlightElement: anElement [
 	] ifNotNil: [
 		highlightBoxNode
 			visible: true;
+			color: WDELevelEditorTheme current highlightColor;
 			transform: (anElement selectableBoundingBox withExpandedHalfExtent: 0.025) reversibleTransformToConvertUnitBoxToMe.
 	]
 ]

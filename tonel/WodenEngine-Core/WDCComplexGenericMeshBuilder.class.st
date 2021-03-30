@@ -144,7 +144,7 @@ WDCComplexGenericMeshBuilder >> planeTextureScale: texScale offset: texOffset [
 
 { #category : #'as yet unclassified' }
 WDCComplexGenericMeshBuilder >> planeTextureScale: texScale offset: texOffset withModelTransform: modelTransform [
-	self planeTextureTransform: (Float32x3x3 texScale: texScale offset: texOffset).
+	self planeTextureTransform: (Float32x3x3 texScale: texScale offset: texOffset) withModelTransform: modelTransform.
 ]
 
 { #category : #'as yet unclassified' }

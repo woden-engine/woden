@@ -24,8 +24,8 @@ WDELevelEditor3DBoxPlacementManipulator >> activateAction [
 { #category : #accessing }
 WDELevelEditor3DBoxPlacementManipulator >> currentColor [
 	^ highlighted
-		ifTrue: [ (Float32x4 x: 0.9 y: 0.9 z: 0.9 w: 0.3)  ]
-		ifFalse: [ (Float32x4 x: 0.7 y: 0.7 z: 0.7 w: 0.3) ]
+		ifTrue: [ self theme highlightedboxPlacementManipulatorColor ]
+		ifFalse: [ self theme boxPlacementManipulatorColor ]
 ]
 
 { #category : #initialization }
