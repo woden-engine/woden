@@ -68,6 +68,11 @@ WDELevelEditorElementSceneNodeBuilder >> initialize [
 	editorColorMaterials := Dictionary new.
 ]
 
+{ #category : #accessing }
+WDELevelEditorElementSceneNodeBuilder >> levelEditorSession [
+	^ editorSceneModel levelEditorSession
+]
+
 { #category : #'as yet unclassified' }
 WDELevelEditorElementSceneNodeBuilder >> lightSourceDisplayMeshColor [
 	^ Color yellow darker muchLighter
@@ -116,7 +121,7 @@ WDELevelEditorElementSceneNodeBuilder >> visitBoxVisualComponent: component [
 	node renderable: renderable.
 	component whenChangedDoNow: [
 		renderable shadedRenderable setMaterial: (component material
-			ifNotNil: [ :mat | mat asRenderingMaterialFor: self engine ]
+			ifNotNil: [ :mat | mat asRenderingMaterialForSession: self levelEditorSession engine: self engine ]
 			ifNil: [self engine resourceCache defaultMaterial]).
 		node
 			transform: component boundingBox reversibleTransformToConvertUnitBoxToMe;

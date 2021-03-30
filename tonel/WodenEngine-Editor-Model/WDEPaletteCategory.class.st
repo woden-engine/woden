@@ -4,14 +4,16 @@ Class {
 	#instVars : [
 		'name',
 		'templates',
-		'subcategories'
+		'subcategories',
+		'subcategoryDictionary'
 	],
 	#category : #'WodenEngine-Editor-Model-Palettes'
 }
 
 { #category : #accessing }
 WDEPaletteCategory >> addSubCategory: aSubCategory [
-	subcategories add: aSubCategory
+	subcategories add: aSubCategory.
+	subcategoryDictionary at: aSubCategory name put: aSubCategory
 ]
 
 { #category : #accessing }
@@ -29,9 +31,30 @@ WDEPaletteCategory >> children [
 	^ subcategories , templates
 ]
 
+{ #category : #accessing }
+WDEPaletteCategory >> getOrCreateSubcategoryNamed: subcategoryName [
+	^ subcategoryDictionary at: subcategoryName ifAbsentPut: [ 
+		| subcategory |
+		subcategory := self class new name: subcategoryName; yourself.
+		subcategories add: subcategory.
+		subcategory
+	]
+]
+
+{ #category : #'as yet unclassified' }
+WDEPaletteCategory >> getOrCreateSubcategoryWithPath: path [
+	| category |
+	category := self.
+	path do: [ :each |
+		category := category getOrCreateSubcategoryNamed: each
+	].
+	^ category
+]
+
 { #category : #initialization }
 WDEPaletteCategory >> initialize [
 	subcategories := OrderedCollection new.
+	subcategoryDictionary := Dictionary new.
 	templates := OrderedCollection new.
 	
 ]

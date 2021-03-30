@@ -519,11 +519,14 @@ WDELevelEditor >> initializePresenters [
 		];
 		contextMenu: [ self treeViewMenu ].
 	elementTemplateList := WDELevelEditorElementTemplatePalettePresenter on: self model.
+	elementTemplateList engine: wodenApplication engine.
 	
 	paletteNotebook := self newNotebook.
 	paletteNotebook
-		addPageTitle: 'Materials' provider: [ WDELevelEditorMaterialPalettePresenter on: self model];
-		addPageTitle: 'Light Sources' provider: [ WDELevelEditorLightSourcePalettePresenter on: self model].
+		addPageTitle: 'Materials' provider: [ (WDELevelEditorMaterialPalettePresenter on: self model)
+			engine: wodenApplication engine];
+		addPageTitle: 'Light Sources' provider: [ (WDELevelEditorLightSourcePalettePresenter on: self model)
+		engine: wodenApplication engine].
 
 ]
 

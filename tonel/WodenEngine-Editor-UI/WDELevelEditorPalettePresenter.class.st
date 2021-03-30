@@ -2,6 +2,7 @@ Class {
 	#name : #WDELevelEditorPalettePresenter,
 	#superclass : #SpPresenterWithModel,
 	#instVars : [
+		'engine',
 		'treeView'
 	],
 	#category : #'WodenEngine-Editor-UI'
@@ -13,6 +14,18 @@ WDELevelEditorPalettePresenter class >> defaultSpec [
 		add: #treeView;
 		yourself
 		
+]
+
+{ #category : #accessing }
+WDELevelEditorPalettePresenter >> engine [
+
+	^ engine
+]
+
+{ #category : #accessing }
+WDELevelEditorPalettePresenter >> engine: anObject [
+
+	engine := anObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -27,10 +40,11 @@ WDELevelEditorPalettePresenter >> initializePresenters [
 		addColumn: (SpCompositeTableColumn new
 			title: 'Name';
 			addColumn: (SpStringTableColumn evaluated: [ :node | node name ]);
-			addColumn: (SpImageTableColumn evaluated: [ :node | node thumbnail ]);
+			addColumn: (SpImageTableColumn evaluated: [ :node | node thumbnailFor: self model engine: self engine ]);
 			yourself
 		);
 		hideColumnHeaders;
+		beResizable;
 		children: [ :node | node children ];
 		whenActivatedDo: [
 			treeView selectedItem ifNotNil: [ :item | item activateInLevelSession: self model ]

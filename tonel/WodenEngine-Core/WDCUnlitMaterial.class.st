@@ -117,7 +117,7 @@ WDCUnlitMaterial >> invalidateCache [
 ]
 
 { #category : #parsing }
-WDCUnlitMaterial >> parse: materialFileReference data: aDictionary [
+WDCUnlitMaterial >> parseInFolder: parentFolderFileReference data: aDictionary [
 	useDepth := aDictionary at: #useDepth ifAbsent: [ true ].
 	writeDepth := aDictionary at: #writeDepth ifAbsent: [ true ].
 	stipple := aDictionary at: #stipple ifAbsent: [ false ].

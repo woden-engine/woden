@@ -32,7 +32,7 @@ WDEMetallicRoughnessMaterial >> = other [
 ]
 
 { #category : #converting }
-WDEMetallicRoughnessMaterial >> asRenderingMaterialFor: engine [
+WDEMetallicRoughnessMaterial >> asRenderingMaterialForSession: levelEditorSession engine: engine [
 	^ renderingMaterial ifNil: [ renderingMaterial := self createRenderingMaterialFor: engine ]
 ]
 
@@ -153,7 +153,7 @@ WDEMetallicRoughnessMaterial >> loadFromJson: jsonData context: context [
 ]
 
 { #category : #thumbnail }
-WDEMetallicRoughnessMaterial >> makeThumbnail [
+WDEMetallicRoughnessMaterial >> makeThumbnailForSession: levelEditorSession engine: engine [
 	^ (Form extent: 16@16 depth: 32) fillColor: baseColor asColor
 ]
 

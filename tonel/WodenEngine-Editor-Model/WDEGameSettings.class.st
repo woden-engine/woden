@@ -21,6 +21,50 @@ WDEGameSettings class >> isAbstract [
 	^ self == WDEGameSettings
 ]
 
+{ #category : #'as yet unclassified' }
+WDEGameSettings >> createMaterialCategoriesFromFilesInFolders: folders [
+	| topLevelCategory |
+	topLevelCategory := WDEPaletteCategory new name: self name , ' Assets'.
+	folders select: [ :eachFolder | eachFolder exists ] thenDo: [ :eachFolder |
+		eachFolder allChildren do: [ :eachChild |
+			(eachChild isFile and: [#(wmat wtmat ) includes: eachChild extension]) ifTrue: [
+				| categoryPath category materialPath |
+				categoryPath := eachChild parent relativeTo: eachFolder.
+				category := topLevelCategory getOrCreateSubcategoryWithPath: categoryPath.
+				materialPath := (eachChild relativeTo: eachFolder) fullName.
+				category addTemplate: 
+					((WDEMaterialPaletteElement referencePath: materialPath)
+						name: eachChild basenameWithoutExtension)
+			]
+		]
+	].
+
+	^ { topLevelCategory }
+]
+
+{ #category : #'as yet unclassified' }
+WDEGameSettings >> createRenderingMaterialForPath: path engine: engine [
+	^ engine defaultMaterial
+]
+
+{ #category : #'as yet unclassified' }
+WDEGameSettings >> makeThumbnailForMaterialWithPath: path engine: engine [
+	| thumbnailValue |
+	thumbnailValue := (self createRenderingMaterialForPath: path engine: engine) thumbnail value.
+	thumbnailValue isColor ifTrue: [ 
+		^ (Form extent: 16@16 depth: 32) fillColor: thumbnailValue
+	].
+	thumbnailValue isForm ifTrue: [
+		(thumbnailValue width >16 or: thumbnailValue height > 16) ifTrue: [
+			^ thumbnailValue scaledToSize: (thumbnailValue width min: 16) @ (thumbnailValue height min: 16)
+		].
+	
+		^ thumbnailValue
+	].
+	^ nil
+
+]
+
 { #category : #accessing }
 WDEGameSettings >> name [
 	^ self subclassResponsibility

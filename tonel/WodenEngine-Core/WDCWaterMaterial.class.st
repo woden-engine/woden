@@ -109,16 +109,16 @@ WDCWaterMaterial >> materialState [
 ]
 
 { #category : #parsing }
-WDCWaterMaterial >> parse: materialFileReference data: data [
+WDCWaterMaterial >> parseInFolder: parentFolderFileReference data: data [
 	materialState
-		textureOffset: (self parse: data at: materialFileReference vector2: #textureOffset ifAbsent: [ Float32x2 zeros ]);
-		textureScale: (self parse: data at: materialFileReference vector2: #textureScale ifAbsent: [ Float32x2 x: 1.0 y: 1.0 ]);
+		textureOffset: (self parse: data at: parentFolderFileReference vector2: #textureOffset ifAbsent: [ Float32x2 zeros ]);
+		textureScale: (self parse: data at: parentFolderFileReference vector2: #textureScale ifAbsent: [ Float32x2 x: 1.0 y: 1.0 ]);
 
-		albedo: (self parse: data at: materialFileReference srgbColor: #baseColorFactor ifAbsent: [ Color white ]);
-		fresnel: (self parse: data at: materialFileReference vector3: #fresnel ifAbsent: [ Float32x3 x: 0.04 y: 0.04 z: 0.04 ]);
+		albedo: (self parse: data at: parentFolderFileReference srgbColor: #baseColorFactor ifAbsent: [ Color white ]);
+		fresnel: (self parse: data at: parentFolderFileReference vector3: #fresnel ifAbsent: [ Float32x3 x: 0.04 y: 0.04 z: 0.04 ]);
 		smoothness: (1.0 - (data at: #roughness ifAbsent: [0.0])).
-	albedoTexture := self parse: data at: materialFileReference optionalSRGBTexture: #baseColorTexture.
-	normalTexture := self parse: data at: materialFileReference optionalTexture: #normalTexture.
+	albedoTexture := self parse: data at: parentFolderFileReference optionalSRGBTexture: #baseColorTexture.
+	normalTexture := self parse: data at: parentFolderFileReference optionalTexture: #normalTexture.
 	self invalidateCache.
 ]
 

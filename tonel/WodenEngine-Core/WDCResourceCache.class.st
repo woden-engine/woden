@@ -413,7 +413,7 @@ WDCResourceCache >> doActualMaterialLoading: materialFileReference [
 	materialClass := Smalltalk at: materialClassName ifAbsent: [ self error: 'Failed to find material class for material type ' , materialType ].
 	self assert: materialClass isMaterialClass.
 	^ (materialClass for: engine)
-		parse: materialFileReference data: materialData;
+		parseInFolder: materialFileReference parent data: materialData;
 		yourself
 ]
 

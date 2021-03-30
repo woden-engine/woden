@@ -81,11 +81,11 @@ WDCSpecularityGlossinessMaterial >> materialStateClass [
 ]
 
 { #category : #parsing }
-WDCSpecularityGlossinessMaterial >> parse: materialFileReference data: data [
-	super parse: materialFileReference data: data.
-	specularityGlossinessTexture := self parse: data at: materialFileReference optionalTexture: #specularityGlossinessTexture.
+WDCSpecularityGlossinessMaterial >> parseInFolder: parentFolderFileReference data: data [
+	super parseInFolder: parentFolderFileReference data: data.
+	specularityGlossinessTexture := self parse: data at: parentFolderFileReference optionalTexture: #specularityGlossinessTexture.
 	materialState
-		specularFactor: (self parse: data at: materialFileReference vector3: #specularFactor
+		specularFactor: (self parse: data at: parentFolderFileReference vector3: #specularFactor
 			ifAbsent: [
 				specularityGlossinessTexture
 					ifNil: [ Float32x3 ones * 0.04 ]

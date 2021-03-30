@@ -15,6 +15,6 @@ WDEPaletteTreeNode >> name [
 ]
 
 { #category : #accessing }
-WDEPaletteTreeNode >> thumbnail [
+WDEPaletteTreeNode >> thumbnailFor: levelEditorSession engine: engine [
 	^ nil
 ]

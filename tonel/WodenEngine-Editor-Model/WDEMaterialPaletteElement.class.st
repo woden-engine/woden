@@ -30,6 +30,15 @@ WDEMaterialPaletteElement class >> metallicBaseColor: albedo roughness: roughnes
 		yourself
 ]
 
+{ #category : #'single color materials' }
+WDEMaterialPaletteElement class >> referencePath: path [
+	^ self new 
+		material: (WDEFileReferenceMaterial new
+			path: path;
+			yourself);
+		yourself
+]
+
 { #category : #'as yet unclassified' }
 WDEMaterialPaletteElement >> activateInLevelSession: levelSession [
 	| oldSelection memento |
@@ -61,6 +70,6 @@ WDEMaterialPaletteElement >> material: anObject [
 ]
 
 { #category : #accessing }
-WDEMaterialPaletteElement >> thumbnail [
-	^ thumbnail ifNil: [ thumbnail := material ifNotNil: [ material makeThumbnail ] ]
+WDEMaterialPaletteElement >> thumbnailFor: levelEditorSession engine: engine [
+	^ thumbnail ifNil: [ thumbnail := material ifNotNil: [ material makeThumbnailForSession: levelEditorSession engine: engine ] ]
 ]
