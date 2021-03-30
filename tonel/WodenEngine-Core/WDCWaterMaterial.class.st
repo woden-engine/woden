@@ -80,6 +80,11 @@ WDCWaterMaterial >> fragmentShader [
 	]
 ]
 
+{ #category : #testing }
+WDCWaterMaterial >> hasTexture [
+	^ albedoTexture isNotNil
+]
+
 { #category : #initialization }
 WDCWaterMaterial >> initialize [
 	materialState := WDCWaterMaterialState new

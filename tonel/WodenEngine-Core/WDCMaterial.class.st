@@ -78,6 +78,11 @@ WDCMaterial >> fetchVertexShader: shaderName [
 	^ engine loadVertexShader: shaderName
 ]
 
+{ #category : #testing }
+WDCMaterial >> hasTexture [
+	^ false
+]
+
 { #category : #'state binding' }
 WDCMaterial >> invalidateCache [
 ]

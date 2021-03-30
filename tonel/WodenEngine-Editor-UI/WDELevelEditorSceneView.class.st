@@ -460,6 +460,14 @@ WDELevelEditorSceneView >> snapToSubGrid: vector [
 	^ model snapToSubGrid: vector
 ]
 
+{ #category : #accessing }
+WDELevelEditorSceneView >> startPlacingDuplicatedElements: duplicatedElements oldSelection: oldSelection [
+	self activeToolMode: ((WDELevelEditorDuplicatePlacementToolMode for: self)
+		duplicatedElements: duplicatedElements;
+		oldSelection: oldSelection;
+		yourself)
+]
+
 { #category : #snapping }
 WDELevelEditorSceneView >> subGridSize [
 	^ model subGridSize

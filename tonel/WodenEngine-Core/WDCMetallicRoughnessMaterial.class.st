@@ -80,6 +80,11 @@ WDCMetallicRoughnessMaterial >> forwardFragmentShaderFor: stateTracker [
 
 ]
 
+{ #category : #testing }
+WDCMetallicRoughnessMaterial >> hasTexture [
+	^ super hasTexture or: [ metallicRoughnessTexture isNotNil ]
+]
+
 { #category : #initialization }
 WDCMetallicRoughnessMaterial >> initialize [
 	super initialize.

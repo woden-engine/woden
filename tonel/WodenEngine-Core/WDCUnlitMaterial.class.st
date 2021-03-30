@@ -101,6 +101,11 @@ WDCUnlitMaterial >> hasPremultipliedAlpha: anObject [
 	hasPremultipliedAlpha := anObject
 ]
 
+{ #category : #testing }
+WDCUnlitMaterial >> hasTexture [
+	^ colorTexture isNotNil
+]
+
 { #category : #initialization }
 WDCUnlitMaterial >> initialize [
 	super initialize.

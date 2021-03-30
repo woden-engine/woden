@@ -26,6 +26,11 @@ WDEFileReferenceMaterial >> encodeJsonKeyValues [
 	}
 ]
 
+{ #category : #testing }
+WDEFileReferenceMaterial >> hasTexture [
+	^ renderingMaterial isNotNil and: [ renderingMaterial hasTexture ]
+]
+
 { #category : #comparing }
 WDEFileReferenceMaterial >> hash [
 	^ self class identityHash bitXor: (path hash)

@@ -18,6 +18,12 @@ WDEEntityComponent >> changed [
 	self raiseChangedEvent
 ]
 
+{ #category : #'as yet unclassified' }
+WDEEntityComponent >> destroyAnnouncers [
+	super destroyAnnouncers.
+	changedEventHolder destroyAnnouncer.
+]
+
 { #category : #accessing }
 WDEEntityComponent >> entity [
 	^ parent

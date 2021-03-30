@@ -61,9 +61,18 @@ WDELevelElement >> buildLevelElementPropertyPageWith: builder [
 		stringPropertyNamed: 'Name' selector: #name
 ]
 
+{ #category : #testing }
+WDELevelElement >> canBeDuplicatedAndPlacedInLayer [
+	^ false
+]
+
 { #category : #accessing }
 WDELevelElement >> children [
 	^ #()
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelElement >> destroyAnnouncers [
 ]
 
 { #category : #serialization }
@@ -274,6 +283,7 @@ WDELevelElement >> removeFromParent [
 
 { #category : #'as yet unclassified' }
 WDELevelElement >> removedFromLevel: level [
+	self destroyAnnouncers.
 	self children do: [ :each | each removedFromLevel: level ].
 	level announceRemovedElement: self.
 

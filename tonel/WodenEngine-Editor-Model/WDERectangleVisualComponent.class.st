@@ -41,7 +41,9 @@ WDERectangleVisualComponent >> encodeJsonKeyValues [
 
 { #category : #accessing }
 WDERectangleVisualComponent >> entityTransformChanged [
-	self raiseChangedEvent
+	material hasTexture ifTrue: [
+		self raiseChangedEvent
+	]
 ]
 
 { #category : #initialization }

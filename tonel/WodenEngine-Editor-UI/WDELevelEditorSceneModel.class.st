@@ -290,7 +290,10 @@ WDELevelEditorSceneModel >> levelEditorSession: anObject [
 	levelEditorSession
 		whenActiveLevelElementTemplateDo: [ :template | views do: [ :v | v levelElementTemplateSelected: template ] ];
 		whenLevelChangedDo: [ self levelChanged ];
-		whenSelectionChangedDo: [ :newSelection | self applyNewSelection: newSelection ].
+		whenSelectionChangedDo: [ :newSelection | self applyNewSelection: newSelection ];
+		whenStartingToPlaceDuplicatedItemsDo: [ :duplicatedItems :oldSelection |
+			self startPlacingDuplicatedElements: duplicatedItems oldSelection: oldSelection
+		].
 	self levelChanged.
 ]
 
@@ -382,6 +385,11 @@ WDELevelEditorSceneModel >> snapToGrid: vector [
 { #category : #snapping }
 WDELevelEditorSceneModel >> snapToSubGrid: vector [
 	^ levelEditorSession snapToSubGrid: vector
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneModel >> startPlacingDuplicatedElements: duplicatedItems oldSelection: oldSelection [
+	views first startPlacingDuplicatedElements: duplicatedItems oldSelection: oldSelection
 ]
 
 { #category : #'instance creation' }

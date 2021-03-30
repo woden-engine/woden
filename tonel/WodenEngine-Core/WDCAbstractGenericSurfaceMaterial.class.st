@@ -236,6 +236,11 @@ WDCAbstractGenericSurfaceMaterial >> forwardFragmentShaderFor: stateTracker [
 	^ self subclassResponsibility
 ]
 
+{ #category : #testing }
+WDCAbstractGenericSurfaceMaterial >> hasTexture [
+	^ emissionTexture isNotNil or: [ albedoTexture isNotNil or: [ normalTexture isNotNil ] ]
+]
+
 { #category : #initialization }
 WDCAbstractGenericSurfaceMaterial >> initialize [
 	materialState := self materialStateClass new

@@ -52,7 +52,10 @@ WDEBoxVisualComponent >> encodeJsonKeyValues [
 
 { #category : #accessing }
 WDEBoxVisualComponent >> entityTransformChanged [
-	"self changed"
+	material hasTexture ifTrue: [
+		self raiseChangedEvent
+	].
+
 ]
 
 { #category : #initialization }

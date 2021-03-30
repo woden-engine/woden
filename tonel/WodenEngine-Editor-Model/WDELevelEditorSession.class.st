@@ -12,7 +12,8 @@ Class {
 		'redoOperationHistory',
 		'statusMessage',
 		'activeToolModeOrEditionModeName',
-		'gameSettings'
+		'gameSettings',
+		'whenStartingToPlaceDuplicatedItems'
 	],
 	#category : #'WodenEngine-Editor-Model-Session'
 }
@@ -112,6 +113,7 @@ WDELevelEditorSession >> initialize [
 	activeLevelElementTemplate := nil asValueHolder.
 	statusMessage := '' asValueHolder.
 	gridSize := 10.0 asValueHolder.
+	whenStartingToPlaceDuplicatedItems := [].
 	selection := WDELevelEditorSelection empty asValueHolder.
 	undoOperationHistory := OrderedCollection new.
 	redoOperationHistory := OrderedCollection new.
@@ -248,6 +250,11 @@ WDELevelEditorSession >> snapToSubGrid: vector [
 	^ self round: vector quantum: self subGridSize
 ]
 
+{ #category : #actions }
+WDELevelEditorSession >> startPlacingDuplicatedItems: duplicatedItems [
+	whenStartingToPlaceDuplicatedItems cull: duplicatedItems cull: self selection
+]
+
 { #category : #accessing }
 WDELevelEditorSession >> statusMessage [
 	^ statusMessage value
@@ -339,6 +346,11 @@ WDELevelEditorSession >> whenLevelChangedDoNow: aBlock [
 { #category : #enumerating }
 WDELevelEditorSession >> whenSelectionChangedDo: aBlock [
 	selection whenChangedDo: aBlock
+]
+
+{ #category : #actions }
+WDELevelEditorSession >> whenStartingToPlaceDuplicatedItemsDo: aBlock [
+	whenStartingToPlaceDuplicatedItems := aBlock
 ]
 
 { #category : #enumerating }

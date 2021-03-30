@@ -139,6 +139,11 @@ WDEEntity >> buildLevelElementPropertyPageWith: builder [
 		linearColor4PropertyNamed: 'Editor color' selector: #editorColor.
 ]
 
+{ #category : #testing }
+WDEEntity >> canBeDuplicatedAndPlacedInLayer [
+	^ true
+]
+
 { #category : #accessing }
 WDEEntity >> children [
 	^ components
@@ -175,6 +180,14 @@ WDEEntity >> computeLocalBoundingBoxFromComponents [
 WDEEntity >> computeLocalSelecteableBoundingBox [
 
 	localSelectableBoundingBox := BoxF32 center: self localBoundingBoxWithDepth center halfExtent: (self localBoundingBoxWithDepth halfExtent max: 0.1)
+]
+
+{ #category : #initialization }
+WDEEntity >> destroyAnnouncers [
+	super destroyAnnouncers.
+	components destroyAnnouncer.
+	position destroyAnnouncer.
+	localBoundingBox destroyAnnouncer.
 ]
 
 { #category : #accessing }

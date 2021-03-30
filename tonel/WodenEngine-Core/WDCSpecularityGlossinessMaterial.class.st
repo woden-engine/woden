@@ -75,6 +75,11 @@ WDCSpecularityGlossinessMaterial >> glossinessFactor: aFloat [
 	
 ]
 
+{ #category : #testing }
+WDCSpecularityGlossinessMaterial >> hasTexture [
+	^ super hasTexture or: [ specularityGlossinessTexture isNotNil ]
+]
+
 { #category : #'state binding' }
 WDCSpecularityGlossinessMaterial >> materialStateClass [
 	^ WDCSpecularityGlossinessMaterialState
