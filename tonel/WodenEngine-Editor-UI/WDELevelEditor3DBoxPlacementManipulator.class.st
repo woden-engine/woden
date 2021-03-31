@@ -24,7 +24,7 @@ WDELevelEditor3DBoxPlacementManipulator >> activateAction [
 { #category : #accessing }
 WDELevelEditor3DBoxPlacementManipulator >> currentColor [
 	^ highlighted
-		ifTrue: [ self theme highlightedboxPlacementManipulatorColor ]
+		ifTrue: [ self theme highlightedBoxPlacementManipulatorColor ]
 		ifFalse: [ self theme boxPlacementManipulatorColor ]
 ]
 

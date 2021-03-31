@@ -98,6 +98,16 @@ WDELevelElement >> encodeJsonKeyValues [
 	}
 ]
 
+{ #category : #accessing }
+WDELevelElement >> gameEntityDescriptions [
+	^ self gameSettings ifNotNil: [ :settings | settings entityDescriptions ]
+]
+
+{ #category : #accessing }
+WDELevelElement >> gameSettings [
+	^ self level ifNotNil: [ :level | level gameSettings ]
+]
+
 { #category : #initialization }
 WDELevelElement >> initialize [
 	super initialize.

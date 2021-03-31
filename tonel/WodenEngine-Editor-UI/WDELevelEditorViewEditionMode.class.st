@@ -89,6 +89,10 @@ WDELevelEditorViewEditionMode >> shortcuts [
 		KeyboardKey escape asKeyCombination . [ self cancelAction ].
 		KeyboardKey enter asKeyCombination . [ self activateAction ].
 
+
+		$s command mac | $s control unix | $s control win . [ self model actionSaveFile ].
+		$o command mac | $o control unix | $o control win . [ self model actionOpenFile ].
+
 		$z asKeyCombination . [ view openShadingMenu ].
 		$z command mac | $z control unix | $z control win . [ self levelEditorSession undo ].
 		$z command shift mac | $z control shift unix | $z control shift win . [ self levelEditorSession redo ].

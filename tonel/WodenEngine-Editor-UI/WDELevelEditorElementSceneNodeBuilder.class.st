@@ -17,7 +17,7 @@ WDELevelEditorElementSceneNodeBuilder >> createDirectionalLightVisualizationNode
 		yourself).
 	node
 		color: self lightSourceDisplayMeshColor;
-		transform: (BoxF32 halfExtent: 0.1) reversibleTransformToConvertUnitBoxToMe.
+		transform: (BoxF32 halfExtent: WDEEntity pointEntitySelectionBoxHalfExtent) reversibleTransformToConvertUnitBoxToMe.
 	^ node
 ]
 
@@ -30,7 +30,7 @@ WDELevelEditorElementSceneNodeBuilder >> createPointLightVisualizationNodeFor: c
 			yourself).
 	node
 		color: self lightSourceDisplayMeshColor;
-		transform: (BoxF32 halfExtent: 0.1) reversibleTransformToConvertUnitBoxToMe.
+		transform: (BoxF32 halfExtent: WDEEntity pointEntitySelectionBoxHalfExtent) reversibleTransformToConvertUnitBoxToMe.
 	^ node
 ]
 
@@ -43,7 +43,7 @@ WDELevelEditorElementSceneNodeBuilder >> createSpotLightVisualizationNodeFor: li
 		yourself).
 	node
 		color: self lightSourceDisplayMeshColor;
-		transform: (BoxF32 halfExtent: 0.1) reversibleTransformToConvertUnitBoxToMe.
+		transform: (BoxF32 halfExtent: WDEEntity pointEntitySelectionBoxHalfExtent) reversibleTransformToConvertUnitBoxToMe.
 	^ node
 ]
 

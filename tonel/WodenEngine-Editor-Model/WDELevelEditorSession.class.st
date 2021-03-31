@@ -90,7 +90,8 @@ WDELevelEditorSession >> gameSettings [
 { #category : #accessing }
 WDELevelEditorSession >> gameSettings: anObject [
 
-	gameSettings := anObject
+	gameSettings := anObject.
+	level value ifNotNil: [ :lv | lv gameSettings: gameSettings ]
 ]
 
 { #category : #accessing }
@@ -129,8 +130,8 @@ WDELevelEditorSession >> level: anObject [
 	self selection: WDELevelEditorSelection empty.
 	undoOperationHistory removeAll.
 	redoOperationHistory removeAll.
+	anObject gameSettings: gameSettings.
 	level value: anObject.
-
 ]
 
 { #category : #accessing }
@@ -209,6 +210,13 @@ WDELevelEditorSession >> saveMessagePackEncodedTo: aFileReference [
 	encodedLevel := self level encodeAsMessagePack.
 	aFileReference binaryWriteStreamDo: [ :out | out truncate; nextPutAll: encodedLevel ].
 	self levelFileReference: aFileReference
+]
+
+{ #category : #serialization }
+WDELevelEditorSession >> saveTemporaryJSONEncodedTo: aFileReference [
+	| encodedLevel |
+	encodedLevel := self level encodeAsJSONString.
+	aFileReference writeStreamDo: [ :out | out truncate; nextPutAll: encodedLevel ].
 ]
 
 { #category : #serialization }
@@ -294,7 +302,7 @@ WDELevelEditorSession >> toggleElementsFromSelection: elements [
 
 { #category : #palettes }
 WDELevelEditorSession >> topLevelElementTemplateCategories [
-	^ WDELevelElementTemplateProvider allTopLevelPaletteCategories
+	^ WDELevelElementTemplateProvider allTopLevelPaletteCategories , self gameSettings topLevelElementTemplateCategories
 ]
 
 { #category : #palettes }

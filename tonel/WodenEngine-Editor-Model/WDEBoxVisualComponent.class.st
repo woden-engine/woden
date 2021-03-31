@@ -52,7 +52,7 @@ WDEBoxVisualComponent >> encodeJsonKeyValues [
 
 { #category : #accessing }
 WDEBoxVisualComponent >> entityTransformChanged [
-	material hasTexture ifTrue: [
+	(material isNotNil and: [material hasTexture]) ifTrue: [
 		self raiseChangedEvent
 	].
 

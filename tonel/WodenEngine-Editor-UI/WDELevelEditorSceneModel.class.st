@@ -22,6 +22,44 @@ Class {
 	#category : #'WodenEngine-Editor-UI'
 }
 
+{ #category : #'main actions' }
+WDELevelEditorSceneModel >> actionOpenFile [
+	| dialog result |
+	dialog := self createLevelFileDialog.
+	dialog title: 'Select the level to open'; answerPathName.
+	result := dialog openModal answer.
+	result ifNil: [ ^ self ].
+	levelEditorSession openFrom: result asFileReference
+]
+
+{ #category : #'main actions' }
+WDELevelEditorSceneModel >> actionSaveFile [
+	levelEditorSession levelFileReference ifNotNil: [ :fileReference |
+		levelEditorSession saveTo: fileReference
+	] ifNil: [
+		self actionSaveFileAs
+	]
+]
+
+{ #category : #'main actions' }
+WDELevelEditorSceneModel >> actionSaveFileAs [
+	| dialog result |
+	dialog := self createLevelFileDialog.
+	dialog
+		title: 'Select the location to save the level';
+		fileNameText: 'level.wlevel';
+		answerSaveFile.
+	levelEditorSession levelFileReference ifNotNil: [ :fileRef |
+		dialog
+			fileNameText: fileRef basename;
+			selectPath: fileRef parent
+	].
+
+	result := dialog openModal answer.
+	result ifNil: [ ^ self ].
+	levelEditorSession saveTo: result asFileReference
+]
+
 { #category : #'editor modes' }
 WDELevelEditorSceneModel >> activateObjectMode [
 	views do: [ :v | v activateObjectMode ]
@@ -143,10 +181,16 @@ WDELevelEditorSceneModel >> createEntityEditorSelectionBoxNode: entity [
 	entityNode children isNotEmpty ifTrue: [ ^ self ].
 
 	selectionBoxNode := WDSGSpatialObject new.
-	selectionBoxNode renderable: self entitySelectionBoxRenderable.
+	selectionBoxNode
+		renderable: self entitySelectionBoxRenderable.
+	entity whenEditorColorChangedDoNow: [
+		selectionBoxNode
+			color: entity editorColor
+	].
 	entityNode addChild: selectionBoxNode.
 	levelElementToSelectionBoxNode at: entity put: selectionBoxNode.
-	selectionBoxNode transform: entity localSelectableBoundingBox reversibleTransformToConvertUnitBoxToMe.
+	selectionBoxNode transform:
+		entity localSelectableBoundingBox reversibleTransformToConvertUnitBoxToMe.
 ]
 
 { #category : #'instance creation' }
@@ -167,6 +211,14 @@ WDELevelEditorSceneModel >> createHighlightBoxNode [
 		visible: false;
 		yourself.
 	scene add: highlightBoxNode.
+]
+
+{ #category : #'main actions' }
+WDELevelEditorSceneModel >> createLevelFileDialog [
+	^ FileDialogWindow basicNew
+		initialize;
+		validExtensions: #(wtlevel wlevel);
+		yourself
 ]
 
 { #category : #'instance creation' }

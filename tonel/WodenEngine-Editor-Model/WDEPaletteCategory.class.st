@@ -11,6 +11,11 @@ Class {
 }
 
 { #category : #accessing }
+WDEPaletteCategory >> addAllTemplates: newTemplates [
+	templates addAll: newTemplates
+]
+
+{ #category : #accessing }
 WDEPaletteCategory >> addSubCategory: aSubCategory [
 	subcategories add: aSubCategory.
 	subcategoryDictionary at: aSubCategory name put: aSubCategory
@@ -59,6 +64,11 @@ WDEPaletteCategory >> initialize [
 	
 ]
 
+{ #category : #testing }
+WDEPaletteCategory >> isEmpty [
+	^ templates isEmpty and: [ subcategories isEmpty ]
+]
+
 { #category : #accessing }
 WDEPaletteCategory >> name [
 	^ name
@@ -67,6 +77,20 @@ WDEPaletteCategory >> name [
 { #category : #accessing }
 WDEPaletteCategory >> name: anObject [
 	name := anObject
+]
+
+{ #category : #sorting }
+WDEPaletteCategory >> sort [
+	| sortBlock |
+	sortBlock := [ :a :b | a name <= b name ].
+	subcategories sort: sortBlock.
+	templates sort: sortBlock.
+]
+
+{ #category : #sorting }
+WDEPaletteCategory >> sortRecursively [
+	subcategories do: [ :each | each sort ].
+	self sort
 ]
 
 { #category : #accessing }

@@ -149,12 +149,7 @@ WDELevelEditor >> actionExit [
 
 { #category : #'main actions' }
 WDELevelEditor >> actionOpenFile [
-	| dialog result |
-	dialog := self createLevelFileDialog.
-	dialog title: 'Select the level to open'; answerPathName.
-	result := dialog openModal answer.
-	result ifNil: [ ^ self ].
-	self model openFrom: result asFileReference
+	wodenApplication actionOpenFile
 ]
 
 { #category : #'main actions' }
@@ -174,30 +169,12 @@ WDELevelEditor >> actionRedo [
 
 { #category : #'main actions' }
 WDELevelEditor >> actionSaveFile [
-	self model levelFileReference ifNotNil: [ :fileReference |
-		self model saveTo: fileReference
-	] ifNil: [
-		self actionSaveFileAs
-	]
+	wodenApplication actionSaveFile
 ]
 
 { #category : #'main actions' }
 WDELevelEditor >> actionSaveFileAs [
-	| dialog result |
-	dialog := self createLevelFileDialog.
-	dialog
-		title: 'Select the location to save the level';
-		fileNameText: 'level.wlevel';
-		answerSaveFile.
-	self model levelFileReference ifNotNil: [ :fileRef |
-		dialog
-			fileNameText: fileRef basename;
-			selectPath: fileRef parent
-	].
-
-	result := dialog openModal answer.
-	result ifNil: [ ^ self ].
-	self model saveTo: result asFileReference
+	wodenApplication actionSaveFileAs
 ]
 
 { #category : #'main actions' }
@@ -346,15 +323,6 @@ WDELevelEditor >> content [
 { #category : #accessing }
 WDELevelEditor >> contentView [
 	^ content view
-]
-
-{ #category : #'main actions' }
-WDELevelEditor >> createLevelFileDialog [
-	^ FileDialogWindow basicNew
-		basicTheme: self theme;
-		initialize;
-		validExtensions: #(wtlevel wlevel);
-		yourself
 ]
 
 { #category : #menu }

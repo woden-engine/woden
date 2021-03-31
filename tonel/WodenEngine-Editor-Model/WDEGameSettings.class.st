@@ -1,6 +1,9 @@
 Class {
 	#name : #WDEGameSettings,
 	#superclass : #Object,
+	#instVars : [
+		'entityDescriptions'
+	],
 	#category : #'WodenEngine-Editor-Model-GameSettings'
 }
 
@@ -47,6 +50,16 @@ WDEGameSettings >> createRenderingMaterialForPath: path engine: engine [
 	^ engine defaultMaterial
 ]
 
+{ #category : #palettes }
+WDEGameSettings >> entityDescriptions [
+	^ entityDescriptions ifNil: [ entityDescriptions := self fetchEntityDescriptions ]
+]
+
+{ #category : #palettes }
+WDEGameSettings >> fetchEntityDescriptions [
+	^ WDEEntityDescriptions new
+]
+
 { #category : #'as yet unclassified' }
 WDEGameSettings >> makeThumbnailForMaterialWithPath: path engine: engine [
 	| thumbnailValue |
@@ -77,7 +90,14 @@ WDEGameSettings >> playLevelInSession: levelEditorSession [
 
 { #category : #palettes }
 WDEGameSettings >> topLevelElementTemplateCategories [
-	^ #()
+	^ self topLevelEntityCategories
+]
+
+{ #category : #palettes }
+WDEGameSettings >> topLevelEntityCategories [
+	| category |
+	category := self entityDescriptions makeEntityTemplateCategoryNamed: self name , ' Entities'.
+	^ category isEmpty ifTrue: [ #() ] ifFalse: [ { category } ]
 ]
 
 { #category : #palettes }

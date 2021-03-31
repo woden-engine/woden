@@ -20,7 +20,8 @@ Class {
 	#classVars : [
 		'EditorColorPalette',
 		'EditorColorPaletteLastGeneratedColor',
-		'EditorColorPaletteRandomGenerator'
+		'EditorColorPaletteRandomGenerator',
+		'PointEntitySelectionBoxHalfExtent'
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
 }
@@ -53,6 +54,12 @@ WDEEntity class >> initialize [
 	EditorColorPalette := Color wheel: 13.
 	EditorColorPaletteRandomGenerator := Random seed: 1.
 	EditorColorPaletteLastGeneratedColor := nil.
+	PointEntitySelectionBoxHalfExtent := Float32x3 ones * 0.2 .
+]
+
+{ #category : #serialization }
+WDEEntity class >> pointEntitySelectionBoxHalfExtent [
+	^ PointEntitySelectionBoxHalfExtent
 ]
 
 { #category : #'basic entity prototypes' }
@@ -156,7 +163,9 @@ WDEEntity >> className [
 
 { #category : #accessing }
 WDEEntity >> className: anObject [
-	className := anObject
+	className := anObject.
+	"Trigger the bounding box change event to recompute the selectable bounding box."
+	self localBoundingBox: self localBoundingBox
 ]
 
 { #category : #accessing }
@@ -177,9 +186,17 @@ WDEEntity >> computeLocalBoundingBoxFromComponents [
 ]
 
 { #category : #private }
-WDEEntity >> computeLocalSelecteableBoundingBox [
+WDEEntity >> computeLocalSelectableBoundingBox [
+	localSelectableBoundingBox := BoxF32 center: self localBoundingBoxWithDepth center halfExtent: (self localBoundingBoxWithDepth halfExtent max: self class pointEntitySelectionBoxHalfExtent).
 
-	localSelectableBoundingBox := BoxF32 center: self localBoundingBoxWithDepth center halfExtent: (self localBoundingBoxWithDepth halfExtent max: 0.1)
+	self isPointEntity ifTrue: [ 
+		self gameEntityDescriptions ifNotNil: [ :descs |
+			(descs boundingBoxForEntityWithClassName: className) ifNotNil: [ :bbox |
+				localSelectableBoundingBox := localSelectableBoundingBox unionWith: bbox
+			]
+		]
+	].
+
 ]
 
 { #category : #initialization }
@@ -187,6 +204,7 @@ WDEEntity >> destroyAnnouncers [
 	super destroyAnnouncers.
 	components destroyAnnouncer.
 	position destroyAnnouncer.
+	editorColor destroyAnnouncer.
 	localBoundingBox destroyAnnouncer.
 ]
 
@@ -202,13 +220,12 @@ WDEEntity >> dimensionalityMode: anObject [
 
 { #category : #accessing }
 WDEEntity >> editorColor [
-
-	^ editorColor
+	^ editorColor value
 ]
 
 { #category : #accessing }
 WDEEntity >> editorColor: aColor [
-	editorColor := aColor asFloat32x4.
+	editorColor value: aColor asFloat32x4.
 	self editorColorChanged.
 	
 ]
@@ -226,14 +243,14 @@ WDEEntity >> encodeJsonKeyValues [
 		#position . self position encodeForJSON.
 		#orientation . self orientation encodeForJSON.
 		#localBoundingBox . self localBoundingBox encodeForJSON.
-		#editorColor . editorColor encodeForJSON.
+		#editorColor . self editorColor encodeForJSON.
 		#components . self components collect: [ :each | each encodeForJSON ].
 	}
 ]
 
 { #category : #serialization }
 WDEEntity >> generateEditorColor [
-	editorColor := self class generateEditorColor
+	self editorColor: self class generateEditorColor
 ]
 
 { #category : #initialization }
@@ -244,7 +261,7 @@ WDEEntity >> initialize [
 	position := Float32x3 zeros asValueHolder.
 	orientation := QuaternionF32 identity asValueHolder.
 	localBoundingBox := (BoxF32 point: Float32x3 zeros) asValueHolder.
-	editorColor := Float32x4 ones.
+	editorColor := Float32x4 ones asValueHolder.
 ]
 
 { #category : #'ray casting' }
@@ -310,7 +327,7 @@ WDEEntity >> loadFromJson: jsonData context: context [
 
 	self generateEditorColor.
 	jsonData at: 'editorColor' ifPresent: [ :data |
-		editorColor := Float32x4 loadFromJson: data
+		self editorColor: (Float32x4 loadFromJson: data)
 	].
 
 	jsonData at: 'components' ifPresent: [ :componentData |
@@ -375,7 +392,7 @@ WDEEntity >> localBoundingRectangle: aRectangle [
 
 { #category : #accessing }
 WDEEntity >> localSelectableBoundingBox [
-	localSelectableBoundingBox ifNil: [ self computeLocalSelecteableBoundingBox ].
+	localSelectableBoundingBox ifNil: [ self computeLocalSelectableBoundingBox ].
 	^ localSelectableBoundingBox
 ]
 
@@ -482,13 +499,15 @@ WDEEntity >> positionChanged [
 
 { #category : #copying }
 WDEEntity >> postCopy [
-	| oldComponents oldPosition oldLocalBoundingBox |
+	| oldComponents oldPosition oldLocalBoundingBox oldEditorColor |
 	super postCopy.
 	parent := nil.
 	oldComponents := components value.
 	oldPosition := position value.
 	oldLocalBoundingBox := localBoundingBox value.
+	oldEditorColor := editorColor value.
 	position := oldPosition asValueHolder.
+	editorColor := oldEditorColor asValueHolder.
 	localBoundingBox := oldLocalBoundingBox asValueHolder.
 	components := OrderedCollection new asValueHolder.
 	oldComponents do: [:each | self addComponent: each copy ]
@@ -646,6 +665,17 @@ WDEEntity >> whenComponentAddedDo: aBlock [
 { #category : #events }
 WDEEntity >> whenComponentRemovedDo: aBlock [
 	components whenRemovedDo: aBlock
+]
+
+{ #category : #enumerating }
+WDEEntity >> whenEditorColorChangedDo: aBlock [
+	editorColor whenChangedDo: aBlock
+]
+
+{ #category : #enumerating }
+WDEEntity >> whenEditorColorChangedDoNow: aBlock [
+	self whenEditorColorChangedDo: aBlock.
+	aBlock value
 ]
 
 { #category : #enumerating }

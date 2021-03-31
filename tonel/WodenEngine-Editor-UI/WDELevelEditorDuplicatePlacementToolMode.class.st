@@ -58,6 +58,20 @@ WDELevelEditorDuplicatePlacementToolMode >> dragFinished [
 	super dragFinished
 ]
 
+{ #category : #'as yet unclassified' }
+WDELevelEditorDuplicatePlacementToolMode >> dragStarted [
+	| bbox |
+	bbox := BoxF32 empty.
+	duplicatedElements do: [ :each |
+		bbox insertBox: each boundingBox 
+	].
+
+	bbox isEmpty ifFalse: [ 
+		screenDistance := view computeScreenDistanceForPoint: bbox center
+	].
+
+]
+
 { #category : #accessing }
 WDELevelEditorDuplicatePlacementToolMode >> duplicatedElements [
 
