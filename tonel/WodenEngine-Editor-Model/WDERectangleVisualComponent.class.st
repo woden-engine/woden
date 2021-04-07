@@ -3,9 +3,7 @@ Class {
 	#superclass : #WDEVisualComponent2D,
 	#instVars : [
 		'rectangle',
-		'material',
-		'textureOffset',
-		'textureScale'
+		'materialAttributes'
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
 }
@@ -29,19 +27,44 @@ WDERectangleVisualComponent >> buildLevelElementPropertyPageWith: builder [
 		vector2PropertyNamed: 'Texture Offset' selector: #textureOffset
 ]
 
+{ #category : #'as yet unclassified' }
+WDERectangleVisualComponent >> buildSolidMeshWith: meshBuilder levelEditorSession: levelEditorSession modelTransform: modelTransform [
+	| renderMaterial |
+	renderMaterial := materialAttributes asRenderMaterialForEngine: meshBuilder engine levelEditorSession: levelEditorSession.
+
+	^ meshBuilder
+		currentMaterial: renderMaterial;
+		transform: self boundingBox reversibleTransformToConvertUnitBoxToMe;
+		addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+		planeTextureTransform: materialAttributes textureTransform withModelTransform: modelTransform;
+		computeTangentsBitangents;
+		computeBoundingBox;
+		mesh.
+
+]
+
+{ #category : #'as yet unclassified' }
+WDERectangleVisualComponent >> buildWireMeshWith: meshBuilder material: renderMaterial [
+	^ meshBuilder
+		currentMaterial: renderMaterial;
+		transform: self boundingBox reversibleTransformToConvertUnitBoxToMe;
+		addWireCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+		computeBoundingBox;
+		mesh.
+
+]
+
 { #category : #serialization }
 WDERectangleVisualComponent >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
 		#rectangle . rectangle encodeForJSON.
-		#material . material ifNil: [0] ifNotNil: [material materialIndex].
-		#textureScale . textureScale encodeForJSON.
-		#textureOffset . textureOffset encodeForJSON.
+		#material . materialAttributes encodeForJSON
 	}
 ]
 
 { #category : #accessing }
 WDERectangleVisualComponent >> entityTransformChanged [
-	(material isNotNil and: [material hasTexture]) ifTrue: [
+	materialAttributes hasTexture ifTrue: [
 		self raiseChangedEvent
 	]
 ]
@@ -50,8 +73,7 @@ WDERectangleVisualComponent >> entityTransformChanged [
 WDERectangleVisualComponent >> initialize [
 	super initialize.
 	rectangle := RectangleF32 unitRectangle.
-	textureScale := Float32x2 ones.
-	textureOffset := Float32x2 zeros.
+	materialAttributes := WDEFaceMaterialAttributes new.
 ]
 
 { #category : #testing }
@@ -74,20 +96,14 @@ WDERectangleVisualComponent >> loadFromJson: jsonData context: context [
 	].
 ]
 
-{ #category : #accessing }
-WDERectangleVisualComponent >> material [
-	^ material
-]
-
-{ #category : #accessing }
-WDERectangleVisualComponent >> material: aMaterial [
-	material := aMaterial.
-	self changed
-]
-
 { #category : #memento }
 WDERectangleVisualComponent >> materialStateMemento [
-	^ material
+	^ materialAttributes material
+]
+
+{ #category : #'as yet unclassified' }
+WDERectangleVisualComponent >> pointsForCollisionConvexHull [
+	^ self boundingBox corners
 ]
 
 { #category : #accessing }
@@ -103,7 +119,7 @@ WDERectangleVisualComponent >> rectangle: anObject [
 
 { #category : #memento }
 WDERectangleVisualComponent >> restoreMaterialStateMemento: memento [
-	self material: memento
+	materialAttributes material: memento
 ]
 
 { #category : #memento }
@@ -114,30 +130,6 @@ WDERectangleVisualComponent >> restoreTransformStateMemento: memento [
 { #category : #initialization }
 WDERectangleVisualComponent >> setMaterial: newMaterial [
 	self material: newMaterial
-]
-
-{ #category : #accessing }
-WDERectangleVisualComponent >> textureOffset [
-
-	^ textureOffset
-]
-
-{ #category : #accessing }
-WDERectangleVisualComponent >> textureOffset: anObject [
-	textureOffset := anObject.
-	self changed
-]
-
-{ #category : #accessing }
-WDERectangleVisualComponent >> textureScale [
-
-	^ textureScale
-]
-
-{ #category : #accessing }
-WDERectangleVisualComponent >> textureScale: anObject [
-	textureScale := anObject.
-	self changed
 ]
 
 { #category : #memento }
@@ -153,5 +145,5 @@ WDERectangleVisualComponent >> transformWith: transform [
 
 { #category : #'as yet unclassified' }
 WDERectangleVisualComponent >> validateMaterialList [
-	self level validateMaterial: material
+	self level validateMaterial: materialAttributes material
 ]

@@ -3,9 +3,7 @@ Class {
 	#superclass : #WDEVisualComponent3D,
 	#instVars : [
 		'box',
-		'material',
-		'textureOffset',
-		'textureScale'
+		'materialAttributes'
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
 }
@@ -31,28 +29,44 @@ WDEBoxVisualComponent >> box: anObject [
 	self changed.
 ]
 
-{ #category : #accessing }
-WDEBoxVisualComponent >> buildLevelElementPropertyPageWith: builder [
-	super buildLevelElementPropertyPageWith: builder.
-	
-	builder
-		vector2PropertyNamed: 'Texture Scale' selector: #textureScale;
-		vector2PropertyNamed: 'Texture Offset' selector: #textureOffset
+{ #category : #'as yet unclassified' }
+WDEBoxVisualComponent >> buildSolidMeshWith: meshBuilder levelEditorSession: levelEditorSession modelTransform: modelTransform [
+	| renderMaterial |
+	renderMaterial := materialAttributes asRenderMaterialForEngine: meshBuilder engine levelEditorSession: levelEditorSession.
+
+	^ meshBuilder
+		currentMaterial: renderMaterial;
+		transform: self boundingBox reversibleTransformToConvertUnitBoxToMe;
+		addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+		planeTextureTransform: materialAttributes textureTransform withModelTransform: modelTransform;
+		computeTangentsBitangents;
+		computeBoundingBox;
+		mesh.
+
+]
+
+{ #category : #'as yet unclassified' }
+WDEBoxVisualComponent >> buildWireMeshWith: meshBuilder material: renderMaterial [
+	^ meshBuilder
+		currentMaterial: renderMaterial;
+		transform: self boundingBox reversibleTransformToConvertUnitBoxToMe;
+		addWireCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+		computeBoundingBox;
+		mesh.
+
 ]
 
 { #category : #serialization }
 WDEBoxVisualComponent >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
 		#box . box encodeForJSON.
-		#material . material ifNil: [0] ifNotNil: [material materialIndex].
-		#textureScale . textureScale encodeForJSON.
-		#textureOffset . textureOffset encodeForJSON.
+		#material . materialAttributes encodeForJSON
 	}
 ]
 
 { #category : #accessing }
 WDEBoxVisualComponent >> entityTransformChanged [
-	(material isNotNil and: [material hasTexture]) ifTrue: [
+	materialAttributes hasTexture ifTrue: [
 		self raiseChangedEvent
 	].
 
@@ -62,8 +76,7 @@ WDEBoxVisualComponent >> entityTransformChanged [
 WDEBoxVisualComponent >> initialize [
 	super initialize.
 	box := BoxF32 unitBox.
-	textureScale := Float32x2 ones.
-	textureOffset := Float32x2 zeros.
+	materialAttributes := WDEFaceMaterialAttributes new.
 ]
 
 { #category : #testing }
@@ -75,38 +88,36 @@ WDEBoxVisualComponent >> isBoxVisualComponent [
 WDEBoxVisualComponent >> loadFromJson: jsonData context: context [
 	super loadFromJson: jsonData context: context.
 	box := BoxF32 loadFromJson: (jsonData at: 'box').
-	jsonData at: 'material' ifPresent: [ :index |
-		material := context getMaterialWithIndex: index
+	jsonData at: 'material' ifPresent: [ :data |
+		materialAttributes loadFromJson: data context: context
 	].
-	jsonData at: 'textureScale' ifPresent: [ :scale |
-		textureScale := Float32x2 loadFromJson: scale.
-	].
-	jsonData at: 'textureOffset' ifPresent: [ :offset |
-		textureOffset := Float32x2 loadFromJson: offset.
-	].
+	
 ]
 
 { #category : #accessing }
-WDEBoxVisualComponent >> material [
+WDEBoxVisualComponent >> materialAttributes [
 
-	^ material
+	^ materialAttributes
 ]
 
 { #category : #accessing }
-WDEBoxVisualComponent >> material: anObject [
-
-	material := anObject.
-	self changed.
+WDEBoxVisualComponent >> materialAttributes: newMaterialAttributes [
+	materialAttributes := newMaterialAttributes copy.
 ]
 
 { #category : #memento }
 WDEBoxVisualComponent >> materialStateMemento [
-	^ material
+	^ materialAttributes materialStateMemento
+]
+
+{ #category : #'as yet unclassified' }
+WDEBoxVisualComponent >> pointsForCollisionConvexHull [
+	^ box corners
 ]
 
 { #category : #memento }
 WDEBoxVisualComponent >> restoreMaterialStateMemento: memento [
-	self material: memento
+	materialAttributes restoreMaterialStateMemento: memento
 ]
 
 { #category : #memento }
@@ -116,30 +127,7 @@ WDEBoxVisualComponent >> restoreTransformStateMemento: memento [
 
 { #category : #initialization }
 WDEBoxVisualComponent >> setMaterial: newMaterial [
-	self material: newMaterial
-]
-
-{ #category : #accessing }
-WDEBoxVisualComponent >> textureOffset [
-
-	^ textureOffset
-]
-
-{ #category : #accessing }
-WDEBoxVisualComponent >> textureOffset: anObject [
-	textureOffset := anObject.
-	self changed
-]
-
-{ #category : #accessing }
-WDEBoxVisualComponent >> textureScale [
-
-	^ textureScale
-]
-
-{ #category : #accessing }
-WDEBoxVisualComponent >> textureScale: anObject [
-	textureScale := anObject.
+	materialAttributes material: newMaterial.
 	self changed
 ]
 
@@ -155,5 +143,5 @@ WDEBoxVisualComponent >> transformWith: transform [
 
 { #category : #'as yet unclassified' }
 WDEBoxVisualComponent >> validateMaterialList [
-	self level validateMaterial: material
+	self level validateMaterial: materialAttributes material
 ]

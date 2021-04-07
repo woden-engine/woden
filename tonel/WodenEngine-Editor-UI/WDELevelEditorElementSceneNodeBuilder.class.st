@@ -109,46 +109,7 @@ WDELevelEditorElementSceneNodeBuilder >> visitBoxCollisionComponent: component [
 
 { #category : #'visual components' }
 WDELevelEditorElementSceneNodeBuilder >> visitBoxVisualComponent: component [
-	| node |
-	node := WDSGSpatialObject new.
-	component whenChangedDoNow: [
-		| renderable editorColorMaterial material wireMesh solidMesh transform parentTransform |
-		renderable := WDERenderableWithEditorAlternatives new.
-		material := (component material
-			ifNotNil: [ :mat | mat asRenderingMaterialForSession: self levelEditorSession engine: self engine ]
-			ifNil: [self engine resourceCache defaultMaterial]).
-		editorColorMaterial := self makeEditorColorMaterialFor: component.
-		transform := component boundingBox reversibleTransformToConvertUnitBoxToMe.
-		parentTransform := component entity transform.
-
-		wireMesh :=
-			(WDCComplexGenericMeshBuilder for: self engine)
-				currentMaterial: editorColorMaterial;
-				transform: transform;
-				addWireCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
-				computeBoundingBox;
-				mesh.
-			
-		solidMesh :=
-			(WDCComplexGenericMeshBuilder for: self engine)
-				transform: transform;
-				currentMaterial: material;
-				addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
-				planeTextureScale: component textureScale offset: component textureOffset withModelTransform: parentTransform;
-				computeTangentsBitangents;
-				computeBoundingBox;
-				mesh.
-
-		renderable
-			wireFrameRenderable: wireMesh;
-			colorRenderable: (solidMesh copy setMaterial: editorColorMaterial);
-			shadedRenderable: solidMesh.
-
-		node
-			renderable: renderable;
-			stateChanged
-	].
-	^ node
+	^ self visitGeneratedMeshVisualComponent: component
 ]
 
 { #category : #visiting }
@@ -178,6 +139,30 @@ WDELevelEditorElementSceneNodeBuilder >> visitEntity: entity [
 ]
 
 { #category : #'visual components' }
+WDELevelEditorElementSceneNodeBuilder >> visitGeneratedMeshVisualComponent: component [
+	| node |
+	node := WDSGSpatialObject new.
+	component whenChangedDoNow: [
+		| renderable editorColorMaterial wireMesh solidMesh |
+		renderable := WDERenderableWithEditorAlternatives new.
+		editorColorMaterial := self makeEditorColorMaterialFor: component.
+
+		wireMesh := component buildWireMeshWith: (WDCComplexGenericMeshBuilder for: self engine) material: editorColorMaterial.
+		solidMesh := component buildSolidMeshWith: (WDCComplexGenericMeshBuilder for: self engine) levelEditorSession: self levelEditorSession modelTransform: component entity transform.
+
+		renderable
+			wireFrameRenderable: wireMesh;
+			colorRenderable: (solidMesh copy setMaterial: editorColorMaterial);
+			shadedRenderable: solidMesh.
+
+		node
+			renderable: renderable;
+			stateChanged
+	].
+	^ node
+]
+
+{ #category : #'visual components' }
 WDELevelEditorElementSceneNodeBuilder >> visitLightSourceVisualComponent: component [
 	| node |
 	node := WDSGLightSource new.
@@ -197,13 +182,28 @@ WDELevelEditorElementSceneNodeBuilder >> visitPointLightSourceVisualComponent: c
 ]
 
 { #category : #'collision components' }
+WDELevelEditorElementSceneNodeBuilder >> visitPolyhedronConvexHullCollisionComponent: component [
+	^ nil
+]
+
+{ #category : #visiting }
+WDELevelEditorElementSceneNodeBuilder >> visitPolyhedronFace: polyhedronFace [
+	^ nil
+]
+
+{ #category : #'visual components' }
+WDELevelEditorElementSceneNodeBuilder >> visitPolyhedronVisualComponent: component [
+	^ self visitGeneratedMeshVisualComponent: component
+]
+
+{ #category : #'collision components' }
 WDELevelEditorElementSceneNodeBuilder >> visitRectangleCollisionComponent: component [
 	^ self visitBoxCollisionComponent: component
 ]
 
 { #category : #'visual components' }
 WDELevelEditorElementSceneNodeBuilder >> visitRectangleVisualComponent: component [
-	^ self visitBoxVisualComponent: component
+	^ self visitGeneratedMeshVisualComponent: component
 ]
 
 { #category : #visiting }

@@ -47,7 +47,7 @@ WDELevelEditorSceneModel >> actionSaveFileAs [
 	dialog := self createLevelFileDialog.
 	dialog
 		title: 'Select the location to save the level';
-		fileNameText: 'level.wlevel';
+		fileNameText: 'level.wtlevel';
 		answerSaveFile.
 	levelEditorSession levelFileReference ifNotNil: [ :fileRef |
 		dialog

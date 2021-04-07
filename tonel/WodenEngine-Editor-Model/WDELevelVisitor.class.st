@@ -45,6 +45,21 @@ WDELevelVisitor >> visitPointLightSourceVisualComponent: component [
 ]
 
 { #category : #visiting }
+WDELevelVisitor >> visitPolyhedronConvexHullCollisionComponent: component [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
+WDELevelVisitor >> visitPolyhedronFace: entity [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
+WDELevelVisitor >> visitPolyhedronVisualComponent: component [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
 WDELevelVisitor >> visitRectangleCollisionComponent: component [
 	self subclassResponsibility
 ]

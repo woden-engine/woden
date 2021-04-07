@@ -179,6 +179,11 @@ WDELevelElement >> isPointLightSourceVisualComponent [
 ]
 
 { #category : #testing }
+WDELevelElement >> isPolyhedronVisualComponent [
+	^ false
+]
+
+{ #category : #testing }
 WDELevelElement >> isPunctualVisualComponent [
 	^ false
 ]

@@ -102,6 +102,18 @@ WDEEntity class >> solidWall3DPrototype [
 ]
 
 { #category : #'basic entity prototypes' }
+WDEEntity class >> solidWallPolyhedronPrototype [
+	^ self new
+		makeEntity3D;
+		className: 'Wall';
+		localBoundingBox: BoxF32 unitBox;
+		addComponent: (WDEVisualComponent polyhedronBox: BoxF32 unitBox);
+		addComponent: WDEPolyhedronConvexHullCollisionComponent new;
+		yourself
+
+]
+
+{ #category : #'basic entity prototypes' }
 WDEEntity class >> spotLightPrototype [
 	^ self new
 		className: #SpotLight;
