@@ -134,6 +134,38 @@ RWView >> addTickingElement: anElement [
 	tickingElements add: anElement.
 ]
 
+{ #category : #adding }
+RWView >> addTrackedStylusControl [
+	^ self addTrackedStylusControlAttachedToTrackerWithIndex: 1
+]
+
+{ #category : #adding }
+RWView >> addTrackedStylusControlAttachedToTrackerWithIndex: trackerIndex [
+	| stylus stylusBbox stylusTipLocation tip stylusController tipShape tipSize |
+	stylus := (RWModelShape modelNamed: 'models/vr/stylus.obj') element.
+	stylusBbox := stylus localBoundingBox.
+	tipSize := 0.001.
+	stylusTipLocation := Float32x3 x: 0 y: stylusBbox min y / 2 z: stylusBbox max z - (tipSize / 2).
+	
+	tipShape := RWUVSphere blue
+		size: tipSize;
+		yourself.
+	tip := tipShape element
+		translateTo: stylusTipLocation.
+
+	stylusController := RWGroup new
+		addChild: stylus;
+		addChild: tip.
+	stylusController attachTrackerAt: (RWVRTrackerAttachment new
+		trackerIndex: trackerIndex;
+		attachmentPointTransform:
+		(ReversibleAffineTransform3dF32 identity
+			orthonormal: (Float32x3x3 yRotation: Float pi) * (Float32x3x3 xRotation: Float halfPi);
+			yourself)).
+
+	self add: stylusController
+]
+
 { #category : #accessing }
 RWView >> allElementsInScene [
 	| result |

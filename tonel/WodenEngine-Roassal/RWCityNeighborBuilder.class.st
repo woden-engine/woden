@@ -10,7 +10,8 @@ Class {
 		'shouldAttachVRTracker',
 		'scaleMaxWidth',
 		'scaleMaxHeight',
-		'scaleMaxDepth'
+		'scaleMaxDepth',
+		'vrTrackerIndex'
 	],
 	#category : #'WodenEngine-Roassal-Builder-CityBuilder'
 }
@@ -52,6 +53,12 @@ RWCityNeighborBuilder >> applyScaleFactor [
 { #category : #'as yet unclassified' }
 RWCityNeighborBuilder >> attachVRTracker [
 	shouldAttachVRTracker := true
+]
+
+{ #category : #'as yet unclassified' }
+RWCityNeighborBuilder >> attachVRTrackerWithIndex: anInteger [
+	shouldAttachVRTracker := true.
+	vrTrackerIndex := anInteger.
 ]
 
 { #category : #accessing }
@@ -151,8 +158,9 @@ RWCityNeighborBuilder >> buildVRTrackerAttachment [
 		addChild: attachment;
 		addChild: attachmentBase.
 		
-	groupWithAttachment attachTrackerAt: (RWVRTrackerAttachment new attachmentPointTransform:
-		(attachment transform copy
+	groupWithAttachment attachTrackerAt: (RWVRTrackerAttachment new
+		trackerIndex: vrTrackerIndex;
+		attachmentPointTransform: (attachment transform copy
 			orthonormal: (Float32x3x3 yRotation: Float pi) * (Float32x3x3 xRotation: Float halfPi);
 			yourself)).
 	
