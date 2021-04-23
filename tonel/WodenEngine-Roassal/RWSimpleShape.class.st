@@ -6,7 +6,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 RWSimpleShape class >> defaultMaterial [
-	^ 'materials/basic/white.json'
+	^ 'materials/basic/white.wtmat'
 ]
 
 { #category : #hooks }
