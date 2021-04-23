@@ -15,12 +15,23 @@ WDEEntityComponent >> boundingBox [
 
 { #category : #updating }
 WDEEntityComponent >> changed [
-	changedEventHolder value: changedEventHolder value not
+	self raiseChangedEvent
+]
+
+{ #category : #'as yet unclassified' }
+WDEEntityComponent >> destroyAnnouncers [
+	super destroyAnnouncers.
+	changedEventHolder destroyAnnouncer.
 ]
 
 { #category : #accessing }
 WDEEntityComponent >> entity [
 	^ parent
+]
+
+{ #category : #accessing }
+WDEEntityComponent >> entityTransformChanged [
+	"By default do nothing."
 ]
 
 { #category : #initialization }
@@ -49,6 +60,11 @@ WDEEntityComponent >> postCopy [
 	super postCopy.
 	parent := nil.
 	changedEventHolder := false asValueHolder.
+]
+
+{ #category : #updating }
+WDEEntityComponent >> raiseChangedEvent [
+	changedEventHolder value: changedEventHolder value not
 ]
 
 { #category : #'as yet unclassified' }

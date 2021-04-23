@@ -12,7 +12,7 @@ Class {
 WDEMaterialPaletteElement class >> dielectricBaseColor: albedo roughness: roughness [
 	^ self new 
 		material: (WDEMetallicRoughnessMaterial new
-			baseColor: albedo;
+			baseColorFactor: albedo;
 			roughnessFactor: roughness;
 			metallicFactor: 0.0;
 			yourself);
@@ -23,9 +23,18 @@ WDEMaterialPaletteElement class >> dielectricBaseColor: albedo roughness: roughn
 WDEMaterialPaletteElement class >> metallicBaseColor: albedo roughness: roughness [
 	^ self new 
 		material: (WDEMetallicRoughnessMaterial new
-			baseColor: albedo;
+			baseColorFactor: albedo;
 			roughnessFactor: roughness;
 			metallicFactor: 1.0;
+			yourself);
+		yourself
+]
+
+{ #category : #'single color materials' }
+WDEMaterialPaletteElement class >> referencePath: path [
+	^ self new 
+		material: (WDEFileReferenceMaterial new
+			path: path;
 			yourself);
 		yourself
 ]
@@ -61,6 +70,6 @@ WDEMaterialPaletteElement >> material: anObject [
 ]
 
 { #category : #accessing }
-WDEMaterialPaletteElement >> thumbnail [
-	^ thumbnail ifNil: [ thumbnail := material ifNotNil: [ material makeThumbnail ] ]
+WDEMaterialPaletteElement >> thumbnailFor: levelEditorSession engine: engine [
+	^ thumbnail ifNil: [ thumbnail := material ifNotNil: [ material makeThumbnailForSession: levelEditorSession engine: engine ] ]
 ]

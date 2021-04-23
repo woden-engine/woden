@@ -3,7 +3,7 @@ Class {
 	#superclass : #WDEVisualComponent2D,
 	#instVars : [
 		'rectangle',
-		'material'
+		'materialAttributes'
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
 }
@@ -18,18 +18,62 @@ WDERectangleVisualComponent >> boundingRectangle [
 	^ rectangle
 ]
 
+{ #category : #accessing }
+WDERectangleVisualComponent >> buildLevelElementPropertyPageWith: builder [
+	super buildLevelElementPropertyPageWith: builder.
+	
+	builder
+		vector2PropertyNamed: 'Texture Scale' selector: #textureScale;
+		vector2PropertyNamed: 'Texture Offset' selector: #textureOffset
+]
+
+{ #category : #'as yet unclassified' }
+WDERectangleVisualComponent >> buildSolidMeshWith: meshBuilder levelEditorSession: levelEditorSession modelTransform: modelTransform [
+	| renderMaterial |
+	renderMaterial := materialAttributes asRenderMaterialForEngine: meshBuilder engine levelEditorSession: levelEditorSession.
+
+	^ meshBuilder
+		currentMaterial: renderMaterial;
+		transform: self boundingBox reversibleTransformToConvertUnitBoxToMe;
+		addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+		planeTextureTransform: materialAttributes textureTransform withModelTransform: modelTransform;
+		computeTangentsBitangents;
+		computeBoundingBox;
+		mesh.
+
+]
+
+{ #category : #'as yet unclassified' }
+WDERectangleVisualComponent >> buildWireMeshWith: meshBuilder material: renderMaterial [
+	^ meshBuilder
+		currentMaterial: renderMaterial;
+		transform: self boundingBox reversibleTransformToConvertUnitBoxToMe;
+		addWireCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+		computeBoundingBox;
+		mesh.
+
+]
+
 { #category : #serialization }
 WDERectangleVisualComponent >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
 		#rectangle . rectangle encodeForJSON.
-		#material . material ifNil: [0] ifNotNil: [material materialIndex].
+		#material . materialAttributes encodeForJSON
 	}
+]
+
+{ #category : #accessing }
+WDERectangleVisualComponent >> entityTransformChanged [
+	materialAttributes hasTexture ifTrue: [
+		self raiseChangedEvent
+	]
 ]
 
 { #category : #initialization }
 WDERectangleVisualComponent >> initialize [
 	super initialize.
 	rectangle := RectangleF32 unitRectangle.
+	materialAttributes := WDEFaceMaterialAttributes new.
 ]
 
 { #category : #testing }
@@ -44,23 +88,22 @@ WDERectangleVisualComponent >> loadFromJson: jsonData context: context [
 	jsonData at: 'material' ifPresent: [ :index |
 		material := context getMaterialWithIndex: index
 	].
-
-]
-
-{ #category : #accessing }
-WDERectangleVisualComponent >> material [
-	^ material
-]
-
-{ #category : #accessing }
-WDERectangleVisualComponent >> material: aMaterial [
-	material := aMaterial.
-	self changed
+	jsonData at: 'textureScale' ifPresent: [ :scale |
+		textureScale := Float32x2 loadFromJson: scale.
+	].
+	jsonData at: 'textureOffset' ifPresent: [ :offset |
+		textureOffset := Float32x2 loadFromJson: offset.
+	].
 ]
 
 { #category : #memento }
 WDERectangleVisualComponent >> materialStateMemento [
-	^ material
+	^ materialAttributes material
+]
+
+{ #category : #'as yet unclassified' }
+WDERectangleVisualComponent >> pointsForCollisionConvexHull [
+	^ self boundingBox corners
 ]
 
 { #category : #accessing }
@@ -76,7 +119,7 @@ WDERectangleVisualComponent >> rectangle: anObject [
 
 { #category : #memento }
 WDERectangleVisualComponent >> restoreMaterialStateMemento: memento [
-	self material: memento
+	materialAttributes material: memento
 ]
 
 { #category : #memento }
@@ -102,5 +145,5 @@ WDERectangleVisualComponent >> transformWith: transform [
 
 { #category : #'as yet unclassified' }
 WDERectangleVisualComponent >> validateMaterialList [
-	self level validateMaterial: material
+	self level validateMaterial: materialAttributes material
 ]

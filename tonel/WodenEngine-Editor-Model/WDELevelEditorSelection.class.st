@@ -39,7 +39,20 @@ WDELevelEditorSelection >> deleteSelectedItemsInSession: levelSession [
 
 { #category : #actions }
 WDELevelEditorSelection >> duplicateSelectedItemsInSession: levelSession [
-	self inform: 'TODO: duplicateSelectedItemsInSession:'
+	| duplicatedItems placeableElements |
+	selectedItems ifEmpty: [ ^ self ].
+
+	placeableElements := selectedItems select: [ :each | each canBeDuplicatedAndPlacedInLayer ].
+	placeableElements ifEmpty: [ ^ self ].
+	
+	duplicatedItems := placeableElements collect: [ :each |
+		| copy |
+		copy := each copy.
+		each parent addChild: copy.
+		copy
+	].
+
+	levelSession startPlacingDuplicatedItems: duplicatedItems
 ]
 
 { #category : #initialization }

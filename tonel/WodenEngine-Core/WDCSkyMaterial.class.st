@@ -63,8 +63,8 @@ WDCSkyMaterial >> objectSpace: aBoolean [
 ]
 
 { #category : #parsing }
-WDCSkyMaterial >> parse: materialFileReference data: data [
-	skyTexture := self parse: data at: materialFileReference optionalSRGBTexture: 'texture'.
+WDCSkyMaterial >> parseInFolder: parentFolderFileReference data: data [
+	skyTexture := self parse: data at: parentFolderFileReference optionalSRGBTexture: #texture.
 	self invalidateCache.
 ]
 

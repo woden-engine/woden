@@ -49,8 +49,8 @@ WDELevelEditor3DBoxCornerHandle >> createSceneNode [
 { #category : #removing }
 WDELevelEditor3DBoxCornerHandle >> currentColor [
 	^ highlighted
-		ifTrue: [ Float32x4 ones  ]
-		ifFalse: [ Float32x4 x: 0.6 y: 0.6 z: 0.6 w: 1.0 ]
+		ifTrue: [ self theme highlightedBoxCornerHandleColor  ]
+		ifFalse: [ self theme boxCornerHandleColor ]
 ]
 
 { #category : #'as yet unclassified' }

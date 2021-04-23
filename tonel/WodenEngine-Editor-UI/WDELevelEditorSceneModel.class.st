@@ -22,6 +22,44 @@ Class {
 	#category : #'WodenEngine-Editor-UI'
 }
 
+{ #category : #'main actions' }
+WDELevelEditorSceneModel >> actionOpenFile [
+	| dialog result |
+	dialog := self createLevelFileDialog.
+	dialog title: 'Select the level to open'; answerPathName.
+	result := dialog openModal answer.
+	result ifNil: [ ^ self ].
+	levelEditorSession openFrom: result asFileReference
+]
+
+{ #category : #'main actions' }
+WDELevelEditorSceneModel >> actionSaveFile [
+	levelEditorSession levelFileReference ifNotNil: [ :fileReference |
+		levelEditorSession saveTo: fileReference
+	] ifNil: [
+		self actionSaveFileAs
+	]
+]
+
+{ #category : #'main actions' }
+WDELevelEditorSceneModel >> actionSaveFileAs [
+	| dialog result |
+	dialog := self createLevelFileDialog.
+	dialog
+		title: 'Select the location to save the level';
+		fileNameText: 'level.wtlevel';
+		answerSaveFile.
+	levelEditorSession levelFileReference ifNotNil: [ :fileRef |
+		dialog
+			fileNameText: fileRef basename;
+			selectPath: fileRef parent
+	].
+
+	result := dialog openModal answer.
+	result ifNil: [ ^ self ].
+	levelEditorSession saveTo: result asFileReference
+]
+
 { #category : #'editor modes' }
 WDELevelEditorSceneModel >> activateObjectMode [
 	views do: [ :v | v activateObjectMode ]
@@ -143,10 +181,16 @@ WDELevelEditorSceneModel >> createEntityEditorSelectionBoxNode: entity [
 	entityNode children isNotEmpty ifTrue: [ ^ self ].
 
 	selectionBoxNode := WDSGSpatialObject new.
-	selectionBoxNode renderable: self entitySelectionBoxRenderable.
+	selectionBoxNode
+		renderable: self entitySelectionBoxRenderable.
+	entity whenEditorColorChangedDoNow: [
+		selectionBoxNode
+			color: entity editorColor
+	].
 	entityNode addChild: selectionBoxNode.
 	levelElementToSelectionBoxNode at: entity put: selectionBoxNode.
-	selectionBoxNode transform: entity localSelectableBoundingBox reversibleTransformToConvertUnitBoxToMe.
+	selectionBoxNode transform:
+		entity localSelectableBoundingBox reversibleTransformToConvertUnitBoxToMe.
 ]
 
 { #category : #'instance creation' }
@@ -164,10 +208,17 @@ WDELevelEditorSceneModel >> createHighlightBoxNode [
 		renderable: (engine resourceCache flatShadedTranslucentUnitCubeMesh copy 			setFlatColorSubRenderMode; 
 			isOpaqueShadowCaster: false;
 			yourself);
-		color: (Float32x4 x: 0.3 y: 0.3 z: 0.9 w: 0.5);
 		visible: false;
 		yourself.
 	scene add: highlightBoxNode.
+]
+
+{ #category : #'main actions' }
+WDELevelEditorSceneModel >> createLevelFileDialog [
+	^ FileDialogWindow basicNew
+		initialize;
+		validExtensions: #(wtlevel wlevel);
+		yourself
 ]
 
 { #category : #'instance creation' }
@@ -228,6 +279,7 @@ WDELevelEditorSceneModel >> highlightElement: anElement [
 	] ifNotNil: [
 		highlightBoxNode
 			visible: true;
+			color: WDELevelEditorTheme current highlightColor;
 			transform: (anElement selectableBoundingBox withExpandedHalfExtent: 0.025) reversibleTransformToConvertUnitBoxToMe.
 	]
 ]
@@ -290,7 +342,10 @@ WDELevelEditorSceneModel >> levelEditorSession: anObject [
 	levelEditorSession
 		whenActiveLevelElementTemplateDo: [ :template | views do: [ :v | v levelElementTemplateSelected: template ] ];
 		whenLevelChangedDo: [ self levelChanged ];
-		whenSelectionChangedDo: [ :newSelection | self applyNewSelection: newSelection ].
+		whenSelectionChangedDo: [ :newSelection | self applyNewSelection: newSelection ];
+		whenStartingToPlaceDuplicatedItemsDo: [ :duplicatedItems :oldSelection |
+			self startPlacingDuplicatedElements: duplicatedItems oldSelection: oldSelection
+		].
 	self levelChanged.
 ]
 
@@ -382,6 +437,11 @@ WDELevelEditorSceneModel >> snapToGrid: vector [
 { #category : #snapping }
 WDELevelEditorSceneModel >> snapToSubGrid: vector [
 	^ levelEditorSession snapToSubGrid: vector
+]
+
+{ #category : #accessing }
+WDELevelEditorSceneModel >> startPlacingDuplicatedElements: duplicatedItems oldSelection: oldSelection [
+	views first startPlacingDuplicatedElements: duplicatedItems oldSelection: oldSelection
 ]
 
 { #category : #'instance creation' }

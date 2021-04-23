@@ -413,7 +413,7 @@ WDCResourceCache >> doActualMaterialLoading: materialFileReference [
 	materialClass := Smalltalk at: materialClassName ifAbsent: [ self error: 'Failed to find material class for material type ' , materialType ].
 	self assert: materialClass isMaterialClass.
 	^ (materialClass for: engine)
-		parse: materialFileReference data: materialData;
+		parseInFolder: materialFileReference parent data: materialData;
 		yourself
 ]
 
@@ -1103,7 +1103,7 @@ WDCResourceCache >> whiteCubeMap [
 
 { #category : #'as yet unclassified' }
 WDCResourceCache >> whiteFlatColorMaterial [
-	^ self resourceAt: #whiteFlatColorMaterial ifAbsentPut: [ WDCFlatColorMaterial for: engine]
+	^ self resourceAt: #whiteFlatColorMaterial ifAbsentPut: [ WDCUnlitMaterial for: engine]
 ]
 
 { #category : #textures }

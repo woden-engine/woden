@@ -27,6 +27,13 @@ WDEVisualComponent class >> pointLight [
 ]
 
 { #category : #'as yet unclassified' }
+WDEVisualComponent class >> polyhedronBox: box [
+	^ WDEPolyhedronVisualComponent new
+		constructFacesForBox: box;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
 WDEVisualComponent class >> rectangle: rectangle [
 	^ WDERectangleVisualComponent new
 		rectangle: rectangle;
@@ -43,7 +50,27 @@ WDEVisualComponent >> boundingBox [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'as yet unclassified' }
+WDEVisualComponent >> buildSolidMeshWith: meshBuilder levelEditorSession: levelEditorSession modelTransform: modelTransform [
+	self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+WDEVisualComponent >> buildWireMeshWith: meshBuilder material: renderMaterial [
+	self subclassResponsibility
+]
+
 { #category : #testing }
 WDEVisualComponent >> isVisualComponent [
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+WDEVisualComponent >> planesForCollisionConvexHull [
+	^ #()
+]
+
+{ #category : #'as yet unclassified' }
+WDEVisualComponent >> pointsForCollisionConvexHull [
+	^ #()
 ]

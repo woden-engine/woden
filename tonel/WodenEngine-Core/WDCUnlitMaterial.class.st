@@ -1,5 +1,5 @@
 Class {
-	#name : #WDCFlatColorMaterial,
+	#name : #WDCUnlitMaterial,
 	#superclass : #WDCMaterial,
 	#instVars : [
 		'useDepth',
@@ -16,7 +16,7 @@ Class {
 }
 
 { #category : #rendering }
-WDCFlatColorMaterial >> activateDepthNormalOn: stateTracker [
+WDCUnlitMaterial >> activateDepthNormalOn: stateTracker [
 	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
 	
 	stateTracker
@@ -26,7 +26,7 @@ WDCFlatColorMaterial >> activateDepthNormalOn: stateTracker [
 ]
 
 { #category : #rendering }
-WDCFlatColorMaterial >> activateDepthOnlyOn: stateTracker [
+WDCUnlitMaterial >> activateDepthOnlyOn: stateTracker [
 	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
 	
 	stateTracker
@@ -36,7 +36,7 @@ WDCFlatColorMaterial >> activateDepthOnlyOn: stateTracker [
 ]
 
 { #category : #rendering }
-WDCFlatColorMaterial >> activateForwardOn: stateTracker [
+WDCUnlitMaterial >> activateForwardOn: stateTracker [
 	self validateCache.
 	stateTracker
 		vertexShader: self vertexShader;
@@ -56,7 +56,7 @@ WDCFlatColorMaterial >> activateForwardOn: stateTracker [
 ]
 
 { #category : #rendering }
-WDCFlatColorMaterial >> bindResources [
+WDCUnlitMaterial >> bindResources [
 	| signature |
 	resourceBinding ifNil: [ 
 		signature := WDCSceneRenderingShaderSignature for: engine.
@@ -67,12 +67,12 @@ WDCFlatColorMaterial >> bindResources [
 ]
 
 { #category : #'as yet unclassified' }
-WDCFlatColorMaterial >> colorTexture [
+WDCUnlitMaterial >> colorTexture [
 	^ colorTexture
 ]
 
 { #category : #'as yet unclassified' }
-WDCFlatColorMaterial >> colorTexture: aTexture [
+WDCUnlitMaterial >> colorTexture: aTexture [
 	colorTexture ~~ aTexture ifTrue: [ 
 		colorTexture := aTexture.
 		self invalidateCache.
@@ -81,7 +81,7 @@ WDCFlatColorMaterial >> colorTexture: aTexture [
 ]
 
 { #category : #accessing }
-WDCFlatColorMaterial >> fragmentShader [
+WDCUnlitMaterial >> fragmentShader [
 	^ stipple
 		ifTrue: [ self shaderLibrary getFragmentStage: #stipple ]
 		ifFalse: [ colorTexture
@@ -90,19 +90,24 @@ WDCFlatColorMaterial >> fragmentShader [
 ]
 
 { #category : #accessing }
-WDCFlatColorMaterial >> hasPremultipliedAlpha [
+WDCUnlitMaterial >> hasPremultipliedAlpha [
 
 	^ hasPremultipliedAlpha
 ]
 
 { #category : #accessing }
-WDCFlatColorMaterial >> hasPremultipliedAlpha: anObject [
+WDCUnlitMaterial >> hasPremultipliedAlpha: anObject [
 
 	hasPremultipliedAlpha := anObject
 ]
 
+{ #category : #testing }
+WDCUnlitMaterial >> hasTexture [
+	^ colorTexture isNotNil
+]
+
 { #category : #initialization }
-WDCFlatColorMaterial >> initialize [
+WDCUnlitMaterial >> initialize [
 	super initialize.
 	stipple := false.
 	useDepth := true.
@@ -112,81 +117,81 @@ WDCFlatColorMaterial >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-WDCFlatColorMaterial >> invalidateCache [
+WDCUnlitMaterial >> invalidateCache [
 	resourceBindingsAreUpdated := false.
 ]
 
 { #category : #parsing }
-WDCFlatColorMaterial >> parse: materialFileReference data: aDictionary [
-	useDepth := aDictionary at: 'use-depth' ifAbsent: [ true ].
-	writeDepth := aDictionary at: 'write-depth' ifAbsent: [ true ].
-	stipple := aDictionary at: 'stipple' ifAbsent: [ false ].
-	thumbnailType := (aDictionary at: 'thumbnail-type' ifAbsent: [ #color ]) asSymbol.
+WDCUnlitMaterial >> parseInFolder: parentFolderFileReference data: aDictionary [
+	useDepth := aDictionary at: #useDepth ifAbsent: [ true ].
+	writeDepth := aDictionary at: #writeDepth ifAbsent: [ true ].
+	stipple := aDictionary at: #stipple ifAbsent: [ false ].
+	thumbnailType := (aDictionary at: #thumbnailType ifAbsent: [ #color ]) asSymbol.
 ]
 
 { #category : #enumerating }
-WDCFlatColorMaterial >> precacheResources [
+WDCUnlitMaterial >> precacheResources [
 	self shaderLibrary
 ]
 
 { #category : #accessing }
-WDCFlatColorMaterial >> shaderLibrary [
+WDCUnlitMaterial >> shaderLibrary [
 	^ shaderLibrary ifNil: [ shaderLibrary := engine loadShaderLibrary: 'shaders/material/flat.dastrel' ].
 
 ]
 
 { #category : #accessing }
-WDCFlatColorMaterial >> stipple [
+WDCUnlitMaterial >> stipple [
 	^ stipple
 ]
 
 { #category : #accessing }
-WDCFlatColorMaterial >> stipple: anObject [
+WDCUnlitMaterial >> stipple: anObject [
 	stipple := anObject
 ]
 
 { #category : #preview }
-WDCFlatColorMaterial >> thumbnail [
+WDCUnlitMaterial >> thumbnail [
 	^ WDCResourceThumbnail type: thumbnailType value: Color white
 ]
 
 { #category : #accessing }
-WDCFlatColorMaterial >> thumbnailType [
+WDCUnlitMaterial >> thumbnailType [
 	^ thumbnailType
 ]
 
 { #category : #accessing }
-WDCFlatColorMaterial >> thumbnailType: anObject [
+WDCUnlitMaterial >> thumbnailType: anObject [
 	thumbnailType := anObject
 ]
 
 { #category : #accessing }
-WDCFlatColorMaterial >> useDepth [
+WDCUnlitMaterial >> useDepth [
 	^ useDepth
 ]
 
 { #category : #accessing }
-WDCFlatColorMaterial >> useDepth: anObject [
+WDCUnlitMaterial >> useDepth: anObject [
 	useDepth := anObject
 ]
 
 { #category : #rendering }
-WDCFlatColorMaterial >> validateCache [
+WDCUnlitMaterial >> validateCache [
 	resourceBindingsAreUpdated ifFalse: [ self bindResources ].
 	resourceBindingsAreUpdated := true.
 ]
 
 { #category : #accessing }
-WDCFlatColorMaterial >> vertexShader [
+WDCUnlitMaterial >> vertexShader [
 	^ self shaderLibrary getVertexStage: #vertex
 ]
 
 { #category : #accessing }
-WDCFlatColorMaterial >> writeDepth [
+WDCUnlitMaterial >> writeDepth [
 	^ writeDepth
 ]
 
 { #category : #accessing }
-WDCFlatColorMaterial >> writeDepth: anObject [
+WDCUnlitMaterial >> writeDepth: anObject [
 	writeDepth := anObject
 ]

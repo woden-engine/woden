@@ -41,3 +41,8 @@ WDCSkinnedModelBone >> parentIndex [
 WDCSkinnedModelBone >> parentIndex: anObject [
 	parentIndex := anObject
 ]
+
+{ #category : #printing }
+WDCSkinnedModelBone >> printOn: aStream [
+	aStream nextPutAll: 'bone '; print: index; space; nextPutAll: name asString; space; print: parentIndex
+]

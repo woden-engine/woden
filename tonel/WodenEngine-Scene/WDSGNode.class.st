@@ -251,6 +251,11 @@ WDSGNode >> isMultiEyeCamera [
 ]
 
 { #category : #testing }
+WDSGNode >> isRecursivelyNullNode [
+	^ children allSatisfy: [ :each | each isRecursivelyNullNode ]
+]
+
+{ #category : #testing }
 WDSGNode >> isSpatialObject [
 	^ false
 ]
@@ -330,12 +335,11 @@ WDSGNode >> position: aPosition [
 { #category : #copying }
 WDSGNode >> postCopy [
 	| oldChildren |
-	super postCopy.
 	scene := nil.
 	parent := nil.
 	stateChangeListeners := nil.
-	oldChildren := children.
 	globalTransform := nil.
+	oldChildren := children.
 	children := OrderedCollection new.
 	oldChildren do: [ :child |
 		self addChild: child copy

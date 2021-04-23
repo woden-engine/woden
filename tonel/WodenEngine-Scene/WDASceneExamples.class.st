@@ -30,8 +30,8 @@ WDASceneExamples class >> cloudTexture [
 WDASceneExamples class >> constructPoolMeshWith: meshBuilder [
 	| engine tilesMaterial concreteMaterial borderThickness |
 	engine := meshBuilder engine.
-	tilesMaterial := engine resourceCache loadMaterial: 'materials/demos/tile.json'.
-	concreteMaterial := engine resourceCache loadMaterial: 'materials/demos/esug-floor.json'.
+	tilesMaterial := engine resourceCache loadMaterial: 'materials/demos/tile.wtmat'.
+	concreteMaterial := engine resourceCache loadMaterial: 'materials/demos/esug-floor.wtmat'.
 	
 	"Add the floor"
 	borderThickness := 0.5.
@@ -87,7 +87,7 @@ WDASceneExamples class >> constructPoolMeshWith: meshBuilder [
 WDASceneExamples class >> constructPoolSceneInto: scene [
 	| engine waterMaterial meshBuilder floor mesh cube waterMesh waterSurface |
 	engine := scene engine.
-	waterMaterial := engine resourceCache loadMaterial: 'materials/demos/water.json'.
+	waterMaterial := engine resourceCache loadMaterial: 'materials/demos/water.wtmat'.
 	
 	"Add the floor"
 	meshBuilder := WDCComplexGenericMeshBuilder for: engine.
@@ -128,7 +128,7 @@ WDASceneExamples class >> constructPoolSceneInto: scene [
 { #category : #'examples procedural' }
 WDASceneExamples class >> createIslandTerrainObjectFor: engine [
 	| material mesh terrain terrainData |
-	material := engine resourceCache loadMaterial: 'materials/demos/island.json'.
+	material := engine resourceCache loadMaterial: 'materials/demos/island.wtmat'.
 	terrainData := engine resourceCache loadTerrain: 'terrains/demos/procedural/island.stterrain'.
 	
 	terrain := WDSGSpatialObject new.
@@ -142,7 +142,7 @@ WDASceneExamples class >> createIslandTerrainObjectFor: engine [
 WDASceneExamples class >> createIslandWaterObjectFor: engine [
 	"Setup the water material"
 	| material mesh waterObject |
-	material := (engine resourceCache loadMaterial: 'materials/demos/ocean.json').
+	material := (engine resourceCache loadMaterial: 'materials/demos/ocean.wtmat').
 
 	"Add the water"
 	mesh := (WDCTerrainMeshBuilder for: engine)
@@ -197,7 +197,7 @@ WDASceneExamples class >> example02TextureCube [
 	camera := model camera.
 	camera translateByZ: 3.0.
 	
-	material := scene engine resourceCache loadMaterial: 'materials/basic/checkboard.json'.
+	material := scene engine resourceCache loadMaterial: 'materials/basic/checkboard.wtmat'.
 	
 	meshBuilder := WDCGenericMeshBuilder for: scene engine.
 	meshBuilder
@@ -227,7 +227,7 @@ WDASceneExamples class >> example03Floor [
 	camera := model camera.
 	camera translateByX: 0.0 y: 1.0 z: 3.0.
 	
-	material := scene engine resourceCache loadMaterial: 'materials/demos/tile.json'.
+	material := scene engine resourceCache loadMaterial: 'materials/demos/tile.wtmat'.
 
 	meshBuilder := WDCComplexGenericMeshBuilder for: scene engine.
 	meshBuilder
@@ -540,7 +540,9 @@ WDASceneExamples class >> example09Island [
 	model := WDASampleSceneModel new.
 	scene := model newScene.
 	camera := model camera.
-	camera toneMappingOperator: #filmic.
+	camera 
+		withAutoExposure;
+		toneMappingOperator: #filmic.
 	camera farDistance: 250.0; cascadeSplitDistribution: 0.75.
 	camera translateByZ: 85.0; translateByY: 1.5.
 	

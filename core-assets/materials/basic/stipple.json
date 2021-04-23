@@ -1,8 +1,0 @@
-{
-    "type" : "FlatColor",
-
-    "stipple" : true,
-
-    "use-depth" : false,
-    "thumbnail-type" : "no-editor"
-}

@@ -1,0 +1,6 @@
+{
+    "type" : "MetallicRoughness",
+    "baseColorTexture" : "textures/procedural/urban/concrete.sttex",
+    "normalTexture" : "textures/procedural/urban/concrete.sttex?texture=normal",
+    "occlusionMetallicRoughnessTexture" : "textures/procedural/urban/concrete.sttex?texture=rma"
+}

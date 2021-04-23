@@ -170,3 +170,8 @@ WDELevelEditor3DManipulator >> startDragToolWithEvent: event on: view [
 			dragStartedWith: event;
 			yourself)
 ]
+
+{ #category : #accessing }
+WDELevelEditor3DManipulator >> theme [
+	^ WDELevelEditorTheme current
+]

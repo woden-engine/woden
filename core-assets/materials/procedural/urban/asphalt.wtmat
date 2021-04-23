@@ -1,0 +1,6 @@
+{
+    "type" : "MetallicRoughness",
+    "baseColorTexture" : "textures/procedural/urban/asphalt.sttex",
+    "normalTexture" : "textures/procedural/urban/asphalt.sttex?texture=normal",
+    "occlusionMetallicRoughnessTexture" : "textures/procedural/urban/asphalt.sttex?texture=rma"
+}

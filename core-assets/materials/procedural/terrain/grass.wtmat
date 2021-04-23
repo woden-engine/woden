@@ -1,0 +1,6 @@
+{
+    "type" : "MetallicRoughness",
+    "baseColorTexture" : "textures/procedural/terrain/grass.sttex",
+    "normalTexture" : "textures/procedural/terrain/grass.sttex?texture=normal",
+    "occlusionMetallicRoughnessTexture" : "textures/procedural/terrain/grass.sttex?texture=rma"
+}

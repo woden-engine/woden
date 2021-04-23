@@ -31,6 +31,11 @@ WDAESAbstractUniverseModel >> initializeScene [
 	universe ifNotNil: [ universe scene: scene ]
 ]
 
+{ #category : #testing }
+WDAESAbstractUniverseModel >> isAnimated [
+	^ true
+]
+
 { #category : #'instance creation' }
 WDAESAbstractUniverseModel >> newScene [
 	self scene: (WDSGScene for: engine).

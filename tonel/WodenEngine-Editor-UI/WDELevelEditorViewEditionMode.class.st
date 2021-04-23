@@ -77,7 +77,10 @@ WDELevelEditorViewEditionMode >> onRightClick: event [
 	self supportsElementSelection ifFalse: [ ^ self ].
 	elements := (view elementInScreenPosition: event position) ifNil: [ #() ] ifNotNil: [ :e | { e } ].
 	view setSelectedElements: elements.
-	view levelEditorSession buildSelectionContextMenu openWithSpecAtPointer
+	elements ifNotEmpty: [ 
+		view levelEditorSession buildSelectionContextMenu openWithSpecAtPointer
+	].
+
 ]
 
 { #category : #'event handling' }
@@ -86,11 +89,16 @@ WDELevelEditorViewEditionMode >> shortcuts [
 		KeyboardKey escape asKeyCombination . [ self cancelAction ].
 		KeyboardKey enter asKeyCombination . [ self activateAction ].
 
+
+		$s command mac | $s control unix | $s control win . [ self model actionSaveFile ].
+		$o command mac | $o control unix | $o control win . [ self model actionOpenFile ].
+
 		$z asKeyCombination . [ view openShadingMenu ].
 		$z command mac | $z control unix | $z control win . [ self levelEditorSession undo ].
 		$z command shift mac | $z control shift unix | $z control shift win . [ self levelEditorSession redo ].
 
 		$d command mac | $d control unix | $d control win . [ self levelEditorSession duplicateSelectedItems  ].
+		$p command mac | $p control unix | $p control win . [ self levelEditorSession playLevel ].
 
 		KeyboardKey delete asKeyCombination . [ self levelEditorSession deleteSelectedItems  ].
 

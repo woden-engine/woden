@@ -17,6 +17,11 @@ WDCNullRenderable >> exportModelWith: exporter [
 	"Nothing is required here."
 ]
 
+{ #category : #testing }
+WDCNullRenderable >> isNullRenderable [
+	^ true
+]
+
 { #category : #rendering }
 WDCNullRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
 	"Do nothing"

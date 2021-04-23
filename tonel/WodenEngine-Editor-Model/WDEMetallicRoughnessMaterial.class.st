@@ -2,8 +2,6 @@ Class {
 	#name : #WDEMetallicRoughnessMaterial,
 	#superclass : #WDEMaterial,
 	#instVars : [
-		'baseColor',
-		'emissionColor',
 		'occlusionFactor',
 		'metallicFactor',
 		'roughnessFactor',
@@ -11,7 +9,9 @@ Class {
 		'normalTexture',
 		'occlusionRoughnessMetallicTexture',
 		'renderingMaterial',
-		'baseColorTexture'
+		'baseColorTexture',
+		'baseColorFactor',
+		'emissionFactor'
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
 }
@@ -19,8 +19,8 @@ Class {
 { #category : #comparing }
 WDEMetallicRoughnessMaterial >> = other [
 	^ self class == other class and: [ 
-		baseColor = other baseColor and: [
-		emissionColor = other emissionColor and: [
+		baseColorFactor = other baseColorFactor and: [
+		emissionFactor = other emissionFactor and: [
 		occlusionFactor = other occlusionFactor and: [
 		roughnessFactor = other roughnessFactor and: [
 		metallicFactor = other metallicFactor and: [
@@ -32,20 +32,20 @@ WDEMetallicRoughnessMaterial >> = other [
 ]
 
 { #category : #converting }
-WDEMetallicRoughnessMaterial >> asRenderingMaterialFor: engine [
+WDEMetallicRoughnessMaterial >> asRenderingMaterialForSession: levelEditorSession engine: engine [
 	^ renderingMaterial ifNil: [ renderingMaterial := self createRenderingMaterialFor: engine ]
 ]
 
 { #category : #accessing }
-WDEMetallicRoughnessMaterial >> baseColor [
+WDEMetallicRoughnessMaterial >> baseColorFactor [
 
-	^ baseColor
+	^ baseColorFactor
 ]
 
 { #category : #accessing }
-WDEMetallicRoughnessMaterial >> baseColor: anObject [
+WDEMetallicRoughnessMaterial >> baseColorFactor: anObject [
 
-	baseColor := anObject asFloat32x4
+	baseColorFactor := anObject asFloat32x4
 ]
 
 { #category : #accessing }
@@ -65,8 +65,8 @@ WDEMetallicRoughnessMaterial >> createRenderingMaterialFor: engine [
 	| material |
 	material := WDCMetallicRoughnessMaterial for: engine.
 	material
-		albedoColor: baseColor;
-		emissionColor: emissionColor;
+		albedoColor: baseColorFactor;
+		emissionFactor: emissionFactor;
 		occlusionFactor: occlusionFactor;
 		roughnessFactor: roughnessFactor;
 		metallicFactor: metallicFactor.
@@ -74,15 +74,15 @@ WDEMetallicRoughnessMaterial >> createRenderingMaterialFor: engine [
 ]
 
 { #category : #accessing }
-WDEMetallicRoughnessMaterial >> emissionColor [
+WDEMetallicRoughnessMaterial >> emissionFactor [
 
-	^ emissionColor
+	^ emissionFactor
 ]
 
 { #category : #accessing }
-WDEMetallicRoughnessMaterial >> emissionColor: anObject [
+WDEMetallicRoughnessMaterial >> emissionFactor: anObject [
 
-	emissionColor := anObject asFloat32x3
+	emissionFactor := anObject asFloat32x3
 ]
 
 { #category : #accessing }
@@ -100,8 +100,8 @@ WDEMetallicRoughnessMaterial >> emissionTexture: anObject [
 { #category : #serialization }
 WDEMetallicRoughnessMaterial >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
-		#baseColor . baseColor encodeForJSON.
-		#emissionColor . emissionColor encodeForJSON.
+		#baseColorFactor . baseColorFactor encodeForJSON.
+		#emissionFactor . emissionFactor encodeForJSON.
 		#occlusionFactor . occlusionFactor.
 		#roughnessFactor . roughnessFactor.
 		#metallicFactor . metallicFactor.
@@ -115,8 +115,8 @@ WDEMetallicRoughnessMaterial >> encodeJsonKeyValues [
 { #category : #comparing }
 WDEMetallicRoughnessMaterial >> hash [
 	^ self class identityHash bitXor: ( 
-		baseColor hash bitXor: (
-		emissionColor hash bitXor: (
+		baseColorFactor hash bitXor: (
+		emissionFactor hash bitXor: (
 		occlusionFactor hash bitXor: (
 		roughnessFactor hash bitXor: (
 		metallicFactor hash bitXor: (
@@ -129,8 +129,8 @@ WDEMetallicRoughnessMaterial >> hash [
 { #category : #initialization }
 WDEMetallicRoughnessMaterial >> initialize [
 	super initialize.
-	baseColor := Float32x4 ones.
-	emissionColor := Float32x3 zeros.
+	baseColorFactor := Float32x4 ones.
+	emissionFactor := Float32x3 zeros.
 	occlusionFactor := 1.0.
 	metallicFactor := 1.0.
 	roughnessFactor := 1.0.
@@ -139,8 +139,8 @@ WDEMetallicRoughnessMaterial >> initialize [
 { #category : #serialization }
 WDEMetallicRoughnessMaterial >> loadFromJson: jsonData context: context [
 	super loadFromJson: jsonData context: context.
-	jsonData at: #baseColor ifPresent: [ :color | baseColor := Float32x4 loadFromJson: color ].
-	jsonData at: #emissionColor ifPresent: [ :color | emissionColor := Float32x3 loadFromJson: color ].
+	jsonData at: #baseColorFactor ifPresent: [ :color | baseColorFactor := Float32x4 loadFromJson: color ].
+	jsonData at: #emissionFactor ifPresent: [ :color | emissionFactor := Float32x3 loadFromJson: color ].
 	
 	occlusionFactor := jsonData at: #occlusionFactor ifAbsent: [ occlusionFactor ].
 	roughnessFactor := jsonData at: #roughnessFactor ifAbsent: [ roughnessFactor ].
@@ -153,8 +153,8 @@ WDEMetallicRoughnessMaterial >> loadFromJson: jsonData context: context [
 ]
 
 { #category : #thumbnail }
-WDEMetallicRoughnessMaterial >> makeThumbnail [
-	^ (Form extent: 16@16 depth: 32) fillColor: baseColor asColor
+WDEMetallicRoughnessMaterial >> makeThumbnailForSession: levelEditorSession engine: engine [
+	^ (Form extent: 16@16 depth: 32) fillColor: baseColorFactor asColor
 ]
 
 { #category : #accessing }

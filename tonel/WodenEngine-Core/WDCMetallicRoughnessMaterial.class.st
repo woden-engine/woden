@@ -80,6 +80,11 @@ WDCMetallicRoughnessMaterial >> forwardFragmentShaderFor: stateTracker [
 
 ]
 
+{ #category : #testing }
+WDCMetallicRoughnessMaterial >> hasTexture [
+	^ super hasTexture or: [ metallicRoughnessTexture isNotNil ]
+]
+
 { #category : #initialization }
 WDCMetallicRoughnessMaterial >> initialize [
 	super initialize.
@@ -115,9 +120,9 @@ WDCMetallicRoughnessMaterial >> metallicRoughnessTexture: anObject [
 ]
 
 { #category : #parsing }
-WDCMetallicRoughnessMaterial >> parse: materialFileReference data: data [
-	super parse: materialFileReference data: data.
-	metallicRoughnessTexture := self parse: data at: materialFileReference optionalTexture: 'metallic-roughness-texture'.
+WDCMetallicRoughnessMaterial >> parseInFolder: parentFolderFileReference data: data [
+	super parseInFolder: parentFolderFileReference data: data.
+	metallicRoughnessTexture := self parse: data at: parentFolderFileReference optionalTexture: #occlusionMetallicRoughnessTexture.
 
 	materialState
 		roughnessFactor: (data at: 'roughness-factor' ifAbsent: [

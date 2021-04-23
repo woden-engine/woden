@@ -8,8 +8,18 @@ Class {
 }
 
 { #category : #converting }
-WDEMaterial >> asRenderingMaterialFor: engine [
+WDEMaterial >> asRenderingMaterialForSession: levelEditorSession engine: engine [
 	^ engine resourceCache defaultMaterial
+]
+
+{ #category : #testing }
+WDEMaterial >> hasTexture [
+	^ false
+]
+
+{ #category : #thumbnail }
+WDEMaterial >> makeThumbnailForSession: levelEditorSession engine: engine [
+	^ nil
 ]
 
 { #category : #accessing }

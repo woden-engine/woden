@@ -3,7 +3,7 @@ Class {
 	#superclass : #WDEVisualComponent3D,
 	#instVars : [
 		'box',
-		'material'
+		'materialAttributes'
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
 }
@@ -29,18 +29,54 @@ WDEBoxVisualComponent >> box: anObject [
 	self changed.
 ]
 
+{ #category : #'as yet unclassified' }
+WDEBoxVisualComponent >> buildSolidMeshWith: meshBuilder levelEditorSession: levelEditorSession modelTransform: modelTransform [
+	| renderMaterial |
+	renderMaterial := materialAttributes asRenderMaterialForEngine: meshBuilder engine levelEditorSession: levelEditorSession.
+
+	^ meshBuilder
+		currentMaterial: renderMaterial;
+		transform: self boundingBox reversibleTransformToConvertUnitBoxToMe;
+		addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+		planeTextureTransform: materialAttributes textureTransform withModelTransform: modelTransform;
+		computeTangentsBitangents;
+		computeBoundingBox;
+		mesh.
+
+]
+
+{ #category : #'as yet unclassified' }
+WDEBoxVisualComponent >> buildWireMeshWith: meshBuilder material: renderMaterial [
+	^ meshBuilder
+		currentMaterial: renderMaterial;
+		transform: self boundingBox reversibleTransformToConvertUnitBoxToMe;
+		addWireCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+		computeBoundingBox;
+		mesh.
+
+]
+
 { #category : #serialization }
 WDEBoxVisualComponent >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
 		#box . box encodeForJSON.
-		#material . material ifNil: [0] ifNotNil: [material materialIndex].
+		#material . materialAttributes encodeForJSON
 	}
+]
+
+{ #category : #accessing }
+WDEBoxVisualComponent >> entityTransformChanged [
+	materialAttributes hasTexture ifTrue: [
+		self raiseChangedEvent
+	].
+
 ]
 
 { #category : #initialization }
 WDEBoxVisualComponent >> initialize [
 	super initialize.
 	box := BoxF32 unitBox.
+	materialAttributes := WDEFaceMaterialAttributes new.
 ]
 
 { #category : #testing }
@@ -52,33 +88,36 @@ WDEBoxVisualComponent >> isBoxVisualComponent [
 WDEBoxVisualComponent >> loadFromJson: jsonData context: context [
 	super loadFromJson: jsonData context: context.
 	box := BoxF32 loadFromJson: (jsonData at: 'box').
-	jsonData at: 'material' ifPresent: [ :index |
-		material := context getMaterialWithIndex: index
+	jsonData at: 'material' ifPresent: [ :data |
+		materialAttributes loadFromJson: data context: context
 	].
-
+	
 ]
 
 { #category : #accessing }
-WDEBoxVisualComponent >> material [
+WDEBoxVisualComponent >> materialAttributes [
 
-	^ material
+	^ materialAttributes
 ]
 
 { #category : #accessing }
-WDEBoxVisualComponent >> material: anObject [
-
-	material := anObject.
-	self changed.
+WDEBoxVisualComponent >> materialAttributes: newMaterialAttributes [
+	materialAttributes := newMaterialAttributes copy.
 ]
 
 { #category : #memento }
 WDEBoxVisualComponent >> materialStateMemento [
-	^ material
+	^ materialAttributes materialStateMemento
+]
+
+{ #category : #'as yet unclassified' }
+WDEBoxVisualComponent >> pointsForCollisionConvexHull [
+	^ box corners
 ]
 
 { #category : #memento }
 WDEBoxVisualComponent >> restoreMaterialStateMemento: memento [
-	self material: memento
+	materialAttributes restoreMaterialStateMemento: memento
 ]
 
 { #category : #memento }
@@ -88,7 +127,8 @@ WDEBoxVisualComponent >> restoreTransformStateMemento: memento [
 
 { #category : #initialization }
 WDEBoxVisualComponent >> setMaterial: newMaterial [
-	self material: newMaterial
+	materialAttributes material: newMaterial.
+	self changed
 ]
 
 { #category : #memento }
@@ -103,5 +143,5 @@ WDEBoxVisualComponent >> transformWith: transform [
 
 { #category : #'as yet unclassified' }
 WDEBoxVisualComponent >> validateMaterialList [
-	self level validateMaterial: material
+	self level validateMaterial: materialAttributes material
 ]

@@ -22,6 +22,7 @@ WDCSkinnedMeshAnimationState >> applyAnimation: animation repeated: isRepeated i
 { #category : #adding }
 WDCSkinnedMeshAnimationState >> applyAnimationChannel: channel repeated: isRepeated inTime: animationTime [
 	| bonePoseState |
+	(channel appliesToArmature: self armature) ifFalse: [ ^ self ].
 	bonePoseState := poseState at: channel targetBoneIndex + 1.
 	channel applyToBoneState: bonePoseState repeated: isRepeated inTime: animationTime.
 ]

@@ -3,6 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'sampler',
+		'targetArmature',
 		'targetBoneIndex',
 		'targetProperty'
 	],
@@ -25,6 +26,7 @@ WDIGLTF2AnimationChannel class >> initialize [
 { #category : #converting }
 WDIGLTF2AnimationChannel >> asSkinnedModelAnimationChannel [
 	^ self skinnedModelAnimationChannelClass new
+		targetArmature: targetArmature;
 		targetBoneIndex: targetBoneIndex;
 		inputSamples: sampler inputValues;
 		inputMinValue: sampler inputMinValue;
@@ -47,6 +49,18 @@ WDIGLTF2AnimationChannel >> sampler: anObject [
 { #category : #'as yet unclassified' }
 WDIGLTF2AnimationChannel >> skinnedModelAnimationChannelClass [
 	^ TargetPropertyToClassMap at: targetProperty
+]
+
+{ #category : #accessing }
+WDIGLTF2AnimationChannel >> targetArmature [
+
+	^ targetArmature
+]
+
+{ #category : #accessing }
+WDIGLTF2AnimationChannel >> targetArmature: anObject [
+
+	targetArmature := anObject
 ]
 
 { #category : #accessing }

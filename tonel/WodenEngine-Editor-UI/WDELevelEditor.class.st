@@ -83,7 +83,38 @@ WDELevelEditor class >> menuCommandOn: builder [
 	(builder item: #'Open level editor')
 		parent: #Woden;
 		order: 0;
-		action: [ WDELevel empty openEditor  ].
+		action: [ self openEditorWorldMenuCommand  ].
+]
+
+{ #category : #'world menu' }
+WDELevelEditor class >> openEditorWithGameSettings: gameSettings [
+	WDELevel empty newEditorSession
+		gameSettings: gameSettings;
+		openEditor
+]
+
+{ #category : #'world menu' }
+WDELevelEditor class >> openEditorWorldMenuCommand [
+	| availableSettings |
+	availableSettings := WDEGameSettings allSettings.
+	
+	availableSettings size > 1 ifTrue: [
+		|gameMenu |
+		gameMenu := SpMenuPresenter new.
+		availableSettings do: [ :gameSetting |
+			gameMenu
+				addItem: [ :item |
+					item
+						name: gameSetting name;
+						action: [ self openEditorWithGameSettings: gameSetting ]
+				]
+		].
+	
+		gameMenu openWithSpecAtPointer
+	] ifFalse: [
+		self openEditorWithGameSettings: availableSettings first.
+	].
+
 ]
 
 { #category : #'main actions' }
@@ -118,17 +149,17 @@ WDELevelEditor >> actionExit [
 
 { #category : #'main actions' }
 WDELevelEditor >> actionOpenFile [
-	| dialog result |
-	dialog := self createLevelFileDialog.
-	dialog title: 'Select the level to open'; answerPathName.
-	result := dialog openModal answer.
-	result ifNil: [ ^ self ].
-	self model openFrom: result asFileReference
+	wodenApplication actionOpenFile
 ]
 
 { #category : #'main actions' }
 WDELevelEditor >> actionPaste [
 	self inform: 'TODO: actionPaste'
+]
+
+{ #category : #'main actions' }
+WDELevelEditor >> actionPlayLevel [
+	self model playLevel
 ]
 
 { #category : #'main actions' }
@@ -138,30 +169,12 @@ WDELevelEditor >> actionRedo [
 
 { #category : #'main actions' }
 WDELevelEditor >> actionSaveFile [
-	self model levelFileReference ifNotNil: [ :fileReference |
-		self model saveTo: fileReference
-	] ifNil: [
-		self actionSaveFileAs
-	]
+	wodenApplication actionSaveFile
 ]
 
 { #category : #'main actions' }
 WDELevelEditor >> actionSaveFileAs [
-	| dialog result |
-	dialog := self createLevelFileDialog.
-	dialog
-		title: 'Select the location to save the level';
-		fileNameText: 'level.wlevel';
-		answerSaveFile.
-	self model levelFileReference ifNotNil: [ :fileRef |
-		dialog
-			fileNameText: fileRef basename;
-			selectPath: fileRef parent
-	].
-
-	result := dialog openModal answer.
-	result ifNil: [ ^ self ].
-	self model saveTo: result asFileReference
+	wodenApplication actionSaveFileAs
 ]
 
 { #category : #'main actions' }
@@ -191,6 +204,11 @@ WDELevelEditor >> buildMainMenuBar [
 				];
 				addItem: [ :item |
 					item
+						name: 'Game';
+						subMenu: self gameMenu
+				];
+				addItem: [ :item |
+					item
 						name: 'View';
 						subMenu: self viewMenu
 				];
@@ -206,6 +224,7 @@ WDELevelEditor >> buildMainMenuBar [
 { #category : #initialization }
 WDELevelEditor >> buildMainToolbar [
 	^ self newToolbar
+		
 		addItem: (SpToolbarButtonPresenter new
 			label: 'Object';
 			action: [ content view activateObjectMode ];
@@ -213,6 +232,10 @@ WDELevelEditor >> buildMainToolbar [
 		addItem: (SpToolbarButtonPresenter new
 			label: 'Placement';
 			action: [ content view activatePlacementMode ];
+			yourself);
+		addItem: (SpToolbarButtonPresenter new
+			icon: (self iconNamed: #glamorousGo);
+			action: [ self actionPlayLevel ];
 			yourself);
 		yourself
 ]
@@ -300,15 +323,6 @@ WDELevelEditor >> content [
 { #category : #accessing }
 WDELevelEditor >> contentView [
 	^ content view
-]
-
-{ #category : #'main actions' }
-WDELevelEditor >> createLevelFileDialog [
-	^ FileDialogWindow basicNew
-		basicTheme: self theme;
-		initialize;
-		validExtensions: #(wlevel wblevel);
-		yourself
 ]
 
 { #category : #menu }
@@ -418,6 +432,21 @@ WDELevelEditor >> fileMenu [
 ]
 
 { #category : #menu }
+WDELevelEditor >> gameMenu [
+	^ self newMenu
+		addGroup: [ :group |
+			group
+				addItem: [ :item |
+					item
+						name: 'Play level';
+						shortcut: $p command mac | $p control unix | $p control win;
+						action: [self actionPlayLevel].
+				]
+		];
+		yourself
+]
+
+{ #category : #menu }
 WDELevelEditor >> helpMenu [
 	^ self newMenu
 		addGroup: [ :group |
@@ -458,11 +487,14 @@ WDELevelEditor >> initializePresenters [
 		];
 		contextMenu: [ self treeViewMenu ].
 	elementTemplateList := WDELevelEditorElementTemplatePalettePresenter on: self model.
+	elementTemplateList engine: wodenApplication engine.
 	
 	paletteNotebook := self newNotebook.
 	paletteNotebook
-		addPageTitle: 'Materials' provider: [ WDELevelEditorMaterialPalettePresenter on: self model];
-		addPageTitle: 'Light Sources' provider: [ WDELevelEditorLightSourcePalettePresenter on: self model].
+		addPageTitle: 'Materials' provider: [ (WDELevelEditorMaterialPalettePresenter on: self model)
+			engine: wodenApplication engine];
+		addPageTitle: 'Light Sources' provider: [ (WDELevelEditorLightSourcePalettePresenter on: self model)
+		engine: wodenApplication engine].
 
 ]
 

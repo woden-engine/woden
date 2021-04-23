@@ -27,17 +27,32 @@ WDELevelElementTest class >> createTestLevel [
 
 { #category : #tests }
 WDELevelElementTest class >> greenMaterial [
-	^ WDEMetallicRoughnessMaterial new baseColor: Color green; yourself
+	^ WDEMetallicRoughnessMaterial new baseColorFactor: Color green; yourself
 ]
 
 { #category : #tests }
 WDELevelElementTest class >> redMaterial [
-	^ WDEMetallicRoughnessMaterial new baseColor: Color red; yourself
+	^ WDEMetallicRoughnessMaterial new baseColorFactor: Color red; yourself
 ]
 
 { #category : #tests }
 WDELevelElementTest >> createTestLevel [
 	^ self class createTestLevel
+]
+
+{ #category : #tests }
+WDELevelElementTest >> testPolyhedronBox [
+	| box polyhedron |
+	box := BoxF32 unitBox.
+	polyhedron := WDEPolyhedronVisualComponent new constructFacesForBox: box.
+	self assert: polyhedron faces size equals: 6.
+	self assert: polyhedron faces first plane equals: (PlaneF32 nx: -1 distance: 0.5).
+	self assert: polyhedron faces second plane equals: (PlaneF32 nx: 1 distance: 0.5).
+	self assert: polyhedron faces third plane equals: (PlaneF32 nz: -1 distance: 0.5).
+	self assert: polyhedron faces fourth plane equals: (PlaneF32 nz: 1 distance: 0.5).
+	self assert: polyhedron faces fifth plane equals: (PlaneF32 ny: -1 distance: 0.5).
+	self assert: polyhedron faces sixth plane equals: (PlaneF32 ny: 1 distance: 0.5).
+	self assert: polyhedron boundingBox equals: box.
 ]
 
 { #category : #tests }

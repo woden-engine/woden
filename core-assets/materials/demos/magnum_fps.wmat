@@ -1,0 +1,7 @@
+{
+    "type" : "SpecularityGlossiness",
+    "baseColorTexture" : "textures/demos/magnum-albedo.dds",
+    "specularityGlossinessTexture" : "textures/demos/magnum-fresnel.dds",
+
+    "glossinessFactor" : 0.45
+}

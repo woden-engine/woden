@@ -17,7 +17,7 @@ WDELevelEditorElementSceneNodeBuilder >> createDirectionalLightVisualizationNode
 		yourself).
 	node
 		color: self lightSourceDisplayMeshColor;
-		transform: (BoxF32 halfExtent: 0.1) reversibleTransformToConvertUnitBoxToMe.
+		transform: (BoxF32 halfExtent: WDEEntity pointEntitySelectionBoxHalfExtent) reversibleTransformToConvertUnitBoxToMe.
 	^ node
 ]
 
@@ -30,7 +30,7 @@ WDELevelEditorElementSceneNodeBuilder >> createPointLightVisualizationNodeFor: c
 			yourself).
 	node
 		color: self lightSourceDisplayMeshColor;
-		transform: (BoxF32 halfExtent: 0.1) reversibleTransformToConvertUnitBoxToMe.
+		transform: (BoxF32 halfExtent: WDEEntity pointEntitySelectionBoxHalfExtent) reversibleTransformToConvertUnitBoxToMe.
 	^ node
 ]
 
@@ -43,7 +43,7 @@ WDELevelEditorElementSceneNodeBuilder >> createSpotLightVisualizationNodeFor: li
 		yourself).
 	node
 		color: self lightSourceDisplayMeshColor;
-		transform: (BoxF32 halfExtent: 0.1) reversibleTransformToConvertUnitBoxToMe.
+		transform: (BoxF32 halfExtent: WDEEntity pointEntitySelectionBoxHalfExtent) reversibleTransformToConvertUnitBoxToMe.
 	^ node
 ]
 
@@ -68,6 +68,11 @@ WDELevelEditorElementSceneNodeBuilder >> initialize [
 	editorColorMaterials := Dictionary new.
 ]
 
+{ #category : #accessing }
+WDELevelEditorElementSceneNodeBuilder >> levelEditorSession [
+	^ editorSceneModel levelEditorSession
+]
+
 { #category : #'as yet unclassified' }
 WDELevelEditorElementSceneNodeBuilder >> lightSourceDisplayMeshColor [
 	^ Color yellow darker muchLighter
@@ -79,7 +84,7 @@ WDELevelEditorElementSceneNodeBuilder >> makeEditorColorMaterialFor: component [
 	color := component entity editorColor.
 	^ editorColorMaterials at: color ifAbsentPut: [
 		(WDCMetallicRoughnessMaterial for: self engine)
-			baseColor: color;
+			baseColorFactor: color;
 			yourself
 	]
 ]
@@ -104,25 +109,7 @@ WDELevelEditorElementSceneNodeBuilder >> visitBoxCollisionComponent: component [
 
 { #category : #'visual components' }
 WDELevelEditorElementSceneNodeBuilder >> visitBoxVisualComponent: component [
-	| node renderable editorColorMaterial |
-	renderable := WDERenderableWithEditorAlternatives new.
-	editorColorMaterial := self makeEditorColorMaterialFor: component.
-	renderable
-		wireFrameRenderable: (self engine resourceCache unitWireCubeMesh copy setMaterial: editorColorMaterial);
-		colorRenderable: (self engine resourceCache unitCubeMesh copy setMaterial: editorColorMaterial);
-		shadedRenderable: self engine resourceCache unitCubeMesh copy.
-	
-	node := WDSGSpatialObject new.
-	node renderable: renderable.
-	component whenChangedDoNow: [
-		renderable shadedRenderable setMaterial: (component material
-			ifNotNil: [ :mat | mat asRenderingMaterialFor: self engine ]
-			ifNil: [self engine resourceCache defaultMaterial]).
-		node
-			transform: component boundingBox reversibleTransformToConvertUnitBoxToMe;
-			stateChanged
-	].
-	^ node
+	^ self visitGeneratedMeshVisualComponent: component
 ]
 
 { #category : #visiting }
@@ -152,6 +139,30 @@ WDELevelEditorElementSceneNodeBuilder >> visitEntity: entity [
 ]
 
 { #category : #'visual components' }
+WDELevelEditorElementSceneNodeBuilder >> visitGeneratedMeshVisualComponent: component [
+	| node |
+	node := WDSGSpatialObject new.
+	component whenChangedDoNow: [
+		| renderable editorColorMaterial wireMesh solidMesh |
+		renderable := WDERenderableWithEditorAlternatives new.
+		editorColorMaterial := self makeEditorColorMaterialFor: component.
+
+		wireMesh := component buildWireMeshWith: (WDCComplexGenericMeshBuilder for: self engine) material: editorColorMaterial.
+		solidMesh := component buildSolidMeshWith: (WDCComplexGenericMeshBuilder for: self engine) levelEditorSession: self levelEditorSession modelTransform: component entity transform.
+
+		renderable
+			wireFrameRenderable: wireMesh;
+			colorRenderable: (solidMesh copy setMaterial: editorColorMaterial);
+			shadedRenderable: solidMesh.
+
+		node
+			renderable: renderable;
+			stateChanged
+	].
+	^ node
+]
+
+{ #category : #'visual components' }
 WDELevelEditorElementSceneNodeBuilder >> visitLightSourceVisualComponent: component [
 	| node |
 	node := WDSGLightSource new.
@@ -171,13 +182,28 @@ WDELevelEditorElementSceneNodeBuilder >> visitPointLightSourceVisualComponent: c
 ]
 
 { #category : #'collision components' }
+WDELevelEditorElementSceneNodeBuilder >> visitPolyhedronConvexHullCollisionComponent: component [
+	^ nil
+]
+
+{ #category : #visiting }
+WDELevelEditorElementSceneNodeBuilder >> visitPolyhedronFace: polyhedronFace [
+	^ nil
+]
+
+{ #category : #'visual components' }
+WDELevelEditorElementSceneNodeBuilder >> visitPolyhedronVisualComponent: component [
+	^ self visitGeneratedMeshVisualComponent: component
+]
+
+{ #category : #'collision components' }
 WDELevelEditorElementSceneNodeBuilder >> visitRectangleCollisionComponent: component [
 	^ self visitBoxCollisionComponent: component
 ]
 
 { #category : #'visual components' }
 WDELevelEditorElementSceneNodeBuilder >> visitRectangleVisualComponent: component [
-	^ self visitBoxVisualComponent: component
+	^ self visitGeneratedMeshVisualComponent: component
 ]
 
 { #category : #visiting }

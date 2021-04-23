@@ -11,7 +11,9 @@ Class {
 		'undoOperationHistory',
 		'redoOperationHistory',
 		'statusMessage',
-		'activeToolModeOrEditionModeName'
+		'activeToolModeOrEditionModeName',
+		'gameSettings',
+		'whenStartingToPlaceDuplicatedItems'
 	],
 	#category : #'WodenEngine-Editor-Model-Session'
 }
@@ -80,6 +82,19 @@ WDELevelEditorSession >> duplicateSelectedItems [
 ]
 
 { #category : #accessing }
+WDELevelEditorSession >> gameSettings [
+
+	^ gameSettings
+]
+
+{ #category : #accessing }
+WDELevelEditorSession >> gameSettings: anObject [
+
+	gameSettings := anObject.
+	level value ifNotNil: [ :lv | lv gameSettings: gameSettings ]
+]
+
+{ #category : #accessing }
 WDELevelEditorSession >> gridSize [
 	^ gridSize value
 ]
@@ -92,12 +107,14 @@ WDELevelEditorSession >> gridSize: newValue [
 { #category : #initialization }
 WDELevelEditorSession >> initialize [
 	super initialize.
+	gameSettings := WDEGameSettings default.
 	level := nil asValueHolder.
 	levelFileReference := nil asValueHolder.
 	activeSectorLayer := nil asValueHolder.
 	activeLevelElementTemplate := nil asValueHolder.
 	statusMessage := '' asValueHolder.
 	gridSize := 10.0 asValueHolder.
+	whenStartingToPlaceDuplicatedItems := [].
 	selection := WDELevelEditorSelection empty asValueHolder.
 	undoOperationHistory := OrderedCollection new.
 	redoOperationHistory := OrderedCollection new.
@@ -113,8 +130,8 @@ WDELevelEditorSession >> level: anObject [
 	self selection: WDELevelEditorSelection empty.
 	undoOperationHistory removeAll.
 	redoOperationHistory removeAll.
+	anObject gameSettings: gameSettings.
 	level value: anObject.
-
 ]
 
 { #category : #accessing }
@@ -150,8 +167,13 @@ WDELevelEditorSession >> openFrom: aFileReference [
 	| extension |
 	aFileReference exists ifFalse: [ ^ self ].
 	extension := aFileReference extension asLowercase.
-	extension = 'wlevel' ifTrue: [ ^ self loadJSONEncodedFrom: aFileReference ].
-	extension = 'wblevel' ifTrue: [ ^ self loadMessagePackEncodedFrom: aFileReference ].
+	extension = 'wtlevel' ifTrue: [ ^ self loadJSONEncodedFrom: aFileReference ].
+	extension = 'wlevel' ifTrue: [ ^ self loadMessagePackEncodedFrom: aFileReference ].
+]
+
+{ #category : #'play testing' }
+WDELevelEditorSession >> playLevel [
+	^ gameSettings playLevelInSession: self
 ]
 
 { #category : #'undo-redo' }
@@ -191,12 +213,19 @@ WDELevelEditorSession >> saveMessagePackEncodedTo: aFileReference [
 ]
 
 { #category : #serialization }
+WDELevelEditorSession >> saveTemporaryJSONEncodedTo: aFileReference [
+	| encodedLevel |
+	encodedLevel := self level encodeAsJSONString.
+	aFileReference writeStreamDo: [ :out | out truncate; nextPutAll: encodedLevel ].
+]
+
+{ #category : #serialization }
 WDELevelEditorSession >> saveTo: aFileReference [
 	| extension |
 	self level ifNil: [ ^ self ].
 	extension := aFileReference extension asLowercase.
-	extension = 'wlevel' ifTrue: [ self saveJSONEncodedTo: aFileReference ].
-	extension = 'wblevel' ifTrue: [ self saveMessagePackEncodedTo: aFileReference ].
+	extension = 'wtlevel' ifTrue: [ self saveJSONEncodedTo: aFileReference ].
+	extension = 'wlevel' ifTrue: [ self saveMessagePackEncodedTo: aFileReference ].
 ]
 
 { #category : #accessing }
@@ -227,6 +256,11 @@ WDELevelEditorSession >> snapToGrid: vector [
 { #category : #snapping }
 WDELevelEditorSession >> snapToSubGrid: vector [
 	^ self round: vector quantum: self subGridSize
+]
+
+{ #category : #actions }
+WDELevelEditorSession >> startPlacingDuplicatedItems: duplicatedItems [
+	whenStartingToPlaceDuplicatedItems cull: duplicatedItems cull: self selection
 ]
 
 { #category : #accessing }
@@ -268,7 +302,7 @@ WDELevelEditorSession >> toggleElementsFromSelection: elements [
 
 { #category : #palettes }
 WDELevelEditorSession >> topLevelElementTemplateCategories [
-	^ WDELevelElementTemplateProvider allTopLevelPaletteCategories
+	^ WDELevelElementTemplateProvider allTopLevelPaletteCategories , self gameSettings topLevelElementTemplateCategories
 ]
 
 { #category : #palettes }
@@ -278,7 +312,7 @@ WDELevelEditorSession >> topLevelLightSourcePaletteCategories [
 
 { #category : #palettes }
 WDELevelEditorSession >> topMaterialPaletteCategories [
-	^ WDEMaterialPaletteProvider allTopLevelPaletteCategories
+	^ WDEMaterialPaletteProvider allTopLevelPaletteCategories , gameSettings topMaterialPaletteCategories
 ]
 
 { #category : #'undo-redo' }
@@ -320,6 +354,11 @@ WDELevelEditorSession >> whenLevelChangedDoNow: aBlock [
 { #category : #enumerating }
 WDELevelEditorSession >> whenSelectionChangedDo: aBlock [
 	selection whenChangedDo: aBlock
+]
+
+{ #category : #actions }
+WDELevelEditorSession >> whenStartingToPlaceDuplicatedItemsDo: aBlock [
+	whenStartingToPlaceDuplicatedItems := aBlock
 ]
 
 { #category : #enumerating }

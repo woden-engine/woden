@@ -7,7 +7,8 @@ Class {
 		'materials',
 		'textures',
 		'textureSet',
-		'materialSet'
+		'materialSet',
+		'gameSettings'
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
 }
@@ -106,6 +107,18 @@ WDELevel >> encodeJsonKeyValues [
 		#materials . materials collect: [ :each | each encodeForJSON ].
 		#sectors . sectors collect: [ :each | each encodeForJSON ].
 	}
+]
+
+{ #category : #accessing }
+WDELevel >> gameSettings [
+
+	^ gameSettings
+]
+
+{ #category : #accessing }
+WDELevel >> gameSettings: anObject [
+
+	gameSettings := anObject
 ]
 
 { #category : #serialization }

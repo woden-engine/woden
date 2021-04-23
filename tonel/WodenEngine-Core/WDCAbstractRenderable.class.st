@@ -215,6 +215,11 @@ WDCAbstractRenderable >> invalidate [
 	"This is the place for invalidating dynamic renderables."
 ]
 
+{ #category : #testing }
+WDCAbstractRenderable >> isNullRenderable [
+	^ false
+]
+
 { #category : #accessing }
 WDCAbstractRenderable >> isOpaqueShadowCaster [
 	^ isOpaqueShadowCaster

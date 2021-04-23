@@ -48,6 +48,11 @@ WDSGSpatialObject >> invalidateRenderable [
 	"Null action"
 ]
 
+{ #category : #testing }
+WDSGSpatialObject >> isRecursivelyNullNode [
+	^ renderable isNullRenderable and: [ super isRecursivelyNullNode ]
+]
+
 { #category : #'as yet unclassified' }
 WDSGSpatialObject >> localBoundingBox [
 	^ renderable boundingBox

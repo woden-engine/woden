@@ -1,0 +1,8 @@
+{
+    "type" : "MetallicRoughness",
+    "baseColorTexture" : "textures/demos/baby-dragon-albedo.png",
+
+    "roughnessFactor" : 0.6,
+	"metallicFactor" : 0.0,
+    "skinned" : true
+}

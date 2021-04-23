@@ -86,8 +86,8 @@ WDELevelEditor3DBoxManipulator >> createSceneNode [
 { #category : #accessing }
 WDELevelEditor3DBoxManipulator >> currentColor [
 	^ highlighted
-		ifTrue: [ (Float32x4 x: 0.9 y: 0.9 z: 0.3 w: 0.3)  ]
-		ifFalse: [ (Float32x4 x: 0.9 y: 0.7 z: 0.3 w: 0.3) ]
+		ifTrue: [ self theme highlightedBoxManipulatorColor  ]
+		ifFalse: [ self theme boxManipulatorColor ]
 ]
 
 { #category : #'as yet unclassified' }

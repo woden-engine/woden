@@ -6,7 +6,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 WDELevelElementTemplate >> activateInLevelSession: levelSession [
-	self model activeLevelElementTemplate: self
+	levelSession activeLevelElementTemplate: self
 ]
 
 { #category : #'as yet unclassified' }

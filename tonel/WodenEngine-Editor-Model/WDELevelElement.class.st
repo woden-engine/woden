@@ -61,9 +61,18 @@ WDELevelElement >> buildLevelElementPropertyPageWith: builder [
 		stringPropertyNamed: 'Name' selector: #name
 ]
 
+{ #category : #testing }
+WDELevelElement >> canBeDuplicatedAndPlacedInLayer [
+	^ false
+]
+
 { #category : #accessing }
 WDELevelElement >> children [
 	^ #()
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelElement >> destroyAnnouncers [
 ]
 
 { #category : #serialization }
@@ -87,6 +96,16 @@ WDELevelElement >> encodeJsonKeyValues [
 		#type . self class jsonTypeName.
 		#name . self name.
 	}
+]
+
+{ #category : #accessing }
+WDELevelElement >> gameEntityDescriptions [
+	^ self gameSettings ifNotNil: [ :settings | settings entityDescriptions ]
+]
+
+{ #category : #accessing }
+WDELevelElement >> gameSettings [
+	^ self level ifNotNil: [ :level | level gameSettings ]
 ]
 
 { #category : #initialization }
@@ -156,6 +175,11 @@ WDELevelElement >> isPointEntity [
 
 { #category : #testing }
 WDELevelElement >> isPointLightSourceVisualComponent [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isPolyhedronVisualComponent [
 	^ false
 ]
 
@@ -274,6 +298,7 @@ WDELevelElement >> removeFromParent [
 
 { #category : #'as yet unclassified' }
 WDELevelElement >> removedFromLevel: level [
+	self destroyAnnouncers.
 	self children do: [ :each | each removedFromLevel: level ].
 	level announceRemovedElement: self.
 

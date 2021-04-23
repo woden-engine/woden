@@ -17,8 +17,8 @@ WDELevelEditorBrushDrawDragToolMode >> applyBoxToSceneNode: box [
 { #category : #'event handling' }
 WDELevelEditorBrushDrawDragToolMode >> computeBoxWithScreenEndPoint: screenEndPoint [
 	| dragMinDistance startPosition endPosition dragMaxDistance box |
-	dragMinDistance := 5.0.
-	dragMaxDistance := 6.0.
+	dragMinDistance := view cameraFocalPointDistance - 0.5.
+	dragMaxDistance := dragMinDistance + 1.0.
 	startPosition := self cameraXYToWorld: dragStartPosition distance: dragMinDistance.
 	endPosition := self cameraXYToWorld: screenEndPoint distance: dragMaxDistance.
 	box := BoxF32 min: (startPosition min: endPosition) max: (startPosition max: endPosition).

@@ -78,6 +78,11 @@ WDCMaterial >> fetchVertexShader: shaderName [
 	^ engine loadVertexShader: shaderName
 ]
 
+{ #category : #testing }
+WDCMaterial >> hasTexture [
+	^ false
+]
+
 { #category : #'state binding' }
 WDCMaterial >> invalidateCache [
 ]
@@ -165,13 +170,13 @@ WDCMaterial >> parse: data at: fileReference srgbColor: name ifAbsent: aBlock [
 ]
 
 { #category : #parsing }
-WDCMaterial >> parse: data at: materialFileReference srgbTexture: name arrayOfSize: size [
+WDCMaterial >> parse: data at: parentFolderFileReference srgbTexture: name arrayOfSize: size [
 	| result |
 	result := Array new: size.
 	data at: name ifPresent: [ :textureNames |
 		textureNames doWithIndex: [ :textureName :index |
 			index <= size ifTrue: [
-				result at: index put: (engine resourceCache loadSRGBTexture: textureName)
+				result at: index put: (engine resourceCache loadSRGBTexture: (self solveTextureRelativePath: textureName to: parentFolderFileReference))
 			]
 		]
 	].
@@ -180,21 +185,21 @@ WDCMaterial >> parse: data at: materialFileReference srgbTexture: name arrayOfSi
 ]
 
 { #category : #parsing }
-WDCMaterial >> parse: data at: fileReference srgbTexture: name ifAbsent: aBlock [
+WDCMaterial >> parse: data at: parentFolderFileReference srgbTexture: name ifAbsent: aBlock [
 	^ data at: name
-		ifPresent: [ :textureName | engine resourceCache loadSRGBTexture: textureName ]
+		ifPresent: [ :textureName | engine resourceCache loadSRGBTexture: (self solveTextureRelativePath: textureName to: parentFolderFileReference) ]
 		ifAbsent: aBlock .
 	
 ]
 
 { #category : #parsing }
-WDCMaterial >> parse: data at: materialFileReference texture: name arrayOfSize: size [
+WDCMaterial >> parse: data at: parentFolderFileReference texture: name arrayOfSize: size [
 	| result |
 	result := Array new: size.
 	data at: name ifPresent: [ :textureNames |
 		textureNames doWithIndex: [ :textureName :index |
 			index <= size ifTrue: [
-				result at: index put: (engine resourceCache loadTexture: textureName)
+				result at: index put: (engine resourceCache loadTexture: (self solveTextureRelativePath: textureName to: parentFolderFileReference))
 			]
 		]
 	].
@@ -203,9 +208,9 @@ WDCMaterial >> parse: data at: materialFileReference texture: name arrayOfSize: 
 ]
 
 { #category : #parsing }
-WDCMaterial >> parse: data at: fileReference texture: name ifAbsent: aBlock [
+WDCMaterial >> parse: data at: parentFolderFileReference texture: name ifAbsent: aBlock [
 	^ data at: name
-		ifPresent: [ :textureName | engine resourceCache loadTexture: textureName ]
+		ifPresent: [ :textureName | engine resourceCache loadTexture: (self solveTextureRelativePath: textureName to: parentFolderFileReference) ]
 		ifAbsent: aBlock .
 	
 ]
@@ -247,14 +252,14 @@ WDCMaterial >> parse: data at: fileReference vector4: name ifAbsent: aBlock [
 ]
 
 { #category : #parsing }
-WDCMaterial >> parse: materialFileReference data: aDictionary [
-	self subclassResponsibility
-	
+WDCMaterial >> parseError: errorMessage at: fileReference [
+	self error: fileReference printString , ': ' , errorMessage
 ]
 
 { #category : #parsing }
-WDCMaterial >> parseError: errorMessage at: fileReference [
-	self error: fileReference printString , ': ' , errorMessage
+WDCMaterial >> parseInFolder: parentFolderFileReference data: aDictionary [
+	self subclassResponsibility
+	
 ]
 
 { #category : #enumerating }
@@ -274,6 +279,23 @@ WDCMaterial >> sessionChanged [
 
 { #category : #'as yet unclassified' }
 WDCMaterial >> setupRenderableTranslucency: renderable [
+]
+
+{ #category : #parsing }
+WDCMaterial >> solveTextureRelativePath: relativePath to: parentFolderFileReference [
+	| solvedPath relativeFileReference |
+	solvedPath := parentFolderFileReference resolve: relativePath.
+	solvedPath exists ifTrue: [ ^ solvedPath asAbsolute ].
+
+	relativeFileReference := relativePath asFileReference.
+	relativeFileReference extension ifEmpty: [ 
+		#(png jpg dds) do: [ :eachExtension |
+			solvedPath := parentFolderFileReference resolve: (relativeFileReference withExtension: eachExtension).
+			solvedPath exists ifTrue: [ ^ solvedPath asAbsolute ].
+		]
+	].
+
+	^ relativePath
 ]
 
 { #category : #preview }

@@ -139,12 +139,12 @@ WDCAbstractGenericSurfaceMaterial >> alphaCutoff: aFloat [
 ]
 
 { #category : #accessing }
-WDCAbstractGenericSurfaceMaterial >> baseColor [
+WDCAbstractGenericSurfaceMaterial >> baseColorFactor [
 	^ self albedoColor
 ]
 
 { #category : #accessing }
-WDCAbstractGenericSurfaceMaterial >> baseColor: aColor [
+WDCAbstractGenericSurfaceMaterial >> baseColorFactor: aColor [
 	self albedoColor: aColor
 ]
 
@@ -211,12 +211,12 @@ WDCAbstractGenericSurfaceMaterial >> doubleSided: anObject [
 ]
 
 { #category : #accessing }
-WDCAbstractGenericSurfaceMaterial >> emissionColor [
+WDCAbstractGenericSurfaceMaterial >> emissionFactor [
 	^ materialState emission
 ]
 
 { #category : #accessing }
-WDCAbstractGenericSurfaceMaterial >> emissionColor: aColor [
+WDCAbstractGenericSurfaceMaterial >> emissionFactor: aColor [
 	materialState emission: (Float32x4 xyz: aColor asFloat32x3 w: 0.0).
 	self uploadMaterialStateData.
 ]
@@ -234,6 +234,11 @@ WDCAbstractGenericSurfaceMaterial >> emissionTexture: anObject [
 { #category : #shaders }
 WDCAbstractGenericSurfaceMaterial >> forwardFragmentShaderFor: stateTracker [
 	^ self subclassResponsibility
+]
+
+{ #category : #testing }
+WDCAbstractGenericSurfaceMaterial >> hasTexture [
+	^ emissionTexture isNotNil or: [ albedoTexture isNotNil or: [ normalTexture isNotNil ] ]
 ]
 
 { #category : #initialization }
@@ -278,12 +283,12 @@ WDCAbstractGenericSurfaceMaterial >> occlusionFactor: occlusionFactor [
 ]
 
 { #category : #parsing }
-WDCAbstractGenericSurfaceMaterial >> parse: materialFileReference data: data [
-	materialState albedo: (self parse: data at: materialFileReference srgbColor: 'albedo-color' ifAbsent: [ Color white ]).
-	albedoTexture := self parse: data at: materialFileReference optionalSRGBTexture: 'albedo-texture'.
-	normalTexture := self parse: data at: materialFileReference optionalTexture: 'normal-texture'.
+WDCAbstractGenericSurfaceMaterial >> parseInFolder: parentFolderFileReference data: data [
+	materialState albedo: (self parse: data at: parentFolderFileReference srgbColor: #baseColorFactor ifAbsent: [ Color white ]).
+	albedoTexture := self parse: data at: parentFolderFileReference optionalSRGBTexture: #baseColorTexture.
+	normalTexture := self parse: data at: parentFolderFileReference optionalTexture: #normalTexture.
 	materialState
-		alphaCutoff: (data at: 'alpha-cutoff' ifAbsent: [ materialState alphaCutoff ]).
+		alphaCutoff: (data at: #alphaCutoff ifAbsent: [ materialState alphaCutoff ]).
 ]
 
 { #category : #enumerating }
