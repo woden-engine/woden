@@ -107,7 +107,7 @@ WDCFormSceneGraphRenderable >> renderDrawingSurfaceContentWithStateTracker: stat
 	FormSGAGPUCommandListRenderer new
 		surfaceScaleFactor: self validScaleFactor;
 		fontTextureAtlasCache: self validDrawCommandProcessor fontTextureAtlasCache;
-		hasDirectSubpixelBlending: true;
+		hasDirectSubpixelBlending: self validDrawCommandProcessor hasDirectSubpixelBlending;
 		render: sceneGraph with: sgCommandList transform: FormSGAffineTransform identity clippingBounds: (0@0 extent: self drawingSurfaceExtent).
 
 	self validDrawCommandProcessor
