@@ -12,12 +12,11 @@ Class {
 		'backRenderingProcesses',
 		'renderingProcessMutex',
 		'lastFrameStartTime',
-		'currentFrameTargetTime',
-		'nextFrameTargetTime',
-		'currentFrameStartTime',
 		'lastFrameEndTime',
 		'currentVRLeftEyeTexture',
-		'currentVRRightEyeTexture'
+		'currentVRRightEyeTexture',
+		'currentFrameStartTime',
+		'renderingProcessAvailable'
 	],
 	#category : #'WodenEngine-Core-Rendering'
 }
@@ -47,7 +46,8 @@ WDCFrameBufferingDriver >> addRenderProcess: aRenderProcess [
 	renderingProcessesLock critical: [
 		aRenderProcess suspended: false.
 		(backRenderingProcesses includes: aRenderProcess) ifFalse: [
-			backRenderingProcesses add: aRenderProcess
+			backRenderingProcesses add: aRenderProcess.
+			renderingProcessAvailable signal.
 		]
 	]
 ]
@@ -164,44 +164,30 @@ WDCFrameBufferingDriver >> mainRenderingProcess [
 { #category : #'rendering process' }
 WDCFrameBufferingDriver >> mainRenderingProcessIteration [
 	"Compute the delta"
-	| frameDeltaTime delayTime |
-	currentFrameTargetTime ifNil: [ currentFrameTargetTime := Time microsecondClockValue ].
-	nextFrameTargetTime ifNil: [ nextFrameTargetTime := Time microsecondClockValue ].
-
-	"If the delay is too long."
-	Time microsecondClockValue > (nextFrameTargetTime + (500000 // self targetFrameRate)) ifTrue: [ 
-		nextFrameTargetTime := Time microsecondClockValue
-	].
-
+	| frameDeltaTime hasRenderingProcesses |
+	lastFrameStartTime ifNil: [ lastFrameStartTime := Time microsecondClockValue ].
+	
 	"Compute the delta time for the frame."
-	frameDeltaTime := nextFrameTargetTime - currentFrameTargetTime.
-	currentFrameTargetTime := nextFrameTargetTime.
-	
-	lastFrameStartTime := currentFrameStartTime.
 	currentFrameStartTime := Time microsecondClockValue.
-	
+	frameDeltaTime := currentFrameStartTime - lastFrameStartTime.
+
 	engine resourceCache reloadPendingResources.
 	self swapRenderingProcesses.
 	engine vrSystem frameStarted.
 	self renderForDeltaMicroseconds: frameDeltaTime.
 	engine vrSystem frameEnded.
+	hasRenderingProcesses := frontRenderingProcesses isNotEmpty.
 	frontRenderingProcesses removeAll.
-	
-	
-	nextFrameTargetTime := currentFrameTargetTime + (1000000 // self targetFrameRate).
-	self flag: 'TODO: Support delays in microseconds.'.
+
+	lastFrameStartTime := currentFrameStartTime.	
 	lastFrameEndTime := Time microsecondClockValue.
-	
-	delayTime := (nextFrameTargetTime - lastFrameEndTime) // 1000.
 	
 	"Ask the VR engine VR system to apply the delay. They VR system may want
 	 to use a low latency method."
-	engine vrSystem applyMainLoopDelay: delayTime.
-	
-	delayTime <= 0 ifTrue: [
-		nextFrameTargetTime := Time microsecondClockValue.
+	engine vrSystem yield.
+	hasRenderingProcesses ifFalse: [
+		renderingProcessAvailable wait; consumeAllSignals
 	].
-
 ]
 
 { #category : #'rendering process' }
@@ -299,6 +285,7 @@ WDCFrameBufferingDriver >> sessionChanged [
 	bufferingFrameIndex := 1.
 	frameFences := Array new: self frameBufferingCount.
 	renderingProcessesLock := Semaphore forMutualExclusion.
+	renderingProcessAvailable := Semaphore new.
 	renderingProcessMutex := Mutex new.
 	frontRenderingProcesses := OrderedCollection new.
 	backRenderingProcesses := OrderedCollection new.

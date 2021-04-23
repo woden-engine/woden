@@ -33,6 +33,13 @@ WDCSwapChainRenderTarget >> createFramebuffers: bufferCount [
 		height: height;
 		yourself.
 		
+	AGPU shouldUseVSync ifTrue: [ 
+		swapChainInfo presentation_mode: AGPU_SWAP_CHAIN_PRESENTATION_MODE_FIFO
+	] ifFalse: [ 
+		swapChainInfo presentation_mode: AGPU_SWAP_CHAIN_PRESENTATION_MODE_MAILBOX.
+		swapChainInfo fallback_presentation_mode: AGPU_SWAP_CHAIN_PRESENTATION_MODE_IMMEDIATE.
+	].
+		
 	windowHandle window ifNotNil: [ swapChainInfo window: windowHandle window ].
 	windowHandle surface ifNotNil: [ swapChainInfo surface: windowHandle surface ].
 	

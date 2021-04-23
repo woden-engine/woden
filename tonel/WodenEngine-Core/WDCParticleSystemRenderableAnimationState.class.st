@@ -80,8 +80,7 @@ WDCParticleSystemRenderableAnimationState >> createEngineDependantData [
 
 { #category : #'as yet unclassified' }
 WDCParticleSystemRenderableAnimationState >> deltaTime [
-	^ 1.0 / WDCFrameBufferingDriver defaultTargetFrameRate.
-
+	^ 1.0 / 60.0
 ]
 
 { #category : #accessing }

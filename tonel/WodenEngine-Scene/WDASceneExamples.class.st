@@ -413,7 +413,7 @@ WDASceneExamples class >> example06MeshGrid [
 	camera := model camera.
 	camera translateByZ: 3.0.
 	
-	material := scene engine resourceCache loadMaterial: 'materials/basic/flat.json'.
+	material := scene engine resourceCache loadMaterial: 'materials/basic/flat.wtmat'.
 	
 	meshBuilder := WDCGenericMeshBuilder for: scene engine.
 	meshBuilder

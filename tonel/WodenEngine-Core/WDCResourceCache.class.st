@@ -438,7 +438,7 @@ WDCResourceCache >> ensureAllMaterialThumbnailsInDB: thumbnailDB [
 
 { #category : #accessing }
 WDCResourceCache >> flatColorMaterial [
-	^ self loadMaterial: 'materials/basic/flat.json'
+	^ self loadMaterial: 'materials/basic/flat.wtmat'
 ]
 
 { #category : #'special meshes' }
