@@ -45,6 +45,11 @@ WDEEntityComponent >> isEntityComponent [
 	^ true
 ]
 
+{ #category : #'as yet unclassified' }
+WDEEntityComponent >> makeSimilarForEntity: newEntity [
+	^ self copy
+]
+
 { #category : #accessing }
 WDEEntityComponent >> parent [
 	^ parent

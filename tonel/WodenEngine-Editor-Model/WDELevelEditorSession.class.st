@@ -63,6 +63,11 @@ WDELevelEditorSession >> addElementsToSelection: elements [
 ]
 
 { #category : #actions }
+WDELevelEditorSession >> decreaseGridSize [
+	self gridSize: self gridSize / self gridSizeIncrementFactor
+]
+
+{ #category : #actions }
 WDELevelEditorSession >> deleteSelectedItems [
 	self selection deleteSelectedItemsInSession: self
 ]
@@ -101,7 +106,22 @@ WDELevelEditorSession >> gridSize [
 
 { #category : #accessing }
 WDELevelEditorSession >> gridSize: newValue [
-	gridSize value: newValue
+	gridSize value: ((newValue roundTo: self gridSizeGranularity) max: self gridSizeGranularity)
+]
+
+{ #category : #accessing }
+WDELevelEditorSession >> gridSizeGranularity [
+	^ 0.001
+]
+
+{ #category : #accessing }
+WDELevelEditorSession >> gridSizeIncrementFactor [
+	^ 10
+]
+
+{ #category : #actions }
+WDELevelEditorSession >> increaseGridSize [
+	self gridSize: self gridSize * self gridSizeIncrementFactor
 ]
 
 { #category : #initialization }
@@ -276,6 +296,11 @@ WDELevelEditorSession >> statusMessage: newMessage [
 { #category : #snapping }
 WDELevelEditorSession >> subGridSize [
 	^ self gridSize * 0.1
+]
+
+{ #category : #actions }
+WDELevelEditorSession >> subtractSelectedItems [
+	self selection subtractSelectedItemsInSession: self
 ]
 
 { #category : #adding }

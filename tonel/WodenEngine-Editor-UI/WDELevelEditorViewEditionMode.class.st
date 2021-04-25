@@ -1,6 +1,9 @@
 Class {
 	#name : #WDELevelEditorViewEditionMode,
 	#superclass : #WDELevelEditorViewMode,
+	#instVars : [
+		'clickSelectionWheel'
+	],
 	#category : #'WodenEngine-Editor-UI-ViewMode'
 }
 
@@ -17,10 +20,23 @@ WDELevelEditorViewEditionMode >> cancelAction [
 ]
 
 { #category : #'event handling' }
+WDELevelEditorViewEditionMode >> nextValidClickSelectionWheelFor: clickPosition [
+	(clickSelectionWheel isNotNil and: [ clickSelectionWheel isValidForPosition: clickPosition ]) ifFalse: [
+		^ clickSelectionWheel := WDELevelEditorSelectionClickWheel new
+			clickPosition: clickPosition;
+			elements: (view elementsInScreenPosition: clickPosition);
+			yourself.
+	].
+
+	^ clickSelectionWheel advance
+]
+
+{ #category : #'event handling' }
 WDELevelEditorViewEditionMode >> onLeftClick: event [
 	| elements |
 	self supportsElementSelection ifFalse: [ ^ self ].
-	elements := (view elementInScreenPosition: event position) ifNil: [ #() ] ifNotNil: [ :e | { e } ].
+	elements := (self nextValidClickSelectionWheelFor: event position) currentElement ifNil: [ #() ] ifNotNil: [ :e | { e } ].
+	
 	event modifiers shift ifTrue: [
 		^ view addElementsToSelection: elements
 	].
@@ -49,13 +65,20 @@ WDELevelEditorViewEditionMode >> onMouseMove: event [
 		self model
 			highlightManipulator: manipulatorBeingPointed;
 			highlightElement: nil
-	] ifNil: [ 
-		elementBeingPointed := self supportsElementSelection
-			ifTrue: [view elementInScreenPosition: event position]
-			ifFalse: [nil].
-		self model
-			highlightElement: elementBeingPointed;
-			highlightManipulator: nil
+	] ifNil: [
+		
+		(self supportsElementSelection and: [self levelEditorSession selection selectedItems isNotEmpty]) ifTrue: [ 
+			elementBeingPointed := self supportsElementSelection
+				ifTrue: [view elementInScreenPosition: event position]
+				ifFalse: [nil].
+			self model
+				highlightElement: elementBeingPointed;
+				highlightManipulator: nil
+		] ifFalse: [ 
+			self model
+				highlightElement: nil;
+				highlightManipulator: nil
+		]
 	].
 
 	^ super onMouseMove: event
@@ -75,7 +98,7 @@ WDELevelEditorViewEditionMode >> onMouseWheel: event [
 WDELevelEditorViewEditionMode >> onRightClick: event [
 	| elements |
 	self supportsElementSelection ifFalse: [ ^ self ].
-	elements := (view elementInScreenPosition: event position) ifNil: [ #() ] ifNotNil: [ :e | { e } ].
+	elements := (self validRightClickSelectionWheelFor: event position) currentElement ifNil: [ #() ] ifNotNil: [ :e | { e } ].
 	view setSelectedElements: elements.
 	elements ifNotEmpty: [ 
 		view levelEditorSession buildSelectionContextMenu openWithSpecAtPointer
@@ -89,9 +112,11 @@ WDELevelEditorViewEditionMode >> shortcuts [
 		KeyboardKey escape asKeyCombination . [ self cancelAction ].
 		KeyboardKey enter asKeyCombination . [ self activateAction ].
 
-
 		$s command mac | $s control unix | $s control win . [ self model actionSaveFile ].
 		$o command mac | $o control unix | $o control win . [ self model actionOpenFile ].
+
+		(KeyboardKey named: #KP_ADD) asKeyCombination asKeyCombination . [ self levelEditorSession increaseGridSize ].
+		(KeyboardKey named: #KP_SUBTRACT) asKeyCombination asKeyCombination . [ self levelEditorSession decreaseGridSize ].
 
 		$z asKeyCombination . [ view openShadingMenu ].
 		$z command mac | $z control unix | $z control win . [ self levelEditorSession undo ].
@@ -99,6 +124,7 @@ WDELevelEditorViewEditionMode >> shortcuts [
 
 		$d command mac | $d control unix | $d control win . [ self levelEditorSession duplicateSelectedItems  ].
 		$p command mac | $p control unix | $p control win . [ self levelEditorSession playLevel ].
+		$- command shift mac | $- control shift unix | $- control shift win . [ self levelEditorSession subtractSelectedItems  ].
 
 		KeyboardKey delete asKeyCombination . [ self levelEditorSession deleteSelectedItems  ].
 
@@ -155,4 +181,16 @@ WDELevelEditorViewEditionMode >> supportsElementSelection [
 { #category : #'as yet unclassified' }
 WDELevelEditorViewEditionMode >> supportsManipulators [
 	^ false
+]
+
+{ #category : #'event handling' }
+WDELevelEditorViewEditionMode >> validRightClickSelectionWheelFor: clickPosition [
+	(clickSelectionWheel isNotNil and: [ clickSelectionWheel isValidForPositionForRightClick: clickPosition view: view ]) ifFalse: [
+		^ clickSelectionWheel := WDELevelEditorSelectionClickWheel new
+			clickPosition: clickPosition;
+			elements: (view elementsInScreenPosition: clickPosition);
+			yourself.
+	].
+
+	^ clickSelectionWheel
 ]

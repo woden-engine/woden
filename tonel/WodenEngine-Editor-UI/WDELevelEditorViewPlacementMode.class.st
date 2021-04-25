@@ -20,7 +20,7 @@ WDELevelEditorViewPlacementMode >> onLeftClick: event [
 		self levelEditorSession activeLevelElementTemplate ifNotNil: [ :elementTemplate |
 			elementTemplate isPointElementTemplate ifTrue: [
 				| entityLocation |
-				entityLocation := self snapToSubGrid: (self cameraXYToWorld: event position distance: 5.0).
+				entityLocation := self snapToSubGrid: (self cameraXYToWorld: event position).
 				elementTemplate instantiateInSectorLayer: sectorLayer placingInPoint: entityLocation session: self levelEditorSession.
 				view activateObjectMode
 			]

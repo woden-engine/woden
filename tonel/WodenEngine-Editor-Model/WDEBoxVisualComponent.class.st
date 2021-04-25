@@ -13,6 +13,14 @@ WDEBoxVisualComponent >> accept: visitor [
 	^ visitor visitBoxVisualComponent: self
 ]
 
+{ #category : #converting }
+WDEBoxVisualComponent >> asPolyhedronVisualComponent [
+	| polyhedron |
+	polyhedron := self class polyhedronBox: box.
+	polyhedron faces do: [ :each | each materialAttributes: materialAttributes ].
+	^ polyhedron
+]
+
 { #category : #accessing }
 WDEBoxVisualComponent >> boundingBox [
 	^ box
@@ -72,6 +80,20 @@ WDEBoxVisualComponent >> entityTransformChanged [
 
 ]
 
+{ #category : #'as yet unclassified' }
+WDEBoxVisualComponent >> hasIntersectionWith: otherVisualComponent withTransform: transform [
+	^ otherVisualComponent hasIntersectionWithBoxVisualComponent: self withTransform: transform inverse
+]
+
+{ #category : #'as yet unclassified' }
+WDEBoxVisualComponent >> hasIntersectionWithBoxVisualComponent: otherBox withTransform: otherTransform [
+	otherTransform matrix isIdentity ifFalse: [
+		^ super hasIntersectionWithBoxVisualComponent: otherBox withTransform: otherTransform
+	].
+
+	^ box hasIntersectionWithBox: (otherBox box transformedWith: otherTransform)
+]
+
 { #category : #initialization }
 WDEBoxVisualComponent >> initialize [
 	super initialize.
@@ -111,8 +133,13 @@ WDEBoxVisualComponent >> materialStateMemento [
 ]
 
 { #category : #'as yet unclassified' }
-WDEBoxVisualComponent >> pointsForCollisionConvexHull [
+WDEBoxVisualComponent >> polytopeConvexHullVertices [
 	^ box corners
+]
+
+{ #category : #'as yet unclassified' }
+WDEBoxVisualComponent >> polytopeSupportFunction [
+	^ [:direction | box positiveVertex: direction ]
 ]
 
 { #category : #memento }

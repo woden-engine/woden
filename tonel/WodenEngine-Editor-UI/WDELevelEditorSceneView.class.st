@@ -149,7 +149,7 @@ WDELevelEditorSceneView >> cameraFocalPointDistance [
 
 { #category : #'as yet unclassified' }
 WDELevelEditorSceneView >> cameraXYDeltaToWorld: screenDelta [
-	^ self cameraXYDeltaToWorld: screenDelta distance: 3.0
+	^ self cameraXYDeltaToWorld: screenDelta distance: self cameraFocalPointDistance
 ]
 
 { #category : #'as yet unclassified' }
@@ -158,6 +158,11 @@ WDELevelEditorSceneView >> cameraXYDeltaToWorld: screenDelta distance: screenDis
 	depth := self depthAtCameraDistance: screenDistance.
 	cameraDelta := (self windowToLocal: screenDelta depth: depth) - (self windowToLocal: 0@0 depth: depth).
 	^ (cameraDelta x * self xDragDirection) + (cameraDelta y * self yDragDirection)
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditorSceneView >> cameraXYToWorld: screenPosition [
+	^ self cameraXYToWorld: screenPosition distance: self cameraFocalPointDistance
 ]
 
 { #category : #'as yet unclassified' }
@@ -171,7 +176,7 @@ WDELevelEditorSceneView >> cameraXYToWorld: screenPosition distance: screenDista
 
 { #category : #'as yet unclassified' }
 WDELevelEditorSceneView >> cameraXZDeltaToWorld: screenDelta [
-	^ self cameraXZDeltaToWorld: screenDelta distance: 3.0
+	^ self cameraXZDeltaToWorld: screenDelta distance: self cameraFocalPointDistance
 ]
 
 { #category : #'as yet unclassified' }
@@ -228,6 +233,17 @@ WDELevelEditorSceneView >> elementInScreenPosition: aPoint [
 ]
 
 { #category : #visiting }
+WDELevelEditorSceneView >> elementsInPositionWithRayPicking: aPoint [
+	^ (self rayPickElements: (self rayForScreenPosition: aPoint)) collect: [ :each | each value ]
+]
+
+{ #category : #visiting }
+WDELevelEditorSceneView >> elementsInScreenPosition: aPoint [
+	^ self elementsInPositionWithRayPicking: aPoint
+
+]
+
+{ #category : #visiting }
 WDELevelEditorSceneView >> elementsInScreenRectangle: screenRectangle [
 	| originPosition cornerPosition normalizedScreenRectangle selectionFrustum |
 	originPosition := (self normalizeScreenPosition: screenRectangle origin) asFloat32x2.
@@ -259,6 +275,11 @@ WDELevelEditorSceneView >> frontView [
 { #category : #snapping }
 WDELevelEditorSceneView >> gridSize [
 	^ model gridSize
+]
+
+{ #category : #testing }
+WDELevelEditorSceneView >> hasFreeEditorViewType [
+	^ editorViewType == #free
 ]
 
 { #category : #initialization }
@@ -382,6 +403,11 @@ WDELevelEditorSceneView >> rayPickElement: ray [
 	distanceElement := model rayCast: ray.
 	^ distanceElement value ifNil: [ nil ]
 	
+]
+
+{ #category : #visiting }
+WDELevelEditorSceneView >> rayPickElements: ray [
+	^ model rayCastAllAlong: ray
 ]
 
 { #category : #visiting }
@@ -515,7 +541,8 @@ WDELevelEditorSceneView >> updateCameraForFrameDelta: delta [
 	
 	self
 		updateCameraProjection;
-		updateGridsForCamera.
+		updateGridsForCamera;
+		updateManipulatorsForCamera.
 	cameraChanged := false
 ]
 
@@ -575,6 +602,11 @@ WDELevelEditorSceneView >> updateGridsForCamera [
 	model axisNode ifNotNil: [ :node |
 		node renderable renderPriority: renderPriority + 2
 	].
+]
+
+{ #category : #updating }
+WDELevelEditorSceneView >> updateManipulatorsForCamera [
+	model activeToolManipulator ifNotNil: [:manip | manip updateForViewCamera: self]
 ]
 
 { #category : #updating }

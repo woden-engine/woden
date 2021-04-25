@@ -28,7 +28,13 @@ WDELevelEditorSelection >> buildContextMenuFor: levelSession on: menuPresenter [
 				item
 					name: 'Duplicate';
 					action: [ self duplicateSelectedItemsInSession: levelSession ]
+			];
+			addItem: [ :item |
+				item
+					name: 'Subtract volumes';
+					action: [ self subtractSelectedItemsInSession: levelSession ]
 			].
+.
 		(selectedItems allSatisfy: [ :each | each isSectorLayerChild ]) ifTrue: [
 			| parentSectorSet |
 			parentSectorSet := selectedItems collect: [ :each | each sector ] as: IdentitySet.

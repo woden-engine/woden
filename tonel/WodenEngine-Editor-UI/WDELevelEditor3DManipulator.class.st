@@ -130,6 +130,7 @@ WDELevelEditor3DManipulator >> parent: anObject [
 { #category : #'ray casting' }
 WDELevelEditor3DManipulator >> rayCast: ray [
 	| bestResult distance |
+	self visible ifFalse: [ ^ nil ].
 	bestResult := nil.
 	children do: [ :each |
 		(each rayCast: ray) ifNotNil: [:childResult |
@@ -160,6 +161,13 @@ WDELevelEditor3DManipulator >> restoreMementoForDragging: memento [
 ]
 
 { #category : #'as yet unclassified' }
+WDELevelEditor3DManipulator >> sizeScaleFactorForPosition: position inView: view [
+	^ view isPerspective
+		ifTrue: [ (position - view validCameraTransform translation) length max: 1.0 ]
+		ifFalse: [ view viewScale * 2.0 ]
+]
+
+{ #category : #'as yet unclassified' }
 WDELevelEditor3DManipulator >> startDragToolWithEvent: event on: view [
 	| dragToolClass |
 	dragToolClass := self currentDragToolClass.
@@ -174,4 +182,19 @@ WDELevelEditor3DManipulator >> startDragToolWithEvent: event on: view [
 { #category : #accessing }
 WDELevelEditor3DManipulator >> theme [
 	^ WDELevelEditorTheme current
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelEditor3DManipulator >> updateForViewCamera: view [
+	children do: [ :each | each updateForViewCamera: view ]
+]
+
+{ #category : #accessing }
+WDELevelEditor3DManipulator >> visible [
+	^ sceneNode isNotNil and: [ sceneNode visible ]
+]
+
+{ #category : #accessing }
+WDELevelEditor3DManipulator >> visible: aBoolean [
+	sceneNode ifNotNil: [ sceneNode visible: aBoolean ]
 ]

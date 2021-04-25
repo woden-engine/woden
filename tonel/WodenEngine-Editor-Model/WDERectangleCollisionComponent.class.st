@@ -36,6 +36,14 @@ WDERectangleCollisionComponent >> loadFromJson: jsonData context: context [
 	rectangle := RectangleF32 loadFromJson: (jsonData at: 'rectangle').
 ]
 
+{ #category : #'as yet unclassified' }
+WDERectangleCollisionComponent >> makeSimilarForEntity: newEntity [
+	| entityBox |
+	entityBox := newEntity localBoundingBox.
+	
+	^ self copy box: (RectangleF32 min: entityBox min xy max: entityBox max xy); yourself
+]
+
 { #category : #accessing }
 WDERectangleCollisionComponent >> rectangle [
 	^ rectangle

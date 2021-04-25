@@ -85,15 +85,20 @@ WDERectangleVisualComponent >> isRectangleVisualComponent [
 WDERectangleVisualComponent >> loadFromJson: jsonData context: context [
 	super loadFromJson: jsonData context: context.
 	rectangle := RectangleF32 loadFromJson: (jsonData at: 'rectangle').
-	jsonData at: 'material' ifPresent: [ :index |
-		material := context getMaterialWithIndex: index
+	jsonData at: 'material' ifPresent: [ :data |
+		materialAttributes loadFromJson: data context: context
 	].
-	jsonData at: 'textureScale' ifPresent: [ :scale |
-		textureScale := Float32x2 loadFromJson: scale.
-	].
-	jsonData at: 'textureOffset' ifPresent: [ :offset |
-		textureOffset := Float32x2 loadFromJson: offset.
-	].
+]
+
+{ #category : #accessing }
+WDERectangleVisualComponent >> materialAttributes [
+
+	^ materialAttributes
+]
+
+{ #category : #accessing }
+WDERectangleVisualComponent >> materialAttributes: newMaterialAttributes [
+	materialAttributes := newMaterialAttributes copy.
 ]
 
 { #category : #memento }
@@ -102,7 +107,7 @@ WDERectangleVisualComponent >> materialStateMemento [
 ]
 
 { #category : #'as yet unclassified' }
-WDERectangleVisualComponent >> pointsForCollisionConvexHull [
+WDERectangleVisualComponent >> polytopeConvexHullVertices [
 	^ self boundingBox corners
 ]
 
@@ -129,7 +134,7 @@ WDERectangleVisualComponent >> restoreTransformStateMemento: memento [
 
 { #category : #initialization }
 WDERectangleVisualComponent >> setMaterial: newMaterial [
-	self material: newMaterial
+	materialAttributes material: newMaterial
 ]
 
 { #category : #memento }

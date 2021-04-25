@@ -14,6 +14,11 @@ WDEPolyhedronVisualComponent >> accept: visitor [
 	^ visitor visitPolyhedronVisualComponent: self
 ]
 
+{ #category : #converting }
+WDEPolyhedronVisualComponent >> asPolyhedronVisualComponent [
+	^ self
+]
+
 { #category : #accessing }
 WDEPolyhedronVisualComponent >> boundingBox [
 	boundingBox ifNil: [ self computeBoundingBox ].
@@ -41,6 +46,66 @@ WDEPolyhedronVisualComponent >> buildWireMeshWith: meshBuilder material: renderM
 { #category : #accessing }
 WDEPolyhedronVisualComponent >> children [
 	^ faces
+]
+
+{ #category : #'as yet unclassified' }
+WDEPolyhedronVisualComponent >> clipAgainstPlane: plane [
+	| classification frontFaces backFaces planeInFront planeInBack frontPolyhedron backPolyhedron |
+	classification := plane classifyVertices: vertices epsilon: Epsilon.
+	self assert: classification ~~ #inside.
+	classification == #front ifTrue: [ ^ { self . nil } ].
+	classification == #back ifTrue: [ ^ { nil . self } ].
+	self assert: classification == #frontAndBack.
+	
+	frontFaces := OrderedCollection new.
+	backFaces := OrderedCollection new.
+	
+	planeInFront := false.
+	planeInBack := false.
+	faces do: [ :eachFace |
+		| faceClassification |
+		faceClassification := plane classifyVertices: eachFace vertices epsilon: Epsilon.
+		faceClassification == #inside ifTrue: [
+			| normalDirection |
+			normalDirection := eachFace plane normal dot: plane normal.
+			normalDirection > 0 ifTrue: [
+				self assert: (eachFace plane normal normalized closeTo: plane normal normalized).
+				backFaces add: eachFace copy.
+				planeInBack := true.
+			] ifFalse: [ 
+				self assert: (eachFace plane normal normalized closeTo: plane normal normalized).
+				frontFaces add: (eachFace copy plane: eachFace plane negated).
+				planeInFront := true.
+			].
+		].
+		faceClassification == #front ifTrue: [ 
+			frontFaces add: eachFace copy		
+		].
+		faceClassification == #back ifTrue: [ 
+			backFaces add: eachFace copy
+		].
+		faceClassification == #frontAndBack ifTrue: [ 
+			frontFaces add: eachFace copy.
+			backFaces add: eachFace copy.
+		].
+	].
+
+	planeInBack ifFalse: [
+		backFaces add: (WDEPolyhedronFace plane: plane)
+	].
+	planeInFront ifFalse: [
+		frontFaces add: (WDEPolyhedronFace plane: plane negated)
+	].
+
+	frontPolyhedron := self class new faces: frontFaces;
+		computeVerticesFromPlanes;
+		computeBoundingBox;
+		yourself.
+	backPolyhedron := self class new faces: backFaces;
+		computeVerticesFromPlanes;
+		computeBoundingBox;
+		yourself.
+	^ { frontPolyhedron . backPolyhedron }
 ]
 
 { #category : #'display box access' }
@@ -174,19 +239,43 @@ WDEPolyhedronVisualComponent >> materialStateMemento [
 ]
 
 { #category : #'as yet unclassified' }
-WDEPolyhedronVisualComponent >> planesForCollisionConvexHull [
+WDEPolyhedronVisualComponent >> polytopeConvexHullVertices [
+	^ vertices
+]
+
+{ #category : #'as yet unclassified' }
+WDEPolyhedronVisualComponent >> polytopeEnclosingPlanes [
 	^ faces collect: [ :each | each plane ]
 ]
 
 { #category : #'as yet unclassified' }
-WDEPolyhedronVisualComponent >> pointsForCollisionConvexHull [
-	^ vertices
+WDEPolyhedronVisualComponent >> polytopeSupportFunction [
+	^ [:direction |
+		| result bestSoFar |
+		result := vertices first.
+		bestSoFar := result dot: direction.
+		
+		vertices allButFirstDo: [:vertex |
+			| nextDot |
+			nextDot := vertex dot: direction.
+			nextDot > bestSoFar ifTrue: [ 
+				result := vertex.
+				bestSoFar := nextDot
+			]
+		].
+	
+		result
+	]
 ]
 
 { #category : #copying }
 WDEPolyhedronVisualComponent >> postCopy [
+	| copiedFaces |
 	super postCopy.
-	self faces: self faces copy.
+	
+	copiedFaces := (self faces collect: [:each | each copy]).
+	faces := #().
+	self faces: copiedFaces.
 	vertices := vertices copy.
 	
 ]
@@ -215,6 +304,53 @@ WDEPolyhedronVisualComponent >> restoreTransformStateMemento: memento [
 WDEPolyhedronVisualComponent >> setMaterial: newMaterial [
 	faces do: [ :each | each setMaterial: newMaterial ].
 	self changed.
+]
+
+{ #category : #'as yet unclassified' }
+WDEPolyhedronVisualComponent >> subtract: otherVisualComponent withTransform: transform [
+	| otherPlanes otherPlaneClassifications clippingPlanes result remaining |
+	(self hasIntersectionWith: otherVisualComponent withTransform: transform) ifFalse: [
+		^ super subtract: otherVisualComponent withTransform: transform
+	].
+
+	otherPlanes := otherVisualComponent polytopeEnclosingPlanes.
+	otherPlanes ifEmpty: [ ^ self subtract: otherVisualComponent withTransform: transform ].
+	
+	otherPlanes := otherPlanes collect: [ :each | each transformedWith: transform ].
+	
+	otherPlaneClassifications := otherPlanes collect: [ :eachPlane | eachPlane classifyVertices: vertices epsilon: Epsilon ].
+
+	"Am I fully contained in the other polytope?"
+	(otherPlaneClassifications allSatisfy: [:each | #(back inside) includes: each ]) ifTrue: [ ^ #() ].
+	
+	"Am I fully outside the other polytope?"
+	(otherPlaneClassifications anySatisfy: [:each | #(front inside) includes: each ]) ifTrue: [ ^ { self } ].
+	
+	"We only clip against front and back planes."
+	clippingPlanes := OrderedCollection new.
+	otherPlaneClassifications doWithIndex: [ :classification :index |
+		classification == #frontAndBack ifTrue: [ 
+			clippingPlanes add: (otherPlanes at: index)
+		].
+	].
+
+	self assert: clippingPlanes isNotEmpty.
+	result := OrderedCollection new. 
+	remaining := self.
+	clippingPlanes do: [ :plane |
+		| frontAndBack front back |
+		frontAndBack := remaining clipAgainstPlane: plane.
+		front := frontAndBack first.
+		back := frontAndBack second.
+		front ifNotNil: [
+			result add: front
+		].
+
+		self assert: back isNotNil.
+		remaining := back
+	].
+	
+	^ result
 ]
 
 { #category : #memento }

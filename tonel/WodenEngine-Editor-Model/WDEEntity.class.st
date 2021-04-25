@@ -163,6 +163,16 @@ WDEEntity >> canBeDuplicatedAndPlacedInLayer [
 	^ true
 ]
 
+{ #category : #testing }
+WDEEntity >> canBeSubtracted [
+	^ self visualComponent ifNil: [ false ] ifNotNil: [ :comp | comp canBeSubtracted ]
+]
+
+{ #category : #testing }
+WDEEntity >> canBeUsedForSubtraction [
+	^ self visualComponent ifNil: [false] ifNotNil: [ :comp | comp canBeUsedForSubtraction ]
+]
+
 { #category : #accessing }
 WDEEntity >> children [
 	^ components
@@ -209,6 +219,35 @@ WDEEntity >> computeLocalSelectableBoundingBox [
 		]
 	].
 
+]
+
+{ #category : #accessing }
+WDEEntity >> createSimilarButWithVisualComponent: otherVisualComponent [
+	| result myVisualComponentCenter otherCenter localCenterOffset centerOffset centeredVisualComponent |
+	myVisualComponentCenter := self visualComponent boundingBox center.
+	
+	otherCenter := otherVisualComponent boundingBox center.
+	localCenterOffset := myVisualComponentCenter - otherCenter.
+	centerOffset := self transform transformVector: localCenterOffset.
+	
+	centeredVisualComponent := otherVisualComponent copy translateBy: localCenterOffset negated.
+
+	result := self class new
+		setupForNewInstance;
+		name: self name;
+		className: self className;
+		dimensionalityMode: self dimensionalityMode;
+		localBoundingBox: centeredVisualComponent boundingBox;
+		position: self position + centerOffset;
+		orientation: self orientation;
+		yourself.
+	result addComponent: centeredVisualComponent.
+	components do: [ :each |
+		each isVisualComponent ifFalse: [ 
+			result addComponent: (each makeSimilarForEntity: result)
+		].
+	].
+	^ result
 ]
 
 { #category : #initialization }
@@ -277,10 +316,22 @@ WDEEntity >> initialize [
 ]
 
 { #category : #'ray casting' }
+WDEEntity >> intersectsBox: box [
+	self selectableBoundingBox isEmpty ifTrue: [ ^ false ].
+	
+	^ box hasIntersectionWithBox: self selectableBoundingBox
+]
+
+{ #category : #'ray casting' }
 WDEEntity >> intersectsFrustum: frustum [
 	self selectableBoundingBox isEmpty ifTrue: [ ^ false ].
 	
 	^ frustum intersectsOrContainsBox: self selectableBoundingBox
+]
+
+{ #category : #'as yet unclassified' }
+WDEEntity >> intersectsWithEntity: otherEntity [
+	^ self intersectsBox: otherEntity boundingBox
 ]
 
 { #category : #transforms }
@@ -541,6 +592,16 @@ WDEEntity >> rayCast: ray [
 	^ distance -> self.
 ]
 
+{ #category : #'ray casting' }
+WDEEntity >> rayCastAllAlong: ray [
+	| distance |
+	self selectableBoundingBox isEmpty ifTrue: [ ^ #() ].
+	
+	distance := selectableBoundingBox intersectionWithRay: ray.
+	distance ifNil: [ ^ #() ].
+	^ {distance -> self}.
+]
+
 { #category : #adding }
 WDEEntity >> removeChild: aChild [
 	self removeComponent: aChild
@@ -605,6 +666,22 @@ WDEEntity >> setupForNewInstance [
 	self generateEditorColor
 ]
 
+{ #category : #'as yet unclassified' }
+WDEEntity >> subtract: otherEntity [
+	| myVisualComponent otherVisualComponent otherTransformIntoMe subtractionResult |
+	myVisualComponent := self visualComponent.
+	myVisualComponent ifNil: [ ^ { self } ].
+	
+	otherVisualComponent := otherEntity visualComponent.
+	otherVisualComponent ifNil: [ ^ { self } ].
+
+	otherTransformIntoMe := self transform inverseTransformTransform: otherEntity transform.
+	subtractionResult := myVisualComponent subtract: otherVisualComponent withTransform: otherTransformIntoMe.
+	(subtractionResult size = 1 and: [ subtractionResult first == myVisualComponent ]) ifTrue: [ ^ { self } ].
+	
+	^ subtractionResult collect: [ :each | self createSimilarButWithVisualComponent: each ]
+]
+
 { #category : #transforming }
 WDEEntity >> transform [
 	^ transform ifNil: [transform := ReversibleAffineTransform3dF32 new
@@ -667,6 +744,19 @@ WDEEntity >> validPosition3D [
 { #category : #'as yet unclassified' }
 WDEEntity >> validateMaterialList [
 	components do: [ :each | each validateMaterialList ]
+]
+
+{ #category : #accessing }
+WDEEntity >> visualComponent [
+	| found |
+	found := nil.
+	components do: [ :each |
+		each isVisualComponent ifTrue: [ 
+			found ifNotNil: [ ^ nil ].
+			found := each.
+		]
+	].
+	^ found
 ]
 
 { #category : #events }

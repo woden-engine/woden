@@ -10,6 +10,16 @@ WDEVisualComponent3D class >> isAbstract [
 ]
 
 { #category : #testing }
+WDEVisualComponent3D >> canBeSubtracted [
+	^ true
+]
+
+{ #category : #testing }
+WDEVisualComponent3D >> canBeUsedForSubtraction [
+	^ self polytopeEnclosingPlanes isNotEmpty
+]
+
+{ #category : #testing }
 WDEVisualComponent3D >> isVisualComponent3D [
 	^ true
 ]

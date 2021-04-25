@@ -47,6 +47,11 @@ WDEBoxCollisionComponent >> loadFromJson: jsonData context: context [
 	box := BoxF32 loadFromJson: (jsonData at: 'box').
 ]
 
+{ #category : #'as yet unclassified' }
+WDEBoxCollisionComponent >> makeSimilarForEntity: newEntity [
+	^ self copy box: newEntity localBoundingBox; yourself
+]
+
 { #category : #memento }
 WDEBoxCollisionComponent >> restoreTransformStateMemento: memento [
 	self box: memento

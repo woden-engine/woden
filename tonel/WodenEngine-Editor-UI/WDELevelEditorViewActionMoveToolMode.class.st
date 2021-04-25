@@ -11,6 +11,11 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+WDELevelEditorViewActionMoveToolMode >> cameraXZDeltaToWorld: delta [
+	^ self view cameraXZDeltaToWorld: delta distance: screenDistance
+]
+
+{ #category : #'as yet unclassified' }
 WDELevelEditorViewActionMoveToolMode >> dragCancelled [
 	self view
 		activeToolMode: nil
@@ -33,7 +38,7 @@ WDELevelEditorViewActionMoveToolMode >> dragStarted [
 { #category : #initialization }
 WDELevelEditorViewActionMoveToolMode >> initialize [
 	super initialize.
-	screenDistance := 3.0.
+	screenDistance := 1.0.
 ]
 
 { #category : #'event handling' }
@@ -63,4 +68,10 @@ WDELevelEditorViewActionMoveToolMode >> onMouseMove: event [
 { #category : #'event handling' }
 WDELevelEditorViewActionMoveToolMode >> onRightClick: event [
 	self dragCancelled
+]
+
+{ #category : #accessing }
+WDELevelEditorViewActionMoveToolMode >> view: aView [
+	super view: aView.
+	screenDistance := aView cameraFocalPointDistance.
 ]

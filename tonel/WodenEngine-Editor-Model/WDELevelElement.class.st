@@ -5,6 +5,7 @@ Class {
 		'name'
 	],
 	#classVars : [
+		'Epsilon',
 		'JsonTypeNameDictionary'
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
@@ -12,6 +13,7 @@ Class {
 
 { #category : #'class initialization' }
 WDELevelElement class >> initialize [
+	Epsilon := 0.00001.
 	JsonTypeNameDictionary := Dictionary new.
 	self withAllSubclassesDo: [ :each |
 		JsonTypeNameDictionary at: each jsonTypeName put: each
@@ -63,6 +65,11 @@ WDELevelElement >> buildLevelElementPropertyPageWith: builder [
 
 { #category : #testing }
 WDELevelElement >> canBeDuplicatedAndPlacedInLayer [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> canBeUsedForSubtraction [
 	^ false
 ]
 
@@ -286,6 +293,11 @@ WDELevelElement >> rayCast: ray [
 	^ nil
 ]
 
+{ #category : #'ray casting' }
+WDELevelElement >> rayCastAllAlong: ray [
+	^ #()
+]
+
 { #category : #removing }
 WDELevelElement >> removeChild: aChild [
 	self subclassResponsibility
@@ -337,6 +349,11 @@ WDELevelElement >> setMaterial: aMaterial [
 	"By default do nothing here."
 ]
 
+{ #category : #serialization }
+WDELevelElement >> setupForNewInstance [
+	"By default do nothing"
+]
+
 { #category : #memento }
 WDELevelElement >> transformStateMemento [
 	^ nil
@@ -348,6 +365,7 @@ WDELevelElement >> transformWith: transform [
 
 { #category : #transforms }
 WDELevelElement >> translateBy: translation [
+	self transformWith: (ReversibleAffineTransform3dF32 identity translation: translation)
 ]
 
 { #category : #accessing }

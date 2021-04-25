@@ -109,6 +109,38 @@ WDELevel >> encodeJsonKeyValues [
 	}
 ]
 
+{ #category : #'as yet unclassified' }
+WDELevel >> findEntitiesThatIntersectEntities: testingEntitites [
+	| enclosingBox searchSet searchLayers searchLayerSet coarseSearchResult |
+	enclosingBox := BoxF32 empty.
+	searchSet := testingEntitites as: IdentitySet.
+	searchLayers := OrderedCollection new.
+	searchLayerSet := IdentitySet new.
+	
+	"Find the layers to search, and an enclosing volume."
+	testingEntitites do: [ :each |
+		| layer |
+		enclosingBox insertBox: each boundingBox.
+		layer := each sectorLayer.
+		(searchLayerSet includes: layer) ifFalse: [
+			searchLayers add: layer.
+			searchLayerSet add: layer
+		]
+	].
+
+	"Coarse search".
+	coarseSearchResult := OrderedCollection new.
+	searchLayers do: [:layer |
+		coarseSearchResult addAll: ((layer elementsInBox: enclosingBox)
+			reject: [ :each | searchSet includes: each ])
+	].
+
+	coarseSearchResult ifEmpty: [ ^ #() ].
+	
+	"Refine the search intersected entities."
+	^ coarseSearchResult select: [ :each | testingEntitites anySatisfy: [ :testEntity | each intersectsWithEntity: testEntity ] ]
+]
+
 { #category : #accessing }
 WDELevel >> gameSettings [
 
@@ -195,6 +227,17 @@ WDELevel >> rayCast: ray [
 		].
 	].
 	^ bestResult
+]
+
+{ #category : #'ray casting' }
+WDELevel >> rayCastAllAlong: ray [
+	| result |
+	result := OrderedCollection new.
+	self allEntitiesDo: [ :eachEntity |
+		result addAll: (eachEntity rayCastAllAlong: ray).
+	].
+
+	^ result sort: [ :a :b | a key <= b key ]
 ]
 
 { #category : #removing }

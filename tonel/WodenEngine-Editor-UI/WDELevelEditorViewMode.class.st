@@ -27,6 +27,11 @@ WDELevelEditorViewMode >> cameraXYDeltaToWorld: delta distance: screenDistance [
 ]
 
 { #category : #'as yet unclassified' }
+WDELevelEditorViewMode >> cameraXYToWorld: position [
+	^ self view cameraXYToWorld: position
+]
+
+{ #category : #'as yet unclassified' }
 WDELevelEditorViewMode >> cameraXYToWorld: position distance: distance [
 	^ self view cameraXYToWorld: position distance: distance
 ]

@@ -85,8 +85,9 @@ WDELevelEditorSceneModel >> activeToolManipulator: newManipulator [
 	activeToolManipulator := newManipulator.
 	activeToolManipulator ifNotNil: [
 		activeToolManipulator addToScene: scene.
-		self highlightManipulator: nil; highlightElement: nil
-	]
+		self highlightManipulator: nil; highlightElement: nil.
+		views ifNotEmpty: [ activeToolManipulator updateForViewCamera: views first ]
+	].
 ]
 
 { #category : #accessing }
@@ -386,6 +387,11 @@ WDELevelEditorSceneModel >> nodeForLevelElement: levelElement [
 { #category : #'ray casting' }
 WDELevelEditorSceneModel >> rayCast: ray [
 	^ self level rayCast: ray
+]
+
+{ #category : #'ray casting' }
+WDELevelEditorSceneModel >> rayCastAllAlong: ray [
+	^ self level rayCastAllAlong: ray
 ]
 
 { #category : #'ray casting' }

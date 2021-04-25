@@ -178,6 +178,11 @@ WDELevelEditor >> actionSaveFileAs [
 ]
 
 { #category : #'main actions' }
+WDELevelEditor >> actionSubtract [
+	self model subtractSelectedItems
+]
+
+{ #category : #'main actions' }
 WDELevelEditor >> actionUndo [
 	self model undo
 ]

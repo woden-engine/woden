@@ -78,6 +78,11 @@ WDESectorLayer >> createSolidEntity: entityClassName rectangle: entityLocation m
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+WDESectorLayer >> elementsInBox: box [
+	^ children select: [ :each | each isEntity and: [ each intersectsBox: box ] ]
+]
+
 { #category : #serialization }
 WDESectorLayer >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {

@@ -135,13 +135,13 @@ WDELevelEditorTheme >> initialize [
 	super initialize.
 	highlightColor := Color r: 0.5 g: 0.6 b: 0.9 alpha: 0.1.
 
-	boxCornerHandleColor := Color gray: 0.8.
-	highlightedBoxCornerHandleColor := Color gray: 0.8.	
+	boxCornerHandleColor := Color gray: 0.7.
+	highlightedBoxCornerHandleColor := Color gray: 0.9.
 
-	boxManipulatorColor := Color r: 0.95 g: 0.85 b: 0.6 alpha: 0.1.
+	boxManipulatorColor := Color r: 0.85 g: 0.85 b: 0.5 alpha: 0.1.
 	highlightedBoxManipulatorColor := Color r: 0.95 g: 0.95 b: 0.6 alpha: 0.1.
 	
-	boxPlacementManipulatorColor := (Color gray: 0.8) alpha: 0.1.
+	boxPlacementManipulatorColor := (Color gray: 0.7) alpha: 0.1.
 	highlightedBoxPlacementManipulatorColor := (Color gray: 0.9) alpha: 0.1.
 	
 	selectionManipulatorColor := Color r: 0.95 g: 0.85 b: 0.6 alpha: 0.1.

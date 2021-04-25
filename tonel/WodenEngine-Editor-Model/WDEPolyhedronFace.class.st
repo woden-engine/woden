@@ -38,8 +38,9 @@ WDEPolyhedronFace >> buildSolidMeshWith: meshBuilder levelEditorSession: levelEd
 	textureMatrix := materialAttributes textureTransform.
 		
 	vertices do: [ :each |
-		| uv |
-		uv := Float32x2 x: (tangent dot: each) y: (bitangent dot: each).
+		| uv worldVertex |
+		worldVertex := modelTransform transformPosition: each.
+		uv := Float32x2 x: (tangent dot: worldVertex) y: (bitangent dot: worldVertex).
 
 		meshBuilder addP: each N: normal TC: (textureMatrix transformVector2: uv)
 	].
@@ -184,7 +185,7 @@ WDEPolyhedronFace >> transformStateMemento [
 { #category : #transforms }
 WDEPolyhedronFace >> transformWith: transform [
 	vertices := vertices collect: [ :each | transform transformPosition: each ].
-	plane := plane transformedWithAffineMatrix: transform matrix4.
+	plane := plane transformedWith: transform
 ]
 
 { #category : #'as yet unclassified' }
