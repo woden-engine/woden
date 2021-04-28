@@ -152,6 +152,26 @@ RWElement >> extent [
 	^ Float32x3 x: self width asFloat y: self height asFloat z: self depth asFloat
 ]
 
+{ #category : #'ray casting' }
+RWElement >> findElementsIntersectingSphereVolume: sphere into: result [
+	| worldBoundingBox |
+	worldBoundingBox := self boundingBox.
+	worldBoundingBox isEmpty ifTrue: [ ^ self ].
+	
+	(worldBoundingBox hasIntersectionWithSphere: sphere) ifFalse: [ ^ self ].
+	result add: self
+]
+
+{ #category : #'ray casting' }
+RWElement >> findElementsIntersectingSphereVolume: sphere transformedWith: sphereTransform [
+	| worldBoundingBox |
+	worldBoundingBox := self boundingBox.
+	worldBoundingBox isEmpty ifTrue: [ ^ self ].
+	
+	(self hasIntersectionWithSphere: sphere transformedWith: sphereTransform) ifFalse: [ ^ self ].
+	sphereTransform 
+]
+
 { #category : #accessing }
 RWElement >> height [
 	^ shape heightFor: self

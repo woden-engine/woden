@@ -52,6 +52,11 @@ RWEdge >> extent [
 	^ self localBoundingBox extent
 ]
 
+{ #category : #'as yet unclassified' }
+RWEdge >> findElementsIntersectingSphereVolume: sphere into: result [
+
+]
+
 { #category : #accessing }
 RWEdge >> from [
 	

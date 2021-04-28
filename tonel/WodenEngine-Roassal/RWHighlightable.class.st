@@ -9,7 +9,7 @@ Class {
 
 { #category : #'reset shape' }
 RWHighlightable class >> highlightedColor [
-	^ Color blue
+	^ Color blue muchLighter
 ]
 
 { #category : #visiting }

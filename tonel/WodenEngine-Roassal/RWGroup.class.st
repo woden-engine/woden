@@ -114,6 +114,21 @@ RWGroup >> extent [
 	^ self boundingBox extent
 ]
 
+{ #category : #'ray casting' }
+RWGroup >> findElementsIntersectingSphereVolume: sphere into: result [
+	| worldBoundingBox localSphere |
+	worldBoundingBox := self boundingBox.
+	worldBoundingBox isEmpty ifTrue: [ ^ self ].
+	
+	(worldBoundingBox hasIntersectionWithSphere: sphere) ifFalse: [ ^ self ].
+	result add: self.
+
+	localSphere := sphere transformedWith: self transform inverse.
+	children do: [ :each |
+		each findElementsIntersectingSphereVolume: localSphere into: result
+	]
+]
+
 { #category : #accessing }
 RWGroup >> height [
 	^ self boundingBox height

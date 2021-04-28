@@ -66,14 +66,20 @@ RWAbstractHighlightable >> initializeElement: element [
 	| elements |
 	elements := nil.
 	element
-		when: RWMouseEnter
-		do: [ :e |
+		when: RWMouseEnter do: [ :e |
 			elements := 	(highlightElements rwValue: element) copyWithout: nil.
 			elements do: [ :eachElement | self doHighlightElement: eachElement ].
-		].
-	element
-		when: RWMouseLeave
-		do: [ :e |
+		];
+		when: RWMouseLeave do: [ :e |
+			elements ifNotNil: [ 
+				elements do: [ :eachElement | self doUnhighlightElement: eachElement ].
+			].
+		];
+		when: RWTouch3DCursorEnter do: [ :e |
+			elements := 	(highlightElements rwValue: element) copyWithout: nil.
+			elements do: [ :eachElement | self doHighlightElement: eachElement ].
+		];
+		when: RWTouch3DCursorLeave do: [ :e |
 			elements ifNotNil: [ 
 				elements do: [ :eachElement | self doUnhighlightElement: eachElement ].
 			].

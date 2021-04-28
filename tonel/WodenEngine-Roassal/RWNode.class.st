@@ -77,6 +77,10 @@ RWNode >> exportPrintableModelToFileNamed: aFileName [
 	^ self exportModelToFileNamed: aFileName withScaleFactor: 1000.0
 ]
 
+{ #category : #'ray casting' }
+RWNode >> findElementsIntersectingSphereVolume: sphere into: result [
+]
+
 { #category : #accessing }
 RWNode >> globalPosition [
 	^ sceneNode globalTransform translation

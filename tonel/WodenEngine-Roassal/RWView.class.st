@@ -57,7 +57,8 @@ Class {
 		'tickingElements',
 		'transmissibleItemActivationBlock',
 		'genericTrackedDevices',
-		'nodeWithTrackerAttachments'
+		'nodeWithTrackerAttachments',
+		'touch3DCursorVolumeSet'
 	],
 	#category : #'WodenEngine-Roassal-Core'
 }
@@ -158,6 +159,7 @@ RWView >> addTrackedStylusControlAttachedToTrackerWithIndex: trackerIndex [
 		addChild: tip.
 	stylusController attachTrackerAt: (RWVRTrackerAttachment new
 		trackerIndex: trackerIndex;
+		touch3DCursorVolume: (SphereF32 new center: stylusTipLocation; radius: tipSize/2; yourself);
 		attachmentPointTransform:
 		(ReversibleAffineTransform3dF32 identity
 			orthonormal: (Float32x3x3 yRotation: Float pi) * (Float32x3x3 xRotation: Float halfPi);
@@ -189,8 +191,8 @@ RWView >> announce: eventOrClassEvent [
 { #category : #vr }
 RWView >> applyGenericTrackedDevice: trackedDevice transform: newTransform [
 	(nodeWithTrackerAttachments at: trackedDevice index ifAbsent: [ #() ]) do: [ :eachNode |
-		eachNode trackerAttachment applyTransform: newTransform to: eachNode
-	]
+		eachNode trackerAttachment applyTransform: newTransform to: eachNode inView: self
+	].
 ]
 
 { #category : #converting }
@@ -340,6 +342,17 @@ RWView >> exportModelToFileNamed: aFileName withScaleFactor: scaleFactor [
 	scene exportModelToFileNamed: aFileName withScaleFactor: scaleFactor
 ]
 
+{ #category : #'ray casting' }
+RWView >> findElementsIntersectingSphereVolume: sphere [
+	| result |
+	result := Set new.
+	groups do: [ :each |
+		each findElementsIntersectingSphereVolume: sphere into: result
+	].
+
+	^ result
+]
+
 { #category : #'as yet unclassified' }
 RWView >> generateIdForElement: anElement [
 	| id |
@@ -379,6 +392,7 @@ RWView >> initializeModel [
 	tickingElements := OrderedCollection new.
 	genericTrackedDevices := OrderedCollection new.
 	nodeWithTrackerAttachments := Dictionary new.
+  	touch3DCursorVolumeSet := Dictionary new.
 	genidCount := 0.
 	self initializeScene.
 ]
@@ -404,6 +418,42 @@ RWView >> initializeScene [
 { #category : #testing }
 RWView >> isAnimated [
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+RWView >> moveTouch3DCursorSphereVolume: touch3DCursorVolume for: trackedDevice to: cursorTransform [
+	| oldSet newSet leaveSet enterSet moveSet |
+	oldSet := touch3DCursorVolumeSet at: trackedDevice ifAbsent: [ Set new ].
+	newSet := self findElementsIntersectingSphereVolume: (touch3DCursorVolume transformedWith: cursorTransform).
+	leaveSet := oldSet difference: newSet.
+	enterSet := newSet difference: oldSet.
+	moveSet := oldSet intersection: newSet.
+	
+	leaveSet select: [ :each | each isElement ] thenDo: [ :each |
+		RWTouch3DCursorLeave new
+			element: each;
+			device: trackedDevice;
+			volume: touch3DCursorVolume;
+			cursorTransform: cursorTransform;
+			sendToElement
+	].
+	enterSet select: [ :each | each isElement ] thenDo: [ :each |
+		RWTouch3DCursorEnter new
+			element: each;
+			device: trackedDevice;
+			volume: touch3DCursorVolume;
+			cursorTransform: cursorTransform;
+			sendToElement
+	].
+	moveSet select: [ :each | each isElement ] thenDo: [ :each |
+		RWTouch3DCursorMove new
+			element: each;
+			device: trackedDevice;
+			volume: touch3DCursorVolume;
+			cursorTransform: cursorTransform;
+			sendToElement
+	].
+	touch3DCursorVolumeSet at: trackedDevice put: newSet
 ]
 
 { #category : #accessing }

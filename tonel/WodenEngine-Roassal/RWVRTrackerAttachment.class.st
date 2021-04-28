@@ -4,14 +4,20 @@ Class {
 	#instVars : [
 		'trackerIndex',
 		'attachmentPointTransform',
-		'attachmentPointInverseTransform'
+		'attachmentPointInverseTransform',
+		'touch3DCursorVolume'
 	],
 	#category : #'WodenEngine-Roassal-Interaction'
 }
 
 { #category : #'element manipulation' }
-RWVRTrackerAttachment >> applyTransform: newTransform to: node [
-	node transform: (newTransform transformTransform: self attachmentPointInverseTransform)
+RWVRTrackerAttachment >> applyTransform: newTransform to: node inView: view [
+	| newNodeTransform |
+	newNodeTransform := newTransform transformTransform: self attachmentPointInverseTransform.
+	node transform: newNodeTransform.
+	touch3DCursorVolume ifNotNil: [
+		view moveTouch3DCursorSphereVolume: touch3DCursorVolume for: self to: newNodeTransform
+	].
 ]
 
 { #category : #accessing }
@@ -33,6 +39,18 @@ RWVRTrackerAttachment >> attachmentPointTransform: anObject [
 { #category : #initialization }
 RWVRTrackerAttachment >> initializeElement: element [
 	element trackerAttachment: self
+]
+
+{ #category : #accessing }
+RWVRTrackerAttachment >> touch3DCursorVolume [
+
+	^ touch3DCursorVolume
+]
+
+{ #category : #accessing }
+RWVRTrackerAttachment >> touch3DCursorVolume: anObject [
+
+	touch3DCursorVolume := anObject
 ]
 
 { #category : #accessing }

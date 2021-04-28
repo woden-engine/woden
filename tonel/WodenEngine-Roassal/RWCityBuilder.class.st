@@ -250,10 +250,10 @@ RWCityBuilder class >> examplePrintableCollectionsFromDataSet [
 	b
 		scaleToFitInMaxBaseSize: 0.15;
 		attachVRTracker.
-	true
+	false
 		ifTrue: [ b build exportPrintableModelToFileNamed: 'collections.obj' ]
 		ifFalse: [ b build makeDefaultView
-			addTrackedStylusControlAttachedToTrackerWithIndex: 1;
+			addTrackedStylusControlAttachedToTrackerWithIndex: 2;
 			openInVR ]
 ]
 
