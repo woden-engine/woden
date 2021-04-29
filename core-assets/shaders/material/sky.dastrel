@@ -45,6 +45,11 @@ uniform(binding = MaterialState.Textures) skyTexture : textureCube;
 
 code_block(fragment) forward_cubeMap
 {
+    forwardFlatOutput color: cubeMapSampler.sample(skyTexture, FragmentInput.position);
+}
+
+code_block(fragment) forward_cubeMapRGBM
+{
     let skyColor = decodeRGBM(cubeMapSampler.sample(skyTexture, FragmentInput.position));
     forwardFlatOutput color: float4(skyColor, 1.0f);
 }
