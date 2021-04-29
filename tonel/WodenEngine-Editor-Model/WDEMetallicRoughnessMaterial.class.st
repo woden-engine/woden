@@ -32,6 +32,11 @@ WDEMetallicRoughnessMaterial >> = other [
 ]
 
 { #category : #converting }
+WDEMetallicRoughnessMaterial >> asRenderingMaterialForEngine: engine [
+	^ renderingMaterial ifNil: [ renderingMaterial := self createRenderingMaterialFor: engine ]
+]
+
+{ #category : #converting }
 WDEMetallicRoughnessMaterial >> asRenderingMaterialForSession: levelEditorSession engine: engine [
 	^ renderingMaterial ifNil: [ renderingMaterial := self createRenderingMaterialFor: engine ]
 ]

@@ -15,6 +15,11 @@ WDEFileReferenceMaterial >> = other [
 ]
 
 { #category : #converting }
+WDEFileReferenceMaterial >> asRenderingMaterialForEngine: engine [
+	^ renderingMaterial ifNil: [ renderingMaterial := engine resourceCache loadMaterial: path fallback: [engine resourceCache notFoundMaterial ]]
+]
+
+{ #category : #converting }
 WDEFileReferenceMaterial >> asRenderingMaterialForSession: levelEditorSession engine: engine [
 	^ renderingMaterial ifNil: [ renderingMaterial := levelEditorSession gameSettings createRenderingMaterialForPath: path engine: engine ]
 ]

@@ -35,6 +35,19 @@ WDEPolyhedronConvexHullCollisionComponent >> convexHullPoints [
 	^ convexHullPoints
 ]
 
+{ #category : #'as yet unclassified' }
+WDEPolyhedronConvexHullCollisionComponent >> createCollisionShapeWithTransform: localTransform [
+	| points |
+	points := self convexHullPoints.
+	localTransform isIdentity ifFalse: [ 
+		points := points collect: [ :each | localTransform transformPosition: each ]
+	].
+
+	^ WDPhyConvexHullCollisionShape new
+		points: ((StdnVector newFor: Float32x3) addAll: points; yourself);
+		yourself
+]
+
 { #category : #serialization }
 WDEPolyhedronConvexHullCollisionComponent >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {

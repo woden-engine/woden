@@ -14,7 +14,7 @@ Class {
 
 { #category : #'mouse capture' }
 WDCOSWindow >> captureMouse [
-	window captureMouse
+	"window captureMouse"
 ]
 
 { #category : #'instance creation' }

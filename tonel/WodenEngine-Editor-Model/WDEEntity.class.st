@@ -102,18 +102,6 @@ WDEEntity class >> solidWall3DPrototype [
 ]
 
 { #category : #'basic entity prototypes' }
-WDEEntity class >> solidWallPolyhedronPrototype [
-	^ self new
-		makeEntity3D;
-		className: 'Wall';
-		localBoundingBox: BoxF32 unitBox;
-		addComponent: (WDEVisualComponent polyhedronBox: BoxF32 unitBox);
-		addComponent: WDEPolyhedronConvexHullCollisionComponent new;
-		yourself
-
-]
-
-{ #category : #'basic entity prototypes' }
 WDEEntity class >> spotLightPrototype [
 	^ self new
 		className: #SpotLight;
@@ -352,6 +340,16 @@ WDEEntity >> isInSector2D [
 { #category : #testing }
 WDEEntity >> isPointEntity [
 	^ self localBoundingBox min = self localBoundingBox max
+]
+
+{ #category : #testing }
+WDEEntity >> isSectorLevelComponentEntity [
+	(self name isEmpty and: [
+		self components isNotEmpty and: [
+		self components allSatisfy: [:each | each isVisualComponent or: [ each isCollisionComponent]]
+		]]) ifTrue: [ ^ true ].
+
+	^ #(Wall) includes: className
 ]
 
 { #category : #serialization }

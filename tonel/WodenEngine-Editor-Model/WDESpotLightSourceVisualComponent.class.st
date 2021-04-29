@@ -24,6 +24,14 @@ WDESpotLightSourceVisualComponent >> buildLevelElementPropertyPageWith: builder 
 		scalarPropertyNamed: 'Spot Exponent' selector: #exponent
 ]
 
+{ #category : #'as yet unclassified' }
+WDESpotLightSourceVisualComponent >> createEntitySystemComponentWithTransform: componentTransform for: gameEntity [
+	^ (super createEntitySystemComponentWithTransform: componentTransform for: gameEntity)
+		innerCutOffAngle: self innerCutOffAngle;
+		outerCutOffAngle: self outerCutOffAngle;
+		yourself
+]
+
 { #category : #serialization }
 WDESpotLightSourceVisualComponent >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
@@ -74,6 +82,11 @@ WDESpotLightSourceVisualComponent >> loadFromJson: jsonData context: context [
 	outerCutOffAngle := jsonData at: 'outerCutOffAngle' ifAbsent: [ outerCutOffAngle ].
 	innerCutOffAngle := jsonData at: 'innerCutOffAngle' ifAbsent: [ innerCutOffAngle ].
 	exponent := jsonData at: 'exponent' ifAbsent: [ exponent ].
+]
+
+{ #category : #'instance creation' }
+WDESpotLightSourceVisualComponent >> newGameLightSourceComponent [
+	^ WDESSpotLightSourceSceneNodeComponent new
 ]
 
 { #category : #accessing }

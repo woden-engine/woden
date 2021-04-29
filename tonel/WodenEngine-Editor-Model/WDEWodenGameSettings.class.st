@@ -41,6 +41,17 @@ WDEWodenGameSettings >> name [
 	^ 'Woden'
 ]
 
+{ #category : #'as yet unclassified' }
+WDEWodenGameSettings >> playLevelInSession: levelEditorSession [
+	| universe |
+	universe := WDESSimpleUniverse for: WDCEngine default.
+	universe loadSectorsFromEditorLevel: levelEditorSession level.
+
+	universe createSimulationModel
+		openInVR
+		spawnPlayer.
+]
+
 { #category : #palettes }
 WDEWodenGameSettings >> topMaterialPaletteCategories [
 	^ self createMaterialCategoriesFromFilesInFolders: self materialSearchPaths

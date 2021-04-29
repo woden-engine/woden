@@ -14,6 +14,11 @@ WDEDirectionalLightSourceVisualComponent >> isDirectionalLightSourceVisualCompon
 	^ true
 ]
 
+{ #category : #'instance creation' }
+WDEDirectionalLightSourceVisualComponent >> newGameLightSourceComponent [
+	^ WDESDirectionalLightSourceSceneNodeComponent new
+]
+
 { #category : #accessing }
 WDEDirectionalLightSourceVisualComponent >> radius [
 	^ 1.0

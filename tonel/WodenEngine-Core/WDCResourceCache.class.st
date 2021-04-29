@@ -732,6 +732,11 @@ WDCResourceCache >> neutralGenericObjectInstanceState [
 	^ neutralObjectInstanceState
 ]
 
+{ #category : #accessing }
+WDCResourceCache >> notFoundMaterial [
+	^ self defaultMaterial
+]
+
 { #category : #private }
 WDCResourceCache >> parseQuery: queryString [
 	| query in |

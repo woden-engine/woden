@@ -81,8 +81,8 @@ WDELevelElementTest >> testEntitySubtraction [
 	| biggerBox smallerBox biggerPolyhedron smallerPolyhedron subtractionResult biggerEntity smallerEntity |
 	biggerBox := BoxF32 halfExtent: 2.
 	smallerBox := BoxF32 halfExtent: 1.
-	biggerPolyhedron := WDEVisualComponent polyhedronBox: biggerBox.
-	smallerPolyhedron := WDEVisualComponent polyhedronBox: smallerBox.
+	biggerPolyhedron := WDEVisualComponent box: biggerBox.
+	smallerPolyhedron := WDEVisualComponent box: smallerBox.
 	biggerEntity := WDEEntity new addComponent: biggerPolyhedron.
 	smallerEntity := WDEEntity new addComponent: smallerPolyhedron.
 
@@ -113,8 +113,8 @@ WDELevelElementTest >> testEntitySubtraction2 [
 	| biggerBox smallerBox biggerPolyhedron smallerPolyhedron subtractionResult biggerEntity smallerEntity |
 	biggerBox := BoxF32 halfExtent: 2.
 	smallerBox := BoxF32 halfExtent: 1.
-	biggerPolyhedron := WDEVisualComponent polyhedronBox: biggerBox.
-	smallerPolyhedron := WDEVisualComponent polyhedronBox: smallerBox.
+	biggerPolyhedron := WDEVisualComponent box: biggerBox.
+	smallerPolyhedron := WDEVisualComponent box: smallerBox.
 	biggerEntity := WDEEntity new addComponent: biggerPolyhedron.
 	smallerEntity := WDEEntity new
 		position: (Float32x3 ones);
@@ -154,36 +154,36 @@ WDELevelElementTest >> testPolyhedronBox [
 { #category : #tests }
 WDELevelElementTest >> testPolyhedronBoxIntersection [
 	self assert:
-		((WDEVisualComponent polyhedronBox: (BoxF32 halfExtent: 2))
+		((WDEVisualComponent box: (BoxF32 halfExtent: 2))
 			hasIntersectionWith:
-		(WDEVisualComponent polyhedronBox: (BoxF32 halfExtent: 1))
+		(WDEVisualComponent box: (BoxF32 halfExtent: 1))
 			withTransform: ReversibleAffineTransform3dF32 identity).
 	self assert:
-		((WDEVisualComponent polyhedronBox: (BoxF32 halfExtent: 1))
+		((WDEVisualComponent box: (BoxF32 halfExtent: 1))
 			hasIntersectionWith:
-		(WDEVisualComponent polyhedronBox: (BoxF32 halfExtent: 1))
+		(WDEVisualComponent box: (BoxF32 halfExtent: 1))
 			withTransform: ReversibleAffineTransform3dF32 identity).
 
 	self assert:
-		((WDEVisualComponent polyhedronBox: (BoxF32 center: 2 halfExtent: 1))
+		((WDEVisualComponent box: (BoxF32 center: 2 halfExtent: 1))
 			hasIntersectionWith:
-		(WDEVisualComponent polyhedronBox: (BoxF32 halfExtent: 1))
+		(WDEVisualComponent box: (BoxF32 halfExtent: 1))
 			withTransform: ReversibleAffineTransform3dF32 identity).
 	self deny:
-		((WDEVisualComponent polyhedronBox: (BoxF32 center: 3 halfExtent: 1))
+		((WDEVisualComponent box: (BoxF32 center: 3 halfExtent: 1))
 			hasIntersectionWith:
-		(WDEVisualComponent polyhedronBox: (BoxF32 halfExtent: 1))
+		(WDEVisualComponent box: (BoxF32 halfExtent: 1))
 			withTransform: ReversibleAffineTransform3dF32 identity).
 			
 	self assert:
-		((WDEVisualComponent polyhedronBox: (BoxF32 halfExtent: 1))
+		((WDEVisualComponent box: (BoxF32 halfExtent: 1))
 			hasIntersectionWith:
-		(WDEVisualComponent polyhedronBox: (BoxF32 halfExtent: 1))
+		(WDEVisualComponent box: (BoxF32 halfExtent: 1))
 			withTransform: (ReversibleAffineTransform3dF32 identity translateByX: 2)).
 	self deny:
-		((WDEVisualComponent polyhedronBox: (BoxF32 halfExtent: 1))
+		((WDEVisualComponent box: (BoxF32 halfExtent: 1))
 			hasIntersectionWith:
-		(WDEVisualComponent polyhedronBox: (BoxF32 halfExtent: 1))
+		(WDEVisualComponent box: (BoxF32 halfExtent: 1))
 			withTransform: (ReversibleAffineTransform3dF32 identity translateByX: 3)).
 ]
 
@@ -207,8 +207,8 @@ WDELevelElementTest >> testPolyhedronBoxSubtraction [
 	| biggerBox smallerBox biggerPolyhedron smallerPolyhedron subtractionResult |
 	biggerBox := BoxF32 halfExtent: 2.
 	smallerBox := BoxF32 halfExtent: 1.
-	biggerPolyhedron := WDEVisualComponent polyhedronBox: biggerBox.
-	smallerPolyhedron := WDEVisualComponent polyhedronBox: smallerBox.
+	biggerPolyhedron := WDEVisualComponent box: biggerBox.
+	smallerPolyhedron := WDEVisualComponent box: smallerBox.
 	subtractionResult := biggerPolyhedron subtract: smallerPolyhedron withTransform: ReversibleAffineTransform3dF32 identity.
 	self assert: subtractionResult size equals: 6.
 	
@@ -233,14 +233,14 @@ WDELevelElementTest >> testPolyhedronBoxSubtraction [
 
 { #category : #tests }
 WDELevelElementTest >> testPolyhedronBoxSubtractionCount [
-	self assert: ((WDEVisualComponent polyhedronBox: (BoxF32 halfExtent: 2))
+	self assert: ((WDEVisualComponent box: (BoxF32 halfExtent: 2))
 		subtract:
-	(WDEVisualComponent polyhedronBox: (BoxF32 halfExtent: 1))
+	(WDEVisualComponent box: (BoxF32 halfExtent: 1))
 		withTransform: ReversibleAffineTransform3dF32 identity) size equals: 6.
 		
-	self assert: ((WDEVisualComponent polyhedronBox: (BoxF32 halfExtent: 1))
+	self assert: ((WDEVisualComponent box: (BoxF32 halfExtent: 1))
 		subtract:
-	(WDEVisualComponent polyhedronBox: (BoxF32 halfExtent: 1))
+	(WDEVisualComponent box: (BoxF32 halfExtent: 1))
 		withTransform: ReversibleAffineTransform3dF32 identity) size equals: 0.
 
 ]

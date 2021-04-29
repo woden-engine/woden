@@ -11,9 +11,16 @@ Class {
 }
 
 { #category : #converting }
+WDEFaceMaterialAttributes >> asRenderMaterialForEngine: engine [
+	^ material
+		ifNotNil: [ material asRenderingMaterialForEngine: engine   ]
+		ifNil: [ engine resourceCache defaultMaterial ].
+]
+
+{ #category : #converting }
 WDEFaceMaterialAttributes >> asRenderMaterialForEngine: engine levelEditorSession: levelEditorSession [
 	^ material
-		ifNotNil: [ material asRenderingMaterialForSession: levelEditorSession engine: engine   ]
+		ifNotNil: [ material asRenderingMaterialForSession: levelEditorSession engine: engine ]
 		ifNil: [ engine resourceCache defaultMaterial ].
 ]
 

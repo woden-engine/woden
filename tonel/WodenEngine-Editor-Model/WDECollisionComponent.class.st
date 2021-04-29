@@ -28,6 +28,16 @@ WDECollisionComponent >> boundingBox [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'as yet unclassified' }
+WDECollisionComponent >> createCollisionShapeWithTransform: localTransform [
+	self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+WDECollisionComponent >> createEntitySystemComponentWithTransform: componentTransform for: gameEntity [
+	^ gameEntity createComponentWithCollisionShape: (self createCollisionShapeWithTransform: componentTransform)
+]
+
 { #category : #testing }
 WDECollisionComponent >> isCollisionComponent [
 	^ true

@@ -8,6 +8,11 @@ Class {
 }
 
 { #category : #converting }
+WDEMaterial >> asRenderingMaterialForEngine: engine [
+	^ engine resourceCache defaultMaterial
+]
+
+{ #category : #converting }
 WDEMaterial >> asRenderingMaterialForSession: levelEditorSession engine: engine [
 	^ engine resourceCache defaultMaterial
 ]

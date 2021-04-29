@@ -6,8 +6,8 @@ Class {
 
 { #category : #'as yet unclassified' }
 WDEVisualComponent class >> box: box [
-	^ WDEBoxVisualComponent new
-		box: box;
+	^ WDEPolyhedronVisualComponent new
+		constructFacesForBox: box;
 		yourself
 ]
 
@@ -24,13 +24,6 @@ WDEVisualComponent class >> isAbstract [
 { #category : #'as yet unclassified' }
 WDEVisualComponent class >> pointLight [
 	^ WDEPointLightSourceVisualComponent new
-]
-
-{ #category : #'as yet unclassified' }
-WDEVisualComponent class >> polyhedronBox: box [
-	^ WDEPolyhedronVisualComponent new
-		constructFacesForBox: box;
-		yourself
 ]
 
 { #category : #'as yet unclassified' }
@@ -51,6 +44,11 @@ WDEVisualComponent >> boundingBox [
 ]
 
 { #category : #rendering }
+WDEVisualComponent >> buildMeshWith: meshBuilder modelTransform: modelTransform [
+	self subclassResponsibility
+]
+
+{ #category : #rendering }
 WDEVisualComponent >> buildSolidMeshWith: meshBuilder levelEditorSession: levelEditorSession modelTransform: modelTransform [
 	self subclassResponsibility
 ]
@@ -63,6 +61,17 @@ WDEVisualComponent >> buildWireMeshWith: meshBuilder material: renderMaterial [
 { #category : #testing }
 WDEVisualComponent >> canBeSubtracted [
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+WDEVisualComponent >> createEntitySystemComponentWithTransform: componentTransform for: gameEntity [
+	| builder |
+	builder := WDCComplexGenericMeshBuilder for: gameEntity engine.
+	self buildMeshWith: builder modelTransform: parent transform.
+	^ WDESStaticRenderableSceneNodeComponent new
+		renderable: builder mesh;
+		localTransform: componentTransform;
+		yourself
 ]
 
 { #category : #testing }

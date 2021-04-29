@@ -15,19 +15,7 @@ Class {
 
 { #category : #building }
 WDESGenericEntity >> addComponentWithCollisionShape: collisionShape [
-	self isStaticPhysicsObject ifTrue: [
-		^ self addComponent: (WDESStaticCollisionObject new
-			collisionShape: collisionShape)		
-	].
-	self isKinematicPhysicsObject ifTrue: [
-		^ self addComponent: (WDESKinematicObjectCollisionShape new
-			collisionShape: collisionShape)		
-	].
-	self assert: self isRigidBodyPhysicsObject.
-
-	^ self addComponent: (WDESRigidBodyCollisionShape new
-		collisionShape: collisionShape).
-
+	^ self addComponent: (self createComponentWithCollisionShape: collisionShape)
 ]
 
 { #category : #building }
@@ -72,7 +60,7 @@ WDESGenericEntity >> addModelLibraryNamed: modelLibraryName nodeNamed: modelNode
 
 { #category : #building }
 WDESGenericEntity >> addPlayerStartPointAt: position [
-	^ self addPointEntityWithType: EntityTypeName_InfoPlayerStart at: position
+	^ self addPointEntityWithType: EntityTypeName_PlayerStartPoint at: position
 ]
 
 { #category : #building }
@@ -257,6 +245,25 @@ WDESGenericEntity >> buildWaterMeshWith: aBlock [
 	
 	^ component
 	
+]
+
+{ #category : #building }
+WDESGenericEntity >> createComponentWithCollisionShape: collisionShape [
+	self isStaticPhysicsObject ifTrue: [
+		^ WDESStaticCollisionObject new
+			collisionShape: collisionShape;
+			yourself
+	].
+	self isKinematicPhysicsObject ifTrue: [
+		^ WDESKinematicObjectCollisionShape new
+			collisionShape: collisionShape;
+			yourself
+	].
+	self assert: self isRigidBodyPhysicsObject.
+
+	^ WDESRigidBodyCollisionShape new
+		collisionShape: collisionShape;
+		yourself
 ]
 
 { #category : #directions }

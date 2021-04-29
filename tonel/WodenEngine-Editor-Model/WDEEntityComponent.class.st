@@ -19,6 +19,11 @@ WDEEntityComponent >> changed [
 ]
 
 { #category : #'as yet unclassified' }
+WDEEntityComponent >> createEntitySystemComponentWithTransform: componentTransform for: gameEntity [
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 WDEEntityComponent >> destroyAnnouncers [
 	super destroyAnnouncers.
 	changedEventHolder destroyAnnouncer.

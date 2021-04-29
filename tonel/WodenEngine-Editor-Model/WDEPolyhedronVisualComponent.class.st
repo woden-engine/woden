@@ -26,6 +26,15 @@ WDEPolyhedronVisualComponent >> boundingBox [
 ]
 
 { #category : #'as yet unclassified' }
+WDEPolyhedronVisualComponent >> buildMeshWith: meshBuilder modelTransform: modelTransform [
+	faces do: [ :each | each buildMeshWith: meshBuilder modelTransform: modelTransform ].
+	^ meshBuilder
+		computeTangentsBitangents;
+		computeBoundingBox;
+		mesh
+]
+
+{ #category : #'as yet unclassified' }
 WDEPolyhedronVisualComponent >> buildSolidMeshWith: meshBuilder levelEditorSession: levelEditorSession modelTransform: modelTransform [
 	faces do: [ :each | each buildSolidMeshWith: meshBuilder levelEditorSession: levelEditorSession modelTransform: modelTransform ].
 	^ meshBuilder

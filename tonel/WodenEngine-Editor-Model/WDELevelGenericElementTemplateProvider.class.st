@@ -14,7 +14,6 @@ WDELevelGenericElementTemplateProvider >> genericCategory [
 		'Point' . WDEEntity pointPrototype.
 		'Solid Wall 2D' . WDEEntity solidWall2DPrototype.
 		'Solid Wall 3D' . WDEEntity solidWall3DPrototype.
-		'Solid Polyhedron Wall' . WDEEntity solidWallPolyhedronPrototype.
 		'Point Light' . WDEEntity pointLightPrototype.
 		'Spot Light' . WDEEntity spotLightPrototype.
 		'Directional Light' . WDEEntity directionalLightPrototype.

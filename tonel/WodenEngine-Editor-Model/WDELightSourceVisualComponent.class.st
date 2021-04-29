@@ -51,6 +51,15 @@ WDELightSourceVisualComponent >> coloredIntensity [
 	^ color * intensity
 ]
 
+{ #category : #'as yet unclassified' }
+WDELightSourceVisualComponent >> createEntitySystemComponentWithTransform: componentTransform for: gameEntity [
+	^ self newGameLightSourceComponent
+		localTransform: componentTransform;
+		intensity: (Float32x4 xyz: self coloredIntensity w: 0.0);
+		castShadows: self castShadows;
+		yourself
+]
+
 { #category : #serialization }
 WDELightSourceVisualComponent >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
@@ -91,4 +100,9 @@ WDELightSourceVisualComponent >> loadFromJson: jsonData context: context [
 	intensity := (jsonData at: 'intensity' ifAbsent: [intensity]) asFloat.
 	castShadows := jsonData at: 'castShadows' ifAbsent: [castShadows].
 
+]
+
+{ #category : #'instance creation' }
+WDELightSourceVisualComponent >> newGameLightSourceComponent [
+	self subclassResponsibility
 ]

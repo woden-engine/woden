@@ -34,7 +34,7 @@ WDESCharacterBehaviorComponent class >> halfExtent [
 
 { #category : #accessing }
 WDESCharacterBehaviorComponent class >> headPosition [
-	^ Float32x3 y: self halfExtent y * 0.9
+	^ Float32x3 y: self halfExtent y - 0.1
 ]
 
 { #category : #'as yet unclassified' }

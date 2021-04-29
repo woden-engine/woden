@@ -26,11 +26,32 @@ WDEPolyhedronFace >> accept: visitor [
 ]
 
 { #category : #'as yet unclassified' }
+WDEPolyhedronFace >> buildMeshWith: meshBuilder modelTransform: modelTransform [
+	meshBuilder currentMaterial: (materialAttributes asRenderMaterialForEngine: meshBuilder engine).
+	self doBuildMeshWith: meshBuilder modelTransform: modelTransform
+]
+
+{ #category : #'as yet unclassified' }
 WDEPolyhedronFace >> buildSolidMeshWith: meshBuilder levelEditorSession: levelEditorSession modelTransform: modelTransform [
+	meshBuilder currentMaterial: (materialAttributes asRenderMaterialForEngine: meshBuilder engine levelEditorSession: levelEditorSession).
+	self doBuildMeshWith: meshBuilder modelTransform: modelTransform
+]
+
+{ #category : #'as yet unclassified' }
+WDEPolyhedronFace >> buildWireMeshWith: meshBuilder [
+	meshBuilder beginLines.
+	vertices do: [ :each | meshBuilder addP: each ].
+	1 to: vertices size - 1 do: [ :i |
+		meshBuilder
+			addI1: i i2: i + 1
+	].
+	meshBuilder addI1: vertices size i2: 1
+]
+
+{ #category : #'as yet unclassified' }
+WDEPolyhedronFace >> doBuildMeshWith: meshBuilder modelTransform: modelTransform [
 	| normal normalAxis tangent bitangent textureMatrix |
-	meshBuilder
-		currentMaterial: (materialAttributes asRenderMaterialForEngine: meshBuilder engine levelEditorSession: levelEditorSession);
-		beginTriangles.
+	meshBuilder beginTriangles.
 	normal := plane normal.
 	normalAxis := meshBuilder computeNormalAxis: normal.
 	tangent := meshBuilder tangentForAxis: normalAxis.
@@ -48,17 +69,6 @@ WDEPolyhedronFace >> buildSolidMeshWith: meshBuilder levelEditorSession: levelEd
 	3 to: vertices size do: [ :i |
 		meshBuilder addI1: 1 i2: i - 1 i3: i
 	]
-]
-
-{ #category : #'as yet unclassified' }
-WDEPolyhedronFace >> buildWireMeshWith: meshBuilder [
-	meshBuilder beginLines.
-	vertices do: [ :each | meshBuilder addP: each ].
-	1 to: vertices size - 1 do: [ :i |
-		meshBuilder
-			addI1: i i2: i + 1
-	].
-	meshBuilder addI1: vertices size i2: 1
 ]
 
 { #category : #serialization }

@@ -16,7 +16,7 @@ WDEBoxVisualComponent >> accept: visitor [
 { #category : #converting }
 WDEBoxVisualComponent >> asPolyhedronVisualComponent [
 	| polyhedron |
-	polyhedron := self class polyhedronBox: box.
+	polyhedron := self class box: box.
 	polyhedron faces do: [ :each | each materialAttributes: materialAttributes ].
 	^ polyhedron
 ]

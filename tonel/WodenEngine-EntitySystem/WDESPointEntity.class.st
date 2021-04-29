@@ -9,7 +9,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 WDESPointEntity >> isPlayerStartPoint [
-	^ typeName == EntityTypeName_InfoPlayerStart
+	^ typeName == EntityTypeName_PlayerStartPoint
 ]
 
 { #category : #testing }
@@ -19,5 +19,5 @@ WDESPointEntity >> isPointEntity [
 
 { #category : #'as yet unclassified' }
 WDESPointEntity >> makePlayerStartPoint [
-	^ self typeName: EntityTypeName_InfoPlayerStart
+	^ self typeName: EntityTypeName_PlayerStartPoint
 ]

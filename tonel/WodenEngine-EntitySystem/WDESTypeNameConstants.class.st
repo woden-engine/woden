@@ -2,12 +2,12 @@ Class {
 	#name : #WDESTypeNameConstants,
 	#superclass : #SharedPool,
 	#classVars : [
-		'EntityTypeName_InfoPlayerStart'
+		'EntityTypeName_PlayerStartPoint'
 	],
 	#category : #'WodenEngine-EntitySystem-Nodes'
 }
 
 { #category : #initialization }
 WDESTypeNameConstants class >> initialize [
-	EntityTypeName_InfoPlayerStart := #InfoPlayerStart.
+	EntityTypeName_PlayerStartPoint := #PlayerStartPoint.
 ]

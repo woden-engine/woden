@@ -158,7 +158,7 @@ WDESAbstractUniverse >> findAnyEntityByTypeName: aTypeName [
 
 { #category : #queries }
 WDESAbstractUniverse >> findAnyPlayerStartPoint [
-	^ (self findAnyEntityByTypeName: EntityTypeName_InfoPlayerStart)
+	^ (self findAnyEntityByTypeName: EntityTypeName_PlayerStartPoint)
 ]
 
 { #category : #accessing }
