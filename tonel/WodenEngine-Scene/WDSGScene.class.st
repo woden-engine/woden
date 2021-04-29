@@ -167,6 +167,7 @@ WDSGScene >> createSkyBoxWithMaterial: skyMaterial [
 WDSGScene >> createSkyBoxWithTexture: skyTexture [
 	^ self createSkyBoxWithMaterial: ((WDCSkyMaterial for: engine)
 		skyTexture: skyTexture;
+		rgbm: true;
 		yourself)
 ]
 

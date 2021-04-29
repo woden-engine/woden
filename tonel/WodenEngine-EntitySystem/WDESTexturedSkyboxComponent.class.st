@@ -36,6 +36,7 @@ WDESTexturedSkyboxComponent >> removedFromScene: scene [
 WDESTexturedSkyboxComponent >> renderable [
 	renderable ifNil: [ renderable := self createSkyBoxRenderableWithMaterial: ((WDCSkyMaterial for: self engine)
 		skyTexture: texture;
+		rgbm: true;
 		yourself)].
 	^ renderable 
 ]

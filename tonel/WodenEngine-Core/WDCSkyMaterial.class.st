@@ -7,7 +7,8 @@ Class {
 		'resourceBinding',
 		'shaderLibrary',
 		'forwardFragmentShader',
-		'objectSpace'
+		'objectSpace',
+		'rgbm'
 	],
 	#category : #'WodenEngine-Core-Material'
 }
@@ -38,7 +39,12 @@ WDCSkyMaterial >> bindResources [
 
 { #category : #shaders }
 WDCSkyMaterial >> forwardFragmentShader [
-	^ forwardFragmentShader ifNil: [ forwardFragmentShader := self shaderLibrary getFragmentStage: #forward_cubeMap ]
+	^ forwardFragmentShader ifNil: [ forwardFragmentShader :=
+		self shaderLibrary getFragmentStage:
+			(rgbm
+				ifTrue: [#forward_cubeMapRGBM]
+				ifFalse: [#forward_cubeMap])
+	]
 ]
 
 { #category : #initialization }
@@ -65,12 +71,25 @@ WDCSkyMaterial >> objectSpace: aBoolean [
 { #category : #parsing }
 WDCSkyMaterial >> parseInFolder: parentFolderFileReference data: data [
 	skyTexture := self parse: data at: parentFolderFileReference optionalSRGBTexture: #texture.
+	rgbm := data at: #rgbm ifAbsent: [ false ].
 	self invalidateCache.
 ]
 
 { #category : #enumerating }
 WDCSkyMaterial >> precacheResources [
 	self shaderLibrary
+]
+
+{ #category : #accessing }
+WDCSkyMaterial >> rgbm [
+
+	^ rgbm
+]
+
+{ #category : #accessing }
+WDCSkyMaterial >> rgbm: anObject [
+
+	rgbm := anObject
 ]
 
 { #category : #shaders }
