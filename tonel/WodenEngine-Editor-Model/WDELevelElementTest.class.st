@@ -140,7 +140,7 @@ WDELevelElementTest >> testEntitySubtraction2 [
 WDELevelElementTest >> testPolyhedronBox [
 	| box polyhedron |
 	box := BoxF32 unitBox.
-	polyhedron := WDEPolyhedronVisualComponent new constructFacesForBox: box.
+	polyhedron := WDEConvexPolyhedronVisualComponent new constructFacesForBox: box.
 	self assert: polyhedron faces size equals: 6.
 	self assert: polyhedron faces first plane equals: (PlaneF32 nx: -1 distance: 0.5).
 	self assert: polyhedron faces second plane equals: (PlaneF32 nx: 1 distance: 0.5).
@@ -191,7 +191,7 @@ WDELevelElementTest >> testPolyhedronBoxIntersection [
 WDELevelElementTest >> testPolyhedronBoxPolytopeSupportFunction [
 	| box polyhedron supportFunction |
 	box := BoxF32 unitBox.
-	polyhedron := WDEPolyhedronVisualComponent new constructFacesForBox: box.
+	polyhedron := WDEConvexPolyhedronVisualComponent new constructFacesForBox: box.
 	supportFunction := polyhedron polytopeSupportFunction.
 	self assert: (supportFunction value: (Float32x3 x: -1)) x equals: -0.5.
 	self assert: (supportFunction value: (Float32x3 y: -1)) y equals: -0.5.
@@ -302,13 +302,15 @@ WDELevelElementTest >> validateTestLevel: decodedLevel [
 	
 	self assert: entity components size equals: 2.
 	component := entity components first.
-	self assert: component isRectangleVisualComponent.
-	self assert: component rectangle equals: (RectangleF32 halfExtent: (Float32x2 x: 12.5f y: 0.5f)).
-	self assert: component materialAttributes material equals: self class redMaterial.
+	self assert: component isConvexPolygonVisualComponent.
+	self assert: component boundingRectangle equals: (RectangleF32 halfExtent: (Float32x2 x: 12.5f y: 0.5f)).
+	self assert: component topFaceAttributes materialAttributes material equals: self class redMaterial.
+	self assert: component bottomFaceAttributes materialAttributes material equals: self class redMaterial.
+	self assert: component sideFaceAttributes materialAttributes material equals: self class redMaterial.
 	
 	component := entity components second.
-	self assert: component isRectangleCollisionComponent.
-	self assert: component rectangle equals: (RectangleF32 halfExtent: (Float32x2 x: 12.5f y: 0.5f)).
+	self assert: component isPolygonConvexHullCollisionComponent.
+	self assert: component boundingRectangle equals: (RectangleF32 halfExtent: (Float32x2 x: 12.5f y: 0.5f)).
 
 	self assert: entities fifth className equals: 'Wall'.
 	self assert: entities fifth position equals: (Float32x3 x: 5.5f y: 4.5f).
@@ -317,12 +319,14 @@ WDELevelElementTest >> validateTestLevel: decodedLevel [
 
 	self assert: entity components size equals: 2.
 	component := entity components first.
-	self assert: component isRectangleVisualComponent.
-	self assert: component rectangle equals: (RectangleF32 halfExtent: (Float32x2 x: 2.5f y: 0.5f)).
-	self assert: component materialAttributes material equals: self class greenMaterial.
+	self assert: component isConvexPolygonVisualComponent.
+	self assert: component boundingRectangle equals: (RectangleF32 halfExtent: (Float32x2 x: 2.5f y: 0.5f)).
+	self assert: component topFaceAttributes materialAttributes material equals: self class greenMaterial.
+	self assert: component bottomFaceAttributes materialAttributes material equals: self class greenMaterial.
+	self assert: component sideFaceAttributes materialAttributes material equals: self class greenMaterial.
 	
 	component := entity components second.
-	self assert: component isRectangleCollisionComponent.
-	self assert: component rectangle equals: (RectangleF32 halfExtent: (Float32x2 x: 2.5f y: 0.5f)).
+	self assert: component isPolygonConvexHullCollisionComponent.
+	self assert: component boundingRectangle equals: (RectangleF32 halfExtent: (Float32x2 x: 2.5f y: 0.5f)).
 
 ]

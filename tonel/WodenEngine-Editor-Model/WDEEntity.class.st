@@ -84,7 +84,7 @@ WDEEntity class >> solidWall2DPrototype [
 		className: 'Wall';
 		localBoundingRectangle: RectangleF32 unitRectangle;
 		addComponent: (WDEVisualComponent rectangle: RectangleF32 unitRectangle);
-		addComponent: (WDECollisionComponent rectangle: RectangleF32 unitRectangle);
+		addComponent: WDECollisionComponent polygonConvexHull;
 		yourself
 
 ]
@@ -96,7 +96,7 @@ WDEEntity class >> solidWall3DPrototype [
 		className: 'Wall';
 		localBoundingBox: BoxF32 unitBox;
 		addComponent: (WDEVisualComponent box: BoxF32 unitBox);
-		addComponent: (WDECollisionComponent box: BoxF32 unitBox);
+		addComponent: WDECollisionComponent polyhedronConvexHull;
 		yourself
 
 ]

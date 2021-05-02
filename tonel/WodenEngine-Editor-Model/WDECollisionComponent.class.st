@@ -17,6 +17,16 @@ WDECollisionComponent class >> isAbstract [
 ]
 
 { #category : #'as yet unclassified' }
+WDECollisionComponent class >> polygonConvexHull [
+	^ WDEPolygonConvexHullCollisionComponent new
+]
+
+{ #category : #'as yet unclassified' }
+WDECollisionComponent class >> polyhedronConvexHull [
+	^ WDEPolyhedronConvexHullCollisionComponent new
+]
+
+{ #category : #'as yet unclassified' }
 WDECollisionComponent class >> rectangle: rectangle [
 	^ WDERectangleCollisionComponent new
 		rectangle: rectangle

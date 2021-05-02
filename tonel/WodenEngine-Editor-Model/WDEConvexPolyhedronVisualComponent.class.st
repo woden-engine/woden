@@ -1,5 +1,5 @@
 Class {
-	#name : #WDEPolyhedronVisualComponent,
+	#name : #WDEConvexPolyhedronVisualComponent,
 	#superclass : #WDEVisualComponent3D,
 	#instVars : [
 		'faces',
@@ -10,23 +10,23 @@ Class {
 }
 
 { #category : #visiting }
-WDEPolyhedronVisualComponent >> accept: visitor [
+WDEConvexPolyhedronVisualComponent >> accept: visitor [
 	^ visitor visitPolyhedronVisualComponent: self
 ]
 
 { #category : #converting }
-WDEPolyhedronVisualComponent >> asPolyhedronVisualComponent [
+WDEConvexPolyhedronVisualComponent >> asPolyhedronVisualComponent [
 	^ self
 ]
 
 { #category : #accessing }
-WDEPolyhedronVisualComponent >> boundingBox [
+WDEConvexPolyhedronVisualComponent >> boundingBox [
 	boundingBox ifNil: [ self computeBoundingBox ].
 	^ boundingBox
 ]
 
 { #category : #'as yet unclassified' }
-WDEPolyhedronVisualComponent >> buildMeshWith: meshBuilder modelTransform: modelTransform [
+WDEConvexPolyhedronVisualComponent >> buildMeshWith: meshBuilder modelTransform: modelTransform [
 	faces do: [ :each | each buildMeshWith: meshBuilder modelTransform: modelTransform ].
 	^ meshBuilder
 		computeTangentsBitangents;
@@ -35,7 +35,7 @@ WDEPolyhedronVisualComponent >> buildMeshWith: meshBuilder modelTransform: model
 ]
 
 { #category : #'as yet unclassified' }
-WDEPolyhedronVisualComponent >> buildSolidMeshWith: meshBuilder levelEditorSession: levelEditorSession modelTransform: modelTransform [
+WDEConvexPolyhedronVisualComponent >> buildSolidMeshWith: meshBuilder levelEditorSession: levelEditorSession modelTransform: modelTransform [
 	faces do: [ :each | each buildSolidMeshWith: meshBuilder levelEditorSession: levelEditorSession modelTransform: modelTransform ].
 	^ meshBuilder
 		computeTangentsBitangents;
@@ -44,7 +44,7 @@ WDEPolyhedronVisualComponent >> buildSolidMeshWith: meshBuilder levelEditorSessi
 ]
 
 { #category : #'as yet unclassified' }
-WDEPolyhedronVisualComponent >> buildWireMeshWith: meshBuilder material: renderMaterial [
+WDEConvexPolyhedronVisualComponent >> buildWireMeshWith: meshBuilder material: renderMaterial [
 	meshBuilder currentMaterial: renderMaterial.
 	faces do: [ :each | each buildWireMeshWith: meshBuilder ].
 	^ meshBuilder
@@ -53,12 +53,12 @@ WDEPolyhedronVisualComponent >> buildWireMeshWith: meshBuilder material: renderM
 ]
 
 { #category : #accessing }
-WDEPolyhedronVisualComponent >> children [
+WDEConvexPolyhedronVisualComponent >> children [
 	^ faces
 ]
 
 { #category : #'as yet unclassified' }
-WDEPolyhedronVisualComponent >> clipAgainstPlane: plane [
+WDEConvexPolyhedronVisualComponent >> clipAgainstPlane: plane [
 	| classification frontFaces backFaces planeInFront planeInBack frontPolyhedron backPolyhedron |
 	classification := plane classifyVertices: vertices epsilon: Epsilon.
 	self assert: classification ~~ #inside.
@@ -118,7 +118,7 @@ WDEPolyhedronVisualComponent >> clipAgainstPlane: plane [
 ]
 
 { #category : #'display box access' }
-WDEPolyhedronVisualComponent >> computeBoundingBox [
+WDEConvexPolyhedronVisualComponent >> computeBoundingBox [
 	boundingBox := BoxF32 empty.
 	vertices do: [ :eachVertex |
 		boundingBox insertPoint: eachVertex
@@ -126,7 +126,7 @@ WDEPolyhedronVisualComponent >> computeBoundingBox [
 ]
 
 { #category : #constructing }
-WDEPolyhedronVisualComponent >> computeVerticesFromPlanes [
+WDEConvexPolyhedronVisualComponent >> computeVerticesFromPlanes [
 	faces do: [ :each | each vertices: OrderedCollection new ].
 	vertices := OrderedCollection new.
 	
@@ -163,7 +163,7 @@ WDEPolyhedronVisualComponent >> computeVerticesFromPlanes [
 ]
 
 { #category : #constructing }
-WDEPolyhedronVisualComponent >> constructFacesForBox: box [
+WDEConvexPolyhedronVisualComponent >> constructFacesForBox: box [
 	self
 		faces: {
 			WDEPolyhedronFace name: #Left plane: (PlaneF32 normal: (Float32x3 x: -1) distance: box min x negated).
@@ -179,7 +179,7 @@ WDEPolyhedronVisualComponent >> constructFacesForBox: box [
 ]
 
 { #category : #serialization }
-WDEPolyhedronVisualComponent >> encodeJsonKeyValues [
+WDEConvexPolyhedronVisualComponent >> encodeJsonKeyValues [
 	^ super encodeJsonKeyValues , {
 		#faces . faces collect: [ :each | each encodeForJSON ] .
 		#vertices . vertices collect: [ :each | each encodeForJSON ] .
@@ -188,7 +188,7 @@ WDEPolyhedronVisualComponent >> encodeJsonKeyValues [
 ]
 
 { #category : #accessing }
-WDEPolyhedronVisualComponent >> entityTransformChanged [
+WDEConvexPolyhedronVisualComponent >> entityTransformChanged [
 	(faces anySatisfy: [ :each | each hasTexture ]) ifTrue: [
 		self raiseChangedEvent
 	].
@@ -196,13 +196,13 @@ WDEPolyhedronVisualComponent >> entityTransformChanged [
 ]
 
 { #category : #accessing }
-WDEPolyhedronVisualComponent >> faces [
+WDEConvexPolyhedronVisualComponent >> faces [
 
 	^ faces
 ]
 
 { #category : #accessing }
-WDEPolyhedronVisualComponent >> faces: anObject [
+WDEConvexPolyhedronVisualComponent >> faces: anObject [
 	| level |
 	level := self level.
 	faces do: [ :each |
@@ -217,19 +217,19 @@ WDEPolyhedronVisualComponent >> faces: anObject [
 ]
 
 { #category : #initialization }
-WDEPolyhedronVisualComponent >> initialize [
+WDEConvexPolyhedronVisualComponent >> initialize [
 	super initialize.
 	faces := #().
 	vertices := #().
 ]
 
 { #category : #testing }
-WDEPolyhedronVisualComponent >> isPolyhedronVisualComponent [
+WDEConvexPolyhedronVisualComponent >> isPolyhedronVisualComponent [
 	^ true
 ]
 
 { #category : #serialization }
-WDEPolyhedronVisualComponent >> loadFromJson: jsonData context: context [
+WDEConvexPolyhedronVisualComponent >> loadFromJson: jsonData context: context [
 	super loadFromJson: jsonData context: context.
 	jsonData at: 'faces' ifPresent: [ :facesData |
 		self faces: (facesData collect: [ :each | WDELevelElement loadFromJson: each context: context ]).
@@ -243,22 +243,22 @@ WDEPolyhedronVisualComponent >> loadFromJson: jsonData context: context [
 ]
 
 { #category : #memento }
-WDEPolyhedronVisualComponent >> materialStateMemento [
+WDEConvexPolyhedronVisualComponent >> materialStateMemento [
 	^ faces collect: [ :each | each materialStateMemento ]
 ]
 
 { #category : #'as yet unclassified' }
-WDEPolyhedronVisualComponent >> polytopeConvexHullVertices [
+WDEConvexPolyhedronVisualComponent >> polyhedronConvexHullVertices [
 	^ vertices
 ]
 
 { #category : #'as yet unclassified' }
-WDEPolyhedronVisualComponent >> polytopeEnclosingPlanes [
+WDEConvexPolyhedronVisualComponent >> polyhedronEnclosingPlanes [
 	^ faces collect: [ :each | each plane ]
 ]
 
 { #category : #'as yet unclassified' }
-WDEPolyhedronVisualComponent >> polytopeSupportFunction [
+WDEConvexPolyhedronVisualComponent >> polytopeSupportFunction [
 	^ [:direction |
 		| result bestSoFar |
 		result := vertices first.
@@ -278,7 +278,7 @@ WDEPolyhedronVisualComponent >> polytopeSupportFunction [
 ]
 
 { #category : #copying }
-WDEPolyhedronVisualComponent >> postCopy [
+WDEConvexPolyhedronVisualComponent >> postCopy [
 	| copiedFaces |
 	super postCopy.
 	
@@ -290,7 +290,7 @@ WDEPolyhedronVisualComponent >> postCopy [
 ]
 
 { #category : #memento }
-WDEPolyhedronVisualComponent >> restoreMaterialStateMemento: memento [
+WDEConvexPolyhedronVisualComponent >> restoreMaterialStateMemento: memento [
 	faces doWithIndex: [ :faceMemento :faceIndex |
 		(faces at: faceIndex)
 			restoreMaterialStateMemento: faceMemento
@@ -299,7 +299,7 @@ WDEPolyhedronVisualComponent >> restoreMaterialStateMemento: memento [
 ]
 
 { #category : #memento }
-WDEPolyhedronVisualComponent >> restoreTransformStateMemento: memento [
+WDEConvexPolyhedronVisualComponent >> restoreTransformStateMemento: memento [
 	memento first doWithIndex: [ :faceMemento :index |
 		(faces at: index)
 			restoreTransformStateMemento: faceMemento
@@ -310,19 +310,19 @@ WDEPolyhedronVisualComponent >> restoreTransformStateMemento: memento [
 ]
 
 { #category : #initialization }
-WDEPolyhedronVisualComponent >> setMaterial: newMaterial [
+WDEConvexPolyhedronVisualComponent >> setMaterial: newMaterial [
 	faces do: [ :each | each setMaterial: newMaterial ].
 	self changed.
 ]
 
 { #category : #'as yet unclassified' }
-WDEPolyhedronVisualComponent >> subtract: otherVisualComponent withTransform: transform [
+WDEConvexPolyhedronVisualComponent >> subtract: otherVisualComponent withTransform: transform [
 	| otherPlanes otherPlaneClassifications clippingPlanes result remaining |
 	(self hasIntersectionWith: otherVisualComponent withTransform: transform) ifFalse: [
 		^ super subtract: otherVisualComponent withTransform: transform
 	].
 
-	otherPlanes := otherVisualComponent polytopeEnclosingPlanes.
+	otherPlanes := otherVisualComponent polyhedronEnclosingPlanes.
 	otherPlanes ifEmpty: [ ^ self subtract: otherVisualComponent withTransform: transform ].
 	
 	otherPlanes := otherPlanes collect: [ :each | each transformedWith: transform ].
@@ -363,7 +363,7 @@ WDEPolyhedronVisualComponent >> subtract: otherVisualComponent withTransform: tr
 ]
 
 { #category : #memento }
-WDEPolyhedronVisualComponent >> transformStateMemento [
+WDEConvexPolyhedronVisualComponent >> transformStateMemento [
 	^ {
 		faces collect: [ :each | each transformStateMemento ] .
 		vertices
@@ -371,7 +371,7 @@ WDEPolyhedronVisualComponent >> transformStateMemento [
 ]
 
 { #category : #constructing }
-WDEPolyhedronVisualComponent >> transformWith: transform [
+WDEConvexPolyhedronVisualComponent >> transformWith: transform [
 	faces do: [ :each | each transformWith: transform ].
 	vertices := vertices collect: [ :each | transform transformPosition: each ].
 	self computeBoundingBox.
@@ -379,6 +379,6 @@ WDEPolyhedronVisualComponent >> transformWith: transform [
 ]
 
 { #category : #'as yet unclassified' }
-WDEPolyhedronVisualComponent >> validateMaterialList [
+WDEConvexPolyhedronVisualComponent >> validateMaterialList [
 	faces do: [ :each | each validateMaterialList ]
 ]

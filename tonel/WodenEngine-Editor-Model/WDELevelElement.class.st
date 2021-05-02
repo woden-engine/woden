@@ -136,12 +136,12 @@ WDELevelElement >> isBoxCollisionComponent [
 ]
 
 { #category : #testing }
-WDELevelElement >> isBoxVisualComponent [
+WDELevelElement >> isCollisionComponent [
 	^ false
 ]
 
 { #category : #testing }
-WDELevelElement >> isCollisionComponent [
+WDELevelElement >> isConvexPolygonVisualComponent [
 	^ false
 ]
 
@@ -182,6 +182,16 @@ WDELevelElement >> isPointEntity [
 
 { #category : #testing }
 WDELevelElement >> isPointLightSourceVisualComponent [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isPolygonConvexHullCollisionComponent [
+	^ false
+]
+
+{ #category : #testing }
+WDELevelElement >> isPolyhedronConvexHullCollisionComponent [
 	^ false
 ]
 

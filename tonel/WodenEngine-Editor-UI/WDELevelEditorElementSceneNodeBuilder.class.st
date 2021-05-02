@@ -112,6 +112,11 @@ WDELevelEditorElementSceneNodeBuilder >> visitBoxVisualComponent: component [
 	^ self visitGeneratedMeshVisualComponent: component
 ]
 
+{ #category : #'visual components' }
+WDELevelEditorElementSceneNodeBuilder >> visitConvexPolygonVisualComponent: component [
+	^ self visitGeneratedMeshVisualComponent: component
+]
+
 { #category : #visiting }
 WDELevelEditorElementSceneNodeBuilder >> visitDirectionalLightSourceVisualComponent: component [
 	^ (super visitDirectionalLightSourceVisualComponent: component)
@@ -179,6 +184,16 @@ WDELevelEditorElementSceneNodeBuilder >> visitPointLightSourceVisualComponent: c
 		point;
 		addChild: (self createPointLightVisualizationNodeFor: component);
 		yourself
+]
+
+{ #category : #'collision components' }
+WDELevelEditorElementSceneNodeBuilder >> visitPolygonConvexHullCollisionComponent: component [
+	^ nil
+]
+
+{ #category : #visiting }
+WDELevelEditorElementSceneNodeBuilder >> visitPolygonSideAttributes: polyhedronFace [
+	^ nil
 ]
 
 { #category : #'collision components' }

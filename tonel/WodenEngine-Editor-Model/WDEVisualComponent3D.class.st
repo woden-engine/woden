@@ -16,7 +16,7 @@ WDEVisualComponent3D >> canBeSubtracted [
 
 { #category : #testing }
 WDEVisualComponent3D >> canBeUsedForSubtraction [
-	^ self polytopeEnclosingPlanes isNotEmpty
+	^ self polyhedronEnclosingPlanes isNotEmpty
 ]
 
 { #category : #testing }

@@ -6,7 +6,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 WDEVisualComponent class >> box: box [
-	^ WDEPolyhedronVisualComponent new
+	^ WDEConvexPolyhedronVisualComponent new
 		constructFacesForBox: box;
 		yourself
 ]
@@ -28,8 +28,8 @@ WDEVisualComponent class >> pointLight [
 
 { #category : #'as yet unclassified' }
 WDEVisualComponent class >> rectangle: rectangle [
-	^ WDERectangleVisualComponent new
-		rectangle: rectangle;
+	^ WDEConvexPolygonVisualComponent new
+		constructForRectangle: rectangle;
 		yourself
 ]
 
@@ -104,12 +104,17 @@ WDEVisualComponent >> isVisualComponent [
 ]
 
 { #category : #representations }
-WDEVisualComponent >> polytopeConvexHullVertices [
+WDEVisualComponent >> polygonConvexHullVertices [
 	^ #()
 ]
 
 { #category : #representations }
-WDEVisualComponent >> polytopeEnclosingPlanes [
+WDEVisualComponent >> polyhedronConvexHullVertices [
+	^ #()
+]
+
+{ #category : #representations }
+WDEVisualComponent >> polyhedronEnclosingPlanes [
 	^ #()
 ]
 

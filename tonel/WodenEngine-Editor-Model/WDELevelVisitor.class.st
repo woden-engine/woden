@@ -15,6 +15,11 @@ WDELevelVisitor >> visitBoxVisualComponent: component [
 ]
 
 { #category : #visiting }
+WDELevelVisitor >> visitConvexPolygonVisualComponent: component [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
 WDELevelVisitor >> visitDirectionalLightSourceVisualComponent: component [
 	^ self visitLightSourceVisualComponent: component
 ]
@@ -42,6 +47,16 @@ WDELevelVisitor >> visitLightSourceVisualComponent: level [
 { #category : #visiting }
 WDELevelVisitor >> visitPointLightSourceVisualComponent: component [
 	^ self visitLightSourceVisualComponent: component
+]
+
+{ #category : #visiting }
+WDELevelVisitor >> visitPolygonConvexHullCollisionComponent: component [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
+WDELevelVisitor >> visitPolygonSideAttributes: entity [
+	self subclassResponsibility
 ]
 
 { #category : #visiting }

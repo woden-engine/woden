@@ -16,7 +16,7 @@ WDEPolyhedronConvexHullCollisionComponent >> convexHullPlanes [
 	convexHullPlanes := OrderedCollection new.
 	self parent components do: [ :each |
 		each isVisualComponent ifTrue: [ 
-			convexHullPlanes addAll: each polytopeEnclosingPlanes 
+			convexHullPlanes addAll: each polyhedronEnclosingPlanes 
 		].
 	].
 	^ convexHullPlanes
@@ -29,7 +29,7 @@ WDEPolyhedronConvexHullCollisionComponent >> convexHullPoints [
 	convexHullPoints := OrderedCollection new.
 	self parent components do: [ :each |
 		each isVisualComponent ifTrue: [ 
-			convexHullPoints addAll: each polytopeConvexHullVertices 
+			convexHullPoints addAll: each polyhedronConvexHullVertices 
 		].
 	].
 	^ convexHullPoints
@@ -54,4 +54,9 @@ WDEPolyhedronConvexHullCollisionComponent >> encodeJsonKeyValues [
 		#points . self convexHullPoints collect: [:each | each encodeForJSON ].
 		#planes . self convexHullPlanes collect: [:each | each encodeForJSON ].
 	}
+]
+
+{ #category : #testing }
+WDEPolyhedronConvexHullCollisionComponent >> isPolyhedronConvexHullCollisionComponent [
+	^ true
 ]
