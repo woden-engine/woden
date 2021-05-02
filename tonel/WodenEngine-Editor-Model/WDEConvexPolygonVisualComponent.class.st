@@ -40,6 +40,39 @@ WDEConvexPolygonVisualComponent >> boundingRectangle [
 ]
 
 { #category : #rendering }
+WDEConvexPolygonVisualComponent >> buildMeshWith: meshBuilder modelTransform: modelTransform [
+
+	self extrudedFacesDo: [ :faceVertices :faceNormal |
+		| normalAxis tangent bitangent textureMatrix faceAttributes |
+		faceAttributes := self faceAttributesForNormal: faceNormal.
+		meshBuilder
+			currentMaterial: (faceAttributes materialAttributes asRenderMaterialForEngine: meshBuilder engine);
+			beginTriangles.
+
+		normalAxis := meshBuilder computeNormalAxis: faceNormal.
+		tangent := meshBuilder tangentForAxis: normalAxis.
+		bitangent := meshBuilder bitangentForAxis: normalAxis.
+		textureMatrix := faceAttributes materialAttributes textureTransform.
+
+		faceVertices do: [ :each |
+			| uv worldVertex |
+			worldVertex := modelTransform transformPosition: each.
+			uv := Float32x2 x: (tangent dot: worldVertex) y: (bitangent dot: worldVertex).
+
+			meshBuilder addP: each N: faceNormal TC: (textureMatrix transformVector2: uv)
+		].
+		3 to: faceVertices size do: [ :i |
+			meshBuilder addI1: 1 i2: i - 1 i3: i
+		].
+	].
+
+	^ meshBuilder
+		computeTangentsBitangents;
+		computeBoundingBox;
+		mesh
+]
+
+{ #category : #rendering }
 WDEConvexPolygonVisualComponent >> buildSolidMeshWith: meshBuilder levelEditorSession: levelEditorSession modelTransform: modelTransform [
 	self extrudedFacesDo: [ :faceVertices :faceNormal |
 		| normalAxis tangent bitangent textureMatrix faceAttributes |
