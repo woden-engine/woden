@@ -42,7 +42,7 @@ WDSLightedSceneRenderer class >> initialize [
 
 { #category : #accessing }
 WDSLightedSceneRenderer class >> maxShadowCastingLightCount [
-	^ 4
+	^ 8
 ]
 
 { #category : #'shadow mapping' }

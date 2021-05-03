@@ -89,7 +89,7 @@ WDSSceneAssetModel >> getNodeBoundingBox: childNodeName relativeToNode: parentNo
 	self ensureValidNameDictionaries.
 	childNode := sceneNodeNameDictionary at: childNodeName.
 	parentNode := sceneNodeNameDictionary at: parentNodeName.
-	^ childNode globalOrientedBoundingBox transformedWith: (parentNode globalTransform inverseTransformTransform: childNode globalTransform)
+	^ childNode localBoundingBoxWithChildren transformedWith: (parentNode globalTransform inverseTransformTransform: childNode globalTransform)
 ]
 
 { #category : #'as yet unclassified' }

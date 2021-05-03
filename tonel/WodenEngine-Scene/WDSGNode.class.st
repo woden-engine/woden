@@ -17,7 +17,7 @@ Class {
 		'model',
 		'stateChangeListeners',
 		'globalBoundingBox',
-		'globalOrientedBoundingBox'
+		'localBoundingBoxWithChildren'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
@@ -31,8 +31,8 @@ WDSGNode >> addChild: aChild [
 { #category : #adding }
 WDSGNode >> addedToNode: newParentNode [
 	parent := newParentNode.
+	self parentTransformChanged.
 	newParentNode scene ifNotNil: [ self addedToScene: newParentNode scene ].
-
 ]
 
 { #category : #adding }
@@ -67,7 +67,7 @@ WDSGNode >> childTransformChanged: aChild [
 	aChild countedForBoundingBox ifFalse: [ ^ self ].
 	
 	globalBoundingBox := nil.
-	globalOrientedBoundingBox := nil.
+	localBoundingBoxWithChildren := nil.
 	parent ifNotNil: [ parent childTransformChanged: self ].
 ]
 
@@ -176,14 +176,8 @@ WDSGNode >> findChildNodeNamed: childName ifAbsent: aBlock [
 
 { #category : #accessing }
 WDSGNode >> globalBoundingBox [
-	globalBoundingBox ifNil: [ globalBoundingBox := (self globalOrientedBoundingBox transformedWith: self globalTransform) ].
+	globalBoundingBox ifNil: [ globalBoundingBox := (self localBoundingBoxWithChildren transformedWith: self globalTransform) ].
 	^ globalBoundingBox
-]
-
-{ #category : #accessing }
-WDSGNode >> globalOrientedBoundingBox [
-	globalOrientedBoundingBox ifNil: [ globalOrientedBoundingBox := self computeGlobalOrientedBoundingBox ].
-	^ globalOrientedBoundingBox
 ]
 
 { #category : #accessing }
@@ -263,6 +257,12 @@ WDSGNode >> isSpatialObject [
 { #category : #'as yet unclassified' }
 WDSGNode >> localBoundingBox [
 	^ BoxF32 new
+]
+
+{ #category : #accessing }
+WDSGNode >> localBoundingBoxWithChildren [
+	localBoundingBoxWithChildren ifNil: [ localBoundingBoxWithChildren := self computeGlobalOrientedBoundingBox ].
+	^ localBoundingBoxWithChildren
 ]
 
 { #category : #accessing }
@@ -366,6 +366,7 @@ WDSGNode >> removeFromScene [
 WDSGNode >> removedFromNode: oldParentNode [
 	scene ifNotNil: [ self removedFromScene: scene ].
 	parent := nil.
+	self parentTransformChanged.
 ]
 
 { #category : #adding }
@@ -462,7 +463,6 @@ WDSGNode >> transform: aTransform [
 
 { #category : #caching }
 WDSGNode >> transformChanged [
-	self renderingRenderables do: #transformChanged.
 	parent ifNotNil: [ parent childTransformChanged: self ].
 	self parentTransformChanged.
 ]
