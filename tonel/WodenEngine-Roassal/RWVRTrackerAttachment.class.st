@@ -5,7 +5,8 @@ Class {
 		'trackerIndex',
 		'attachmentPointTransform',
 		'attachmentPointInverseTransform',
-		'touch3DCursorVolume'
+		'touch3DCursorVolume',
+		'uiDisplayShape'
 	],
 	#category : #'WodenEngine-Roassal-Interaction'
 }
@@ -36,6 +37,13 @@ RWVRTrackerAttachment >> attachmentPointTransform: anObject [
 	attachmentPointInverseTransform := nil
 ]
 
+{ #category : #'as yet unclassified' }
+RWVRTrackerAttachment >> displayUIWith: aBlock [
+	uiDisplayShape ifNotNil: [ 
+		uiDisplayShape drawWith: aBlock
+	]
+]
+
 { #category : #initialization }
 RWVRTrackerAttachment >> initializeElement: element [
 	element trackerAttachment: self
@@ -62,4 +70,16 @@ RWVRTrackerAttachment >> trackerIndex [
 RWVRTrackerAttachment >> trackerIndex: anObject [
 
 	trackerIndex := anObject
+]
+
+{ #category : #accessing }
+RWVRTrackerAttachment >> uiDisplayShape [
+
+	^ uiDisplayShape
+]
+
+{ #category : #accessing }
+RWVRTrackerAttachment >> uiDisplayShape: anObject [
+
+	uiDisplayShape := anObject
 ]

@@ -142,7 +142,7 @@ RWView >> addTrackedStylusControl [
 
 { #category : #adding }
 RWView >> addTrackedStylusControlAttachedToTrackerWithIndex: trackerIndex [
-	| stylus stylusBbox stylusTipLocation tip stylusController tipShape tipSize |
+	| stylus stylusBbox stylusTipLocation tip stylusController tipShape tipSize uiDisplayShape uiDisplay |
 	stylus := (RWModelShape modelNamed: 'models/vr/stylus.obj') element.
 	stylusBbox := stylus localBoundingBox.
 	tipSize := 0.001.
@@ -153,13 +153,26 @@ RWView >> addTrackedStylusControlAttachedToTrackerWithIndex: trackerIndex [
 		yourself.
 	tip := tipShape element
 		translateTo: stylusTipLocation.
+		
+	uiDisplayShape := RWFormSceneGraphShape new
+		drawWith: [:builder |
+			builder rectangle: builder clippingBounds color: (Color magenta alpha: 0.3)
+		];
+		yourself.
+	uiDisplay := uiDisplayShape element
+		scaleBy: 0.1;
+		rotateDegreesOnY: 90;
+		translateByY: stylusBbox max y;
+		yourself.
 
 	stylusController := RWGroup new
 		addChild: stylus;
+		addChild: uiDisplay;
 		addChild: tip.
 	stylusController attachTrackerAt: (RWVRTrackerAttachment new
 		trackerIndex: trackerIndex;
 		touch3DCursorVolume: (SphereF32 new center: stylusTipLocation; radius: tipSize/2; yourself);
+		uiDisplayShape: uiDisplayShape;
 		attachmentPointTransform:
 		(ReversibleAffineTransform3dF32 identity
 			orthonormal: (Float32x3x3 yRotation: Float pi) * (Float32x3x3 xRotation: Float halfPi);
