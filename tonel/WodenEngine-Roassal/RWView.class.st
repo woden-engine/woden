@@ -156,13 +156,15 @@ RWView >> addTrackedStylusControlAttachedToTrackerWithIndex: trackerIndex [
 		
 	uiDisplayShape := RWFormSceneGraphShape new
 		drawWith: [:builder |
-			builder rectangle: builder clippingBounds color: (Color magenta alpha: 0.3)
+			(builder rectangle: builder clippingBounds color: (Color veryLightGray alpha: 0.3)) ,
+			(builder borderRectangle: builder clippingBounds color: Color black width: 2)
 		];
 		yourself.
 	uiDisplay := uiDisplayShape element
 		scaleBy: 0.1;
-		rotateDegreesOnY: 90;
-		translateByY: stylusBbox max y;
+		rotateByYDegrees: 90;
+		translateByY: stylusBbox max y + 0.05;
+		translateByZ: 0.05;
 		yourself.
 
 	stylusController := RWGroup new
