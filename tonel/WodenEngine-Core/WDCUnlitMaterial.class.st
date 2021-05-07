@@ -10,7 +10,8 @@ Class {
 		'colorTexture',
 		'resourceBindingsAreUpdated',
 		'resourceBinding',
-		'hasPremultipliedAlpha'
+		'hasPremultipliedAlpha',
+		'doubleSided'
 	],
 	#category : #'WodenEngine-Core-Material'
 }
@@ -19,6 +20,10 @@ Class {
 WDCUnlitMaterial >> activateDepthNormalOn: stateTracker [
 	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
 	
+	doubleSided ifTrue: [ 
+		stateTracker materialCullMode: AGPU_CULL_MODE_NONE
+	].
+
 	stateTracker
 		vertexShader: self vertexShader;
 		fragmentShader: engine resourceCache alwaysFrontDepthNormalFragmentShader.
@@ -29,6 +34,10 @@ WDCUnlitMaterial >> activateDepthNormalOn: stateTracker [
 WDCUnlitMaterial >> activateDepthOnlyOn: stateTracker [
 	stateTracker objectDepthWriteMask == false ifTrue: [ ^ false ].
 	
+	doubleSided ifTrue: [ 
+		stateTracker materialCullMode: AGPU_CULL_MODE_NONE
+	].
+
 	stateTracker
 		vertexShader: self vertexShader;
 		fragmentShader: nil.
@@ -38,6 +47,10 @@ WDCUnlitMaterial >> activateDepthOnlyOn: stateTracker [
 { #category : #rendering }
 WDCUnlitMaterial >> activateForwardOn: stateTracker [
 	self validateCache.
+	doubleSided ifTrue: [ 
+		stateTracker materialCullMode: AGPU_CULL_MODE_NONE
+	].
+
 	stateTracker
 		vertexShader: self vertexShader;
 		fragmentShader: self fragmentShader;
@@ -81,6 +94,18 @@ WDCUnlitMaterial >> colorTexture: aTexture [
 ]
 
 { #category : #accessing }
+WDCUnlitMaterial >> doubleSided [
+
+	^ doubleSided
+]
+
+{ #category : #accessing }
+WDCUnlitMaterial >> doubleSided: anObject [
+
+	doubleSided := anObject
+]
+
+{ #category : #accessing }
 WDCUnlitMaterial >> fragmentShader [
 	^ stipple
 		ifTrue: [ self shaderLibrary getFragmentStage: #stipple ]
@@ -114,6 +139,7 @@ WDCUnlitMaterial >> initialize [
 	writeDepth := true.
 	resourceBindingsAreUpdated := false.
 	hasPremultipliedAlpha := false.
+	doubleSided := false.
 ]
 
 { #category : #'as yet unclassified' }
@@ -126,6 +152,7 @@ WDCUnlitMaterial >> parseInFolder: parentFolderFileReference data: aDictionary [
 	useDepth := aDictionary at: #useDepth ifAbsent: [ true ].
 	writeDepth := aDictionary at: #writeDepth ifAbsent: [ true ].
 	stipple := aDictionary at: #stipple ifAbsent: [ false ].
+	doubleSided := aDictionary at: #doubleSided ifAbsent: [ false ].
 	thumbnailType := (aDictionary at: #thumbnailType ifAbsent: [ #color ]) asSymbol.
 ]
 

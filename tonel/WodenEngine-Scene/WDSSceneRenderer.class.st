@@ -186,6 +186,8 @@ WDSSceneRenderer >> renderViewport: renderingViewport index: viewportIndex [
 	renderPass := renderTarget validMainRenderPass.
 	renderPass setColorClearValue: 0 value: renderingViewport scene backgroundColor asFloat32x4 asAGPUColor4f.
 
+	self renderViewportVisibleObjectsDependencies: renderingViewport.
+
 	"Begin rendering into the viewport"
 	stateTracker
 		beginRenderPass: renderPass renderTarget: renderTarget bounds: viewport bounds.
@@ -218,6 +220,13 @@ WDSSceneRenderer >> renderViewportLayer: viewportLayer visibleObjectsWithCameraL
 ]
 
 { #category : #rendering }
+WDSSceneRenderer >> renderViewportLayerVisibleObjectsDependencies: viewportLayer [
+	viewportLayer visibleObjects do: [ :object |
+		object renderRenderPassDependenciesWith: stateTracker.
+	]
+]
+
+{ #category : #rendering }
 WDSSceneRenderer >> renderViewportOverlays: renderingViewport [
 	| viewport |
 	viewport := renderingViewport viewport.
@@ -244,6 +253,19 @@ WDSSceneRenderer >> renderViewportVisibleObjects: renderingViewport [
 	].
 	engine frameRenderingMetrics renderedObjectCount: engine frameRenderingMetrics renderedObjectCount + count.
 	stateTracker clearObjectRenderingStates.
+]
+
+{ #category : #rendering }
+WDSSceneRenderer >> renderViewportVisibleObjectsDependencies: renderingViewport [
+	renderingViewport shouldRenderBackgroundLayer ifTrue: [ 
+		self renderViewportLayerVisibleObjectsDependencies: renderingViewport backgroundLayer
+	].
+
+	self renderViewportLayerVisibleObjectsDependencies: renderingViewport normalLayer.
+	renderingViewport shouldRenderForegroundLayer ifTrue: [ 
+		self renderViewportLayerVisibleObjectsDependencies: renderingViewport foregroundLayer.
+	].
+
 ]
 
 { #category : #rendering }

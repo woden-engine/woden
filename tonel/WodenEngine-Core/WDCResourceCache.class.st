@@ -124,6 +124,22 @@ WDCResourceCache >> billboardQuadMesh [
 			addP: (Float32x3 x: 1.0 y: 1.0) TC: (Float32x2 x: 1.0 y: 0.0);
 			addP: (Float32x3 x: -1.0 y: 1.0) TC: (Float32x2 x: 0.0 y: 0.0);
 			addQuadI1: 1 i2: 2 i3: 3 i4: 4;
+			computeBoundingBox;
+			mesh	
+	]
+]
+
+{ #category : #'special meshes' }
+WDCResourceCache >> billboardUnitQuadMesh [
+	^ self resourceAt: #billboardUnitQuadMesh ifAbsentPut: [
+		(WDCGenericMeshBuilder for: engine)
+			beginTriangles;
+			addP: (Float32x3 x: -0.5 y: -0.5) TC: (Float32x2 x: 0.0 y: 1.0);
+			addP: (Float32x3 x: 0.5 y: -0.5) TC: (Float32x2 x: 1.0 y: 1.0);
+			addP: (Float32x3 x: 0.5 y: 0.5) TC: (Float32x2 x: 1.0 y: 0.0);
+			addP: (Float32x3 x: -0.5 y: 0.5) TC: (Float32x2 x: 0.0 y: 0.0);
+			addQuadI1: 1 i2: 2 i3: 3 i4: 4;
+			computeBoundingBox;
 			mesh	
 	]
 ]

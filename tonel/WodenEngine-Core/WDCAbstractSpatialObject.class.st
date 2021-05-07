@@ -58,6 +58,10 @@ WDCAbstractSpatialObject >> initialize [
 ]
 
 { #category : #rendering }
+WDCAbstractSpatialObject >> renderRenderable: renderable renderPassDependenciesWith: stateTracker [
+]
+
+{ #category : #rendering }
 WDCAbstractSpatialObject >> renderRenderable: renderable with: stateTracker [
 ]
 

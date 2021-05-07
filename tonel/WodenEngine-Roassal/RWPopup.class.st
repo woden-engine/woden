@@ -85,7 +85,12 @@ RWPopup >> initializeElement: anElement [
 			].
 		];
 		when: RWMouseMove do: [ :evt | popupElement view isInVirtualReality ifTrue: [popupElement position: evt position ]];
-		when: RWMouseLeave do: [ :evt | popupElement remove ]
+		when: RWMouseLeave do: [ :evt | popupElement remove ];
+		when: RWTouch3DCursorEnter do: [ :evt |
+			evt device displayUIWith: [ :builder |
+				self buildUISceneGraphWith: builder for: anElement
+			]
+		]
 ]
 
 { #category : #accessing }

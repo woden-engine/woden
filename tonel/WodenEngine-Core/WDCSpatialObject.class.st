@@ -26,6 +26,11 @@ WDCSpatialObject >> createEngineDependantData [
 ]
 
 { #category : #rendering }
+WDCSpatialObject >> renderRenderable: renderable renderPassDependenciesWith: stateTracker [
+	renderable renderRenderPassDependenciesWith: stateTracker
+]
+
+{ #category : #rendering }
 WDCSpatialObject >> renderRenderable: renderable with: stateTracker [
 	stateTracker
 		useShaderResources: self currentObjectStateBinding.

@@ -264,6 +264,8 @@ WDSLightedSceneRenderer >> renderViewport: renderingViewport index: viewportInde
 		viewport overlayRenderer renderViewport: viewport overlayRenderTargetWith: stateTracker 
 	].
 
+	self renderViewportVisibleObjectsDependencies: renderingViewport.
+
 	"First pass: g-buffer rendering. Normal and depth-only rendering."
 	self setupStateTrackerForRenderMode: self gbufferRenderMode.
 	stateTracker

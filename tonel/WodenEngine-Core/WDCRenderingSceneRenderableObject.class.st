@@ -34,6 +34,13 @@ WDCRenderingSceneRenderableObject >> renderPriority [
 ]
 
 { #category : #accessing }
+WDCRenderingSceneRenderableObject >> renderRenderPassDependenciesWith: stateTracker [
+	self validateRenderable.
+	spatialObject renderRenderable: renderable renderPassDependenciesWith: stateTracker
+
+]
+
+{ #category : #accessing }
 WDCRenderingSceneRenderableObject >> renderable [
 	^ renderable
 ]

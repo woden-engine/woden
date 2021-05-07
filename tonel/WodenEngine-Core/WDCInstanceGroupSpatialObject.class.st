@@ -145,6 +145,11 @@ WDCInstanceGroupSpatialObject >> removeChild: aChild [
 ]
 
 { #category : #rendering }
+WDCInstanceGroupSpatialObject >> renderRenderable: renderable renderPassDependenciesWith: stateTracker [
+	renderable renderRenderPassDependenciesWith: stateTracker
+]
+
+{ #category : #rendering }
 WDCInstanceGroupSpatialObject >> renderRenderable: renderable with: stateTracker [
 	stateTracker
 		useShaderResources: self currentObjectStateBinding.

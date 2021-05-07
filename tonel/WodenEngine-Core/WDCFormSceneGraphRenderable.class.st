@@ -32,6 +32,11 @@ WDCFormSceneGraphRenderable class >> logicalHeight [
 	^ 480
 ]
 
+{ #category : #accessing }
+WDCFormSceneGraphRenderable >> boundingBox [
+	^ self mesh boundingBox.
+]
+
 { #category : #'as yet unclassified' }
 WDCFormSceneGraphRenderable >> buildSceneGraphWith: aBlock [
 	self sceneGraph: (aBlock cull: self newSceneGraphBuilder cull: self)
@@ -79,6 +84,7 @@ WDCFormSceneGraphRenderable >> material [
 			useDepth: false;
 			writeDepth: false;
 			hasPremultipliedAlpha: true;
+			doubleSided: true;
 			yourself
 	].
 	^ material
@@ -116,8 +122,14 @@ WDCFormSceneGraphRenderable >> renderDrawingSurfaceContentWithStateTracker: stat
 ]
 
 { #category : #rendering }
-WDCFormSceneGraphRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [ 
+WDCFormSceneGraphRenderable >> renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex [
 	^ self mesh renderOn: stateTracker instanceCount: instanceCount baseInstance: baseInstance baseVertex: baseVertex 
+]
+
+{ #category : #'as yet unclassified' }
+WDCFormSceneGraphRenderable >> renderRenderPassDependenciesWith: stateTracker [
+	super renderRenderPassDependenciesWith: stateTracker.
+	self validateSurfaceContentWithStateTracker: stateTracker
 ]
 
 { #category : #accessing }
@@ -141,6 +153,11 @@ WDCFormSceneGraphRenderable >> sceneGraph [
 WDCFormSceneGraphRenderable >> sceneGraph: anObject [
 	sceneGraph := anObject.
 	hasValidSurfaceContent := false.
+]
+
+{ #category : #accessing }
+WDCFormSceneGraphRenderable >> useUnitBox [
+	mesh := engine resourceCache billboardUnitQuadMesh copyWithMaterial: self material
 ]
 
 { #category : #'as yet unclassified' }
@@ -203,5 +220,5 @@ WDCFormSceneGraphRenderable >> validateSurfaceContentWithStateTracker: stateTrac
 	self
 		validateDrawingSurfaceExtent;
 		renderDrawingSurfaceContentWithStateTracker: stateTracker.
-	hasValidSurfaceContent := false.
+	hasValidSurfaceContent := true.
 ]

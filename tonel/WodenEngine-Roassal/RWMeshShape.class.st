@@ -67,7 +67,7 @@ RWMeshShape >> buildRenderableFor: anElement view: aView [
 
 { #category : #computing }
 RWMeshShape >> depthFor: anElement [
-	^ (super depthFor: anElement) * mesh boundingBox depth
+	^ mesh boundingBox depth
 ]
 
 { #category : #morphic }
@@ -81,7 +81,7 @@ RWMeshShape >> for: aViewOrEngine buildWith: aBlock [
 
 { #category : #computing }
 RWMeshShape >> heightFor: anElement [
-	^ (super heightFor: anElement) * mesh boundingBox height
+	^ mesh boundingBox height
 ]
 
 { #category : #computing }
@@ -109,5 +109,5 @@ RWMeshShape >> rawExtentFor: element [
 
 { #category : #computing }
 RWMeshShape >> widthFor: anElement [
-	^ (super widthFor: anElement) * mesh boundingBox width
+	^ mesh boundingBox width
 ]

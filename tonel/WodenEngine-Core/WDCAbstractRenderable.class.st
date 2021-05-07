@@ -288,6 +288,10 @@ WDCAbstractRenderable >> renderPriority: anObject [
 	renderPriority := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDCAbstractRenderable >> renderRenderPassDependenciesWith: stateTracker [
+]
+
 { #category : #initialization }
 WDCAbstractRenderable >> setFlatColorSubRenderMode [
 	self subRenderMode: WDCStateTrackerSubRenderMode flatColor

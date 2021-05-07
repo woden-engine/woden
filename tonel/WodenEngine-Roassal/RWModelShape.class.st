@@ -30,17 +30,17 @@ RWModelShape >> buildRenderableFor: anElement view: aView [
 
 { #category : #computing }
 RWModelShape >> depthFor: anElement [
-	^ (super depthFor: anElement) * shapeNode localBoundingBox depth
+	^ shapeNode localBoundingBox depth
 ]
 
 { #category : #computing }
 RWModelShape >> heightFor: anElement [
-	^ (super heightFor: anElement) * shapeNode localBoundingBox height
+	^ shapeNode localBoundingBox height
 ]
 
 { #category : #computing }
 RWModelShape >> localCenterFor: anElement [
-	^ (self rawExtentFor: anElement) * self validShapeNode localBoundingBox center
+	^ self validShapeNode localBoundingBox center
 ]
 
 { #category : #accessing }
@@ -61,14 +61,6 @@ RWModelShape >> nodeName [
 { #category : #accessing }
 RWModelShape >> nodeName: anObject [
 	nodeName := anObject
-]
-
-{ #category : #computing }
-RWModelShape >> rawExtentFor: element [
-	^ Float32x3
-		x: (super widthFor: element)
-		y: (super heightFor: element)
-		z: (super depthFor: element)
 ]
 
 { #category : #'as yet unclassified' }
@@ -94,5 +86,5 @@ RWModelShape >> validShapeNode [
 
 { #category : #computing }
 RWModelShape >> widthFor: anElement [
-	^ (super widthFor: anElement) * shapeNode localBoundingBox width
+	^ shapeNode localBoundingBox width
 ]
