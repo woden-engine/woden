@@ -3,15 +3,45 @@ Class {
 	#superclass : #RWAbstractSolidShape,
 	#instVars : [
 		'renderable',
-		'drawBlock'
+		'drawBlock',
+		'backgroundColor',
+		'borderColor'
 	],
 	#category : #'WodenEngine-Roassal-Core'
 }
 
+{ #category : #accessing }
+RWFormSceneGraphShape >> backgroundColor [
+
+	^ backgroundColor
+]
+
+{ #category : #accessing }
+RWFormSceneGraphShape >> backgroundColor: anObject [
+
+	backgroundColor := anObject
+]
+
+{ #category : #accessing }
+RWFormSceneGraphShape >> borderColor [
+
+	^ borderColor
+]
+
+{ #category : #accessing }
+RWFormSceneGraphShape >> borderColor: anObject [
+
+	borderColor := anObject
+]
+
 { #category : #'as yet unclassified' }
 RWFormSceneGraphShape >> buildRenderableFor: anElement view: aView [
 	renderable := WDCFormSceneGraphRenderable for: aView engine.
-	renderable useUnitBox.
+	renderable
+		makeTranslucentSorted;
+		drawingSurfaceExtent: 512@512;
+		scaleFactor: self scaleFactor;
+		useUnitBox.
 	self changed.
 	^ renderable
 ]
@@ -22,7 +52,13 @@ RWFormSceneGraphShape >> changed [
 	renderable ifNil: [ ^ self ].
 	
 	renderable buildSceneGraphWith: [ :builder |
-		drawBlock value: builder
+		(builder withTransform: (FormSGAffineTransform scale: self scaleFactor) build: [
+			| background |
+			background := (builder rectangle: builder clippingBounds color: backgroundColor) ,
+				(builder borderRectangle: builder clippingBounds color: borderColor width: 2).
+
+			background , (drawBlock value: builder).
+		])
 	]
 ]
 
@@ -34,6 +70,18 @@ RWFormSceneGraphShape >> changedElement: element sceneNode: sceneNode renderable
 RWFormSceneGraphShape >> drawWith: aBlock [
 	drawBlock := aBlock.
 	self changed.
+]
+
+{ #category : #initialization }
+RWFormSceneGraphShape >> initialize [
+	super initialize.
+	backgroundColor := Color veryLightGray alpha: 0.3.
+	borderColor := Color black.
+]
+
+{ #category : #accessing }
+RWFormSceneGraphShape >> scaleFactor [
+	^ 2.0
 ]
 
 { #category : #'changing shape' }

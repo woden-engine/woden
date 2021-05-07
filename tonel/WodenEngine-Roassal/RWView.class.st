@@ -156,8 +156,7 @@ RWView >> addTrackedStylusControlAttachedToTrackerWithIndex: trackerIndex [
 		
 	uiDisplayShape := RWFormSceneGraphShape new
 		drawWith: [:builder |
-			(builder rectangle: builder clippingBounds color: (Color veryLightGray alpha: 0.3)) ,
-			(builder borderRectangle: builder clippingBounds color: Color black width: 2)
+			builder null
 		];
 		yourself.
 	uiDisplay := uiDisplayShape element

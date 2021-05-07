@@ -30,7 +30,7 @@ RWPopup >> accept: aVisitor [
 ]
 
 { #category : #hooks }
-RWPopup >> buildUISceneGraphWith: builder for: anElement [
+RWPopup >> buildUISceneGraphWith: builder for: anElement onlyText: onlyText [
 	| textExtent textRectangle backgroundRectangle |
 
 	text := self textFor: anElement.
@@ -38,6 +38,8 @@ RWPopup >> buildUISceneGraphWith: builder for: anElement [
 
 	textRectangle := borderExtent + marginExtent extent: textExtent.
 	backgroundRectangle := 0@0 extent: textExtent + ((borderExtent + marginExtent) * 2).
+	
+	onlyText ifTrue: [ ^ builder string: text in: textRectangle font: font color: color ].
 
 	^ (builder rectangle: backgroundRectangle color: Color white) ,
 	(builder string: text in: textRectangle font: font color: color) ,
@@ -81,14 +83,14 @@ RWPopup >> initializeElement: anElement [
 	anElement
 		when: RWMouseEnter do: [ :evt |
 			popupElement := anElement view createPopupAtViewPosition: evt position drawingWith: [ :builder |
-				self buildUISceneGraphWith: builder for: anElement
+				self buildUISceneGraphWith: builder for: anElement onlyText: false
 			].
 		];
 		when: RWMouseMove do: [ :evt | popupElement view isInVirtualReality ifTrue: [popupElement position: evt position ]];
 		when: RWMouseLeave do: [ :evt | popupElement remove ];
 		when: RWTouch3DCursorEnter do: [ :evt |
 			evt device displayUIWith: [ :builder |
-				self buildUISceneGraphWith: builder for: anElement
+				self buildUISceneGraphWith: builder for: anElement onlyText: true
 			]
 		]
 ]
