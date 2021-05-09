@@ -39,7 +39,7 @@ WDESModelLibraryNodeInstanceComponent >> createCollisionShapeWithConvexCollision
 
 { #category : #accessing }
 WDESModelLibraryNodeInstanceComponent >> createSceneNode [
-	^ self validModelLibrary instanceSceneNodeNamed: modelNodeName
+	^ self validModelLibrary instanceSceneNodeNamed: modelNodeName for: self engine
 ]
 
 { #category : #'as yet unclassified' }

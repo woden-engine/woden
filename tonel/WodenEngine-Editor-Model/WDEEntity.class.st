@@ -15,7 +15,9 @@ Class {
 		'dimensionalityMode',
 		'orientation',
 		'transform',
-		'editorColor'
+		'editorColor',
+		'scale',
+		'decomposedTransform'
 	],
 	#classVars : [
 		'EditorColorPalette',
@@ -25,6 +27,18 @@ Class {
 	],
 	#category : #'WodenEngine-Editor-Model-Level'
 }
+
+{ #category : #'basic entity prototypes' }
+WDEEntity class >> bspBoxPrototype [
+	^ self new
+		makeEntity3D;
+		className: 'Wall';
+		localBoundingBox: BoxF32 unitBox;
+		addComponent: (WDEVisualComponent box: BoxF32 unitBox);
+		addComponent: WDECollisionComponent polyhedronConvexHull;
+		yourself
+
+]
 
 { #category : #'basic entity prototypes' }
 WDEEntity class >> defaultColor [
@@ -38,6 +52,18 @@ WDEEntity class >> directionalLightPrototype [
 		orientation: QuaternionF32 lookAtBottom;
 		addComponent: (WDEVisualComponent directionalLight);
 		yourself
+]
+
+{ #category : #'basic entity prototypes' }
+WDEEntity class >> extrudedRectanglePrototype [
+	^ self new
+		makeEntity2D;
+		className: 'Wall';
+		localBoundingRectangle: RectangleF32 unitRectangle;
+		addComponent: (WDEVisualComponent rectangle: RectangleF32 unitRectangle);
+		addComponent: WDECollisionComponent polygonConvexHull;
+		yourself
+
 ]
 
 { #category : #serialization }
@@ -75,30 +101,6 @@ WDEEntity class >> pointPrototype [
 	^ self new
 		className: #Point;
 		yourself
-]
-
-{ #category : #'basic entity prototypes' }
-WDEEntity class >> solidWall2DPrototype [
-	^ self new
-		makeEntity2D;
-		className: 'Wall';
-		localBoundingRectangle: RectangleF32 unitRectangle;
-		addComponent: (WDEVisualComponent rectangle: RectangleF32 unitRectangle);
-		addComponent: WDECollisionComponent polygonConvexHull;
-		yourself
-
-]
-
-{ #category : #'basic entity prototypes' }
-WDEEntity class >> solidWall3DPrototype [
-	^ self new
-		makeEntity3D;
-		className: 'Wall';
-		localBoundingBox: BoxF32 unitBox;
-		addComponent: (WDEVisualComponent box: BoxF32 unitBox);
-		addComponent: WDECollisionComponent polyhedronConvexHull;
-		yourself
-
 ]
 
 { #category : #'basic entity prototypes' }
@@ -140,8 +142,9 @@ WDEEntity >> buildLevelElementPropertyPageWith: builder [
 	
 	builder
 		stringPropertyNamed: 'Class Name' selector: #className;
-		vector3PropertyNamed: 'Position' selector: #position;
+		vector3PropertyNamed: 'Scale' selector: #scale;
 		quaternionPropertyNamed: 'Orientation' selector: #orientation;
+		vector3PropertyNamed: 'Position' selector: #position;
 		propertyNamed: 'Dimensionality Mode' selector: #dimensionalityMode alternatives: [WDELevelElementDimensionalityMode alternatives];
 		linearColor4PropertyNamed: 'Editor color' selector: #editorColor.
 ]
@@ -238,6 +241,25 @@ WDEEntity >> createSimilarButWithVisualComponent: otherVisualComponent [
 	^ result
 ]
 
+{ #category : #transforming }
+WDEEntity >> decomposedTransform [
+	^ decomposedTransform ifNil: [decomposedTransform := DecomposedTransform3dF32 new
+		scale: self scale;
+		rotation: self orientation;
+		translation: self position;
+		yourself
+	]
+]
+
+{ #category : #accessing }
+WDEEntity >> decomposedTransform: aDecomposedTransform [
+	self
+		scale: aDecomposedTransform scale;
+		orientation: aDecomposedTransform rotation;
+		position: aDecomposedTransform translation
+		
+]
+
 { #category : #initialization }
 WDEEntity >> destroyAnnouncers [
 	super destroyAnnouncers.
@@ -299,6 +321,7 @@ WDEEntity >> initialize [
 	dimensionalityMode := WDELevelElementDimensionalityMode mode3D.
 	position := Float32x3 zeros asValueHolder.
 	orientation := QuaternionF32 identity asValueHolder.
+	scale := Float32x3 ones asValueHolder.
 	localBoundingBox := (BoxF32 point: Float32x3 zeros) asValueHolder.
 	editorColor := Float32x4 ones asValueHolder.
 ]
@@ -372,6 +395,15 @@ WDEEntity >> loadFromJson: jsonData context: context [
 		] ifFalse: [
 			self assert: data size = 3.
 			self position: (Float32x3 loadFromJson: data)
+		]
+	].
+
+	jsonData at: 'scale' ifPresent: [ :data |
+		data size = 2 ifTrue: [
+			self scale: (Float32x3 xy: (Float32x2 loadFromJson: data) z: 1.0)
+		] ifFalse: [
+			self assert: data size = 3.
+			self scale: (Float32x3 loadFromJson: data)
 		]
 	].
 
@@ -560,13 +592,17 @@ WDEEntity >> positionChanged [
 
 { #category : #copying }
 WDEEntity >> postCopy [
-	| oldComponents oldPosition oldLocalBoundingBox oldEditorColor |
+	| oldComponents oldScale oldOrientation oldPosition oldLocalBoundingBox oldEditorColor |
 	super postCopy.
 	parent := nil.
 	oldComponents := components value.
+	oldScale := scale value.
+	oldOrientation := orientation value.
 	oldPosition := position value.
 	oldLocalBoundingBox := localBoundingBox value.
 	oldEditorColor := editorColor value.
+	scale := oldScale asValueHolder.
+	orientation := oldOrientation asValueHolder.
 	position := oldPosition asValueHolder.
 	editorColor := oldEditorColor asValueHolder.
 	localBoundingBox := oldLocalBoundingBox asValueHolder.
@@ -626,6 +662,8 @@ WDEEntity >> restoreMaterialStateMemento: memento [
 { #category : #memento }
 WDEEntity >> restoreTransformStateMemento: memento [
 	| componentMementos |
+	self shouldScaleAndOrientationBeAppliedToTheComponents ifFalse: [ ^ self decomposedTransform: memento ].
+	
 	self assert: memento size = 3.
 	self assert: memento third size = components size.
 	self
@@ -636,6 +674,23 @@ WDEEntity >> restoreTransformStateMemento: memento [
 	components doWithIndex: [ :eachComponent :index |
 		eachComponent restoreTransformStateMemento: (componentMementos at: index)
 	]
+]
+
+{ #category : #accessing }
+WDEEntity >> scale [
+	^ scale value
+]
+
+{ #category : #accessing }
+WDEEntity >> scale: newScale [
+	self scaleChanged.
+	scale value: newScale.
+	self notifyComponentsAboutTransformChange.
+]
+
+{ #category : #private }
+WDEEntity >> scaleChanged [
+	self transformChanged.
 ]
 
 { #category : #'as yet unclassified' }
@@ -649,7 +704,7 @@ WDEEntity >> sectorLayerThicknessChanged [
 
 { #category : #accessing }
 WDEEntity >> selectableBoundingBox [
-	^ selectableBoundingBox ifNil: [ selectableBoundingBox := self localSelectableBoundingBox translatedBy: self validPosition3D ]
+	^ selectableBoundingBox ifNil: [ selectableBoundingBox := self localSelectableBoundingBox transformedWith: self transform ]
 ]
 
 { #category : #accessing }
@@ -662,6 +717,11 @@ WDEEntity >> setMaterial: aMaterial [
 { #category : #serialization }
 WDEEntity >> setupForNewInstance [
 	self generateEditorColor
+]
+
+{ #category : #testing }
+WDEEntity >> shouldScaleAndOrientationBeAppliedToTheComponents [
+	^ components isNotEmpty and: [components allSatisfy: [ :each | each shouldScaleAndOrientationBeAppliedHere ] ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -682,14 +742,12 @@ WDEEntity >> subtract: otherEntity [
 
 { #category : #transforming }
 WDEEntity >> transform [
-	^ transform ifNil: [transform := ReversibleAffineTransform3dF32 new
-		orthonormal: self orientation asFloat32x3x3 translation: self validPosition3D;
-		yourself
-	]
+	^ transform ifNil: [transform := self decomposedTransform asReversibleAffineTransform3d ]
 ]
 
 { #category : #private }
 WDEEntity >> transformChanged [
+	decomposedTransform := nil.
 	transform := nil.
 	selectableBoundingBox := nil.
 	boundingBox := nil.
@@ -697,12 +755,17 @@ WDEEntity >> transformChanged [
 
 { #category : #memento }
 WDEEntity >> transformStateMemento [
+	self shouldScaleAndOrientationBeAppliedToTheComponents ifFalse: [ ^ self decomposedTransform ].
 	^ { self position . self localBoundingBox . components collect: [:each | each transformStateMemento ]}
 ]
 
 { #category : #transforms }
 WDEEntity >> transformWith: transformToApply [
 	| rawPosition oldPosition componentTransform |
+	self shouldScaleAndOrientationBeAppliedToTheComponents ifFalse: [
+		^ self decomposedTransform: (self decomposedTransform transformedWith: transformToApply)
+	].
+
 	rawPosition := self position.
 	oldPosition := self validPosition3D.
 	self position: (transformToApply transformPosition: self validPosition3D).
@@ -794,10 +857,16 @@ WDEEntity >> whenPositionChangedDo: aBlock [
 ]
 
 { #category : #enumerating }
+WDEEntity >> whenScaleChangedDo: aBlock [
+	scale whenChangedDo: aBlock
+]
+
+{ #category : #enumerating }
 WDEEntity >> whenTransformChangedDo: aBlock [
 	| adaptBlock |
 	adaptBlock := [ aBlock cull: self transform ].
 	self
+		whenScaleChangedDo: adaptBlock;
 		whenOrientationChangedDo: adaptBlock;
 		whenPositionChangedDo: adaptBlock
 ]

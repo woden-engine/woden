@@ -118,8 +118,26 @@ WDSSceneAssetModel >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+WDSSceneAssetModel >> instanceMainSceneNodeFor: engine [
+	| rootNodes node |
+	mainScene ifNil: [ ^ nil ].
+	rootNodes := mainScene normalLayer children.
+	rootNodes size = 1 ifTrue: [ ^ rootNodes first copy ].
+	
+	node := WDSGSpatialObject new.
+	rootNodes do: [ :each | node addChild: each copy ].
+	^ node
+]
+
+{ #category : #'as yet unclassified' }
 WDSSceneAssetModel >> instanceSceneNodeNamed: sceneNodeName [
 	^ self instanceSceneNodeNamed: sceneNodeName ifAbsent: [self error: 'Requested scene node is not available in the model.']
+]
+
+{ #category : #'as yet unclassified' }
+WDSSceneAssetModel >> instanceSceneNodeNamed: sceneNodeName for: engine [
+	(sceneNodeName isNil or: [ sceneNodeName isEmpty ]) ifTrue: [ ^ self instanceMainSceneNodeFor: engine ].
+	^ self instanceSceneNodeNamed: sceneNodeName
 ]
 
 { #category : #'as yet unclassified' }

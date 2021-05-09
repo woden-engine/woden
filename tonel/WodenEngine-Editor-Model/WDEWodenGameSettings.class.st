@@ -3,7 +3,8 @@ Class {
 	#superclass : #WDEGameSettings,
 	#instVars : [
 		'materialSearchPaths',
-		'assetSearchPaths'
+		'assetSearchPaths',
+		'modelSearchPaths'
 	],
 	#category : #'WodenEngine-Editor-Model-GameSettings'
 }
@@ -31,9 +32,27 @@ WDEWodenGameSettings >> defaultAssetSearchPaths [
 	^ WDCEngine default assetSearchPaths
 ]
 
+{ #category : #'as yet unclassified' }
+WDEWodenGameSettings >> getOrCreateModelAssetForPath: path engine: engine [
+	| solvedPath |
+	self materialSearchPaths do: [ :searchPath |
+		solvedPath := searchPath resolve: path asFileReference.
+		solvedPath exists ifTrue: [
+			^ engine resourceCache load3DModel: solvedPath
+		]
+	].
+
+	^ super getOrCreateModelAssetForPath: path engine: engine
+]
+
 { #category : #palettes }
 WDEWodenGameSettings >> materialSearchPaths [
 	^ materialSearchPaths ifNil: [ materialSearchPaths := self assetSearchPaths ]
+]
+
+{ #category : #palettes }
+WDEWodenGameSettings >> modelSearchPaths [
+	^ modelSearchPaths ifNil: [ modelSearchPaths := self assetSearchPaths ]
 ]
 
 { #category : #accessing }
@@ -50,6 +69,11 @@ WDEWodenGameSettings >> playLevelInSession: levelEditorSession [
 	universe createSimulationModel
 		openInVR
 		spawnPlayer.
+]
+
+{ #category : #palettes }
+WDEWodenGameSettings >> topLevelModelsCategories [
+	^ self createModelCategoriesFromFilesInFolders: self modelSearchPaths
 ]
 
 { #category : #palettes }

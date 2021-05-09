@@ -10,11 +10,6 @@ WDEVisualComponent3D class >> isAbstract [
 ]
 
 { #category : #testing }
-WDEVisualComponent3D >> canBeSubtracted [
-	^ true
-]
-
-{ #category : #testing }
 WDEVisualComponent3D >> canBeUsedForSubtraction [
 	^ self polyhedronEnclosingPlanes isNotEmpty
 ]

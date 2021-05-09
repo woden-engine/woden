@@ -52,3 +52,8 @@ WDECollisionComponent >> createEntitySystemComponentWithTransform: componentTran
 WDECollisionComponent >> isCollisionComponent [
 	^ true
 ]
+
+{ #category : #asserting }
+WDECollisionComponent >> shouldScaleAndOrientationBeAppliedHere [
+	^ true
+]

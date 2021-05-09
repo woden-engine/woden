@@ -15,6 +15,16 @@ WDCAbstractModel >> createViewer [
 ]
 
 { #category : #'as yet unclassified' }
+WDCAbstractModel >> instanceMainSceneNodeFor: engine [
+	self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+WDCAbstractModel >> instanceSceneNodeNamed: sceneNodeName for: engine [
+	self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
 WDCAbstractModel >> openViewer [
 	^ self createViewer open
 ]

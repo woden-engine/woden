@@ -89,6 +89,11 @@ WDEEntityComponent >> sectorLayerThicknessChanged [
 	super sectorLayerThicknessChanged.
 ]
 
+{ #category : #asserting }
+WDEEntityComponent >> shouldScaleAndOrientationBeAppliedHere [
+	^ false
+]
+
 { #category : #initialization }
 WDEEntityComponent >> whenChangedDo: aBlock [
 	changedEventHolder whenChangedDo: aBlock

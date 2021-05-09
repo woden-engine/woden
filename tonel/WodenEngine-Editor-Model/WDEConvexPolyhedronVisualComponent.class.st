@@ -52,6 +52,11 @@ WDEConvexPolyhedronVisualComponent >> buildWireMeshWith: meshBuilder material: r
 		mesh
 ]
 
+{ #category : #testing }
+WDEConvexPolyhedronVisualComponent >> canBeSubtracted [
+	^ true
+]
+
 { #category : #accessing }
 WDEConvexPolyhedronVisualComponent >> children [
 	^ faces
@@ -313,6 +318,11 @@ WDEConvexPolyhedronVisualComponent >> restoreTransformStateMemento: memento [
 WDEConvexPolyhedronVisualComponent >> setMaterial: newMaterial [
 	faces do: [ :each | each setMaterial: newMaterial ].
 	self changed.
+]
+
+{ #category : #asserting }
+WDEConvexPolyhedronVisualComponent >> shouldScaleAndOrientationBeAppliedHere [
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

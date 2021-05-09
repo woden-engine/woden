@@ -5,19 +5,35 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-WDELevelGenericElementTemplateProvider >> genericCategory [
-	| category |
-	category :=  WDEPaletteCategory new
-		name: 'Basic Entities'.
-		
-	{
-		'Point' . WDEEntity pointPrototype.
-		'Solid Wall 2D' . WDEEntity solidWall2DPrototype.
-		'Solid Wall 3D' . WDEEntity solidWall3DPrototype.
+WDELevelGenericElementTemplateProvider >> bspGeometryCategory [
+	^ self makeCategoryNamed: 'BSP Geometry' withElements: {
+		'Box' . WDEEntity bspBoxPrototype.
+	}
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelGenericElementTemplateProvider >> extrudedGeometry2DCategory [
+	^ self makeCategoryNamed: 'Extruded Geometry 2D' withElements: {
+		'Rectangle' . WDEEntity extrudedRectanglePrototype.
+	}
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelGenericElementTemplateProvider >> lightsCategory [
+	^ self makeCategoryNamed: 'Light Sources' withElements: {
 		'Point Light' . WDEEntity pointLightPrototype.
 		'Spot Light' . WDEEntity spotLightPrototype.
 		'Directional Light' . WDEEntity directionalLightPrototype.
-	} pairsDo: [ :templateName :prototype |
+	}
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelGenericElementTemplateProvider >> makeCategoryNamed: categoryName withElements: elements [
+	| category |
+	category :=  WDEPaletteCategory new
+		name: categoryName.
+		
+	elements pairsDo: [ :templateName :prototype |
 		category addTemplate: (
 		WDELevelElementEntityTemplate new
 			name: templateName;
@@ -31,6 +47,8 @@ WDELevelGenericElementTemplateProvider >> genericCategory [
 { #category : #'as yet unclassified' }
 WDELevelGenericElementTemplateProvider >> topLevelPaletteCategories [
 	^ {
-		self genericCategory
+		self lightsCategory.
+		self extrudedGeometry2DCategory.
+		self bspGeometryCategory.
 	}
 ]

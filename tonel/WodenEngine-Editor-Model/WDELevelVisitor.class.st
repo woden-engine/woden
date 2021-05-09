@@ -30,6 +30,11 @@ WDELevelVisitor >> visitEntity: entity [
 ]
 
 { #category : #visiting }
+WDELevelVisitor >> visitFileReferenceModel: component [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
 WDELevelVisitor >> visitLevel: level [
 	self subclassResponsibility
 ]

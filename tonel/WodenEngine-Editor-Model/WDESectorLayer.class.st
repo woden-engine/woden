@@ -56,7 +56,7 @@ WDESectorLayer >> createPointEntity: entityClassName at: entityLocation [
 
 { #category : #'as yet unclassified' }
 WDESectorLayer >> createSolidEntity: entityClassName box: entityLocation [
-	^ self instanceEntityPrototype: WDEEntity solidWall3DPrototype withClassName: entityClassName andPlaceInBox: entityLocation
+	^ self instanceEntityPrototype: WDEEntity bspBoxPrototype withClassName: entityClassName andPlaceInBox: entityLocation
 ]
 
 { #category : #'as yet unclassified' }
@@ -68,7 +68,7 @@ WDESectorLayer >> createSolidEntity: entityClassName box: entityLocation materia
 
 { #category : #'as yet unclassified' }
 WDESectorLayer >> createSolidEntity: entityClassName rectangle: entityLocation [
-	^ self instanceEntityPrototype: WDEEntity solidWall2DPrototype withClassName: entityClassName andPlaceInRectangle: entityLocation
+	^ self instanceEntityPrototype: WDEEntity extrudedRectanglePrototype withClassName: entityClassName andPlaceInRectangle: entityLocation
 ]
 
 { #category : #'as yet unclassified' }

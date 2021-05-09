@@ -25,19 +25,33 @@ WDEGameSettings class >> isAbstract [
 ]
 
 { #category : #'as yet unclassified' }
-WDEGameSettings >> createMaterialCategoriesFromFilesInFolders: folders [
-	| topLevelCategory |
-	topLevelCategory := WDEPaletteCategory new name: self name , ' Assets'.
-	folders select: [ :eachFolder | eachFolder exists ] thenDo: [ :eachFolder |
+WDEGameSettings >> createMaterialCategoriesFromFilesInFolders: searchFolders [
+	^ self createPaletteCategory: self name , ' Materials' forFilesWithExtensions: self materialExtensions inFolders: searchFolders with: [:materialPath |
+		(WDEMaterialPaletteElement referencePath: materialPath fullName)
+			name: materialPath basenameWithoutExtension
+	]
+]
+
+{ #category : #'as yet unclassified' }
+WDEGameSettings >> createModelCategoriesFromFilesInFolders: searchFolders [
+	^ self createPaletteCategory: self name , ' Models' forFilesWithExtensions: self modelExtensions inFolders: searchFolders with: [:modelPath |
+		(WDEModelPaletteElement referencePath: modelPath fullName)
+			name: modelPath basenameWithoutExtension
+	]
+]
+
+{ #category : #'as yet unclassified' }
+WDEGameSettings >> createPaletteCategory: categoryName forFilesWithExtensions: extensions inFolders: searchFolders with: paletteElementCreationBlock [
+		| topLevelCategory |
+	topLevelCategory := WDEPaletteCategory new name: categoryName.
+	searchFolders select: [ :eachFolder | eachFolder exists ] thenDo: [ :eachFolder |
 		eachFolder allChildren do: [ :eachChild |
-			(eachChild isFile and: [#(wmat wtmat ) includes: eachChild extension]) ifTrue: [
-				| categoryPath category materialPath |
+			(eachChild isFile and: [extensions includes: eachChild extension]) ifTrue: [
+				| categoryPath category assetPath |
 				categoryPath := eachChild parent relativeTo: eachFolder.
 				category := topLevelCategory getOrCreateSubcategoryWithPath: categoryPath.
-				materialPath := (eachChild relativeTo: eachFolder) fullName.
-				category addTemplate: 
-					((WDEMaterialPaletteElement referencePath: materialPath)
-						name: eachChild basenameWithoutExtension)
+				assetPath := eachChild relativeTo: eachFolder.
+				category addTemplate: (paletteElementCreationBlock value: assetPath)
 			]
 		]
 	].
@@ -61,6 +75,11 @@ WDEGameSettings >> fetchEntityDescriptions [
 ]
 
 { #category : #'as yet unclassified' }
+WDEGameSettings >> getOrCreateModelAssetForPath: path engine: engine [
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 WDEGameSettings >> makeThumbnailForMaterialWithPath: path engine: engine [
 	| thumbnailValue |
 	thumbnailValue := (self createRenderingMaterialForPath: path engine: engine) thumbnail value.
@@ -78,6 +97,16 @@ WDEGameSettings >> makeThumbnailForMaterialWithPath: path engine: engine [
 
 ]
 
+{ #category : #'as yet unclassified' }
+WDEGameSettings >> materialExtensions [
+	^ #(wmat wtmat )
+]
+
+{ #category : #'as yet unclassified' }
+WDEGameSettings >> modelExtensions [
+	^ #(obj gltf glb)
+]
+
 { #category : #accessing }
 WDEGameSettings >> name [
 	^ self subclassResponsibility
@@ -90,7 +119,7 @@ WDEGameSettings >> playLevelInSession: levelEditorSession [
 
 { #category : #palettes }
 WDEGameSettings >> topLevelElementTemplateCategories [
-	^ self topLevelEntityCategories
+	^ self topLevelModelsCategories , self topLevelEntityCategories
 ]
 
 { #category : #palettes }
@@ -98,6 +127,11 @@ WDEGameSettings >> topLevelEntityCategories [
 	| category |
 	category := self entityDescriptions makeEntityTemplateCategoryNamed: self name , ' Entities'.
 	^ category isEmpty ifTrue: [ #() ] ifFalse: [ { category } ]
+]
+
+{ #category : #palettes }
+WDEGameSettings >> topLevelModelsCategories [
+	^ #()
 ]
 
 { #category : #palettes }

@@ -144,6 +144,24 @@ WDELevelEditorElementSceneNodeBuilder >> visitEntity: entity [
 ]
 
 { #category : #'visual components' }
+WDELevelEditorElementSceneNodeBuilder >> visitFileReferenceModel: component [
+	| node oldNode |
+	node := WDSGSpatialObject new.
+	oldNode := nil.
+	component whenChangedDoNow: [
+		| newNode|
+		newNode := component getOrCreateModelNodeFor: self engine levelEditorSession: self levelEditorSession.
+		oldNode ifNotNil: [ oldNode removeFromParent ].
+		newNode ifNotNil: [ 
+			node addChild: newNode.
+		].
+		oldNode := newNode.
+	].
+
+	^ node
+]
+
+{ #category : #'visual components' }
 WDELevelEditorElementSceneNodeBuilder >> visitGeneratedMeshVisualComponent: component [
 	| node |
 	node := WDSGSpatialObject new.

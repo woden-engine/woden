@@ -82,7 +82,7 @@ WDELevelEditor3DBoxCornerHandle >> initialize [
 
 { #category : #'element manipulation' }
 WDELevelEditor3DBoxCornerHandle >> manipulatedBoxCornerAxis [
-	^ (self position - self parent boundingBox center) sign.
+	^ (self position - self parent boundingBox center roundTo: 0.00001) sign.
 ]
 
 { #category : #memento }
@@ -116,11 +116,11 @@ WDELevelEditor3DBoxCornerHandle >> updateForViewCamera: view [
 		self visible: true.
 	] ifFalse: [
 		view hasFreeEditorViewType ifTrue: [
-			self visible: true		
+			self visible: true
 		] ifFalse: [
 			| viewCorner |
 			viewCorner := self manipulatedBoxCornerAxis * view validCameraOrientation.
-			self visible: (viewCorner z closeTo: 0.0)
+			self visible: viewCorner z = 0
 		].
 	]
 

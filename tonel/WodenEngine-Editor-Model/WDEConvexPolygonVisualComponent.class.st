@@ -300,6 +300,11 @@ WDEConvexPolygonVisualComponent >> setMaterial: newMaterial [
 	sideFaceAttributes setMaterial: newMaterial.
 ]
 
+{ #category : #asserting }
+WDEConvexPolygonVisualComponent >> shouldScaleAndOrientationBeAppliedHere [
+	^ true
+]
+
 { #category : #accessing }
 WDEConvexPolygonVisualComponent >> sideFaceAttributes [
 

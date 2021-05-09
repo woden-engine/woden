@@ -104,6 +104,18 @@ WDCSimpleModel >> indices: anObject [
 	indices := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+WDCSimpleModel >> instanceMainSceneNodeFor: engine [
+	^ WDSGSpatialObject new
+		renderable: (self meshFor: engine);
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
+WDCSimpleModel >> instanceSceneNodeNamed: sceneNodeName for: engine [
+	^ self instanceMainSceneNodeFor: engine
+]
+
 { #category : #modifiers }
 WDCSimpleModel >> mapMaterials: aDictionary [
 	submeshes do: [ :submesh | submesh material: (aDictionary at: submesh material) ]
