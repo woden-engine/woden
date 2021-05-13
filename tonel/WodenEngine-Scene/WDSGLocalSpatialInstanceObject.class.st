@@ -9,7 +9,9 @@ Class {
 
 { #category : #'rendering phases' }
 WDSGLocalSpatialInstanceObject >> bakeLazyObjectStates [
-	objectState transform: self instanceTransform
+	objectState 
+		transform: self instanceTransform;
+		visible: self visible
 ]
 
 { #category : #'as yet unclassified' }
@@ -19,6 +21,10 @@ WDSGLocalSpatialInstanceObject >> exportNodeElementsWith: exporter [
 		transform: self instanceTransform;
 		renderable: parent renderable
 	
+]
+
+{ #category : #caching }
+WDSGLocalSpatialInstanceObject >> globalIsVisibleValidated [
 ]
 
 { #category : #caching }

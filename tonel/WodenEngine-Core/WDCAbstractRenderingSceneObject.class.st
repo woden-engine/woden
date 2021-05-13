@@ -96,5 +96,5 @@ WDCAbstractRenderingSceneObject >> updateGpuStateForFrame: frameIndex camera: ca
 
 { #category : #accessing }
 WDCAbstractRenderingSceneObject >> visible [
-	^ node visible
+	^ spatialObject visible
 ]

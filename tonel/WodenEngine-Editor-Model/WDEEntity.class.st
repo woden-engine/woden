@@ -17,7 +17,8 @@ Class {
 		'transform',
 		'editorColor',
 		'scale',
-		'decomposedTransform'
+		'decomposedTransform',
+		'decomposedTransformIn3D'
 	],
 	#classVars : [
 		'EditorColorPalette',
@@ -258,6 +259,16 @@ WDEEntity >> decomposedTransform: aDecomposedTransform [
 		orientation: aDecomposedTransform rotation;
 		position: aDecomposedTransform translation
 		
+]
+
+{ #category : #transforming }
+WDEEntity >> decomposedTransformIn3D [
+	^ decomposedTransformIn3D ifNil: [decomposedTransformIn3D := DecomposedTransform3dF32 new
+		scale: self scale;
+		rotation: self orientation;
+		translation: self validPosition3D;
+		yourself
+	]
 ]
 
 { #category : #initialization }
@@ -742,12 +753,13 @@ WDEEntity >> subtract: otherEntity [
 
 { #category : #transforming }
 WDEEntity >> transform [
-	^ transform ifNil: [transform := self decomposedTransform asReversibleAffineTransform3d ]
+	^ transform ifNil: [transform := self decomposedTransformIn3D asReversibleAffineTransform3d ]
 ]
 
 { #category : #private }
 WDEEntity >> transformChanged [
 	decomposedTransform := nil.
+	decomposedTransformIn3D := nil.
 	transform := nil.
 	selectableBoundingBox := nil.
 	boundingBox := nil.

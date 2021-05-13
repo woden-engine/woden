@@ -133,6 +133,7 @@ WDELevelEditorElementSceneNodeBuilder >> visitEntity: entity [
 	entity whenTransformChangedDo: [ :newTransform | node transform: newTransform ].
 
 	editorSceneModel mapLevelElement: entity toSceneNode: node.
+	entity whenVisibleInEditorChanged: [ :value | node visible: value ].
 	entity components do: [ :each |
 		(self visitLevelElement: each) ifNotNil: [:childNode |
 			node addChild: childNode
@@ -244,6 +245,7 @@ WDELevelEditorElementSceneNodeBuilder >> visitSector: sector [
 	| node |
 	node := WDSGSpatialObject new.
 	editorSceneModel mapLevelElement: sector toSceneNode: node.
+	sector whenVisibleInEditorChanged: [ :value | node visible: value ].
 	sector layers do: [ :each |
 		(self visitLevelElement: each) ifNotNil: [:childNode |
 			node addChild: childNode
@@ -257,6 +259,7 @@ WDELevelEditorElementSceneNodeBuilder >> visitSectorLayer: sectorLayer [
 	| node |
 	node := WDSGSpatialObject new.
 	editorSceneModel mapLevelElement: sectorLayer toSceneNode: node.
+	sectorLayer whenVisibleInEditorChanged: [ :value | node visible: value ].
 	sectorLayer entities do: [ :each |
 		(self visitLevelElement: each) ifNotNil: [:childNode |
 			node addChild: childNode

@@ -346,6 +346,10 @@ WDELevelEditorSceneModel >> levelEditorSession: anObject [
 		whenSelectionChangedDo: [ :newSelection | self applyNewSelection: newSelection ];
 		whenStartingToPlaceDuplicatedItemsDo: [ :duplicatedItems :oldSelection |
 			self startPlacingDuplicatedElements: duplicatedItems oldSelection: oldSelection
+		];
+		whenGridSizeChangedDo: [
+			self changed.
+			views do: [ :each | each cameraChanged ]
 		].
 	self levelChanged.
 ]

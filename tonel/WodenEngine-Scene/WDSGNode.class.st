@@ -17,7 +17,8 @@ Class {
 		'model',
 		'stateChangeListeners',
 		'globalBoundingBox',
-		'localBoundingBoxWithChildren'
+		'localBoundingBoxWithChildren',
+		'globalIsVisible'
 	],
 	#category : #'WodenEngine-Scene-Graph'
 }
@@ -181,6 +182,20 @@ WDSGNode >> globalBoundingBox [
 ]
 
 { #category : #accessing }
+WDSGNode >> globalIsVisible [
+	globalIsVisible ifNil: [ 
+		globalIsVisible := visible.
+		parent ifNotNil: [ globalIsVisible := globalIsVisible and: [parent globalIsVisible] ].
+		self globalIsVisibleValidated.
+	].
+	^ globalIsVisible
+]
+
+{ #category : #caching }
+WDSGNode >> globalIsVisibleValidated [
+]
+
+{ #category : #accessing }
 WDSGNode >> globalTransform [
 	globalTransform ifNil: [
 		globalTransform := self computeGlobalTransform.
@@ -308,8 +323,16 @@ WDSGNode >> parentTransformChanged [
 	self stateChanged.
 	globalTransform := nil.
 	globalBoundingBox := nil.
-	self renderingRenderables do: #transformChanged.
+	self renderingRenderables do: [:each | each transformChanged ].
 	children do: [ :child | child parentTransformChanged ].
+
+]
+
+{ #category : #caching }
+WDSGNode >> parentVisibleChanged [
+	self stateChanged.
+	globalIsVisible := nil.
+	children do: [ :child | child parentVisibleChanged ].
 
 ]
 
@@ -485,6 +508,15 @@ WDSGNode >> visible [
 ]
 
 { #category : #accessing }
-WDSGNode >> visible: anObject [
-	visible := anObject
+WDSGNode >> visible: aBoolean [
+	visible == aBoolean ifFalse: [ 
+		visible := aBoolean.
+		self visibleChanged
+	].
+
+]
+
+{ #category : #caching }
+WDSGNode >> visibleChanged [
+	self parentVisibleChanged.
 ]

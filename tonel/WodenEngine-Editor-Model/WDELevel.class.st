@@ -67,6 +67,16 @@ WDELevel >> allEntitiesDo: aBlock [
 
 ]
 
+{ #category : #'ray casting' }
+WDELevel >> allVisibleEntitiesDo: aBlock [
+	self sectors select: [:each | each visibleInEditor ] thenDo: [ :eachSector |
+		eachSector layers select: [:each | each visibleInEditor ] thenDo: [ :eachLayer |
+			eachLayer entities select: [:each | each visibleInEditor ] thenDo: aBlock
+		].
+	].
+
+]
+
 { #category : #'as yet unclassified' }
 WDELevel >> announceAddedElement: anElement [
 	announcer announce: (WDEAddedElementAnnouncement new element: anElement)
@@ -91,7 +101,7 @@ WDELevel >> children [
 WDELevel >> elementsInFrustum: frustum [
 	| result |
 	result := OrderedCollection new.
-	self allEntitiesDo: [ :eachEntity |
+	self allVisibleEntitiesDo: [ :eachEntity |
 		(eachEntity intersectsFrustum: frustum) ifTrue: [
 			result add: eachEntity
 		]
@@ -217,7 +227,7 @@ WDELevel >> newEditorSession [
 WDELevel >> rayCast: ray [
 	| bestResult |
 	bestResult := nil.
-	self allEntitiesDo: [ :eachEntity |
+	self allVisibleEntitiesDo: [ :eachEntity |
 		| newResult |
 		newResult := eachEntity rayCast: ray.
 		newResult ifNotNil: [
@@ -233,7 +243,7 @@ WDELevel >> rayCast: ray [
 WDELevel >> rayCastAllAlong: ray [
 	| result |
 	result := OrderedCollection new.
-	self allEntitiesDo: [ :eachEntity |
+	self allVisibleEntitiesDo: [ :eachEntity |
 		result addAll: (eachEntity rayCastAllAlong: ray).
 	].
 

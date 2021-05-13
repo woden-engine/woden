@@ -484,6 +484,11 @@ WDELevelEditor >> initializePresenters [
 			addColumn: (SpStringTableColumn evaluated: [ :node | node treeDisplayName ]);
 			yourself
 		);
+		addColumn: ((SpCheckBoxTableColumn title: 'Visible' evaluated: [ :node | node visibleInEditor ])
+			onActivation: [ :node | node visibleInEditor: true ];
+			onDeactivation: [ :node | node visibleInEditor: false ];
+			yourself
+		);
 		hideColumnHeaders;
 		children: [ :node | node children ];
 		beMultipleSelection;

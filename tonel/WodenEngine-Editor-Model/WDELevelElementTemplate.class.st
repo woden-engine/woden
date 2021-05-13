@@ -9,6 +9,11 @@ WDELevelElementTemplate >> activateInLevelSession: levelSession [
 	levelSession activeLevelElementTemplate: self
 ]
 
+{ #category : #testing }
+WDELevelElementTemplate >> canBePlacedInLevel [
+	^ true
+]
+
 { #category : #'as yet unclassified' }
 WDELevelElementTemplate >> instantiateInSectorLayer: sectorLayer placingInBox: box session: levelEditorSession [
 ]

@@ -95,10 +95,10 @@ WDCAbstractSpatialObject >> updateGpuStateForFrame: frameIndex camera: camera [
 
 { #category : #accessing }
 WDCAbstractSpatialObject >> visible [
-	^ state visible
+	^ state visible ~~ 0
 ]
 
 { #category : #accessing }
 WDCAbstractSpatialObject >> visible: aBoolean [
-	state visible: aBoolean
+	state visible: aBoolean asBit
 ]

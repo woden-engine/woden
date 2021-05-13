@@ -51,6 +51,11 @@ WDELevelEditorViewMode >> engine [
 	^ view engine
 ]
 
+{ #category : #testing }
+WDELevelEditorViewMode >> isPlacementMode [
+	^ false
+]
+
 { #category : #accessing }
 WDELevelEditorViewMode >> level [
 	^ self model level

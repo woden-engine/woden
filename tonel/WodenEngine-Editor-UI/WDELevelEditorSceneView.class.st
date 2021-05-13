@@ -192,6 +192,13 @@ WDELevelEditorSceneView >> computeScreenDistanceForPoint: aPoint [
 	^ (self camera globalTransform inverseTransformPosition: aPoint) z negated
 ]
 
+{ #category : #'editor modes' }
+WDELevelEditorSceneView >> deactivatePlacementMode [
+	self activeEditionMode isPlacementMode ifTrue: [ 
+		self activateObjectMode
+	].
+]
+
 { #category : #'coordinate systems' }
 WDELevelEditorSceneView >> depthAtCameraDistance: distance [
 	^ isPerspective
@@ -319,7 +326,12 @@ WDELevelEditorSceneView >> levelEditorSession [
 
 { #category : #'as yet unclassified' }
 WDELevelEditorSceneView >> levelElementTemplateSelected: template [
-	self activatePlacementMode
+	(template isNotNil and: [template canBePlacedInLevel]) ifTrue: [
+		self activatePlacementMode
+	] ifFalse: [
+		self deactivatePlacementMode
+	]
+
 ]
 
 { #category : #visiting }

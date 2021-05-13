@@ -9,6 +9,11 @@ WDELevelEditorViewPlacementMode >> cancelAction [
 	view activateObjectMode
 ]
 
+{ #category : #testing }
+WDELevelEditorViewPlacementMode >> isPlacementMode [
+	^ true
+]
+
 { #category : #'as yet unclassified' }
 WDELevelEditorViewPlacementMode >> modeName [
 	^ 'Placement Mode'

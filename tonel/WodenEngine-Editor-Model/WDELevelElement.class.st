@@ -2,7 +2,8 @@ Class {
 	#name : #WDELevelElement,
 	#superclass : #Object,
 	#instVars : [
-		'name'
+		'name',
+		'visibleInEditor'
 	],
 	#classVars : [
 		'Epsilon',
@@ -102,6 +103,7 @@ WDELevelElement >> encodeJsonKeyValues [
 	^ {
 		#type . self class jsonTypeName.
 		#name . self name.
+		#visibleInEditor . self visibleInEditor.
 	}
 ]
 
@@ -118,6 +120,7 @@ WDELevelElement >> gameSettings [
 { #category : #initialization }
 WDELevelElement >> initialize [
 	super initialize.
+	visibleInEditor := true asValueHolder.
 ]
 
 { #category : #'ray casting' }
@@ -258,6 +261,7 @@ WDELevelElement >> level [
 { #category : #serialization }
 WDELevelElement >> loadFromJson: jsonData context: context [
 	name := jsonData at: 'name' ifAbsent: [ '' ].
+	self visibleInEditor: (jsonData at: #visibleInEditor ifAbsent: [self visibleInEditor])
 ]
 
 { #category : #memento }
@@ -288,6 +292,12 @@ WDELevelElement >> position [
 { #category : #accessing }
 WDELevelElement >> position: aPosition [
 	"By default do nothing"
+]
+
+{ #category : #copying }
+WDELevelElement >> postCopy [
+	super postCopy.
+	visibleInEditor := visibleInEditor value asValueHolder.
 ]
 
 { #category : #accessing }
@@ -386,4 +396,19 @@ WDELevelElement >> treeDisplayName [
 { #category : #'as yet unclassified' }
 WDELevelElement >> validateMaterialList [
 	"By default do nothing"
+]
+
+{ #category : #accessing }
+WDELevelElement >> visibleInEditor [
+	^ visibleInEditor value
+]
+
+{ #category : #accessing }
+WDELevelElement >> visibleInEditor: aBoolean [
+	visibleInEditor value: aBoolean
+]
+
+{ #category : #'as yet unclassified' }
+WDELevelElement >> whenVisibleInEditorChanged: aBlock [
+	visibleInEditor whenChangedDo: aBlock
 ]

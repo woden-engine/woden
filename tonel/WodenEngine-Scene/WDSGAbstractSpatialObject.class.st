@@ -18,7 +18,9 @@ WDSGAbstractSpatialObject >> addedToScene: aScene [
 
 { #category : #'rendering phases' }
 WDSGAbstractSpatialObject >> bakeLazyObjectStates [
-	objectState transform: self globalTransform
+	objectState
+		transform: self globalTransform;
+		visible: self globalIsVisible.
 ]
 
 { #category : #accessing }
@@ -35,6 +37,11 @@ WDSGAbstractSpatialObject >> color: aColor [
 { #category : #initialization }
 WDSGAbstractSpatialObject >> createSpatialObjectState [
 	self subclassResponsibility
+]
+
+{ #category : #caching }
+WDSGAbstractSpatialObject >> globalIsVisibleValidated [
+	objectState visible: globalIsVisible
 ]
 
 { #category : #caching }
@@ -73,14 +80,4 @@ WDSGAbstractSpatialObject >> stateChanged [
 	super stateChanged.
 	objectState changed.
 	scene ifNotNil: [ scene addNodeWithPendingState: self ].
-]
-
-{ #category : #'as yet unclassified' }
-WDSGAbstractSpatialObject >> visible: aBoolean [
-	super visible: aBoolean.
-	objectState visible = aBoolean asBit ifFalse: [ 
-		objectState visible: aBoolean asBit.
-		self stateChanged.
-	].
-
 ]
