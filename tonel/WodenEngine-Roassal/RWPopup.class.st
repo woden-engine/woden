@@ -13,7 +13,7 @@ v open
 "
 Class {
 	#name : #RWPopup,
-	#superclass : #RWElementInteraction,
+	#superclass : #RWAbstractPopup,
 	#instVars : [
 		'text',
 		'color',
@@ -30,7 +30,7 @@ RWPopup >> accept: aVisitor [
 ]
 
 { #category : #hooks }
-RWPopup >> buildUISceneGraphWith: builder for: anElement onlyText: onlyText [
+RWPopup >> buildUISceneGraphWith: builder for: anElement in3DBillboard: in3DBillboard [
 	| textExtent textRectangle backgroundRectangle |
 
 	text := self textFor: anElement.
@@ -39,7 +39,7 @@ RWPopup >> buildUISceneGraphWith: builder for: anElement onlyText: onlyText [
 	textRectangle := borderExtent + marginExtent extent: textExtent.
 	backgroundRectangle := 0@0 extent: textExtent + ((borderExtent + marginExtent) * 2).
 	
-	onlyText ifTrue: [ ^ builder string: text in: textRectangle font: font color: color ].
+	in3DBillboard ifTrue: [ ^ builder string: text in: textRectangle font: font color: color ].
 
 	^ (builder rectangle: backgroundRectangle color: Color white) ,
 	(builder string: text in: textRectangle font: font color: color) ,
@@ -74,25 +74,6 @@ RWPopup >> initialize [
 	borderExtent := 2@2.
 	marginExtent := 4@4.
 
-]
-
-{ #category : #hooks }
-RWPopup >> initializeElement: anElement [
-	| popupElement |
-	popupElement := nil.
-	anElement
-		when: RWMouseEnter do: [ :evt |
-			popupElement := anElement view createPopupAtViewPosition: evt position drawingWith: [ :builder |
-				self buildUISceneGraphWith: builder for: anElement onlyText: false
-			].
-		];
-		when: RWMouseMove do: [ :evt | popupElement view isInVirtualReality ifTrue: [popupElement position: evt position ]];
-		when: RWMouseLeave do: [ :evt | popupElement remove ];
-		when: RWTouch3DCursorEnter do: [ :evt |
-			evt device displayUIWith: [ :builder |
-				self buildUISceneGraphWith: builder for: anElement onlyText: true
-			]
-		]
 ]
 
 { #category : #accessing }

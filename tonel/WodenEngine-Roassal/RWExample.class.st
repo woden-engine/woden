@@ -121,6 +121,67 @@ RWExample class >> classBars2 [
 ]
 
 { #category : #'as yet unclassified' }
+RWExample class >> classBars3 [
+	<script: 'self classBars3 openInVR'>
+	| shape classElements boundingBox base visualization trackedVisualization |
+	shape := RWCube new height: [ :cls | cls numberOfMethods sqrt + 0.1 ].
+	classElements := shape elementsOn: Collection withAllSubclasses.
+	classElements do: [ :each |
+		each
+			addInteraction: RWHighlightable;
+			addInteraction: (RWRoassal3Popup with: [:canvas :clsMethod |
+				| elements |
+				elements := clsMethod model methods collect: [ :method | RSBox new
+					size: method linesOfCode;
+					model: method ] as: RSGroup.
+				elements @ RSPopup.
+				
+				canvas addAll: elements.	
+				RSGridLayout on: elements
+			]) 
+	].
+
+	RWXZGridLayout on: classElements.
+	RWAlign elements: classElements abovePoint: Float32x3 zeros.
+
+	boundingBox := RWBoundingBox for: classElements.
+	base := (RWCube new
+		width: boundingBox width + 1.0;
+		depth: boundingBox depth + 1.0;
+		height: 1.0;
+		element)
+			translateToY: -0.5;
+			yourself.
+	visualization := RWGroup new
+		addAll: classElements;
+		addChild: base;
+		yourself.
+		
+	classElements do: [ :el |
+		(visualization elementFromModel: el model superclass) ifNotNil: [ :parentElement |
+			visualization addChild: (RWLine blue edgeFrom: el topAnchorPoint to: parentElement topAnchorPoint )
+		]
+	].
+
+	visualization scaleBy: 0.01.
+		
+	trackedVisualization := RWGroup new
+		addChild: visualization;
+		attachTrackerAt: (RWVRTrackerAttachment new
+			attachmentPointTransform: (ReversibleAffineTransform3dF32 new
+				lookAtRight;
+				yourself)
+			);
+		
+		"Initial position in case we do not have a tracker."
+		translateByY: 1.0;
+		translateByZ: -0.5;
+		yourself.
+	^ trackedVisualization
+		makeDefaultView	
+]
+
+{ #category : #'as yet unclassified' }
 RWExample class >> clickAddAbove [
 	<script: 'self clickAddAbove openInVR'>
 	| v e cube position action |
