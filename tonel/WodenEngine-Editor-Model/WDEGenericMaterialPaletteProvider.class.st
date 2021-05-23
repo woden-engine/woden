@@ -18,7 +18,7 @@ WDEGenericMaterialPaletteProvider >> basicDielectrics [
 		'Blue' . WDEMaterialPaletteElement dielectricBaseColor: (Color r: 0.05 g: 0.05 b: 0.8) roughness: 0.6.
 		'Yellow' . WDEMaterialPaletteElement dielectricBaseColor: (Color r: 0.8 g: 0.8 b: 0.05) roughness: 0.6.
 		'Cyan' . WDEMaterialPaletteElement dielectricBaseColor: (Color r: 0.05 g: 0.8 b: 0.8) roughness: 0.6.
-		'Magenta' . WDEMaterialPaletteElement dielectricBaseColor: (Color r: 0.05 g: 0.05 b: 0.8) roughness: 0.6.
+		'Magenta' . WDEMaterialPaletteElement dielectricBaseColor: (Color r: 0.8 g: 0.05 b: 0.8) roughness: 0.6.
 		'Black' . WDEMaterialPaletteElement dielectricBaseColor: (Color r: 0.05 g: 0.05 b: 0.05) roughness: 0.6.
 	} pairsDo: [ :templateName :element |
 		element name: templateName.
