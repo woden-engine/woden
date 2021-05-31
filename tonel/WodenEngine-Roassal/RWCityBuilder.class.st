@@ -4,6 +4,41 @@ Class {
 	#category : #'WodenEngine-Roassal-Builder-CityBuilder'
 }
 
+{ #category : #examples }
+RWCityBuilder class >> buildRoassal3VisualizationForClass: classElement in: canvas [
+	| elements title |
+	elements := classElement model methods collect: [ :method | RSBox new
+			width: 100;
+			height: (method linesOfCode max: 1)*10;
+			color: ((Color r: 0.2 g: 0.8 b: 0.2) interpolateTo: (Color r: 0.8 g: 0.0 b: 0.2) at: method linesOfCode / 100.0);
+			model: method;
+			yourself].
+	elements sort: [ :a :b | a model linesOfCode <= b model linesOfCode ].
+	RSGridLayout on: elements.
+
+	canvas addAll: elements.
+
+	elements do: [ :box |
+		|label |
+		label := RSLabel new
+			color: Color black;
+			text: box model name.
+		canvas add: label.
+		RSLocation new center; stick: label on: box.
+	].
+
+	title := RSLabel new
+		fontSize: 20;
+		color: Color black;
+		text: 'Array';
+		yourself.
+	canvas add: title.
+	RSLocation new above; stick: title on: (elements as: RSGroup).
+
+	canvas @ RSCanvasController.
+
+]
+
 { #category : #defaults }
 RWCityBuilder class >> defaultBaseBorder [
 	^ 1.0
@@ -243,7 +278,10 @@ RWCityBuilder class >> examplePrintableCollectionsFromDataSet [
 						color: [ :cls | Color green lighter interpolateTo: Color red lighter at:
 							(cls linesOfCode / (cls numberOfMethods * 12 max: 1) min: 1.0)];
 						highlightable;
-						tooltip;
+						"tooltip;"
+						popupRoassal3: [:canvas :classElement |
+							self buildRoassal3VisualizationForClass: classElement in: canvas
+						];
 						inspectable
 		]
 	].

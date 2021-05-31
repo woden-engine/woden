@@ -9,7 +9,8 @@ Class {
 
 { #category : #accessing }
 RWCityElementBuilder >> addInteraction: anInteraction [
-	interactions add: anInteraction
+	interactions add: anInteraction.
+	^ anInteraction
 ]
 
 { #category : #interactions }
@@ -36,6 +37,11 @@ RWCityElementBuilder >> popup [
 { #category : #interactions }
 RWCityElementBuilder >> popup: aPopupText [
 	self addInteraction: (RWPopup new text: aPopupText)
+]
+
+{ #category : #interactions }
+RWCityElementBuilder >> popupRoassal3: aBlock [
+	self addInteraction: (RWRoassal3Popup with: aBlock)
 ]
 
 { #category : #interactions }
