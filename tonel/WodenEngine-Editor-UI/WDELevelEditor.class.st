@@ -315,11 +315,6 @@ WDELevelEditor >> connectForNewLevel: level [
 	level whenAddedOrRemovedElementDo: [	levelTreeView roots: {level} ]
 ]
 
-{ #category : #initialization }
-WDELevelEditor >> connectPresenters [
-	mainMenuBar applyTo: self.
-]
-
 { #category : #accessing }
 WDELevelEditor >> content [
 	^ content
