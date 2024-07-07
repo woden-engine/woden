@@ -24,7 +24,7 @@ BaselineOfWodenEngine >> baseline: spec [
 			baseline: #'OpenAL' with: [
 				spec repository: 'github://ronsaldo/pharo-openal/tonel' ];
 			baseline: #'Sysmel' with: [
-				spec repository: 'github://ronsaldo/sysmel-alpha' ];
+				spec repository: 'github://desromech/sysmel-alpha' ];
 			package: #'WodenEngine-NativeStructures' with: [
 				spec requires: #(#'Sysmel')];
 			package: #'WodenEngine-NativeDastrelBindings' with: [
