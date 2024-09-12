@@ -14,7 +14,7 @@ BaselineOfWodenEngine >> baseline: spec [
 			baseline: #'NeoJSON' with: [
 				spec repository: 'github://svenvc/NeoJSON:v17/repository' ];
 			baseline: #'AbstractGPU' with: [
-				spec repository: 'github://ronsaldo/abstract-gpu/tonel' ];
+				spec repository: 'github://desromech/abstract-gpu/tonel' ];
 			baseline: #'AbstractPhysics' with: [
 				spec repository: 'github://ronsaldo/abstract-physics/tonel' ];
 			baseline: #'Dastrel' with: [

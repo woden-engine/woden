@@ -16,7 +16,7 @@ Woden on OS X requires a Mac with support for the Metal API.
 
 ## Loading Woden
 
-Woden can be loaded in a 64 bits Pharo 9 image by running the following script in a playground:
+Woden can be loaded in a 64 bits Pharo 10 image by running the following script in a playground:
 
 ```smalltalk
 Metacello new
